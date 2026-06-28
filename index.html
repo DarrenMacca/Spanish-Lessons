@@ -11,9 +11,10 @@
         .tab-btn { padding: 10px 20px; border: none; background: #e2e8f0; border-radius: 8px; cursor: pointer; font-weight: 600; }
         .tab-btn.active { background: var(--primary); color: white; }
         .hidden { display: none; }
-        .status-box { padding: 15px; border-radius: 8px; margin: 10px 0; border: 1px solid #e2e8f0; }
-        .quiz-row { display: flex; align-items: center; gap: 15px; padding: 12px; border-bottom: 1px solid #f1f5f9; }
+        .card { width: 140px; height: 90px; display: inline-flex; align-items: center; justify-content: center; border: 2px solid var(--primary); border-radius: 10px; margin: 8px; cursor: pointer; font-weight: bold; background: white; }
         .word-pill { display: inline-block; padding: 10px 18px; margin: 6px; background: #dbeafe; border-radius: 20px; cursor: pointer; border: 1px solid #bfdbfe; font-size: 14px; }
+        .quiz-row { display: flex; align-items: center; gap: 15px; padding: 12px; border-bottom: 1px solid #f1f5f9; }
+        .status-box { padding: 15px; border-radius: 8px; margin: 10px 0; border: 1px solid #e2e8f0; }
     </style>
 </head>
 <body>
@@ -21,33 +22,35 @@
 <div class="wrapper">
     <div id="dashboard-view">
         <h1>Dashboard</h1>
-        <div id="status-container">
-            <div class="status-box">Quiz Performance: <b id="quiz-status">Incomplete</b></div>
-            <div class="status-box">Builder Performance: <b id="build-status">Incomplete</b></div>
-            <h3 id="final-verdict">Course Status: Pending Completion</h3>
-        </div>
-        <button class="tab-btn" onclick="openApp()">Enter Learning Portal</button>
+        <div class="status-box">Quiz Performance: <b id="quiz-status">Incomplete</b></div>
+        <div class="status-box">Builder Performance: <b id="build-status">Incomplete</b></div>
+        <h3 id="final-verdict">Course Status: Pending</h3>
+        <button class="tab-btn" onclick="openApp()" style="margin-top:20px;">Enter Learning Portal</button>
     </div>
 
     <div id="learning-view" class="hidden">
-        <button onclick="goBack()" style="margin-bottom:20px;">← Return to Dashboard</button>
+        <button onclick="goBack()" style="margin-bottom:20px;">← Back to Dashboard</button>
         <div class="nav-tabs">
-            <button class="tab-btn active" onclick="showTab('quiz')">3. Quiz</button>
+            <button class="tab-btn active" onclick="showTab('listen')">1. Listen</button>
+            <button class="tab-btn" onclick="showTab('flash')">2. Flashcards</button>
+            <button class="tab-btn" onclick="showTab('quiz')">3. Quiz</button>
             <button class="tab-btn" onclick="showTab('build')">4. Building</button>
         </div>
         
-        <div class="tab-content" id="quiz">
+        <div class="tab-content" id="listen"><h3>Listen</h3><div id="listen-list"></div></div>
+        <div class="tab-content hidden" id="flash"><h3>Flashcards</h3><div id="flash-area"></div></div>
+        <div class="tab-content hidden" id="quiz">
             <div id="score-board">Quiz Score: 0%</div>
             <div id="quiz-area"></div>
         </div>
         <div class="tab-content hidden" id="build">
             <h3 id="build-task"></h3>
-            <p id="progress-counter">Task 1/10 | Session Score: 0%</p>
+            <p id="progress-counter">Task 1/10</p>
             <div id="word-bank"></div>
             <div id="sentence-box" style="padding:15px; border:2px dashed #cbd5e1; min-height:40px; margin: 10px 0;"></div>
             <button onclick="checkBuild()">Submit</button>
             <button id="show-answer-btn" class="hidden" onclick="revealAnswer()">Show Answer</button>
-            <button id="next-btn" onclick="nextTask()">Next Task</button>
+            <button onclick="nextTask()">Next Task</button>
         </div>
     </div>
 </div>
@@ -58,30 +61,23 @@
         sentences: [{en: 'I eat bread', target: 'Yo Comer Pan'}, {en: 'The friend is happy', target: 'El Amigo Feliz'}, {en: 'Where is the store', target: 'Donde Esta La Tienda'}, {en: 'You drink water', target: 'Tu Beber Agua'}, {en: 'The book is red', target: 'El Libro Rojo'}, {en: 'I am happy', target: 'Yo Feliz'}, {en: 'The house is big', target: 'La Casa Grande'}, {en: 'The map is here', target: 'El Mapa Aquí'}, {en: 'He eats bread', target: 'El Comer Pan'}, {en: 'The street is big', target: 'La Calle Grande'}]
     };
 
-    let qTotal = 0, qCorrect = 0, bScore = 0, bCount = 1, bAttempts = 0, bFinished = false, qFinished = false;
+    let qTotal = 0, qCorrect = 0, bScore = 0, bCount = 1, bAttempts = 0;
 
     function openApp() { document.getElementById('dashboard-view').classList.add('hidden'); document.getElementById('learning-view').classList.remove('hidden'); }
-    
-    function goBack() { 
-        document.getElementById('dashboard-view').classList.remove('hidden'); 
-        document.getElementById('learning-view').classList.add('hidden');
-        updateDashboard();
-    }
+    function goBack() { document.getElementById('dashboard-view').classList.remove('hidden'); document.getElementById('learning-view').classList.add('hidden'); updateDashboard(); }
 
     function updateDashboard() {
         const qPercent = qTotal === 0 ? 0 : Math.round((qCorrect/qTotal)*100);
         const bPercent = Math.round((bScore/10)*100);
-        
-        document.getElementById('quiz-status').innerText = qPercent >= 90 ? "Passed ("+qPercent+"%)" : "Retry Quiz ("+qPercent+"%)";
-        document.getElementById('build-status').innerText = bPercent >= 90 ? "Passed ("+bPercent+"%)" : "Retry Builder ("+bPercent+"%)";
-        
-        if(qPercent >= 90 && bPercent >= 90) {
-            document.getElementById('final-verdict').innerText = "Course Status: 🎉 PASSED";
-            document.getElementById('final-verdict').style.color = "green";
-        } else {
-            document.getElementById('final-verdict').innerText = "Course Status: Needs Improvement";
-            document.getElementById('final-verdict').style.color = "red";
-        }
+        document.getElementById('quiz-status').innerText = qPercent >= 90 ? "Passed ("+qPercent+"%)" : "Retry ("+qPercent+"%)";
+        document.getElementById('build-status').innerText = bPercent >= 90 ? "Passed ("+bPercent+"%)" : "Retry ("+bPercent+"%)";
+        document.getElementById('final-verdict').innerText = (qPercent >= 90 && bPercent >= 90) ? "Course Status: PASSED" : "Course Status: Needs Improvement";
+    }
+
+    function init() {
+        document.getElementById('listen-list').innerHTML = data.words.map(w => `<div><button onclick="new SpeechSynthesisUtterance('${w.es}').lang='es-MX'; speechSynthesis.speak(new SpeechSynthesisUtterance('${w.es}'))">🔊</button> ${w.es} - ${w.en}</div>`).join('');
+        document.getElementById('flash-area').innerHTML = data.words.map(w => `<div class="card" onclick="this.innerText=(this.innerText=='${w.en}' ? '${w.es}' : '${w.en}')">${w.en}</div>`).join('');
+        renderQuiz(); renderBuild();
     }
 
     function renderQuiz() { 
@@ -99,26 +95,31 @@
     }
 
     function renderBuild() {
-        const task = data.sentences[bCount - 1];
-        document.getElementById('build-task').innerText = "Build: " + task.en;
+        document.getElementById('build-task').innerText = "Build: " + data.sentences[bCount - 1].en;
         document.getElementById('word-bank').innerHTML = data.words.map(w => `<span class="word-pill" onclick="document.getElementById('sentence-box').innerText+=' ' + '${w.es}'">${w.es}</span>`).join('');
     }
 
     function checkBuild() {
         if(document.getElementById('sentence-box').innerText.trim().replace(/\s+/g, ' ') === data.sentences[bCount-1].target.replace(/ /g, ' ')) {
-            if(bAttempts === 0) bScore++;
-            alert("Correct!");
+            if(bAttempts === 0) bScore++; alert("Correct!");
         } else { bAttempts++; if(bAttempts >= 3) document.getElementById('show-answer-btn').classList.remove('hidden'); }
     }
 
     function nextTask() {
-        if(bCount >= 10) { alert("Session complete! Returning to Dashboard."); goBack(); } 
-        else { bCount++; bAttempts = 0; document.getElementById('sentence-box').innerText = ''; renderBuild(); }
+        if(bCount >= 10) { alert("Session complete!"); goBack(); } 
+        else { bCount++; bAttempts = 0; document.getElementById('sentence-box').innerText = ''; document.getElementById('show-answer-btn').classList.add('hidden'); renderBuild(); }
     }
 
-    function showTab(id) { document.querySelectorAll('.tab-content').forEach(t => t.classList.add('hidden')); document.getElementById(id).classList.remove('hidden'); }
+    function showTab(id) { 
+        document.querySelectorAll('.tab-content').forEach(t => t.classList.add('hidden')); 
+        document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+        document.getElementById(id).classList.remove('hidden');
+        event.target.classList.add('active');
+    }
     
-    renderQuiz(); renderBuild();
+    function revealAnswer() { document.getElementById('sentence-box').innerText = data.sentences[bCount-1].target; }
+
+    init();
 </script>
 </body>
 </html>
