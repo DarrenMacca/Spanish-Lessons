@@ -61,11 +61,11 @@
             <span id="feedback" style="margin-left:10px; font-weight:bold;"></span>
         </div>
         
-        <!-- NEW CONVERSATION TAB -->
         <div class="tab-content hidden" id="conv">
             <h3>Conversation</h3>
             <h3 id="conv-task"></h3>
             <p id="c-progress-counter">Task 1/5</p>
+            <button onclick="speak(window.currentConv.q_es)">🔊 Hear Question</button>
             <div id="conv-word-bank" style="margin:20px 0;"></div>
             <div id="conv-sentence-box" style="padding:15px; border:2px dashed #cbd5e1; min-height:40px; margin: 10px 0;"></div>
             <button onclick="checkConv()">Submit</button>
@@ -81,7 +81,13 @@
     const data = {
         words: [{es: 'Hola', en: 'Hello'}, {es: 'Gracias', en: 'Thank you'}, {es: 'Casa', en: 'House'}, {es: 'Yo', en: 'I'}, {es: 'Tu', en: 'You'}, {es: 'El', en: 'He'}, {es: 'Agua', en: 'Water'}, {es: 'Pan', en: 'Bread'}, {es: 'Libro', en: 'Book'}, {es: 'Amigo', en: 'Friend'}, {es: 'Feliz', en: 'Happy'}, {es: 'Comer', en: 'Eat'}, {es: 'Beber', en: 'Drink'}, {es: 'Sol', en: 'Sun'}, {es: 'Luz', en: 'Light'}, {es: 'Mar', en: 'Sea'}, {es: 'Tienda', en: 'Store'}, {es: 'Calle', en: 'Street'}, {es: 'Mapa', en: 'Map'}, {es: 'Donde', en: 'Where'}, {es: 'La', en: 'The'}, {es: 'Esta', en: 'Is'}, {es: 'Rojo', en: 'Red'}, {es: 'Aquí', en: 'Here'}, {es: 'Grande', en: 'Big'}],
         sentences: [{en: 'I eat bread', target: 'Yo Comer Pan'}, {en: 'The friend is happy', target: 'El Amigo Feliz'}, {en: 'Where is the store', target: 'Donde Esta La Tienda'}, {en: 'You drink water', target: 'Tu Beber Agua'}, {en: 'The book is red', target: 'El Libro Rojo'}, {en: 'I am happy', target: 'Yo Feliz'}, {en: 'The house is big', target: 'La Casa Grande'}, {en: 'The map is here', target: 'El Mapa Aquí'}, {en: 'He eats bread', target: 'El Comer Pan'}, {en: 'The street is big', target: 'La Calle Grande'}],
-        conversations: [{q: 'How are you?', target: 'Yo Feliz'}, {q: 'Where is the house?', target: 'La Casa Grande'}, {q: 'Do you drink water?', target: 'Tu Beber Agua'}, {q: 'Is the bread here?', target: 'El Pan Aquí'}, {q: 'Are you a friend?', target: 'Tu Amigo'}]
+        conversations: [
+            {q: 'How are you?', q_es: '¿Cómo estás?', target: 'Yo Feliz'}, 
+            {q: 'Where is the house?', q_es: '¿Dónde está la casa?', target: 'La Casa Grande'}, 
+            {q: 'Do you drink water?', q_es: '¿Tú bebes agua?', target: 'Tu Beber Agua'}, 
+            {q: 'Is the bread here?', q_es: '¿Está el pan aquí?', target: 'El Pan Aquí'}, 
+            {q: 'Are you a friend?', q_es: '¿Eres tú amigo?', target: 'Tu Amigo'}
+        ]
     };
 
     let qTotal = 0, qCorrect = 0, bScore = 0, bCount = 1, bAttempts = 0, cCount = 1, cAttempts = 0;
@@ -128,7 +134,7 @@
 
     function renderConv() {
         window.currentConv = data.conversations[cCount - 1];
-        document.getElementById('conv-task').innerText = currentConv.q;
+        document.getElementById('conv-task').innerText = "Conversation: " + currentConv.q;
         document.getElementById('c-progress-counter').innerText = `Task ${cCount}/5`;
         document.getElementById('conv-word-bank').innerHTML = data.words.map(w => `<span class="word-pill" onclick="document.getElementById('conv-sentence-box').innerText+=' ' + '${w.es}'">${w.es}</span>`).join('');
     }
@@ -145,14 +151,8 @@
         } else { cAttempts++; document.getElementById('c-feedback').innerText = "Attempts: " + cAttempts + "/3"; if(cAttempts >= 3) document.getElementById('show-conv-answer-btn').classList.remove('hidden'); }
     }
 
-    function nextTask() {
-        if(bCount >= 10) { alert("Building complete!"); } else { bCount++; bAttempts = 0; document.getElementById('sentence-box').innerText = ''; document.getElementById('feedback').innerText = ''; document.getElementById('show-answer-btn').classList.add('hidden'); renderBuild(); }
-    }
-
-    function nextConvTask() {
-        if(cCount >= 5) { alert("Conversations complete!"); } else { cCount++; cAttempts = 0; document.getElementById('conv-sentence-box').innerText = ''; document.getElementById('c-feedback').innerText = ''; document.getElementById('show-conv-answer-btn').classList.add('hidden'); renderConv(); }
-    }
-
+    function nextTask() { if(bCount < 10) { bCount++; bAttempts = 0; document.getElementById('sentence-box').innerText = ''; document.getElementById('feedback').innerText = ''; document.getElementById('show-answer-btn').classList.add('hidden'); renderBuild(); } }
+    function nextConvTask() { if(cCount < 5) { cCount++; cAttempts = 0; document.getElementById('conv-sentence-box').innerText = ''; document.getElementById('c-feedback').innerText = ''; document.getElementById('show-conv-answer-btn').classList.add('hidden'); renderConv(); } }
     function showTab(id) { document.querySelectorAll('.tab-content').forEach(t => t.classList.add('hidden')); document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active')); document.getElementById(id).classList.remove('hidden'); event.target.classList.add('active'); }
     function revealAnswer() { document.getElementById('sentence-box').innerText = currentTask.target; }
     function revealConvAnswer() { document.getElementById('conv-sentence-box').innerText = currentConv.target; }
