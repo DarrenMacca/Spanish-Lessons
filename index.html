@@ -51,7 +51,8 @@
             <button onclick="speak(window.currentTask.target)">🔊 Hear Sentence</button>
             <div id="word-bank" style="margin:20px 0; display:flex; flex-wrap:wrap;"></div>
             <div id="sentence-box" style="padding:15px; border:2px dashed #cbd5e1; min-height:40px; margin-bottom:10px;"></div>
-            <button onclick="checkBuild()">Submit</button>
+            <button onclick="checkBuild()">Submit Attempt</button>
+            <button onclick="clearCurrentBox()">Clear Box</button>
             <button id="next-btn" onclick="nextTask()">Next Task</button>
             <span id="feedback" style="margin-left:15px; font-weight:bold;"></span>
             <button id="show-answer-btn" class="hidden" onclick="revealAnswer()" style="background:#f59e0b; color:white; border:none; padding:10px; border-radius:8px;">Show Answer</button>
@@ -61,20 +62,8 @@
 
 <script>
     const data = {
-        words: [
-            {es: 'Hola', en: 'Hello'}, {es: 'Gracias', en: 'Thank you'}, {es: 'Casa', en: 'House'}, {es: 'Yo', en: 'I'}, {es: 'Tu', en: 'You'}, 
-            {es: 'El', en: 'He'}, {es: 'Agua', en: 'Water'}, {es: 'Pan', en: 'Bread'}, {es: 'Libro', en: 'Book'}, {es: 'Amigo', en: 'Friend'}, 
-            {es: 'Feliz', en: 'Happy'}, {es: 'Comer', en: 'Eat'}, {es: 'Beber', en: 'Drink'}, {es: 'Sol', en: 'Sun'}, {es: 'Luz', en: 'Light'}, 
-            {es: 'Mar', en: 'Sea'}, {es: 'Tienda', en: 'Store'}, {es: 'Calle', en: 'Street'}, {es: 'Mapa', en: 'Map'}, {es: 'Donde', en: 'Where'},
-            {es: 'La', en: 'The'}, {es: 'Esta', en: 'Is'}, {es: 'Rojo', en: 'Red'}, {es: 'Aquí', en: 'Here'}, {es: 'Grande', en: 'Big'}
-        ],
-        sentences: [
-            {en: 'I eat bread', target: 'Yo Comer Pan'}, {en: 'The friend is happy', target: 'El Amigo Feliz'}, 
-            {en: 'Where is the store', target: 'Donde Esta La Tienda'}, {en: 'You drink water', target: 'Tu Beber Agua'}, 
-            {en: 'The book is red', target: 'El Libro Rojo'}, {en: 'I am happy', target: 'Yo Feliz'},
-            {en: 'The house is big', target: 'La Casa Grande'}, {en: 'The map is here', target: 'El Mapa Aquí'},
-            {en: 'He eats bread', target: 'El Comer Pan'}, {en: 'The street is big', target: 'La Calle Grande'}
-        ]
+        words: [{es: 'Hola', en: 'Hello'}, {es: 'Gracias', en: 'Thank you'}, {es: 'Casa', en: 'House'}, {es: 'Yo', en: 'I'}, {es: 'Tu', en: 'You'}, {es: 'El', en: 'He'}, {es: 'Agua', en: 'Water'}, {es: 'Pan', en: 'Bread'}, {es: 'Libro', en: 'Book'}, {es: 'Amigo', en: 'Friend'}, {es: 'Feliz', en: 'Happy'}, {es: 'Comer', en: 'Eat'}, {es: 'Beber', en: 'Drink'}, {es: 'Sol', en: 'Sun'}, {es: 'Luz', en: 'Light'}, {es: 'Mar', en: 'Sea'}, {es: 'Tienda', en: 'Store'}, {es: 'Calle', en: 'Street'}, {es: 'Mapa', en: 'Map'}, {es: 'Donde', en: 'Where'}, {es: 'La', en: 'The'}, {es: 'Esta', en: 'Is'}, {es: 'Rojo', en: 'Red'}, {es: 'Aquí', en: 'Here'}, {es: 'Grande', en: 'Big'}],
+        sentences: [{en: 'I eat bread', target: 'Yo Comer Pan'}, {en: 'The friend is happy', target: 'El Amigo Feliz'}, {en: 'Where is the store', target: 'Donde Esta La Tienda'}, {en: 'You drink water', target: 'Tu Beber Agua'}, {en: 'The book is red', target: 'El Libro Rojo'}, {en: 'I am happy', target: 'Yo Feliz'}, {en: 'The house is big', target: 'La Casa Grande'}, {en: 'The map is here', target: 'El Mapa Aquí'}, {en: 'He eats bread', target: 'El Comer Pan'}, {en: 'The street is big', target: 'La Calle Grande'}]
     };
 
     let totalQs = 0, correctQs = 0, buildAttempts = 0, buildCount = 1, buildScore = 0;
@@ -111,13 +100,16 @@
 
     function speak(t) { const s = new SpeechSynthesisUtterance(t); s.rate = document.getElementById('rate').value; s.lang = 'es-MX'; window.speechSynthesis.speak(s); }
     function checkBuild() {
-        buildAttempts++;
         if(document.getElementById('sentence-box').innerText.trim().replace(/\s+/g, ' ') === window.currentTask.target.replace(/ /g, ' ')) { 
             document.getElementById('feedback').innerText = "Correct!"; 
-            if(buildAttempts === 1) buildScore++;
-        } else { document.getElementById('feedback').innerText = "Try again."; }
-        if(buildAttempts >= 3) document.getElementById('show-answer-btn').classList.remove('hidden');
+            if(buildAttempts === 0) buildScore++;
+        } else { 
+            buildAttempts++;
+            document.getElementById('feedback').innerText = "Incorrect (" + buildAttempts + "/3)"; 
+            if(buildAttempts >= 3) { document.getElementById('show-answer-btn').classList.remove('hidden'); document.getElementById('feedback').innerText = "Max attempts reached."; }
+        }
     }
+    function clearCurrentBox() { document.getElementById('sentence-box').innerText = ''; }
     function nextTask() {
         if (buildCount >= 10) { alert("Session complete! Returning to Dashboard."); goBack(); buildCount = 1; buildScore = 0; } 
         else { buildCount++; buildAttempts = 0; document.getElementById('sentence-box').innerText = ''; document.getElementById('feedback').innerText = ''; document.getElementById('show-answer-btn').classList.add('hidden'); renderBuild(); }
