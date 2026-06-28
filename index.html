@@ -4,32 +4,27 @@
     <meta charset="UTF-8">
     <title>Spanish CEFR Mastery Portal</title>
     <style>
-        :root { --primary: #2563eb; --bg: #f8fafc; }
-        body { font-family: 'Inter', sans-serif; background: var(--bg); padding: 20px; color: #1e293b; }
+        :root { --primary: #2563eb; }
+        body { font-family: 'Inter', sans-serif; background: #f8fafc; padding: 20px; color: #1e293b; }
         .wrapper { max-width: 900px; margin: auto; background: white; padding: 30px; border-radius: 20px; box-shadow: 0 10px 15px -3px rgba(0,0,0,0.1); }
         .nav-tabs { display: flex; gap: 10px; margin-bottom: 20px; border-bottom: 2px solid #e2e8f0; padding-bottom: 10px; }
         .tab-btn { padding: 10px 20px; border: none; background: #e2e8f0; border-radius: 8px; cursor: pointer; font-weight: 600; }
         .tab-btn.active { background: var(--primary); color: white; }
         .hidden { display: none; }
-        .card { width: 120px; height: 80px; display: inline-flex; align-items: center; justify-content: center; border: 2px solid var(--primary); border-radius: 10px; margin: 5px; cursor: pointer; font-weight: bold; background: white; }
-        .quiz-row { display: grid; grid-template-columns: 1fr 1fr 100px; gap: 10px; padding: 10px; border-bottom: 1px solid #f1f5f9; align-items: center; }
+        .card { width: 140px; height: 90px; display: inline-flex; align-items: center; justify-content: center; border: 2px solid var(--primary); border-radius: 10px; margin: 8px; cursor: pointer; font-weight: bold; background: white; }
+        .word-pill { display: inline-block; padding: 10px 18px; margin: 6px; background: #dbeafe; border-radius: 20px; cursor: pointer; border: 1px solid #bfdbfe; }
+        .quiz-row { display: flex; align-items: center; gap: 15px; padding: 12px; border-bottom: 1px solid #f1f5f9; }
     </style>
 </head>
 <body>
 
-<div class="wrapper" id="main-ui">
-    <!-- DASHBOARD VIEW -->
+<div class="wrapper">
     <div id="dashboard-view">
-        <h1>Welcome Back, Learner</h1>
-        <div style="background:#eff6ff; padding:20px; border-radius:12px;">
-            <h3>Your Progress</h3>
-            <div style="height:15px; background:#dbeafe; border-radius:10px; width:100%;"><div style="width:35%; height:100%; background:var(--primary); border-radius:10px;"></div></div>
-            <p>Skill Level: <b>A1 Elementary</b> | XP: 350 / 1000</p>
-        </div>
-        <button class="tab-btn" onclick="openApp()" style="margin-top:20px;">Open Learning Portal</button>
+        <h1>Dashboard</h1>
+        <p>Skill Level: <b>A1 Elementary</b> | Progress: 35%</p>
+        <button class="tab-btn" onclick="openApp()">Enter Learning Portal</button>
     </div>
 
-    <!-- TABBED LEARNING VIEW -->
     <div id="learning-view" class="hidden">
         <div class="nav-tabs">
             <button class="tab-btn active" onclick="showTab('listen')">1. Listen</button>
@@ -42,15 +37,20 @@
 
         <div id="listen" class="tab-content"><div id="listen-list"></div></div>
         <div id="flash" class="tab-content hidden"><div id="flash-area"></div></div>
-        <div id="quiz" class="tab-content hidden"><div id="quiz-area"></div></div>
+        <div id="quiz" class="tab-content hidden">
+            <div id="score-board" style="font-weight:bold; margin-bottom:15px;">Score: 0%</div>
+            <div id="quiz-area"></div>
+        </div>
         <div id="build" class="tab-content hidden">
             <h3 id="build-task"></h3>
-            <button onclick="speakSentence()">🔊 Hear</button>
-            <div id="word-bank" style="margin:20px 0;"></div>
+            <button onclick="speak(window.currentTask.target, true)">🔊 Hear</button>
+            <div id="word-bank" style="margin:20px 0; display:flex; flex-wrap:wrap; gap:10px;"></div>
             <div id="sentence-box" style="padding:15px; border:2px dashed #cbd5e1; min-height:40px;"></div>
-            <button onclick="checkBuild()">Submit</button>
-            <button onclick="resetBuild()">Reset</button>
-            <p id="feedback"></p>
+            <div style="margin-top:10px;">
+                <button onclick="checkBuild()">Submit</button>
+                <button onclick="resetBuild()">Reset</button>
+                <span id="feedback" style="margin-left:15px; font-weight:bold;"></span>
+            </div>
         </div>
     </div>
 </div>
@@ -61,26 +61,42 @@
         sentences: [{en: 'I eat bread', target: 'Yo Comer Pan'}, {en: 'The friend is happy', target: 'El Amigo Feliz'}, {en: 'Where is the store', target: 'Donde Esta La Tienda'}]
     };
 
+    let totalQs = 0, correctQs = 0;
+
     function openApp() { document.getElementById('dashboard-view').classList.add('hidden'); document.getElementById('learning-view').classList.remove('hidden'); }
     
     function init() {
-        document.getElementById('listen-list').innerHTML = data.words.map(w => `<div><button onclick="speak('${w.es}')">🔊</button> ${w.es} - ${w.en}</div>`).join('');
-        document.getElementById('flash-area').innerHTML = data.words.map(w => `<div class="card" onclick="this.innerText=(this.innerText=='${w.en}' ? '${w.es}' : '${w.en}')">${w.en}</div>`).join('');
-        document.getElementById('quiz-area').innerHTML = data.words.slice(0,10).map((w,i) => `<div class="quiz-row"><span>${w.en}</span><input id="q${i}"> <button onclick="alert(document.getElementById('q${i}').value=='${w.es}'?'Correct':'Wrong')">Check</button></div>`).join('');
+        document.getElementById('listen-list').innerHTML = data.words.map(w => `<div><button onclick="speak('${w.es}', true)">🔊</button> ${w.es} - ${w.en}</div>`).join('');
+        
+        document.getElementById('flash-area').innerHTML = data.words.map(w => `<div class="card" onclick="this.innerText=(this.innerText=='${w.en}' ? '${w.es}' : '${w.en}'); if(this.innerText=='${w.es}') speak('${w.es}', false)">${w.en}</div>`).join('');
+        
+        document.getElementById('quiz-area').innerHTML = data.words.slice(0,10).map((w,i) => `<div class="quiz-row"><span>${w.en}</span><input id="q${i}"> <button onclick="checkQuiz('${w.es}', 'q${i}', 'f${i}')">Submit</button> <span id="f${i}"></span></div>`).join('');
+        
         renderBuild();
     }
 
-    function renderBuild() {
-        const s = data.sentences[Math.floor(Math.random()*data.sentences.length)];
-        document.getElementById('build-task').innerText = "Build: " + s.en;
-        document.getElementById('word-bank').innerHTML = data.words.map(w => `<span class="tab-btn" onclick="document.getElementById('sentence-box').innerText+='${w.es} '">${w.es}</span>`).join(' ');
-        window.currentTask = s;
+    function checkQuiz(ans, inputId, feedId) {
+        totalQs++;
+        if(document.getElementById(inputId).value.toLowerCase() === ans.toLowerCase()) correctQs++;
+        document.getElementById(feedId).innerText = "Result: " + Math.round((correctQs/totalQs)*100) + "%";
+        document.getElementById('score-board').innerText = "Overall Score: " + Math.round((correctQs/totalQs)*100) + "%";
     }
 
-    function speak(t) { const s = new SpeechSynthesisUtterance(t); s.rate = document.getElementById('rate').value; window.speechSynthesis.speak(s); }
-    function speakSentence() { speak(window.currentTask.target); }
-    function resetBuild() { document.getElementById('sentence-box').innerText = ''; }
-    function checkBuild() { document.getElementById('feedback').innerText = (document.getElementById('sentence-box').innerText.trim() === window.currentTask.target.replace(/ /g, '  ').trim()) ? "Perfect!" : "Try again."; }
+    function renderBuild() {
+        window.currentTask = data.sentences[Math.floor(Math.random()*data.sentences.length)];
+        document.getElementById('build-task').innerText = "Build: " + currentTask.en;
+        document.getElementById('word-bank').innerHTML = data.words.map(w => `<span class="word-pill" onclick="document.getElementById('sentence-box').innerText+='${w.es} '">${w.es}</span>`).join('');
+    }
+
+    function speak(t, isLatin) { 
+        const s = new SpeechSynthesisUtterance(t); 
+        s.rate = document.getElementById('rate').value; 
+        s.lang = 'es-MX'; // Latin American Spanish
+        window.speechSynthesis.speak(s); 
+    }
+    
+    function checkBuild() { document.getElementById('feedback').innerText = (document.getElementById('sentence-box').innerText.trim() === window.currentTask.target.replace(/ /g, '  ').trim()) ? "Correct!" : "Try again."; }
+    function resetBuild() { document.getElementById('sentence-box').innerText = ''; document.getElementById('feedback').innerText = ''; }
     function showTab(id) { document.querySelectorAll('.tab-content').forEach(t => t.classList.add('hidden')); document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active')); document.getElementById(id).classList.remove('hidden'); event.target.classList.add('active'); }
     
     init();
