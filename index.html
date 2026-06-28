@@ -27,7 +27,7 @@
     </header>
 
     <!-- Main Dynamic Interface -->
-    <main class="flex-grow p-4 max-w-4xl w-full mx-auto max-w-4xl my-6">
+    <main class="flex-grow p-4 max-w-4xl w-full mx-auto my-6">
         
         <!-- Dashboard / Lesson Selection View -->
         <div id="dashboard-view" class="space-y-6">
@@ -134,11 +134,109 @@
     <!-- App Engineering Architecture JavaScript Core Data Set -->
     <script>
         const lessonData = [
-            { id: 0, tier: 'beginner', title: 'Everyday Greetings', desc: 'Basic words used to say hello and goodbye safely in daily settings.', words: [{es: 'Hola', en: 'Hello'}, {es: 'Adiós', en: 'Goodbye'}, {es: 'Gracias', en: 'Thank you'}], sentences: [{scrambled: ['Hola', 'gracias', 'y'], correct: 'Hola y gracias'}], quiz: [{q: "How do you say 'Thank you' in Spanish?", a: "Gracias", alt: ["Hola", "Adiós"]}] },
-            { id: 1, tier: 'beginner', title: 'Crucial Numbers', desc: 'Master core numbers needed for shopping, ordering, or asking coordinates.', words: [{es: 'Uno', en: 'One'}, {es: 'Dos', en: 'Two'}, {es: 'Tres', en: 'Three'}], sentences: [{scrambled: ['Dos', 'uno', 'y'], correct: 'Uno y dos'}], quiz: [{q: "What is the number 'Tres' in English?", a: "Three", alt: ["One", "Two"]}] },
-            { id: 2, tier: 'intermediate', title: 'Food & Dining', desc: 'Transition into standard structural items for asking for food items safely.', words: [{es: 'Manzana', en: 'Apple'}, {es: 'Agua', en: 'Water'}, {es: 'Por favor', en: 'Please'}], sentences: [{scrambled: ['por favor', 'Agua', 'un'], correct: 'Agua por favor'}], quiz: [{q: "Translate the item: 'Manzana'", a: "Apple", alt: ["Water", "Please"]}] },
-            { id: 3, tier: 'intermediate', title: 'Essential Verbs', desc: 'Forming concrete conversational actions.', words: [{es: 'Tener', en: 'To have'}, {es: 'Quiero', en: 'I want'}, {es: 'Hablar', en: 'To speak'}], sentences: [{scrambled: ['hablar', 'Quiero', 'español'], correct: 'Quiero hablar español'}], quiz: [{q: "Which word means 'I want'?", a: "Quiero", alt: ["Tener", "Hablar"]}] },
-            { id: 4, tier: 'advanced', title: 'Time Complexities', desc: 'Abstract tracking items, referencing conditional planning metrics.', words: [{es: 'Mañana', en: 'Tomorrow'}, {es: 'Ayer', en: 'Yesterday'}, {es: 'Tiempo', en: 'Time'}], sentences: [{scrambled: ['tiempo', 'No', 'tengo'], correct: 'No tengo tiempo'}], quiz: [{q: "What does 'Mañana' mean in standard tracking layouts?", a: "Tomorrow", alt: ["Yesterday", "Time"]}] }
+            { 
+                id: 0, 
+                tier: 'beginner', 
+                title: 'Everyday Greetings & Basics', 
+                desc: 'Crucial expressions to handle basic polite conversations.', 
+                words: [
+                    {es: 'Hola', en: 'Hello'}, {es: 'Adiós', en: 'Goodbye'}, {es: 'Gracias', en: 'Thank you'},
+                    {es: 'Por favor', en: 'Please'}, {es: 'Buenos días', en: 'Good morning'}, {es: 'Buenas tardes', en: 'Good afternoon'},
+                    {es: 'Buenas noches', en: 'Good night'}, {es: 'Lo siento', en: 'I am sorry'}, {es: 'Sí', en: 'Yes'},
+                    {es: 'No', en: 'No'}, {es: '¿Cómo estás?', en: 'How are you?'}, {es: 'Bien', en: 'Well / Good'}
+                ], 
+                sentences: [
+                    {scrambled: ['gracias', 'Hola', 'y'], correct: 'Hola y gracias'},
+                    {scrambled: ['por favor', 'Buenos', 'días'], correct: 'Buenos días por favor'}
+                ], 
+                quiz: [
+                    {q: "How do you say 'Thank you' in Spanish?", a: "Gracias", alt: ["Hola", "Adiós"]},
+                    {q: "What does 'Lo siento' mean?", a: "I am sorry", alt: ["Good morning", "Please"]},
+                    {q: "Translate 'How are you?'", a: "¿Cómo estás?", alt: ["Buenas tardes", "Adiós"]}
+                ] 
+            },
+            { 
+                id: 1, 
+                tier: 'beginner', 
+                title: 'Numbers & Core Essentials', 
+                desc: 'Master basic counting, calendar references, and family basics.', 
+                words: [
+                    {es: 'Uno', en: 'One'}, {es: 'Dos', en: 'Two'}, {es: 'Tres', en: 'Three'},
+                    {es: 'Cuatro', en: 'Four'}, {es: 'Cinco', en: 'Five'}, {es: 'Seis', en: 'Six'},
+                    {es: 'Siete', en: 'Seven'}, {es: 'Ocho', en: 'Eight'}, {es: 'Nueve', en: 'Nine'},
+                    {es: 'Diez', en: 'Ten'}, {es: 'Familia', en: 'Family'}, {es: 'Amigo', en: 'Friend'}
+                ], 
+                sentences: [
+                    {scrambled: ['amigo', 'un', 'Dos', 'y'], correct: 'Dos y un amigo'}
+                ], 
+                quiz: [
+                    {q: "What is the number 'Tres' in English?", a: "Three", alt: ["One", "Two"]},
+                    {q: "How do you say 'Eight'?", a: "Ocho", alt: ["Siete", "Nueve"]},
+                    {q: "Translate the word 'Amigo'", a: "Friend", alt: ["Family", "Four"]}
+                ] 
+            },
+            { 
+                id: 2, 
+                tier: 'intermediate', 
+                title: 'Food, Dining & Household', 
+                desc: 'Vocabulary used to order food, identify kitchen items, and describe the home.', 
+                words: [
+                    {es: 'Manzana', en: 'Apple'}, {es: 'Agua', en: 'Water'}, {es: 'Pan', en: 'Bread'},
+                    {es: 'Leche', en: 'Milk'}, {es: 'Café', en: 'Coffee'}, {es: 'Desayuno', en: 'Breakfast'},
+                    {es: 'Casa', en: 'House'}, {es: 'Cocina', en: 'Kitchen'}, {es: 'Mesa', en: 'Table'},
+                    {es: 'Comida', en: 'Food / Meal'}, {es: 'Queso', en: 'Cheese'}, {es: 'Pollo', en: 'Chicken'}
+                ], 
+                sentences: [
+                    {scrambled: ['por favor', 'Agua', 'y', 'pan'], correct: 'Agua y pan por favor'}
+                ], 
+                quiz: [
+                    {q: "Translate the item: 'Manzana'", a: "Apple", alt: ["Water", "Milk"]},
+                    {q: "What is the Spanish word for 'Breakfast'?", a: "Desayuno", alt: ["Comida", "Cocina"]},
+                    {q: "What does 'Mesa' mean?", a: "Table", alt: ["House", "Cheese"]}
+                ] 
+            },
+            { 
+                id: 3, 
+                tier: 'intermediate', 
+                title: 'Actions & Core Verbs', 
+                desc: 'Transition into conversational action sentences and spatial concepts.', 
+                words: [
+                    {es: 'Tener', en: 'To have'}, {es: 'Quiero', en: 'I want'}, {es: 'Hablar', en: 'To speak'},
+                    {es: 'Hacer', en: 'To do / make'}, {es: 'Comer', en: 'To eat'}, {es: 'Beber', en: 'To drink'},
+                    {es: 'Necesito', en: 'I need'}, {es: 'Dónde', en: 'Where'}, {es: 'Aquí', en: 'Here'},
+                    {es: 'Hoy', en: 'Today'}, {es: 'Trabajo', en: 'Work'}, {es: 'Dinero', en: 'Money'}
+                ], 
+                sentences: [
+                    {scrambled: ['español', 'Quiero', 'hablar'], correct: 'Quiero hablar español'},
+                    {scrambled: ['comida', 'Necesito', 'aquí'], correct: 'Necesito comida aquí'}
+                ], 
+                quiz: [
+                    {q: "Which word means 'I want'?", a: "Quiero", alt: ["Tener", "Hablar"]},
+                    {q: "What does 'Dónde' translate to?", a: "Where", alt: ["Here", "Today"]},
+                    {q: "Translate the action 'Comer'", a: "To eat", alt: ["To drink", "To have"]}
+                ] 
+            },
+            { 
+                id: 4, 
+                tier: 'advanced', 
+                title: 'Time, Complexities & Travel', 
+                desc: 'Abstract concepts, conditional descriptions, and time management.', 
+                words: [
+                    {es: 'Mañana', en: 'Tomorrow'}, {es: 'Ayer', en: 'Yesterday'}, {es: 'Tiempo', en: 'Time'},
+                    {es: 'Viaje', en: 'Trip / Travel'}, {es: 'Ciudad', en: 'City'}, {es: 'Aeropuerto', en: 'Airport'},
+                    {es: 'Entiendo', en: 'I understand'}, {es: 'Problema', en: 'Problem'}, {es: 'Dificultad', en: 'Difficulty'},
+                    {es: 'Siempre', en: 'Always'}, {es: 'Nunca', en: 'Never'}, {es: 'Felicidad', en: 'Happiness'}
+                ], 
+                sentences: [
+                    {scrambled: ['tiempo', 'No', 'tengo', 'hoy'], correct: 'No tengo tiempo hoy'},
+                    {scrambled: ['Entiendo', 'el', 'problema', 'siempre'], correct: 'Siempre entiendo el problema'}
+                ], 
+                quiz: [
+                    {q: "What does 'Mañana' mean?", a: "Tomorrow", alt: ["Yesterday", "Time"]},
+                    {q: "Translate 'I understand'", a: "Entiendo", alt: ["Siempre", "Viaje"]},
+                    {q: "What is the opposite of 'Siempre'?", a: "Nunca", alt: ["Ayer", "Ciudad"]}
+                ] 
+            }
         ];
 
         let userScores = JSON.parse(localStorage.getItem('familia_spanish_scores')) || { 0: null, 1: null, 2: null, 3: null, 4: null };
@@ -196,7 +294,7 @@
                     </div>
                     <div>
                         ${isLocked ? '<span class="text-sm font-semibold text-slate-400">🔒 Locked</span>' : 
-                        `<button onclick="loadLesson(${l.id})" class="bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-bold px-4 py-2 rounded-lg transition shadow-sm">${score !== null ? `Retry (Score: ${score}%)` : 'Start Lesson'}</button>`}
+                        `<button onclick="loadLesson(${l.id})" class="bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-bold px-4 py-2 rounded-lg transition shadow-sm">${score !== null ? `Retry (${score}%)` : 'Start Lesson'}</button>`}
                     </div>
                 </div>`;
             });
@@ -218,7 +316,7 @@
             let audioHtml = '';
             l.words.forEach(w => {
                 audioHtml += `
-                <div class="flex justify-between items-center py-3.5">
+                <div class="flex justify-between items-center py-3.5 border-b border-slate-100 last:border-0">
                     <div>
                         <p class="text-lg font-bold text-slate-900">${w.es}</p>
                         <p class="text-slate-500 text-sm">${w.en}</p>
@@ -247,8 +345,8 @@
             l.sentences.forEach((s, idx) => {
                 quizHtml += `
                 <div class="bg-slate-50 p-4 rounded-xl space-y-3">
-                    <p class="font-bold text-slate-800 text-sm"><span class="text-indigo-600">Sentence Builder:</span> Arrange words into everyday practice:</p>
-                    <p class="text-xs text-slate-500 italic">Target Meaning: "${s.correct}"</p>
+                    <p class="font-bold text-slate-800 text-sm"><span class="text-indigo-600">Sentence Builder:</span> Unscramble and write out the words to practice everyday application:</p>
+                    <p class="text-xs text-slate-500 italic">English Meaning: "${s.correct}"</p>
                     <div class="flex flex-wrap gap-2 py-1">
                         ${s.scrambled.map(w => `<span class="bg-white border text-sm font-semibold px-3 py-1.5 rounded-lg shadow-sm cursor-default select-none">${w}</span>`).join('')}
                     </div>
@@ -303,8 +401,9 @@
             });
 
             l.sentences.forEach((s, idx) => {
-                let entry = document.getElementById(`scramble-ans-${idx}`).value.trim().toLowerCase();
-                if(entry === s.correct.toLowerCase()) correctCount++;
+                let entry = document.getElementById(`scramble-ans-${idx}`).value.trim().toLowerCase().replace(/[.,\/#!$%\^&\*;:{}=\-_`~()¿?]/g,"");
+                let cleanCorrect = s.correct.toLowerCase().replace(/[.,\/#!$%\^&\*;:{}=\-_`~()¿?]/g,"");
+                if(entry === cleanCorrect) correctCount++;
             });
 
             let finalPercent = Math.round((correctCount / totalItems) * 100);
@@ -331,7 +430,6 @@
         function generateCertificate() { document.getElementById('certificate-print-view').classList.remove('hidden'); }
         function closeCertificate() { document.getElementById('certificate-print-view').classList.add('hidden'); }
 
-        // Start App Instance on Initial Window Trigger Injection
         window.onload = renderDashboard;
     </script>
 </body>
