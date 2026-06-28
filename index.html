@@ -9,9 +9,9 @@
         .tab-btn { padding: 12px 20px; border: none; background: #e2e8f0; cursor: pointer; border-radius: 8px; font-weight: bold; }
         .tab-btn.active { background: #2563eb; color: white; }
         .hidden { display: none; }
-        .card { border: 2px solid #e2e8f0; padding: 40px; text-align: center; border-radius: 12px; cursor: pointer; background: #fff; font-size: 1.5rem; }
-        .locked { filter: grayscale(1); pointer-events: none; opacity: 0.6; }
+        .card { border: 2px solid #e2e8f0; padding: 40px; text-align: center; border-radius: 12px; cursor: pointer; background: #fff; font-size: 1.5rem; margin-top: 20px; }
         .grid-list { display: grid; grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); gap: 10px; margin-top: 15px; }
+        .locked { filter: grayscale(1); pointer-events: none; opacity: 0.6; }
     </style>
 </head>
 <body>
@@ -23,7 +23,7 @@
     </div>
 
     <div id="lesson-zone" class="hidden">
-        <button onclick="goBack()">← Dashboard</button>
+        <button onclick="goBack()">← Back to Dashboard</button>
         <h2 id="level-title"></h2>
         
         <div style="margin: 20px 0;">
@@ -49,7 +49,7 @@
         </div>
 
         <div id="build" class="tab-content hidden">
-            <p>Construct a sentence:</p>
+            <p id="build-q"></p>
             <textarea id="sentence-input" style="width:100%; height:80px;"></textarea>
             <button onclick="gradeBuilding()">Finalize Level</button>
         </div>
@@ -58,8 +58,16 @@
 
 <script>
     const levels = [
-        { id: 0, code: 'A1', title: 'Beginner', words: ['Hola', 'Gracias', 'Uno', 'Rojo', 'Perro', 'Gato', 'Casa', 'Yo', 'Tu', 'El', 'Agua', 'Pan'], q: 'Translate "Hello"', a: 'Hola' },
-        { id: 1, code: 'A2', title: 'Elementary', words: ['Tienda', 'Mapa', 'Donde', 'Calle', 'Cerca', 'Comprar', 'Libro', 'Agua', 'Pan', 'Leche', 'Amigo', 'Familia'], q: 'Translate "The store"', a: 'La tienda' }
+        { 
+            id: 0, code: 'A1', title: 'Beginner', 
+            words: ['Hola', 'Gracias', 'Uno', 'Rojo', 'Perro', 'Gato', 'Casa', 'Yo', 'Tu', 'El', 'Agua', 'Pan', 'Sol', 'Luz', 'Mar'], 
+            q: 'Translate "Hello" in Spanish?', a: 'Hola', b: 'Construct a sentence using "Yo" and "Casa".' 
+        },
+        { 
+            id: 1, code: 'A2', title: 'Elementary', 
+            words: ['Tienda', 'Mapa', 'Donde', 'Calle', 'Cerca', 'Comprar', 'Libro', 'Agua', 'Pan', 'Leche', 'Amigo', 'Familia', 'Escuela', 'Trabajo', 'Ciudad'], 
+            q: 'Translate "The store" in Spanish?', a: 'La tienda', b: 'Construct a sentence asking "Where is the street?".' 
+        }
     ];
 
     let progress = parseInt(localStorage.getItem('cefr_progress')) || 0;
@@ -81,6 +89,8 @@
         document.getElementById('vocab-list').innerHTML = levels[id].words.map(w => `
             <div style="padding:10px; background:#f1f5f9; cursor:pointer;" onclick="speak('${w}')">${w} 🔊</div>
         `).join('');
+        document.getElementById('quiz-q').innerText = levels[id].q;
+        document.getElementById('build-q').innerText = levels[id].b;
         document.getElementById('dashboard').classList.add('hidden');
         document.getElementById('lesson-zone').classList.remove('hidden');
     }
@@ -105,20 +115,19 @@
     }
 
     function gradeQuiz() {
-        const val = document.getElementById('quiz-ans').value;
-        if(val.toLowerCase() === levels[currentLvl].a.toLowerCase()) alert("Correct!");
+        if(document.getElementById('quiz-ans').value.toLowerCase() === levels[currentLvl].a.toLowerCase()) alert("Correct!");
         else alert("Try again.");
     }
 
     function gradeBuilding() {
-        if(document.getElementById('sentence-input').value.length > 10) {
+        if(document.getElementById('sentence-input').value.length > 5) {
             alert("Mastery achieved! Level unlocked.");
             if(currentLvl === progress) {
                 progress++;
                 localStorage.setItem('cefr_progress', progress);
             }
             goBack();
-        } else alert("Sentence too simple.");
+        } else alert("Sentence too short.");
     }
 
     function goBack() {
