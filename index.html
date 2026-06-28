@@ -2,96 +2,120 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Spanish CEFR Learning Portal</title>
+    <title>CEFR Spanish Learning Portal</title>
     <style>
-        body { font-family: sans-serif; padding: 20px; max-width: 800px; margin: auto; background: #f4f7f6; }
-        .card { background: white; padding: 20px; margin: 10px 0; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
-        .locked { opacity: 0.5; pointer-events: none; }
-        .vocab-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin: 15px 0; }
-        .item { padding: 10px; background: #e0e7ff; border-radius: 4px; text-align: center; }
-        button { padding: 10px 20px; background: #2563eb; color: white; border: none; border-radius: 5px; cursor: pointer; }
+        body { font-family: sans-serif; background: #f4f4f9; padding: 20px; color: #333; }
+        .container { max-width: 800px; margin: auto; background: white; padding: 20px; border-radius: 12px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); }
+        .tab-btn { padding: 10px; cursor: pointer; border: none; background: #ddd; }
+        .active-tab { background: #2563eb; color: white; }
         .hidden { display: none; }
+        .card { border: 1px solid #ccc; padding: 50px; text-align: center; cursor: pointer; background: #fff; border-radius: 8px; }
+        .locked { opacity: 0.5; pointer-events: none; }
+        .vocab-list { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 10px; margin-top: 10px; }
     </style>
 </head>
 <body>
 
+<div class="container">
+    <!-- DASHBOARD -->
     <div id="dashboard">
-        <h1>Learning Dashboard</h1>
-        <div id="levels-container"></div>
+        <h1>CEFR Training Dashboard</h1>
+        <div id="levels-list"></div>
     </div>
 
-    <div id="learning-zone" class="hidden">
-        <button onclick="backToDashboard()">← Back</button>
-        <h2 id="current-title"></h2>
+    <!-- LESSON ZONE -->
+    <div id="lesson-zone" class="hidden">
+        <button onclick="goBack()">← Back to Dashboard</button>
+        <h2 id="level-title"></h2>
         
-        <div class="card">
-            <h3>1. Flashcards (Click to Flip)</h3>
-            <div id="flashcards" class="vocab-grid"></div>
+        <div id="tabs">
+            <button class="tab-btn active-tab" onclick="showTab('vocab')">1. Vocabulary</button>
+            <button class="tab-btn" onclick="showTab('flash')">2. Flashcards</button>
+            <button class="tab-btn" onclick="showTab('quiz')">3. Quiz</button>
+            <button class="tab-btn" onclick="showTab('build')">4. Sentences</button>
         </div>
 
-        <div class="card">
-            <h3>2. Interactive Quiz</h3>
-            <p id="quiz-question"></p>
-            <input type="text" id="quiz-input" placeholder="Type your answer...">
-            <button onclick="checkQuiz()">Submit</button>
-        </div>
-
-        <div class="card">
-            <h3>3. Sentence Builder</h3>
-            <p>Construct a sentence using the words above:</p>
-            <textarea id="sentence-input" rows="3" style="width:100%"></textarea>
-            <button onclick="completeLevel()">Submit Sentence</button>
+        <div id="tab-content" style="margin-top:20px;">
+            <div id="vocab" class="tab-view"><div id="vocab-grid" class="vocab-list"></div></div>
+            <div id="flash" class="tab-view hidden"><div class="card" id="card" onclick="flipCard()">Click to Flip</div></div>
+            <div id="quiz" class="tab-view hidden">
+                <p id="quiz-q"></p>
+                <input id="quiz-ans" type="text">
+                <button onclick="validateQuiz()">Submit</button>
+            </div>
+            <div id="build" class="tab-view hidden">
+                <p>Construct a sentence using the vocabulary:</p>
+                <textarea id="sentence-area" style="width:100%"></textarea>
+                <button onclick="finishLevel()">Submit & Grade</button>
+            </div>
         </div>
     </div>
+</div>
 
-    <script>
-        const levels = [
-            { id: 0, code: 'A1', title: 'Beginner', words: ['Hola', 'Gracias', 'Yo'], correct: 'Hola, yo soy.' },
-            { id: 1, code: 'A2', title: 'Elementary', words: ['Tienda', 'Mapa', 'Donde'], correct: '¿Donde esta la tienda?' }
-        ];
+<script>
+    const levels = [
+        { id: 0, code: 'A1', title: 'Beginner', words: ['Hola', 'Gracias', 'Uno', 'Rojo', 'Perro', 'Gato', 'Casa', 'Yo', 'Tu', 'El'], q: 'How to say Hello?', a: 'Hola' },
+        { id: 1, code: 'A2', title: 'Elementary', words: ['Tienda', 'Mapa', 'Donde', 'Calle', 'Cerca', 'Comprar', 'Libro', 'Agua', 'Pan', 'Leche'], q: 'Translate "The store"', a: 'La tienda' }
+    ];
 
-        let progress = parseInt(localStorage.getItem('cefr_progress')) || 0;
+    let progress = parseInt(localStorage.getItem('cefr_progress')) || 0;
+    let currentLevel = 0;
+    let cardFlipped = false;
 
-        function renderDashboard() {
-            const container = document.getElementById('levels-container');
-            container.innerHTML = levels.map(l => `
-                <div class="card ${l.id > progress ? 'locked' : ''}">
-                    <strong>${l.code}: ${l.title}</strong>
-                    <button onclick="startLevel(${l.id})">${l.id > progress ? 'Locked' : 'Start Learning'}</button>
-                </div>
-            `).join('');
-        }
+    function renderDashboard() {
+        document.getElementById('levels-list').innerHTML = levels.map(l => `
+            <div style="margin:10px 0; padding:15px; border:1px solid #ccc;" class="${l.id > progress ? 'locked' : ''}">
+                <strong>${l.code}: ${l.title}</strong>
+                <button onclick="startLevel(${l.id})">Start Learning</button>
+            </div>
+        `).join('');
+    }
 
-        function startLevel(id) {
-            const level = levels[id];
-            document.getElementById('current-title').innerText = level.title;
-            document.getElementById('flashcards').innerHTML = level.words.map(w => `<div class="item">${w}</div>`).join('');
-            document.getElementById('quiz-question').innerText = "Translate: 'Hello, I am.'";
-            document.getElementById('dashboard').classList.add('hidden');
-            document.getElementById('learning-zone').classList.remove('hidden');
-        }
+    function startLevel(id) {
+        currentLevel = id;
+        document.getElementById('level-title').innerText = levels[id].title;
+        document.getElementById('vocab-grid').innerHTML = levels[id].words.map(w => `<div class="card">${w}</div>`).join('');
+        document.getElementById('quiz-q').innerText = levels[id].q;
+        document.getElementById('dashboard').classList.add('hidden');
+        document.getElementById('lesson-zone').classList.remove('hidden');
+    }
 
-        function checkQuiz() {
-            const ans = document.getElementById('quiz-input').value.toLowerCase();
-            if(ans.includes('hola') || ans.includes('hello')) {
-                alert("Correct!");
-            } else { alert("Try again!"); }
-        }
+    function showTab(tab) {
+        document.querySelectorAll('.tab-view').forEach(t => t.classList.add('hidden'));
+        document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active-tab'));
+        document.getElementById(tab).classList.remove('hidden');
+        event.target.classList.add('active-tab');
+    }
 
-        function completeLevel() {
-            alert("Level Complete! Unlocking next stage...");
+    function flipCard() {
+        cardFlipped = !cardFlipped;
+        document.getElementById('card').innerText = cardFlipped ? levels[currentLevel].words[0] : 'Click to Flip';
+    }
+
+    function validateQuiz() {
+        const input = document.getElementById('quiz-ans').value;
+        if(input.toLowerCase() === levels[currentLevel].a.toLowerCase()) {
+            alert("Correct!");
+        } else { alert("Incorrect."); }
+    }
+
+    function finishLevel() {
+        const sentence = document.getElementById('sentence-area').value;
+        if(sentence.length > 5) {
+            alert("Excellent! Level Passed.");
             progress++;
             localStorage.setItem('cefr_progress', progress);
-            backToDashboard();
-        }
+            goBack();
+        } else { alert("Sentence too short."); }
+    }
 
-        function backToDashboard() {
-            document.getElementById('dashboard').classList.remove('hidden');
-            document.getElementById('learning-zone').classList.add('hidden');
-            renderDashboard();
-        }
-
+    function goBack() {
+        document.getElementById('dashboard').classList.remove('hidden');
+        document.getElementById('lesson-zone').classList.add('hidden');
         renderDashboard();
-    </script>
+    }
+
+    renderDashboard();
+</script>
 </body>
 </html>
