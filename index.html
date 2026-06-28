@@ -8,27 +8,39 @@
         body { font-family: 'Inter', sans-serif; background: #f8fafc; padding: 20px; color: #1e293b; }
         .wrapper { max-width: 900px; margin: auto; background: white; padding: 30px; border-radius: 20px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); }
         .hidden { display: none; }
-        .locked { opacity: 0.5; pointer-events: none; background: #f1f5f9; }
-        progress { width: 100%; height: 20px; margin: 15px 0; border-radius: 10px; }
-        .level-card { border: 2px solid var(--primary); padding: 20px; margin: 15px 0; border-radius: 12px; }
-        button { cursor: pointer; padding: 10px 20px; border-radius: 6px; border: none; background: var(--primary); color: white; margin-right: 10px; }
+        .locked { opacity: 0.5; pointer-events: none; }
+        .nav-tabs { display: flex; gap: 10px; margin-bottom: 20px; border-bottom: 2px solid #e2e8f0; }
+        .tab-btn { padding: 10px; border: none; background: #e2e8f0; cursor: pointer; border-radius: 8px; }
+        .tab-btn.active { background: var(--primary); color: white; }
+        .level-card { border: 2px solid var(--primary); padding: 15px; margin: 10px 0; border-radius: 10px; }
+        progress { width: 100%; height: 20px; margin: 10px 0; }
     </style>
 </head>
 <body>
 
 <div class="wrapper">
+    <!-- Dashboard -->
     <div id="dashboard-view">
         <h1>CEFR Mastery Dashboard</h1>
         <div id="levels-container"></div>
     </div>
 
+    <!-- Learning Portal -->
     <div id="learning-view" class="hidden">
-        <button onclick="goBack()">← Exit Level</button>
+        <button onclick="goBack()">← Back to Dashboard</button>
         <progress id="progress-bar" value="0" max="100"></progress>
-        <h3 id="task-display"></h3>
-        <button id="audio-btn" class="hidden" onclick="playTaskAudio()">🔊 Listen to Spanish</button>
-        <input id="userInput" type="text" style="width:100%; padding:10px; margin:10px 0;">
-        <button id="next-btn" onclick="handleNext()">Submit Answer</button>
+        
+        <div class="nav-tabs">
+            <button class="tab-btn active" onclick="showTab('listen')">Listen</button>
+            <button class="tab-btn" onclick="showTab('flash')">Flashcards</button>
+            <button class="tab-btn" onclick="showTab('quiz')">Quiz</button>
+            <button class="tab-btn" onclick="showTab('build')">Building</button>
+        </div>
+
+        <div id="listen" class="tab-content"><h3>Audio Challenge</h3><button onclick="playAudio()">Play</button></div>
+        <div id="flash" class="tab-content hidden"><h3>Flashcards</h3><div id="flash-area"></div></div>
+        <div id="quiz" class="tab-content hidden"><h3>Quiz</h3><input id="q-input"><button onclick="checkQuiz()">Check</button></div>
+        <div id="build" class="tab-content hidden"><h3>Sentence Builder</h3><div id="build-area"></div><button onclick="finishLevel()">Complete</button></div>
     </div>
 </div>
 
@@ -39,19 +51,13 @@
     };
 
     const curriculum = {
-        A1: { tasks: [{q: 'Translate: Hello, how are you?', target: 'Hola Como Estas'}, {q: 'Translate: Thank you very much', target: 'Muchas Gracias'}] },
-        A2: { tasks: [{q: 'Translate: Where is the coffee shop?', target: 'Donde Esta La Cafeteria'}, {q: 'Translate: I would like a water', target: 'Yo Quisiera Un Agua'}] },
-        B1: { tasks: [{q: 'Audio Challenge: Type what you hear', target: 'Yo Tengo Que Ir Al Trabajo', audio: true}, {q: 'Audio Challenge: Type what you hear', target: 'Puedes Ayudarme Por Favor', audio: true}] },
-        B2: { tasks: [{q: 'Audio Challenge: Type what you hear', target: 'Estoy Buscando Un Nuevo Apartamento', audio: true}, {q: 'Audio Challenge: Type what you hear', target: 'Fue Una Reunion Muy Productiva', audio: true}] },
-        C1: { tasks: [{q: 'Translate: We must address the issue promptly', target: 'Debemos Abordar El Problema Con Rapidez'}, {q: 'Translate: It is essential to consider the alternatives', target: 'Es Esencial Considerar Las Alternativas'}] },
-        C2: { tasks: [{q: 'Translate: I am completely fluent in this matter', target: 'Domino Completamente Este Asunto'}, {q: 'Translate: Let us articulate our perspective precisely', target: 'Articulemos Nuestra Perspectiva Con Precision'}] }
+        A1: { target: 'Hola Como Estas' },
+        A2: { target: 'Donde Esta La Cafeteria' },
+        B1: { target: 'Yo Tengo Que Ir Al Trabajo' },
+        B2: { target: 'Estoy Buscando Un Nuevo Apartamento' },
+        C1: { target: 'Debemos Abordar El Problema Con Rapidez' },
+        C2: { target: 'Domino Completamente Este Asunto' }
     };
-
-    function playTaskAudio() {
-        const msg = new SpeechSynthesisUtterance(curriculum[currentLevel].tasks[taskIndex].target);
-        msg.lang = 'es-ES';
-        window.speechSynthesis.speak(msg);
-    }
 
     function initDashboard() {
         const container = document.getElementById('levels-container');
@@ -61,44 +67,42 @@
             container.innerHTML += `
                 <div class="level-card ${isUnlocked ? '' : 'locked'}">
                     <h3>Level ${level} ${isUnlocked ? '✅' : '🔒'}</h3>
-                    <p>Best Score: ${userProgress.scores[level]}%</p>
-                    <button ${isUnlocked ? `onclick="startLevel('${level}')"` : ''}>${isUnlocked ? 'Start Level' : 'Locked'}</button>
+                    <button ${isUnlocked ? `onclick="startLevel('${level}')"` : ''}>${isUnlocked ? 'Start' : 'Locked'}</button>
                 </div>`;
         });
     }
 
     function startLevel(level) {
         window.currentLevel = level;
-        window.taskIndex = 0;
         document.getElementById('dashboard-view').classList.add('hidden');
         document.getElementById('learning-view').classList.remove('hidden');
-        renderTask();
     }
 
-    function renderTask() {
-        const task = curriculum[currentLevel].tasks[taskIndex];
-        document.getElementById('task-display').innerText = task.q;
-        document.getElementById('audio-btn').classList.toggle('hidden', !task.audio);
-        document.getElementById('userInput').value = '';
-        document.getElementById('progress-bar').value = (taskIndex / curriculum[currentLevel].tasks.length) * 100;
+    function showTab(tabId) {
+        document.querySelectorAll('.tab-content').forEach(t => t.classList.add('hidden'));
+        document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+        document.getElementById(tabId).classList.remove('hidden');
+        event.target.classList.add('active');
     }
 
-    function handleNext() {
-        const input = document.getElementById('userInput').value.trim();
-        if (input === curriculum[currentLevel].tasks[taskIndex].target) {
-            taskIndex++;
-            if (taskIndex < curriculum[currentLevel].tasks.length) renderTask();
-            else finishLevel();
-        } else { alert("Incorrect. Please try again."); }
+    function playAudio() {
+        const msg = new SpeechSynthesisUtterance(curriculum[currentLevel].target);
+        msg.lang = 'es-ES';
+        window.speechSynthesis.speak(msg);
+    }
+
+    function checkQuiz() {
+        if (document.getElementById('q-input').value === curriculum[currentLevel].target) {
+            document.getElementById('progress-bar').value = 50;
+        }
     }
 
     function finishLevel() {
-        userProgress.scores[currentLevel] = 100; 
+        userProgress.scores[currentLevel] = 100;
         const levels = ['A1', 'A2', 'B1', 'B2', 'C1', 'C2'];
         const nextIdx = levels.indexOf(currentLevel) + 1;
         if (nextIdx < levels.length) userProgress.unlockedLevels.push(levels[nextIdx]);
         localStorage.setItem('cefrProgress', JSON.stringify(userProgress));
-        alert("Level Complete! Proficiency Secured.");
         goBack();
     }
 
