@@ -12,7 +12,7 @@
         .tab-btn.active { background: var(--primary); color: white; }
         .hidden { display: none; }
         .card { width: 140px; height: 90px; display: inline-flex; align-items: center; justify-content: center; border: 2px solid var(--primary); border-radius: 10px; margin: 8px; cursor: pointer; font-weight: bold; background: white; }
-        .word-pill { display: inline-block; padding: 10px 18px; margin: 8px; background: #dbeafe; border-radius: 20px; cursor: pointer; border: 1px solid #bfdbfe; font-size: 14px; }
+        .word-pill { display: inline-block; padding: 10px 18px; margin: 6px; background: #dbeafe; border-radius: 20px; cursor: pointer; border: 1px solid #bfdbfe; font-size: 14px; }
         .quiz-row { display: flex; align-items: center; gap: 15px; padding: 12px; border-bottom: 1px solid #f1f5f9; }
         .global-controls { background: #eff6ff; padding: 10px; border-radius: 8px; margin-bottom: 15px; }
     </style>
@@ -20,7 +20,6 @@
 <body>
 
 <div class="wrapper">
-    <!-- DASHBOARD -->
     <div id="dashboard-view">
         <h1>Dashboard</h1>
         <div id="progress-container">
@@ -31,7 +30,6 @@
         <button class="tab-btn" onclick="openApp()" style="margin-top:20px;">Enter Learning Portal</button>
     </div>
 
-    <!-- LEARNING -->
     <div id="learning-view" class="hidden">
         <button onclick="goBack()" style="margin-bottom:20px;">← Back to Dashboard</button>
         
@@ -55,11 +53,12 @@
         </div>
         <div class="tab-content hidden" id="build">
             <h3 id="build-task"></h3>
-            <button onclick="speak(window.currentTask.target, true)">🔊 Hear Sentence</button>
+            <p id="progress-counter">Question 1/5</p>
+            <button onclick="speak(window.currentTask.target)">🔊 Hear Sentence</button>
             <div id="word-bank" style="margin:20px 0; display:flex; flex-wrap:wrap;"></div>
             <div id="sentence-box" style="padding:15px; border:2px dashed #cbd5e1; min-height:40px; margin-bottom:10px;"></div>
             <button onclick="checkBuild()">Submit</button>
-            <button onclick="resetBuild()">Reset & Next</button>
+            <button onclick="resetBuild()">Next Task</button>
             <span id="feedback" style="margin-left:15px; font-weight:bold;"></span>
             <button id="show-answer-btn" class="hidden" onclick="revealAnswer()" style="background:#f59e0b; color:white; border:none; padding:10px; border-radius:8px;">Show Answer</button>
         </div>
@@ -68,16 +67,15 @@
 
 <script>
     const data = {
-        words: [{es: 'Hola', en: 'Hello'}, {es: 'Gracias', en: 'Thank you'}, {es: 'Casa', en: 'House'}, {es: 'Yo', en: 'I'}, {es: 'Tu', en: 'You'}, {es: 'El', en: 'He'}, {es: 'Agua', en: 'Water'}, {es: 'Pan', en: 'Bread'}, {es: 'Libro', en: 'Book'}, {es: 'Amigo', en: 'Friend'}, {es: 'Feliz', en: 'Happy'}, {es: 'Comer', en: 'Eat'}, {es: 'Beber', en: 'Drink'}, {es: 'Sol', en: 'Sun'}, {es: 'Luz', en: 'Light'}, {es: 'Mar', en: 'Sea'}, {es: 'Tienda', en: 'Store'}, {es: 'Calle', en: 'Street'}, {es: 'Mapa', en: 'Map'}, {es: 'Donde', en: 'Where'}],
+        words: [{es: 'Hola', en: 'Hello'}, {es: 'Gracias', en: 'Thank you'}, {es: 'Casa', en: 'House'}, {es: 'Yo', en: 'I'}, {es: 'Tu', en: 'You'}, {es: 'El', en: 'He'}, {es: 'Agua', en: 'Water'}, {es: 'Pan', en: 'Bread'}, {es: 'Libro', en: 'Book'}, {es: 'Amigo', en: 'Friend'}, {es: 'Feliz', en: 'Happy'}, {es: 'Comer', en: 'Eat'}, {es: 'Beber', en: 'Drink'}, {es: 'Sol', en: 'Sun'}, {es: 'Luz', en: 'Light'}, {es: 'Mar', en: 'Sea'}],
         sentences: [
             {en: 'I eat bread', target: 'Yo Comer Pan'}, {en: 'The friend is happy', target: 'El Amigo Feliz'}, 
-            {en: 'Where is the store', target: 'Donde Esta La Tienda'}, {en: 'You drink water', target: 'Tu Beber Agua'}, 
-            {en: 'The book is red', target: 'El Libro Rojo'}, {en: 'I am happy', target: 'Yo Feliz'},
-            {en: 'The house is here', target: 'La Casa Aquí'}, {en: 'He eats bread', target: 'El Comer Pan'}
+            {en: 'You drink water', target: 'Tu Beber Agua'}, {en: 'I am happy', target: 'Yo Feliz'},
+            {en: 'The book is red', target: 'El Libro'} 
         ]
     };
 
-    let totalQs = 0, correctQs = 0, buildAttempts = 0;
+    let totalQs = 0, correctQs = 0, buildAttempts = 0, buildCount = 1;
 
     function openApp() { document.getElementById('dashboard-view').classList.add('hidden'); document.getElementById('learning-view').classList.remove('hidden'); }
     function goBack() { document.getElementById('dashboard-view').classList.remove('hidden'); document.getElementById('learning-view').classList.add('hidden'); updateDashboard(); }
@@ -94,19 +92,19 @@
         renderQuiz(); renderBuild();
     }
 
-    function renderQuiz() { document.getElementById('quiz-area').innerHTML = data.words.slice(0,10).map((w,i) => `<div class="quiz-row"><span>${w.en}</span><input id="q${i}" class="quiz-input"> <button onclick="checkQuiz('${w.es}', 'q${i}', 'f${i}')">Submit</button> <span id="f${i}"></span></div>`).join(''); }
-    function resetQuiz() { totalQs = 0; correctQs = 0; document.getElementById('score-board').innerText = "Overall Score: 0%"; renderQuiz(); }
+    function renderQuiz() { document.getElementById('quiz-area').innerHTML = data.words.slice(0,5).map((w,i) => `<div class="quiz-row"><span>${w.en}</span><input id="q${i}"> <button onclick="checkQuiz('${w.es}', 'q${i}', 'f${i}')">Submit</button> <span id="f${i}"></span></div>`).join(''); }
     function checkQuiz(ans, inputId, feedId) {
         totalQs++;
         const isCorrect = document.getElementById(inputId).value.toLowerCase() === ans.toLowerCase();
         if(isCorrect) correctQs++;
-        document.getElementById(feedId).innerText = isCorrect ? "✅ Correct" : "❌ Try Again";
+        document.getElementById(feedId).innerText = isCorrect ? "✅" : "❌";
         document.getElementById('score-board').innerText = "Overall Score: " + Math.round((correctQs/totalQs)*100) + "%";
     }
 
     function renderBuild() {
         window.currentTask = data.sentences[Math.floor(Math.random()*data.sentences.length)];
         document.getElementById('build-task').innerText = "Build: " + currentTask.en;
+        document.getElementById('progress-counter').innerText = `Question ${buildCount}/5`;
         document.getElementById('word-bank').innerHTML = data.words.map(w => `<span class="word-pill" onclick="document.getElementById('sentence-box').innerText+=' ' + '${w.es}'">${w.es}</span>`).join('');
     }
 
@@ -117,9 +115,14 @@
         else { document.getElementById('feedback').innerText = "Try again."; }
         if(buildAttempts >= 3) document.getElementById('show-answer-btn').classList.remove('hidden');
     }
+    function resetBuild() { 
+        buildAttempts = 0; buildCount = buildCount >= 5 ? 1 : buildCount + 1;
+        document.getElementById('sentence-box').innerText = ''; document.getElementById('feedback').innerText = ''; 
+        document.getElementById('show-answer-btn').classList.add('hidden'); renderBuild(); 
+    }
     function revealAnswer() { document.getElementById('sentence-box').innerText = window.currentTask.target; }
-    function resetBuild() { buildAttempts = 0; document.getElementById('sentence-box').innerText = ''; document.getElementById('feedback').innerText = ''; document.getElementById('show-answer-btn').classList.add('hidden'); renderBuild(); }
     function showTab(id) { document.querySelectorAll('.tab-content').forEach(t => t.classList.add('hidden')); document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active')); document.getElementById(id).classList.remove('hidden'); event.target.classList.add('active'); }
+    function resetQuiz() { totalQs = 0; correctQs = 0; document.getElementById('score-board').innerText = "Overall Score: 0%"; renderQuiz(); }
     
     init();
 </script>
