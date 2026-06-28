@@ -109,12 +109,10 @@
                 <div id="content-quiz" class="p-6 space-y-6 hidden">
                     <div id="quiz-interactive-body" class="space-y-6"></div>
                     
-                    <div id="quiz-actions" class="flex gap-3">
-                        <button id="submit-btn" onclick="evaluateQuiz()" class="flex-grow bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-3 rounded-xl transition shadow">Submit My Answers</button>
-                        <button id="reset-btn" onclick="resetQuiz()" class="bg-slate-200 hover:bg-slate-300 text-slate-700 font-bold px-6 py-3 rounded-xl transition">Reset Quiz</button>
+                    <div id="quiz-actions" class="pt-4 border-t">
+                        <button id="submit-btn" onclick="evaluateQuiz()" class="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-3 rounded-xl transition shadow">Submit Full Quiz</button>
                     </div>
                     
-                    <div id="retry-warning" class="hidden text-center text-sm font-semibold text-rose-600 italic mt-2"></div>
                     <div id="quiz-result-banner" class="hidden p-4 rounded-xl text-center font-bold"></div>
                 </div>
             </div>
@@ -138,7 +136,6 @@
     </main>
 
     <script>
-        // Core Curriculum Data Set
         const lessonData = [
             { 
                 id: 0, 
@@ -242,15 +239,56 @@
                     {q: "Translate 'I understand'", a: "Entiendo", alt: ["Siempre", "Viaje"]},
                     {q: "What is the opposite of 'Siempre'?", a: "Nunca", alt: ["Ayer", "Ciudad"]}
                 ] 
+            },
+            // CAPSTONE LESSONS: Conversational Dialogues putting everything into context
+            {
+                id: 5,
+                tier: 'beginner',
+                isDialogue: true,
+                title: 'Beginner Conversation: Meeting a Friend',
+                desc: 'Put your greetings and numbers to use in a casual encounter.',
+                words: [{es: 'Conversación', en: 'Contextual Practice Only'}],
+                sentences: [
+                    {english: 'Response to: "¡Hola! ¿Cómo estás?" (Say: Hello, well thank you)', scrambled: ['gracias', 'Hola', 'bien'], correct: 'Hola bien gracias'},
+                    {english: 'Response to: "How many friends are coming?" (Say: One or two friends)', scrambled: ['o', 'dos', 'amigos', 'Uno'], correct: 'Uno o dos amigos'}
+                ],
+                quiz: []
+            },
+            {
+                id: 6,
+                tier: 'intermediate',
+                isDialogue: true,
+                title: 'Intermediate Conversation: Dining Out',
+                desc: 'Order a meal and talk about what you need at the table.',
+                words: [{es: 'Restaurante', en: 'Contextual Practice Only'}],
+                sentences: [
+                    {english: 'Response to: "¿Qué deseas tomar?" (Say: I want water and milk please)', scrambled: ['leche', 'Quiero', 'por favor', 'y', 'agua'], correct: 'Quiero agua y leche por favor'},
+                    {english: 'Response to: "¿Falta algo en la mesa?" (Say: I need bread and cheese here)', scrambled: ['pan', 'aquí', 'queso', 'Necesito', 'y'], correct: 'Necesito pan y queso aquí'}
+                ],
+                quiz: []
+            },
+            {
+                id: 7,
+                tier: 'advanced',
+                isDialogue: true,
+                title: 'Advanced Conversation: At the Airport',
+                desc: 'Handle travel obstacles and explain time constraints in an actual conversation scenario.',
+                words: [{es: 'Aeropuerto', en: 'Contextual Practice Only'}],
+                sentences: [
+                    {english: 'Response to: "Your flight to the city is tomorrow." (Say: I understand, but I do not have time today)', scrambled: ['tengo', 'hoy', 'tiempo', 'pero', 'No', 'Entiendo'], correct: 'Entiendo pero no tengo tiempo hoy'},
+                    {english: 'Response to: "¿Hay alguna dificultad con el viaje?" (Say: There is always a problem at the airport)', scrambled: ['un', 'aeropuerto', 'problema', 'Siempre', 'en', 'el', 'hay'], correct: 'Siempre hay un problema en el aeropuerto'}
+                ],
+                quiz: []
             }
         ];
 
-        let userScores = JSON.parse(localStorage.getItem('familia_spanish_scores')) || { 0: null, 1: null, 2: null, 3: null, 4: null };
+        let userScores = JSON.parse(localStorage.getItem('familia_spanish_scores')) || { 0: null, 1: null, 2: null, 3: null, 4: null, 5: null, 6: null, 7: null };
         let activeId = 0, activeCardIndex = 0;
+        
         let selectedSentenceWords = {}; 
-        let retryAttempts = 0; 
+        let quizAttempts = {};     
+        let sentenceAttempts = {}; 
 
-        // Sound Speed Adjustment
         document.getElementById('audio-speed').addEventListener('input', (e) => {
             document.getElementById('speed-num').innerText = `${e.target.value}x`;
         });
@@ -260,7 +298,7 @@
                 let valid = ids.map(id => userScores[id]).filter(v => v !== null);
                 return valid.length > 0 ? Math.round(valid.reduce((a,b)=>a+b,0)/valid.length) : null;
             };
-            return { beginner: compute([0, 1]), intermediate: compute([2, 3]), advanced: compute([4]) };
+            return { beginner: compute([0, 1, 5]), intermediate: compute([2, 3, 6]), advanced: compute([4, 7]) };
         }
 
         function speakWord(text) {
@@ -273,6 +311,11 @@
 
         function renderDashboard() {
             const avgs = calculateTierAverages();
+            
+            // Tier lock checks: Standard modules must be finished with 90%+ to advance
+            const begStandardPassed = userScores[0] !== null && userScores[0] >= 90 && userScores[1] !== null && userScores[1] >= 90;
+            const intStandardPassed = userScores[2] !== null && userScores[2] >= 90 && userScores[3] !== null && userScores[3] >= 90;
+
             const intUnlocked = avgs.beginner !== null && avgs.beginner >= 90;
             const advUnlocked = intUnlocked && avgs.intermediate !== null && avgs.intermediate >= 90;
 
@@ -291,17 +334,28 @@
             let html = '';
             lessonData.forEach(l => {
                 let isLocked = (l.tier === 'intermediate' && !intUnlocked) || (l.tier === 'advanced' && !advUnlocked);
+                
+                // Conversational dialogue simulations display logic lock check
+                if (l.isDialogue) {
+                    if (l.tier === 'beginner' && !begStandardPassed) isLocked = true;
+                    if (l.tier === 'intermediate' && !intStandardPassed) isLocked = true;
+                    if (l.tier === 'advanced' && userScores[4] < 90) isLocked = true;
+                }
+
                 let score = userScores[l.id];
+                let titlePrefix = l.isDialogue ? '💬 Dialogue Milestone: ' : '';
+                let bgStyle = l.isDialogue ? 'bg-amber-50/60 border-amber-200' : 'bg-white border-indigo-100';
+
                 html += `
-                <div class="p-5 rounded-xl border flex justify-between items-center bg-white ${isLocked ? 'opacity-60 border-slate-200' : 'border-indigo-100 hover:shadow-md transition'}">
+                <div class="p-5 rounded-xl border flex justify-between items-center ${isLocked ? 'opacity-60 border-slate-200 bg-white' : bgStyle + ' hover:shadow-md transition'}">
                     <div>
-                        <span class="text-xs font-bold uppercase tracking-wider px-2 py-0.5 rounded bg-slate-100 text-slate-600">${l.tier}</span>
-                        <h4 class="text-lg font-bold text-slate-900 mt-1">${l.title}</h4>
+                        <span class="text-xs font-bold uppercase tracking-wider px-2 py-0.5 rounded ${l.isDialogue ? 'bg-amber-200 text-amber-900' : 'bg-slate-100 text-slate-600'}">${l.tier}</span>
+                        <h4 class="text-lg font-bold text-slate-900 mt-1">${titlePrefix}${l.title}</h4>
                         <p class="text-slate-500 text-xs mt-0.5">${l.desc}</p>
                     </div>
                     <div>
                         ${isLocked ? '<span class="text-sm font-semibold text-slate-400">🔒 Locked</span>' : 
-                        `<button onclick="loadLesson(${l.id})" class="bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-bold px-4 py-2 rounded-lg transition shadow-sm">${score !== null ? `Retry (${score}%)` : 'Start Lesson'}</button>`}
+                        `<button onclick="loadLesson(${l.id})" class="bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-bold px-4 py-2 rounded-lg transition shadow-sm">${score !== null ? `Retry (${score}%)` : 'Start Unit'}</button>`}
                     </div>
                 </div>`;
             });
@@ -313,20 +367,17 @@
         }
 
         function loadLesson(id) {
-            activeId = id; activeCardIndex = 0; selectedSentenceWords = {}; retryAttempts = 0;
-            const l = lessonData[id];
+            activeId = id; activeCardIndex = 0; selectedSentenceWords = {};
+            quizAttempts = {}; sentenceAttempts = {};
             
-            // Clean dynamic interface containers
-            document.getElementById('submit-btn').classList.remove('hidden');
-            document.getElementById('reset-btn').classList.remove('hidden');
-            document.getElementById('retry-warning').classList.add('hidden');
+            const l = lessonData[id];
             document.getElementById('quiz-result-banner').classList.add('hidden');
 
             document.getElementById('lesson-badge').innerText = l.tier;
             document.getElementById('lesson-title').innerText = l.title;
             document.getElementById('lesson-desc').innerText = l.desc;
 
-            // Render Tab 1 (Audio Vocabulary)
+            // Audio Vocabulary Tab 1 Loader
             let audioHtml = '';
             l.words.forEach(w => {
                 audioHtml += `
@@ -335,55 +386,73 @@
                         <p class="text-lg font-bold text-slate-900">${w.es}</p>
                         <p class="text-slate-500 text-sm">${w.en}</p>
                     </div>
-                    <button onclick="speakWord('${w.es}')" class="bg-indigo-50 hover:bg-indigo-100 p-2.5 rounded-full text-indigo-600 font-bold tracking-wider text-sm transition">🔊 Play</button>
+                    ${l.isDialogue ? '' : `<button onclick="speakWord('${w.es}')" class="bg-indigo-50 hover:bg-indigo-100 p-2.5 rounded-full text-indigo-600 font-bold tracking-wider text-sm transition">🔊 Play</button>`}
                 </div>`;
             });
-            document.getElementById('audio-words-stack').innerHTML = audioHtml;
+            document.getElementById('audio-words-stack').innerHTML = l.isDialogue ? '<p class="text-sm text-amber-800 bg-amber-50 p-4 rounded-lg">This is a Conversational Capstone Unit. Proceed directly to **Take Quiz** to run the dialogue simulator framework.</p>' : audioHtml;
 
-            // Set Up Flashcards
             updateFlashcardView();
 
-            // Render Tab 3 (Interactive Quiz Engine)
+            // Quiz Tab 3 Layout Engine
             let quizHtml = '';
+            
+            // standard questions loop (if items exist)
             l.quiz.forEach((q, idx) => {
+                quizAttempts[idx] = 0; 
                 let options = [...q.alt, q.a].sort(() => Math.random() - 0.5);
                 quizHtml += `
-                <div class="bg-slate-50 p-4 rounded-xl space-y-3">
-                    <p class="font-bold text-slate-800 text-sm"><span class="text-indigo-600">Q${idx+1}:</span> ${q.q}</p>
-                    <div class="grid grid-cols-1 gap-2">
+                <div id="quiz-block-${idx}" class="bg-slate-50 p-5 rounded-xl border border-slate-100 space-y-3 relative">
+                    <div class="flex justify-between items-start">
+                        <p class="font-bold text-slate-800 text-sm"><span class="text-indigo-600">Q${idx+1}:</span> ${q.q}</p>
+                        <button onclick="resetSingleQuestion(${idx})" id="q-reset-btn-${idx}" class="text-xs bg-slate-200 hover:bg-slate-300 text-slate-600 px-2.5 py-1 rounded font-semibold transition">Reset Question (3 left)</button>
+                    </div>
+                    <div id="q-options-container-${idx}" class="grid grid-cols-1 gap-2">
                         ${options.map(opt => `<label class="flex items-center gap-3 bg-white border border-slate-200 p-3 rounded-lg cursor-pointer hover:bg-slate-50 text-sm"><input type="radio" name="q-${idx}" value="${opt}" class="text-indigo-600 focus:ring-indigo-500"> ${opt}</label>`).join('')}
                     </div>
+                    <p id="q-warn-${idx}" class="hidden text-xs font-bold text-rose-600 italic mt-1"></p>
                 </div>`;
             });
 
+            // dialogue setup blocks or translation blocks configuration
             l.sentences.forEach((s, sIdx) => {
+                sentenceAttempts[sIdx] = 0; 
                 selectedSentenceWords[sIdx] = []; 
+                
+                let builderLabel = l.isDialogue ? '🗣️ Dialogue Response Builder:' : 'Sentence Builder:';
+                let contextPrompt = l.isDialogue ? 'Translate your spoken reply into correct Spanish alignment order:' : 'Form the Spanish sentence in the correct order:';
+
                 quizHtml += `
-                <div class="bg-slate-50 p-4 rounded-xl space-y-3">
-                    <p class="font-bold text-slate-800 text-sm"><span class="text-indigo-600">Sentence Builder:</span> Form the Spanish sentence in the correct order:</p>
-                    <p class="text-sm font-medium text-slate-700 bg-indigo-50 border border-indigo-100 px-3 py-2 rounded-lg">🇬🇧 English: "${s.english}"</p>
+                <div id="sentence-block-${sIdx}" class="bg-slate-50 p-5 rounded-xl border border-slate-100 space-y-3">
+                    <div class="flex justify-between items-start">
+                        <p class="font-bold text-slate-800 text-sm"><span class="text-indigo-600">${builderLabel}</span> ${contextPrompt}</p>
+                        <button onclick="resetSingleSentence(${sIdx})" id="s-reset-btn-${sIdx}" class="text-xs bg-slate-200 hover:bg-slate-300 text-slate-600 px-2.5 py-1 rounded font-semibold transition">Reset Section (3 left)</button>
+                    </div>
+                    <p class="text-sm font-medium text-slate-700 bg-indigo-50 border border-indigo-100 px-3 py-2 rounded-lg">💬 Prompt Concept: "${s.english}"</p>
                     
                     <div class="bg-white border-2 border-dashed border-slate-200 rounded-xl p-3 min-h-[3.5rem] flex flex-wrap gap-2 items-center" id="sentence-target-${sIdx}">
-                        <span class="text-slate-400 text-xs italic pointer-events-none">Click words below to assemble your answer...</span>
+                        <span class="text-slate-400 text-xs italic pointer-events-none">Click the structural words below to form your reply...</span>
                     </div>
 
                     <div class="flex flex-wrap gap-2 pt-2" id="sentence-bank-${sIdx}">
                         ${s.scrambled.map((word, wIdx) => `
-                            <button onclick="handleWordClick(${sIdx}, ${wIdx}, '${word}')" id="word-btn-${sIdx}-${wIdx}" class="sentence-word-btn bg-white border border-slate-300 text-slate-800 text-sm font-semibold px-3 py-2 rounded-xl shadow-sm hover:bg-slate-100 transition">
+                            <button onclick="handleWordClick(${sIdx}, ${wIdx}, '${word}')" id="word-btn-${sIdx}-${wIdx}" class="sentence-word-btn-${sIdx} bg-white border border-slate-300 text-slate-800 text-sm font-semibold px-3 py-2 rounded-xl shadow-sm hover:bg-slate-100 transition">
                                 ${word}
                             </button>
                         `).join('')}
                     </div>
+                    <p id="s-warn-${sIdx}" class="hidden text-xs font-bold text-rose-600 italic mt-1"></p>
                 </div>`;
             });
 
             document.getElementById('quiz-interactive-body').innerHTML = quizHtml;
-            switchTab('audio');
+            switchTab(l.isDialogue ? 'quiz' : 'audio'); // skip to quiz directly for dialogues
             document.getElementById('dashboard-view').classList.add('hidden');
             document.getElementById('lesson-view').classList.remove('hidden');
         }
 
         function handleWordClick(sIdx, wIdx, word) {
+            if (sentenceAttempts[sIdx] >= 3) return;
+
             const btn = document.getElementById(`word-btn-${sIdx}-${wIdx}`);
             const targetContainer = document.getElementById(`sentence-target-${sIdx}`);
             
@@ -392,14 +461,14 @@
 
             if (existingIndex > -1) {
                 selectedSentenceWords[sIdx].splice(existingIndex, 1);
-                btn.className = "sentence-word-btn bg-white border border-slate-300 text-slate-800 text-sm font-semibold px-3 py-2 rounded-xl shadow-sm hover:bg-slate-100 transition";
+                btn.className = `sentence-word-btn-${sIdx} bg-white border border-slate-300 text-slate-800 text-sm font-semibold px-3 py-2 rounded-xl shadow-sm hover:bg-slate-100 transition`;
             } else {
                 selectedSentenceWords[sIdx].push({ wIdx, word });
-                btn.className = "sentence-word-btn bg-indigo-100 border border-indigo-300 text-indigo-700 text-sm font-semibold px-3 py-2 rounded-xl shadow-sm opacity-50";
+                btn.className = `sentence-word-btn-${sIdx} bg-indigo-100 border border-indigo-300 text-indigo-700 text-sm font-semibold px-3 py-2 rounded-xl shadow-sm opacity-50`;
             }
 
             if (selectedSentenceWords[sIdx].length === 0) {
-                targetContainer.innerHTML = `<span class="text-slate-400 text-xs italic pointer-events-none">Click words below to assemble your answer...</span>`;
+                targetContainer.innerHTML = `<span class="text-slate-400 text-xs italic pointer-events-none">Click the structural words below to form your reply...</span>`;
             } else {
                 targetContainer.innerHTML = selectedSentenceWords[sIdx].map(item => `
                     <span class="bg-indigo-600 text-white text-sm font-semibold px-3 py-1.5 rounded-xl shadow">
@@ -409,42 +478,62 @@
             }
         }
 
-        function resetQuiz() {
-            if (retryAttempts >= 3) return;
+        function resetSingleQuestion(idx) {
+            if (quizAttempts[idx] >= 3) return;
 
-            retryAttempts++;
-            const remaining = 3 - retryAttempts;
+            quizAttempts[idx]++;
+            const left = 3 - quizAttempts[idx];
+            const radios = document.querySelectorAll(`input[name="q-${idx}"]`);
+            radios.forEach(r => r.checked = false);
 
-            // Clear Radio selections
-            const radios = document.querySelectorAll('#quiz-interactive-body input[type="radio"]');
-            radios.forEach(radio => radio.checked = false);
+            const resetBtn = document.getElementById(`q-reset-btn-${idx}`);
+            const warnTxt = document.getElementById(`q-warn-${idx}`);
 
-            // Clear Word Banks safely without using broken selector hacks
-            const targetIds = Object.keys(selectedSentenceWords);
-            targetIds.forEach(sIdx => {
-                selectedSentenceWords[sIdx] = [];
-                const targetBox = document.getElementById(`sentence-target-${sIdx}`);
-                if (targetBox) {
-                    targetBox.innerHTML = `<span class="text-slate-400 text-xs italic pointer-events-none">Click words below to assemble your answer...</span>`;
-                }
-            });
-
-            // Restore style on all scattered word components safely
-            const wordButtons = document.querySelectorAll('.sentence-word-btn');
-            wordButtons.forEach(btn => {
-                btn.className = "sentence-word-btn bg-white border border-slate-300 text-slate-800 text-sm font-semibold px-3 py-2 rounded-xl shadow-sm hover:bg-slate-100 transition";
-            });
-
-            document.getElementById('quiz-result-banner').classList.add('hidden');
-            const warningZone = document.getElementById('retry-warning');
-            warningZone.classList.remove('hidden');
-
-            if (remaining > 0) {
-                warningZone.innerText = `Quiz reset successfully! Leftover attempts remaining: ${remaining}`;
+            if (left > 0) {
+                resetBtn.innerText = `Reset Question (${left} left)`;
             } else {
-                document.getElementById('submit-btn').classList.add('hidden');
-                document.getElementById('reset-btn').classList.add('hidden');
-                warningZone.innerHTML = `⚠️ <strong>Attempts Exhausted!</strong> You must head back to the <button class="text-indigo-600 underline font-bold" onclick="switchTab('audio')">Listen & Learn</button> or <button class="text-indigo-600 underline font-bold" onclick="switchTab('flash')">Flash Cards</button> tabs to review materials before returning here.`;
+                resetBtn.classList.add('hidden');
+                warnTxt.classList.remove('hidden');
+                warnTxt.innerHTML = `⚠️ <strong>Question Locked!</strong> Max attempts used. Review your <button class="text-indigo-600 font-bold underline" onclick="switchTab('flash')">Flash Cards</button> to find the context rules.`;
+                radios.forEach(r => r.disabled = true);
+            }
+        }
+
+        function resetSingleSentence(sIdx) {
+            if (sentenceAttempts[sIdx] >= 3) return;
+
+            sentenceAttempts[sIdx]++;
+            const left = 3 - sentenceAttempts[sIdx];
+            selectedSentenceWords[sIdx] = [];
+            
+            const targetBox = document.getElementById(`sentence-target-${sIdx}`);
+            if (targetBox) {
+                targetBox.innerHTML = `<span class="text-slate-400 text-xs italic pointer-events-none">Click the structural words below to form your reply...</span>`;
+            }
+
+            const phraseButtons = document.querySelectorAll(`.sentence-word-btn-${sIdx}`);
+            phraseButtons.forEach(btn => {
+                btn.className = `sentence-word-btn-${sIdx} bg-white border border-slate-300 text-slate-800 text-sm font-semibold px-3 py-2 rounded-xl shadow-sm hover:bg-slate-100 transition`;
+            });
+
+            const resetBtn = document.getElementById(`s-reset-btn-${sIdx}`);
+            const warnTxt = document.getElementById(`s-warn-${sIdx}`);
+
+            if (left > 0) {
+                resetBtn.innerText = `Reset Section (${left} left)`;
+            } else {
+                resetBtn.classList.add('hidden');
+                warnTxt.classList.remove('hidden');
+                
+                let targetTabName = lessonData[activeId].isDialogue ? 'Flash Cards' : 'Listen & Learn';
+                let targetTabType = lessonData[activeId].isDialogue ? 'flash' : 'audio';
+
+                warnTxt.innerHTML = `⚠️ <strong>Section Locked!</strong> Max attempts used. Head to <button class="text-indigo-600 font-bold underline" onclick="switchTab('${targetTabType}')">${targetTabName}</button> to review correct vocabulary choices.`;
+                
+                phraseButtons.forEach(btn => {
+                    btn.removeAttribute('onclick');
+                    btn.classList.add('opacity-40', 'cursor-not-allowed');
+                });
             }
         }
 
@@ -473,10 +562,10 @@
             
             if (finalPercent >= 90) {
                 banner.className = "p-4 rounded-xl text-center font-bold bg-emerald-100 text-emerald-800";
-                banner.innerText = `¡Excelente! Passed with ${finalPercent}% accuracy!`;
+                banner.innerText = `¡Excelente! Session submitted successfully with ${finalPercent}% accuracy!`;
             } else {
                 banner.className = "p-4 rounded-xl text-center font-bold bg-rose-100 text-rose-800";
-                banner.innerText = `Score: ${finalPercent}%. You need 90% or higher to progress. Use the reset options if available!`;
+                banner.innerText = `Total Score: ${finalPercent}%. You need 90% or higher to advance. Try resetting individual dialogue elements to fix any mistakes!`;
             }
         }
 
