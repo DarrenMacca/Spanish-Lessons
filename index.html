@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Spanish CEFR Mastery Portal</title>
+    <title>Spanish CEFR Portal</title>
     <style>
         :root { --primary: #2563eb; }
         body { font-family: 'Segoe UI', sans-serif; background: #f8fafc; padding: 20px; color: #334155; }
@@ -12,8 +12,9 @@
         .tab-btn.active { background: var(--primary); color: white; }
         .hidden { display: none; }
         .card-container { display: flex; flex-wrap: wrap; gap: 10px; }
-        .card { width: 140px; padding: 15px; border: 2px solid var(--primary); border-radius: 10px; background: white; cursor: pointer; text-align: center; }
+        .card { width: 140px; padding: 15px; border: 2px solid var(--primary); border-radius: 10px; cursor: pointer; text-align: center; background: #fff; }
         .word-pill { display: inline-block; padding: 8px 16px; margin: 4px; background: #dbeafe; border-radius: 20px; cursor: pointer; border: 1px solid #bfdbfe; }
+        .quiz-row { display: flex; align-items: center; justify-content: space-between; padding: 10px; border-bottom: 1px solid #eee; }
     </style>
 </head>
 <body>
@@ -28,49 +29,53 @@
     </div>
 
     <div id="listen" class="tab-content"><div id="listen-area"></div></div>
+    
     <div id="flash" class="tab-content hidden"><div id="flash-area" class="card-container"></div></div>
+    
     <div id="quiz" class="tab-content hidden"><div id="quiz-area"></div></div>
+    
     <div id="build" class="tab-content hidden">
         <h3 id="build-task"></h3>
         <button onclick="speak(currentTask.target)">🔊 Hear Sentence</button>
         <div id="word-bank" style="margin-top:15px;"></div>
-        <div id="sentence-box" style="padding:20px; background:#f1f5f9; border-radius:8px; margin:20px 0; min-height:50px;"></div>
-        <button onclick="checkBuild()">Submit</button>
-        <button onclick="resetBuild()" style="background:#ef4444; color:white; border:none; padding:10px; border-radius:8px;">Reset</button>
+        <div style="display: flex; align-items: center; gap: 10px; margin-top:20px;">
+            <div id="sentence-box" style="padding:15px; background:#f1f5f9; border-radius:8px; flex-grow:1; min-height:20px;"></div>
+            <button onclick="checkBuild()">Submit</button>
+            <button onclick="resetBuild()">Reset</button>
+        </div>
+        <p id="build-feedback" style="font-weight:bold;"></p>
     </div>
 </div>
 
 <script>
     const data = {
-        words: [
-            {es: 'Hola', en: 'Hello'}, {es: 'Gracias', en: 'Thank you'}, {es: 'Uno', en: 'One'}, {es: 'Rojo', en: 'Red'}, {es: 'Perro', en: 'Dog'}, 
-            {es: 'Gato', en: 'Cat'}, {es: 'Casa', en: 'House'}, {es: 'Yo', en: 'I'}, {es: 'Tu', en: 'You'}, {es: 'El', en: 'He'}, 
-            {es: 'Agua', en: 'Water'}, {es: 'Pan', en: 'Bread'}, {es: 'Sol', en: 'Sun'}, {es: 'Luz', en: 'Light'}, {es: 'Mar', en: 'Sea'},
-            {es: 'Libro', en: 'Book'}, {es: 'Amigo', en: 'Friend'}, {es: 'Comer', en: 'Eat'}, {es: 'Beber', en: 'Drink'}, {es: 'Feliz', en: 'Happy'}
-        ],
-        sentences: [
-            {en: 'I eat bread', target: 'Yo Comer Pan'}, {en: 'The dog is happy', target: 'El Perro Feliz'},
-            {en: 'You drink water', target: 'Tu Beber Agua'}, {en: 'I am happy', target: 'Yo Feliz'}
-        ]
+        words: [{es: 'Hola', en: 'Hello'}, {es: 'Gracias', en: 'Thank you'}, {es: 'Uno', en: 'One'}, {es: 'Rojo', en: 'Red'}, {es: 'Perro', en: 'Dog'}, {es: 'Gato', en: 'Cat'}, {es: 'Casa', en: 'House'}, {es: 'Yo', en: 'I'}, {es: 'Tu', en: 'You'}, {es: 'El', en: 'He'}, {es: 'Agua', en: 'Water'}, {es: 'Pan', en: 'Bread'}, {es: 'Sol', en: 'Sun'}, {es: 'Luz', en: 'Light'}, {es: 'Mar', en: 'Sea'}, {es: 'Libro', en: 'Book'}, {es: 'Amigo', en: 'Friend'}, {es: 'Comer', en: 'Eat'}, {es: 'Beber', en: 'Drink'}, {es: 'Feliz', en: 'Happy'}],
+        sentences: [{en: 'I eat bread', target: 'Yo Comer Pan'}, {en: 'The dog is happy', target: 'El Perro Feliz'}, {en: 'You drink water', target: 'Tu Beber Agua'}, {en: 'I am happy', target: 'Yo Feliz'}]
     };
 
     let sentenceArray = [], attempts = 0, currentTask = {};
 
     function init() {
-        document.getElementById('listen-area').innerHTML = data.words.map(w => `<div><button onclick="speak('${w.es}')">🔊</button> ${w.es} - ${w.en}</div>`).join('').repeat(1);
-        document.getElementById('flash-area').innerHTML = data.words.map((w, i) => `
-            <div class="card" id="c-${i}" onclick="this.innerHTML='<b>${w.es}</b><br><small>(Click to Reset)</small>'; this.onclick=function(){location.reload()}">
-                <b>${w.en}</b>
+        document.getElementById('listen-area').innerHTML = data.words.map(w => `<div><button onclick="speak('${w.es}')">🔊</button> ${w.es} - ${w.en}</div>`).join('');
+        document.getElementById('flash-area').innerHTML = data.words.map(w => `
+            <div class="card" onclick="this.innerText='${w.es}'"><b>${w.en}</b></div>
+            <button onclick="this.previousElementSibling.innerText='${w.en}'">Reset</button>`).join('');
+        
+        // Quiz as a List
+        document.getElementById('quiz-area').innerHTML = data.words.slice(0, 10).map((w, i) => `
+            <div class="quiz-row">
+                <span>${i+1}. Translate "${w.en}"</span>
+                <input id="q-${i}" placeholder="Spanish...">
+                <button onclick="checkQuiz('${w.es}', 'q-${i}', 'f-${i}')">Check</button>
+                <span id="f-${i}"></span>
             </div>`).join('');
-        renderQuiz(); renderBuild();
+
+        renderBuild();
     }
 
-    function renderQuiz() {
-        const q = data.words[Math.floor(Math.random()*data.words.length)];
-        const distractors = data.words.filter(w => w.es !== q.es).sort(() => 0.5 - Math.random()).slice(0,3);
-        const options = [q, ...distractors].sort(() => 0.5 - Math.random());
-        document.getElementById('quiz-area').innerHTML = `<p>Translate: <b>${q.en}</b></p>` + 
-            options.map(o => `<button onclick="alert('${o.es === q.es ? 'Correct!' : 'Incorrect, it was ' + q.es}'); renderQuiz()">${o.es}</button>`).join(' ');
+    function checkQuiz(ans, inputId, feedId) {
+        const val = document.getElementById(inputId).value;
+        document.getElementById(feedId).innerText = (val.toLowerCase() === ans.toLowerCase()) ? "✅ Correct" : "❌ Wrong";
     }
 
     function renderBuild() {
@@ -80,16 +85,15 @@
     }
 
     function addWord(w) { sentenceArray.push(w); document.getElementById('sentence-box').innerText = sentenceArray.join(' '); }
-    function resetBuild() { sentenceArray = []; document.getElementById('sentence-box').innerText = ''; attempts = 0; }
+    function resetBuild() { sentenceArray = []; document.getElementById('sentence-box').innerText = ''; attempts = 0; document.getElementById('build-feedback').innerText = ''; }
     function checkBuild() {
         attempts++;
-        if(sentenceArray.join(' ') === currentTask.target.replace(/ /g, ' ')) alert("Perfect!");
-        else if(attempts >= 3) { alert("3 attempts reached. Resetting task."); resetBuild(); renderBuild(); }
-        else alert("Try again!");
+        if(sentenceArray.join(' ') === currentTask.target.replace(/ /g, ' ')) document.getElementById('build-feedback').innerText = "Perfect!";
+        else if(attempts >= 3) { alert("3 attempts reached. Resetting."); resetBuild(); renderBuild(); }
+        else document.getElementById('build-feedback').innerText = "Try again!";
     }
     function showTab(id) { document.querySelectorAll('.tab-content').forEach(t => t.classList.add('hidden')); document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active')); document.getElementById(id).classList.remove('hidden'); event.target.classList.add('active'); }
     function speak(t) { const s = new SpeechSynthesisUtterance(t); s.lang = 'es-ES'; window.speechSynthesis.speak(s); }
-
     init();
 </script>
 </body>
