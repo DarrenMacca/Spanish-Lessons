@@ -3,121 +3,1560 @@
 <head>
     <meta charset="UTF-8">
     <title>Spanish CEFR Mastery Portal</title>
+
     <style>
         :root { --primary: #2563eb; }
-        body { font-family: 'Inter', sans-serif; background: #f8fafc; padding: 20px; color: #1e293b; }
-        .wrapper { max-width: 900px; margin: auto; background: white; padding: 30px; border-radius: 20px; box-shadow: 0 10px 15px -3px rgba(0,0,0,0.1); }
-        .nav-tabs { display: flex; gap: 10px; margin-bottom: 20px; border-bottom: 2px solid #e2e8f0; padding-bottom: 10px; }
-        .tab-btn { padding: 10px 20px; border: none; background: #e2e8f0; border-radius: 8px; cursor: pointer; font-weight: 600; }
-        .tab-btn.active { background: var(--primary); color: white; }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: #f8fafc;
+            padding: 20px;
+            color: #1e293b;
+        }
+
+        .wrapper {
+            max-width: 900px;
+            margin: auto;
+            background: white;
+            padding: 30px;
+            border-radius: 20px;
+            box-shadow: 0 10px 15px -3px rgba(0,0,0,0.1);
+        }
+
+        .nav-tabs {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+            border-bottom: 2px solid #e2e8f0;
+            padding-bottom: 10px;
+        }
+
+        .tab-btn {
+            padding: 10px 20px;
+            border: none;
+            background: #e2e8f0;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+        }
+
+        .tab-btn.active {
+            background: var(--primary);
+            color: white;
+        }
+
         .hidden { display: none; }
-        .card { width: 140px; height: 90px; display: inline-flex; align-items: center; justify-content: center; border: 2px solid var(--primary); border-radius: 10px; margin: 8px; cursor: pointer; font-weight: bold; background: white; }
-        .word-pill { display: inline-block; padding: 10px 18px; margin: 6px; background: #dbeafe; border-radius: 20px; cursor: pointer; border: 1px solid #bfdbfe; font-size: 14px; }
-        .quiz-row { display: flex; align-items: center; gap: 15px; padding: 12px; border-bottom: 1px solid #f1f5f9; }
-        .status-box { padding: 15px; border-radius: 8px; margin: 10px 0; border: 1px solid #e2e8f0; }
+
+        .card {
+            width: 140px;
+            height: 90px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            border: 2px solid var(--primary);
+            border-radius: 10px;
+            margin: 8px;
+            cursor: pointer;
+            font-weight: bold;
+            background: white;
+        }
+
+        .word-pill {
+            display: inline-block;
+            padding: 10px 18px;
+            margin: 6px;
+            background: #dbeafe;
+            border-radius: 20px;
+            cursor: pointer;
+            border: 1px solid #bfdbfe;
+            font-size: 14px;
+        }
+
+        .quiz-row {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            padding: 12px;
+            border-bottom: 1px solid #f1f5f9;
+        }
+
+        .status-box {
+            padding: 15px;
+            border-radius: 8px;
+            margin: 10px 0;
+            border: 1px solid #e2e8f0;
+        }
+
+        /* ============================
+           MOBILE RESPONSIVE
+           ============================ */
+        @media (max-width: 768px) {
+
+            body { padding: 10px; }
+
+            .wrapper {
+                padding: 20px;
+                border-radius: 12px;
+            }
+
+            .nav-tabs {
+                overflow-x: auto;
+                white-space: nowrap;
+                padding-bottom: 5px;
+            }
+
+            .tab-btn {
+                flex: 0 0 auto;
+                padding: 8px 14px;
+                font-size: 14px;
+            }
+
+            .card {
+                width: 100px;
+                height: 70px;
+                font-size: 14px;
+            }
+
+            .word-pill {
+                padding: 8px 14px;
+                font-size: 13px;
+                margin: 4px;
+            }
+
+            #sentence-box,
+            #conv-sentence-box {
+                min-height: 50px;
+                font-size: 14px;
+            }
+
+            button {
+                margin-top: 6px;
+                width: 100%;
+            }
+
+            .quiz-row {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 8px;
+            }
+
+            #rate { width: 100%; }
+        }
+
+        /* ============================
+           CELEBRATION ANIMATION
+           ============================ */
+        @keyframes confettiFall {
+            0% { transform: translateY(-10vh) rotate(0deg); opacity: 1; }
+            100% { transform: translateY(100vh) rotate(360deg); opacity: 0; }
+        }
+
+        .confetti {
+            position: fixed;
+            top: 0;
+            left: 50%;
+            width: 10px;
+            height: 10px;
+            background: red;
+            opacity: 0.9;
+            border-radius: 50%;
+            pointer-events: none;
+            animation: confettiFall 2s linear forwards;
+        }
+
+        #celebration-banner {
+            position: fixed;
+            top: 30%;
+            left: 50%;
+            transform: translateX(-50%);
+            background: #2563eb;
+            color: white;
+            padding: 25px 40px;
+            border-radius: 15px;
+            font-size: 28px;
+            font-weight: bold;
+            box-shadow: 0 10px 20px rgba(0,0,0,0.2);
+            z-index: 9999;
+            display: none;
+        }
+
+        /* ============================
+           GRAMMAR MODE — GAMIFIED STYLE
+           ============================ */
+        .grammar-card {
+            background: #fef3c7;
+            border: 2px solid #fbbf24;
+            border-radius: 14px;
+            padding: 20px;
+            margin: 15px 0;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+            transition: transform 0.2s ease;
+        }
+
+        .grammar-card:hover {
+            transform: scale(1.02);
+        }
+
+        .grammar-title {
+            font-size: 22px;
+            font-weight: bold;
+            color: #b45309;
+        }
+
+        .grammar-level {
+            font-size: 14px;
+            font-weight: bold;
+            background: #fde68a;
+            padding: 4px 10px;
+            border-radius: 8px;
+            display: inline-block;
+            margin-top: 6px;
+        }
+
+        .grammar-desc {
+            margin-top: 10px;
+            font-size: 16px;
+        }
+
+        .grammar-start-btn {
+            margin-top: 15px;
+            padding: 10px 18px;
+            background: #f59e0b;
+            color: white;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: bold;
+        }
+
+        .grammar-start-btn:hover {
+            background: #d97706;
+        }
+
+        #grammar-practice {
+            background: #fff7ed;
+            border: 2px solid #fdba74;
+            padding: 20px;
+            border-radius: 14px;
+        }
+
+        #grammar-feedback {
+            font-size: 18px;
+            font-weight: bold;
+            margin-top: 12px;
+        }
+
     </style>
 </head>
 <body>
-
 <div class="wrapper">
+
+    <!-- ============================
+         DASHBOARD VIEW
+         ============================ -->
     <div id="dashboard-view">
         <h1>Dashboard</h1>
-        <div class="status-box">Quiz Performance: <b id="quiz-status">Incomplete</b></div>
-        <div class="status-box">Builder Performance: <b id="build-status">Incomplete</b></div>
+
+        <div class="status-box">
+            Quiz Performance: <b id="quiz-status">Incomplete</b>
+        </div>
+
+        <div class="status-box">
+            Builder Performance: <b id="build-status">Incomplete</b>
+        </div>
+
         <h3 id="final-verdict">Course Status: Pending</h3>
+
         <button class="tab-btn" onclick="openApp()">Enter Learning Portal</button>
     </div>
 
+
+    <!-- ============================
+         LEARNING VIEW
+         ============================ -->
     <div id="learning-view" class="hidden">
+
         <button onclick="goBack()" style="margin-bottom:20px;">← Back to Dashboard</button>
-        <div style="background:#eff6ff; padding:10px; border-radius:8px; margin-bottom:15px;">
-            Audio Speed: <input type="range" id="rate" min="0.5" max="1.5" step="0.1" value="1">
+
+        <!-- CEFR LEVEL SELECTOR -->
+        <div style="margin-bottom:15px; padding:10px; border-radius:8px; background:#f1f5f9;">
+            <b>CEFR Level:</b>
+            <select id="level-select" onchange="changeLevel(this.value)">
+                <option value="A1">A1 (Unlocked)</option>
+                <option value="A2">A2 (Locked)</option>
+                <option value="B1">B1 (Locked)</option>
+            </select>
+            <span id="level-status" style="margin-left:10px; font-weight:bold;"></span>
         </div>
 
+        <!-- AUDIO SPEED -->
+        <div style="background:#eff6ff; padding:10px; border-radius:8px; margin-bottom:15px;">
+            Audio Speed:
+            <input type="range" id="rate" min="0.5" max="1.5" step="0.1" value="1" onchange="saveProgress()">
+        </div>
+
+
+        <!-- ============================
+             NAVIGATION TABS
+             ============================ -->
         <div class="nav-tabs">
             <button class="tab-btn active" onclick="showTab('listen', event)">1. Listen</button>
             <button class="tab-btn" onclick="showTab('flash', event)">2. Flashcards</button>
             <button class="tab-btn" onclick="showTab('quiz', event)">3. Quiz</button>
             <button class="tab-btn" onclick="showTab('build', event)">4. Building</button>
             <button class="tab-btn" onclick="showTab('conv', event)">5. Conversation</button>
+            <button class="tab-btn" onclick="showTab('smart', event)">6. Smart Conversation</button>
+            <button class="tab-btn" onclick="showTab('daily', event)">7. Daily Practice</button>
+            <button class="tab-btn" onclick="showTab('badges', event)">8. Badges</button>
+            <button class="tab-btn" onclick="showTab('grammar', event)">9. Grammar Mode</button>
         </div>
-        
-        <div class="tab-content" id="listen"><h3>Listen</h3><div id="listen-list"></div></div>
-        <div class="tab-content hidden" id="flash"><h3>Flashcards</h3><div id="flash-area"></div></div>
+
+
+        <!-- ============================
+             LISTEN TAB
+             ============================ -->
+        <div class="tab-content" id="listen">
+            <h3>Listen</h3>
+            <button onclick="autoPlayListen()">▶️ Play All (Auto‑Play)</button>
+            <div id="listen-list"></div>
+        </div>
+
+
+        <!-- ============================
+             FLASHCARDS TAB
+             ============================ -->
+        <div class="tab-content hidden" id="flash">
+            <h3>Flashcards</h3>
+            <div id="flash-area"></div>
+        </div>
+
+
+        <!-- ============================
+             QUIZ TAB
+             ============================ -->
         <div class="tab-content hidden" id="quiz">
             <div id="score-board">Quiz Score: 0%</div>
             <div id="quiz-area"></div>
         </div>
+
+
+        <!-- ============================
+             BUILD TAB
+             ============================ -->
         <div class="tab-content hidden" id="build">
             <h3 id="build-task"></h3>
             <p id="progress-counter">Task 1/10</p>
+
             <button onclick="speak(window.currentTask.target)">🔊 Hear Sentence</button>
+
             <div id="word-bank" style="margin:20px 0;"></div>
-            <div id="sentence-box" style="padding:15px; border:2px dashed #cbd5e1; min-height:40px; margin: 10px 0;"></div>
+
+            <div id="sentence-box"
+                 style="padding:15px; border:2px dashed #cbd5e1; min-height:40px; margin:10px 0;"></div>
+
             <button onclick="checkBuild()">Submit</button>
             <button onclick="document.getElementById('sentence-box').innerText=''">Reset</button>
             <button id="show-answer-btn" class="hidden" onclick="revealAnswer()">Show Answer</button>
             <button onclick="nextTask()">Next Task</button>
+
             <span id="feedback" style="margin-left:10px; font-weight:bold;"></span>
         </div>
-        
+
+
+        <!-- ============================
+             CONVERSATION TAB
+             ============================ -->
         <div class="tab-content hidden" id="conv">
             <h3>Conversation</h3>
             <h3 id="conv-task"></h3>
             <p id="c-progress-counter">Task 1/5</p>
+
             <button onclick="speak(window.currentConv.q_es)">🔊 Hear Question</button>
             <button onclick="speak(window.currentConv.target)">🔊 Hear Answer</button>
+
             <div id="conv-word-bank" style="margin:20px 0;"></div>
-            <div id="conv-sentence-box" style="padding:15px; border:2px dashed #cbd5e1; min-height:40px; margin: 10px 0;"></div>
+
+            <div id="conv-sentence-box"
+                 style="padding:15px; border:2px dashed #cbd5e1; min-height:40px; margin:10px 0;"></div>
+
             <button onclick="checkConv()">Submit</button>
             <button onclick="document.getElementById('conv-sentence-box').innerText=''">Reset</button>
             <button id="show-conv-answer-btn" class="hidden" onclick="revealConvAnswer()">Show Answer</button>
             <button onclick="nextConvTask()">Next Task</button>
+
             <span id="c-feedback" style="margin-left:10px; font-weight:bold;"></span>
         </div>
+
+
+        <!-- ============================
+             SMART CONVERSATION TAB
+             ============================ -->
+        <div class="tab-content hidden" id="smart">
+            <h3>Smart Conversation Mode</h3>
+
+            <p id="smart-q"></p>
+            <button onclick="speak(window.smartCurrent.q_es)">🔊 Hear Question</button>
+
+            <div id="smart-word-bank" style="margin:20px 0;"></div>
+
+            <div id="smart-box"
+                 style="padding:15px; border:2px dashed #cbd5e1; min-height:40px; margin:10px 0;"></div>
+
+            <button onclick="checkSmart()">Submit</button>
+            <button onclick="document.getElementById('smart-box').innerText=''">Reset</button>
+            <button id="smart-show-answer" class="hidden" onclick="revealSmartAnswer()">Show Answer</button>
+
+            <p id="smart-feedback" style="font-weight:bold;"></p>
+            <p id="smart-progress"></p>
+
+            <button onclick="nextSmart()">Next Question</button>
+        </div>
+
+
+        <!-- ============================
+             DAILY PRACTICE TAB
+             ============================ -->
+        <div class="tab-content hidden" id="daily">
+            <h3>Daily Practice Mode</h3>
+
+            <p id="daily-date"></p>
+
+            <h4>Words (5)</h4>
+            <div id="daily-words"></div>
+
+            <h4>Flashcards (3)</h4>
+            <div id="daily-flash"></div>
+
+            <h4>Quiz (2)</h4>
+            <div id="daily-quiz"></div>
+
+            <h4>Build Task (1)</h4>
+            <p id="daily-build-en"></p>
+            <div id="daily-build-bank"></div>
+            <div id="daily-build-box"
+                 style="padding:15px; border:2px dashed #cbd5e1; min-height:40px; margin:10px 0;"></div>
+            <button onclick="checkDailyBuild()">Submit</button>
+            <p id="daily-build-feedback"></p>
+
+            <h4>Conversation (1)</h4>
+            <p id="daily-conv-q"></p>
+            <div id="daily-conv-bank"></div>
+            <div id="daily-conv-box"
+                 style="padding:15px; border:2px dashed #cbd5e1; min-height:40px; margin:10px 0;"></div>
+            <button onclick="checkDailyConv()">Submit</button>
+            <p id="daily-conv-feedback"></p>
+
+            <!-- ⭐ DAILY GRAMMAR MODE -->
+            <h4>Grammar (1)</h4>
+            <p id="daily-grammar-q"></p>
+            <input id="daily-grammar-answer" class="input-field" placeholder="Type your answer...">
+            <button onclick="checkDailyGrammar()">Submit</button>
+            <p id="daily-grammar-feedback"></p>
+
+            <h3 id="daily-score"></h3>
+        </div>
+
+
+        <!-- ============================
+             BADGES TAB
+             ============================ -->
+        <div class="tab-content hidden" id="badges">
+            <h3>Achievement Badges</h3>
+            <div id="badge-list"></div>
+        </div>
+
+
+        <!-- ============================
+             GRAMMAR MODE TAB
+             ============================ -->
+        <div class="tab-content hidden" id="grammar">
+            <h3>Grammar Mode</h3>
+            <p>Learn Spanish grammar through fun, interactive lessons and practice tasks.</p>
+            <div id="grammar-lessons"></div>
+        </div>
+
+        <div class="tab-content hidden" id="grammar-practice">
+            <h3 id="grammar-practice-title"></h3>
+            <p id="grammar-practice-question"></p>
+
+            <input id="grammar-answer" class="input-field" placeholder="Type your answer...">
+
+            <button class="grammar-start-btn" onclick="submitGrammarAnswer()">Submit Answer</button>
+
+            <p id="grammar-feedback"></p>
+        </div>
+
     </div>
 </div>
 
+<!-- Celebration Banner -->
+<div id="celebration-banner">¡Excelente! 🎉</div>
+
 <script>
-    const data = {
-        words: [{es: 'Hola', en: 'Hello'}, {es: 'Gracias', en: 'Thank you'}, {es: 'Casa', en: 'House'}, {es: 'Estoy', en: 'I am'}, {es: 'Yo', en: 'I'}, {es: 'Tu', en: 'You'}, {es: 'El', en: 'He'}, {es: 'Agua', en: 'Water'}, {es: 'Pan', en: 'Bread'}, {es: 'Libro', en: 'Book'}, {es: 'Amigo', en: 'Friend'}, {es: 'Feliz', en: 'Happy'}, {es: 'Comer', en: 'Eat'}, {es: 'Beber', en: 'Drink'}, {es: 'Sol', en: 'Sun'}, {es: 'Luz', en: 'Light'}, {es: 'Mar', en: 'Sea'}, {es: 'Tienda', en: 'Store'}, {es: 'Calle', en: 'Street'}, {es: 'Mapa', en: 'Map'}, {es: 'Donde', en: 'Where'}, {es: 'La', en: 'The'}, {es: 'Si', en: 'Yes'}, {es: 'No', en: 'No'}, {es: 'De Nada', en: 'Your Welcome'}, {es: 'Esta', en: 'Is'}, {es: 'Rojo', en: 'Red'}, {es: 'Aquí', en: 'Here'}, {es: 'Grande', en: 'Big'}],
-        sentences: [{en: 'I eat bread', target: 'Yo Comer Pan'}, {en: 'The friend is happy', target: 'El Amigo Feliz'}, {en: 'Where is the store', target: 'Donde Esta La Tienda'}, {en: 'You drink water', target: 'Tu Beber Agua'}, {en: 'The book is red', target: 'El Libro Rojo'}, {en: 'I am happy', target: 'Yo Feliz'}, {en: 'The house is big', target: 'La Casa Grande'}, {en: 'The map is here', target: 'El Mapa Aquí'}, {en: 'He eats bread', target: 'El Comer Pan'}, {en: 'The street is big', target: 'La Calle Grande'}],
-        conversations: [{q: 'Good morning! How are you today?', q_es: 'Buenos días, cómo estás hoy?', target: 'Hola Estoy Feliz'}, {q: 'How big is the house?', q_es: '¿Dónde está la casa?', target: 'La Casa Grande'}, {q: 'Do you drink water?', q_es: '¿Tú bebes agua?', target: 'Si Yo Beber Agua'}, {q: 'Is the bread here?', q_es: '¿Está el pan aquí?', target: 'El Pan Aquí'}, {q: 'Are you a friend?', q_es: '¿Eres tú amigo?', target: 'Si Yo Amigo'}]
+/* ============================
+   CEFR LEVEL STATE
+   ============================ */
+let currentLevel = "A1";
+let unlockedLevels = ["A1"];
+
+/* ============================
+   ACHIEVEMENT BADGES
+   ============================ */
+let badges = {
+    a1_master: false,
+    a2_master: false,
+    b1_master: false,
+
+    quiz_master: false,
+    builder_pro: false,
+    conversation_ace: false,
+    smart_champ: false,
+
+    daily_5: false,
+    daily_10: false,
+    daily_30: false
+};
+
+/* ============================
+   LEVEL-SPECIFIC DATA
+   ============================ */
+const levelData = {
+    A1: {
+        words: [
+            {es:'Hola',en:'Hello'},{es:'Gracias',en:'Thank you'},{es:'Casa',en:'House'},
+            {es:'Estoy',en:'I am'},{es:'Yo',en:'I'},{es:'Tu',en:'You'},{es:'El',en:'He'},
+            {es:'Agua',en:'Water'},{es:'Pan',en:'Bread'},{es:'Libro',en:'Book'},
+            {es:'Amigo',en:'Friend'},{es:'Feliz',en:'Happy'},{es:'Comer',en:'Eat'},
+            {es:'Beber',en:'Drink'},{es:'Sol',en:'Sun'},{es:'Luz',en:'Light'},
+            {es:'Mar',en:'Sea'},{es:'Tienda',en:'Store'},{es:'Calle',en:'Street'},
+            {es:'Mapa',en:'Map'},{es:'Donde',en:'Where'},{es:'La',en:'The'},
+            {es:'Si',en:'Yes'},{es:'No',en:'No'},{es:'De Nada',en:'Your Welcome'},
+            {es:'Esta',en:'Is'},{es:'Rojo',en:'Red'},{es:'Aquí',en:'Here'},{es:'Grande',en:'Big'}
+        ],
+
+        sentences: [
+            {en:'I eat bread',target:'Yo Comer Pan'},
+            {en:'The friend is happy',target:'El Amigo Feliz'},
+            {en:'Where is the store',target:'Donde Esta La Tienda'},
+            {en:'You drink water',target:'Tu Beber Agua'},
+            {en:'The book is red',target:'El Libro Rojo'},
+            {en:'I am happy',target:'Yo Feliz'},
+            {en:'The house is big',target:'La Casa Grande'},
+            {en:'The map is here',target:'El Mapa Aquí'},
+            {en:'He eats bread',target:'El Comer Pan'},
+            {en:'The street is big',target:'La Calle Grande'}
+        ],
+
+        conversations: [
+            {q:'Good morning! How are you today?',q_es:'Buenos días, cómo estás hoy?',target:'Hola Estoy Feliz'},
+            {q:'How big is the house?',q_es:'¿Dónde está la casa?',target:'La Casa Grande'},
+            {q:'Do you drink water?',q_es:'¿Tú bebes agua?',target:'Si Yo Beber Agua'},
+            {q:'Is the bread here?',q_es:'¿Está el pan aquí?',target:'El Pan Aquí'},
+            {q:'Are you a friend?',q_es:'¿Eres tú amigo?',target:'Si Yo Amigo'}
+        ]
+    },
+
+    A2: {
+        words: [
+            {es:'Trabajo',en:'Work'},{es:'Escuela',en:'School'},{es:'Ciudad',en:'City'},
+            {es:'Viajar',en:'Travel'},{es:'Coche',en:'Car'},{es:'Familia',en:'Family'},
+            {es:'Cena',en:'Dinner'},{es:'Mañana',en:'Tomorrow'},{es:'Ayer',en:'Yesterday'},
+            {es:'Siempre',en:'Always'},{es:'Nunca',en:'Never'}
+        ],
+
+        sentences: [
+            {en:'I travel to the city tomorrow',target:'Yo Viajar A La Ciudad Mañana'},
+            {en:'My family eats dinner at home',target:'Mi Familia Comer Cena En Casa'},
+            {en:'He works in the school',target:'El Trabajo En La Escuela'}
+        ],
+
+        conversations: [
+            {q:'Where do you work?',q_es:'¿Dónde trabajas?',target:'Yo Trabajo En La Ciudad'},
+            {q:'When is dinner?',q_es:'¿Cuándo es la cena?',target:'La Cena Mañana'}
+        ]
+    },
+
+    B1: {
+        words: [
+            {es:'Porque',en:'Because'},{es:'Entonces',en:'Then'},{es:'Primero',en:'First'},
+            {es:'Después',en:'After'},{es:'Importante',en:'Important'},{es:'Decisión',en:'Decision'}
+        ],
+
+        sentences: [
+            {en:'First I work, then I eat dinner at home',
+             target:'Primero Yo Trabajo Entonces Yo Comer Cena En Casa'},
+            {en:'It is important because the city is big',
+             target:'Es Importante Porque La Ciudad Grande'}
+        ],
+
+        conversations: [
+            {q:'Why is this decision important?',
+             q_es:'¿Por qué es importante esta decisión?',
+             target:'Es Importante Porque La Ciudad Grande'}
+        ]
+    }
+};
+
+/* ============================
+   SMART CONVERSATION POOLS
+   ============================ */
+const smartPools = {
+    A1: [
+        { q:"How are you today?", q_es:"¿Cómo estás hoy?", target:"Yo Feliz" },
+        { q:"Do you have a friend?", q_es:"¿Tienes un amigo?", target:"Si Yo Amigo" },
+        { q:"Where is the store?", q_es:"¿Dónde está la tienda?", target:"Donde Esta La Tienda" },
+        { q:"Do you drink water?", q_es:"¿Bebes agua?", target:"Si Yo Beber Agua" },
+        { q:"Is the book here?", q_es:"¿Está el libro aquí?", target:"El Libro Aquí" }
+    ],
+
+    A2: [
+        { q:"Where do you work?", q_es:"¿Dónde trabajas?", target:"Yo Trabajo En La Ciudad" },
+        { q:"When is dinner?", q_es:"¿Cuándo es la cena?", target:"La Cena Mañana" }
+    ],
+
+    B1: [
+        { q:"Why is this decision important?",
+          q_es:"¿Por qué es importante esta decisión?",
+          target:"Es Importante Porque La Ciudad Grande" }
+    ]
+};
+
+/* ============================
+   GET CURRENT LEVEL DATA
+   ============================ */
+function getData(){
+    return levelData[currentLevel];
+}
+
+/* ============================
+   GLOBAL SCORE VARIABLES
+   ============================ */
+let qTotal=0,qCorrect=0,bScore=0,bCount=1,bAttempts=0,cCount=1,cAttempts=0,cScore=0;
+let smartIndex=1,smartScore=0,smartAttempts=0;
+
+/* ============================
+   LOCALSTORAGE SYSTEM
+   ============================ */
+function saveProgress(){
+    const progress={
+        qTotal,qCorrect,bScore,bCount,bAttempts,cCount,cAttempts,cScore,
+        smartIndex,smartScore,smartAttempts,
+        audioRate:document.getElementById('rate').value,
+        currentLevel,
+        unlockedLevels,
+        badges
     };
+    localStorage.setItem("cefrProgress",JSON.stringify(progress));
+}
 
-    let qTotal = 0, qCorrect = 0, bScore = 0, bCount = 1, bAttempts = 0, cCount = 1, cAttempts = 0, cScore = 0;
+function loadProgress(){
+    const saved=JSON.parse(localStorage.getItem("cefrProgress"));
+    if(!saved) return;
 
-    function syncWords() { data.sentences.forEach(s => { s.target.split(' ').forEach(word => { if(!data.words.find(w => w.es === word)) data.words.push({es: word, en: 'New Word'}); }); }); }
-    function speak(t) { const s = new SpeechSynthesisUtterance(t); s.rate = document.getElementById('rate').value; s.lang = 'es-MX'; speechSynthesis.speak(s); }
-    function openApp() { document.getElementById('dashboard-view').classList.add('hidden'); document.getElementById('learning-view').classList.remove('hidden'); }
-    function goBack() { document.getElementById('dashboard-view').classList.remove('hidden'); document.getElementById('learning-view').classList.add('hidden'); updateDashboard(); }
+    qTotal=saved.qTotal??0;
+    qCorrect=saved.qCorrect??0;
+    bScore=saved.bScore??0;
+    bCount=saved.bCount??1;
+    bAttempts=saved.bAttempts??0;
+    cCount=saved.cCount??1;
+    cAttempts=saved.cAttempts??0;
+    cScore=saved.cScore??0;
 
-    function updateDashboard() {
-        const qPercent = qTotal === 0 ? 0 : Math.round((qCorrect/qTotal)*100);
-        const bPercent = Math.round((bScore/15)*100);
-        const cPercent = Math.round((cScore/15)*100);
-        const combined = Math.round((qPercent + bPercent + cPercent)/3);
-        document.getElementById('quiz-status').innerText = qPercent >= 90 ? "Passed ("+qPercent+"%)" : "Retry ("+qPercent+"%)";
-        document.getElementById('build-status').innerText = bPercent >= 90 ? "Passed ("+bPercent+"%)" : "Retry ("+bPercent+"%)";
-        document.getElementById('final-verdict').innerText = combined >= 90 ? "Course Status: PASSED (Celebration!)" : "Course Status: Needs Improvement";
+    smartIndex=saved.smartIndex??1;
+    smartScore=saved.smartScore??0;
+    smartAttempts=saved.smartAttempts??0;
+
+    currentLevel=saved.currentLevel??"A1";
+    unlockedLevels=saved.unlockedLevels??["A1"];
+
+    badges = saved.badges ?? badges;
+
+    document.getElementById('rate').value=saved.audioRate??1;
+}
+
+/* ============================
+   SPEAK FUNCTION
+   ============================ */
+function speak(t){
+    const s=new SpeechSynthesisUtterance(t);
+    s.rate=document.getElementById('rate').value;
+    s.lang='es-MX';
+    speechSynthesis.speak(s);
+}
+/* ============================
+   LEVEL SELECTOR UI UPDATE
+   ============================ */
+function updateLevelUI(){
+    const select=document.getElementById('level-select');
+    const status=document.getElementById('level-status');
+
+    ["A1","A2","B1"].forEach(lvl=>{
+        const opt=[...select.options].find(o=>o.value===lvl);
+        if(!opt) return;
+        opt.textContent = unlockedLevels.includes(lvl)
+            ? `${lvl} (Unlocked)`
+            : `${lvl} (Locked)`;
+    });
+
+    select.value=currentLevel;
+    status.textContent=`Current Level: ${currentLevel}`;
+}
+
+/* ============================
+   CHANGE LEVEL
+   ============================ */
+function changeLevel(level){
+    if(!unlockedLevels.includes(level)){
+        speak("Este nivel está bloqueado");
+        return;
+    }
+    currentLevel=level;
+    updateLevelUI();
+    renderQuiz();
+    renderBuild();
+    renderConv();
+    renderSmart();
+    renderDaily();
+    renderBadges();
+    saveProgress();
+}
+
+/* ============================
+   BADGE UNLOCK LOGIC
+   ============================ */
+function unlockBadge(key){
+    if(!badges[key]){
+        badges[key] = true;
+        saveProgress();
+        renderBadges();
+        speak("Nuevo logro desbloqueado");
+        launchCelebration();
+    }
+}
+
+function checkCEFRMasteryBadges(){
+    if(currentLevel === "A1" && unlockedLevels.includes("A2"))
+        unlockBadge("a1_master");
+
+    if(currentLevel === "A2" && unlockedLevels.includes("B1"))
+        unlockBadge("a2_master");
+
+    if(currentLevel === "B1")
+        unlockBadge("b1_master");
+}
+
+function checkSkillBadges(){
+    const quizPercent = qTotal === 0 ? 0 : Math.round((qCorrect/qTotal)*100);
+    const builderPercent = Math.round((bScore/15)*100);
+    const convPercent = Math.round((cScore/15)*100);
+    const smartPercent = Math.round((smartScore/15)*100);
+
+    if(quizPercent >= 90) unlockBadge("quiz_master");
+    if(builderPercent >= 90) unlockBadge("builder_pro");
+    if(convPercent >= 90) unlockBadge("conversation_ace");
+    if(smartPercent >= 90) unlockBadge("smart_champ");
+}
+
+function checkDailyStreakBadges(){
+    let streak = Number(localStorage.getItem("dailyStreak") || 0);
+    const today = new Date().toLocaleDateString();
+    const lastDay = localStorage.getItem("dailyLastDay");
+
+    if(lastDay !== today){
+        streak++;
+        localStorage.setItem("dailyStreak", streak);
+        localStorage.setItem("dailyLastDay", today);
     }
 
-    function init() { syncWords(); document.getElementById('listen-list').innerHTML = data.words.map(w => `<div><button onclick="speak('${w.es}')">🔊</button> ${w.es} - ${w.en}</div>`).join(''); document.getElementById('flash-area').innerHTML = data.words.map(w => `<div class="card" onclick="this.innerText=(this.innerText=='${w.en}' ? '${w.es}' : '${w.en}'); if(this.innerText=='${w.es}') speak('${w.es}')">${w.en}</div>`).join(''); renderQuiz(); renderBuild(); renderConv(); }
-    function renderQuiz() { document.getElementById('quiz-area').innerHTML = data.words.slice(0,10).map((w,i) => `<div class="quiz-row"><span>${w.en}</span> <input id="q${i}" onkeydown="if(event.key==='Enter') checkQuiz('${w.es}', 'q${i}', 'f${i}')"> <span id="f${i}"></span></div>`).join(''); }
-    function checkQuiz(ans, inputId, feedId) { qTotal++; const isCorrect = document.getElementById(inputId).value.toLowerCase() === ans.toLowerCase(); if(isCorrect) qCorrect++; document.getElementById(feedId).innerText = isCorrect ? "✅" : "❌"; document.getElementById('score-board').innerText = "Quiz Score: " + Math.round((qCorrect/qTotal)*100) + "%"; }
-    function renderBuild() { window.currentTask = data.sentences[bCount - 1]; document.getElementById('build-task').innerText = "Build: " + currentTask.en; document.getElementById('progress-counter').innerText = `Task ${bCount}/10`; document.getElementById('word-bank').innerHTML = data.words.map(w => `<span class="word-pill" onclick="document.getElementById('sentence-box').innerText+=' ' + '${w.es}'">${w.es}</span>`).join(''); }
-    function renderConv() { window.currentConv = data.conversations[cCount - 1]; document.getElementById('conv-task').innerText = currentConv.q; document.getElementById('c-progress-counter').innerText = `Task ${cCount}/5`; document.getElementById('conv-word-bank').innerHTML = data.words.map(w => `<span class="word-pill" onclick="document.getElementById('conv-sentence-box').innerText+=' ' + '${w.es}'">${w.es}</span>`).join(''); }
-    function checkBuild() { if(document.getElementById('sentence-box').innerText.trim().replace(/\s+/g, ' ') === currentTask.target.replace(/ /g, ' ')) { if(bAttempts === 0) bScore++; document.getElementById('feedback').innerText = "Correct!"; } else { bAttempts++; document.getElementById('feedback').innerText = "Attempts: " + bAttempts + "/3"; if(bAttempts >= 3) document.getElementById('show-answer-btn').classList.remove('hidden'); } }
-    
-    // Updated checkConv to reveal button after 3 attempts
-    function checkConv() { if(document.getElementById('conv-sentence-box').innerText.trim().replace(/\s+/g, ' ') === currentConv.target.replace(/ /g, ' ')) { if(cAttempts === 0) cScore += 3; document.getElementById('c-feedback').innerText = "Correct!"; } else { cAttempts++; document.getElementById('c-feedback').innerText = "Attempts: " + cAttempts + "/3"; if(cAttempts >= 3) document.getElementById('show-conv-answer-btn').classList.remove('hidden'); } }
-    
-    function nextTask() { if(bCount < 10) { bCount++; bAttempts = 0; document.getElementById('sentence-box').innerText = ''; document.getElementById('feedback').innerText = ''; document.getElementById('show-answer-btn').classList.add('hidden'); renderBuild(); } }
-    function nextConvTask() { if(cCount < 5) { cCount++; cAttempts = 0; document.getElementById('conv-sentence-box').innerText = ''; document.getElementById('c-feedback').innerText = ''; document.getElementById('show-conv-answer-btn').classList.add('hidden'); renderConv(); } else { alert("Celebration: Course Finished!"); } }
-    function showTab(id, event) { document.querySelectorAll('.tab-content').forEach(t => t.classList.add('hidden')); document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active')); document.getElementById(id).classList.remove('hidden'); event.target.classList.add('active'); }
-    function revealAnswer() { document.getElementById('sentence-box').innerText = currentTask.target; }
-    function revealConvAnswer() { document.getElementById('conv-sentence-box').innerText = currentConv.target; }
-    init();
+    if(streak >= 5) unlockBadge("daily_5");
+    if(streak >= 10) unlockBadge("daily_10");
+    if(streak >= 30) unlockBadge("daily_30");
+}
+
+function checkAllBadges(){
+    checkCEFRMasteryBadges();
+    checkSkillBadges();
+    checkDailyStreakBadges();
+}
+
+/* ============================
+   QUIZ (CEFR‑aware + Badges)
+   ============================ */
+function renderQuiz(){
+    const d = getData();
+
+    document.getElementById('quiz-area').innerHTML =
+        d.words.slice(0,10).map((w,i)=>`
+            <div class="quiz-row">
+                <span>${w.en}</span>
+                <input id="q${i}" 
+                       onkeydown="if(event.key==='Enter') checkQuiz('${w.es}','q${i}','f${i}')">
+                <span id="f${i}"></span>
+            </div>`).join('');
+}
+
+function checkQuiz(ans,inputId,feedId){
+    qTotal++;
+    const isCorrect = document.getElementById(inputId).value.toLowerCase() === ans.toLowerCase();
+    if(isCorrect) qCorrect++;
+
+    document.getElementById(feedId).innerText = isCorrect ? "✅" : "❌";
+
+    document.getElementById('score-board').innerText =
+        "Quiz Score: " + Math.round((qCorrect/qTotal)*100) + "%";
+
+    saveProgress();
+    checkSkillBadges();
+}
+
+/* ============================
+   BUILDING (CEFR‑aware + Badges)
+   ============================ */
+function renderBuild(){
+    const d = getData();
+
+    window.currentTask = d.sentences[bCount-1] ?? d.sentences[0];
+
+    document.getElementById('build-task').innerText = "Build: " + currentTask.en;
+    document.getElementById('progress-counter').innerText = `Task ${bCount}/10`;
+
+    document.getElementById('word-bank').innerHTML =
+        d.words.map(w=>`<span class="word-pill"
+            onclick="document.getElementById('sentence-box').innerText+=' ${w.es}'">${w.es}</span>`
+        ).join('');
+}
+
+function checkBuild(){
+    const user = document.getElementById('sentence-box').innerText.trim().replace(/\s+/g,' ');
+    const correct = currentTask.target.replace(/ /g,' ');
+
+    if(user === correct){
+        if(bAttempts === 0) bScore++;
+        document.getElementById('feedback').innerText = "Correct!";
+    } else {
+        bAttempts++;
+        document.getElementById('feedback').innerText = `Attempts: ${bAttempts}/3`;
+
+        if(bAttempts >= 3)
+            document.getElementById('show-answer-btn').classList.remove('hidden');
+    }
+
+    saveProgress();
+    checkSkillBadges();
+}
+
+function nextTask(){
+    if(bCount < 10){
+        bCount++;
+        bAttempts = 0;
+
+        document.getElementById('sentence-box').innerText = '';
+        document.getElementById('feedback').innerText = '';
+        document.getElementById('show-answer-btn').classList.add('hidden');
+
+        renderBuild();
+        saveProgress();
+    }
+}
+
+function revealAnswer(){
+    document.getElementById('sentence-box').innerText = currentTask.target;
+}
+
+/* ============================
+   CONVERSATION (CEFR‑aware + Badges)
+   ============================ */
+function renderConv(){
+    const d = getData();
+
+    window.currentConv = d.conversations[cCount-1] ?? d.conversations[0];
+
+    document.getElementById('conv-task').innerText = currentConv.q;
+    document.getElementById('c-progress-counter').innerText = `Task ${cCount}/5`;
+
+    document.getElementById('conv-word-bank').innerHTML =
+        d.words.map(w=>`<span class="word-pill"
+            onclick="document.getElementById('conv-sentence-box').innerText+=' ${w.es}'">${w.es}</span>`
+        ).join('');
+}
+
+function checkConv(){
+    const user = document.getElementById('conv-sentence-box').innerText.trim().replace(/\s+/g,' ');
+    const correct = currentConv.target.replace(/ /g,' ');
+
+    if(user === correct){
+        if(cAttempts === 0) cScore += 3;
+        document.getElementById('c-feedback').innerText = "Correct!";
+    } else {
+        cAttempts++;
+        document.getElementById('c-feedback').innerText = `Attempts: ${cAttempts}/3`;
+
+        if(cAttempts >= 3)
+            document.getElementById('show-conv-answer-btn').classList.remove('hidden');
+    }
+
+    saveProgress();
+    checkSkillBadges();
+}
+
+function nextConvTask(){
+    const d = getData();
+
+    if(cCount < d.conversations.length){
+        cCount++;
+        cAttempts = 0;
+
+        document.getElementById('conv-sentence-box').innerText = '';
+        document.getElementById('c-feedback').innerText = '';
+        document.getElementById('show-conv-answer-btn').classList.add('hidden');
+
+        renderConv();
+        saveProgress();
+    } else {
+        speak("Excelente trabajo");
+        launchCelebration();
+        checkSkillBadges();
+    }
+}
+
+function revealConvAnswer(){
+    document.getElementById('conv-sentence-box').innerText = currentConv.target;
+}
+
+/* ============================
+   SMART CONVERSATION (CEFR + Badges)
+   ============================ */
+function renderSmart(){
+    const pool = smartPools[currentLevel];
+    const idx = Math.min(smartIndex - 1, pool.length - 1);
+
+    window.smartCurrent = pool[idx];
+
+    document.getElementById('smart-q').innerText =
+        `Level ${currentLevel} — Question ${idx+1}: ${smartCurrent.q}`;
+
+    document.getElementById('smart-progress').innerText =
+        `Progress: ${idx+1}/${pool.length}`;
+
+    const d = getData();
+
+    document.getElementById('smart-word-bank').innerHTML =
+        d.words.map(w=>`<span class="word-pill"
+            onclick="document.getElementById('smart-box').innerText+=' ${w.es}'">${w.es}</span>`
+        ).join('');
+}
+
+function checkSmart(){
+    const user = document.getElementById('smart-box').innerText.trim().replace(/\s+/g,' ');
+    const correct = smartCurrent.target.replace(/ /g,' ');
+
+    if(user === correct){
+        if(smartAttempts === 0) smartScore += 3;
+        document.getElementById('smart-feedback').innerText = "Correct!";
+    } else {
+        smartAttempts++;
+        document.getElementById('smart-feedback').innerText =
+            `Attempts: ${smartAttempts}/3`;
+
+        if(smartAttempts >= 3)
+            document.getElementById('smart-show-answer').classList.remove('hidden');
+    }
+
+    // ⭐ Grammar Hint Integration
+    const hint = smartGrammarHint(user);
+    if(hint){
+        document.getElementById('smart-feedback').innerText += ` (${hint})`;
+    }
+
+    saveProgress();
+    checkSkillBadges();
+}
+
+function nextSmart(){
+    const pool = smartPools[currentLevel];
+
+    if(smartIndex < pool.length){
+        smartIndex++;
+        smartAttempts = 0;
+
+        document.getElementById('smart-box').innerText = '';
+        document.getElementById('smart-feedback').innerText = '';
+        document.getElementById('smart-show-answer').classList.add('hidden');
+
+        renderSmart();
+        saveProgress();
+    } else {
+        speak("Excelente trabajo");
+        launchCelebration();
+        checkSkillBadges();
+    }
+}
+
+function revealSmartAnswer(){
+    document.getElementById('smart-box').innerText = smartCurrent.target;
+}
+/* ============================
+   GRAMMAR MODE — LESSON DATA
+   ============================ */
+const grammarLessons = [
+    { id:"gender", level:"A1", title:"Gender & Plurals", desc:"Learn masculine/feminine nouns and plurals." },
+    { id:"articles", level:"A1", title:"Articles", desc:"Master el, la, los, las." },
+    { id:"present_regular", level:"A1", title:"Present Tense — Regular Verbs", desc:"Conjugate -ar, -er, -ir verbs." },
+    { id:"ser_vs_estar", level:"A1", title:"Ser vs Estar", desc:"Permanent vs temporary states." },
+
+    { id:"adjectives", level:"A2", title:"Adjective Agreement", desc:"Gender and number agreement." },
+    { id:"preterite", level:"A2", title:"Preterite Tense", desc:"Completed past actions." },
+    { id:"pronouns", level:"A2", title:"Pronouns", desc:"Direct and indirect pronouns." },
+    { id:"prepositions", level:"A2", title:"Prepositions", desc:"Common prepositions: en, a, de, con." },
+
+    { id:"future", level:"B1", title:"Future Tense", desc:"Learn future conjugations." },
+    { id:"imperfect", level:"B1", title:"Imperfect Tense", desc:"Ongoing past actions." },
+    { id:"subjunctive_intro", level:"B1", title:"Intro to Subjunctive", desc:"Basic subjunctive forms." }
+];
+
+/* ============================
+   GRAMMAR MODE — ICONS
+   ============================ */
+const grammarIcons = {
+    gender:"🎭", articles:"📚", present_regular:"⚙️", ser_vs_estar:"🔮",
+    adjectives:"🎨", preterite:"⏳", pronouns:"🧠", prepositions:"🧭",
+    future:"🚀", imperfect:"📜", subjunctive_intro:"🌀"
+};
+
+/* ============================
+   GRAMMAR MODE — LESSON RENDERER
+   ============================ */
+function renderGrammarLessons(){
+    const box = document.getElementById("grammar-lessons");
+    if(!box) return;
+
+    box.innerHTML = "";
+
+    grammarLessons.forEach(lesson=>{
+        const icon = grammarIcons[lesson.id] || "📘";
+
+        box.innerHTML += `
+            <div class="grammar-card">
+                <div class="grammar-title">${icon} ${lesson.title}</div>
+                <div class="grammar-level">Level: ${lesson.level}</div>
+                <div class="grammar-desc">${lesson.desc}</div>
+                <button class="grammar-start-btn" onclick="startGrammarLesson('${lesson.id}')">
+                    Start Lesson
+                </button>
+            </div>
+        `;
+    });
+}
+
+/* ============================
+   GRAMMAR MODE — PRACTICE QUESTIONS
+   ============================ */
+const grammarQuestions = {
+    gender:[
+        {q:"Make plural: el libro",a:"los libros"},
+        {q:"Make plural: la casa",a:"las casas"}
+    ],
+    articles:[
+        {q:"Correct article: ___ mesa",a:"la"},
+        {q:"Correct article: ___ perro",a:"el"}
+    ],
+    present_regular:[
+        {q:"Conjugate: yo hablar",a:"hablo"},
+        {q:"Conjugate: tú comer",a:"comes"}
+    ],
+    ser_vs_estar:[
+        {q:"Yo ___ feliz",a:"estoy"},
+        {q:"Ella ___ doctora",a:"es"}
+    ],
+    adjectives:[
+        {q:"Correct adjective: casa (blanco)",a:"blanca"},
+        {q:"Correct adjective: perros (rojo)",a:"rojos"}
+    ],
+    preterite:[
+        {q:"yo hablar (preterite)",a:"hablé"},
+        {q:"ellos comer (preterite)",a:"comieron"}
+    ],
+    pronouns:[
+        {q:"Yo veo el coche → Yo ___ veo",a:"lo"},
+        {q:"Ella compra la fruta → Ella ___ compra",a:"la"}
+    ],
+    prepositions:[
+        {q:"Estoy ___ la casa",a:"en"},
+        {q:"Vamos ___ Madrid",a:"a"}
+    ],
+    future:[
+        {q:"yo hablar (future)",a:"hablaré"},
+        {q:"tú vivir (future)",a:"vivirás"}
+    ],
+    imperfect:[
+        {q:"yo comer (imperfect)",a:"comía"},
+        {q:"ellos vivir (imperfect)",a:"vivían"}
+    ],
+    subjunctive_intro:[
+        {q:"yo hablar (subjunctive)",a:"hable"},
+        {q:"tú comer (subjunctive)",a:"comas"}
+    ]
+};
+
+/* ============================
+   GRAMMAR MODE — PRACTICE ENGINE
+   ============================ */
+let currentGrammarLesson = null;
+let currentGrammarQuestion = null;
+
+function startGrammarLesson(id){
+    currentGrammarLesson = id;
+
+    const lesson = grammarLessons.find(l=>l.id===id);
+    document.getElementById("grammar-practice-title").innerText = `Practice: ${lesson.title}`;
+    document.getElementById("grammar-feedback").innerText = "";
+    document.getElementById("grammar-answer").value = "";
+
+    loadGrammarQuestion();
+    showTab("grammar-practice");
+}
+
+function loadGrammarQuestion(){
+    const list = grammarQuestions[currentGrammarLesson];
+    currentGrammarQuestion = list[Math.floor(Math.random()*list.length)];
+
+    document.getElementById("grammar-practice-question").innerText = currentGrammarQuestion.q;
+    document.getElementById("grammar-answer").value = "";
+    document.getElementById("grammar-feedback").innerText = "";
+}
+
+/* ============================
+   GRAMMAR MODE — XP SYSTEM
+   ============================ */
+const grammarXPReward = 40;
+function addGrammarXP(){
+    if(typeof addXP === "function"){
+        addXP(grammarXPReward);
+    }
+}
+
+/* ============================
+   GRAMMAR MODE — BADGE SYSTEM
+   ============================ */
+let grammarCorrectCount = 0;
+let grammarBadgeUnlocked = false;
+
+function checkGrammarBadge(){
+    if(grammarCorrectCount >= 20 && !grammarBadgeUnlocked){
+        grammarBadgeUnlocked = true;
+        saveGrammarBadge();
+        speak("Insignia de gramática desbloqueada");
+        grammarBadgeCelebration();
+    }
+}
+
+function saveGrammarBadge(){
+    localStorage.setItem("grammarBadge",JSON.stringify({
+        grammarBadgeUnlocked,
+        grammarCorrectCount
+    }));
+}
+
+function loadGrammarBadge(){
+    const saved = JSON.parse(localStorage.getItem("grammarBadge"));
+    if(saved){
+        grammarBadgeUnlocked = saved.grammarBadgeUnlocked;
+        grammarCorrectCount = saved.grammarCorrectCount;
+    }
+}
+
+function grammarBadgeCelebration(){
+    for(let i=0;i<30;i++){
+        const c=document.createElement("div");
+        c.classList.add("confetti");
+        c.style.left=Math.random()*100+"%";
+        c.style.background="#f59e0b";
+        document.body.appendChild(c);
+        setTimeout(()=>c.remove(),1500);
+    }
+}
+
+/* ============================
+   GRAMMAR MODE — CERTIFICATE SYSTEM
+   ============================ */
+let grammarCertificateUnlocked = false;
+
+function checkGrammarCertificate(){
+    if(grammarCorrectCount >= 50 && !grammarCertificateUnlocked){
+        grammarCertificateUnlocked = true;
+        saveGrammarCertificate();
+        unlockCertificate("grammarMaster");
+        speak("Certificado de gramática desbloqueado");
+    }
+}
+
+function saveGrammarCertificate(){
+    localStorage.setItem("grammarCertificate",JSON.stringify({
+        grammarCertificateUnlocked
+    }));
+}
+
+function loadGrammarCertificate(){
+    const saved = JSON.parse(localStorage.getItem("grammarCertificate"));
+    if(saved){
+        grammarCertificateUnlocked = saved.grammarCertificateUnlocked;
+    }
+}
+
+/* ============================
+   GRAMMAR MODE — ANSWER CHECKER
+   ============================ */
+function submitGrammarAnswer(){
+    const user = document.getElementById("grammar-answer").value.trim().toLowerCase();
+    const correct = currentGrammarQuestion.a.toLowerCase();
+
+    if(user === correct){
+        document.getElementById("grammar-feedback").innerText = "✅ Correct!";
+        speak("Correcto");
+
+        addGrammarXP();
+        grammarCorrectCount++;
+        checkGrammarBadge();
+        checkGrammarCertificate();
+
+        loadGrammarQuestion();
+    } else {
+        document.getElementById("grammar-feedback").innerText =
+            `❌ Incorrect. Correct answer: ${currentGrammarQuestion.a}`;
+        speak("Incorrecto");
+    }
+
+    saveGrammarBadge();
+    saveGrammarCertificate();
+}
+
+/* ============================
+   GRAMMAR MODE — DAILY PRACTICE SUPPORT
+   ============================ */
+function dailyGrammarTask(){
+    const keys = Object.keys(grammarQuestions);
+    const lesson = keys[Math.floor(Math.random()*keys.length)];
+    const qs = grammarQuestions[lesson];
+    return qs[Math.floor(Math.random()*qs.length)];
+}
+
+/* ============================
+   GRAMMAR MODE — SMART CONVERSATION HINTS
+   ============================ */
+function smartGrammarHint(word){
+    if(word==="ser"||word==="estar") return "Tip: 'ser' = permanent, 'estar' = temporary.";
+    if(word.endsWith("ar")) return "Tip: -ar verbs follow regular conjugation patterns.";
+    return "";
+}
+/* ============================
+   DAILY PRACTICE (CEFR + Grammar + Badges)
+   ============================ */
+
+let dailyData = null;
+
+function generateDailySet(){
+    const today = new Date().toLocaleDateString();
+
+    const saved = JSON.parse(localStorage.getItem("dailyPractice"));
+
+    if(saved && saved.date === today && saved.level === currentLevel){
+        dailyData = saved;
+        return;
+    }
+
+    const d = getData();
+
+    dailyData = {
+        date: today,
+        level: currentLevel,
+        words: shuffle(d.words).slice(0,5),
+        flash: shuffle(d.words).slice(0,3),
+        quiz: shuffle(d.words).slice(0,2),
+        build: shuffle(d.sentences)[0],
+        conv: shuffle(d.conversations)[0],
+
+        // ⭐ Daily Grammar Mode
+        grammar: dailyGrammarTask(),
+
+        buildAttempts: 0,
+        convAttempts: 0,
+        score: 0
+    };
+
+    localStorage.setItem("dailyPractice", JSON.stringify(dailyData));
+}
+
+function renderDaily(){
+    generateDailySet();
+
+    document.getElementById('daily-date').innerText =
+        "Today's Practice: " + dailyData.date;
+
+    document.getElementById('daily-words').innerHTML =
+        dailyData.words.map(w=>`${w.es} - ${w.en}`).join('<br>');
+
+    document.getElementById('daily-flash').innerHTML =
+        dailyData.flash.map(w=>`<div class="card"
+            onclick="this.innerText=(this.innerText=='${w.en}'?'${w.es}':'${w.en}')">${w.en}</div>`
+        ).join('');
+
+    document.getElementById('daily-quiz').innerHTML =
+        dailyData.quiz.map((w,i)=>`
+            <div class="quiz-row">
+                <span>${w.en}</span>
+                <input id="dq${i}" 
+                       onkeydown="if(event.key==='Enter') checkDailyQuiz('${w.es}','dq${i}','df${i}')">
+                <span id="df${i}"></span>
+            </div>`).join('');
+
+    document.getElementById('daily-build-en').innerText =
+        "Build: " + dailyData.build.en;
+
+    const d = getData();
+
+    document.getElementById('daily-build-bank').innerHTML =
+        d.words.map(w=>`<span class="word-pill"
+            onclick="document.getElementById('daily-build-box').innerText+=' ${w.es}'">${w.es}</span>`
+        ).join('');
+
+    document.getElementById('daily-conv-q').innerText =
+        dailyData.conv.q;
+
+    document.getElementById('daily-conv-bank').innerHTML =
+        d.words.map(w=>`<span class="word-pill"
+            onclick="document.getElementById('daily-conv-box').innerText+=' ${w.es}'">${w.es}</span>`
+        ).join('');
+
+    // ⭐ Daily Grammar Mode
+    document.getElementById('daily-grammar-q').innerText =
+        "Grammar: " + dailyData.grammar.q;
+
+    updateDailyScore();
+    checkDailyStreakBadges();
+}
+
+function checkDailyQuiz(ans,inputId,feedId){
+    const isCorrect = document.getElementById(inputId).value.toLowerCase() === ans.toLowerCase();
+    document.getElementById(feedId).innerText = isCorrect ? "✅" : "❌";
+
+    if(isCorrect) dailyData.score++;
+
+    saveDaily();
+}
+
+function checkDailyBuild(){
+    const user = document.getElementById('daily-build-box').innerText.trim().replace(/\s+/g,' ');
+    const correct = dailyData.build.target.replace(/ /g,' ');
+
+    if(user === correct){
+        if(dailyData.buildAttempts === 0) dailyData.score += 2;
+        document.getElementById('daily-build-feedback').innerText = "Correct!";
+    } else {
+        dailyData.buildAttempts++;
+        document.getElementById('daily-build-feedback').innerText =
+            `Attempts: ${dailyData.buildAttempts}/3`;
+    }
+
+    saveDaily();
+}
+
+function checkDailyConv(){
+    const user = document.getElementById('daily-conv-box').innerText.trim().replace(/\s+/g,' ');
+    const correct = dailyData.conv.target.replace(/ /g,' ');
+
+    if(user === correct){
+        if(dailyData.convAttempts === 0) dailyData.score += 2;
+        document.getElementById('daily-conv-feedback').innerText = "Correct!";
+    } else {
+        dailyData.convAttempts++;
+        document.getElementById('daily-conv-feedback').innerText =
+            `Attempts: ${dailyData.convAttempts}/3`;
+    }
+
+    saveDaily();
+}
+
+// ⭐ Daily Grammar Checker
+function checkDailyGrammar(){
+    const user = document.getElementById('daily-grammar-answer').value.trim().toLowerCase();
+    const correct = dailyData.grammar.a.toLowerCase();
+
+    if(user === correct){
+        dailyData.score += 2;
+        document.getElementById('daily-grammar-feedback').innerText = "Correct!";
+    } else {
+        document.getElementById('daily-grammar-feedback').innerText =
+            `Incorrect. Correct answer: ${dailyData.grammar.a}`;
+    }
+
+    saveDaily();
+}
+
+function updateDailyScore(){
+    document.getElementById('daily-score').innerText =
+        "Daily Score: " + dailyData.score + "/12";
+}
+
+function saveDaily(){
+    localStorage.setItem("dailyPractice", JSON.stringify(dailyData));
+    updateDailyScore();
+}
+
+function shuffle(arr){
+    return [...arr].sort(()=>Math.random()-0.5);
+}
+
+/* ============================
+   AUTO‑PLAY LISTENING
+   ============================ */
+let autoPlayIndex = 0;
+let autoPlayActive = false;
+
+function autoPlayListen(){
+    if(autoPlayActive) return;
+
+    autoPlayActive = true;
+    autoPlayIndex = 0;
+
+    const words = getData().words.map(w => w.es);
+    playNextWord(words);
+}
+
+function playNextWord(words){
+    if(autoPlayIndex >= words.length){
+        autoPlayActive = false;
+        speak("Fin de la lista");
+        return;
+    }
+
+    const word = words[autoPlayIndex];
+    const rate = document.getElementById('rate').value;
+
+    const utter = new SpeechSynthesisUtterance(word);
+    utter.lang = "es-MX";
+    utter.rate = rate;
+
+    utter.onend = () => {
+        autoPlayIndex++;
+        setTimeout(() => playNextWord(words), 600);
+    };
+
+    speechSynthesis.speak(utter);
+}
+
+/* ============================
+   CELEBRATION LOGIC
+   ============================ */
+function launchCelebration() {
+    const banner = document.getElementById('celebration-banner');
+    banner.style.display = 'block';
+
+    setTimeout(() => banner.style.display = 'none', 3000);
+
+    for (let i = 0; i < 40; i++) {
+        const confetti = document.createElement('div');
+        confetti.classList.add('confetti');
+
+        confetti.style.backgroundColor =
+            ['#ef4444','#f59e0b','#10b981','#3b82f6','#8b5cf6'][Math.floor(Math.random()*5)];
+
+        confetti.style.left = (50 + (Math.random()*40 - 20)) + '%';
+
+        const size = Math.random()*12 + 6;
+        confetti.style.width = size + 'px';
+        confetti.style.height = size + 'px';
+
+        document.body.appendChild(confetti);
+        setTimeout(() => confetti.remove(), 2000);
+    }
+
+    speak("Excelente trabajo");
+}
+
+/* ============================
+   TAB SWITCHING (with Grammar Integration)
+   ============================ */
+function showTab(id,event){
+    document.querySelectorAll('.tab-content').forEach(t=>t.classList.add('hidden'));
+    document.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('active'));
+
+    document.getElementById(id).classList.remove('hidden');
+    event.target.classList.add('active');
+
+    if(id === "badges") renderBadges();
+    if(id === "grammar") renderGrammarLessons();
+}
+
+/* ============================
+   DASHBOARD + LEVEL UNLOCK LOGIC
+   ============================ */
+function updateDashboard(){
+    const qPercent=qTotal===0?0:Math.round((qCorrect/qTotal)*100);
+    const bPercent=Math.round((bScore/15)*100);
+    const cPercent=Math.round((cScore/15)*100);
+    const sPercent=Math.round((smartScore/15)*100);
+
+    const combined=Math.round((qPercent+bPercent+cPercent+sPercent)/4);
+
+    document.getElementById('quiz-status').innerText=
+        qPercent>=90?`Passed (${qPercent}%)`:`Retry (${qPercent}%)`;
+
+    document.getElementById('build-status').innerText=
+        bPercent>=90?`Passed (${bPercent}%)`:`Retry (${bPercent}%)`;
+
+    document.getElementById('final-verdict').innerText=
+        combined>=90?"Course Status: PASSED (Celebration!)":
+                      "Course Status: Needs Improvement";
+
+    if(combined>=90){
+        if(!unlockedLevels.includes("A2")){
+            unlockedLevels.push("A2");
+            speak("Has desbloqueado el nivel A2");
+        } else if(!unlockedLevels.includes("B1")){
+            unlockedLevels.push("B1");
+            speak("Has desbloqueado el nivel B1");
+        }
+    }
+
+    updateLevelUI();
+    checkAllBadges();
+    saveProgress();
+}
+
+/* ============================
+   INIT (Final Merge)
+   ============================ */
+function init(){
+    loadProgress();
+    loadGrammarBadge();
+    loadGrammarCertificate();
+
+    updateLevelUI();
+
+    const d=getData();
+
+    document.getElementById('listen-list').innerHTML=
+        d.words.map(w=>`<div><button onclick="speak('${w.es}')">🔊</button> ${w.es} - ${w.en}</div>`).join('');
+
+    document.getElementById('flash-area').innerHTML=
+        d.words.map(w=>`<div class="card"
+            onclick="this.innerText=(this.innerText=='${w.en}'?'${w.es}':'${w.en}');
+                     if(this.innerText=='${w.es}') speak('${w.es}')">${w.en}</div>`).join('');
+
+    renderQuiz();
+    renderBuild();
+    renderConv();
+    renderSmart();
+    renderDaily();
+    renderBadges();
+    renderGrammarLessons();
+
+    checkAllBadges();
+}
+
+init();
+
 </script>
 </body>
 </html>
