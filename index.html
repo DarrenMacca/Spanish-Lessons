@@ -1497,15 +1497,18 @@ function shuffle(arr){
 }
 
 /* ============================
-   AUTO‑PLAY LISTENING
+   AUTO‑PLAY LISTENING (Play, Stop, Pause, Resume)
    ============================ */
+
 let autoPlayIndex = 0;
 let autoPlayActive = false;
+let autoPlayPaused = false;
 
 function autoPlayListen(){
     if(autoPlayActive) return;
 
     autoPlayActive = true;
+    autoPlayPaused = false;
     autoPlayIndex = 0;
 
     const words = getData().words.map(w => w.es);
@@ -1513,6 +1516,8 @@ function autoPlayListen(){
 }
 
 function playNextWord(words){
+    if(!autoPlayActive) return;
+
     if(autoPlayIndex >= words.length){
         autoPlayActive = false;
         speak("Fin de la lista");
@@ -1527,12 +1532,32 @@ function playNextWord(words){
     utter.rate = rate;
 
     utter.onend = () => {
+        if(autoPlayPaused) return;   // stop advancing while paused
         autoPlayIndex++;
         setTimeout(() => playNextWord(words), 600);
     };
 
     speechSynthesis.speak(utter);
 }
+
+function stopAutoPlay(){
+    autoPlayActive = false;
+    autoPlayPaused = false;
+    speechSynthesis.cancel();   // stops immediately
+}
+
+function pauseAutoPlay(){
+    if(!autoPlayActive) return;
+    autoPlayPaused = true;
+    speechSynthesis.pause();
+}
+
+function resumeAutoPlay(){
+    if(!autoPlayActive) return;
+    autoPlayPaused = false;
+    speechSynthesis.resume();
+}
+
 /* ============================
    STOP AUTO‑PLAY LISTENING
    ============================ */
