@@ -2,59 +2,66 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>CEFR Spanish Portal</title>
-    <script src="https://cdn.tailwindcss.com"></script>
+    <title>Spanish Language Portal</title>
+    <style>
+        body { font-family: sans-serif; padding: 20px; line-height: 1.6; color: #333; max-width: 800px; margin: auto; }
+        .card { border: 1px solid #ddd; padding: 15px; margin: 10px 0; border-radius: 8px; background: #f9f9f9; }
+        .hidden { display: none; }
+        button { cursor: pointer; padding: 10px 20px; background: #2563eb; color: white; border: none; border-radius: 5px; }
+        .vocab-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(120px, 1fr)); gap: 10px; margin-top: 10px; }
+        .vocab-item { background: #e0e7ff; padding: 10px; text-align: center; border-radius: 4px; border: 1px solid #c7d2fe; }
+    </style>
 </head>
-<body class="bg-slate-50 text-slate-800 p-6">
-    <div id="app" class="max-w-3xl mx-auto">
-        <h1 class="text-2xl font-bold mb-4">Spanish Proficiency Portal</h1>
-        
-        <!-- Dashboard Container -->
-        <div id="dashboard" class="space-y-4"></div>
-        
-        <!-- Lesson Container -->
-        <div id="lesson-ui" class="hidden bg-white p-6 rounded-lg shadow">
-            <button type="button" onclick="goHome()" class="text-blue-600 mb-4 font-bold">← Back to Dashboard</button>
-            <h2 id="lesson-title" class="text-xl font-bold"></h2>
-            <div id="vocab-display" class="grid grid-cols-2 gap-2 my-4"></div>
-            <p id="lesson-goal" class="text-sm italic text-slate-500"></p>
-        </div>
+<body>
+
+    <div id="dashboard">
+        <h1>Learning Dashboard</h1>
+        <div id="level-list"></div>
+    </div>
+
+    <div id="lesson-view" class="hidden">
+        <button onclick="backToDashboard()">← Back to Dashboard</button>
+        <h2 id="level-title"></h2>
+        <h3>Vocabulary to Learn</h3>
+        <div id="vocab-container" class="vocab-grid"></div>
     </div>
 
     <script>
-        // Ensure DOM is ready before running
-        document.addEventListener('DOMContentLoaded', () => {
-            const curriculum = [
-                { id: 'A1', title: 'Beginner', words: ['Hola', 'Gracias', 'Yo', 'Ser'], goal: 'Introduce yourself.' },
-                { id: 'A2', title: 'Elementary', words: ['Tienda', 'Mapa', 'Donde', 'Calle'], goal: 'Ask for directions.' }
-            ];
+        const levels = [
+            { id: 'A1', title: 'Beginner', words: ['Hola', 'Adiós', 'Por favor', 'Gracias', 'Uno', 'Dos', 'Tres', 'Rojo', 'Azul', 'Verde', 'Yo', 'Tú', 'Él', 'Ella', 'Nosotros'] },
+            { id: 'A2', title: 'Elementary', words: ['Tienda', 'Comprar', 'Dónde', 'Calle', 'Cerca', 'Lejos', 'Derecha', 'Izquierda', 'Mapa', 'Trabajo', 'Casa', 'Escuela', 'Familia', 'Amigo', 'Comida'] },
+            { id: 'B1', title: 'Intermediate', words: ['Experiencia', 'Pensar', 'Opinión', 'Viajar', 'Aprender', 'Divertido', 'Importante', 'Decisión', 'Posible', 'Problema', 'Solución', 'Futuro', 'Pasado', 'Presente', 'Sentimiento'] },
+            { id: 'B2', title: 'Upper-Intermediate', words: ['Argumento', 'Sostener', 'Desarrollo', 'Estructura', 'Análisis', 'Perspectiva', 'Contexto', 'Impacto', 'Resultado', 'Objetivo', 'Estrategia', 'Colaborar', 'Eficiente', 'Complejo', 'Flexible'] },
+            { id: 'C1', title: 'Advanced', words: ['Abstracción', 'Coherencia', 'Espontáneo', 'Precisión', 'Refinamiento', 'Interpretación', 'Metáfora', 'Argumentación', 'Dialéctica', 'Argumento', 'Sustancial', 'Articulación', 'Percepción', 'Inferencia', 'Elaboración'] },
+            { id: 'C2', title: 'Mastery', words: ['Matiz', 'Elocuencia', 'Sutileza', 'Dominio', 'Innato', 'Paradigma', 'Vernáculo', 'Ambivalencia', 'Perspicacia', 'Magnanimidad', 'Intrínseco', 'Exacerbar', 'Yuxtaponer', 'Efímero', 'Paradójico'] }
+        ];
 
-            window.goHome = () => {
-                document.getElementById('dashboard').classList.remove('hidden');
-                document.getElementById('lesson-ui').classList.add('hidden');
-            };
-
-            window.loadLesson = (id) => {
-                const data = curriculum.find(l => l.id === id);
-                document.getElementById('lesson-title').innerText = data.title;
-                document.getElementById('lesson-goal').innerText = data.goal;
-                document.getElementById('vocab-display').innerHTML = data.words
-                    .map(w => `<div class="p-2 bg-blue-50 border rounded">${w}</div>`).join('');
-                
-                document.getElementById('dashboard').classList.add('hidden');
-                document.getElementById('lesson-ui').classList.remove('hidden');
-            };
-
-            // Initial Render
-            const dash = document.getElementById('dashboard');
-            dash.innerHTML = curriculum.map(l => `
-                <div class="p-4 bg-white border rounded shadow-sm flex justify-between items-center">
-                    <span>${l.id}: ${l.title}</span>
-                    <button type="button" onclick="loadLesson('${l.id}')" class="bg-blue-600 text-white px-4 py-2 rounded">Start</button>
+        function init() {
+            const list = document.getElementById('level-list');
+            list.innerHTML = levels.map(l => `
+                <div class="card">
+                    <strong>${l.id}: ${l.title}</strong><br>
+                    <button onclick="openLesson('${l.id}')">Start Learning</button>
                 </div>
             `).join('');
-        });
+        }
+
+        function openLesson(id) {
+            const level = levels.find(l => l.id === id);
+            document.getElementById('level-title').innerText = level.id + ' - ' + level.title;
+            const container = document.getElementById('vocab-container');
+            container.innerHTML = level.words.map(w => `<div class="vocab-item">${w}</div>`).join('');
+            
+            document.getElementById('dashboard').classList.add('hidden');
+            document.getElementById('lesson-view').classList.remove('hidden');
+        }
+
+        function backToDashboard() {
+            document.getElementById('dashboard').classList.remove('hidden');
+            document.getElementById('lesson-view').classList.add('hidden');
+        }
+
+        init();
     </script>
 </body>
 </html>
