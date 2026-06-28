@@ -2,69 +2,73 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>CEFR Spanish Learning Portal</title>
+    <title>Spanish CEFR Mastery Portal</title>
     <style>
-        body { font-family: sans-serif; background: #f4f4f9; padding: 20px; color: #333; }
-        .container { max-width: 800px; margin: auto; background: white; padding: 20px; border-radius: 12px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); }
-        .tab-btn { padding: 10px; cursor: pointer; border: none; background: #ddd; }
-        .active-tab { background: #2563eb; color: white; }
+        body { font-family: sans-serif; background: #f8fafc; padding: 20px; color: #1e293b; }
+        .wrapper { max-width: 900px; margin: auto; background: white; padding: 25px; border-radius: 16px; box-shadow: 0 10px 15px -3px rgba(0,0,0,0.1); }
+        .tab-btn { padding: 12px 20px; border: none; background: #e2e8f0; cursor: pointer; border-radius: 8px; font-weight: bold; }
+        .tab-btn.active { background: #2563eb; color: white; }
         .hidden { display: none; }
-        .card { border: 1px solid #ccc; padding: 50px; text-align: center; cursor: pointer; background: #fff; border-radius: 8px; }
-        .locked { opacity: 0.5; pointer-events: none; }
-        .vocab-list { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 10px; margin-top: 10px; }
+        .card { border: 2px solid #e2e8f0; padding: 40px; text-align: center; border-radius: 12px; cursor: pointer; background: #fff; font-size: 1.5rem; }
+        .locked { filter: grayscale(1); pointer-events: none; opacity: 0.6; }
+        .grid-list { display: grid; grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); gap: 10px; margin-top: 15px; }
     </style>
 </head>
 <body>
 
-<div class="container">
-    <!-- DASHBOARD -->
+<div class="wrapper">
     <div id="dashboard">
         <h1>CEFR Training Dashboard</h1>
-        <div id="levels-list"></div>
+        <div id="levels-container"></div>
     </div>
 
-    <!-- LESSON ZONE -->
     <div id="lesson-zone" class="hidden">
-        <button onclick="goBack()">← Back to Dashboard</button>
+        <button onclick="goBack()">← Dashboard</button>
         <h2 id="level-title"></h2>
         
-        <div id="tabs">
-            <button class="tab-btn active-tab" onclick="showTab('vocab')">1. Vocabulary</button>
+        <div style="margin: 20px 0;">
+            <button class="tab-btn active" onclick="showTab('listen')">1. Listen & Learn</button>
             <button class="tab-btn" onclick="showTab('flash')">2. Flashcards</button>
             <button class="tab-btn" onclick="showTab('quiz')">3. Quiz</button>
-            <button class="tab-btn" onclick="showTab('build')">4. Sentences</button>
+            <button class="tab-btn" onclick="showTab('build')">4. Building</button>
         </div>
 
-        <div id="tab-content" style="margin-top:20px;">
-            <div id="vocab" class="tab-view"><div id="vocab-grid" class="vocab-list"></div></div>
-            <div id="flash" class="tab-view hidden"><div class="card" id="card" onclick="flipCard()">Click to Flip</div></div>
-            <div id="quiz" class="tab-view hidden">
-                <p id="quiz-q"></p>
-                <input id="quiz-ans" type="text">
-                <button onclick="validateQuiz()">Submit</button>
-            </div>
-            <div id="build" class="tab-view hidden">
-                <p>Construct a sentence using the vocabulary:</p>
-                <textarea id="sentence-area" style="width:100%"></textarea>
-                <button onclick="finishLevel()">Submit & Grade</button>
-            </div>
+        <div id="listen" class="tab-content">
+            <label>Speed: <input type="range" id="speed" min="0.5" max="1.5" step="0.1" value="1"></label>
+            <div id="vocab-list" class="grid-list"></div>
+        </div>
+
+        <div id="flash" class="tab-content hidden">
+            <div class="card" id="flash-card" onclick="flipCard()">Click to Flip</div>
+        </div>
+
+        <div id="quiz" class="tab-content hidden">
+            <p id="quiz-q"></p>
+            <input type="text" id="quiz-ans" style="padding:10px; width:80%;">
+            <button onclick="gradeQuiz()">Check Answer</button>
+        </div>
+
+        <div id="build" class="tab-content hidden">
+            <p>Construct a sentence:</p>
+            <textarea id="sentence-input" style="width:100%; height:80px;"></textarea>
+            <button onclick="gradeBuilding()">Finalize Level</button>
         </div>
     </div>
 </div>
 
 <script>
     const levels = [
-        { id: 0, code: 'A1', title: 'Beginner', words: ['Hola', 'Gracias', 'Uno', 'Rojo', 'Perro', 'Gato', 'Casa', 'Yo', 'Tu', 'El'], q: 'How to say Hello?', a: 'Hola' },
-        { id: 1, code: 'A2', title: 'Elementary', words: ['Tienda', 'Mapa', 'Donde', 'Calle', 'Cerca', 'Comprar', 'Libro', 'Agua', 'Pan', 'Leche'], q: 'Translate "The store"', a: 'La tienda' }
+        { id: 0, code: 'A1', title: 'Beginner', words: ['Hola', 'Gracias', 'Uno', 'Rojo', 'Perro', 'Gato', 'Casa', 'Yo', 'Tu', 'El', 'Agua', 'Pan'], q: 'Translate "Hello"', a: 'Hola' },
+        { id: 1, code: 'A2', title: 'Elementary', words: ['Tienda', 'Mapa', 'Donde', 'Calle', 'Cerca', 'Comprar', 'Libro', 'Agua', 'Pan', 'Leche', 'Amigo', 'Familia'], q: 'Translate "The store"', a: 'La tienda' }
     ];
 
     let progress = parseInt(localStorage.getItem('cefr_progress')) || 0;
-    let currentLevel = 0;
-    let cardFlipped = false;
+    let currentLvl = 0;
+    let isFlipped = false;
 
     function renderDashboard() {
-        document.getElementById('levels-list').innerHTML = levels.map(l => `
-            <div style="margin:10px 0; padding:15px; border:1px solid #ccc;" class="${l.id > progress ? 'locked' : ''}">
+        document.getElementById('levels-container').innerHTML = levels.map(l => `
+            <div style="padding:20px; border:1px solid #ddd; margin:10px 0;" class="${l.id > progress ? 'locked' : ''}">
                 <strong>${l.code}: ${l.title}</strong>
                 <button onclick="startLevel(${l.id})">Start Learning</button>
             </div>
@@ -72,41 +76,49 @@
     }
 
     function startLevel(id) {
-        currentLevel = id;
+        currentLvl = id;
         document.getElementById('level-title').innerText = levels[id].title;
-        document.getElementById('vocab-grid').innerHTML = levels[id].words.map(w => `<div class="card">${w}</div>`).join('');
-        document.getElementById('quiz-q').innerText = levels[id].q;
+        document.getElementById('vocab-list').innerHTML = levels[id].words.map(w => `
+            <div style="padding:10px; background:#f1f5f9; cursor:pointer;" onclick="speak('${w}')">${w} 🔊</div>
+        `).join('');
         document.getElementById('dashboard').classList.add('hidden');
         document.getElementById('lesson-zone').classList.remove('hidden');
     }
 
-    function showTab(tab) {
-        document.querySelectorAll('.tab-view').forEach(t => t.classList.add('hidden'));
-        document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active-tab'));
-        document.getElementById(tab).classList.remove('hidden');
-        event.target.classList.add('active-tab');
+    function speak(text) {
+        const msg = new SpeechSynthesisUtterance(text);
+        msg.lang = 'es-ES';
+        msg.rate = document.getElementById('speed').value;
+        window.speechSynthesis.speak(msg);
     }
 
     function flipCard() {
-        cardFlipped = !cardFlipped;
-        document.getElementById('card').innerText = cardFlipped ? levels[currentLevel].words[0] : 'Click to Flip';
+        isFlipped = !isFlipped;
+        document.getElementById('flash-card').innerText = isFlipped ? levels[currentLvl].words[0] : 'Click to Flip';
     }
 
-    function validateQuiz() {
-        const input = document.getElementById('quiz-ans').value;
-        if(input.toLowerCase() === levels[currentLevel].a.toLowerCase()) {
-            alert("Correct!");
-        } else { alert("Incorrect."); }
+    function showTab(id) {
+        document.querySelectorAll('.tab-content').forEach(t => t.classList.add('hidden'));
+        document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+        document.getElementById(id).classList.remove('hidden');
+        event.target.classList.add('active');
     }
 
-    function finishLevel() {
-        const sentence = document.getElementById('sentence-area').value;
-        if(sentence.length > 5) {
-            alert("Excellent! Level Passed.");
-            progress++;
-            localStorage.setItem('cefr_progress', progress);
+    function gradeQuiz() {
+        const val = document.getElementById('quiz-ans').value;
+        if(val.toLowerCase() === levels[currentLvl].a.toLowerCase()) alert("Correct!");
+        else alert("Try again.");
+    }
+
+    function gradeBuilding() {
+        if(document.getElementById('sentence-input').value.length > 10) {
+            alert("Mastery achieved! Level unlocked.");
+            if(currentLvl === progress) {
+                progress++;
+                localStorage.setItem('cefr_progress', progress);
+            }
             goBack();
-        } else { alert("Sentence too short."); }
+        } else alert("Sentence too simple.");
     }
 
     function goBack() {
