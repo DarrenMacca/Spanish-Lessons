@@ -1532,7 +1532,7 @@ function playNextWord(words){
     utter.rate = rate;
 
     utter.onend = () => {
-        if(autoPlayPaused) return;   // stop advancing while paused
+        if(autoPlayPaused) return;   // ⭐ prevents advancing while paused
         autoPlayIndex++;
         setTimeout(() => playNextWord(words), 600);
     };
@@ -1543,7 +1543,7 @@ function playNextWord(words){
 function stopAutoPlay(){
     autoPlayActive = false;
     autoPlayPaused = false;
-    speechSynthesis.cancel();   // stops immediately
+    speechSynthesis.cancel();
 }
 
 function pauseAutoPlay(){
