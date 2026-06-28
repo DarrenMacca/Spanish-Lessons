@@ -14,6 +14,7 @@
         .card { width: 140px; height: 90px; display: inline-flex; align-items: center; justify-content: center; border: 2px solid var(--primary); border-radius: 10px; margin: 8px; cursor: pointer; font-weight: bold; background: white; }
         .word-pill { display: inline-block; padding: 10px 18px; margin: 8px; background: #dbeafe; border-radius: 20px; cursor: pointer; border: 1px solid #bfdbfe; font-size: 14px; }
         .quiz-row { display: flex; align-items: center; gap: 15px; padding: 12px; border-bottom: 1px solid #f1f5f9; }
+        .global-controls { background: #eff6ff; padding: 10px; border-radius: 8px; margin-bottom: 15px; }
     </style>
 </head>
 <body>
@@ -33,6 +34,11 @@
     <!-- LEARNING -->
     <div id="learning-view" class="hidden">
         <button onclick="goBack()" style="margin-bottom:20px;">← Back to Dashboard</button>
+        
+        <div class="global-controls">
+            Audio Speed: <input type="range" id="rate" min="0.5" max="1.5" step="0.1" value="1">
+        </div>
+
         <div class="nav-tabs">
             <button class="tab-btn active" onclick="showTab('listen')">1. Listen</button>
             <button class="tab-btn" onclick="showTab('flash')">2. Flashcards</button>
@@ -53,7 +59,7 @@
             <div id="word-bank" style="margin:20px 0; display:flex; flex-wrap:wrap;"></div>
             <div id="sentence-box" style="padding:15px; border:2px dashed #cbd5e1; min-height:40px; margin-bottom:10px;"></div>
             <button onclick="checkBuild()">Submit</button>
-            <button onclick="resetBuild()">Reset</button>
+            <button onclick="resetBuild()">Reset & Next</button>
             <span id="feedback" style="margin-left:15px; font-weight:bold;"></span>
             <button id="show-answer-btn" class="hidden" onclick="revealAnswer()" style="background:#f59e0b; color:white; border:none; padding:10px; border-radius:8px;">Show Answer</button>
         </div>
@@ -66,19 +72,15 @@
         sentences: [
             {en: 'I eat bread', target: 'Yo Comer Pan'}, {en: 'The friend is happy', target: 'El Amigo Feliz'}, 
             {en: 'Where is the store', target: 'Donde Esta La Tienda'}, {en: 'You drink water', target: 'Tu Beber Agua'}, 
-            {en: 'The book is red', target: 'El Libro Rojo'}, {en: 'I drink water', target: 'Yo Beber Agua'},
-            {en: 'The street is red', target: 'La Calle Rojo'}, {en: 'The map is here', target: 'El Mapa Aquí'} // Simplified for core vocab
+            {en: 'The book is red', target: 'El Libro Rojo'}, {en: 'I am happy', target: 'Yo Feliz'},
+            {en: 'The house is here', target: 'La Casa Aquí'}, {en: 'He eats bread', target: 'El Comer Pan'}
         ]
     };
 
     let totalQs = 0, correctQs = 0, buildAttempts = 0;
 
     function openApp() { document.getElementById('dashboard-view').classList.add('hidden'); document.getElementById('learning-view').classList.remove('hidden'); }
-    function goBack() { 
-        document.getElementById('dashboard-view').classList.remove('hidden'); 
-        document.getElementById('learning-view').classList.add('hidden'); 
-        updateDashboard();
-    }
+    function goBack() { document.getElementById('dashboard-view').classList.remove('hidden'); document.getElementById('learning-view').classList.add('hidden'); updateDashboard(); }
 
     function updateDashboard() {
         const score = totalQs === 0 ? 0 : Math.round((correctQs/totalQs)*100);
@@ -87,8 +89,8 @@
     }
 
     function init() {
-        document.getElementById('listen-list').innerHTML = data.words.map(w => `<div><button onclick="speak('${w.es}', true)">🔊</button> ${w.es} - ${w.en}</div>`).join('');
-        document.getElementById('flash-area').innerHTML = data.words.map(w => `<div class="card" onclick="this.innerText=(this.innerText=='${w.en}' ? '${w.es}' : '${w.en}'); if(this.innerText=='${w.es}') speak('${w.es}', false)">${w.en}</div>`).join('');
+        document.getElementById('listen-list').innerHTML = data.words.map(w => `<div><button onclick="speak('${w.es}')">🔊</button> ${w.es} - ${w.en}</div>`).join('');
+        document.getElementById('flash-area').innerHTML = data.words.map(w => `<div class="card" onclick="this.innerText=(this.innerText=='${w.en}' ? '${w.es}' : '${w.en}'); if(this.innerText=='${w.es}') speak('${w.es}')">${w.en}</div>`).join('');
         renderQuiz(); renderBuild();
     }
 
@@ -108,7 +110,7 @@
         document.getElementById('word-bank').innerHTML = data.words.map(w => `<span class="word-pill" onclick="document.getElementById('sentence-box').innerText+=' ' + '${w.es}'">${w.es}</span>`).join('');
     }
 
-    function speak(t) { const s = new SpeechSynthesisUtterance(t); s.rate = 1; s.lang = 'es-MX'; window.speechSynthesis.speak(s); }
+    function speak(t) { const s = new SpeechSynthesisUtterance(t); s.rate = document.getElementById('rate').value; s.lang = 'es-MX'; window.speechSynthesis.speak(s); }
     function checkBuild() {
         buildAttempts++;
         if(document.getElementById('sentence-box').innerText.trim().replace(/\s+/g, ' ') === window.currentTask.target.replace(/ /g, ' ')) { document.getElementById('feedback').innerText = "Correct!"; }
