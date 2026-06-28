@@ -1,9 +1,10 @@
 <!DOCTYPE html>
-<html lang="es">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Academia de Español de la Familia</title>
+    <title>Family Spanish Learning Portal</title>
+    <!-- Tailwind CSS CDN for presentation styling -->
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
         .flip-card { perspective: 1000px; }
@@ -15,43 +16,59 @@
 </head>
 <body class="bg-slate-50 text-slate-800 min-h-screen flex flex-col font-sans">
 
+    <!-- Header Navigation Bar -->
     <header class="bg-indigo-600 text-white shadow-md p-4">
         <div class="max-w-4xl mx-auto flex justify-between items-center">
-            <h1 class="text-xl font-bold tracking-wide">🌎 Academia de la Familia</h1>
+            <h1 class="text-xl font-bold tracking-wide">🌎 Family Learning Academy</h1>
             <div class="text-sm bg-indigo-700 px-3 py-1 rounded-full font-medium">
-                Nivel Actual: <span id="user-tier-display" class="font-bold uppercase text-yellow-300">Principiante</span>
+                Current Tier: <span id="user-tier-display" class="font-bold uppercase text-yellow-300">Beginner</span>
             </div>
         </div>
     </header>
 
+    <!-- Main Dynamic Interface -->
     <main class="flex-grow p-4 max-w-4xl w-full mx-auto my-6">
         
+        <!-- Dashboard / Lesson Selection View -->
         <div id="dashboard-view" class="space-y-6">
             <div class="bg-white rounded-xl shadow-sm p-6 border border-slate-100">
-                <h2 class="text-2xl font-bold text-slate-900 mb-2">¡Hola Familia! 👋</h2>
-                <p class="text-slate-600 text-sm">Completen las lecciones de manera secuencial. Deben promediar un **90% o más** en las evaluaciones de un nivel para desbloquear la siguiente categoría.</p>
+                <h2 class="text-2xl font-bold text-slate-900 mb-2">Hello Family! 👋</h2>
+                <p class="text-slate-600 text-sm">Please complete the lessons sequentially. You must score an average of **90% or higher** on a level's evaluations to unlock the next progressive category tier.</p>
                 
+                <!-- Progress Stats Breakdown -->
                 <div class="grid grid-cols-3 gap-4 mt-4 bg-slate-50 p-4 rounded-lg text-center">
-                    <div><span class="block text-xs font-semibold text-slate-500 uppercase">Promedio Principiante</span><span id="stat-beginner" class="text-lg font-bold text-indigo-600">0%</span></div>
-                    <div><span class="block text-xs font-semibold text-slate-500 uppercase">Promedio Intermedio</span><span id="stat-intermediate" class="text-lg font-bold text-slate-400">Bloqueado</span></div>
-                    <div><span class="block text-xs font-semibold text-slate-500 uppercase">Promedio Avanzado</span><span id="stat-advanced" class="text-lg font-bold text-slate-400">Bloqueado</span></div>
+                    <div>
+                        <span class="block text-xs font-semibold text-slate-500 uppercase">Beginner Avg</span>
+                        <span id="stat-beginner" class="text-lg font-bold text-indigo-600">0%</span>
+                    </div>
+                    <div>
+                        <span class="block text-xs font-semibold text-slate-500 uppercase">Intermediate Avg</span>
+                        <span id="stat-intermediate" class="text-lg font-bold text-slate-400">Locked</span>
+                    </div>
+                    <div>
+                        <span class="block text-xs font-semibold text-slate-500 uppercase">Advanced Avg</span>
+                        <span id="stat-advanced" class="text-lg font-bold text-slate-400">Locked</span>
+                    </div>
                 </div>
             </div>
 
+            <!-- Lessons Hierarchy Grid -->
             <div>
-                <h3 class="text-lg font-bold text-slate-900 mb-4">Plan de Estudios Completo (Español Sudamericano)</h3>
+                <h3 class="text-lg font-bold text-slate-900 mb-4">Complete Curriculum Matrix (South American Spanish Focus)</h3>
                 <div id="lessons-list" class="space-y-4"></div>
             </div>
 
+            <!-- Certificate Section -->
             <div id="certificate-claim-zone" class="hidden bg-emerald-50 border-2 border-dashed border-emerald-400 rounded-xl p-6 text-center">
-                <h3 class="text-xl font-bold text-emerald-800">🎉 ¡Plan de Estudios Completado con Éxito!</h3>
-                <p class="text-emerald-700 text-sm mt-1 mb-4">¡Mantuviste un promedio mayor o igual al 90% en todos los niveles de competencia!</p>
-                <button onclick="generateCertificate()" class="bg-emerald-600 hover:bg-emerald-700 text-white font-bold px-6 py-2.5 rounded-lg transition shadow-md">Generar Certificado Oficial</button>
+                <h3 class="text-xl font-bold text-emerald-800">🎉 Curriculum Completed Successfully!</h3>
+                <p class="text-emerald-700 text-sm mt-1 mb-4">You maintained an overall score of 90% or higher across all competency modules!</p>
+                <button onclick="generateCertificate()" class="bg-emerald-600 hover:bg-emerald-700 text-white font-bold px-6 py-2.5 rounded-lg transition shadow-md">Generate Official Certificate</button>
             </div>
         </div>
 
+        <!-- Single Lesson Deep Dive View -->
         <div id="lesson-view" class="hidden space-y-6">
-            <button onclick="showDashboard()" class="text-indigo-600 font-semibold hover:text-indigo-800 transition flex items-center gap-1">← Volver al Panel de Control</button>
+            <button onclick="showDashboard()" class="text-indigo-600 font-semibold hover:text-indigo-800 transition flex items-center gap-1">← Back to Dashboard Panel</button>
             
             <div class="bg-white rounded-xl shadow-sm p-6 border border-slate-100">
                 <span id="lesson-badge" class="text-xs uppercase font-extrabold px-2.5 py-1 rounded bg-indigo-100 text-indigo-700 tracking-wider"></span>
@@ -59,92 +76,97 @@
                 <p id="lesson-desc" class="text-slate-600 text-sm"></p>
             </div>
 
+            <!-- TAB CONTAINER -->
             <div class="bg-white rounded-xl shadow-sm border border-slate-100 overflow-hidden">
                 <div class="flex border-b bg-slate-50">
-                    <button onclick="switchTab('audio')" id="tab-audio" class="flex-1 text-center py-3 font-semibold text-sm border-b-2 border-indigo-600 text-indigo-600">1. Escuchar y Aprender</button>
-                    <button onclick="switchTab('flash')" id="tab-flash" class="flex-1 text-center py-3 font-semibold text-sm border-b-2 border-transparent text-slate-500 hover:text-slate-800">2. Tarjetas de Memoria</button>
-                    <button onclick="switchTab('quiz')" id="tab-quiz" class="flex-1 text-center py-3 font-semibold text-sm border-b-2 border-transparent text-slate-500 hover:text-slate-800">3. Rendir Evaluación</button>
+                    <button onclick="switchTab('audio')" id="tab-audio" class="flex-1 text-center py-3 font-semibold text-sm border-b-2 border-indigo-600 text-indigo-600">1. Listen & Learn</button>
+                    <button onclick="switchTab('flash')" id="tab-flash" class="flex-1 text-center py-3 font-semibold text-sm border-b-2 border-transparent text-slate-500 hover:text-slate-800">2. Flashcards Practice</button>
+                    <button onclick="switchTab('quiz')" id="tab-quiz" class="flex-1 text-center py-3 font-semibold text-sm border-b-2 border-transparent text-slate-500 hover:text-slate-800">3. Start Evaluation</button>
                 </div>
 
+                <!-- Tab A: Audio Practicing Layer -->
                 <div id="content-audio" class="p-6 space-y-4">
                     <div class="flex flex-col md:flex-row md:items-center gap-4 bg-indigo-50 p-4 rounded-lg text-sm text-indigo-900 mb-2">
                         <div class="flex-1 flex items-center gap-2">
-                            <label class="font-semibold shrink-0">🔊 Velocidad:</label>
+                            <label class="font-semibold shrink-0">🔊 Playback Speed:</label>
                             <input type="range" id="audio-speed" min="0.3" max="1.0" step="0.1" value="0.8" class="w-full h-2 bg-indigo-200 rounded-lg appearance-none cursor-pointer">
                             <span id="speed-num" class="font-bold text-xs bg-indigo-200 px-2 py-0.5 rounded">0.8x</span>
                         </div>
                         <div class="flex items-center gap-2 border-t md:border-t-0 pt-2 md:pt-0 border-indigo-200">
-                            <label class="font-semibold shrink-0">🌎 Acento:</label>
+                            <label class="font-semibold shrink-0">🌎 Dialect Accent:</label>
                             <select id="audio-dialect" class="bg-white border border-indigo-300 rounded px-2 py-1 font-medium focus:outline-none">
-                                <option value="es-CO" selected>Colombia / Región Andina</option>
-                                <option value="es-AR">Argentina / Cono Sur</option>
-                                <option value="es-PE">Perú</option>
-                                <option value="es-MX">México / LatAm General</option>
+                                <option value="es-CO" selected>Colombia / Andean Region</option>
+                                <option value="es-AR">Argentina / Southern Cone</option>
+                                <option value="es-PE">Peru</option>
+                                <option value="es-MX">Mexico / LatAm General</option>
                             </select>
                         </div>
                     </div>
                     <div id="audio-words-stack" class="divide-y divide-slate-100"></div>
                 </div>
 
+                <!-- Tab B: Self-Quizzing Flash Cards Layer -->
                 <div id="content-flash" class="p-6 hidden flex flex-col items-center">
                     <div id="flashcard-box" class="flip-card w-72 h-44 cursor-pointer" onclick="this.classList.toggle('flipped')">
                         <div class="flip-card-inner w-full h-full text-center relative">
                             <div class="flip-card-front bg-indigo-600 text-white rounded-xl flex flex-col justify-center items-center p-4 shadow-md font-bold text-xl">
                                 <span id="card-front-text"></span>
-                                <span class="text-xs font-normal opacity-70 mt-4">(Clic para Girar)</span>
+                                <span class="text-xs font-normal opacity-70 mt-4">(Click to Flip Card)</span>
                             </div>
                             <div class="flip-card-back bg-amber-400 text-slate-900 rounded-xl flex flex-col justify-center items-center p-4 shadow-md font-bold text-lg">
                                 <span id="card-back-text"></span>
-                                <span class="text-xs font-normal opacity-70 mt-4">(Traducción al Español)</span>
+                                <span class="text-xs font-normal opacity-70 mt-4">(Spanish Translation)</span>
                             </div>
                         </div>
                     </div>
                     <div class="flex gap-4 mt-6">
-                        <button onclick="prevCard()" class="bg-slate-200 hover:bg-slate-300 px-4 py-2 rounded-lg font-medium text-sm">Anterior</button>
-                        <button onclick="nextCard()" class="bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-2 rounded-lg font-medium text-sm">Siguiente</button>
+                        <button onclick="prevCard()" class="bg-slate-200 hover:bg-slate-300 px-4 py-2 rounded-lg font-medium text-sm">Previous</button>
+                        <button onclick="nextCard()" class="bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-2 rounded-lg font-medium text-sm">Next</button>
                     </div>
                 </div>
 
+                <!-- Tab C: Core Quiz Section -->
                 <div id="content-quiz" class="p-6 space-y-6 hidden">
                     <div id="quiz-interactive-body" class="space-y-6"></div>
                     <div id="quiz-actions" class="pt-4 border-t">
-                        <button id="submit-btn" onclick="evaluateQuiz()" class="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-3 rounded-xl transition shadow">Enviar Evaluación Completa</button>
+                        <button id="submit-btn" onclick="evaluateQuiz()" class="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-3 rounded-xl transition shadow">Submit Assessment Answers</button>
                     </div>
                     <div id="quiz-result-banner" class="hidden p-4 rounded-xl text-center font-bold"></div>
                 </div>
             </div>
         </div>
 
+        <!-- Certificate View Mode -->
         <div id="certificate-print-view" class="hidden fixed inset-0 bg-white p-12 flex flex-col items-center justify-center border-[16px] border-indigo-900 text-center z-50">
             <div class="max-w-2xl border-4 border-amber-400 p-8 space-y-6">
-                <h1 class="text-4xl font-serif text-indigo-900 font-bold tracking-wide">CERTIFICADO DE COMPLETACIÓN</h1>
-                <p class="text-slate-500 font-medium tracking-widest text-xs uppercase">Esta verificación oficial se otorga con orgullo a</p>
-                <input type="text" id="student-name-input" placeholder="Escribe el nombre del miembro aquí" class="text-3xl font-bold text-slate-800 text-center border-b-2 border-slate-300 focus:outline-none w-full max-w-md pb-1 py-2 font-serif">
-                <p class="text-slate-600 max-w-md mx-auto text-sm leading-relaxed">Por haber alcanzado los objetivos de fluidez del idioma al registrar un promedio de calificaciones mayor o igual al 90% en los niveles Principiante, Intermedio y Avanzado de nuestro plan de estudios sudamericano.</p>
+                <h1 class="text-4xl font-serif text-indigo-900 font-bold tracking-wide">CERTIFICATE OF COMPLETION</h1>
+                <p class="text-slate-500 font-medium tracking-widest text-xs uppercase">This official milestone verification is proudly awarded to</p>
+                <input type="text" id="student-name-input" placeholder="Type family member's name here" class="text-3xl font-bold text-slate-800 text-center border-b-2 border-slate-300 focus:outline-none w-full max-w-md pb-1 py-2 font-serif">
+                <p class="text-slate-600 max-w-md mx-auto text-sm leading-relaxed">For achieving full working proficiency by registering an evaluation score average of 90% or greater across the Beginner, Intermediate, and Advanced tiers of the customized South American Spanish curriculum mapping setup.</p>
                 <div class="pt-6 border-t border-slate-200 flex justify-between items-center text-xs text-slate-400 font-mono">
-                    <span>Emitido por: Portal de la Familia</span>
-                    <span>Estado: Dominio del Núcleo Verificado 100%</span>
+                    <span>Issued by: Portal de la Familia</span>
+                    <span>Status: Verified Core Fluency 100%</span>
                 </div>
             </div>
-            <button onclick="window.print()" class="mt-8 bg-indigo-600 text-white font-bold px-6 py-2 rounded shadow print:hidden">Imprimir Certificado</button>
-            <button onclick="closeCertificate()" class="mt-2 text-xs text-slate-400 hover:underline print:hidden">Salir de la vista</button>
+            <button onclick="window.print()" class="mt-8 bg-indigo-600 text-white font-bold px-6 py-2 rounded shadow print:hidden">Print Certificate</button>
+            <button onclick="closeCertificate()" class="mt-2 text-xs text-slate-400 hover:underline print:hidden">Exit View</button>
         </div>
     </main>
 
     <script>
         const lessonData = [
-            // ==================== PRINCIPIANTE (BEGINNER) ====================
+            // ==================== BEGINNER ====================
             { 
-                id: 0, tier: 'principiante', type: 'standard', title: 'Hito 1: Números y Colores Básicos', desc: 'Cantidades del 1 al 10 y descriptores primarios.',
+                id: 0, tier: 'beginner', type: 'standard', title: 'Milestone 1: Basic Numbers & Colors', desc: 'Core quantities from 1 to 10 and primary descriptors.',
                 words: [{es: 'Uno', en: 'One'}, {es: 'Cinco', en: 'Five'}, {es: 'Diez', en: 'Ten'}, {es: 'Rojo', en: 'Red'}, {es: 'Azul', en: 'Blue'}, {es: 'Verde', en: 'Green'}],
                 sentences: [
                     {english: 'I want five red cars', scrambled: ['red', 'cinco', 'autos', 'Quiero', 'rojos'], correct: 'Quiero cinco autos rojos'},
                     {english: 'The blue book is on the table', scrambled: ['mesa', 'El', 'azul', 'está', 'en', 'la', 'libro'], correct: 'El libro azul está en la mesa'}
                 ],
-                quiz: [{q: "¿Cómo se dice 'Green' en español?", a: "Verde", alt: ["Rojo", "Azul"]}]
+                quiz: [{q: "How do you say 'Green' in Spanish?", a: "Verde", alt: ["Rojo", "Azul"]}]
             },
             {
-                id: 1, tier: 'principiante', type: 'dialogue', title: 'Simulación Práctica 1: Feria Artesanal', desc: 'Comprando souvenirs usando números y colores simples.',
+                id: 1, tier: 'beginner', type: 'dialogue', title: 'Practical Simulation 1: Local Artisan Market', desc: 'Purchasing basic souvenirs using numbers and color associations.',
                 words: [{es: 'Feria', en: 'Market'}],
                 sentences: [
                     {english: 'I want three blue hats please', scrambled: ['tres', 'por favor', 'sombreros', 'Quiero', 'azules'], correct: 'Quiero tres sombreros azules por favor'},
@@ -153,16 +175,16 @@
                 quiz: []
             },
             { 
-                id: 2, tier: 'principiante', type: 'standard', title: 'Hito 2: Fechas y Horas Elementales', desc: 'Aprende a decir la hora y los días de la semana.',
+                id: 2, tier: 'beginner', type: 'standard', title: 'Milestone 2: Elementary Dates & Times', desc: 'Learn to read basic calendar configurations and hours.',
                 words: [{es: 'Lunes', en: 'Monday'}, {es: 'Viernes', en: 'Friday'}, {es: 'A las tres', en: 'At three o\'clock'}, {es: 'Hoy es', en: 'Today is'}],
                 sentences: [
                     {english: 'Today is Monday', scrambled: ['lunes', 'Hoy', 'es'], correct: 'Hoy es lunes'},
-                    {english: 'The meeting is at three', scrambled: ['tres', 'La', 'a', 'reunión', 'las', 'es'], correct: 'La reunión es a las las tres'}
+                    {english: 'The meeting is at three', scrambled: ['tres', 'La', 'a', 'reunión', 'las', 'es'], correct: 'La reunión es a las tres'}
                 ],
-                quiz: [{q: "¿Qué día es 'Friday'?", a: "Viernes", alt: ["Lunes", "Martes"]}]
+                quiz: [{q: "Which day matches 'Friday'?", a: "Viernes", alt: ["Lunes", "Martes"]}]
             },
             {
-                id: 3, tier: 'principiante', type: 'dialogue', title: 'Simulación Práctica 2: Fijando una Cita', desc: 'Organiza un encuentro simple un día específico.',
+                id: 3, tier: 'beginner', type: 'dialogue', title: 'Practical Simulation 2: Scheduling an Appointment', desc: 'Arranging simple meetup parameters on specific days.',
                 words: [{es: 'Cita', en: 'Appointment'}],
                 sentences: [
                     {english: 'Can we meet on Friday at three?', scrambled: ['el', 'reunirnos', '¿Podemos', 'viernes', 'tres?', 'a', 'las'], correct: '¿Podemos reunirnos el viernes a las tres'},
@@ -171,16 +193,16 @@
                 quiz: []
             },
             { 
-                id: 4, tier: 'principiante', type: 'standard', title: 'Hito 3: Conversación General de Bienvenida', desc: 'Presentarse, dar el nombre y saludar.',
+                id: 4, tier: 'beginner', type: 'standard', title: 'Milestone 3: Welcoming & General Introductions', desc: 'Introducing yourself, providing names, and greeting others.',
                 words: [{es: 'Hola', en: 'Hello'}, {es: '¿Cómo te llamás?', en: 'What is your name?'}, {es: 'Me llamo', en: 'My name is'}, {es: 'Mucho gusto', en: 'Nice to meet you'}],
                 sentences: [
                     {english: 'Hello, my name is Juan', scrambled: ['Me', 'Juan', 'llamo', 'Hola'], correct: 'Hola Me llamo Juan'},
                     {english: 'Nice to meet you, what is your name?', scrambled: ['gusto', '¿cómo', 'llamás?', 'Mucho', 'te'], correct: 'Mucho gusto ¿cómo te llamás'}
                 ],
-                quiz: [{q: "¿Qué significa 'Mucho gusto'?", a: "Nice to meet you", alt: ["Goodbye", "Thank you"]}]
+                quiz: [{q: "What is the true translation of 'Mucho gusto'?", a: "Nice to meet you", alt: ["Goodbye", "Thank you"]}]
             },
             {
-                id: 5, tier: 'principiante', type: 'dialogue', title: 'Simulación Práctica 3: El Encuentro Inicial', desc: 'Saluda a un nuevo vecino en el edificio.',
+                id: 5, tier: 'beginner', type: 'dialogue', title: 'Practical Simulation 3: Meet the Neighbors', desc: 'Greeting an individual setting up an apartment next door.',
                 words: [{es: 'Vecino', en: 'Neighbor'}],
                 sentences: [
                     {english: 'Hello, what is your name?', scrambled: ['¿cómo', 'Hola', 'llamás?', 'te'], correct: 'Hola ¿cómo te llamás'},
@@ -189,16 +211,16 @@
                 quiz: []
             },
             { 
-                id: 6, tier: 'principiante', type: 'standard', title: 'Hito 4: Pedir Comida Básica', desc: 'Ordenar bebidas e ítems de cafetería esenciales.',
+                id: 6, tier: 'beginner', type: 'standard', title: 'Milestone 4: Ordering Food Essentials', desc: 'Basic beverage ordering and handling basic cafe metrics.',
                 words: [{es: 'Café', en: 'Coffee'}, {es: 'Agua', en: 'Water'}, {es: 'Por favor', en: 'Please'}, {es: 'La cuenta', en: 'The bill'}],
                 sentences: [
                     {english: 'I want a coffee please', scrambled: ['por favor', 'un', 'café', 'Quiero'], correct: 'Quiero un café por favor'},
                     {english: 'The bill please', scrambled: ['por favor', 'La', 'cuenta'], correct: 'La cuenta por favor'}
                 ],
-                quiz: [{q: "¿Cómo se pide 'The bill'?", a: "La cuenta", alt: ["El menú", "El mozo"]}]
+                quiz: [{q: "How do you request 'The bill' in South America?", a: "La cuenta", alt: ["El menú", "El mozo"]}]
             },
             {
-                id: 7, tier: 'principiante', type: 'dialogue', title: 'Simulación Práctica 4: En el Café de la Esquina', desc: 'Pide algo sencillo de tomar al mesero.',
+                id: 7, tier: 'beginner', type: 'dialogue', title: 'Practical Simulation 4: At the Corner Café Table', desc: 'Getting a waiter\'s attention to order a basic table beverage.',
                 words: [{es: 'Mozo', en: 'Waiter'}],
                 sentences: [
                     {english: 'I want a glass of water please', scrambled: ['un', 'por favor', 'Quiero', 'vaso', 'agua', 'de'], correct: 'Quiero un vaso de agua por favor'},
@@ -207,16 +229,16 @@
                 quiz: []
             },
             { 
-                id: 8, tier: 'principiante', type: 'standard', title: 'Hito 5: Compras Esenciales', desc: 'Vocabulario para preguntar precios y pedir ropa.',
+                id: 8, tier: 'beginner', type: 'standard', title: 'Milestone 5: Essential Shopping Exchanges', desc: 'Basic pricing questions and requesting clothing pieces.',
                 words: [{es: 'Remera', en: 'T-shirt'}, {es: '¿Cuánto cuesta?', en: 'How much is it?'}, {es: 'Plata', en: 'Money'}, {es: 'Tienda', en: 'Store'}],
                 sentences: [
                     {english: 'How much does this t-shirt cost?', scrambled: ['cuesta', 'remera?', 'esta', '¿Cuánto'], correct: '¿Cuánto cuesta esta remera'},
                     {english: 'I have money', scrambled: ['plata', 'Yo', 'tengo'], correct: 'Yo tengo plata'}
                 ],
-                quiz: [{q: "¿Qué significa 'Remera'?", a: "T-shirt", alt: ["Shoes", "Pants"]}]
+                quiz: [{q: "What item corresponds to 'Remera'?", a: "T-shirt", alt: ["Shoes", "Pants"]}]
             },
             {
-                id: 9, tier: 'principiante', type: 'dialogue', title: 'Simulación Práctica 5: Comprando una Remera', desc: 'Pregunta el costo de una prenda expuesta.',
+                id: 9, tier: 'beginner', type: 'dialogue', title: 'Practical Simulation 5: Buying a T-Shirt', desc: 'Interacting with a retail assistant regarding store display inventory.',
                 words: [{es: 'Vidriera', en: 'Shop window'}],
                 sentences: [
                     {english: 'How much is that red t-shirt?', scrambled: ['roja?', 'remera', '¿Cuánto', 'cuesta', 'esa'], correct: '¿Cuánto cuesta esa remera roja'},
@@ -225,16 +247,16 @@
                 quiz: []
             },
             { 
-                id: 10, tier: 'principiante', type: 'standard', title: 'Hito 6: Direcciones Simples', desc: 'Conceptos básicos para orientarse en la calle.',
+                id: 10, tier: 'beginner', type: 'standard', title: 'Milestone 6: Simple Navigation & Directions', desc: 'Primary parameters for orienting yourself out on town blocks.',
                 words: [{es: 'Acá', en: 'Here'}, {es: 'Allá', en: 'There'}, {es: 'Derecho', en: 'Straight ahead'}, {es: '¿Dónde está...?', en: 'Where is...?'}, {es: 'El hotel', en: 'The hotel'}],
                 sentences: [
                     {english: 'Where is the hotel?', scrambled: ['está', '¿Dónde', 'hotel?', 'el'], correct: '¿Dónde está el hotel'},
                     {english: 'Go straight ahead', scrambled: ['derecho', 'Andá'], correct: 'Andá derecho'}
                 ],
-                quiz: [{q: "¿Qué es 'Derecho'?", a: "Straight ahead", alt: ["To the left", "To the right"]}]
+                quiz: [{q: "What command represents 'Straight ahead'?", a: "Derecho", alt: ["To the left", "To the right"]}]
             },
             {
-                id: 11, tier: 'principiante', type: 'dialogue', title: 'Simulación Práctica 6: Preguntando en la Calle', desc: 'Consigue indicaciones rápidas para llegar a tu hotel.',
+                id: 11, tier: 'beginner', type: 'dialogue', title: 'Practical Simulation 6: Street Wayfinding Check', desc: 'Stopping a pedestrian on the avenue sidewalk to confirm your lodging location.',
                 words: [{es: 'Calle', en: 'Street'}],
                 sentences: [
                     {english: 'Excuse me, where is the hotel?', scrambled: ['¿dónde', 'Disculpe', 'el', 'está', 'hotel?'], correct: 'Disculpe ¿dónde está el hotel'},
@@ -243,18 +265,18 @@
                 quiz: []
             },
 
-            // ==================== INTERMEDIO (INTERMEDIATE) ====================
+            // ==================== INTERMEDIATE ====================
             { 
-                id: 12, tier: 'intermedio', type: 'standard', title: 'Hito 7: Números y Colores Compuestos', desc: 'Cifras hasta el 1000 y matices detallados.',
+                id: 12, tier: 'intermediate', type: 'standard', title: 'Milestone 7: Compound Numbers & Custom Shades', desc: 'Advancing tracking figures up to 1000 and secondary colors.',
                 words: [{es: 'Ciento cincuenta', en: '150'}, {es: 'Rojo oscuro', en: 'Dark red'}, {es: 'Gris', en: 'Grey'}, {es: 'Dólares', en: 'Dollars'}],
                 sentences: [
-                    {english: 'The price is one hundred fifty dollars', scrambled: ['ciento', 'El', 'cincuenta', 'precio', 'dólares', 'es'], correct: 'El precio es ciento cincuenta dólares'},
+                    {english: 'The price is one hundred fifty dollars', scrambled: ['ciento', 'El', 'cincuenta', 'precio', 'dólares', 'es'], correct: 'El price es ciento cincuenta dólares'},
                     {english: 'I prefer the dark red jacket', scrambled: ['campera', 'rojo', 'Prefiero', 'oscura', 'la'], correct: 'Prefiero la campera rojo oscura'}
                 ],
-                quiz: [{q: "¿Qué número es 'Ciento cincuenta'?", a: "150", alt: ["50", "105"]}]
+                quiz: [{q: "Identify the number 'Ciento cincuenta':", a: "150", alt: ["50", "105"]}]
             },
             {
-                id: 13, tier: 'intermedio', type: 'dialogue', title: 'Simulación Práctica 7: Presupuesto de Galería', desc: 'Negocia el valor de un tapizado de color específico.',
+                id: 13, tier: 'intermediate', type: 'dialogue', title: 'Practical Simulation 7: Gallery Quote Discussion', desc: 'Determining material pricing conditions inside a furniture display showroom.',
                 words: [{es: 'Presupuesto', en: 'Quote/Budget'}],
                 sentences: [
                     {english: 'The grey table costs one hundred fifty', scrambled: ['ciento', 'La', 'cincuenta', 'gris', 'mesa', 'cuesta'], correct: 'La mesa gris cuesta ciento cincuenta'},
@@ -263,16 +285,16 @@
                 quiz: []
             },
             { 
-                id: 14, tier: 'intermedio', type: 'standard', title: 'Hito 8: Horarios de Transporte y Fechas de Viaje', desc: 'Planifica partidas y trasbordos usando calendarios.',
+                id: 14, tier: 'intermediate', type: 'standard', title: 'Milestone 8: Commute & Trip Calendars', desc: 'Arranging specific transport bookings using hours and upcoming months.',
                 words: [{es: 'El tren', en: 'The train'}, {es: 'Sale', en: 'Leaves'}, {es: 'Ocho y media', en: 'Eight thirty'}, {es: 'Próximo mes', en: 'Next month'}],
                 sentences: [
                     {english: 'The train leaves at eight thirty', scrambled: ['ocho', 'El', 'a', 'tren', 'las', 'y', 'sale', 'media'], correct: 'El tren sale a las ocho y media'},
                     {english: 'My trip is next month', scrambled: ['viaje', 'mes', 'Mi', 'es', 'el', 'próximo'], correct: 'Mi viaje es el próximo mes'}
                 ],
-                quiz: [{q: "¿Qué significa 'Sale'?", a: "Leaves", alt: ["Arrives", "Stops"]}]
+                quiz: [{q: "What does 'Sale' mean in transit hubs?", a: "Leaves", alt: ["Arrives", "Stops"]}]
             },
             {
-                id: 15, tier: 'intermedio', type: 'dialogue', title: 'Simulación Práctica 8: En la Terminal de Colectivos', desc: 'Consulta el itinerario de un viaje programado de fin de semana.',
+                id: 15, tier: 'intermediate', type: 'dialogue', title: 'Practical Simulation 8: At the Central Bus Terminal', desc: 'Inquiring with window ticket agents regarding cross-province weekend departures.',
                 words: [{es: 'Boleto', en: 'Ticket'}],
                 sentences: [
                     {english: 'Does the bus leave at eight thirty?', scrambled: ['colectivo', 'las', 'ocho', '¿El', 'sale', 'y', 'a', 'media?'], correct: '¿El colectivo sale a las ocho y media'},
@@ -281,16 +303,16 @@
                 quiz: []
             },
             { 
-                id: 16, tier: 'intermedio', type: 'standard', title: 'Hito 9: Conversación Fluida e Intercambio', desc: 'Hablar de profesiones, procedencia y hobbies.',
+                id: 16, tier: 'intermediate', type: 'standard', title: 'Milestone 9: Social Contexts & Careers', desc: 'Sharing background origins, vocational fields, and housing terms.',
                 words: [{es: 'Trabajo', en: 'Job/Work'}, {es: 'Estudiante', en: 'Student'}, {es: '¿A qué te dedicás?', en: 'What do you do for a living?'}, {es: 'Departamento', en: 'Apartment'}],
                 sentences: [
                     {english: 'I live in a beautiful apartment', scrambled: ['un', 'hermoso', 'departamento', 'en', 'Vivo'], correct: 'Vivo en un hermoso departamento'},
                     {english: 'What do you do for a living here?', scrambled: ['dedicás', '¿A', 'acá?', 'qué', 'te'], correct: '¿A qué te dedicás acá'}
                 ],
-                quiz: [{q: "¿Cómo se pregunta informalmente por el trabajo en el Cono Sur?", a: "¿A qué te dedicás?", alt: ["¿Qué haces?", "¿Dónde trabajas?"]}]
+                quiz: [{q: "Which informal regional phrasing asks what you do for work?", a: "¿A qué te dedicás?", alt: ["¿Qué haces?", "Where is it?"]}]
             },
             {
-                id: 17, tier: 'intermedio', type: 'dialogue', title: 'Simulación Práctica 9: Conociendo a un Compañero', desc: 'Entabla una conversación laboral informal durante el almuerzo.',
+                id: 17, tier: 'intermediate', type: 'dialogue', title: 'Practical Simulation 9: Professional Networking Chat', desc: 'Discussing daily routines and background with a new group project partner.',
                 words: [{es: 'Colega', en: 'Colleague'}],
                 sentences: [
                     {english: 'I work here and I am a student', scrambled: ['estudiante', 'trabajo', 'y', 'acá', 'soy', 'Yo'], correct: 'Yo trabajo acá y soy estudiante'},
@@ -299,16 +321,16 @@
                 quiz: []
             },
             { 
-                id: 18, tier: 'intermedio', type: 'standard', title: 'Hito 10: Pedidos Gastronómicos y Alérgenos', desc: 'Especificar términos de cocción y restricciones de menú.',
+                id: 18, tier: 'intermediate', type: 'standard', title: 'Milestone 10: Advanced Dining & Dietary Needs', desc: 'Specifying ingredient exclusions and custom menu modifications.',
                 words: [{es: 'Gaseosa', en: 'Soda'}, {es: 'Sin gluten', en: 'Gluten-free'}, {es: 'Vino tinto', en: 'Red wine'}, {es: 'Mozo', en: 'Waiter'}],
                 sentences: [
                     {english: 'I need a gluten free menu please', scrambled: ['por favor', 'menú', 'Necesito', 'un', 'sin', 'gluten'], correct: 'Necesito un menú sin gluten por favor'},
                     {english: 'Bring me a red wine and a soda', scrambled: ['gaseosa', 'un', 'vino', 'Traiga', 'y', 'una', 'tinto'], correct: 'Traiga un vino tinto y una gaseosa'}
                 ],
-                quiz: [{q: "¿Qué es una 'Gaseosa'?", a: "Soda", alt: ["Juice", "Beer"]}]
+                quiz: [{q: "What item is a 'Gaseosa'?", a: "Soda", alt: ["Juice", "Beer"]}]
             },
             {
-                id: 19, tier: 'intermedio', type: 'dialogue', title: 'Simulación Práctica 10: Ordenando en el Restorán', desc: 'Modifica los ingredientes de un plato pidiéndoselo al mozo.',
+                id: 19, tier: 'intermediate', type: 'dialogue', title: 'Practical Simulation 10: Special Menu Requests', desc: 'Confirming processing allergen safety directly with restaurant service workers.',
                 words: [{es: 'Plato', en: 'Dish'}],
                 sentences: [
                     {english: 'Is this dish gluten free?', scrambled: ['sin', 'este', '¿Es', 'plato', 'gluten?'], correct: '¿Es este plato sin gluten'},
@@ -317,16 +339,16 @@
                 quiz: []
             },
             { 
-                id: 20, tier: 'intermedio', type: 'standard', title: 'Hito 11: Devoluciones y Talles de Ropa', desc: 'Hacer valer reclamos en tiendas de ropa.',
+                id: 20, tier: 'intermediate', type: 'standard', title: 'Milestone 11: Retail Returns & Sizing Exchanges', desc: 'Managing purchase queries, apparel fit, and handling items with flaws.',
                 words: [{es: 'Talle M', en: 'Size M'}, {es: 'Cambiar', en: 'To exchange'}, {es: 'Probadores', en: 'Fitting rooms'}, {es: 'Está fallada', en: 'It is defective'}],
                 sentences: [
                     {english: 'I want to exchange this jacket', scrambled: ['esta', 'cambiar', 'campera', 'Quiero'], correct: 'Quiero cambiar esta campera'},
                     {english: 'Where are the fitting rooms?', scrambled: ['los', 'están', '¿Dónde', 'probadores?'], correct: '¿Dónde están los probadores'}
                 ],
-                quiz: [{q: "¿Qué significa 'Talle M'?", a: "Size M", alt: ["Brand M", "Color M"]}]
+                quiz: [{q: "What does 'Talle M' represent?", a: "Size M", alt: ["Brand M", "Color M"]}]
             },
             {
-                id: 21, tier: 'intermedio', type: 'dialogue', title: 'Simulación Práctica 11: Reclamo por Prenda Fallada', desc: 'Solicita el cambio de ropa alegando un defecto en costura.',
+                id: 21, tier: 'intermediate', type: 'dialogue', title: 'Practical Simulation 11: Customer Support Claim', desc: 'Requesting a manufacturing credit exchange directly at the store sales counter.',
                 words: [{es: 'Falla', en: 'Defect'}],
                 sentences: [
                     {english: 'This jacket is defective, I want to exchange it', scrambled: ['campera', 'cambiarla', 'Esta', 'está', 'fallada', 'quiero'], correct: 'Esta campera está fallada quiero cambiarla'},
@@ -335,16 +357,16 @@
                 quiz: []
             },
             { 
-                id: 22, tier: 'intermedio', type: 'standard', title: 'Hito 12: Direcciones Urbanas Complejas', desc: 'Manejo de referencias como cuadras, semáforos y esquinas.',
+                id: 22, tier: 'intermediate', type: 'standard', title: 'Milestone 12: Urban Mapping & Spatial Landmarks', desc: 'Navigating layouts using tracking references like city blocks, traffic signals, and corners.',
                 words: [{es: 'Cuadras', en: 'Blocks'}, {es: 'Semáforo', en: 'Traffic light'}, {es: 'Doblar', en: 'To turn'}, {es: 'A mano izquierda', en: 'On the left hand side'}],
                 sentences: [
                     {english: 'Turn left at the traffic light', scrambled: ['mano', 'el', 'Doble', 'a', 'izquierda', 'en', 'semáforo'], correct: 'Doble en el semáforo a mano izquierda'},
                     {english: 'Walk two blocks straight', scrambled: ['Camine', 'dos', 'derecho', 'cuadras'], correct: 'Camine dos cuadras derecho'}
                 ],
-                quiz: [{q: "¿Qué mide la palabra 'Cuadras'?", a: "City blocks", alt: ["Meters", "Miles"]}]
+                quiz: [{q: "What distance marker is tracked by the word 'Cuadras'?", a: "City blocks", alt: ["Meters", "Miles"]}]
             },
             {
-                id: 23, tier: 'intermedio', type: 'dialogue', title: 'Simulación Práctica 12: Navegando el Centro Urbano', desc: 'Ayuda a un taxista a encontrar una esquina combinando indicaciones.',
+                id: 23, tier: 'intermediate', type: 'dialogue', title: 'Practical Simulation 12: Directing the Taxi Driver', desc: 'Giving coordinated landmark directions to a driver navigating a busy sector.',
                 words: [{es: 'Esquina', en: 'Corner'}],
                 sentences: [
                     {english: 'Drive two blocks and turn left', scrambled: ['y', 'doble', 'Maneje', 'dos', 'a', 'izquierda', 'cuadras', 'la'], correct: 'Maneje dos cuadras y doble a la izquierda'},
@@ -353,18 +375,18 @@
                 quiz: []
             },
 
-            // ==================== AVANZADO (ADVANCED) ====================
+            // ==================== ADVANCED ====================
             { 
-                id: 24, tier: 'avanzado', type: 'standard', title: 'Hito 13: Cifras Millonarias y Teoría Cromática', desc: 'Estadísticas macroeconómicas y descripciones abstractas.',
+                id: 24, tier: 'advanced', type: 'standard', title: 'Milestone 13: Macro Figures & Palette Abstractions', desc: 'Discussing major figures in the millions and color compositions.',
                 words: [{es: 'Tres millones', en: 'Three million'}, {es: 'Desbalanceado', en: 'Unbalanced'}, {es: 'Tonalidad', en: 'Tonality'}, {es: 'Inversión', en: 'Investment'}],
                 sentences: [
                     {english: 'The investment is three million dollars', scrambled: ['de', 'La', 'es', 'tres', 'millones', 'inversión', 'dólares'], correct: 'La inversión es de tres millones dólares'},
                     {english: 'This tonality looks unbalanced', scrambled: ['tonalidad', 'desbalanceada', 'Esta', 'se', 've'], correct: 'Esta tonalidad se ve desbalanceada'}
                 ],
-                quiz: [{q: "Traducción de 'Three million':", a: "Tres millones", alt: ["Tres mil", "Tres millones de mil"]}]
+                quiz: [{q: "Translate 'Three million':", a: "Tres millones", alt: ["Tres mil", "Tres millones de mil"]}]
             },
             {
-                id: 25, tier: 'avanzado', type: 'dialogue', title: 'Simulación Práctica 13: Negociación de Bienes Raíces', desc: 'Discute la paleta de colores y costo de un inmueble.',
+                id: 25, tier: 'advanced', type: 'dialogue', title: 'Practical Simulation 13: Real Estate Corporate Discussion', desc: 'Analyzing architecture investments, design choices, and interior property balances.',
                 words: [{es: 'Inmobiliaria', en: 'Real Estate'}],
                 sentences: [
                     {english: 'The house costs three million dollars', scrambled: ['millones', 'La', 'cuesta', 'tres', 'casa', 'dólares'], correct: 'La casa cuesta tres millones dólares'},
@@ -373,16 +395,16 @@
                 quiz: []
             },
             { 
-                id: 26, tier: 'avanzado', type: 'standard', title: 'Hito 14: Estructuras Temporales Subjuntivas', desc: 'Uso del pluscuamperfecto para coordinar plazos.',
+                id: 26, tier: 'advanced', type: 'standard', title: 'Milestone 14: Subjunctive Timing Modals', desc: 'Coordinating hypothetical compound outcomes and legal timeline limits.',
                 words: [{es: 'Hubiera sabido', en: 'Had known'}, {es: 'Plazo fiscal', en: 'Fiscal deadline'}, {es: 'Antes del viernes', en: 'Before Friday'}, {es: 'Vencimiento', en: 'Expiration'}],
                 sentences: [
                     {english: 'If I had known, I would have paid before Friday', scrambled: ['hubiera', 'pagado', 'viernes', 'Si', 'antes', 'del', 'sabido', 'habría'], correct: 'Si hubiera sabido habría pagado antes del viernes'},
                     {english: 'The fiscal deadline expires today', scrambled: ['vence', 'El', 'hoy', 'plazo', 'fiscal'], correct: 'El plazo fiscal vence hoy'}
                 ],
-                quiz: [{q: "¿Qué modo verbal es 'Hubiera sabido'?", a: "Subjuntivo", alt: ["Indicativo", "Imperativo"]}]
+                quiz: [{q: "What grammatical framework is 'Hubiera sabido'?", a: "Substantive Past Subjunctive", alt: ["Indicative Present", "Imperative Command"]}]
             },
             {
-                id: 27, tier: 'avanzado', type: 'dialogue', title: 'Simulación Práctica 14: Auditoría Contable Contrarreloj', desc: 'Defiende plazos fiscales impositivos frente a un auditor.',
+                id: 27, tier: 'advanced', type: 'dialogue', title: 'Practical Simulation 14: Financial Review Meeting', desc: 'Addressing operational timelines and filing extensions with accounting auditors.',
                 words: [{es: 'Auditoría', en: 'Audit'}],
                 sentences: [
                     {english: 'If we had known the deadline we would have changed it', scrambled: ['hubiéramos', 'el', 'plazo', 'cambiado', 'Si', 'sabido', 'lo'], correct: 'Si hubiéramos sabido el plazo lo cambiado'},
@@ -391,16 +413,16 @@
                 quiz: []
             },
             { 
-                id: 28, tier: 'avanzado', type: 'standard', title: 'Hito 15: Debates Filosóficos y Discursos Sociopolíticos', desc: 'Argumentación avanzada sobre macrosistemas.',
+                id: 28, tier: 'advanced', type: 'standard', title: 'Milestone 15: Philosophical Positions & Public Forums', desc: 'Formulating high-level social arguments, structural debates, and macro concepts.',
                 words: [{es: 'Desde mi punto de vista', en: 'From my point of view'}, {es: 'Precarización', en: 'Job insecurity'}, {es: 'Consenso', en: 'Consensus'}, {es: 'Utopía', en: 'Utopia'}],
                 sentences: [
                     {english: 'From my point of view it is a utopia', scrambled: ['punto', 'una', 'vista', 'es', 'utopía', 'Desde', 'mi'], correct: 'Desde mi punto de vista es una utopía'},
                     {english: 'We need an urgent social consensus', scrambled: ['social', 'Consenso', 'urgente', 'necesitamos', 'un'], correct: 'Consenso necesitamos un social urgente'}
                 ],
-                quiz: [{q: "¿Qué significa 'Precarización'?", a: "Job insecurity", alt: ["Richness", "Stability"]}]
+                quiz: [{q: "What concept is explored by 'Precarización'?", a: "Job insecurity/instability", alt: ["System Prosperity", "Market Wealth"]}]
             },
             {
-                id: 29, tier: 'avanzado', type: 'dialogue', title: 'Simulación Práctica 15: Foro de Políticas Públicas', desc: 'Discute reformas estructurales usando terminología culta.',
+                id: 29, tier: 'advanced', type: 'dialogue', title: 'Practical Simulation 15: Structural Policy Seminar', desc: 'Presenting long-term systemic solutions using high-tier community nomenclature.',
                 words: [{es: 'Foro', en: 'Forum'}],
                 sentences: [
                     {english: 'From my point of view we must reach a consensus', scrambled: ['debemos', 'un', 'consenso', 'vista', 'mi', 'llegar', 'Desde', 'a'], correct: 'Desde mi punto de vista debemos llegar a un consenso'},
@@ -410,163 +432,211 @@
             }
         ];
 
-        let userScores = JSON.parse(localStorage.getItem('familia_spanish_scores')) || {};
-        if (Object.keys(userScores).length === 0) {
-            lessonData.forEach(l => { userScores[l.id] = null; });
-        }
+        let userScores = {};
+        try {
+            const raw = localStorage.getItem('familia_spanish_scores');
+            if (raw) userScores = JSON.parse(raw);
+        } catch(e) { console.error(e); }
+
+        lessonData.forEach(l => {
+            if (userScores[l.id] === undefined) userScores[l.id] = null;
+        });
         
-        let activeId = 0, activeCardIndex = 0;
+        let activeId = 0;
+        let activeCardIndex = 0;
         let selectedSentenceWords = {}; 
         let quizAttempts = {};     
         let sentenceAttempts = {}; 
 
-        document.getElementById('audio-speed').addEventListener('input', (e) => {
-            document.getElementById('speed-num').innerText = `${e.target.value}x`;
-        });
-
-        function calculateTierAverages() {
-            const compute = (tierName) => {
-                let items = lessonData.filter(l => l.tier === tierName);
-                let valid = items.map(l => userScores[l.id]).filter(v => v !== null);
-                return valid.length > 0 ? Math.round(valid.reduce((a,b)=>a+b,0)/valid.length) : null;
-            };
-            return { principiante: compute('principiante'), intermedio: compute('intermedio'), avanzado: compute('avanzado') };
+        function runStartupConfig() {
+            const speedSlider = document.getElementById('audio-speed');
+            if(speedSlider) {
+                speedSlider.addEventListener('input', function(e) {
+                    const numLabel = document.getElementById('speed-num');
+                    if(numLabel) numLabel.innerText = e.target.value + 'x';
+                });
+            }
+            renderDashboard();
         }
 
-        function speakWord(text) {
+        function calculateTierAverages() {
+            const calcForTier = (tierKey) => {
+                const subSet = lessonData.filter(item => item.tier === tierKey);
+                const validScores = subSet.map(item => userScores[item.id]).filter(v => v !== null);
+                if(validScores.length === 0) return null;
+                const total = validScores.reduce((acc, curr) => acc + curr, 0);
+                return Math.round(total / validScores.length);
+            };
+            return {
+                beginner: calcForTier('beginner'),
+                intermediate: calcForTier('intermediate'),
+                advanced: calcForTier('advanced')
+            };
+        }
+
+        function speakWord(textString) {
+            if (!('speechSynthesis' in window)) return;
             window.speechSynthesis.cancel();
-            let msg = new SpeechSynthesisUtterance(text);
-            msg.lang = document.getElementById('audio-dialect').value;
-            msg.rate = parseFloat(document.getElementById('audio-speed').value);
-            window.speechSynthesis.speak(msg);
+            const speechUnit = new SpeechSynthesisUtterance(textString);
+            const chosenDialect = document.getElementById('audio-dialect');
+            const chosenSpeed = document.getElementById('audio-speed');
+            if(chosenDialect) speechUnit.lang = chosenDialect.value;
+            if(chosenSpeed) speechUnit.rate = parseFloat(chosenSpeed.value);
+            window.speechSynthesis.speak(speechUnit);
         }
 
         function renderDashboard() {
-            const avgs = calculateTierAverages();
+            const scoreMetrics = calculateTierAverages();
             
-            const beginnerLessons = lessonData.filter(l => l.tier === 'principiante');
-            const intermediateLessons = lessonData.filter(l => l.tier === 'intermedio');
+            const beginnerGroup = lessonData.filter(l => l.tier === 'beginner');
+            const intermediateGroup = lessonData.filter(l => l.tier === 'intermediate');
             
-            const begPassedAll = beginnerLessons.every(l => userScores[l.id] !== null && userScores[l.id] >= 90);
-            const intPassedAll = intermediateLessons.every(l => userScores[l.id] !== null && userScores[l.id] >= 90);
+            const begClearedAll = beginnerGroup.every(l => userScores[l.id] !== null && userScores[l.id] >= 90);
+            const intClearedAll = intermediateGroup.every(l => userScores[l.id] !== null && userScores[l.id] >= 90);
 
-            const intUnlocked = avgs.principiante !== null && begPassedAll;
-            const advUnlocked = intUnlocked && avgs.intermedio !== null && intPassedAll;
+            const isIntermediateUnlocked = (scoreMetrics.beginner !== null) && begClearedAll;
+            const isAdvancedUnlocked = isIntermediateUnlocked && (scoreMetrics.intermediate !== null) && intClearedAll;
 
-            document.getElementById('stat-beginner').innerText = avgs.principiante !== null ? `${avgs.principiante}%` : '0%';
-            document.getElementById('stat-intermediate').innerText = intUnlocked ? (avgs.intermedio !== null ? `${avgs.intermedio}%` : '0%') : 'Bloqueado';
-            document.getElementById('stat-advanced').innerText = advUnlocked ? (avgs.avanzado !== null ? `${avgs.avanzado}%` : '0%') : 'Bloqueado';
+            const begDom = document.getElementById('stat-beginner');
+            const intDom = document.getElementById('stat-intermediate');
+            const advDom = document.getElementById('stat-advanced');
 
-            document.getElementById('stat-intermediate').className = `text-lg font-bold ${intUnlocked ? 'text-indigo-600' : 'text-slate-400'}`;
-            document.getElementById('stat-advanced').className = `text-lg font-bold ${advUnlocked ? 'text-indigo-600' : 'text-slate-400'}`;
+            if(begDom) begDom.innerText = scoreMetrics.beginner !== null ? scoreMetrics.beginner + '%' : '0%';
+            if(intDom) {
+                intDom.innerText = isIntermediateUnlocked ? (scoreMetrics.intermediate !== null ? scoreMetrics.intermediate + '%' : '0%') : 'Locked';
+                intDom.className = "text-lg font-bold " + (isIntermediateUnlocked ? 'text-indigo-600' : 'text-slate-400');
+            }
+            if(advDom) {
+                advDom.innerText = isAdvancedUnlocked ? (scoreMetrics.advanced !== null ? scoreMetrics.advanced + '%' : '0%') : 'Locked';
+                advDom.className = "text-lg font-bold " + (isAdvancedUnlocked ? 'text-indigo-600' : 'text-slate-400');
+            }
 
-            let currentTier = 'Principiante';
-            if(intUnlocked) currentTier = 'Intermedio';
-            if(advUnlocked) currentTier = 'Avanzado';
-            document.getElementById('user-tier-display').innerText = currentTier;
+            let tierBannerText = 'Beginner';
+            if(isIntermediateUnlocked) tierBannerText = 'Intermediate';
+            if(isAdvancedUnlocked) tierBannerText = 'Advanced';
+            
+            const tierDisplay = document.getElementById('user-tier-display');
+            if(tierDisplay) tierDisplay.innerText = tierBannerText;
 
-            let html = '';
-            lessonData.forEach(l => {
-                let isLocked = (l.tier === 'intermedio' && !intUnlocked) || (l.tier === 'avanzado' && !advUnlocked);
+            let rowHtml = '';
+            lessonData.forEach(item => {
+                let accessLocked = false;
+                if(item.tier === 'intermediate' && !isIntermediateUnlocked) accessLocked = true;
+                if(item.tier === 'advanced' && !isAdvancedUnlocked) accessLocked = true;
                 
-                if (!isLocked && l.type === 'dialogue') {
-                    let prevStandardLesson = lessonData.find(prev => prev.id === (l.id - 1));
-                    if (prevStandardLesson && (userScores[prevStandardLesson.id] === null || userScores[prevStandardLesson.id] < 90)) {
-                        isLocked = true;
+                if (!accessLocked && item.type === 'dialogue') {
+                    let precedingItem = lessonData.find(x => x.id === (item.id - 1));
+                    if (precedingItem && (userScores[precedingItem.id] === null || userScores[precedingItem.id] < 90)) {
+                        accessLocked = true;
                     }
                 }
 
-                let score = userScores[l.id];
-                let isDiag = l.type === 'dialogue';
-                let titlePrefix = isDiag ? '💬 Diálogo: ' : '📖 Unidad: ';
-                let bgStyle = isDiag ? 'bg-amber-50/60 border-amber-200' : 'bg-white border-indigo-100';
+                const currentSavedScore = userScores[item.id];
+                const isItemDialogue = item.type === 'dialogue';
+                const segmentHeader = isItemDialogue ? '💬 Conversation Simulator: ' : '📖 Content Module: ';
+                const colorThemeClass = isItemDialogue ? 'bg-amber-50/60 border-amber-200' : 'bg-white border-indigo-100';
 
-                html += `
-                <div class="p-5 rounded-xl border flex flex-col sm:flex-row justify-between sm:items-center gap-4 ${isLocked ? 'opacity-55 border-slate-200 bg-white shadow-none' : bgStyle + ' hover:shadow-md transition'}">
+                rowHtml += `
+                <div class="p-5 rounded-xl border flex flex-col sm:flex-row justify-between sm:items-center gap-4 ` + (accessLocked ? 'opacity-55 border-slate-200 bg-white shadow-none' : colorThemeClass + ' hover:shadow-md transition') + `">
                     <div>
-                        <span class="text-[10px] font-extrabold uppercase tracking-wider px-2 py-0.5 rounded ${isDiag ? 'bg-amber-200 text-amber-900' : 'bg-indigo-100 text-indigo-700'}">${l.tier}</span>
-                        <h4 class="text-base font-bold text-slate-900 mt-1">${titlePrefix}${l.title}</h4>
-                        <p class="text-slate-500 text-xs mt-0.5">${l.desc}</p>
+                        <span class="text-[10px] font-extrabold uppercase tracking-wider px-2 py-0.5 rounded ` + (isItemDialogue ? 'bg-amber-200 text-amber-900' : 'bg-indigo-100 text-indigo-700') + `">${item.tier}</span>
+                        <h4 class="text-base font-bold text-slate-900 mt-1">${segmentHeader}${item.title}</h4>
+                        <p class="text-slate-500 text-xs mt-0.5">${item.desc}</p>
                     </div>
                     <div class="shrink-0 text-right">
-                        ${isLocked ? '<span class="text-xs font-bold text-slate-400 bg-slate-100 px-2.5 py-1.5 rounded-lg">🔒 Reclama 90% previo</span>' : 
-                        `<button onclick="loadLesson(${l.id})" class="bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-bold px-4 py-2 rounded-lg transition shadow-sm w-full sm:w-auto">${score !== null ? `Reintentar (${score}%)` : 'Iniciar Unidad'}</button>`}
+                        ` + (accessLocked ? '<span class="text-xs font-bold text-slate-400 bg-slate-100 px-2.5 py-1.5 rounded-lg">🔒 Requires 90% score on prior units</span>' : 
+                        `<button onclick="loadLesson(${item.id})" class="bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-bold px-4 py-2 rounded-lg transition shadow-sm w-full sm:w-auto">${currentSavedScore !== null ? `Retake (${currentSavedScore}%)` : 'Start Unit'}</button>`) + `
                     </div>
                 </div>`;
             });
-            document.getElementById('lessons-list').innerHTML = html;
+            
+            const containerDom = document.getElementById('lessons-list');
+            if(containerDom) containerDom.innerHTML = rowHtml;
 
-            const allPassed90 = lessonData.every(l => userScores[l.id] !== null && userScores[l.id] >= 90);
-            if(allPassed90) {
-                document.getElementById('certificate-claim-zone').classList.remove('hidden');
-            } else {
-                document.getElementById('certificate-claim-zone').classList.add('hidden');
+            const generalCompletionMet = lessonData.every(l => userScores[l.id] !== null && userScores[l.id] >= 90);
+            const certZone = document.getElementById('certificate-claim-zone');
+            if(certZone) {
+                if(generalCompletionMet) certZone.classList.remove('hidden');
+                else certZone.classList.add('hidden');
             }
         }
 
-        function loadLesson(id) {
-            activeId = id; activeCardIndex = 0; selectedSentenceWords = {};
-            quizAttempts = {}; sentenceAttempts = {};
+        function loadLesson(targetId) {
+            activeId = parseInt(targetId, 10); 
+            activeCardIndex = 0; 
+            selectedSentenceWords = {};
+            quizAttempts = {}; 
+            sentenceAttempts = {};
             
-            const l = lessonData[id];
-            document.getElementById('quiz-result-banner').classList.add('hidden');
+            const targetDataInstance = lessonData[activeId];
+            const resultBanner = document.getElementById('quiz-result-banner');
+            if(resultBanner) resultBanner.classList.add('hidden');
 
-            document.getElementById('lesson-badge').innerText = l.tier;
-            document.getElementById('lesson-title').innerText = l.title;
-            document.getElementById('lesson-desc').innerText = l.desc;
+            const lBadge = document.getElementById('lesson-badge');
+            const lTitle = document.getElementById('lesson-title');
+            const lDesc = document.getElementById('lesson-desc');
+            
+            if(lBadge) lBadge.innerText = targetDataInstance.tier;
+            if(lTitle) lTitle.innerText = targetDataInstance.title;
+            if(lDesc) lDesc.innerText = targetDataInstance.desc;
 
-            let audioHtml = '';
-            l.words.forEach(w => {
-                audioHtml += `
+            let wordListHtml = '';
+            targetDataInstance.words.forEach(w => {
+                wordListHtml += `
                 <div class="flex justify-between items-center py-3.5 border-b border-slate-100 last:border-0">
                     <div>
                         <p class="text-lg font-bold text-slate-900">${w.es}</p>
                         <p class="text-slate-500 text-sm">${w.en}</p>
                     </div>
-                    ${l.type === 'dialogue' ? '' : `<button onclick="speakWord('${w.es}')" class="bg-indigo-50 hover:bg-indigo-100 p-2.5 rounded-full text-indigo-600 font-bold tracking-wider text-sm transition">🔊 Escuchar</button>`}
+                    ${targetDataInstance.type === 'dialogue' ? '' : `<button onclick="speakWord('${w.es}')" class="bg-indigo-50 hover:bg-indigo-100 p-2.5 rounded-full text-indigo-600 font-bold tracking-wider text-sm transition">🔊 Play Audio</button>`}
                 </div>`;
             });
-            document.getElementById('audio-words-stack').innerHTML = l.type === 'dialogue' ? '<p class="text-sm text-amber-800 bg-amber-50 p-4 rounded-lg font-medium">Este módulo corresponde a una Simulación Conversacional Activa. Pasa directo a la pestaña **Rendir Evaluación** para interactuar.</p>' : audioHtml;
+            
+            const stackDom = document.getElementById('audio-words-stack');
+            if(stackDom) {
+                stackDom.innerHTML = targetDataInstance.type === 'dialogue' ? 
+                '<p class="text-sm text-amber-800 bg-amber-50 p-4 rounded-lg font-medium">This module is an active Conversation Simulation layout. Please navigate directly to the third tab (**Start Evaluation**) to interact with the syntax blocks.</p>' : wordListHtml;
+            }
 
             updateFlashcardView();
 
-            let quizHtml = '';
+            let compositeQuizHtml = '';
             
-            l.quiz.forEach((q, idx) => {
+            targetDataInstance.quiz.forEach((q, idx) => {
                 quizAttempts[idx] = 0; 
-                let options = [...q.alt, q.a].sort(() => Math.random() - 0.5);
-                quizHtml += `
+                let randomizedOptions = [...q.alt, q.a].sort(() => Math.random() - 0.5);
+                compositeQuizHtml += `
                 <div id="quiz-block-${idx}" class="bg-slate-50 p-5 rounded-xl border border-slate-100 space-y-3 relative">
                     <div class="flex justify-between items-center flex-wrap gap-2">
-                        <p class="font-bold text-slate-800 text-sm"><span class="text-indigo-600">Pregunta ${idx+1}:</span></p>
-                        <button onclick="resetSingleQuestion(${idx})" id="q-reset-btn-${idx}" class="text-[11px] bg-slate-200 hover:bg-slate-300 text-slate-600 px-2.5 py-1 rounded font-semibold transition">Reiniciar (3 intentos)</button>
+                        <p class="font-bold text-slate-800 text-sm"><span class="text-indigo-600">Question ${idx+1}:</span></p>
+                        <button onclick="resetSingleQuestion(${idx})" id="q-reset-btn-${idx}" class="text-[11px] bg-slate-200 hover:bg-slate-300 text-slate-600 px-2.5 py-1 rounded font-semibold transition">Reset Question (3 attempts remaining)</button>
                     </div>
                     <p class="text-sm font-semibold text-slate-800">${q.q}</p>
                     <div id="q-options-container-${idx}" class="grid grid-cols-1 gap-2">
-                        ${options.map(opt => `<label class="flex items-center gap-3 bg-white border border-slate-200 p-3 rounded-lg cursor-pointer hover:bg-slate-50 text-sm"><input type="radio" name="q-${idx}" value="${opt}" class="text-indigo-600 focus:ring-indigo-500"> ${opt}</label>`).join('')}
+                        ${randomizedOptions.map(opt => `<label class="flex items-center gap-3 bg-white border border-slate-200 p-3 rounded-lg cursor-pointer hover:bg-slate-50 text-sm"><input type="radio" name="q-${idx}" value="${opt}" class="text-indigo-600 focus:ring-indigo-500"> ${opt}</label>`).join('')}
                     </div>
                     <p id="q-warn-${idx}" class="hidden text-xs font-bold text-rose-600 italic mt-1"></p>
                 </div>`;
             });
 
-            l.sentences.forEach((s, sIdx) => {
+            targetDataInstance.sentences.forEach((s, sIdx) => {
                 sentenceAttempts[sIdx] = 0; 
                 selectedSentenceWords[sIdx] = []; 
                 
-                let builderLabel = l.type === 'dialogue' ? '🗣️ Simulador Dialéctico:' : 'Constructor de Oraciones:';
-                let contextPrompt = l.type === 'dialogue' ? 'Ordena las estructuras lingüísticas para responder en el contexto simulado:' : 'Organiza los bloques estructurales para armar la traducción:';
+                let builderLabel = targetDataInstance.type === 'dialogue' ? '🗣️ Conversation Response Builder:' : 'Sentence Structure Builder:';
+                let instructionsPrompt = targetDataInstance.type === 'dialogue' ? 'Arrange the language tags sequentially to build the correct conversational answer:' : 'Select the structure labels in sequence to complete the Spanish translation mapping:';
 
-                quizHtml += `
+                compositeQuizHtml += `
                 <div id="sentence-block-${sIdx}" class="bg-slate-50 p-5 rounded-xl border border-slate-100 space-y-3">
                     <div class="flex justify-between items-center flex-wrap gap-2">
                         <p class="font-bold text-slate-800 text-sm"><span class="text-indigo-600">${builderLabel}</span></p>
-                        <button onclick="resetSingleSentence(${sIdx})" id="s-reset-btn-${sIdx}" class="text-[11px] bg-slate-200 hover:bg-slate-300 text-slate-600 px-2.5 py-1 rounded font-semibold transition">Reiniciar Bloque (3 intentos)</button>
+                        <button onclick="resetSingleSentence(${sIdx})" id="s-reset-btn-${sIdx}" class="text-[11px] bg-slate-200 hover:bg-slate-300 text-slate-600 px-2.5 py-1 rounded font-semibold transition">Reset Block (3 attempts remaining)</button>
                     </div>
-                    <p class="text-xs font-semibold text-slate-500 uppercase tracking-wider">${contextPrompt}</p>
-                    <p class="text-sm font-medium text-slate-700 bg-indigo-50 border border-indigo-100 px-3 py-2 rounded-lg">💬 Idea en Inglés: "${s.english}"</p>
+                    <p class="text-xs font-semibold text-slate-500 uppercase tracking-wider">${instructionsPrompt}</p>
+                    <p class="text-sm font-medium text-slate-700 bg-indigo-50 border border-indigo-100 px-3 py-2 rounded-lg">💬 Target Phrase Concept: "${s.english}"</p>
                     
                     <div class="bg-white border-2 border-dashed border-slate-200 rounded-xl p-3 min-h-[3.5rem] flex flex-wrap gap-2 items-center" id="sentence-target-${sIdx}">
-                        <span class="text-slate-400 text-xs italic pointer-events-none">Haz clic en las palabras de abajo...</span>
+                        <span class="text-slate-400 text-xs italic pointer-events-none">Click the word tokens below to construct your answer...</span>
                     </div>
 
                     <div class="flex flex-wrap gap-2 pt-2" id="sentence-bank-${sIdx}">
@@ -580,10 +650,15 @@
                 </div>`;
             });
 
-            document.getElementById('quiz-interactive-body').innerHTML = quizHtml;
-            switchTab(l.type === 'dialogue' ? 'quiz' : 'audio');
-            document.getElementById('dashboard-view').classList.add('hidden');
-            document.getElementById('lesson-view').classList.remove('hidden');
+            const bodyDom = document.getElementById('quiz-interactive-body');
+            if(bodyDom) bodyDom.innerHTML = compositeQuizHtml;
+            
+            switchTab(targetDataInstance.type === 'dialogue' ? 'quiz' : 'audio');
+            
+            const dashView = document.getElementById('dashboard-view');
+            const lessView = document.getElementById('lesson-view');
+            if(dashView) dashView.classList.add('hidden');
+            if(lessView) lessView.classList.remove('hidden');
         }
 
         function handleWordClick(sIdx, wIdx, word) {
@@ -591,6 +666,7 @@
 
             const btn = document.getElementById(`word-btn-${sIdx}-${wIdx}`);
             const targetContainer = document.getElementById(`sentence-target-${sIdx}`);
+            if(!btn || !targetContainer) return;
             
             if (!selectedSentenceWords[sIdx]) selectedSentenceWords[sIdx] = [];
             const existingIndex = selectedSentenceWords[sIdx].findIndex(item => item.wIdx === wIdx);
@@ -604,7 +680,7 @@
             }
 
             if (selectedSentenceWords[sIdx].length === 0) {
-                targetContainer.innerHTML = `<span class="text-slate-400 text-xs italic pointer-events-none">Haz clic en las palabras de abajo...</span>`;
+                targetContainer.innerHTML = `<span class="text-slate-400 text-xs italic pointer-events-none">Click the word tokens below to construct your answer...</span>`;
             } else {
                 targetContainer.innerHTML = selectedSentenceWords[sIdx].map(item => `
                     <span class="bg-indigo-600 text-white text-sm font-semibold px-3 py-1.5 rounded-xl shadow">
@@ -626,11 +702,13 @@
             const warnTxt = document.getElementById(`q-warn-${idx}`);
 
             if (left > 0) {
-                resetBtn.innerText = `Reiniciar (${left} restantes)`;
+                if(resetBtn) resetBtn.innerText = `Reset Question (${left} left)`;
             } else {
-                resetBtn.classList.add('hidden');
-                warnTxt.classList.remove('hidden');
-                warnTxt.innerHTML = `⚠️ Intentos agotados. Revisa tus tarjetas de estudio.`;
+                if(resetBtn) resetBtn.classList.add('hidden');
+                if(warnTxt) {
+                    warnTxt.classList.remove('hidden');
+                    warnTxt.innerHTML = `⚠️ Maximum attempts used for this question block.`;
+                }
                 radios.forEach(r => r.disabled = true);
             }
         }
@@ -644,7 +722,7 @@
             
             const targetBox = document.getElementById(`sentence-target-${sIdx}`);
             if (targetBox) {
-                targetBox.innerHTML = `<span class="text-slate-400 text-xs italic pointer-events-none">Haz clic en las palabras de abajo...</span>`;
+                targetBox.innerHTML = `<span class="text-slate-400 text-xs italic pointer-events-none">Click the word tokens below to construct your answer...</span>`;
             }
 
             const phraseButtons = document.querySelectorAll(`.sentence-word-btn-${sIdx}`);
@@ -656,11 +734,13 @@
             const warnTxt = document.getElementById(`s-warn-${sIdx}`);
 
             if (left > 0) {
-                resetBtn.innerText = `Reiniciar Bloque (${left} restantes)`;
+                if(resetBtn) resetBtn.innerText = `Reset Block (${left} left)`;
             } else {
-                resetBtn.classList.add('hidden');
-                warnTxt.classList.remove('hidden');
-                warnTxt.innerHTML = `⚠️ Intentos máximos agotados para este módulo de traducción.`;
+                if(resetBtn) resetBtn.classList.add('hidden');
+                if(warnTxt) {
+                    warnTxt.classList.remove('hidden');
+                    warnTxt.innerHTML = `⚠️ Maximum syntax structure builds spent. Review your Flashcards before next attempt.`;
+                }
                 
                 phraseButtons.forEach(btn => {
                     btn.removeAttribute('onclick');
@@ -670,16 +750,16 @@
         }
 
         function evaluateQuiz() {
-            const l = lessonData[activeId];
-            let totalItems = l.quiz.length + l.sentences.length;
+            const currentItemRef = lessonData[activeId];
+            let totalItems = currentItemRef.quiz.length + currentItemRef.sentences.length;
             let correctCount = 0;
 
-            l.quiz.forEach((q, idx) => {
+            currentItemRef.quiz.forEach((q, idx) => {
                 let chosen = document.querySelector(`input[name="q-${idx}"]:checked`);
                 if(chosen && chosen.value === q.a) correctCount++;
             });
 
-            l.sentences.forEach((s, sIdx) => {
+            currentItemRef.sentences.forEach((s, sIdx) => {
                 let userSentence = (selectedSentenceWords[sIdx] || []).map(item => item.word).join(' ').trim().toLowerCase();
                 let cleanCorrect = s.correct.toLowerCase().replace(/[.,\/#!$%\^&\*;:{}=\-_`~()¿?]/g,"").trim();
                 if(userSentence === cleanCorrect) correctCount++;
@@ -687,25 +767,34 @@
 
             let finalPercent = Math.round((correctCount / totalItems) * 100);
             userScores[activeId] = finalPercent;
-            localStorage.setItem('familia_spanish_scores', JSON.stringify(userScores));
+            
+            try {
+                localStorage.setItem('familia_spanish_scores', JSON.stringify(userScores));
+            } catch(e) { console.error(e); }
 
             let banner = document.getElementById('quiz-result-banner');
-            banner.classList.remove('hidden');
-            
-            if (finalPercent >= 90) {
-                banner.className = "p-4 rounded-xl text-center font-bold bg-emerald-100 text-emerald-800";
-                banner.innerText = `¡Excelente! ¡Aprobado con un ${finalPercent}%!`;
-            } else {
-                banner.className = "p-4 rounded-xl text-center font-bold bg-rose-100 text-rose-800";
-                banner.innerText = `Calificación: ${finalPercent}%. Necesitas un 90% o más para validar de manera oficial.`;
+            if(banner) {
+                banner.classList.remove('hidden');
+                if (finalPercent >= 90) {
+                    banner.className = "p-4 rounded-xl text-center font-bold bg-emerald-100 text-emerald-800";
+                    banner.innerText = `Excellent Work! Passed with an overall metric of ${finalPercent}%!`;
+                } else {
+                    banner.className = "p-4 rounded-xl text-center font-bold bg-rose-100 text-rose-800";
+                    banner.innerText = `Score: ${finalPercent}%. A 90% accuracy or greater is mandatory to unlock further components.`;
+                }
             }
         }
 
         function updateFlashcardView() {
-            document.getElementById('flashcard-box').classList.remove('flipped');
-            const words = lessonData[activeId].words;
-            document.getElementById('card-front-text').innerText = words[activeCardIndex].en;
-            document.getElementById('card-back-text').innerText = words[activeCardIndex].es;
+            const fCardBox = document.getElementById('flashcard-box');
+            if(fCardBox) fCardBox.classList.remove('flipped');
+            
+            const wordSource = lessonData[activeId].words;
+            const frontText = document.getElementById('card-front-text');
+            const backText = document.getElementById('card-back-text');
+            
+            if(frontText) frontText.innerText = wordSource[activeCardIndex].en;
+            if(backText) backText.innerText = wordSource[activeCardIndex].es;
         }
 
         function nextCard() {
@@ -719,25 +808,39 @@
             updateFlashcardView();
         }
 
-        function switchTab(type) {
+        function switchTab(typeString) {
             ['audio', 'flash', 'quiz'].forEach(t => {
-                document.getElementById(`content-${t}`).classList.add('hidden');
-                document.getElementById(`tab-${t}`).className = "flex-1 text-center py-3 font-semibold text-sm border-b-2 border-transparent text-slate-500 hover:text-slate-800";
+                const contentPanel = document.getElementById(`content-${t}`);
+                const tabButton = document.getElementById(`tab-${t}`);
+                if(contentPanel) contentPanel.classList.add('hidden');
+                if(tabButton) tabButton.className = "flex-1 text-center py-3 font-semibold text-sm border-b-2 border-transparent text-slate-500 hover:text-slate-800";
             });
-            document.getElementById(`content-${type}`).classList.remove('hidden');
-            document.getElementById(`tab-${type}`).className = "flex-1 text-center py-3 font-semibold text-sm border-b-2 border-indigo-600 text-indigo-600";
+            
+            const targetPanel = document.getElementById(`content-${typeString}`);
+            const targetButton = document.getElementById(`tab-${typeString}`);
+            if(targetPanel) targetPanel.classList.remove('hidden');
+            if(targetButton) targetButton.className = "flex-1 text-center py-3 font-semibold text-sm border-b-2 border-indigo-600 text-indigo-600";
         }
 
         function showDashboard() {
-            document.getElementById('lesson-view').classList.add('hidden');
-            document.getElementById('dashboard-view').classList.remove('hidden');
+            const lessView = document.getElementById('lesson-view');
+            const dashView = document.getElementById('dashboard-view');
+            if(lessView) lessView.classList.add('hidden');
+            if(dashView) dashView.classList.remove('hidden');
             renderDashboard();
         }
 
-        function generateCertificate() { document.getElementById('certificate-print-view').classList.remove('hidden'); }
-        function closeCertificate() { document.getElementById('certificate-print-view').classList.add('hidden'); }
+        function generateCertificate() { 
+            const certView = document.getElementById('certificate-print-view');
+            if(certView) certView.classList.remove('hidden'); 
+        }
+        
+        function closeCertificate() { 
+            const certView = document.getElementById('certificate-print-view');
+            if(certView) certView.classList.add('hidden'); 
+        }
 
-        window.onload = renderDashboard;
+        window.onload = runStartupConfig;
     </script>
 </body>
 </html>
