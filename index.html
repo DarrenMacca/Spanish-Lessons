@@ -1688,6 +1688,22 @@ function init(){
 
     checkAllBadges();
 }
+/* ============================
+   NAVIGATION: DASHBOARD → APP
+   ============================ */
+function openApp(){
+    document.getElementById("dashboard-view").classList.add("hidden");
+    document.getElementById("learning-view").classList.remove("hidden");
+}
+
+/* ============================
+   NAVIGATION: APP → DASHBOARD
+   ============================ */
+function goBack(){
+    document.getElementById("learning-view").classList.add("hidden");
+    document.getElementById("dashboard-view").classList.remove("hidden");
+    updateDashboard();
+}
 
 init();
 
