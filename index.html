@@ -7,44 +7,57 @@
     <script src="https://cdn.tailwindcss.com"></script>
 </head>
 <body class="bg-slate-50 text-slate-800 min-h-screen p-4">
-    <header class="max-w-4xl mx-auto mb-8">
-        <h1 class="text-3xl font-bold text-blue-900">Spanish CEFR Portal</h1>
-        <p class="text-slate-600">Mastering language through the official CEFR standard.</p>
-    </header>
-
     <main class="max-w-4xl mx-auto">
-        <!-- Credential Section -->
-        <div class="bg-white p-6 rounded-xl shadow border mb-8">
-            <h2 class="font-bold mb-4">Earned Credentials</h2>
-            <div id="credential-showcase" class="grid grid-cols-3 md:grid-cols-6 gap-2">
-                ${['A1','A2','B1','B2','C1','C2'].map(lvl => `
-                    <div id="cred-${lvl}" class="p-2 border rounded-lg text-center bg-slate-100 opacity-50">
-                        <p class="font-bold text-xs">${lvl}</p>
-                    </div>`).join('')}
-            </div>
+        <h1 class="text-3xl font-bold mb-6">Spanish Proficiency Roadmap</h1>
+        
+        <!-- Dashboard/Lessons -->
+        <div id="app-root" class="space-y-6">
+            <div id="lessons-list" class="grid grid-cols-1 md:grid-cols-2 gap-4"></div>
         </div>
 
-        <div id="lessons-list" class="space-y-4"></div>
+        <!-- Lesson/Vocab Overlay -->
+        <div id="lesson-detail" class="hidden bg-white p-8 rounded-2xl shadow-xl border">
+            <button onclick="showDashboard()" class="text-blue-600 font-bold mb-4">← Back</button>
+            <h2 id="lesson-title" class="text-2xl font-bold mb-2"></h2>
+            <div id="vocab-bank" class="grid grid-cols-2 gap-2 my-4"></div>
+            <p id="sentence-goal" class="italic text-slate-600 mt-4 border-t pt-4"></p>
+        </div>
     </main>
 
     <script>
         const curriculum = [
-            { id: 0, level: 'A1', title: 'Beginner', desc: 'Basic words and simple phrases.' },
-            { id: 1, level: 'A2', title: 'Elementary', desc: 'Simple everyday conversations.' },
-            { id: 2, level: 'B1', title: 'Intermediate', desc: 'Independent communication.' },
-            { id: 3, level: 'B2', title: 'Upper-Intermediate', desc: 'Confident discussion.' },
-            { id: 4, level: 'C1', title: 'Advanced', desc: 'Effective use for study or work.' },
-            { id: 5, level: 'C2', title: 'Mastery', desc: 'Fluent and precise expression.' }
+            { id: 'A1', title: 'Beginner', words: ['Hola', 'Gracias', 'Yo', 'Ser', 'Gusto'], goal: 'Goal: Create a sentence introducing yourself using basic expressions.' },
+            { id: 'A2', title: 'Elementary', words: ['Tienda', 'Comprar', 'Donde', 'Calle', 'Cerca'], goal: 'Goal: Construct a sentence asking for directions or shopping details.' },
+            { id: 'B1', title: 'Intermediate', words: ['Experiencia', 'Pensar', 'Viajar', 'Importante', 'Aprender'], goal: 'Goal: Formulate a sentence discussing familiar matters and opinions[cite: 1].' },
+            { id: 'B2', title: 'Upper-Intermediate', words: ['Argumento', 'Sostener', 'Desarrollo', 'Estructura', 'Análisis'], goal: 'Goal: Build a complex sentence expressing a detailed argument[cite: 1].' },
+            { id: 'C1', title: 'Advanced', words: ['Abstracción', 'Coherencia', 'Espontáneo', 'Precision', 'Refinamiento'], goal: 'Goal: Use sophisticated vocabulary to express abstract ideas fluently[cite: 1].' },
+            { id: 'C2', title: 'Mastery', words: ['Matiz', 'Elocuencia', 'Sutileza', 'Dominio', 'Innato'], goal: 'Goal: Create precise sentences capturing fine shades of meaning[cite: 1].' }
         ];
 
         function renderDashboard() {
+            document.getElementById('app-root').classList.remove('hidden');
+            document.getElementById('lesson-detail').classList.add('hidden');
             const list = document.getElementById('lessons-list');
             list.innerHTML = curriculum.map(l => `
-                <div class="p-4 bg-white border rounded-lg flex justify-between items-center shadow-sm">
-                    <div><span class="font-bold text-blue-600">${l.level}</span>: ${l.title}</div>
-                    <button class="bg-blue-600 text-white px-4 py-1 rounded">Start</button>
+                <div class="p-4 bg-white rounded-xl shadow border">
+                    <h3 class="font-bold text-blue-700">${l.id}: ${l.title}</h3>
+                    <button onclick="loadLesson('${l.id}')" class="mt-2 w-full bg-slate-800 text-white py-2 rounded">Study Vocab</button>
                 </div>`).join('');
         }
+
+        function loadLesson(id) {
+            const l = curriculum.find(item => item.id === id);
+            document.getElementById('app-root').classList.add('hidden');
+            document.getElementById('lesson-detail').classList.remove('hidden');
+            document.getElementById('lesson-title').innerText = l.id + ' - ' + l.title;
+            document.getElementById('vocab-bank').innerHTML = l.words.map(w => `<span class="bg-blue-100 p-2 rounded text-center">${w}</span>`).join('');
+            document.getElementById('sentence-goal').innerText = l.goal;
+        }
+
+        function showDashboard() {
+            renderDashboard();
+        }
+
         renderDashboard();
     </script>
 </body>
