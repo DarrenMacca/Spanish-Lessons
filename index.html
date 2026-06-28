@@ -64,14 +64,24 @@
 
 <script>
     const data = {
-        words: [{es: 'Hola', en: 'Hello'}, {es: 'Gracias', en: 'Thank you'}, {es: 'Casa', en: 'House'}, {es: 'Yo', en: 'I'}, {es: 'Tu', en: 'You'}, {es: 'El', en: 'He'}, {es: 'Agua', en: 'Water'}, {es: 'Pan', en: 'Bread'}, {es: 'Libro', en: 'Book'}, {es: 'Amigo', en: 'Friend'}, {es: 'Feliz', en: 'Happy'}, {es: 'Comer', en: 'Eat'}, {es: 'Beber', en: 'Drink'}, {es: 'Sol', en: 'Sun'}, {es: 'Luz', en: 'Light'}, {es: 'Mar', en: 'Sea'}, {es: 'Tienda', en: 'Store'}, {es: 'Calle', en: 'Street'}, {es: 'Mapa', en: 'Map'}, {es: 'Donde', en: 'Where'}],
+        words: [{es: 'Hola', en: 'Hello'}, {es: 'Gracias', en: 'Thank you'}, {es: 'Casa', en: 'House'}, {es: 'Yo', en: 'I'}, {es: 'Tu', en: 'You'}, {es: 'El', en: 'He'}, {es: 'Agua', en: 'Water'}, {es: 'Pan', en: 'Bread'}, {es: 'Libro', en: 'Book'}, {es: 'Amigo', en: 'Friend'}, {es: 'Feliz', en: 'Happy'}, {es: 'Comer', en: 'Eat'}, {es: 'Beber', en: 'Drink'}, {es: 'Sol', en: 'Sun'}, {es: 'Luz', en: 'Light'}, {es: 'Mar', en: 'Sea'}, {es: 'Tienda', en: 'Store'}, {es: 'Calle', en: 'Street'}, {es: 'Mapa', en: 'Map'}, {es: 'Donde', en: 'Where'}, {es: 'La', en: 'The'}, {es: 'Esta', en: 'Is'}, {es: 'Rojo', en: 'Red'}, {es: 'Aquí', en: 'Here'}, {es: 'Grande', en: 'Big'}],
         sentences: [{en: 'I eat bread', target: 'Yo Comer Pan'}, {en: 'The friend is happy', target: 'El Amigo Feliz'}, {en: 'Where is the store', target: 'Donde Esta La Tienda'}, {en: 'You drink water', target: 'Tu Beber Agua'}, {en: 'The book is red', target: 'El Libro Rojo'}, {en: 'I am happy', target: 'Yo Feliz'}, {en: 'The house is big', target: 'La Casa Grande'}, {en: 'The map is here', target: 'El Mapa Aquí'}, {en: 'He eats bread', target: 'El Comer Pan'}, {en: 'The street is big', target: 'La Calle Grande'}]
     };
 
     let qTotal = 0, qCorrect = 0, bScore = 0, bCount = 1, bAttempts = 0;
 
+    // Automated Sync: Ensures every word in sentences exists in data.words
+    function syncWords() {
+        data.sentences.forEach(s => {
+            s.target.split(' ').forEach(word => {
+                if(!data.words.find(w => w.es === word)) {
+                    data.words.push({es: word, en: 'New Word'});
+                }
+            });
+        });
+    }
+
     function speak(t) { const s = new SpeechSynthesisUtterance(t); s.rate = document.getElementById('rate').value; s.lang = 'es-MX'; speechSynthesis.speak(s); }
-    
     function openApp() { document.getElementById('dashboard-view').classList.add('hidden'); document.getElementById('learning-view').classList.remove('hidden'); }
     function goBack() { document.getElementById('dashboard-view').classList.remove('hidden'); document.getElementById('learning-view').classList.add('hidden'); updateDashboard(); }
 
@@ -84,6 +94,7 @@
     }
 
     function init() {
+        syncWords(); // Ensure all sentence words are in the list
         document.getElementById('listen-list').innerHTML = data.words.map(w => `<div><button onclick="speak('${w.es}')">🔊</button> ${w.es} - ${w.en}</div>`).join('');
         document.getElementById('flash-area').innerHTML = data.words.map(w => `<div class="card" onclick="this.innerText=(this.innerText=='${w.en}' ? '${w.es}' : '${w.en}'); if(this.innerText=='${w.es}') speak('${w.es}')">${w.en}</div>`).join('');
         renderQuiz(); renderBuild();
@@ -100,6 +111,7 @@
     function renderBuild() {
         window.currentTask = data.sentences[bCount - 1];
         document.getElementById('build-task').innerText = "Build: " + currentTask.en;
+        document.getElementById('progress-counter').innerText = `Task ${bCount}/10`;
         document.getElementById('word-bank').innerHTML = data.words.map(w => `<span class="word-pill" onclick="document.getElementById('sentence-box').innerText+=' ' + '${w.es}'">${w.es}</span>`).join('');
     }
 
