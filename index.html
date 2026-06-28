@@ -9,8 +9,8 @@
         .tab-btn { padding: 10px 15px; cursor: pointer; border: none; background: #e2e8f0; border-radius: 6px; }
         .tab-btn.active { background: #2563eb; color: white; }
         .hidden { display: none; }
-        .card { border: 2px solid #2563eb; padding: 40px; text-align: center; border-radius: 12px; cursor: pointer; background: #eff6ff; font-size: 1.5rem; font-weight: bold; }
-        .word-pill { display: inline-block; padding: 8px 12px; margin: 4px; background: #dbeafe; border-radius: 6px; cursor: pointer; }
+        .card { border: 2px solid #2563eb; padding: 40px; text-align: center; border-radius: 12px; cursor: pointer; background: #eff6ff; font-size: 1.5rem; font-weight: bold; margin-bottom: 10px;}
+        .word-pill { display: inline-block; padding: 8px 12px; margin: 4px; background: #dbeafe; border-radius: 6px; cursor: pointer; border: 1px solid #bfdbfe; }
     </style>
 </head>
 <body>
@@ -34,84 +34,71 @@
         <div id="listen" class="tab-content"><div id="vocab-list"></div></div>
         
         <div id="flash" class="tab-content hidden">
-            <div class="card" id="flash-card" onclick="flipCard()">Click to Flip</div>
-            <button onclick="resetFlash()">Reset Flashcards</button>
+            <div class="card" id="flash-card" onclick="flipCard()">Click to Start</div>
+            <button onclick="nextCard()">Next Word</button>
+            <button onclick="resetFlash()">Reset</button>
         </div>
 
         <div id="quiz" class="tab-content hidden">
             <p id="quiz-q" style="font-weight:bold;"></p>
-            <div id="quiz-options"></div>
-            <button onclick="resetQuiz()">Reset Quiz</button>
+            <div id="quiz-options" style="display:flex; flex-direction:column; gap:10px;"></div>
+            <button onclick="initQuiz()">Reset Quiz</button>
         </div>
 
         <div id="build" class="tab-content hidden">
             <p id="build-eng" style="font-weight:bold;"></p>
             <div id="word-bank"></div>
-            <div id="sentence-box" style="padding:20px; border:2px dashed #ccc; margin-top:20px; min-height:30px;"></div>
-            <button onclick="gradeBuilding()">Submit</button>
+            <div id="sentence-box" style="padding:20px; border:2px dashed #ccc; margin-top:20px; min-height:40px; background:#fdfdfd;"></div>
+            <button onclick="gradeBuilding()">Check</button>
             <button onclick="resetBuild()">Reset</button>
         </div>
     </div>
 </div>
 
 <script>
-    const levels = [
-        { 
-            id: 0, code: 'A1', title: 'Beginner', 
-            words: [
-                {es: 'Hola', en: 'Hello'}, {es: 'Gracias', en: 'Thank you'}, {es: 'Uno', en: 'One'}, {es: 'Rojo', en: 'Red'}, {es: 'Perro', en: 'Dog'}, 
-                {es: 'Gato', en: 'Cat'}, {es: 'Casa', en: 'House'}, {es: 'Yo', en: 'I'}, {es: 'Tu', en: 'You'}, {es: 'El', en: 'He'}, 
-                {es: 'Agua', en: 'Water'}, {es: 'Pan', en: 'Bread'}, {es: 'Sol', en: 'Sun'}, {es: 'Luz', en: 'Light'}, {es: 'Mar', en: 'Sea'},
-                {es: 'Libro', en: 'Book'}, {es: 'Amigo', en: 'Friend'}, {es: 'Comer', en: 'Eat'}, {es: 'Beber', en: 'Drink'}, {es: 'Feliz', en: 'Happy'}
-            ],
-            sentences: [
-                {en: 'I eat bread', target: 'Yo comer pan'}, {en: 'The dog is happy', target: 'El perro feliz'}
-            ]
-        }
-    ];
+    const levels = [{ 
+        id: 0, code: 'A1', title: 'Beginner', 
+        words: [
+            {es: 'Hola', en: 'Hello'}, {es: 'Gracias', en: 'Thank you'}, {es: 'Uno', en: 'One'}, {es: 'Rojo', en: 'Red'}, {es: 'Perro', en: 'Dog'}, 
+            {es: 'Gato', en: 'Cat'}, {es: 'Casa', en: 'House'}, {es: 'Yo', en: 'I'}, {es: 'Tu', en: 'You'}, {es: 'El', en: 'He'}, 
+            {es: 'Agua', en: 'Water'}, {es: 'Pan', en: 'Bread'}, {es: 'Sol', en: 'Sun'}, {es: 'Luz', en: 'Light'}, {es: 'Mar', en: 'Sea'},
+            {es: 'Libro', en: 'Book'}, {es: 'Amigo', en: 'Friend'}, {es: 'Comer', en: 'Eat'}, {es: 'Beber', en: 'Drink'}, {es: 'Feliz', en: 'Happy'}
+        ],
+        sentences: [{en: 'I eat bread', target: 'Yo comer pan'}]
+    }];
 
-    let currentLvl = 0, cardIdx = 0, isSpanish = false, progress = parseInt(localStorage.getItem('cefr_progress')) || 0;
-
-    function renderDashboard() {
-        document.getElementById('levels-container').innerHTML = levels.map(l => `
-            <div style="padding:15px; border:1px solid #ccc; margin:10px 0;">
-                <strong>${l.code}: ${l.title}</strong>
-                <button onclick="startLevel(${l.id})">Start Learning</button>
-            </div>
-        `).join('');
-    }
+    let currentLvl = 0, cardIdx = 0, isSpanish = false;
 
     function startLevel(id) {
         currentLvl = id;
         document.getElementById('level-title').innerText = levels[id].title;
-        document.getElementById('vocab-list').innerHTML = levels[id].words.map(w => `
-            <div style="margin:5px; padding:5px; border-bottom:1px solid #eee;">
-                <button onclick="speak('${w.es}')">🔊</button> <b>${w.es}</b> - ${w.en}
-            </div>`).join('');
-        
-        // Flashcards
-        document.getElementById('flash-card').innerText = levels[id].words[0].en;
-        
-        // Quiz
-        document.getElementById('quiz-q').innerText = "Which is: " + levels[id].words[5].en + "?";
-        document.getElementById('quiz-options').innerHTML = levels[id].words.slice(0,4).map(w => 
-            `<button onclick="alert('${w.es === levels[id].words[5].es ? 'Correct!' : 'Wrong'}')">${w.es}</button>`).join(' ');
-
-        // Building
-        document.getElementById('build-eng').innerText = "Build: " + levels[id].sentences[0].en;
-        document.getElementById('word-bank').innerHTML = levels[id].words.map(w => `<span class="word-pill" onclick="document.getElementById('sentence-box').innerText += '${w.es} '">${w.es}</span>`).join('');
-        
+        document.getElementById('vocab-list').innerHTML = levels[id].words.map(w => `<div style="margin:5px; padding:5px; border-bottom:1px solid #eee;"><button onclick="speak('${w.es}')">🔊</button> <b>${w.es}</b> - ${w.en}</div>`).join('');
+        initFlash(); initQuiz(); initBuild();
         document.getElementById('dashboard').classList.add('hidden');
         document.getElementById('lesson-zone').classList.remove('hidden');
     }
 
-    function flipCard() {
-        isSpanish = !isSpanish;
-        document.getElementById('flash-card').innerText = isSpanish ? levels[currentLvl].words[cardIdx].es : levels[currentLvl].words[cardIdx].en;
+    function initFlash() { cardIdx = 0; isSpanish = false; document.getElementById('flash-card').innerText = levels[currentLvl].words[0].en; }
+    function flipCard() { isSpanish = !isSpanish; document.getElementById('flash-card').innerText = isSpanish ? levels[currentLvl].words[cardIdx].es : levels[currentLvl].words[cardIdx].en; }
+    function nextCard() { cardIdx = (cardIdx + 1) % levels[currentLvl].words.length; isSpanish = false; document.getElementById('flash-card').innerText = levels[currentLvl].words[cardIdx].en; }
+    
+    function initQuiz() {
+        const target = levels[currentLvl].words[Math.floor(Math.random()*20)];
+        document.getElementById('quiz-q').innerText = "Translate: " + target.en;
+        let options = [target.es];
+        while(options.length < 4) {
+            let rnd = levels[currentLvl].words[Math.floor(Math.random()*20)].es;
+            if(!options.includes(rnd)) options.push(rnd);
+        }
+        options.sort(() => Math.random() - 0.5);
+        document.getElementById('quiz-options').innerHTML = options.map(opt => `<button onclick="alert('${opt === target.es ? 'Correct!' : 'Wrong, it was ' + target.es}')">${opt}</button>`).join('');
     }
 
-    function resetFlash() { cardIdx = 0; isSpanish = false; document.getElementById('flash-card').innerText = levels[currentLvl].words[0].en; }
-    function resetQuiz() { document.getElementById('quiz-ans').value = ''; }
+    function initBuild() {
+        document.getElementById('build-eng').innerText = "Sentence: " + levels[currentLvl].sentences[0].en;
+        document.getElementById('word-bank').innerHTML = levels[currentLvl].words.map(w => `<span class="word-pill" onclick="document.getElementById('sentence-box').innerText += '${w.es} '">${w.es}</span>`).join('');
+    }
+
     function resetBuild() { document.getElementById('sentence-box').innerText = ''; }
     function speak(t) { const s = new SpeechSynthesisUtterance(t); s.lang = 'es-ES'; window.speechSynthesis.speak(s); }
     function showTab(id) {
@@ -120,10 +107,8 @@
         document.getElementById(id).classList.remove('hidden');
         event.target.classList.add('active');
     }
-    function gradeBuilding() { alert("Submission checked."); }
     function goBack() { document.getElementById('dashboard').classList.remove('hidden'); document.getElementById('lesson-zone').classList.add('hidden'); }
-
-    renderDashboard();
+    document.getElementById('levels-container').innerHTML = levels.map(l => `<div style="padding:15px; border:1px solid #ccc;"><button onclick="startLevel(${l.id})">${l.title}</button></div>`).join('');
 </script>
 </body>
 </html>
