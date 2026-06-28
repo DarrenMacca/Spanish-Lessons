@@ -10,6 +10,8 @@
         .nav-tabs { display: flex; gap: 10px; margin-bottom: 20px; border-bottom: 2px solid #e2e8f0; padding-bottom: 10px; }
         .tab-btn { padding: 10px 20px; border: none; background: #e2e8f0; border-radius: 8px; cursor: pointer; font-weight: 600; }
         .tab-btn.active { background: var(--primary); color: white; }
+        .tab-content { display: none; }
+        .tab-content.active { display: block; }
         .hidden { display: none; }
         .card { width: 140px; height: 90px; display: inline-flex; align-items: center; justify-content: center; border: 2px solid var(--primary); border-radius: 10px; margin: 8px; cursor: pointer; font-weight: bold; background: white; }
         .word-pill { display: inline-block; padding: 10px 18px; margin: 6px; background: #dbeafe; border-radius: 20px; cursor: pointer; border: 1px solid #bfdbfe; font-size: 14px; }
@@ -21,6 +23,7 @@
 <body>
 
 <div class="wrapper">
+    <!-- Dashboard -->
     <div id="dashboard-view">
         <h1>Dashboard</h1>
         <div class="status-box">Quiz Performance: <b id="quiz-status">Incomplete</b></div>
@@ -28,34 +31,33 @@
         <button class="tab-btn" style="background:#ef4444; color:white;" onclick="restartProgress()">Restart Progress</button>
     </div>
 
+    <!-- Portal -->
     <div id="learning-view" class="hidden">
         <button onclick="goBack()" style="margin-bottom:20px;">← Back to Dashboard</button>
         <div class="nav-tabs">
-            <button class="tab-btn active" onclick="showTab('listen')">1. Listen</button>
-            <button class="tab-btn" onclick="showTab('flash')">2. Flashcards</button>
-            <button class="tab-btn" onclick="showTab('quiz')">3. Quiz</button>
-            <button class="tab-btn" onclick="showTab('build')">4. Building</button>
-            <button class="tab-btn" onclick="showTab('conv')">5. Conversation</button>
+            <button class="tab-btn active" onclick="showTab('listen', this)">1. Listen</button>
+            <button class="tab-btn" onclick="showTab('flash', this)">2. Flashcards</button>
+            <button class="tab-btn" onclick="showTab('quiz', this)">3. Quiz</button>
+            <button class="tab-btn" onclick="showTab('build', this)">4. Building</button>
+            <button class="tab-btn" onclick="showTab('conv', this)">5. Conversation</button>
         </div>
         
-        <div class="tab-content" id="listen"><h3>Listen</h3><div id="listen-list"></div></div>
-        <div class="tab-content hidden" id="flash"><h3>Flashcards</h3><div id="flash-area"></div></div>
-        <div class="tab-content hidden" id="quiz">
+        <div class="tab-content active" id="listen"><h3>Listen</h3><div id="listen-list"></div></div>
+        <div class="tab-content" id="flash"><h3>Flashcards</h3><div id="flash-area"></div></div>
+        <div class="tab-content" id="quiz">
             <div id="score-board">Quiz Score: 0%</div>
             <div id="quiz-area"></div>
             <div class="status-box"><h4>Incorrect Answers:</h4><div id="error-list"></div></div>
         </div>
-        <div class="tab-content hidden" id="build">
+        <div class="tab-content" id="build">
             <h3 id="build-task"></h3>
             <div id="word-bank"></div>
             <div id="sentence-box" style="border:2px dashed #cbd5e1; min-height:40px; margin: 10px 0;"></div>
-            <button onclick="checkBuild()">Submit</button>
         </div>
-        <div class="tab-content hidden" id="conv">
+        <div class="tab-content" id="conv">
             <h3 id="conv-task"></h3>
             <div id="conv-word-bank"></div>
             <div id="conv-sentence-box" style="border:2px dashed #cbd5e1; min-height:40px; margin: 10px 0;"></div>
-            <button onclick="checkConv()">Submit</button>
         </div>
     </div>
 </div>
@@ -73,7 +75,13 @@
     function restartProgress() { if(confirm("Wipe all progress?")) { localStorage.clear(); location.reload(); } }
     function openApp() { document.getElementById('dashboard-view').classList.add('hidden'); document.getElementById('learning-view').classList.remove('hidden'); }
     function goBack() { document.getElementById('dashboard-view').classList.remove('hidden'); document.getElementById('learning-view').classList.add('hidden'); }
-    function showTab(id) { document.querySelectorAll('.tab-content').forEach(t => t.classList.add('hidden')); document.getElementById(id).classList.remove('hidden'); document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active')); event.target.classList.add('active'); }
+    
+    function showTab(id, btn) {
+        document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
+        document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+        document.getElementById(id).classList.add('active');
+        btn.classList.add('active');
+    }
 
     function checkQuiz(ans, inputId) {
         state.qTotal++;
@@ -82,6 +90,7 @@
         else { state.errors.push(`Expected: ${ans}, You wrote: ${val}`); document.getElementById('error-list').innerHTML += `<div class="error-log">${state.errors[state.errors.length-1]}</div>`; }
         save();
         document.getElementById('score-board').innerText = "Quiz Score: " + Math.round((state.qCorrect/state.qTotal)*100) + "%";
+        document.getElementById('quiz-status').innerText = Math.round((state.qCorrect/state.qTotal)*100) + "%";
     }
 
     function init() {
