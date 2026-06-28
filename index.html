@@ -22,8 +22,8 @@
 <div class="wrapper">
     <div id="dashboard-view">
         <h1>Dashboard</h1>
-        <div class="status-box">Quiz Performance: <b id="quiz-status">Incomplete</b></div>
-        <div class="status-box">Builder & Conversation: <b id="build-status">Incomplete</b></div>
+        <div class="status-box">Quiz: <b id="quiz-status">Incomplete</b></div>
+        <div class="status-box">Building & Conversation: <b id="build-status">Incomplete</b></div>
         <h3 id="final-verdict">Course Status: Pending</h3>
         <button class="tab-btn" onclick="openApp()">Enter Learning Portal</button>
     </div>
@@ -44,9 +44,13 @@
         
         <div class="tab-content" id="listen"><h3>Listen</h3><div id="listen-list"></div></div>
         <div class="tab-content hidden" id="flash"><h3>Flashcards</h3><div id="flash-area"></div></div>
-        <div class="tab-content hidden" id="quiz"><h3>Quiz</h3><div id="score-board">Quiz Score: 0%</div><div id="quiz-area"></div></div>
+        <div class="tab-content hidden" id="quiz">
+            <h3>Quiz</h3>
+            <div id="score-board">Quiz Score: 0%</div>
+            <div id="quiz-area"></div>
+        </div>
         
-        <!-- Shared Logic Area for Building & Conversation -->
+        <!-- Building & Conversation share the build logic template -->
         <div class="tab-content hidden" id="build">
             <h3 id="build-task"></h3>
             <p id="b-counter"></p>
@@ -55,33 +59,34 @@
             <div class="sentence-box" style="padding:15px; border:2px dashed #cbd5e1; margin: 10px 0; min-height:40px;"></div>
             <button onclick="checkTask('build')">Submit</button>
             <button onclick="clearBox()">Reset</button>
-            <button class="answer-btn hidden" onclick="revealAnswer()">Show Answer</button>
+            <button id="show-answer-btn" class="hidden" onclick="revealAnswer()">Show Answer</button>
             <button onclick="nextTask('build')">Next</button>
-            <span class="feedback"></span>
+            <span id="feedback"></span>
         </div>
 
         <div class="tab-content hidden" id="conv">
+            <h3>Conversation</h3>
             <h3 id="conv-task"></h3>
             <p id="c-counter"></p>
-            <div class="word-bank"></div>
-            <div class="sentence-box" style="padding:15px; border:2px dashed #cbd5e1; margin: 10px 0; min-height:40px;"></div>
+            <div class="conv-word-bank"></div>
+            <div class="conv-sentence-box" style="padding:15px; border:2px dashed #cbd5e1; margin: 10px 0; min-height:40px;"></div>
             <button onclick="checkTask('conv')">Submit</button>
             <button onclick="clearBox()">Reset</button>
-            <button class="answer-btn hidden" onclick="revealAnswer()">Show Answer</button>
+            <button id="show-answer-btn-c" class="hidden" onclick="revealAnswer()">Show Answer</button>
             <button onclick="nextTask('conv')">Next</button>
-            <span class="feedback"></span>
+            <span id="c-feedback"></span>
         </div>
     </div>
 </div>
 
 <script>
     const data = {
-        words: [{es: 'Hola', en: 'Hello'}, {es: 'Gracias', en: 'Thank you'}, {es: 'Casa', en: 'House'}, {es: 'Yo', en: 'I'}, {es: 'Tu', en: 'You'}, {es: 'El', en: 'He'}, {es: 'Agua', en: 'Water'}, {es: 'Pan', en: 'Bread'}, {es: 'Libro', en: 'Book'}, {es: 'Amigo', en: 'Friend'}, {es: 'Feliz', en: 'Happy'}, {es: 'Comer', en: 'Eat'}, {es: 'Beber', en: 'Drink'}, {es: 'Donde', en: 'Where'}, {es: 'Esta', en: 'Is'}, {es: 'La', en: 'The'}],
+        words: [{es: 'Hola', en: 'Hello'}, {es: 'Gracias', en: 'Thank you'}, {es: 'Casa', en: 'House'}, {es: 'Yo', en: 'I'}, {es: 'Tu', en: 'You'}, {es: 'El', en: 'He'}, {es: 'Agua', en: 'Water'}, {es: 'Pan', en: 'Bread'}, {es: 'Libro', en: 'Book'}, {es: 'Amigo', en: 'Friend'}, {es: 'Feliz', en: 'Happy'}, {es: 'Comer', en: 'Eat'}, {es: 'Beber', en: 'Drink'}, {es: 'Donde', en: 'Where'}, {es: 'Esta', en: 'Is'}, {es: 'La', en: 'The'}, {es: 'Si', en: 'Yes'}, {es: 'Aquí', en: 'Here'}],
         sentences: [{en: 'I eat bread', target: 'Yo Comer Pan'}, {en: 'The house is big', target: 'La Casa Grande'}],
         convos: [
             {en: 'A: Hello friend. B: Hello.', target: 'Hola Amigo Hola'},
             {en: 'A: Where is the bread? B: Here.', target: 'Donde Esta El Pan Aquí'},
-            {en: 'A: You drink water? B: Yes, I drink.', target: 'Tu Beber Agua Yo Beber'},
+            {en: 'A: You drink water? B: Yes.', target: 'Tu Beber Agua Si'},
             {en: 'A: The friend is happy. B: Yes.', target: 'El Amigo Feliz Si'},
             {en: 'A: I eat here. B: Thank you.', target: 'Yo Comer Aquí Gracias'}
         ]
@@ -95,47 +100,56 @@
     
     function updateDashboard() {
         const qP = qTotal===0?0:Math.round((qCorrect/qTotal)*100);
-        const bP = Math.round(((bScore+cScore)/15)*100);
+        const bP = Math.round(((bScore+cScore)/7)*100);
         document.getElementById('quiz-status').innerText = qP >= 90 ? "Passed ("+qP+"%)" : "Retry ("+qP+"%)";
         document.getElementById('build-status').innerText = bP >= 90 ? "Passed ("+bP+"%)" : "Retry ("+bP+"%)";
         document.getElementById('final-verdict').innerText = (qP >= 90 && bP >= 90) ? "Course Status: PASSED" : "Course Status: Needs Improvement";
     }
 
     function renderTask(type) {
-        const isB = type === 'build';
-        const item = isB ? data.sentences[bCount-1] : data.convos[cCount-1];
-        window.currentTask = item;
-        document.getElementById(isB ? 'build-task' : 'conv-task').innerText = item.en;
-        document.getElementById(isB ? 'b-counter' : 'c-counter').innerText = (isB?bCount:cCount) + "/5";
-        document.querySelectorAll(isB ? '#build .word-bank' : '#conv .word-bank')[0].innerHTML = data.words.map(w => `<span class="word-pill" onclick="this.parentElement.nextElementSibling.innerText+=' '+ '${w.es}'">${w.es}</span>`).join('');
+        if(type === 'build') {
+            window.currentTask = data.sentences[bCount-1];
+            document.getElementById('build-task').innerText = "Build: " + currentTask.en;
+            document.getElementById('b-counter').innerText = bCount + "/2";
+            document.querySelector('#build .word-bank').innerHTML = data.words.map(w => `<span class="word-pill" onclick="document.querySelector('#build .sentence-box').innerText+=' '+ '${w.es}'">${w.es}</span>`).join('');
+        } else {
+            window.currentTask = data.convos[cCount-1];
+            document.getElementById('conv-task').innerText = currentTask.en;
+            document.getElementById('c-counter').innerText = cCount + "/5";
+            document.querySelector('.conv-word-bank').innerHTML = data.words.map(w => `<span class="word-pill" onclick="document.querySelector('.conv-sentence-box').innerText+=' '+ '${w.es}'">${w.es}</span>`).join('');
+        }
     }
 
     function checkTask(type) {
         const isB = type === 'build';
-        const box = document.querySelectorAll(isB ? '#build .sentence-box' : '#conv .sentence-box')[0];
-        const fb = document.querySelectorAll(isB ? '#build .feedback' : '#conv .feedback')[0];
+        const box = document.querySelector(isB ? '#build .sentence-box' : '.conv-sentence-box');
+        const fb = document.getElementById(isB ? 'feedback' : 'c-feedback');
         if(box.innerText.trim().replace(/\s+/g,' ') === currentTask.target.replace(/ /g,' ')) {
             if((isB ? bAtt : cAtt) === 0) isB ? bScore++ : cScore++;
             fb.innerText = "Correct!";
         } else {
             isB ? bAtt++ : cAtt++;
-            fb.innerText = "Attempt: " + (isB ? bAtt : cAtt) + "/3";
-            if((isB ? bAtt : cAtt) >= 3) document.querySelectorAll(isB ? '#build .answer-btn' : '#conv .answer-btn')[0].classList.remove('hidden');
+            fb.innerText = "Attempts: " + (isB ? bAtt : cAtt) + "/3";
+            if((isB ? bAtt : cAtt) >= 3) document.getElementById(isB ? 'show-answer-btn' : 'show-answer-btn-c').classList.remove('hidden');
         }
     }
 
     function nextTask(type) {
-        if(type === 'build') { if(bCount<5) { bCount++; bAtt=0; renderTask('build'); } } 
-        else { if(cCount<5) { cCount++; cAtt=0; renderTask('conv'); } }
+        if(type === 'build') { if(bCount<2) { bCount++; bAtt=0; document.querySelector('#build .sentence-box').innerText=''; document.getElementById('show-answer-btn').classList.add('hidden'); renderTask('build'); } } 
+        else { if(cCount<5) { cCount++; cAtt=0; document.querySelector('.conv-sentence-box').innerText=''; document.getElementById('show-answer-btn-c').classList.add('hidden'); renderTask('conv'); } }
     }
     
-    function clearBox() { document.querySelector('.tab-content:not(.hidden) .sentence-box').innerText=''; }
-    function revealAnswer() { document.querySelector('.tab-content:not(.hidden) .sentence-box').innerText = currentTask.target; }
+    function clearBox() { document.querySelector('.tab-content:not(.hidden) .sentence-box, .tab-content:not(.hidden) .conv-sentence-box').innerText=''; }
+    function revealAnswer() { document.querySelector('.tab-content:not(.hidden) .sentence-box, .tab-content:not(.hidden) .conv-sentence-box').innerText = currentTask.target; }
     function showTab(id) { document.querySelectorAll('.tab-content').forEach(t=>t.classList.add('hidden')); document.getElementById(id).classList.remove('hidden'); }
 
     // Init
     document.getElementById('listen-list').innerHTML = data.words.map(w => `<button onclick="speak('${w.es}')">🔊</button> ${w.es} - ${w.en}<br>`).join('');
-    document.getElementById('flash-area').innerHTML = data.words.map(w => `<div class="card" onclick="this.innerText=(this.innerText=='${w.en}' ? '${w.es}' : '${w.en}')">${w.en}</div>`).join('');
+    document.getElementById('flash-area').innerHTML = data.words.map(w => `<div class="card" onclick="this.innerText=(this.innerText=='${w.en}' ? '${w.es}' : '${w.en}'); if(this.innerText=='${w.es}') speak('${w.es}')">${w.en}</div>`).join('');
+    // Quiz Init
+    document.getElementById('quiz-area').innerHTML = data.words.slice(0,10).map((w,i) => `<div class="quiz-row"><span>${w.en}</span> <input id="q${i}" onkeydown="if(event.key==='Enter') checkQuiz('${w.es}', 'q${i}', 'f${i}')"> <span id="f${i}"></span></div>`).join('');
+    function checkQuiz(ans, inputId, feedId) { qTotal++; const isC = document.getElementById(inputId).value.toLowerCase() === ans.toLowerCase(); if(isC) qCorrect++; document.getElementById(feedId).innerText = isC ? "✅" : "❌"; document.getElementById('score-board').innerText = "Quiz Score: " + Math.round((qCorrect/qTotal)*100) + "%"; }
+    
     renderTask('build'); renderTask('conv');
 </script>
 </body>
