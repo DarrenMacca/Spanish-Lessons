@@ -24,8 +24,6 @@
     <div id="dashboard-view">
         <h1>Dashboard</h1>
         <div class="status-box">Quiz Performance: <b id="quiz-status">Incomplete</b></div>
-        <div class="status-box">Builder Performance: <b id="build-status">Incomplete</b></div>
-        <h3 id="final-verdict">Course Status: Pending</h3>
         <button class="tab-btn" onclick="openApp()">Enter Learning Portal</button>
         <button class="tab-btn" style="background:#ef4444; color:white;" onclick="restartProgress()">Restart Progress</button>
     </div>
@@ -49,13 +47,15 @@
         </div>
         <div class="tab-content hidden" id="build">
             <h3 id="build-task"></h3>
-            <button onclick="checkBuild()">Submit</button>
+            <div id="word-bank"></div>
             <div id="sentence-box" style="border:2px dashed #cbd5e1; min-height:40px; margin: 10px 0;"></div>
+            <button onclick="checkBuild()">Submit</button>
         </div>
         <div class="tab-content hidden" id="conv">
             <h3 id="conv-task"></h3>
-            <button onclick="checkConv()">Submit</button>
+            <div id="conv-word-bank"></div>
             <div id="conv-sentence-box" style="border:2px dashed #cbd5e1; min-height:40px; margin: 10px 0;"></div>
+            <button onclick="checkConv()">Submit</button>
         </div>
     </div>
 </div>
@@ -73,7 +73,7 @@
     function restartProgress() { if(confirm("Wipe all progress?")) { localStorage.clear(); location.reload(); } }
     function openApp() { document.getElementById('dashboard-view').classList.add('hidden'); document.getElementById('learning-view').classList.remove('hidden'); }
     function goBack() { document.getElementById('dashboard-view').classList.remove('hidden'); document.getElementById('learning-view').classList.add('hidden'); }
-    function showTab(id) { document.querySelectorAll('.tab-content').forEach(t => t.classList.add('hidden')); document.getElementById(id).classList.remove('hidden'); }
+    function showTab(id) { document.querySelectorAll('.tab-content').forEach(t => t.classList.add('hidden')); document.getElementById(id).classList.remove('hidden'); document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active')); event.target.classList.add('active'); }
 
     function checkQuiz(ans, inputId) {
         state.qTotal++;
@@ -85,7 +85,13 @@
     }
 
     function init() {
+        document.getElementById('listen-list').innerHTML = data.words.map(w => `<div>${w.es} - ${w.en}</div>`).join('');
+        document.getElementById('flash-area').innerHTML = data.words.map(w => `<div class="card">${w.en}</div>`).join('');
         document.getElementById('quiz-area').innerHTML = data.words.slice(0,5).map((w,i) => `<div class="quiz-row">${w.en} <input id="q${i}" onchange="checkQuiz('${w.es}', 'q${i}')"></div>`).join('');
+        document.getElementById('build-task').innerText = data.sentences[0].en;
+        document.getElementById('word-bank').innerHTML = data.words.map(w => `<span class="word-pill">${w.es}</span>`).join('');
+        document.getElementById('conv-task').innerText = data.conversations[0].q;
+        document.getElementById('conv-word-bank').innerHTML = data.words.map(w => `<span class="word-pill">${w.es}</span>`).join('');
         document.getElementById('error-list').innerHTML = state.errors.map(e => `<div class="error-log">${e}</div>`).join('');
     }
     init();
