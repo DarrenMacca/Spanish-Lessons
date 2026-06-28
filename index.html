@@ -25,11 +25,15 @@
         <div class="status-box">Quiz Performance: <b id="quiz-status">Incomplete</b></div>
         <div class="status-box">Builder Performance: <b id="build-status">Incomplete</b></div>
         <h3 id="final-verdict">Course Status: Pending</h3>
-        <button class="tab-btn" onclick="openApp()" style="margin-top:20px;">Enter Learning Portal</button>
+        <button class="tab-btn" onclick="openApp()">Enter Learning Portal</button>
     </div>
 
     <div id="learning-view" class="hidden">
         <button onclick="goBack()" style="margin-bottom:20px;">← Back to Dashboard</button>
+        <div style="background:#eff6ff; padding:10px; border-radius:8px; margin-bottom:15px;">
+            Audio Speed: <input type="range" id="rate" min="0.5" max="1.5" step="0.1" value="1">
+        </div>
+
         <div class="nav-tabs">
             <button class="tab-btn active" onclick="showTab('listen')">1. Listen</button>
             <button class="tab-btn" onclick="showTab('flash')">2. Flashcards</button>
@@ -46,11 +50,14 @@
         <div class="tab-content hidden" id="build">
             <h3 id="build-task"></h3>
             <p id="progress-counter">Task 1/10</p>
-            <div id="word-bank"></div>
+            <button onclick="speak(window.currentTask.target)">🔊 Hear Sentence</button>
+            <div id="word-bank" style="margin:20px 0;"></div>
             <div id="sentence-box" style="padding:15px; border:2px dashed #cbd5e1; min-height:40px; margin: 10px 0;"></div>
             <button onclick="checkBuild()">Submit</button>
+            <button onclick="document.getElementById('sentence-box').innerText=''">Reset</button>
             <button id="show-answer-btn" class="hidden" onclick="revealAnswer()">Show Answer</button>
             <button onclick="nextTask()">Next Task</button>
+            <span id="feedback" style="margin-left:10px; font-weight:bold;"></span>
         </div>
     </div>
 </div>
@@ -63,6 +70,8 @@
 
     let qTotal = 0, qCorrect = 0, bScore = 0, bCount = 1, bAttempts = 0;
 
+    function speak(t) { const s = new SpeechSynthesisUtterance(t); s.rate = document.getElementById('rate').value; s.lang = 'es-MX'; speechSynthesis.speak(s); }
+    
     function openApp() { document.getElementById('dashboard-view').classList.add('hidden'); document.getElementById('learning-view').classList.remove('hidden'); }
     function goBack() { document.getElementById('dashboard-view').classList.remove('hidden'); document.getElementById('learning-view').classList.add('hidden'); updateDashboard(); }
 
@@ -75,18 +84,12 @@
     }
 
     function init() {
-        document.getElementById('listen-list').innerHTML = data.words.map(w => `<div><button onclick="new SpeechSynthesisUtterance('${w.es}').lang='es-MX'; speechSynthesis.speak(new SpeechSynthesisUtterance('${w.es}'))">🔊</button> ${w.es} - ${w.en}</div>`).join('');
-        document.getElementById('flash-area').innerHTML = data.words.map(w => `<div class="card" onclick="this.innerText=(this.innerText=='${w.en}' ? '${w.es}' : '${w.en}')">${w.en}</div>`).join('');
+        document.getElementById('listen-list').innerHTML = data.words.map(w => `<div><button onclick="speak('${w.es}')">🔊</button> ${w.es} - ${w.en}</div>`).join('');
+        document.getElementById('flash-area').innerHTML = data.words.map(w => `<div class="card" onclick="this.innerText=(this.innerText=='${w.en}' ? '${w.es}' : '${w.en}'); if(this.innerText=='${w.es}') speak('${w.es}')">${w.en}</div>`).join('');
         renderQuiz(); renderBuild();
     }
 
-    function renderQuiz() { 
-        document.getElementById('quiz-area').innerHTML = data.words.slice(0,10).map((w,i) => `
-            <div class="quiz-row"><span>${w.en}</span>
-            <input id="q${i}" onkeydown="if(event.key==='Enter') checkQuiz('${w.es}', 'q${i}', 'f${i}')"> 
-            <span id="f${i}"></span></div>`).join(''); 
-    }
-
+    function renderQuiz() { document.getElementById('quiz-area').innerHTML = data.words.slice(0,10).map((w,i) => `<div class="quiz-row"><span>${w.en}</span> <input id="q${i}" onkeydown="if(event.key==='Enter') checkQuiz('${w.es}', 'q${i}', 'f${i}')"> <span id="f${i}"></span></div>`).join(''); }
     function checkQuiz(ans, inputId, feedId) {
         qTotal++; const isCorrect = document.getElementById(inputId).value.toLowerCase() === ans.toLowerCase();
         if(isCorrect) qCorrect++;
@@ -95,29 +98,24 @@
     }
 
     function renderBuild() {
-        document.getElementById('build-task').innerText = "Build: " + data.sentences[bCount - 1].en;
+        window.currentTask = data.sentences[bCount - 1];
+        document.getElementById('build-task').innerText = "Build: " + currentTask.en;
         document.getElementById('word-bank').innerHTML = data.words.map(w => `<span class="word-pill" onclick="document.getElementById('sentence-box').innerText+=' ' + '${w.es}'">${w.es}</span>`).join('');
     }
 
     function checkBuild() {
-        if(document.getElementById('sentence-box').innerText.trim().replace(/\s+/g, ' ') === data.sentences[bCount-1].target.replace(/ /g, ' ')) {
-            if(bAttempts === 0) bScore++; alert("Correct!");
-        } else { bAttempts++; if(bAttempts >= 3) document.getElementById('show-answer-btn').classList.remove('hidden'); }
+        if(document.getElementById('sentence-box').innerText.trim().replace(/\s+/g, ' ') === currentTask.target.replace(/ /g, ' ')) {
+            if(bAttempts === 0) bScore++; document.getElementById('feedback').innerText = "Correct!";
+        } else { bAttempts++; document.getElementById('feedback').innerText = "Attempts: " + bAttempts + "/3"; if(bAttempts >= 3) document.getElementById('show-answer-btn').classList.remove('hidden'); }
     }
 
     function nextTask() {
         if(bCount >= 10) { alert("Session complete!"); goBack(); } 
-        else { bCount++; bAttempts = 0; document.getElementById('sentence-box').innerText = ''; document.getElementById('show-answer-btn').classList.add('hidden'); renderBuild(); }
+        else { bCount++; bAttempts = 0; document.getElementById('sentence-box').innerText = ''; document.getElementById('feedback').innerText = ''; document.getElementById('show-answer-btn').classList.add('hidden'); renderBuild(); }
     }
 
-    function showTab(id) { 
-        document.querySelectorAll('.tab-content').forEach(t => t.classList.add('hidden')); 
-        document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
-        document.getElementById(id).classList.remove('hidden');
-        event.target.classList.add('active');
-    }
-    
-    function revealAnswer() { document.getElementById('sentence-box').innerText = data.sentences[bCount-1].target; }
+    function showTab(id) { document.querySelectorAll('.tab-content').forEach(t => t.classList.add('hidden')); document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active')); document.getElementById(id).classList.remove('hidden'); event.target.classList.add('active'); }
+    function revealAnswer() { document.getElementById('sentence-box').innerText = currentTask.target; }
 
     init();
 </script>
