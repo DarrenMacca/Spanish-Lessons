@@ -2,49 +2,56 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Spanish CEFR Mastery Portal</title>
+    <title>Spanish CEFR Portal</title>
     <style>
         :root { --primary: #2563eb; }
-        body { font-family: 'Segoe UI', sans-serif; background: #f1f5f9; padding: 40px 20px; color: #1e293b; }
-        .grid-container { max-width: 1000px; margin: auto; display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
-        .section { background: white; padding: 25px; border-radius: 16px; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1); }
-        
-        /* Card Styling */
-        .card { width: 120px; height: 160px; background: white; border: 2px solid var(--primary); border-radius: 12px; display: inline-flex; align-items: center; justify-content: center; margin: 10px; cursor: pointer; text-align: center; font-weight: bold; transition: transform 0.2s; }
-        .card:hover { transform: translateY(-5px); }
-        
+        body { font-family: 'Segoe UI', sans-serif; background: #f8fafc; padding: 20px; color: #334155; }
+        .container { max-width: 800px; margin: auto; background: white; padding: 25px; border-radius: 16px; box-shadow: 0 4px 12px rgba(0,0,0,0.1); }
+        .tab-bar { display: flex; gap: 10px; margin-bottom: 20px; border-bottom: 2px solid #e2e8f0; padding-bottom: 10px; }
+        .tab-btn { padding: 10px 20px; cursor: pointer; border: none; background: #e2e8f0; border-radius: 8px; font-weight: 600; }
+        .tab-btn.active { background: var(--primary); color: white; }
+        .hidden { display: none; }
+        /* Flashcard Styles */
+        .card-container { display: flex; flex-wrap: wrap; gap: 15px; }
+        .card { width: 140px; height: 100px; border: 2px solid var(--primary); border-radius: 10px; display: flex; flex-direction: column; align-items: center; justify-content: center; background: white; cursor: pointer; padding: 10px; text-align: center; }
         .word-pill { display: inline-block; padding: 8px 16px; margin: 4px; background: #dbeafe; border-radius: 20px; cursor: pointer; border: 1px solid #bfdbfe; }
-        .btn-reset { background: #ef4444; color: white; border: none; padding: 5px 10px; border-radius: 4px; cursor: pointer; }
     </style>
 </head>
 <body>
 
-<div class="grid-container">
-    <!-- LISTEN -->
-    <div class="section">
-        <h3>1. Listen & Learn</h3>
-        <div id="listen-area" style="max-height: 300px; overflow-y: auto;"></div>
+<div class="container">
+    <h1>Spanish Training (A1)</h1>
+    
+    <div class="tab-bar">
+        <button class="tab-btn active" onclick="showTab('listen')">1. Listen</button>
+        <button class="tab-btn" onclick="showTab('flash')">2. Flashcards</button>
+        <button class="tab-btn" onclick="showTab('quiz')">3. Quiz</button>
+        <button class="tab-btn" onclick="showTab('build')">4. Building</button>
     </div>
 
-    <!-- FLASHCARDS -->
-    <div class="section">
-        <h3>2. Flashcards</h3>
-        <div id="flash-area"></div>
+    <!-- Content Sections -->
+    <div id="listen" class="tab-content">
+        <h3>Listen & Pronunciation</h3>
+        <div id="listen-area"></div>
     </div>
 
-    <!-- QUIZ -->
-    <div class="section">
-        <h3>3. Quiz</h3>
+    <div id="flash" class="tab-content hidden">
+        <h3>Flashcards (Click to Flip)</h3>
+        <div id="flash-area" class="card-container"></div>
+    </div>
+
+    <div id="quiz" class="tab-content hidden">
+        <h3>Interactive Quiz</h3>
         <div id="quiz-area"></div>
     </div>
 
-    <!-- BUILDER -->
-    <div class="section">
-        <h3>4. Sentence Builder</h3>
-        <div id="build-area"></div>
-        <div id="sentence-box" style="padding:15px; background:#f8fafc; border:2px dashed #cbd5e1; margin:15px 0; min-height:50px; border-radius:8px;"></div>
+    <div id="build" class="tab-content hidden">
+        <h3>Sentence Builder</h3>
+        <p id="build-task"></p>
+        <div id="word-bank"></div>
+        <div id="sentence-box" style="padding:20px; background:#f1f5f9; border-radius:8px; margin:20px 0; min-height:50px;"></div>
         <button onclick="checkBuild()">Submit</button>
-        <button class="btn-reset" onclick="resetBuild()">Reset</button>
+        <button style="background:#ef4444; color:white; border:none; padding:10px 20px; border-radius:8px;" onclick="resetBuild()">Reset</button>
     </div>
 </div>
 
@@ -54,50 +61,49 @@
         sentences: [{en: 'I eat bread', target: 'Yo Comer Pan'}, {en: 'I am happy', target: 'Yo Feliz'}]
     };
 
-    let attempts = 0;
-    let sentenceArray = [];
+    let sentenceArray = [], attempts = 0;
 
-    // Initialize
     function init() {
-        // Listen
         document.getElementById('listen-area').innerHTML = data.words.map(w => `<div><button onclick="speak('${w.es}')">🔊</button> ${w.es} - ${w.en}</div>`).join('');
         
-        // Flashcards
-        document.getElementById('flash-area').innerHTML = data.words.map((w, i) => `
-            <div class="card" onclick="this.innerText='${w.es}'"> ${w.en} </div>
-            <button class="btn-reset" onclick="this.previousElementSibling.innerText='${w.en}'">Reset</button>
+        document.getElementById('flash-area').innerHTML = data.words.map(w => `
+            <div class="card" onclick="this.innerHTML='<b>${w.es}</b><br><small>Click to Reset</small>'">
+                <b>${w.en}</b>
+            </div>
         `).join('');
 
-        // Quiz
         renderQuiz();
-        
-        // Build
-        const s = data.sentences[0];
-        document.getElementById('build-area').innerHTML = `<b>Task: ${s.en}</b><br><br>` + 
-            data.words.map(w => `<span class="word-pill" onclick="addWord('${w.es}')">${w.es}</span>`).join('');
-    }
-
-    function addWord(w) {
-        sentenceArray.push(w);
-        document.getElementById('sentence-box').innerText = sentenceArray.join(' ');
-    }
-
-    function resetBuild() { sentenceArray = []; document.getElementById('sentence-box').innerText = ''; attempts = 0; }
-    
-    function checkBuild() {
-        attempts++;
-        if(sentenceArray.join(' ') === data.sentences[0].target.replace(/ /g, ' ')) alert("Correct!");
-        else if(attempts >= 3) { alert("3 attempts reached. Resetting."); resetBuild(); }
-        else alert("Try again!");
+        renderBuild();
     }
 
     function renderQuiz() {
         const q = data.words[Math.floor(Math.random()*data.words.length)];
-        document.getElementById('quiz-area').innerHTML = `<p>Translate: ${q.en}</p>` + 
-            data.words.slice(0,3).map(o => `<button onclick="renderQuiz()">${o.es}</button>`).join(' ');
+        document.getElementById('quiz-area').innerHTML = `<p>Translate: <b>${q.en}</b></p>` + 
+            data.words.slice(0,4).map(o => `<button onclick="renderQuiz()">${o.es}</button>`).join(' ');
     }
 
+    function renderBuild() {
+        const s = data.sentences[0];
+        document.getElementById('build-task').innerText = "Task: " + s.en;
+        document.getElementById('word-bank').innerHTML = data.words.map(w => `<span class="word-pill" onclick="addWord('${w.es}')">${w.es}</span>`).join('');
+    }
+
+    function addWord(w) { sentenceArray.push(w); document.getElementById('sentence-box').innerText = sentenceArray.join(' '); }
+    function resetBuild() { sentenceArray = []; document.getElementById('sentence-box').innerText = ''; attempts = 0; }
+    function checkBuild() {
+        attempts++;
+        if(sentenceArray.join(' ') === data.sentences[0].target.replace(/ /g, ' ')) alert("Perfect!");
+        else if(attempts >= 3) { alert("3 attempts reached. Resetting."); resetBuild(); }
+        else alert("Try again!");
+    }
+    function showTab(id) { 
+        document.querySelectorAll('.tab-content').forEach(t => t.classList.add('hidden')); 
+        document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active')); 
+        document.getElementById(id).classList.remove('hidden'); 
+        event.target.classList.add('active'); 
+    }
     function speak(t) { const s = new SpeechSynthesisUtterance(t); s.lang = 'es-ES'; window.speechSynthesis.speak(s); }
+
     init();
 </script>
 </body>
