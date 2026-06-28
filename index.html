@@ -144,6 +144,113 @@
         }
 
         /* ============================
+           MOBILE OPTIMISATION PACK
+           ============================ */
+        @media (max-width: 600px) {
+
+            body {
+                font-size: 15px;
+                padding: 8px;
+            }
+
+            h1, h2, h3 {
+                font-size: 20px;
+                margin-bottom: 10px;
+            }
+
+            .wrapper {
+                padding: 16px;
+                border-radius: 12px;
+            }
+
+            /* Sticky tab bar */
+            .nav-tabs {
+                position: sticky;
+                top: 0;
+                background: white;
+                padding: 8px 0;
+                z-index: 999;
+                border-bottom: 2px solid #e2e8f0;
+            }
+
+            .tab-btn {
+                padding: 8px 10px;
+                font-size: 13px;
+                flex: 0 0 auto;
+            }
+
+            /* Flashcards grid */
+            #flash-area {
+                display: grid;
+                grid-template-columns: repeat(auto-fill, minmax(90px, 1fr));
+                gap: 10px;
+            }
+
+            .card {
+                height: 70px;
+                font-size: 14px;
+            }
+
+            /* Word pills */
+            .word-pill {
+                padding: 6px 12px;
+                font-size: 13px;
+                margin: 3px;
+            }
+
+            /* Build / Conversation / Smart / Daily boxes */
+            #sentence-box,
+            #conv-sentence-box,
+            #smart-box,
+            #daily-build-box,
+            #daily-conv-box {
+                min-height: 45px;
+                font-size: 14px;
+                padding: 10px;
+            }
+
+            /* Grammar Mode */
+            .grammar-card {
+                padding: 14px;
+                margin: 10px 0;
+            }
+
+            #grammar-practice {
+                padding: 14px;
+            }
+
+            #grammar-answer,
+            #daily-grammar-answer {
+                width: 100%;
+                padding: 10px;
+                font-size: 15px;
+                border-radius: 8px;
+                border: 1px solid #e2e8f0;
+            }
+
+            /* Daily Practice layout */
+            #daily-words,
+            #daily-flash,
+            #daily-quiz {
+                margin-bottom: 12px;
+            }
+
+            /* Buttons */
+            button {
+                padding: 10px;
+                font-size: 15px;
+                width: 100%;
+                margin-top: 6px;
+            }
+
+            /* Celebration banner */
+            #celebration-banner {
+                font-size: 22px;
+                padding: 18px 24px;
+            }
+        }
+
+        /* ============================
            CELEBRATION ANIMATION
            ============================ */
         @keyframes confettiFall {
@@ -298,7 +405,7 @@
 
 
         <!-- ============================
-             NAVIGATION TABS
+             NAVIGATION TABS (Mobile Optimised + Sticky)
              ============================ -->
         <div class="nav-tabs">
             <button class="tab-btn active" onclick="showTab('listen', event)">1. Listen</button>
@@ -324,7 +431,7 @@
 
 
         <!-- ============================
-             FLASHCARDS TAB
+             FLASHCARDS TAB (Mobile Grid)
              ============================ -->
         <div class="tab-content hidden" id="flash">
             <h3>Flashcards</h3>
@@ -415,7 +522,7 @@
 
 
         <!-- ============================
-             DAILY PRACTICE TAB
+             DAILY PRACTICE TAB (with Daily Grammar)
              ============================ -->
         <div class="tab-content hidden" id="daily">
             <h3>Daily Practice Mode</h3>
@@ -758,28 +865,6 @@ function checkSkillBadges(){
     if(smartPercent >= 90) unlockBadge("smart_champ");
 }
 
-function checkDailyStreakBadges(){
-    let streak = Number(localStorage.getItem("dailyStreak") || 0);
-    const today = new Date().toLocaleDateString();
-    const lastDay = localStorage.getItem("dailyLastDay");
-
-    if(lastDay !== today){
-        streak++;
-        localStorage.setItem("dailyStreak", streak);
-        localStorage.setItem("dailyLastDay", today);
-    }
-
-    if(streak >= 5) unlockBadge("daily_5");
-    if(streak >= 10) unlockBadge("daily_10");
-    if(streak >= 30) unlockBadge("daily_30");
-}
-
-function checkAllBadges(){
-    checkCEFRMasteryBadges();
-    checkSkillBadges();
-    checkDailyStreakBadges();
-}
-
 /* ============================
    QUIZ (CEFR‑aware + Badges)
    ============================ */
@@ -1114,7 +1199,7 @@ function startGrammarLesson(id){
     document.getElementById("grammar-answer").value = "";
 
     loadGrammarQuestion();
-    showTab("grammar-practice");
+    showTab("grammar-practice", { target: document.querySelector("[onclick*='grammar']") });
 }
 
 function loadGrammarQuestion(){
@@ -1486,6 +1571,55 @@ function showTab(id,event){
 
     if(id === "badges") renderBadges();
     if(id === "grammar") renderGrammarLessons();
+}
+
+/* ============================
+   SWIPE NAVIGATION (FULLY INTEGRATED)
+   ============================ */
+
+let touchStartX = 0;
+let touchEndX = 0;
+
+document.addEventListener("touchstart", e => {
+    touchStartX = e.changedTouches[0].screenX;
+});
+
+document.addEventListener("touchend", e => {
+    touchEndX = e.changedTouches[0].screenX;
+    handleSwipe();
+});
+
+function handleSwipe(){
+    const diff = touchEndX - touchStartX;
+
+    if(Math.abs(diff) < 50) return;
+
+    const tabs = [
+        "listen","flash","quiz","build","conv",
+        "smart","daily","badges","grammar"
+    ];
+
+    const activeIndex = tabs.findIndex(id =>
+        !document.getElementById(id).classList.contains("hidden")
+    );
+
+    if(activeIndex === -1) return;
+
+    let newIndex = activeIndex;
+
+    if(diff < 0) newIndex++;   // swipe left → next tab
+    if(diff > 0) newIndex--;   // swipe right → previous tab
+
+    if(newIndex < 0 || newIndex >= tabs.length) return;
+
+    const nextTab = tabs[newIndex];
+
+    const btn = [...document.querySelectorAll(".tab-btn")]
+        .find(b => b.textContent.toLowerCase().includes(nextTab));
+
+    if(btn){
+        showTab(nextTab, { target: btn });
+    }
 }
 
 /* ============================
