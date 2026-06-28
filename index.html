@@ -22,10 +22,9 @@
 <div class="wrapper">
     <div id="dashboard-view">
         <h1>Dashboard</h1>
-        <div class="status-box">Quiz: <b id="quiz-status">Incomplete</b></div>
-        <div class="status-box">Building & Conversation: <b id="build-status">Incomplete</b></div>
-        <h3 id="final-verdict">Course Status: Pending</h3>
-        <button class="tab-btn" onclick="openApp()">Enter Learning Portal</button>
+        <div class="status-box">Quiz Score: <b id="dashboard-quiz">0%</b></div>
+        <div class="status-box">Builder Score: <b id="dashboard-build">0%</b></div>
+        <button class="tab-btn" onclick="openApp()" style="margin-top:20px;">Enter Learning Portal</button>
     </div>
 
     <div id="learning-view" class="hidden">
@@ -44,113 +43,83 @@
         
         <div class="tab-content" id="listen"><h3>Listen</h3><div id="listen-list"></div></div>
         <div class="tab-content hidden" id="flash"><h3>Flashcards</h3><div id="flash-area"></div></div>
-        <div class="tab-content hidden" id="quiz">
-            <h3>Quiz</h3>
-            <div id="score-board">Quiz Score: 0%</div>
-            <div id="quiz-area"></div>
+        <div class="tab-content hidden" id="quiz"><h3>Quiz</h3><div id="score-board">0%</div><div id="quiz-area"></div></div>
+        <div class="tab-content hidden" id="build">
+            <h3>Building</h3>
+            <h3 id="build-task"></h3>
+            <button onclick="speak(window.currentTask.target)">🔊 Hear</button>
+            <div id="word-bank"></div>
+            <div id="sentence-box" style="padding:15px; border:2px dashed #cbd5e1; margin: 10px 0; min-height:40px;"></div>
+            <button onclick="checkBuild()">Submit</button>
+            <button onclick="clearBox('sentence-box')">Reset</button>
+            <button id="show-answer-btn" class="hidden" onclick="revealAnswer()">Show Answer</button>
+            <button onclick="nextBuild()">Next Task</button>
         </div>
         
-        <!-- Building & Conversation share the build logic template -->
-        <div class="tab-content hidden" id="build">
-            <h3 id="build-task"></h3>
-            <p id="b-counter"></p>
-            <button onclick="speak(window.currentTask.target)">🔊 Hear</button>
-            <div class="word-bank"></div>
-            <div class="sentence-box" style="padding:15px; border:2px dashed #cbd5e1; margin: 10px 0; min-height:40px;"></div>
-            <button onclick="checkTask('build')">Submit</button>
-            <button onclick="clearBox()">Reset</button>
-            <button id="show-answer-btn" class="hidden" onclick="revealAnswer()">Show Answer</button>
-            <button onclick="nextTask('build')">Next</button>
-            <span id="feedback"></span>
-        </div>
-
+        <!-- NEW CONVERSATION TAB -->
         <div class="tab-content hidden" id="conv">
-            <h3>Conversation</h3>
+            <h3>Daily Conversation</h3>
             <h3 id="conv-task"></h3>
-            <p id="c-counter"></p>
-            <div class="conv-word-bank"></div>
-            <div class="conv-sentence-box" style="padding:15px; border:2px dashed #cbd5e1; margin: 10px 0; min-height:40px;"></div>
-            <button onclick="checkTask('conv')">Submit</button>
-            <button onclick="clearBox()">Reset</button>
-            <button id="show-answer-btn-c" class="hidden" onclick="revealAnswer()">Show Answer</button>
-            <button onclick="nextTask('conv')">Next</button>
-            <span id="c-feedback"></span>
+            <div id="conv-word-bank"></div>
+            <div id="conv-sentence-box" style="padding:15px; border:2px dashed #cbd5e1; margin: 10px 0; min-height:40px;"></div>
+            <button onclick="checkConv()">Submit</button>
+            <button onclick="clearBox('conv-sentence-box')">Reset</button>
+            <button id="conv-answer-btn" class="hidden" onclick="revealConv()">Show Answer</button>
+            <button onclick="nextConv()">Next Question</button>
         </div>
     </div>
 </div>
 
 <script>
     const data = {
-        words: [{es: 'Hola', en: 'Hello'}, {es: 'Gracias', en: 'Thank you'}, {es: 'Casa', en: 'House'}, {es: 'Yo', en: 'I'}, {es: 'Tu', en: 'You'}, {es: 'El', en: 'He'}, {es: 'Agua', en: 'Water'}, {es: 'Pan', en: 'Bread'}, {es: 'Libro', en: 'Book'}, {es: 'Amigo', en: 'Friend'}, {es: 'Feliz', en: 'Happy'}, {es: 'Comer', en: 'Eat'}, {es: 'Beber', en: 'Drink'}, {es: 'Donde', en: 'Where'}, {es: 'Esta', en: 'Is'}, {es: 'La', en: 'The'}, {es: 'Si', en: 'Yes'}, {es: 'Aquí', en: 'Here'}],
-        sentences: [{en: 'I eat bread', target: 'Yo Comer Pan'}, {en: 'The house is big', target: 'La Casa Grande'}],
+        words: [{es: 'Hola', en: 'Hello'}, {es: 'Gracias', en: 'Thanks'}, {es: 'Si', en: 'Yes'}, {es: 'Donde', en: 'Where'}, {es: 'Amigo', en: 'Friend'}, {es: 'Bien', en: 'Fine'}, {es: 'Mucho', en: 'Much'}, {es: 'Gusto', en: 'Pleasure'}],
+        sentences: [{en: 'I eat bread', target: 'Yo Comer Pan'}, {en: 'The friend is happy', target: 'El Amigo Feliz'}],
         convos: [
-            {en: 'A: Hello friend. B: Hello.', target: 'Hola Amigo Hola'},
-            {en: 'A: Where is the bread? B: Here.', target: 'Donde Esta El Pan Aquí'},
-            {en: 'A: You drink water? B: Yes.', target: 'Tu Beber Agua Si'},
-            {en: 'A: The friend is happy. B: Yes.', target: 'El Amigo Feliz Si'},
-            {en: 'A: I eat here. B: Thank you.', target: 'Yo Comer Aquí Gracias'}
+            {q: 'How are you?', target: 'Bien Gracias'},
+            {q: 'Nice to meet you.', target: 'Mucho Gusto'},
+            {q: 'Hello, my friend!', target: 'Hola Amigo'},
+            {q: 'Are you happy?', target: 'Si'},
+            {q: 'Where is the house?', target: 'Donde Esta La Casa'}
         ]
     };
 
-    let qTotal=0, qCorrect=0, bScore=0, cScore=0, bCount=1, cCount=1, bAtt=0, cAtt=0;
+    let bCount = 0, cCount = 0, bAtt = 0, cAtt = 0, qCorrect = 0, qTotal = 0;
 
     function speak(t) { const s = new SpeechSynthesisUtterance(t); s.rate = document.getElementById('rate').value; s.lang = 'es-MX'; speechSynthesis.speak(s); }
     function openApp() { document.getElementById('dashboard-view').classList.add('hidden'); document.getElementById('learning-view').classList.remove('hidden'); }
-    function goBack() { document.getElementById('dashboard-view').classList.remove('hidden'); document.getElementById('learning-view').classList.add('hidden'); updateDashboard(); }
-    
-    function updateDashboard() {
-        const qP = qTotal===0?0:Math.round((qCorrect/qTotal)*100);
-        const bP = Math.round(((bScore+cScore)/7)*100);
-        document.getElementById('quiz-status').innerText = qP >= 90 ? "Passed ("+qP+"%)" : "Retry ("+qP+"%)";
-        document.getElementById('build-status').innerText = bP >= 90 ? "Passed ("+bP+"%)" : "Retry ("+bP+"%)";
-        document.getElementById('final-verdict').innerText = (qP >= 90 && bP >= 90) ? "Course Status: PASSED" : "Course Status: Needs Improvement";
+    function goBack() { document.getElementById('dashboard-view').classList.remove('hidden'); document.getElementById('learning-view').classList.add('hidden'); }
+
+    function renderBuild() {
+        window.currentTask = data.sentences[bCount];
+        document.getElementById('build-task').innerText = currentTask.en;
+        document.getElementById('word-bank').innerHTML = data.words.map(w => `<span class="word-pill" onclick="document.getElementById('sentence-box').innerText+=' '+ '${w.es}'">${w.es}</span>`).join('');
     }
 
-    function renderTask(type) {
-        if(type === 'build') {
-            window.currentTask = data.sentences[bCount-1];
-            document.getElementById('build-task').innerText = "Build: " + currentTask.en;
-            document.getElementById('b-counter').innerText = bCount + "/2";
-            document.querySelector('#build .word-bank').innerHTML = data.words.map(w => `<span class="word-pill" onclick="document.querySelector('#build .sentence-box').innerText+=' '+ '${w.es}'">${w.es}</span>`).join('');
-        } else {
-            window.currentTask = data.convos[cCount-1];
-            document.getElementById('conv-task').innerText = currentTask.en;
-            document.getElementById('c-counter').innerText = cCount + "/5";
-            document.querySelector('.conv-word-bank').innerHTML = data.words.map(w => `<span class="word-pill" onclick="document.querySelector('.conv-sentence-box').innerText+=' '+ '${w.es}'">${w.es}</span>`).join('');
-        }
+    function renderConv() {
+        window.currentConv = data.convos[cCount];
+        document.getElementById('conv-task').innerText = currentConv.q;
+        document.getElementById('conv-word-bank').innerHTML = data.words.map(w => `<span class="word-pill" onclick="document.getElementById('conv-sentence-box').innerText+=' '+ '${w.es}'">${w.es}</span>`).join('');
     }
 
-    function checkTask(type) {
-        const isB = type === 'build';
-        const box = document.querySelector(isB ? '#build .sentence-box' : '.conv-sentence-box');
-        const fb = document.getElementById(isB ? 'feedback' : 'c-feedback');
-        if(box.innerText.trim().replace(/\s+/g,' ') === currentTask.target.replace(/ /g,' ')) {
-            if((isB ? bAtt : cAtt) === 0) isB ? bScore++ : cScore++;
-            fb.innerText = "Correct!";
-        } else {
-            isB ? bAtt++ : cAtt++;
-            fb.innerText = "Attempts: " + (isB ? bAtt : cAtt) + "/3";
-            if((isB ? bAtt : cAtt) >= 3) document.getElementById(isB ? 'show-answer-btn' : 'show-answer-btn-c').classList.remove('hidden');
-        }
+    function checkBuild() {
+        if(document.getElementById('sentence-box').innerText.trim() === currentTask.target) { alert("Correct!"); } 
+        else { bAtt++; if(bAtt >= 3) document.getElementById('show-answer-btn').classList.remove('hidden'); }
     }
 
-    function nextTask(type) {
-        if(type === 'build') { if(bCount<2) { bCount++; bAtt=0; document.querySelector('#build .sentence-box').innerText=''; document.getElementById('show-answer-btn').classList.add('hidden'); renderTask('build'); } } 
-        else { if(cCount<5) { cCount++; cAtt=0; document.querySelector('.conv-sentence-box').innerText=''; document.getElementById('show-answer-btn-c').classList.add('hidden'); renderTask('conv'); } }
+    function checkConv() {
+        if(document.getElementById('conv-sentence-box').innerText.trim() === currentConv.target) { alert("Perfect!"); } 
+        else { cAtt++; if(cAtt >= 3) document.getElementById('conv-answer-btn').classList.remove('hidden'); }
     }
-    
-    function clearBox() { document.querySelector('.tab-content:not(.hidden) .sentence-box, .tab-content:not(.hidden) .conv-sentence-box').innerText=''; }
-    function revealAnswer() { document.querySelector('.tab-content:not(.hidden) .sentence-box, .tab-content:not(.hidden) .conv-sentence-box').innerText = currentTask.target; }
+
+    function clearBox(id) { document.getElementById(id).innerText = ''; }
+    function nextBuild() { bCount++; bAtt = 0; renderBuild(); }
+    function nextConv() { cCount++; cAtt = 0; renderConv(); }
     function showTab(id) { document.querySelectorAll('.tab-content').forEach(t=>t.classList.add('hidden')); document.getElementById(id).classList.remove('hidden'); }
 
-    // Init
-    document.getElementById('listen-list').innerHTML = data.words.map(w => `<button onclick="speak('${w.es}')">🔊</button> ${w.es} - ${w.en}<br>`).join('');
-    document.getElementById('flash-area').innerHTML = data.words.map(w => `<div class="card" onclick="this.innerText=(this.innerText=='${w.en}' ? '${w.es}' : '${w.en}'); if(this.innerText=='${w.es}') speak('${w.es}')">${w.en}</div>`).join('');
-    // Quiz Init
-    document.getElementById('quiz-area').innerHTML = data.words.slice(0,10).map((w,i) => `<div class="quiz-row"><span>${w.en}</span> <input id="q${i}" onkeydown="if(event.key==='Enter') checkQuiz('${w.es}', 'q${i}', 'f${i}')"> <span id="f${i}"></span></div>`).join('');
-    function checkQuiz(ans, inputId, feedId) { qTotal++; const isC = document.getElementById(inputId).value.toLowerCase() === ans.toLowerCase(); if(isC) qCorrect++; document.getElementById(feedId).innerText = isC ? "✅" : "❌"; document.getElementById('score-board').innerText = "Quiz Score: " + Math.round((qCorrect/qTotal)*100) + "%"; }
-    
-    renderTask('build'); renderTask('conv');
+    // Initialize
+    document.getElementById('listen-list').innerHTML = data.words.map(w => `<button onclick="speak('${w.es}')">🔊</button> ${w.es}<br>`).join('');
+    document.getElementById('flash-area').innerHTML = data.words.map(w => `<div class="card" onclick="this.innerText=(this.innerText=='${w.en}' ? '${w.es}' : '${w.en}')">${w.en}</div>`).join('');
+    renderBuild(); renderConv();
 </script>
 </body>
 </html>
