@@ -1,70 +1,522 @@
-<!-- Update the Quiz Content section in your HTML with these additions -->
-<div id="content-quiz" class="p-6 space-y-6">
-    <div id="quiz-interactive-body" class="space-y-6"></div>
-    
-    <div id="quiz-actions" class="flex gap-2">
-        <button id="submit-btn" onclick="evaluateQuiz()" class="flex-grow bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-3 rounded-xl transition shadow">Submit My Answers</button>
-        <button id="reset-btn" onclick="resetQuiz()" class="px-6 py-3 bg-slate-200 hover:bg-slate-300 rounded-xl font-bold text-slate-700 transition">Reset</button>
-    </div>
-    
-    <div id="retry-warning" class="hidden text-center text-sm font-semibold text-rose-600 italic"></div>
-    <div id="quiz-result-banner" class="hidden p-4 rounded-xl text-center font-bold"></div>
-</div>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Familia Spanish Learning Hub</title>
+    <!-- Tailwind CSS for modern, clean UI styling -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        .flip-card { perspective: 1000px; }
+        .flip-card-inner { transition: transform 0.4s; transform-style: preserve-3d; }
+        .flip-card.flipped .flip-card-inner { transform: rotateY(180deg); }
+        .flip-card-front, .flip-card-back { backface-visibility: hidden; position: absolute; top:0; left:0; width:100%; height:100%; }
+        .flip-card-back { transform: rotateY(180deg); }
+    </style>
+</head>
+<body class="bg-slate-50 text-slate-800 min-h-screen flex flex-col font-sans">
 
-<!-- Add these modifications to your <script> section -->
-<script>
-    let retryCount = 0; // Track attempts
+    <!-- Header Navigation Bar -->
+    <header class="bg-indigo-600 text-white shadow-md p-4">
+        <div class="max-w-4xl mx-auto flex justify-between items-center">
+            <h1 class="text-xl font-bold tracking-wide">🇪🇸 Academia de la Familia</h1>
+            <div class="text-sm bg-indigo-700 px-3 py-1 rounded-full font-medium">
+                Current Level: <span id="user-tier-display" class="font-bold uppercase text-yellow-300">Beginner</span>
+            </div>
+        </div>
+    </header>
 
-    function resetQuiz() {
-        if (retryCount >= 3) return; // Hard limit
-
-        // Clear radio buttons
-        document.querySelectorAll('input[type="radio"]').forEach(el => el.checked = false);
+    <!-- Main Dynamic Interface -->
+    <main class="flex-grow p-4 max-w-4xl w-full mx-auto my-6">
         
-        // Clear word builder selections
-        selectedSentenceWords = {}; 
-        lessonData[activeId].sentences.forEach((_, sIdx) => {
-            selectedSentenceWords[sIdx] = [];
-            document.getElementById(`sentence-target-${sIdx}`).innerHTML = `<span class="text-slate-400 text-xs italic pointer-events-none">Click words below to assemble your answer...</span>`;
-            // Reset button styles
-            document.querySelectorAll(`[id^="word-btn-${sIdx}"]`).forEach(btn => {
-                btn.className = "bg-white border border-slate-300 text-slate-800 text-sm font-semibold px-3 py-2 rounded-xl shadow-sm hover:bg-slate-100 transition active:scale-95";
-            });
+        <!-- Dashboard / Lesson Selection View -->
+        <div id="dashboard-view" class="space-y-6">
+            <div class="bg-white rounded-xl shadow-sm p-6 border border-slate-100">
+                <h2 class="text-2xl font-bold text-slate-900 mb-2">¡Hola Familia! 👋</h2>
+                <p class="text-slate-600">Work through the lessons sequentially. You must average **90% or higher** on a level's quizzes to unlock the next proficiency tier.</p>
+                
+                <!-- Progress Stats Breakdown -->
+                <div class="grid grid-cols-3 gap-4 mt-4 bg-slate-50 p-4 rounded-lg text-center">
+                    <div><span class="block text-xs font-semibold text-slate-500 uppercase">Beginner Avg</span><span id="stat-beginner" class="text-lg font-bold text-indigo-600">0%</span></div>
+                    <div><span class="block text-xs font-semibold text-slate-500 uppercase">Intermediate Avg</span><span id="stat-intermediate" class="text-lg font-bold text-slate-400">Locked</span></div>
+                    <div><span class="block text-xs font-semibold text-slate-500 uppercase">Advanced Avg</span><span id="stat-advanced" class="text-lg font-bold text-slate-400">Locked</span></div>
+                </div>
+            </div>
+
+            <!-- Lessons Hierarchy Grid -->
+            <div>
+                <h3 class="text-lg font-bold text-slate-900 mb-4">Your Curriculum Roadmaps</h3>
+                <div id="lessons-list" class="space-y-4"></div>
+            </div>
+
+            <!-- Certificate Section -->
+            <div id="certificate-claim-zone" class="hidden bg-emerald-50 border-2 border-dashed border-emerald-400 rounded-xl p-6 text-center">
+                <h3 class="text-xl font-bold text-emerald-800">🎉 Master Curriculum Completed!</h3>
+                <p class="text-emerald-700 text-sm mt-1 mb-4">You maintained a 90%+ average across all proficiency tiers!</p>
+                <button onclick="generateCertificate()" class="bg-emerald-600 hover:bg-emerald-700 text-white font-bold px-6 py-2.5 rounded-lg transition shadow-md">Generate Official Certificate</button>
+            </div>
+        </div>
+
+        <!-- Single Lesson Deep Dive View -->
+        <div id="lesson-view" class="hidden space-y-6">
+            <button onclick="showDashboard()" class="text-indigo-600 font-semibold hover:text-indigo-800 transition flex items-center gap-1">← Back to Dashboard</button>
+            
+            <div class="bg-white rounded-xl shadow-sm p-6 border border-slate-100">
+                <span id="lesson-badge" class="text-xs uppercase font-extrabold px-2.5 py-1 rounded bg-indigo-100 text-indigo-700 tracking-wider"></span>
+                <h2 id="lesson-title" class="text-2xl font-bold text-slate-900 mt-2 mb-1"></h2>
+                <p id="lesson-desc" class="text-slate-600 text-sm"></p>
+            </div>
+
+            <!-- TAB CONTAINER -->
+            <div class="bg-white rounded-xl shadow-sm border border-slate-100 overflow-hidden">
+                <div class="flex border-b bg-slate-50">
+                    <button onclick="switchTab('audio')" id="tab-audio" class="flex-1 text-center py-3 font-semibold text-sm border-b-2 border-indigo-600 text-indigo-600">1. Listen & Learn</button>
+                    <button onclick="switchTab('flash')" id="tab-flash" class="flex-1 text-center py-3 font-semibold text-sm border-b-2 border-transparent text-slate-500 hover:text-slate-800">2. Flash Cards</button>
+                    <button onclick="switchTab('quiz')" id="tab-quiz" class="flex-1 text-center py-3 font-semibold text-sm border-b-2 border-transparent text-slate-500 hover:text-slate-800">3. Take Quiz</button>
+                </div>
+
+                <!-- Tab A: Audio Practicing Layer -->
+                <div id="content-audio" class="p-6 space-y-4">
+                    <div class="flex items-center gap-4 bg-indigo-50 p-3 rounded-lg text-sm text-indigo-900 mb-2">
+                        <label class="font-semibold shrink-0">🔊 Speaking Speed Selector:</label>
+                        <input type="range" id="audio-speed" min="0.3" max="1.0" step="0.1" value="0.7" class="w-full h-2 bg-indigo-200 rounded-lg appearance-none cursor-pointer">
+                        <span id="speed-num" class="font-bold text-xs bg-indigo-200 px-2 py-0.5 rounded">0.7x</span>
+                    </div>
+                    <div id="audio-words-stack" class="divide-y divide-slate-100"></div>
+                </div>
+
+                <!-- Tab B: Self-Quizzing Flash Cards Layer -->
+                <div id="content-flash" class="p-6 hidden flex flex-col items-center">
+                    <div id="flashcard-box" class="flip-card w-72 h-44 cursor-pointer" onclick="this.classList.toggle('flipped')">
+                        <div class="flip-card-inner w-full h-full text-center relative">
+                            <div class="flip-card-front bg-indigo-600 text-white rounded-xl flex flex-col justify-center items-center p-4 shadow-md font-bold text-2xl">
+                                <span id="card-front-text"></span>
+                                <span class="text-xs font-normal opacity-70 mt-4">(Click to Flip)</span>
+                            </div>
+                            <div class="flip-card-back bg-amber-400 text-slate-900 rounded-xl flex flex-col justify-center items-center p-4 shadow-md font-bold text-2xl">
+                                <span id="card-back-text"></span>
+                                <span class="text-xs font-normal opacity-70 mt-4">(Spanish Translation)</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="flex gap-4 mt-6">
+                        <button onclick="prevCard()" class="bg-slate-200 hover:bg-slate-300 px-4 py-2 rounded-lg font-medium text-sm">Previous</button>
+                        <button onclick="nextCard()" class="bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-2 rounded-lg font-medium text-sm">Next Card</button>
+                    </div>
+                </div>
+
+                <!-- Tab C: Core Quiz Section -->
+                <div id="content-quiz" class="p-6 space-y-6 hidden">
+                    <div id="quiz-interactive-body" class="space-y-6"></div>
+                    
+                    <div id="quiz-actions" class="flex gap-3">
+                        <button id="submit-btn" onclick="evaluateQuiz()" class="flex-grow bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-3 rounded-xl transition shadow">Submit My Answers</button>
+                        <button id="reset-btn" onclick="resetQuiz()" class="bg-slate-200 hover:bg-slate-300 text-slate-700 font-bold px-6 py-3 rounded-xl transition">Reset Quiz</button>
+                    </div>
+                    
+                    <div id="retry-warning" class="hidden text-center text-sm font-semibold text-rose-600 italic mt-2"></div>
+                    <div id="quiz-result-banner" class="hidden p-4 rounded-xl text-center font-bold"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Certificate View Mode -->
+        <div id="certificate-print-view" class="hidden fixed inset-0 bg-white p-12 flex flex-col items-center justify-center border-[16px] border-indigo-900 text-center z-50">
+            <div class="max-w-2xl border-4 border-amber-400 p-8 space-y-6">
+                <h1 class="text-4xl font-serif text-indigo-900 font-bold tracking-wide">CERTIFICADO DE COMPLETACIÓN</h1>
+                <p class="text-slate-500 font-medium tracking-widest text-xs uppercase">This Official Verification is Proudly Awarded to</p>
+                <input type="text" id="student-name-input" placeholder="Type Family Member Name Here" class="text-3xl font-bold text-slate-800 text-center border-b-2 border-slate-300 focus:outline-none w-full max-w-md pb-1 py-2 font-serif">
+                <p class="text-slate-600 max-w-md mx-auto text-sm leading-relaxed">For achieving full fluency benchmarks by scoring an average tracking score greater than or equal to 90% across Beginner, Intermediate, and Advanced Spanish Curriculums.</p>
+                <div class="pt-6 border-t border-slate-200 flex justify-between items-center text-xs text-slate-400 font-mono">
+                    <span>Issued Via: Familia Portal</span>
+                    <span>Status: verified 100% Core Mastery</span>
+                </div>
+            </div>
+            <button onclick="window.print()" class="mt-8 bg-indigo-600 text-white font-bold px-6 py-2 rounded shadow no-print print:hidden">Print Certificate</button>
+            <button onclick="closeCertificate()" class="mt-2 text-xs text-slate-400 hover:underline print:hidden">Exit View</button>
+        </div>
+    </main>
+
+    <script>
+        // Core Curriculum Data Set
+        const lessonData = [
+            { 
+                id: 0, 
+                tier: 'beginner', 
+                title: 'Everyday Greetings & Basics', 
+                desc: 'Crucial expressions to handle basic polite conversations.', 
+                words: [
+                    {es: 'Hola', en: 'Hello'}, {es: 'Adiós', en: 'Goodbye'}, {es: 'Gracias', en: 'Thank you'},
+                    {es: 'Por favor', en: 'Please'}, {es: 'Buenos días', en: 'Good morning'}, {es: 'Buenas tardes', en: 'Good afternoon'},
+                    {es: 'Buenas noches', en: 'Good night'}, {es: 'Lo siento', en: 'I am sorry'}, {es: 'Sí', en: 'Yes'},
+                    {es: 'No', en: 'No'}, {es: '¿Cómo estás?', en: 'How are you?'}, {es: 'Bien', en: 'Well / Good'}
+                ], 
+                sentences: [
+                    {english: 'Hello and thank you', scrambled: ['gracias', 'Hola', 'y'], correct: 'Hola y gracias'},
+                    {english: 'Good morning please', scrambled: ['por favor', 'Buenos', 'días'], correct: 'Buenos días por favor'}
+                ], 
+                quiz: [
+                    {q: "How do you say 'Thank you' in Spanish?", a: "Gracias", alt: ["Hola", "Adiós"]},
+                    {q: "What does 'Lo siento' mean?", a: "I am sorry", alt: ["Good morning", "Please"]},
+                    {q: "Translate 'How are you?'", a: "¿Cómo estás?", alt: ["Buenas tardes", "Adiós"]}
+                ] 
+            },
+            { 
+                id: 1, 
+                tier: 'beginner', 
+                title: 'Numbers & Core Essentials', 
+                desc: 'Master basic counting, calendar references, and family basics.', 
+                words: [
+                    {es: 'Uno', en: 'One'}, {es: 'Dos', en: 'Two'}, {es: 'Tres', en: 'Three'},
+                    {es: 'Cuatro', en: 'Four'}, {es: 'Cinco', en: 'Five'}, {es: 'Seis', en: 'Six'},
+                    {es: 'Siete', en: 'Seven'}, {es: 'Ocho', en: 'Eight'}, {es: 'Nueve', en: 'Nine'},
+                    {es: 'Diez', en: 'Ten'}, {es: 'Familia', en: 'Family'}, {es: 'Amigo', en: 'Friend'}
+                ], 
+                sentences: [
+                    {english: 'Two and a friend', scrambled: ['amigo', 'un', 'Dos', 'y'], correct: 'Dos y un amigo'}
+                ], 
+                quiz: [
+                    {q: "What is the number 'Tres' in English?", a: "Three", alt: ["One", "Two"]},
+                    {q: "How do you say 'Eight'?", a: "Ocho", alt: ["Siete", "Nueve"]},
+                    {q: "Translate the word 'Amigo'", a: "Friend", alt: ["Family", "Four"]}
+                ] 
+            },
+            { 
+                id: 2, 
+                tier: 'intermediate', 
+                title: 'Food, Dining & Household', 
+                desc: 'Vocabulary used to order food, identify kitchen items, and describe the home.', 
+                words: [
+                    {es: 'Manzana', en: 'Apple'}, {es: 'Agua', en: 'Water'}, {es: 'Pan', en: 'Bread'},
+                    {es: 'Leche', en: 'Milk'}, {es: 'Café', en: 'Coffee'}, {es: 'Desayuno', en: 'Breakfast'},
+                    {es: 'Casa', en: 'House'}, {es: 'Cocina', en: 'Kitchen'}, {es: 'Mesa', en: 'Table'},
+                    {es: 'Comida', en: 'Food / Meal'}, {es: 'Queso', en: 'Cheese'}, {es: 'Pollo', en: 'Chicken'}
+                ], 
+                sentences: [
+                    {english: 'Water and bread please', scrambled: ['por favor', 'Agua', 'y', 'pan'], correct: 'Agua y pan por favor'}
+                ], 
+                quiz: [
+                    {q: "Translate the item: 'Manzana'", a: "Apple", alt: ["Water", "Milk"]},
+                    {q: "What is the Spanish word for 'Breakfast'?", a: "Desayuno", alt: ["Comida", "Cocina"]},
+                    {q: "What does 'Mesa' mean?", a: "Table", alt: ["House", "Cheese"]}
+                ] 
+            },
+            { 
+                id: 3, 
+                tier: 'intermediate', 
+                title: 'Actions & Core Verbs', 
+                desc: 'Transition into conversational action sentences and spatial concepts.', 
+                words: [
+                    {es: 'Tener', en: 'To have'}, {es: 'Quiero', en: 'I want'}, {es: 'Hablar', en: 'To speak'},
+                    {es: 'Hacer', en: 'To do / make'}, {es: 'Comer', en: 'To eat'}, {es: 'Beber', en: 'To drink'},
+                    {es: 'Necesito', en: 'I need'}, {es: 'Dónde', en: 'Where'}, {es: 'Aquí', en: 'Here'},
+                    {es: 'Hoy', en: 'Today'}, {es: 'Trabajo', en: 'Work'}, {es: 'Dinero', en: 'Money'}
+                ], 
+                sentences: [
+                    {english: 'I want to speak Spanish', scrambled: ['español', 'Quiero', 'hablar'], correct: 'Quiero hablar español'},
+                    {english: 'I need food here', scrambled: ['comida', 'Necesito', 'aquí'], correct: 'Necesito comida aquí'}
+                ], 
+                quiz: [
+                    {q: "Which word means 'I want'?", a: "Quiero", alt: ["Tener", "Hablar"]},
+                    {q: "What does 'Dónde' translate to?", a: "Where", alt: ["Here", "Today"]},
+                    {q: "Translate the action 'Comer'", a: "To eat", alt: ["To drink", "To have"]}
+                ] 
+            },
+            { 
+                id: 4, 
+                tier: 'advanced', 
+                title: 'Time, Complexities & Travel', 
+                desc: 'Abstract concepts, conditional descriptions, and time management.', 
+                words: [
+                    {es: 'Mañana', en: 'Tomorrow'}, {es: 'Ayer', en: 'Yesterday'}, {es: 'Tiempo', en: 'Time'},
+                    {es: 'Viaje', en: 'Trip / Travel'}, {es: 'Ciudad', en: 'City'}, {es: 'Aeropuerto', en: 'Airport'},
+                    {es: 'Entiendo', en: 'I understand'}, {es: 'Problema', en: 'Problem'}, {es: 'Dificultad', en: 'Difficulty'},
+                    {es: 'Siempre', en: 'Always'}, {es: 'Nunca', en: 'Never'}, {es: 'Felicidad', en: 'Happiness'}
+                ], 
+                sentences: [
+                    {english: 'I do not have time today', scrambled: ['tiempo', 'No', 'tengo', 'hoy'], correct: 'No tengo tiempo hoy'},
+                    {english: 'I always understand the problem', scrambled: ['Entiendo', 'el', 'problema', 'siempre'], correct: 'Siempre entiendo el problema'}
+                ], 
+                quiz: [
+                    {q: "What does 'Mañana' mean?", a: "Tomorrow", alt: ["Yesterday", "Time"]},
+                    {q: "Translate 'I understand'", a: "Entiendo", alt: ["Siempre", "Viaje"]},
+                    {q: "What is the opposite of 'Siempre'?", a: "Nunca", alt: ["Ayer", "Ciudad"]}
+                ] 
+            }
+        ];
+
+        let userScores = JSON.parse(localStorage.getItem('familia_spanish_scores')) || { 0: null, 1: null, 2: null, 3: null, 4: null };
+        let activeId = 0, activeCardIndex = 0;
+        let selectedSentenceWords = {}; 
+        let retryAttempts = 0; 
+
+        // Sound Speed Adjustment
+        document.getElementById('audio-speed').addEventListener('input', (e) => {
+            document.getElementById('speed-num').innerText = `${e.target.value}x`;
         });
 
-        // Hide banner and increment retry counter
-        document.getElementById('quiz-result-banner').classList.add('hidden');
-        retryCount++;
-        
-        const remaining = 3 - retryCount;
-        const warning = document.getElementById('retry-warning');
-        warning.classList.remove('hidden');
-        warning.innerText = `Attempts remaining: ${remaining}`;
-
-        if (remaining === 0) {
-            document.getElementById('submit-btn').classList.add('hidden');
-            document.getElementById('reset-btn').classList.add('hidden');
-            warning.innerText = "Attempts exhausted. Please review your Flashcards and Audio before trying again.";
+        function calculateTierAverages() {
+            const compute = (ids) => {
+                let valid = ids.map(id => userScores[id]).filter(v => v !== null);
+                return valid.length > 0 ? Math.round(valid.reduce((a,b)=>a+b,0)/valid.length) : null;
+            };
+            return { beginner: compute([0, 1]), intermediate: compute([2, 3]), advanced: compute([4]) };
         }
-    }
 
-    function evaluateQuiz() {
-        // ... (Keep existing evaluation logic) ...
-        
-        // After scoring, ensure the UI reflects potential failure
-        if (finalPercent < 90) {
-            document.getElementById('retry-warning').classList.remove('hidden');
-            document.getElementById('retry-warning').innerText = `Score below 90%. You can reset the quiz ${3 - retryCount} more times.`;
+        function speakWord(text) {
+            window.speechSynthesis.cancel();
+            let msg = new SpeechSynthesisUtterance(text);
+            msg.lang = 'es-ES';
+            msg.rate = parseFloat(document.getElementById('audio-speed').value);
+            window.speechSynthesis.speak(msg);
         }
-    }
 
-    // Update your loadLesson function to reset the counter when opening a new lesson
-    function loadLesson(id) {
-        activeId = id; 
-        retryCount = 0; // Reset counter on load
-        document.getElementById('submit-btn').classList.remove('hidden');
-        document.getElementById('reset-btn').classList.remove('hidden');
-        document.getElementById('retry-warning').classList.add('hidden');
-        // ... (existing load logic) ...
-    }
-</script>
+        function renderDashboard() {
+            const avgs = calculateTierAverages();
+            const intUnlocked = avgs.beginner !== null && avgs.beginner >= 90;
+            const advUnlocked = intUnlocked && avgs.intermediate !== null && avgs.intermediate >= 90;
+
+            document.getElementById('stat-beginner').innerText = avgs.beginner !== null ? `${avgs.beginner}%` : '0%';
+            document.getElementById('stat-intermediate').innerText = intUnlocked ? (avgs.intermediate !== null ? `${avgs.intermediate}%` : '0%') : 'Locked';
+            document.getElementById('stat-advanced').innerText = advUnlocked ? (avgs.advanced !== null ? `${avgs.advanced}%` : '0%') : 'Locked';
+
+            document.getElementById('stat-intermediate').className = `text-lg font-bold ${intUnlocked ? 'text-indigo-600' : 'text-slate-400'}`;
+            document.getElementById('stat-advanced').className = `text-lg font-bold ${advUnlocked ? 'text-indigo-600' : 'text-slate-400'}`;
+
+            let currentTier = 'beginner';
+            if(intUnlocked) currentTier = 'intermediate';
+            if(advUnlocked) currentTier = 'advanced';
+            document.getElementById('user-tier-display').innerText = currentTier;
+
+            let html = '';
+            lessonData.forEach(l => {
+                let isLocked = (l.tier === 'intermediate' && !intUnlocked) || (l.tier === 'advanced' && !advUnlocked);
+                let score = userScores[l.id];
+                html += `
+                <div class="p-5 rounded-xl border flex justify-between items-center bg-white ${isLocked ? 'opacity-60 border-slate-200' : 'border-indigo-100 hover:shadow-md transition'}">
+                    <div>
+                        <span class="text-xs font-bold uppercase tracking-wider px-2 py-0.5 rounded bg-slate-100 text-slate-600">${l.tier}</span>
+                        <h4 class="text-lg font-bold text-slate-900 mt-1">${l.title}</h4>
+                        <p class="text-slate-500 text-xs mt-0.5">${l.desc}</p>
+                    </div>
+                    <div>
+                        ${isLocked ? '<span class="text-sm font-semibold text-slate-400">🔒 Locked</span>' : 
+                        `<button onclick="loadLesson(${l.id})" class="bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-bold px-4 py-2 rounded-lg transition shadow-sm">${score !== null ? `Retry (${score}%)` : 'Start Lesson'}</button>`}
+                    </div>
+                </div>`;
+            });
+            document.getElementById('lessons-list').innerHTML = html;
+
+            if(avgs.beginner >= 90 && avgs.intermediate >= 90 && avgs.advanced >= 90) {
+                document.getElementById('certificate-claim-zone').classList.remove('hidden');
+            }
+        }
+
+        function loadLesson(id) {
+            activeId = id; activeCardIndex = 0; selectedSentenceWords = {}; retryAttempts = 0;
+            const l = lessonData[id];
+            
+            // Clean dynamic interface containers
+            document.getElementById('submit-btn').classList.remove('hidden');
+            document.getElementById('reset-btn').classList.remove('hidden');
+            document.getElementById('retry-warning').classList.add('hidden');
+            document.getElementById('quiz-result-banner').classList.add('hidden');
+
+            document.getElementById('lesson-badge').innerText = l.tier;
+            document.getElementById('lesson-title').innerText = l.title;
+            document.getElementById('lesson-desc').innerText = l.desc;
+
+            // Render Tab 1 (Audio Vocabulary)
+            let audioHtml = '';
+            l.words.forEach(w => {
+                audioHtml += `
+                <div class="flex justify-between items-center py-3.5 border-b border-slate-100 last:border-0">
+                    <div>
+                        <p class="text-lg font-bold text-slate-900">${w.es}</p>
+                        <p class="text-slate-500 text-sm">${w.en}</p>
+                    </div>
+                    <button onclick="speakWord('${w.es}')" class="bg-indigo-50 hover:bg-indigo-100 p-2.5 rounded-full text-indigo-600 font-bold tracking-wider text-sm transition">🔊 Play</button>
+                </div>`;
+            });
+            document.getElementById('audio-words-stack').innerHTML = audioHtml;
+
+            // Set Up Flashcards
+            updateFlashcardView();
+
+            // Render Tab 3 (Interactive Quiz Engine)
+            let quizHtml = '';
+            l.quiz.forEach((q, idx) => {
+                let options = [...q.alt, q.a].sort(() => Math.random() - 0.5);
+                quizHtml += `
+                <div class="bg-slate-50 p-4 rounded-xl space-y-3">
+                    <p class="font-bold text-slate-800 text-sm"><span class="text-indigo-600">Q${idx+1}:</span> ${q.q}</p>
+                    <div class="grid grid-cols-1 gap-2">
+                        ${options.map(opt => `<label class="flex items-center gap-3 bg-white border border-slate-200 p-3 rounded-lg cursor-pointer hover:bg-slate-50 text-sm"><input type="radio" name="q-${idx}" value="${opt}" class="text-indigo-600 focus:ring-indigo-500"> ${opt}</label>`).join('')}
+                    </div>
+                </div>`;
+            });
+
+            l.sentences.forEach((s, sIdx) => {
+                selectedSentenceWords[sIdx] = []; 
+                quizHtml += `
+                <div class="bg-slate-50 p-4 rounded-xl space-y-3">
+                    <p class="font-bold text-slate-800 text-sm"><span class="text-indigo-600">Sentence Builder:</span> Form the Spanish sentence in the correct order:</p>
+                    <p class="text-sm font-medium text-slate-700 bg-indigo-50 border border-indigo-100 px-3 py-2 rounded-lg">🇬🇧 English: "${s.english}"</p>
+                    
+                    <div class="bg-white border-2 border-dashed border-slate-200 rounded-xl p-3 min-h-[3.5rem] flex flex-wrap gap-2 items-center" id="sentence-target-${sIdx}">
+                        <span class="text-slate-400 text-xs italic pointer-events-none">Click words below to assemble your answer...</span>
+                    </div>
+
+                    <div class="flex flex-wrap gap-2 pt-2" id="sentence-bank-${sIdx}">
+                        ${s.scrambled.map((word, wIdx) => `
+                            <button onclick="handleWordClick(${sIdx}, ${wIdx}, '${word}')" id="word-btn-${sIdx}-${wIdx}" class="sentence-word-btn bg-white border border-slate-300 text-slate-800 text-sm font-semibold px-3 py-2 rounded-xl shadow-sm hover:bg-slate-100 transition">
+                                ${word}
+                            </button>
+                        `).join('')}
+                    </div>
+                </div>`;
+            });
+
+            document.getElementById('quiz-interactive-body').innerHTML = quizHtml;
+            switchTab('audio');
+            document.getElementById('dashboard-view').classList.add('hidden');
+            document.getElementById('lesson-view').classList.remove('hidden');
+        }
+
+        function handleWordClick(sIdx, wIdx, word) {
+            const btn = document.getElementById(`word-btn-${sIdx}-${wIdx}`);
+            const targetContainer = document.getElementById(`sentence-target-${sIdx}`);
+            
+            if (!selectedSentenceWords[sIdx]) selectedSentenceWords[sIdx] = [];
+            const existingIndex = selectedSentenceWords[sIdx].findIndex(item => item.wIdx === wIdx);
+
+            if (existingIndex > -1) {
+                selectedSentenceWords[sIdx].splice(existingIndex, 1);
+                btn.className = "sentence-word-btn bg-white border border-slate-300 text-slate-800 text-sm font-semibold px-3 py-2 rounded-xl shadow-sm hover:bg-slate-100 transition";
+            } else {
+                selectedSentenceWords[sIdx].push({ wIdx, word });
+                btn.className = "sentence-word-btn bg-indigo-100 border border-indigo-300 text-indigo-700 text-sm font-semibold px-3 py-2 rounded-xl shadow-sm opacity-50";
+            }
+
+            if (selectedSentenceWords[sIdx].length === 0) {
+                targetContainer.innerHTML = `<span class="text-slate-400 text-xs italic pointer-events-none">Click words below to assemble your answer...</span>`;
+            } else {
+                targetContainer.innerHTML = selectedSentenceWords[sIdx].map(item => `
+                    <span class="bg-indigo-600 text-white text-sm font-semibold px-3 py-1.5 rounded-xl shadow">
+                        ${item.word}
+                    </span>
+                `).join('');
+            }
+        }
+
+        function resetQuiz() {
+            if (retryAttempts >= 3) return;
+
+            retryAttempts++;
+            const remaining = 3 - retryAttempts;
+
+            // Clear Radio selections
+            const radios = document.querySelectorAll('#quiz-interactive-body input[type="radio"]');
+            radios.forEach(radio => radio.checked = false);
+
+            // Clear Word Banks safely without using broken selector hacks
+            const targetIds = Object.keys(selectedSentenceWords);
+            targetIds.forEach(sIdx => {
+                selectedSentenceWords[sIdx] = [];
+                const targetBox = document.getElementById(`sentence-target-${sIdx}`);
+                if (targetBox) {
+                    targetBox.innerHTML = `<span class="text-slate-400 text-xs italic pointer-events-none">Click words below to assemble your answer...</span>`;
+                }
+            });
+
+            // Restore style on all scattered word components safely
+            const wordButtons = document.querySelectorAll('.sentence-word-btn');
+            wordButtons.forEach(btn => {
+                btn.className = "sentence-word-btn bg-white border border-slate-300 text-slate-800 text-sm font-semibold px-3 py-2 rounded-xl shadow-sm hover:bg-slate-100 transition";
+            });
+
+            document.getElementById('quiz-result-banner').classList.add('hidden');
+            const warningZone = document.getElementById('retry-warning');
+            warningZone.classList.remove('hidden');
+
+            if (remaining > 0) {
+                warningZone.innerText = `Quiz reset successfully! Leftover attempts remaining: ${remaining}`;
+            } else {
+                document.getElementById('submit-btn').classList.add('hidden');
+                document.getElementById('reset-btn').classList.add('hidden');
+                warningZone.innerHTML = `⚠️ <strong>Attempts Exhausted!</strong> You must head back to the <button class="text-indigo-600 underline font-bold" onclick="switchTab('audio')">Listen & Learn</button> or <button class="text-indigo-600 underline font-bold" onclick="switchTab('flash')">Flash Cards</button> tabs to review materials before returning here.`;
+            }
+        }
+
+        function evaluateQuiz() {
+            const l = lessonData[activeId];
+            let totalItems = l.quiz.length + l.sentences.length;
+            let correctCount = 0;
+
+            l.quiz.forEach((q, idx) => {
+                let chosen = document.querySelector(`input[name="q-${idx}"]:checked`);
+                if(chosen && chosen.value === q.a) correctCount++;
+            });
+
+            l.sentences.forEach((s, sIdx) => {
+                let userSentence = (selectedSentenceWords[sIdx] || []).map(item => item.word).join(' ').trim().toLowerCase();
+                let cleanCorrect = s.correct.toLowerCase().replace(/[.,\/#!$%\^&\*;:{}=\-_`~()¿?]/g,"").trim();
+                if(userSentence === cleanCorrect) correctCount++;
+            });
+
+            let finalPercent = Math.round((correctCount / totalItems) * 100);
+            userScores[activeId] = finalPercent;
+            localStorage.setItem('familia_spanish_scores', JSON.stringify(userScores));
+
+            let banner = document.getElementById('quiz-result-banner');
+            banner.classList.remove('hidden');
+            
+            if (finalPercent >= 90) {
+                banner.className = "p-4 rounded-xl text-center font-bold bg-emerald-100 text-emerald-800";
+                banner.innerText = `¡Excelente! Passed with ${finalPercent}% accuracy!`;
+            } else {
+                banner.className = "p-4 rounded-xl text-center font-bold bg-rose-100 text-rose-800";
+                banner.innerText = `Score: ${finalPercent}%. You need 90% or higher to progress. Use the reset options if available!`;
+            }
+        }
+
+        function updateFlashcardView() {
+            document.getElementById('flashcard-box').classList.remove('flipped');
+            const words = lessonData[activeId].words;
+            document.getElementById('card-front-text').innerText = words[activeCardIndex].en;
+            document.getElementById('card-back-text').innerText = words[activeCardIndex].es;
+        }
+
+        function nextCard() {
+            activeCardIndex = (activeCardIndex + 1) % lessonData[activeId].words.length;
+            updateFlashcardView();
+        }
+
+        function prevCard() {
+            const len = lessonData[activeId].words.length;
+            activeCardIndex = (activeCardIndex - 1 + len) % len;
+            updateFlashcardView();
+        }
+
+        function switchTab(type) {
+            ['audio', 'flash', 'quiz'].forEach(t => {
+                document.getElementById(`content-${t}`).classList.add('hidden');
+                document.getElementById(`tab-${t}`).className = "flex-1 text-center py-3 font-semibold text-sm border-b-2 border-transparent text-slate-500 hover:text-slate-800";
+            });
+            document.getElementById(`content-${type}`).classList.remove('hidden');
+            document.getElementById(`tab-${type}`).className = "flex-1 text-center py-3 font-semibold text-sm border-b-2 border-indigo-600 text-indigo-600";
+        }
+
+        function showDashboard() {
+            document.getElementById('lesson-view').classList.add('hidden');
+            document.getElementById('dashboard-view').classList.remove('hidden');
+            renderDashboard();
+        }
+
+        function generateCertificate() { document.getElementById('certificate-print-view').classList.remove('hidden'); }
+        function closeCertificate() { document.getElementById('certificate-print-view').classList.add('hidden'); }
+
+        window.onload = renderDashboard;
+    </script>
+</body>
+</html>
