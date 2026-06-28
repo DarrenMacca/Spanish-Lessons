@@ -33,17 +33,17 @@
             <button class="tab-btn" onclick="showTab('build')">4. Building</button>
         </div>
         
-        <div class="controls">Speed: <input type="range" id="rate" min="0.5" max="1.5" step="0.1" value="1"></div>
+        <div class="controls">Audio Speed: <input type="range" id="rate" min="0.5" max="1.5" step="0.1" value="1"></div>
 
         <div id="listen" class="tab-content"><div id="listen-list"></div></div>
         <div id="flash" class="tab-content hidden"><div id="flash-area"></div></div>
         <div id="quiz" class="tab-content hidden">
-            <div id="score-board" style="font-weight:bold; margin-bottom:15px;">Score: 0%</div>
+            <div id="score-board" style="font-weight:bold; margin-bottom:15px; font-size: 1.2rem;">Overall Score: 0%</div>
             <div id="quiz-area"></div>
         </div>
         <div id="build" class="tab-content hidden">
             <h3 id="build-task"></h3>
-            <button onclick="speak(window.currentTask.target, true)">🔊 Hear</button>
+            <button onclick="speak(window.currentTask.target, true)">🔊 Hear Sentence</button>
             <div id="word-bank" style="margin:20px 0; display:flex; flex-wrap:wrap; gap:10px;"></div>
             <div id="sentence-box" style="padding:15px; border:2px dashed #cbd5e1; min-height:40px;"></div>
             <div style="margin-top:10px;">
@@ -67,18 +67,16 @@
     
     function init() {
         document.getElementById('listen-list').innerHTML = data.words.map(w => `<div><button onclick="speak('${w.es}', true)">🔊</button> ${w.es} - ${w.en}</div>`).join('');
-        
         document.getElementById('flash-area').innerHTML = data.words.map(w => `<div class="card" onclick="this.innerText=(this.innerText=='${w.en}' ? '${w.es}' : '${w.en}'); if(this.innerText=='${w.es}') speak('${w.es}', false)">${w.en}</div>`).join('');
-        
         document.getElementById('quiz-area').innerHTML = data.words.slice(0,10).map((w,i) => `<div class="quiz-row"><span>${w.en}</span><input id="q${i}"> <button onclick="checkQuiz('${w.es}', 'q${i}', 'f${i}')">Submit</button> <span id="f${i}"></span></div>`).join('');
-        
         renderBuild();
     }
 
     function checkQuiz(ans, inputId, feedId) {
         totalQs++;
-        if(document.getElementById(inputId).value.toLowerCase() === ans.toLowerCase()) correctQs++;
-        document.getElementById(feedId).innerText = "Result: " + Math.round((correctQs/totalQs)*100) + "%";
+        const isCorrect = document.getElementById(inputId).value.toLowerCase() === ans.toLowerCase();
+        if(isCorrect) correctQs++;
+        document.getElementById(feedId).innerText = isCorrect ? "✅ Correct" : "❌ Try Again";
         document.getElementById('score-board').innerText = "Overall Score: " + Math.round((correctQs/totalQs)*100) + "%";
     }
 
@@ -91,7 +89,7 @@
     function speak(t, isLatin) { 
         const s = new SpeechSynthesisUtterance(t); 
         s.rate = document.getElementById('rate').value; 
-        s.lang = 'es-MX'; // Latin American Spanish
+        s.lang = 'es-MX'; 
         window.speechSynthesis.speak(s); 
     }
     
