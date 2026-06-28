@@ -21,7 +21,7 @@
 <div class="wrapper">
     <div id="dashboard-view">
         <h1>Dashboard</h1>
-        <p>Skill Level: <b>A1 Elementary</b> | Progress: 45%</p>
+        <p>Skill Level: <b>A1 Elementary</b> | Progress: 50%</p>
         <button class="tab-btn" onclick="openApp()">Enter Learning Portal</button>
     </div>
 
@@ -50,6 +50,7 @@
             <button onclick="checkBuild()">Submit</button>
             <button onclick="resetBuild()">Reset</button>
             <span id="feedback" style="margin-left:15px; font-weight:bold;"></span>
+            <button id="show-answer-btn" class="hidden" onclick="revealAnswer()" style="margin-left:10px; background:#f59e0b; color:white; border:none; padding:10px; border-radius:8px;">Show Correct Answer</button>
         </div>
     </div>
 </div>
@@ -60,7 +61,7 @@
         sentences: [{en: 'I eat bread', target: 'Yo Comer Pan'}, {en: 'The friend is happy', target: 'El Amigo Feliz'}, {en: 'Where is the store', target: 'Donde Esta La Tienda'}, {en: 'You drink water', target: 'Tu Beber Agua'}, {en: 'The book is red', target: 'El Libro Rojo'}]
     };
 
-    let totalQs = 0, correctQs = 0;
+    let totalQs = 0, correctQs = 0, buildAttempts = 0;
 
     function openApp() { document.getElementById('dashboard-view').classList.add('hidden'); document.getElementById('learning-view').classList.remove('hidden'); }
     
@@ -70,16 +71,11 @@
         renderQuiz(); renderBuild();
     }
 
-    function renderQuiz() {
-        document.getElementById('quiz-area').innerHTML = data.words.slice(0,10).map((w,i) => `<div class="quiz-row"><span>${w.en}</span><input id="q${i}" class="quiz-input"> <button onclick="checkQuiz('${w.es}', 'q${i}', 'f${i}')">Submit</button> <span id="f${i}"></span></div>`).join('');
-    }
-
+    function renderQuiz() { document.getElementById('quiz-area').innerHTML = data.words.slice(0,10).map((w,i) => `<div class="quiz-row"><span>${w.en}</span><input id="q${i}" class="quiz-input"> <button onclick="checkQuiz('${w.es}', 'q${i}', 'f${i}')">Submit</button> <span id="f${i}"></span></div>`).join(''); }
     function resetQuiz() { totalQs = 0; correctQs = 0; document.getElementById('score-board').innerText = "Overall Score: 0%"; renderQuiz(); }
-
     function checkQuiz(ans, inputId, feedId) {
         totalQs++;
-        const val = document.getElementById(inputId).value;
-        const isCorrect = val.toLowerCase() === ans.toLowerCase();
+        const isCorrect = document.getElementById(inputId).value.toLowerCase() === ans.toLowerCase();
         if(isCorrect) correctQs++;
         document.getElementById(feedId).innerText = isCorrect ? "✅ Correct" : "❌ Try Again";
         document.getElementById('score-board').innerText = "Overall Score: " + Math.round((correctQs/totalQs)*100) + "%";
@@ -91,9 +87,18 @@
         document.getElementById('word-bank').innerHTML = data.words.map(w => `<span class="word-pill" onclick="document.getElementById('sentence-box').innerText+=' ' + '${w.es}'">${w.es}</span>`).join('');
     }
 
-    function speak(t, isLatin) { const s = new SpeechSynthesisUtterance(t); s.rate = document.getElementById('rate').value; s.lang = 'es-MX'; window.speechSynthesis.speak(s); }
-    function checkBuild() { document.getElementById('feedback').innerText = (document.getElementById('sentence-box').innerText.trim().replace(/\s+/g, ' ') === window.currentTask.target.replace(/ /g, ' ')) ? "Correct!" : "Try again."; }
-    function resetBuild() { document.getElementById('sentence-box').innerText = ''; document.getElementById('feedback').innerText = ''; }
+    function speak(t) { const s = new SpeechSynthesisUtterance(t); s.rate = document.getElementById('rate').value; s.lang = 'es-MX'; window.speechSynthesis.speak(s); }
+    
+    function checkBuild() {
+        buildAttempts++;
+        const userAns = document.getElementById('sentence-box').innerText.trim().replace(/\s+/g, ' ');
+        if(userAns === window.currentTask.target.replace(/ /g, ' ')) { document.getElementById('feedback').innerText = "Correct!"; }
+        else { document.getElementById('feedback').innerText = "Try again."; }
+        if(buildAttempts >= 3) document.getElementById('show-answer-btn').classList.remove('hidden');
+    }
+
+    function revealAnswer() { document.getElementById('sentence-box').innerText = window.currentTask.target; }
+    function resetBuild() { buildAttempts = 0; document.getElementById('sentence-box').innerText = ''; document.getElementById('feedback').innerText = ''; document.getElementById('show-answer-btn').classList.add('hidden'); }
     function showTab(id) { document.querySelectorAll('.tab-content').forEach(t => t.classList.add('hidden')); document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active')); document.getElementById(id).classList.remove('hidden'); event.target.classList.add('active'); }
     
     init();
