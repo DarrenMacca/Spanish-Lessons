@@ -9,7 +9,7 @@
         .tab-btn { padding: 10px 15px; cursor: pointer; border: none; background: #e2e8f0; border-radius: 6px; }
         .tab-btn.active { background: #2563eb; color: white; }
         .hidden { display: none; }
-        .card { border: 2px solid #2563eb; padding: 40px; text-align: center; border-radius: 12px; cursor: pointer; background: #eff6ff; font-size: 1.5rem; font-weight: bold; min-height: 100px; }
+        .card-row { border: 1px solid #e2e8f0; padding: 15px; margin: 10px 0; border-radius: 8px; cursor: pointer; display: flex; justify-content: space-between; }
         .word-pill { display: inline-block; padding: 8px 12px; margin: 4px; background: #dbeafe; border-radius: 6px; cursor: pointer; border: 1px solid #bfdbfe; }
     </style>
 </head>
@@ -23,8 +23,7 @@
 
     <div id="lesson-zone" class="hidden">
         <button onclick="goBack()">← Dashboard</button>
-        <h2 id="level-title"></h2>
-        <div style="margin-bottom:20px;">
+        <div style="margin: 20px 0;">
             <button class="tab-btn active" onclick="showTab('listen')">1. Listen</button>
             <button class="tab-btn" onclick="showTab('flash')">2. Flashcards</button>
             <button class="tab-btn" onclick="showTab('quiz')">3. Quiz</button>
@@ -32,17 +31,12 @@
         </div>
 
         <div id="listen" class="tab-content"><div id="vocab-list"></div></div>
-        <div id="flash" class="tab-content hidden">
-            <div class="card" id="flash-card" onclick="flipCard()">Start</div>
-            <button onclick="changeCard(-1)">Prev</button> <button onclick="changeCard(1)">Next</button>
-        </div>
-        <div id="quiz" class="tab-content hidden">
-            <div id="quiz-area"></div>
-        </div>
+        <div id="flash" class="tab-content hidden"><div id="flash-list"></div></div>
+        <div id="quiz" class="tab-content hidden"><div id="quiz-area"></div></div>
         <div id="build" class="tab-content hidden">
-            <div id="sentence-area"></div>
-            <div id="word-bank" style="margin:20px 0;"></div>
-            <div id="sentence-box" style="padding:20px; border:2px dashed #ccc; min-height:40px;"></div>
+            <h3 id="build-task"></h3>
+            <div id="word-bank"></div>
+            <div id="sentence-box" style="padding:20px; border:2px dashed #ccc; margin:20px 0; min-height:40px;"></div>
             <button onclick="resetBuild()">Reset</button>
         </div>
     </div>
@@ -57,41 +51,48 @@
             {es: 'Libro', en: 'Book'}, {es: 'Amigo', en: 'Friend'}, {es: 'Comer', en: 'Eat'}, {es: 'Beber', en: 'Drink'}, {es: 'Feliz', en: 'Happy'}
         ],
         sentences: [
-            {en: 'I eat bread', target: 'Yo comer pan'}, {en: 'The dog is happy', target: 'El perro feliz'},
-            {en: 'You drink water', target: 'Tu beber agua'}, {en: 'I am happy', target: 'Yo feliz'}
+            {en: 'I eat bread', target: ['Yo', 'Comer', 'Pan']}, 
+            {en: 'The dog is happy', target: ['El', 'Perro', 'Feliz']},
+            {en: 'You drink water', target: ['Tu', 'Beber', 'Agua']}, 
+            {en: 'I am happy', target: ['Yo', 'Feliz']}
         ]
     };
 
-    let cardIdx = 0, isSpanish = false, quizCount = 0;
+    let quizUsed = [];
 
     function startLevel() {
         document.getElementById('dashboard').classList.add('hidden');
         document.getElementById('lesson-zone').classList.remove('hidden');
-        // Populate Listen
-        document.getElementById('vocab-list').innerHTML = data.words.map(w => `<div><button onclick="speak('${w.es}')">🔊</button> ${w.es} (${w.en})</div>`).join('');
+        
+        document.getElementById('vocab-list').innerHTML = data.words.map(w => `<div><button onclick="speak('${w.es}')">🔊</button> ${w.es} - ${w.en}</div>`).join('');
+        document.getElementById('flash-list').innerHTML = data.words.map(w => `<div class="card-row" onclick="this.innerHTML='<b>${w.es}</b>'"><span>${w.en}</span> <span>(Click for Spanish)</span></div>`).join('');
+        
         initQuiz(); initBuild();
     }
 
-    function changeCard(dir) { cardIdx = (cardIdx + dir + data.words.length) % data.words.length; isSpanish = false; document.getElementById('flash-card').innerText = data.words[cardIdx].en; }
-    function flipCard() { isSpanish = !isSpanish; document.getElementById('flash-card').innerText = isSpanish ? data.words[cardIdx].es : data.words[cardIdx].en; }
-    
     function initQuiz() {
-        quizCount = 0;
+        quizUsed = [];
         nextQuiz();
     }
 
     function nextQuiz() {
-        if (quizCount >= 10) { document.getElementById('quiz-area').innerHTML = "Quiz Complete!"; return; }
-        const q = data.words[Math.floor(Math.random()*data.words.length)];
+        if (quizUsed.length >= 10) { document.getElementById('quiz-area').innerHTML = "Quiz Complete!"; return; }
+        let available = data.words.filter(w => !quizUsed.some(q => q.es === w.es));
+        const q = available[Math.floor(Math.random()*available.length)];
+        quizUsed.push(q);
+        
         let opts = [q.es];
-        while(opts.length < 4) { let r = data.words[Math.floor(Math.random()*data.words.length)].es; if(!opts.includes(r)) opts.push(r); }
+        while(opts.length < 4) {
+            let r = data.words[Math.floor(Math.random()*data.words.length)].es;
+            if(!opts.includes(r)) opts.push(r);
+        }
         opts.sort(() => Math.random() - 0.5);
-        document.getElementById('quiz-area').innerHTML = `<p>Question ${quizCount+1}: Translate "${q.en}"</p>` + opts.map(o => `<button onclick="quizCount++; nextQuiz()">${o}</button>`).join(' ');
+        document.getElementById('quiz-area').innerHTML = `<p>Question ${quizUsed.length}: Translate "${q.en}"</p>` + opts.map(o => `<button onclick="nextQuiz()">${o}</button>`).join(' ');
     }
 
     function initBuild() {
         const s = data.sentences[Math.floor(Math.random()*data.sentences.length)];
-        document.getElementById('sentence-area').innerHTML = `<h3>Translate: ${s.en}</h3>`;
+        document.getElementById('build-task').innerText = "Translate: " + s.en;
         document.getElementById('word-bank').innerHTML = data.words.map(w => `<span class="word-pill" onclick="document.getElementById('sentence-box').innerText += '${w.es} '">${w.es}</span>`).join('');
     }
 
