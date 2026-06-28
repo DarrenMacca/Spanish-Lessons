@@ -35,11 +35,11 @@
         </div>
 
         <div class="nav-tabs">
-            <button class="tab-btn active" onclick="showTab('listen', this)">1. Listen</button>
-            <button class="tab-btn" onclick="showTab('flash', this)">2. Flashcards</button>
-            <button class="tab-btn" onclick="showTab('quiz', this)">3. Quiz</button>
-            <button class="tab-btn" onclick="showTab('build', this)">4. Building</button>
-            <button class="tab-btn" onclick="showTab('conv', this)">5. Conversation</button>
+            <button class="tab-btn active" onclick="showTab('listen', event)">1. Listen</button>
+            <button class="tab-btn" onclick="showTab('flash', event)">2. Flashcards</button>
+            <button class="tab-btn" onclick="showTab('quiz', event)">3. Quiz</button>
+            <button class="tab-btn" onclick="showTab('build', event)">4. Building</button>
+            <button class="tab-btn" onclick="showTab('conv', event)">5. Conversation</button>
         </div>
         
         <div class="tab-content" id="listen"><h3>Listen</h3><div id="listen-list"></div></div>
@@ -82,7 +82,7 @@
     const data = {
         words: [{es: 'Hola', en: 'Hello'}, {es: 'Gracias', en: 'Thank you'}, {es: 'Casa', en: 'House'}, {es: 'Estoy', en: 'I am'}, {es: 'Yo', en: 'I'}, {es: 'Tu', en: 'You'}, {es: 'El', en: 'He'}, {es: 'Agua', en: 'Water'}, {es: 'Pan', en: 'Bread'}, {es: 'Libro', en: 'Book'}, {es: 'Amigo', en: 'Friend'}, {es: 'Feliz', en: 'Happy'}, {es: 'Comer', en: 'Eat'}, {es: 'Beber', en: 'Drink'}, {es: 'Sol', en: 'Sun'}, {es: 'Luz', en: 'Light'}, {es: 'Mar', en: 'Sea'}, {es: 'Tienda', en: 'Store'}, {es: 'Calle', en: 'Street'}, {es: 'Mapa', en: 'Map'}, {es: 'Donde', en: 'Where'}, {es: 'La', en: 'The'}, {es: 'Si', en: 'Yes'}, {es: 'No', en: 'No'}, {es: 'De Nada', en: 'Your Welcome'}, {es: 'Esta', en: 'Is'}, {es: 'Rojo', en: 'Red'}, {es: 'Aquí', en: 'Here'}, {es: 'Grande', en: 'Big'}],
         sentences: [{en: 'I eat bread', target: 'Yo Comer Pan'}, {en: 'The friend is happy', target: 'El Amigo Feliz'}, {en: 'Where is the store', target: 'Donde Esta La Tienda'}, {en: 'You drink water', target: 'Tu Beber Agua'}, {en: 'The book is red', target: 'El Libro Rojo'}, {en: 'I am happy', target: 'Yo Feliz'}, {en: 'The house is big', target: 'La Casa Grande'}, {en: 'The map is here', target: 'El Mapa Aquí'}, {en: 'He eats bread', target: 'El Comer Pan'}, {en: 'The street is big', target: 'La Calle Grande'}],
-        conversations: [{q: 'Good morning! How are you today?', q_es: 'Buenos días, cómo estás hoy?', target: 'Hola Estoy Feliz'}, {q: 'How big is the house?', q_es: '¿Dónde está la casa?', target: 'La Casa Grande'}, {q: 'Do you drink water?', q_es: '¿Tú bebes agua?', target: 'Si Yo Beber Agua'}, {q: 'Is the bread here?', q_es: '¿Está el pan aquí?', target: 'El Pan Aquí'}, {q: 'Are you a friend?', q_es: '¿Eres tú amigo?', target: 'Si Yo Amigo'}]
+        conversations: [{q: 'Good morning! How are you today?', q_es: 'Buenos días, cómo estás hoy?', target: 'Hola, Estoy Feliz'}, {q: 'How big is the house?', q_es: '¿Dónde está la casa?', target: 'La Casa Grande'}, {q: 'Do you drink water?', q_es: '¿Tú bebes agua?', target: 'Si Yo Beber Agua'}, {q: 'Is the bread here?', q_es: '¿Está el pan aquí?', target: 'El Pan Aquí'}, {q: 'Are you a friend?', q_es: '¿Eres tú amigo?', target: 'Si Yo Amigo'}]
     };
 
     let qTotal = 0, qCorrect = 0, bScore = 0, bCount = 1, bAttempts = 0, cCount = 1, cAttempts = 0, cScore = 0;
@@ -108,18 +108,13 @@
     function renderBuild() { window.currentTask = data.sentences[bCount - 1]; document.getElementById('build-task').innerText = "Build: " + currentTask.en; document.getElementById('progress-counter').innerText = `Task ${bCount}/10`; document.getElementById('word-bank').innerHTML = data.words.map(w => `<span class="word-pill" onclick="document.getElementById('sentence-box').innerText+=' ' + '${w.es}'">${w.es}</span>`).join(''); }
     function renderConv() { window.currentConv = data.conversations[cCount - 1]; document.getElementById('conv-task').innerText = currentConv.q; document.getElementById('c-progress-counter').innerText = `Task ${cCount}/5`; document.getElementById('conv-word-bank').innerHTML = data.words.map(w => `<span class="word-pill" onclick="document.getElementById('conv-sentence-box').innerText+=' ' + '${w.es}'">${w.es}</span>`).join(''); }
     function checkBuild() { if(document.getElementById('sentence-box').innerText.trim().replace(/\s+/g, ' ') === currentTask.target.replace(/ /g, ' ')) { if(bAttempts === 0) bScore++; document.getElementById('feedback').innerText = "Correct!"; } else { bAttempts++; document.getElementById('feedback').innerText = "Attempts: " + bAttempts + "/3"; if(bAttempts >= 3) document.getElementById('show-answer-btn').classList.remove('hidden'); } }
+    
+    // Updated checkConv to reveal button after 3 attempts
     function checkConv() { if(document.getElementById('conv-sentence-box').innerText.trim().replace(/\s+/g, ' ') === currentConv.target.replace(/ /g, ' ')) { if(cAttempts === 0) cScore += 3; document.getElementById('c-feedback').innerText = "Correct!"; } else { cAttempts++; document.getElementById('c-feedback').innerText = "Attempts: " + cAttempts + "/3"; if(cAttempts >= 3) document.getElementById('show-conv-answer-btn').classList.remove('hidden'); } }
+    
     function nextTask() { if(bCount < 10) { bCount++; bAttempts = 0; document.getElementById('sentence-box').innerText = ''; document.getElementById('feedback').innerText = ''; document.getElementById('show-answer-btn').classList.add('hidden'); renderBuild(); } }
     function nextConvTask() { if(cCount < 5) { cCount++; cAttempts = 0; document.getElementById('conv-sentence-box').innerText = ''; document.getElementById('c-feedback').innerText = ''; document.getElementById('show-conv-answer-btn').classList.add('hidden'); renderConv(); } else { alert("Celebration: Course Finished!"); } }
-    
-    // Updated tab function to receive button element
-    function showTab(id, btn) { 
-        document.querySelectorAll('.tab-content').forEach(t => t.classList.add('hidden')); 
-        document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active')); 
-        document.getElementById(id).classList.remove('hidden'); 
-        btn.classList.add('active'); 
-    }
-
+    function showTab(id, event) { document.querySelectorAll('.tab-content').forEach(t => t.classList.add('hidden')); document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active')); document.getElementById(id).classList.remove('hidden'); event.target.classList.add('active'); }
     function revealAnswer() { document.getElementById('sentence-box').innerText = currentTask.target; }
     function revealConvAnswer() { document.getElementById('conv-sentence-box').innerText = currentConv.target; }
     init();
