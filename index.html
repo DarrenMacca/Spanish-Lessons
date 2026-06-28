@@ -69,6 +69,7 @@
             <div id="conv-word-bank" style="margin:20px 0;"></div>
             <div id="conv-sentence-box" style="padding:15px; border:2px dashed #cbd5e1; min-height:40px; margin: 10px 0;"></div>
             <button onclick="checkConv()">Submit Answer</button>
+            <button onclick="speak(window.currentConv.target)">🔊 Hear Answer</button>
             <button onclick="document.getElementById('conv-sentence-box').innerText=''">Reset</button>
             <button id="show-conv-answer-btn" class="hidden" onclick="revealConvAnswer()">Show Answer</button>
             <button onclick="nextConvTask()">Next Question</button>
@@ -86,7 +87,7 @@
             {q: 'Where is the house?', q_es: '¿Dónde está la casa?', target: 'La Casa Grande'}, 
             {q: 'Do you drink water?', q_es: '¿Tú bebes agua?', target: 'Tu Beber Agua'}, 
             {q: 'Is the bread here?', q_es: '¿Está el pan aquí?', target: 'El Pan Aquí'}, 
-            {q: 'Are you a friend?', q_es: '¿Eres tú amigo?', target: 'Tu Amigo'}
+            {q: 'Are you a friend?', q_es: '¿Eres tú amigo?', target: 'Yo Amigo'}
         ]
     };
 
