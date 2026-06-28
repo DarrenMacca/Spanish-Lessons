@@ -3,62 +3,58 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>CEFR Spanish Proficiency Portal</title>
+    <title>CEFR Spanish Portal</title>
     <script src="https://cdn.tailwindcss.com"></script>
 </head>
-<body class="bg-slate-50 text-slate-800 min-h-screen p-4">
-    <main class="max-w-4xl mx-auto">
-        <h1 class="text-3xl font-bold mb-6">Spanish Proficiency Roadmap</h1>
+<body class="bg-slate-50 text-slate-800 p-6">
+    <div id="app" class="max-w-3xl mx-auto">
+        <h1 class="text-2xl font-bold mb-4">Spanish Proficiency Portal</h1>
         
-        <!-- Dashboard/Lessons -->
-        <div id="app-root" class="space-y-6">
-            <div id="lessons-list" class="grid grid-cols-1 md:grid-cols-2 gap-4"></div>
+        <!-- Dashboard Container -->
+        <div id="dashboard" class="space-y-4"></div>
+        
+        <!-- Lesson Container -->
+        <div id="lesson-ui" class="hidden bg-white p-6 rounded-lg shadow">
+            <button type="button" onclick="goHome()" class="text-blue-600 mb-4 font-bold">← Back to Dashboard</button>
+            <h2 id="lesson-title" class="text-xl font-bold"></h2>
+            <div id="vocab-display" class="grid grid-cols-2 gap-2 my-4"></div>
+            <p id="lesson-goal" class="text-sm italic text-slate-500"></p>
         </div>
-
-        <!-- Lesson/Vocab Overlay -->
-        <div id="lesson-detail" class="hidden bg-white p-8 rounded-2xl shadow-xl border">
-            <button onclick="showDashboard()" class="text-blue-600 font-bold mb-4">← Back</button>
-            <h2 id="lesson-title" class="text-2xl font-bold mb-2"></h2>
-            <div id="vocab-bank" class="grid grid-cols-2 gap-2 my-4"></div>
-            <p id="sentence-goal" class="italic text-slate-600 mt-4 border-t pt-4"></p>
-        </div>
-    </main>
+    </div>
 
     <script>
-        const curriculum = [
-            { id: 'A1', title: 'Beginner', words: ['Hola', 'Gracias', 'Yo', 'Ser', 'Gusto'], goal: 'Goal: Create a sentence introducing yourself using basic expressions.' },
-            { id: 'A2', title: 'Elementary', words: ['Tienda', 'Comprar', 'Donde', 'Calle', 'Cerca'], goal: 'Goal: Construct a sentence asking for directions or shopping details.' },
-            { id: 'B1', title: 'Intermediate', words: ['Experiencia', 'Pensar', 'Viajar', 'Importante', 'Aprender'], goal: 'Goal: Formulate a sentence discussing familiar matters and opinions[cite: 1].' },
-            { id: 'B2', title: 'Upper-Intermediate', words: ['Argumento', 'Sostener', 'Desarrollo', 'Estructura', 'Análisis'], goal: 'Goal: Build a complex sentence expressing a detailed argument[cite: 1].' },
-            { id: 'C1', title: 'Advanced', words: ['Abstracción', 'Coherencia', 'Espontáneo', 'Precision', 'Refinamiento'], goal: 'Goal: Use sophisticated vocabulary to express abstract ideas fluently[cite: 1].' },
-            { id: 'C2', title: 'Mastery', words: ['Matiz', 'Elocuencia', 'Sutileza', 'Dominio', 'Innato'], goal: 'Goal: Create precise sentences capturing fine shades of meaning[cite: 1].' }
-        ];
+        // Ensure DOM is ready before running
+        document.addEventListener('DOMContentLoaded', () => {
+            const curriculum = [
+                { id: 'A1', title: 'Beginner', words: ['Hola', 'Gracias', 'Yo', 'Ser'], goal: 'Introduce yourself.' },
+                { id: 'A2', title: 'Elementary', words: ['Tienda', 'Mapa', 'Donde', 'Calle'], goal: 'Ask for directions.' }
+            ];
 
-        function renderDashboard() {
-            document.getElementById('app-root').classList.remove('hidden');
-            document.getElementById('lesson-detail').classList.add('hidden');
-            const list = document.getElementById('lessons-list');
-            list.innerHTML = curriculum.map(l => `
-                <div class="p-4 bg-white rounded-xl shadow border">
-                    <h3 class="font-bold text-blue-700">${l.id}: ${l.title}</h3>
-                    <button onclick="loadLesson('${l.id}')" class="mt-2 w-full bg-slate-800 text-white py-2 rounded">Study Vocab</button>
-                </div>`).join('');
-        }
+            window.goHome = () => {
+                document.getElementById('dashboard').classList.remove('hidden');
+                document.getElementById('lesson-ui').classList.add('hidden');
+            };
 
-        function loadLesson(id) {
-            const l = curriculum.find(item => item.id === id);
-            document.getElementById('app-root').classList.add('hidden');
-            document.getElementById('lesson-detail').classList.remove('hidden');
-            document.getElementById('lesson-title').innerText = l.id + ' - ' + l.title;
-            document.getElementById('vocab-bank').innerHTML = l.words.map(w => `<span class="bg-blue-100 p-2 rounded text-center">${w}</span>`).join('');
-            document.getElementById('sentence-goal').innerText = l.goal;
-        }
+            window.loadLesson = (id) => {
+                const data = curriculum.find(l => l.id === id);
+                document.getElementById('lesson-title').innerText = data.title;
+                document.getElementById('lesson-goal').innerText = data.goal;
+                document.getElementById('vocab-display').innerHTML = data.words
+                    .map(w => `<div class="p-2 bg-blue-50 border rounded">${w}</div>`).join('');
+                
+                document.getElementById('dashboard').classList.add('hidden');
+                document.getElementById('lesson-ui').classList.remove('hidden');
+            };
 
-        function showDashboard() {
-            renderDashboard();
-        }
-
-        renderDashboard();
+            // Initial Render
+            const dash = document.getElementById('dashboard');
+            dash.innerHTML = curriculum.map(l => `
+                <div class="p-4 bg-white border rounded shadow-sm flex justify-between items-center">
+                    <span>${l.id}: ${l.title}</span>
+                    <button type="button" onclick="loadLesson('${l.id}')" class="bg-blue-600 text-white px-4 py-2 rounded">Start</button>
+                </div>
+            `).join('');
+        });
     </script>
 </body>
 </html>
