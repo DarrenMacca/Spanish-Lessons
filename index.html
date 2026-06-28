@@ -4,7 +4,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Academia de Español de la Familia</title>
-    <!-- Tailwind CSS for modern, clean UI styling -->
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
         .flip-card { perspective: 1000px; }
@@ -16,7 +15,6 @@
 </head>
 <body class="bg-slate-50 text-slate-800 min-h-screen flex flex-col font-sans">
 
-    <!-- Header Navigation Bar -->
     <header class="bg-indigo-600 text-white shadow-md p-4">
         <div class="max-w-4xl mx-auto flex justify-between items-center">
             <h1 class="text-xl font-bold tracking-wide">🌎 Academia de la Familia</h1>
@@ -26,16 +24,13 @@
         </div>
     </header>
 
-    <!-- Main Dynamic Interface -->
     <main class="flex-grow p-4 max-w-4xl w-full mx-auto my-6">
         
-        <!-- Dashboard / Lesson Selection View -->
         <div id="dashboard-view" class="space-y-6">
             <div class="bg-white rounded-xl shadow-sm p-6 border border-slate-100">
                 <h2 class="text-2xl font-bold text-slate-900 mb-2">¡Hola Familia! 👋</h2>
-                <p class="text-slate-600">Completen las lecciones de manera secuencial. Deben promediar un **90% o más** en las evaluaciones de un nivel para desbloquear la siguiente categoría.</p>
+                <p class="text-slate-600 text-sm">Completen las lecciones de manera secuencial. Deben promediar un **90% o más** en las evaluaciones de un nivel para desbloquear la siguiente categoría.</p>
                 
-                <!-- Progress Stats Breakdown -->
                 <div class="grid grid-cols-3 gap-4 mt-4 bg-slate-50 p-4 rounded-lg text-center">
                     <div><span class="block text-xs font-semibold text-slate-500 uppercase">Promedio Principiante</span><span id="stat-beginner" class="text-lg font-bold text-indigo-600">0%</span></div>
                     <div><span class="block text-xs font-semibold text-slate-500 uppercase">Promedio Intermedio</span><span id="stat-intermediate" class="text-lg font-bold text-slate-400">Bloqueado</span></div>
@@ -43,13 +38,11 @@
                 </div>
             </div>
 
-            <!-- Lessons Hierarchy Grid -->
             <div>
                 <h3 class="text-lg font-bold text-slate-900 mb-4">Plan de Estudios Completo (Español Sudamericano)</h3>
                 <div id="lessons-list" class="space-y-4"></div>
             </div>
 
-            <!-- Certificate Section -->
             <div id="certificate-claim-zone" class="hidden bg-emerald-50 border-2 border-dashed border-emerald-400 rounded-xl p-6 text-center">
                 <h3 class="text-xl font-bold text-emerald-800">🎉 ¡Plan de Estudios Completado con Éxito!</h3>
                 <p class="text-emerald-700 text-sm mt-1 mb-4">¡Mantuviste un promedio mayor o igual al 90% en todos los niveles de competencia!</p>
@@ -57,7 +50,6 @@
             </div>
         </div>
 
-        <!-- Single Lesson Deep Dive View -->
         <div id="lesson-view" class="hidden space-y-6">
             <button onclick="showDashboard()" class="text-indigo-600 font-semibold hover:text-indigo-800 transition flex items-center gap-1">← Volver al Panel de Control</button>
             
@@ -67,7 +59,6 @@
                 <p id="lesson-desc" class="text-slate-600 text-sm"></p>
             </div>
 
-            <!-- TAB CONTAINER -->
             <div class="bg-white rounded-xl shadow-sm border border-slate-100 overflow-hidden">
                 <div class="flex border-b bg-slate-50">
                     <button onclick="switchTab('audio')" id="tab-audio" class="flex-1 text-center py-3 font-semibold text-sm border-b-2 border-indigo-600 text-indigo-600">1. Escuchar y Aprender</button>
@@ -75,37 +66,34 @@
                     <button onclick="switchTab('quiz')" id="tab-quiz" class="flex-1 text-center py-3 font-semibold text-sm border-b-2 border-transparent text-slate-500 hover:text-slate-800">3. Rendir Evaluación</button>
                 </div>
 
-                <!-- Tab A: Audio Practicing Layer -->
                 <div id="content-audio" class="p-6 space-y-4">
                     <div class="flex flex-col md:flex-row md:items-center gap-4 bg-indigo-50 p-4 rounded-lg text-sm text-indigo-900 mb-2">
                         <div class="flex-1 flex items-center gap-2">
-                            <label class="font-semibold shrink-0">🔊 Velocidad del Habla:</label>
+                            <label class="font-semibold shrink-0">🔊 Velocidad:</label>
                             <input type="range" id="audio-speed" min="0.3" max="1.0" step="0.1" value="0.8" class="w-full h-2 bg-indigo-200 rounded-lg appearance-none cursor-pointer">
                             <span id="speed-num" class="font-bold text-xs bg-indigo-200 px-2 py-0.5 rounded">0.8x</span>
                         </div>
                         <div class="flex items-center gap-2 border-t md:border-t-0 pt-2 md:pt-0 border-indigo-200">
-                            <label class="font-semibold shrink-0">🌎 Acento Regional:</label>
-                            <select id="audio-dialect" class="bg-white border border-indigo-300 rounded px-2 py-1 font-medium focus:outline-none focus:ring-1 focus:ring-indigo-500">
-                                <option value="es-AR">Argentina/Uruguay</option>
-                                <option value="es-CL">Chile</option>
-                                <option value="es-CO" selected>Colombia/Región Andina</option>
+                            <label class="font-semibold shrink-0">🌎 Acento:</label>
+                            <select id="audio-dialect" class="bg-white border border-indigo-300 rounded px-2 py-1 font-medium focus:outline-none">
+                                <option value="es-CO" selected>Colombia / Región Andina</option>
+                                <option value="es-AR">Argentina / Cono Sur</option>
                                 <option value="es-PE">Perú</option>
-                                <option value="es-MX">Latinoamérica General</option>
+                                <option value="es-MX">México / LatAm General</option>
                             </select>
                         </div>
                     </div>
                     <div id="audio-words-stack" class="divide-y divide-slate-100"></div>
                 </div>
 
-                <!-- Tab B: Self-Quizzing Flash Cards Layer -->
                 <div id="content-flash" class="p-6 hidden flex flex-col items-center">
                     <div id="flashcard-box" class="flip-card w-72 h-44 cursor-pointer" onclick="this.classList.toggle('flipped')">
                         <div class="flip-card-inner w-full h-full text-center relative">
-                            <div class="flip-card-front bg-indigo-600 text-white rounded-xl flex flex-col justify-center items-center p-4 shadow-md font-bold text-2xl">
+                            <div class="flip-card-front bg-indigo-600 text-white rounded-xl flex flex-col justify-center items-center p-4 shadow-md font-bold text-xl">
                                 <span id="card-front-text"></span>
                                 <span class="text-xs font-normal opacity-70 mt-4">(Clic para Girar)</span>
                             </div>
-                            <div class="flip-card-back bg-amber-400 text-slate-900 rounded-xl flex flex-col justify-center items-center p-4 shadow-md font-bold text-xl">
+                            <div class="flip-card-back bg-amber-400 text-slate-900 rounded-xl flex flex-col justify-center items-center p-4 shadow-md font-bold text-lg">
                                 <span id="card-back-text"></span>
                                 <span class="text-xs font-normal opacity-70 mt-4">(Traducción al Español)</span>
                             </div>
@@ -117,20 +105,16 @@
                     </div>
                 </div>
 
-                <!-- Tab C: Core Quiz Section -->
                 <div id="content-quiz" class="p-6 space-y-6 hidden">
                     <div id="quiz-interactive-body" class="space-y-6"></div>
-                    
                     <div id="quiz-actions" class="pt-4 border-t">
                         <button id="submit-btn" onclick="evaluateQuiz()" class="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-3 rounded-xl transition shadow">Enviar Evaluación Completa</button>
                     </div>
-                    
                     <div id="quiz-result-banner" class="hidden p-4 rounded-xl text-center font-bold"></div>
                 </div>
             </div>
         </div>
 
-        <!-- Certificate View Mode -->
         <div id="certificate-print-view" class="hidden fixed inset-0 bg-white p-12 flex flex-col items-center justify-center border-[16px] border-indigo-900 text-center z-50">
             <div class="max-w-2xl border-4 border-amber-400 p-8 space-y-6">
                 <h1 class="text-4xl font-serif text-indigo-900 font-bold tracking-wide">CERTIFICADO DE COMPLETACIÓN</h1>
@@ -142,352 +126,285 @@
                     <span>Estado: Dominio del Núcleo Verificado 100%</span>
                 </div>
             </div>
-            <button onclick="window.print()" class="mt-8 bg-indigo-600 text-white font-bold px-6 py-2 rounded shadow no-print print:hidden">Imprimir Certificado</button>
+            <button onclick="window.print()" class="mt-8 bg-indigo-600 text-white font-bold px-6 py-2 rounded shadow print:hidden">Imprimir Certificado</button>
             <button onclick="closeCertificate()" class="mt-2 text-xs text-slate-400 hover:underline print:hidden">Salir de la vista</button>
         </div>
     </main>
 
     <script>
         const lessonData = [
-            // ==================== BEGINNER (A1) ====================
+            // ==================== PRINCIPIANTE (BEGINNER) ====================
             { 
-                id: 0, tier: 'principiante', type: 'standard', title: 'Hito 1: Números y Colores', desc: 'Las bases estructurales, cantidades elementales y descripciones iniciales.',
-                words: [
-                    {es: 'Dos', en: 'Two'}, {es: 'Tres', en: 'Three'}, {es: 'Cinco', en: 'Five'}, {es: 'Diez', en: 'Ten'},
-                    {es: 'Rojo', en: 'Red'}, {es: 'Azul', en: 'Blue'}, {es: 'Verde', en: 'Green'}, {es: 'Blanco', en: 'White'},
-                    {es: 'Negro', en: 'Black'}, {es: 'Amarillo', en: 'Yellow'}, {es: 'El auto', en: 'The car'}, {es: 'Tengo', en: 'I have'}
-                ],
+                id: 0, tier: 'principiante', type: 'standard', title: 'Hito 1: Números y Colores Básicos', desc: 'Cantidades del 1 al 10 y descriptores primarios.',
+                words: [{es: 'Uno', en: 'One'}, {es: 'Cinco', en: 'Five'}, {es: 'Diez', en: 'Ten'}, {es: 'Rojo', en: 'Red'}, {es: 'Azul', en: 'Blue'}, {es: 'Verde', en: 'Green'}],
                 sentences: [
-                    {english: 'I have two black cats', scrambled: ['negros', 'gatos', 'tengo', 'Yo', 'dos'], correct: 'Yo tengo dos gatos negros'},
-                    {english: 'The car is green and blue', scrambled: ['verde', 'y', 'auto', 'El', 'es', 'azul'], correct: 'El auto es verde y azul'}
+                    {english: 'I want five red cars', scrambled: ['red', 'cinco', 'autos', 'Quiero', 'rojos'], correct: 'Quiero cinco autos rojos'},
+                    {english: 'The blue book is on the table', scrambled: ['mesa', 'El', 'azul', 'está', 'en', 'la', 'libro'], correct: 'El libro azul está en la mesa'}
                 ],
-                quiz: [
-                    {q: "¿Cómo se dice el número 'Five' en español?", a: "Cinco", alt: ["Tres", "Diez"]},
-                    {q: "¿Cuál es la traducción de 'The car'?", a: "El auto", alt: ["El coche", "El carro"]}
-                ]
+                quiz: [{q: "¿Cómo se dice 'Green' en español?", a: "Verde", alt: ["Rojo", "Azul"]}]
             },
             {
-                id: 1, tier: 'principiante', type: 'dialogue', title: 'Simulación Práctica 1: En una feria artesanal', desc: 'Aplica el vocabulario de números y colores negociando en un mercado regional.',
-                words: [{es: 'Feria artesanal', en: 'Artisan market context'}],
+                id: 1, tier: 'principiante', type: 'dialogue', title: 'Simulación Práctica 1: Feria Artesanal', desc: 'Comprando souvenirs usando números y colores simples.',
+                words: [{es: 'Feria', en: 'Market'}],
                 sentences: [
-                    {english: 'There are four notebooks: two blue, one red, and one yellow', scrambled: ['uno', 'cuadernos', 'dos', 'amarillo', 'Son', 'y', 'azules', 'cuatro', 'rojo', 'uno'], correct: 'Son cuatro cuadernos dos azules uno rojo y uno amarillo'},
-                    {english: 'How much is the green notebook that is there behind?', scrambled: ['atrás', 'cuánto', 'cuaderno', 'está', 'verde', 'ahí', 'cuesta', 'el', 'que'], correct: 'cuánto cuesta el cuaderno verde que está ahí atrás'}
+                    {english: 'I want three blue hats please', scrambled: ['tres', 'por favor', 'sombreros', 'Quiero', 'azules'], correct: 'Quiero tres sombreros azules por favor'},
+                    {english: 'Do you have ten red items?', scrambled: ['rojos?', '¿Tienen', 'diez', 'artículos'], correct: '¿Tienen diez artículos rojos'}
                 ],
                 quiz: []
             },
             { 
-                id: 2, tier: 'principiante', type: 'standard', title: 'Hito 2: Horas y Fechas', desc: 'Aprende a coordinar turnos, citas, días de la semana y horarios habituales.',
-                words: [
-                    {es: 'Lunes', en: 'Monday'}, {es: 'Martes', en: 'Tuesday'}, {es: '12 de octubre', en: 'October 12th'}, {es: 'El primero de marzo', en: 'March 1st'},
-                    {es: 'A las dos', en: 'At two o\'clock'}, {es: 'A las ocho y media', en: 'At eight thirty'}, {es: 'Al mediodía', en: 'At noon'}, {es: 'Empieza', en: 'Starts'}
-                ],
+                id: 2, tier: 'principiante', type: 'standard', title: 'Hito 2: Fechas y Horas Elementales', desc: 'Aprende a decir la hora y los días de la semana.',
+                words: [{es: 'Lunes', en: 'Monday'}, {es: 'Viernes', en: 'Friday'}, {es: 'A las tres', en: 'At three o\'clock'}, {es: 'Hoy es', en: 'Today is'}],
                 sentences: [
-                    {english: 'The train leaves at eight thirty', scrambled: ['ocho', 'y', 'sale', 'El', 'tren', 'a', 'las', 'media'], correct: 'El tren sale a las ocho y media'},
-                    {english: 'The meeting starts on Tuesday at noon', scrambled: ['martes', 'reunión', 'al', 'La', 'empieza', 'el', 'mediodía'], correct: 'La reunión empieza el martes al mediodía'}
+                    {english: 'Today is Monday', scrambled: ['lunes', 'Hoy', 'es'], correct: 'Hoy es lunes'},
+                    {english: 'The meeting is at three', scrambled: ['tres', 'La', 'a', 'reunión', 'las', 'es'], correct: 'La reunión es a las las tres'}
                 ],
-                quiz: [
-                    {q: "¿Cómo expresas el primer día del mes de marzo?", a: "El primero de marzo", alt: ["El uno de marzo", "El primer de marzo"]},
-                    {q: "¿Qué significa 'Al mediodía'?", a: "At noon", alt: ["At midnight", "In the morning"]}
-                ]
+                quiz: [{q: "¿Qué día es 'Friday'?", a: "Viernes", alt: ["Lunes", "Martes"]}]
             },
             {
-                id: 3, tier: 'principiante', type: 'dialogue', title: 'Simulación Práctica 2: Confirmar un turno', desc: 'Gestiona una cita de salud coordinando días del calendario y horas específicas.',
-                words: [{es: 'Turno médico', en: 'Doctor\'s appointment context'}],
+                id: 3, tier: 'principiante', type: 'dialogue', title: 'Simulación Práctica 2: Fijando una Cita', desc: 'Organiza un encuentro simple un día específico.',
+                words: [{es: 'Cita', en: 'Appointment'}],
                 sentences: [
-                    {english: 'Is 3:00 PM okay for you?', scrambled: ['tarde', 'tres', 'Le', 'bien', 'de', 'la', 'las', 'queda', 'a'], correct: 'Le queda bien a las tres de la tarde'},
-                    {english: 'No, unfortunately I work until four', scrambled: ['las', 'cuatro', 'lamentablemente', 'trabajo', 'No', 'hasta'], correct: 'No lamentablemente trabajo hasta las cuatro'}
+                    {english: 'Can we meet on Friday at three?', scrambled: ['el', 'reunirnos', '¿Podemos', 'viernes', 'tres?', 'a', 'las'], correct: '¿Podemos reunirnos el viernes a las tres'},
+                    {english: 'Yes, Monday is also fine', scrambled: ['está', 'lunes', 'bien', 'Sí', 'el', 'también'], correct: 'Sí el lunes también está bien'}
                 ],
                 quiz: []
             },
             { 
-                id: 4, tier: 'principiante', type: 'standard', title: 'Hito 3: Conversación General Simple', desc: 'Intercambio de datos básicos de identidad, procedencia y estado emocional.',
-                words: [
-                    {es: '¿Cómo te llamás?', en: 'What\'s your name? (South American voseo)'}, {es: '¿De dónde sos?', en: 'Where are you from?'}, {es: '¿Dónde vivís?', en: 'Where do you live?'},
-                    {es: 'Estadounidense', en: 'American / from US'}, {es: 'Departamento', en: 'Apartment'}, {es: 'Hermosa', en: 'Beautiful'}, {es: 'Un montón', en: 'A lot'}
+                id: 4, tier: 'principiante', type: 'standard', title: 'Hito 3: Conversación General de Bienvenida', desc: 'Presentarse, dar el nombre y saludar.',
+                words: [{es: 'Hola', en: 'Hello'}, {es: '¿Cómo te llamás?', en: 'What is your name?'}, {es: 'Me llamo', en: 'My name is'}, {es: 'Mucho gusto', en: 'Nice to meet you'}],
+                sentences: [
+                    {english: 'Hello, my name is Juan', scrambled: ['Me', 'Juan', 'llamo', 'Hola'], correct: 'Hola Me llamo Juan'},
+                    {english: 'Nice to meet you, what is your name?', scrambled: ['gusto', '¿cómo', 'llamás?', 'Mucho', 'te'], correct: 'Mucho gusto ¿cómo te llamás'}
                 ],
+                quiz: [{q: "¿Qué significa 'Mucho gusto'?", a: "Nice to meet you", alt: ["Goodbye", "Thank you"]}]
+            },
+            {
+                id: 5, tier: 'principiante', type: 'dialogue', title: 'Simulación Práctica 3: El Encuentro Inicial', desc: 'Saluda a un nuevo vecino en el edificio.',
+                words: [{es: 'Vecino', en: 'Neighbor'}],
+                sentences: [
+                    {english: 'Hello, what is your name?', scrambled: ['¿cómo', 'Hola', 'llamás?', 'te'], correct: 'Hola ¿cómo te llamás'},
+                    {english: 'My name is Carlos, nice to meet you', scrambled: ['gusto', 'Carlos', 'llamo', 'Mucho', 'Me'], correct: 'Me llamo Carlos Mucho gusto'}
+                ],
+                quiz: []
+            },
+            { 
+                id: 6, tier: 'principiante', type: 'standard', title: 'Hito 4: Pedir Comida Básica', desc: 'Ordenar bebidas e ítems de cafetería esenciales.',
+                words: [{es: 'Café', en: 'Coffee'}, {es: 'Agua', en: 'Water'}, {es: 'Por favor', en: 'Please'}, {es: 'La cuenta', en: 'The bill'}],
+                sentences: [
+                    {english: 'I want a coffee please', scrambled: ['por favor', 'un', 'café', 'Quiero'], correct: 'Quiero un café por favor'},
+                    {english: 'The bill please', scrambled: ['por favor', 'La', 'cuenta'], correct: 'La cuenta por favor'}
+                ],
+                quiz: [{q: "¿Cómo se pide 'The bill'?", a: "La cuenta", alt: ["El menú", "El mozo"]}]
+            },
+            {
+                id: 7, tier: 'principiante', type: 'dialogue', title: 'Simulación Práctica 4: En el Café de la Esquina', desc: 'Pide algo sencillo de tomar al mesero.',
+                words: [{es: 'Mozo', en: 'Waiter'}],
+                sentences: [
+                    {english: 'I want a glass of water please', scrambled: ['un', 'por favor', 'Quiero', 'vaso', 'agua', 'de'], correct: 'Quiero un vaso de agua por favor'},
+                    {english: 'Thank you, bring me the bill', scrambled: ['la', 'Gracias', 'traiga', 'cuenta'], correct: 'Gracias traiga la cuenta'}
+                ],
+                quiz: []
+            },
+            { 
+                id: 8, tier: 'principiante', type: 'standard', title: 'Hito 5: Compras Esenciales', desc: 'Vocabulario para preguntar precios y pedir ropa.',
+                words: [{es: 'Remera', en: 'T-shirt'}, {es: '¿Cuánto cuesta?', en: 'How much is it?'}, {es: 'Plata', en: 'Money'}, {es: 'Tienda', en: 'Store'}],
+                sentences: [
+                    {english: 'How much does this t-shirt cost?', scrambled: ['cuesta', 'remera?', 'esta', '¿Cuánto'], correct: '¿Cuánto cuesta esta remera'},
+                    {english: 'I have money', scrambled: ['plata', 'Yo', 'tengo'], correct: 'Yo tengo plata'}
+                ],
+                quiz: [{q: "¿Qué significa 'Remera'?", a: "T-shirt", alt: ["Shoes", "Pants"]}]
+            },
+            {
+                id: 9, tier: 'principiante', type: 'dialogue', title: 'Simulación Práctica 5: Comprando una Remera', desc: 'Pregunta el costo de una prenda expuesta.',
+                words: [{es: 'Vidriera', en: 'Shop window'}],
+                sentences: [
+                    {english: 'How much is that red t-shirt?', scrambled: ['roja?', 'remera', '¿Cuánto', 'cuesta', 'esa'], correct: '¿Cuánto cuesta esa remera roja'},
+                    {english: 'It is cheap, I will buy it', scrambled: ['compro', 'Es', 'la', 'barata'], correct: 'Es barata la compro'}
+                ],
+                quiz: []
+            },
+            { 
+                id: 10, tier: 'principiante', type: 'standard', title: 'Hito 6: Direcciones Simples', desc: 'Conceptos básicos para orientarse en la calle.',
+                words: [{es: 'Acá', en: 'Here'}, {es: 'Allá', en: 'There'}, {es: 'Derecho', en: 'Straight ahead'}, {es: '¿Dónde está...?', en: 'Where is...?'}, {es: 'El hotel', en: 'The hotel'}],
+                sentences: [
+                    {english: 'Where is the hotel?', scrambled: ['está', '¿Dónde', 'hotel?', 'el'], correct: '¿Dónde está el hotel'},
+                    {english: 'Go straight ahead', scrambled: ['derecho', 'Andá'], correct: 'Andá derecho'}
+                ],
+                quiz: [{q: "¿Qué es 'Derecho'?", a: "Straight ahead", alt: ["To the left", "To the right"]}]
+            },
+            {
+                id: 11, tier: 'principiante', type: 'dialogue', title: 'Simulación Práctica 6: Preguntando en la Calle', desc: 'Consigue indicaciones rápidas para llegar a tu hotel.',
+                words: [{es: 'Calle', en: 'Street'}],
+                sentences: [
+                    {english: 'Excuse me, where is the hotel?', scrambled: ['¿dónde', 'Disculpe', 'el', 'está', 'hotel?'], correct: 'Disculpe ¿dónde está el hotel'},
+                    {english: 'The hotel is straight ahead over there', scrambled: ['allá', 'está', 'El', 'derecho', 'hotel'], correct: 'El hotel está derecho allá'}
+                ],
+                quiz: []
+            },
+
+            // ==================== INTERMEDIO (INTERMEDIATE) ====================
+            { 
+                id: 12, tier: 'intermedio', type: 'standard', title: 'Hito 7: Números y Colores Compuestos', desc: 'Cifras hasta el 1000 y matices detallados.',
+                words: [{es: 'Ciento cincuenta', en: '150'}, {es: 'Rojo oscuro', en: 'Dark red'}, {es: 'Gris', en: 'Grey'}, {es: 'Dólares', en: 'Dollars'}],
+                sentences: [
+                    {english: 'The price is one hundred fifty dollars', scrambled: ['ciento', 'El', 'cincuenta', 'precio', 'dólares', 'es'], correct: 'El precio es ciento cincuenta dólares'},
+                    {english: 'I prefer the dark red jacket', scrambled: ['campera', 'rojo', 'Prefiero', 'oscura', 'la'], correct: 'Prefiero la campera rojo oscura'}
+                ],
+                quiz: [{q: "¿Qué número es 'Ciento cincuenta'?", a: "150", alt: ["50", "105"]}]
+            },
+            {
+                id: 13, tier: 'intermedio', type: 'dialogue', title: 'Simulación Práctica 7: Presupuesto de Galería', desc: 'Negocia el valor de un tapizado de color específico.',
+                words: [{es: 'Presupuesto', en: 'Quote/Budget'}],
+                sentences: [
+                    {english: 'The grey table costs one hundred fifty', scrambled: ['ciento', 'La', 'cincuenta', 'gris', 'mesa', 'cuesta'], correct: 'La mesa gris cuesta ciento cincuenta'},
+                    {english: 'Perfect, I will take the dark red one', scrambled: ['Perfecto', 'rojo', 'llevo', 'la', 'oscuro', 'me'], correct: 'Perfecto me llevo la rojo oscuro'}
+                ],
+                quiz: []
+            },
+            { 
+                id: 14, tier: 'intermedio', type: 'standard', title: 'Hito 8: Horarios de Transporte y Fechas de Viaje', desc: 'Planifica partidas y trasbordos usando calendarios.',
+                words: [{es: 'El tren', en: 'The train'}, {es: 'Sale', en: 'Leaves'}, {es: 'Ocho y media', en: 'Eight thirty'}, {es: 'Próximo mes', en: 'Next month'}],
+                sentences: [
+                    {english: 'The train leaves at eight thirty', scrambled: ['ocho', 'El', 'a', 'tren', 'las', 'y', 'sale', 'media'], correct: 'El tren sale a las ocho y media'},
+                    {english: 'My trip is next month', scrambled: ['viaje', 'mes', 'Mi', 'es', 'el', 'próximo'], correct: 'Mi viaje es el próximo mes'}
+                ],
+                quiz: [{q: "¿Qué significa 'Sale'?", a: "Leaves", alt: ["Arrives", "Stops"]}]
+            },
+            {
+                id: 15, tier: 'intermedio', type: 'dialogue', title: 'Simulación Práctica 8: En la Terminal de Colectivos', desc: 'Consulta el itinerario de un viaje programado de fin de semana.',
+                words: [{es: 'Boleto', en: 'Ticket'}],
+                sentences: [
+                    {english: 'Does the bus leave at eight thirty?', scrambled: ['colectivo', 'las', 'ocho', '¿El', 'sale', 'y', 'a', 'media?'], correct: '¿El colectivo sale a las ocho y media'},
+                    {english: 'No, it leaves next Monday', scrambled: ['lunes', 'No', 'sale', 'el', 'próximo'], correct: 'No sale el próximo lunes'}
+                ],
+                quiz: []
+            },
+            { 
+                id: 16, tier: 'intermedio', type: 'standard', title: 'Hito 9: Conversación Fluida e Intercambio', desc: 'Hablar de profesiones, procedencia y hobbies.',
+                words: [{es: 'Trabajo', en: 'Job/Work'}, {es: 'Estudiante', en: 'Student'}, {es: '¿A qué te dedicás?', en: 'What do you do for a living?'}, {es: 'Departamento', en: 'Apartment'}],
                 sentences: [
                     {english: 'I live in a beautiful apartment', scrambled: ['un', 'hermoso', 'departamento', 'en', 'Vivo'], correct: 'Vivo en un hermoso departamento'},
-                    {english: 'I like this city a lot', scrambled: ['un', 'ciudad', 'Me', 'gusta', 'esta', 'montón'], correct: 'Me gusta esta ciudad un montón'}
+                    {english: 'What do you do for a living here?', scrambled: ['dedicás', '¿A', 'acá?', 'qué', 'te'], correct: '¿A qué te dedicás acá'}
                 ],
-                quiz: [
-                    {q: "¿Cuál palabra es usada comúnmente en Sudamérica para 'Apartment'?", a: "Departamento", alt: ["Piso", "Apartamento"]},
-                    {q: "En regiones como el Cono Sur, ¿cómo se dice 'Where are you from?'?", a: "¿De dónde sos?", alt: ["¿De dónde eres?", "¿Dónde estás tú?"]}
-                ]
+                quiz: [{q: "¿Cómo se pregunta informalmente por el trabajo en el Cono Sur?", a: "¿A qué te dedicás?", alt: ["¿Qué haces?", "¿Dónde trabajas?"]}]
             },
             {
-                id: 5, tier: 'principiante', type: 'dialogue', title: 'Simulación Práctica 3: Conociendo a otro viajero', desc: 'Preséntate, menciona de dónde provienes y describe dónde estás viviendo de manera natural.',
-                words: [{es: 'Presentación', en: 'Personal introduction context'}],
+                id: 17, tier: 'intermedio', type: 'dialogue', title: 'Simulación Práctica 9: Conociendo a un Compañero', desc: 'Entabla una conversación laboral informal durante el almuerzo.',
+                words: [{es: 'Colega', en: 'Colleague'}],
                 sentences: [
-                    {english: 'I am American but now I live in Medellin for studies', scrambled: ['en', 'por', 'estudio', 'ahora', 'Medellín', 'estadounidense', 'pero', 'Soy', 'vivo'], correct: 'Soy estadounidense pero ahora vivo en Medellín por estudio'},
-                    {english: 'I am Colombian, I was born in Cali but I live here', scrambled: ['en', 'vivo', 'Cali', 'acá', 'nací', 'colombiano', 'pero', 'Soy'], correct: 'Soy colombiano nací en Cali pero vivo acá'}
+                    {english: 'I work here and I am a student', scrambled: ['estudiante', 'trabajo', 'y', 'acá', 'soy', 'Yo'], correct: 'Yo trabajo acá y soy estudiante'},
+                    {english: 'I live near the apartment', scrambled: ['del', 'cerca', 'departamento', 'Vivo'], correct: 'Vivo cerca del departamento'}
                 ],
                 quiz: []
             },
             { 
-                id: 6, tier: 'principiante', type: 'standard', title: 'Hito 4: Pedir Comida y Bebida', desc: 'Lógica transaccional básica para desayunos y meriendas en locales gastronómicos.',
-                words: [
-                    {es: 'Quisiera', en: 'I would like (Polite)'}, {es: 'Un café cortado', en: 'An espresso with a dash of milk'}, {es: 'Una medialuna', en: 'A croissant / pastry'},
-                    {es: 'Una gaseosa', en: 'A soda / soft drink'}, {es: 'El mozo / El mesero', en: 'The waiter'}, {es: 'La cuenta', en: 'The bill'}
-                ],
+                id: 18, tier: 'intermedio', type: 'standard', title: 'Hito 10: Pedidos Gastronómicos y Alérgenos', desc: 'Especificar términos de cocción y restricciones de menú.',
+                words: [{es: 'Gaseosa', en: 'Soda'}, {es: 'Sin gluten', en: 'Gluten-free'}, {es: 'Vino tinto', en: 'Red wine'}, {es: 'Mozo', en: 'Waiter'}],
                 sentences: [
-                    {english: 'A soda and an espresso with milk please', scrambled: ['por favor', 'gaseosa', 'y', 'cortado', 'Una', 'un', 'café'], correct: 'Una gaseosa y un café cortado por favor'},
-                    {english: 'Waiter, bring me the bill please', scrambled: ['por favor', 'cuenta', 'la', 'traiga', 'Mozo', 'me'], correct: 'Mozo me traiga la cuenta por favor'}
+                    {english: 'I need a gluten free menu please', scrambled: ['por favor', 'menú', 'Necesito', 'un', 'sin', 'gluten'], correct: 'Necesito un menú sin gluten por favor'},
+                    {english: 'Bring me a red wine and a soda', scrambled: ['gaseosa', 'un', 'vino', 'Traiga', 'y', 'una', 'tinto'], correct: 'Traiga un vino tinto y una gaseosa'}
                 ],
-                quiz: [
-                    {q: "¿Cómo se denomina comúnmente al mesero en países como Argentina y Uruguay?", a: "El mozo", alt: ["El camarero", "El chamo"]},
-                    {q: "¿Cuál es la palabra regional para 'Soda/Soft drink'?", a: "Gaseosa", alt: ["Refresco", "Zumo"]}
-                ]
+                quiz: [{q: "¿Qué es una 'Gaseosa'?", a: "Soda", alt: ["Juice", "Beer"]}]
             },
             {
-                id: 7, tier: 'principiante', type: 'dialogue', title: 'Simulación Práctica 4: Desayuno en la cafetería', desc: 'Interactúa con el mesero o mozo ordenando café, medialunas y solicitando la cuenta de pago.',
-                words: [{es: 'Cafetería', en: 'Cafe interaction context'}],
+                id: 19, tier: 'intermedio', type: 'dialogue', title: 'Simulación Práctica 10: Ordenando en el Restorán', desc: 'Modifica los ingredientes de un plato pidiéndoselo al mozo.',
+                words: [{es: 'Plato', en: 'Dish'}],
                 sentences: [
-                    {english: 'I would like a hot cappuccino and a portion of cake please', scrambled: ['torta', 'un', 'por favor', 'Quisiera', 'caliente', 'bien', 'porción', 'de', 'capuchino', 'y', 'una'], correct: 'Quisiera un capuchino bien caliente y una porción de torta por favor'},
-                    {english: 'For me an American coffee and a glass of still water', scrambled: ['sin', 'vaso', 'un', 'americano', 'café', 'y', 'de', 'agua', 'gas', 'Para', 'mí', 'un'], correct: 'Para mí un café americano y un vaso de agua sin gas'}
+                    {english: 'Is this dish gluten free?', scrambled: ['sin', 'este', '¿Es', 'plato', 'gluten?'], correct: '¿Es este plato sin gluten'},
+                    {english: 'Perfect, bring me a red wine then', scrambled: ['traiga', 'entonces', 'un', 'Perfecto', 'vino', 'tinto'], correct: 'Perfecto traiga un vino tinto entonces'}
                 ],
                 quiz: []
             },
             { 
-                id: 8, tier: 'principiante', type: 'standard', title: 'Hito 5: Ir de Compras', desc: 'Expresiones esenciales para buscar indumentaria, consultar costos y solicitar talles.',
-                words: [
-                    {es: 'Una remera', en: 'A t-shirt'}, {es: 'Una campera', en: 'A jacket'}, {es: 'Los probadores', en: 'The fitting rooms'},
-                    {es: 'La vidriera', en: 'The shop window'}, {es: 'Talle M', en: 'Size M'}, {es: 'Ajustada', en: 'Tight'}
-                ],
+                id: 20, tier: 'intermedio', type: 'standard', title: 'Hito 11: Devoluciones y Talles de Ropa', desc: 'Hacer valer reclamos en tiendas de ropa.',
+                words: [{es: 'Talle M', en: 'Size M'}, {es: 'Cambiar', en: 'To exchange'}, {es: 'Probadores', en: 'Fitting rooms'}, {es: 'Está fallada', en: 'It is defective'}],
                 sentences: [
-                    {english: 'Can I try on this jacket in size M?', scrambled: ['campera', 'probar', 'talle', 'esta', 'en', '¿Me', 'M?', 'puedo'], correct: '¿Me puedo probar esta campera en talle M'},
-                    {english: 'The t-shirt in the shop window is very beautiful', scrambled: ['hermosa', 'vidriera', 'La', 'de', 'la', 'remera', 'es', 'muy'], correct: 'La remera de la vidriera es muy hermosa'}
+                    {english: 'I want to exchange this jacket', scrambled: ['esta', 'cambiar', 'campera', 'Quiero'], correct: 'Quiero cambiar esta campera'},
+                    {english: 'Where are the fitting rooms?', scrambled: ['los', 'están', '¿Dónde', 'probadores?'], correct: '¿Dónde están los probadores'}
                 ],
-                quiz: [
-                    {q: "¿Cómo se dice mayoritariamente 'T-shirt' en Argentina, Paraguay y Uruguay?", a: "Remera", alt: ["Polera", "Camiseta"]},
-                    {q: "¿Qué término se usa para denominar al escaparate o vitrina de una tienda?", a: "La vidriera", alt: ["La ventana", "El mostrador"]}
-                ]
+                quiz: [{q: "¿Qué significa 'Talle M'?", a: "Size M", alt: ["Brand M", "Color M"]}]
             },
             {
-                id: 9, tier: 'principiante', type: 'dialogue', title: 'Simulación Práctica 5: Comprando una campera', desc: 'Pruébate prendas de vestir y consulta sobre disponibilidad de talles alternativos.',
-                words: [{es: 'Tienda de ropa', en: 'Clothing shop context'}],
+                id: 21, tier: 'intermedio', type: 'dialogue', title: 'Simulación Práctica 11: Reclamo por Prenda Fallada', desc: 'Solicita el cambio de ropa alegando un defecto en costura.',
+                words: [{es: 'Falla', en: 'Defect'}],
                 sentences: [
-                    {english: 'This is a size S but it fits me a bit tight', scrambled: ['un', 'ajustada', 'Esta', 'un', 'me', 'S', 'queda', 'poco', 'es', 'pero'], correct: 'Esta es un S pero me queda un poco ajustada'},
-                    {english: 'Do you have size M? It fits me perfect', scrambled: ['talle', 'M', 'perfecta', 'me', '¿Tienen', 'Esta', 'queda'], correct: '¿Tienen talle M Esta me queda perfecta'}
+                    {english: 'This jacket is defective, I want to exchange it', scrambled: ['campera', 'cambiarla', 'Esta', 'está', 'fallada', 'quiero'], correct: 'Esta campera está fallada quiero cambiarla'},
+                    {english: 'Do you have this in size M?', scrambled: ['en', 'talle', '¿Tienen', 'M?', 'esto'], correct: '¿Tienen esto en talle M'}
                 ],
                 quiz: []
             },
             { 
-                id: 10, tier: 'principiante', type: 'standard', title: 'Hito 6: Pedir Indicaciones y Direcciones', desc: 'Aprende a consultar la ubicación de puntos cardinales urbanos y paradas.',
-                words: [
-                    {es: '¿Dónde queda...?', en: 'Where is... located?'}, {es: 'Derecho', en: 'Straight ahead'}, {es: 'Doblar a la derecha', en: 'To turn right'},
-                    {es: 'Estacionar', en: 'To park'}, {es: 'A mano izquierda', en: 'On the left hand side'}, {es: 'Atrás del hotel', en: 'Behind the hotel'}, {es: 'Cuadras', en: 'City blocks'}
-                ],
+                id: 22, tier: 'intermedio', type: 'standard', title: 'Hito 12: Direcciones Urbanas Complejas', desc: 'Manejo de referencias como cuadras, semáforos y esquinas.',
+                words: [{es: 'Cuadras', en: 'Blocks'}, {es: 'Semáforo', en: 'Traffic light'}, {es: 'Doblar', en: 'To turn'}, {es: 'A mano izquierda', en: 'On the left hand side'}],
                 sentences: [
-                    {english: 'The bank is located next to the pharmacy', scrambled: ['farmacia', 'al', 'lado', 'está', 'El', 'de', 'la', 'banco'], correct: 'El banco está al lado de la farmacia'},
-                    {english: 'Walk three blocks straight ahead please', scrambled: ['por favor', 'cuadras', 'derecho', 'Camine', 'tres'], correct: 'Camine tres cuadras derecho por favor'}
+                    {english: 'Turn left at the traffic light', scrambled: ['mano', 'el', 'Doble', 'a', 'izquierda', 'en', 'semáforo'], correct: 'Doble en el semáforo a mano izquierda'},
+                    {english: 'Walk two blocks straight', scrambled: ['Camine', 'dos', 'derecho', 'cuadras'], correct: 'Camine dos cuadras derecho'}
                 ],
-                quiz: [
-                    {q: "En Sudamérica, en lugar de decir 'vete todo recto', se suele indicar:", a: "Andá derecho", alt: ["Ve todo recto", "Sigue directo"]},
-                    {q: "¿Qué palabra reemplaza habitualmente a los 'metros' al medir distancias urbanas?", a: "Cuadras", alt: ["Calles", "Manzanas"]}
-                ]
+                quiz: [{q: "¿Qué mide la palabra 'Cuadras'?", a: "City blocks", alt: ["Meters", "Miles"]}]
             },
             {
-                id: 11, tier: 'principiante', type: 'dialogue', title: 'Simulación Práctica 6: Perdido en el centro', desc: 'Pide auxilio en la calle para orientarte y comprender las instrucciones de un residente.',
-                words: [{es: 'Orientación', en: 'Street navigation context'}],
+                id: 23, tier: 'intermedio', type: 'dialogue', title: 'Simulación Práctica 12: Navegando el Centro Urbano', desc: 'Ayuda a un taxista a encontrar una esquina combinando indicaciones.',
+                words: [{es: 'Esquina', en: 'Corner'}],
                 sentences: [
-                    {english: 'You have to go straight down this street about two blocks', scrambled: ['por', 'tiene', 'dos', 'calle', 'derecho', 'que', 'cuadras', 'ir', 'esta', 'Tiene'], correct: 'Tiene que ir derecho por esta calle unas dos cuadras'},
-                    {english: 'At the traffic light you have to turn to the right', scrambled: ['derecha', 'tiene', 'doblar', 'semáforo', 'en', 'el', 'que', 'a', 'la'], correct: 'en el semáforo tiene que doblar a la derecha'}
+                    {english: 'Drive two blocks and turn left', scrambled: ['y', 'doble', 'Maneje', 'dos', 'a', 'izquierda', 'cuadras', 'la'], correct: 'Maneje dos cuadras y doble a la izquierda'},
+                    {english: 'The hotel is after the traffic light', scrambled: ['está', 'del', 'El', 'hotel', 'después', 'semáforo'], correct: 'El hotel está después del semáforo'}
                 ],
                 quiz: []
             },
 
-            // ==================== INTERMEDIATE (B1-B2) ====================
+            // ==================== AVANZADO (ADVANCED) ====================
             { 
-                id: 12, tier: 'intermedio', type: 'standard', title: 'Hito 7: Devoluciones e Intolerancias Gastronómicas', desc: 'Gestión de reclamos en comercios y restricciones alimentarias en restaurantes.',
-                words: [
-                    {es: 'Ayer compré', en: 'Yesterday I bought'}, {es: 'Ticket de cambio', en: 'Exchange receipt'}, {es: 'Tiene una falla', en: 'It has a defect'},
-                    {es: 'A la lactosa', en: 'To lactose'}, {es: 'Tinto', en: 'Red wine'}, {es: 'Quisiéramos', en: 'We would like'}
-                ],
+                id: 24, tier: 'avanzado', type: 'standard', title: 'Hito 13: Cifras Millonarias y Teoría Cromática', desc: 'Estadísticas macroeconómicas y descripciones abstractas.',
+                words: [{es: 'Tres millones', en: 'Three million'}, {es: 'Desbalanceado', en: 'Unbalanced'}, {es: 'Tonalidad', en: 'Tonality'}, {es: 'Inversión', en: 'Investment'}],
                 sentences: [
-                    {english: 'We are intolerant to gluten, do you have alternatives?', scrambled: ['alternativos', 'al', '¿tienen', 'platos', 'Somos', 'gluten', 'intolerantes'], correct: 'Somos intolerantes al gluten ¿tienen platos alternativos'},
-                    {english: 'This jacket has a defect under the sleeve', scrambled: ['manga', 'falla', 'una', 'Esta', 'tiene', 'abajo', 'de', 'la', 'campera'], correct: 'Esta campera tiene una falla abajo de la manga'}
+                    {english: 'The investment is three million dollars', scrambled: ['de', 'La', 'es', 'tres', 'millones', 'inversión', 'dólares'], correct: 'La inversión es de tres millones dólares'},
+                    {english: 'This tonality looks unbalanced', scrambled: ['tonalidad', 'desbalanceada', 'Esta', 'se', 've'], correct: 'Esta tonalidad se ve desbalanceada'}
                 ],
-                quiz: [
-                    {q: "¿Cómo se llama el comprobante que te permite cambiar un artículo?", a: "Ticket de cambio", alt: ["Factura base", "Sobrante"]},
-                    {q: "¿Cómo se le llama al vino de uva tinta en el cono sur?", a: "Vino tinto", alt: ["Vino negro", "Vino rojo"]}
-                ]
+                quiz: [{q: "Traducción de 'Three million':", a: "Tres millones", alt: ["Tres mil", "Tres millones de mil"]}]
             },
             {
-                id: 13, tier: 'intermedio', type: 'dialogue', title: 'Simulación Práctica 7: Devolución de ropa y reserva', desc: 'Gestiona el cambio de un artículo defectuoso y realiza una consulta gastronómica compleja.',
-                words: [{es: 'Atención al cliente', en: 'Customer service dialogue context'}],
+                id: 25, tier: 'avanzado', type: 'dialogue', title: 'Simulación Práctica 13: Negociación de Bienes Raíces', desc: 'Discute la paleta de colores y costo de un inmueble.',
+                words: [{es: 'Inmobiliaria', en: 'Real Estate'}],
                 sentences: [
-                    {english: 'Yesterday I bought this jacket but I would like to exchange it', scrambled: ['cambiarla', 'esta', 'me', 'compré', 'pero', 'gustaría', 'Ayer', 'campera'], correct: 'Ayer compré esta campera pero me gustaría cambiarla'},
-                    {english: 'I wanted to reserve a table for Saturday outside', scrambled: ['afuera', 'mesa', 'sábado', 'una', 'reservar', 'Quería', 'para', 'el'], correct: 'Quería reservar una mesa para el sábado afuera'}
+                    {english: 'The house costs three million dollars', scrambled: ['millones', 'La', 'cuesta', 'tres', 'casa', 'dólares'], correct: 'La casa cuesta tres millones dólares'},
+                    {english: 'The interior tonality is unbalanced', scrambled: ['interior', 'está', 'La', 'tonalidad', 'desbalanceada'], correct: 'La tonalidad interior está desbalanceada'}
                 ],
                 quiz: []
             },
             { 
-                id: 14, tier: 'intermedio', type: 'standard', title: 'Hito 8: Trastornos de Tránsito y Trasbordos Urbanos', desc: 'Lógica intermedia de transporte público: uso de colectivos, metros y subtes.',
-                words: [
-                    {es: 'El subte / El metro', en: 'The subway'}, {es: 'El colectivo / La micro', en: 'The bus'}, {es: 'Le conviene bajarse', en: 'You should get off'},
-                    {es: 'La estación', en: 'The station'}, {es: 'Refugio de colectivos', en: 'Bus shelter'}, {es: 'Cruce la plaza', en: 'Cross the square'}
-                ],
+                id: 26, tier: 'avanzado', type: 'standard', title: 'Hito 14: Estructuras Temporales Subjuntivas', desc: 'Uso del pluscuamperfecto para coordinar plazos.',
+                words: [{es: 'Hubiera sabido', en: 'Had known'}, {es: 'Plazo fiscal', en: 'Fiscal deadline'}, {es: 'Antes del viernes', en: 'Before Friday'}, {es: 'Vencimiento', en: 'Expiration'}],
                 sentences: [
-                    {english: 'Cross the square and grab the pedestrian street', scrambled: ['peatonal', 'la', 'plaza', 'calle', 'y', 'agarre', 'Cruce'], correct: 'Cruce la plaza y agarre la calle peatonal'},
-                    {english: 'The subway station is full of people today', scrambled: ['gente', 'estación', 'de', 'La', 'subte', 'está', 'llena', 'hoy'], correct: 'La estación de subte está llena de gente hoy'}
+                    {english: 'If I had known, I would have paid before Friday', scrambled: ['hubiera', 'pagado', 'viernes', 'Si', 'antes', 'del', 'sabido', 'habría'], correct: 'Si hubiera sabido habría pagado antes del viernes'},
+                    {english: 'The fiscal deadline expires today', scrambled: ['vence', 'El', 'hoy', 'plazo', 'fiscal'], correct: 'El plazo fiscal vence hoy'}
                 ],
-                quiz: [
-                    {q: "Qué palabra se usa en Buenos Aires para referirse al metro subterráneo?", a: "Subte", alt: ["Subterráneo", "Micro"]},
-                    {q: "¿Cuál es el término más común en Argentina y zonas aledañas para referirse al bus urbano?", a: "Colectivo", alt: ["Autobús", "Guagua"]}
-                ]
+                quiz: [{q: "¿Qué modo verbal es 'Hubiera sabido'?", a: "Subjuntivo", alt: ["Indicativo", "Imperativo"]}]
             },
             {
-                id: 15, tier: 'intermedio', type: 'dialogue', title: 'Simulación Práctica 8: Viajando en transporte público', desc: 'Sigue instrucciones detalladas de trasbordos intermodales combinando buses y metros.',
-                words: [{es: 'Logística urbana', en: 'Transit navigation dialogue'}],
+                id: 27, tier: 'avanzado', type: 'dialogue', title: 'Simulación Práctica 14: Auditoría Contable Contrarreloj', desc: 'Defiende plazos fiscales impositivos frente a un auditor.',
+                words: [{es: 'Auditoría', en: 'Audit'}],
                 sentences: [
-                    {english: 'You should take bus number sixty', scrambled: ['colectivo', 'tomarse', 'conviene', 'el', 'Les', 'sesenta'], correct: 'Les conviene tomarse el colectivo sesenta'},
-                    {english: 'You have to get off at the fifth stop', scrambled: ['quinta', 'parada', 'tienen', 'en', 'se', 'que', 'bajar', 'la'], correct: 'se tienen que bajar en la quinta parada'}
+                    {english: 'If we had known the deadline we would have changed it', scrambled: ['hubiéramos', 'el', 'plazo', 'cambiado', 'Si', 'sabido', 'lo'], correct: 'Si hubiéramos sabido el plazo lo cambiado'},
+                    {english: 'The fiscal expiration is before Friday', scrambled: ['antes', 'El', 'vencimiento', 'es', 'del', 'viernes', 'fiscal'], correct: 'El vencimiento fiscal es antes del viernes'}
                 ],
                 quiz: []
             },
             { 
-                id: 16, tier: 'intermedio', type: 'standard', title: 'Hito 9: Planificación Laboral y Metas de Vida', desc: 'Uso práctico del futuro perifrástico y condicionales temporales.',
-                words: [
-                    {es: 'Para fin de mes', en: 'By the end of the month'}, {es: 'Apenas sepa', en: 'As soon as I know'}, {es: 'Presento la renuncia', en: 'I submit my resignation'},
-                    {es: 'Arranca', en: 'Starts / kicks off'}, {es: 'Un departamento', en: 'An apartment'}, {es: 'Cansador', en: 'Tiring'}
-                ],
+                id: 28, tier: 'avanzado', type: 'standard', title: 'Hito 15: Debates Filosóficos y Discursos Sociopolíticos', desc: 'Argumentación avanzada sobre macrosistemas.',
+                words: [{es: 'Desde mi punto de vista', en: 'From my point of view'}, {es: 'Precarización', en: 'Job insecurity'}, {es: 'Consenso', en: 'Consensus'}, {es: 'Utopía', en: 'Utopia'}],
                 sentences: [
-                    {english: 'When I turn thirty I will buy a house', scrambled: ['casa', 'cumpla', 'treinta', 'una', 'me', 'años', 'comprar', 'voy', 'a', 'Cuando'], correct: 'Cuando cumpla treinta años me voy a comprar una casa'},
-                    {english: 'The new job starts early on Monday morning', scrambled: ['temprano', 'El', 'nuevo', 'trabajo', 'lunes', 'el', 'arranca'], correct: 'El nuevo trabajo arranca el lunes temprano'}
+                    {english: 'From my point of view it is a utopia', scrambled: ['punto', 'una', 'vista', 'es', 'utopía', 'Desde', 'mi'], correct: 'Desde mi punto de vista es una utopía'},
+                    {english: 'We need an urgent social consensus', scrambled: ['social', 'Consenso', 'urgente', 'necesitamos', 'un'], correct: 'Consenso necesitamos un social urgente'}
                 ],
-                quiz: [
-                    {q: "¿Qué verbo informal se usa comúnmente en lugar de 'comenzar/iniciar' en Sudamérica?", a: "Arrancar", alt: ["Emprender", "Zarpar"]},
-                    {q: "¿Cómo se dice 'tiring' en lenguaje cotidiano regional?", a: "Cansador", alt: ["Pesado", "Agotador"]}
-                ]
+                quiz: [{q: "¿Qué significa 'Precarización'?", a: "Job insecurity", alt: ["Richness", "Stability"]}]
             },
             {
-                id: 17, tier: 'intermedio', type: 'dialogue', title: 'Simulación Práctica 9: Charla sobre planes laborales futuros', desc: 'Discute metas de desarrollo profesional, mudanzas y plazos de contratación.',
-                words: [{es: 'Proyección laboral', en: 'Career planning dialogue'}],
+                id: 29, tier: 'avanzado', type: 'dialogue', title: 'Simulación Práctica 15: Foro de Políticas Públicas', desc: 'Discute reformas estructurales usando terminología culta.',
+                words: [{es: 'Foro', en: 'Forum'}],
                 sentences: [
-                    {english: 'By the end of next month I submit the formal resignation', scrambled: ['formal', 'que', 'fin', 'del', 'mes', 'presento', 'la', 'viene', 'renuncia', 'Para'], correct: 'Para fin del mes que viene presento la renuncia formal'},
-                    {english: 'As soon as I pass the three month trial period I will look for an apartment', scrambled: ['tres', 'un', 'departamento', 'período', 'de', 'apenas', 'de', 'voy', 'a', 'buscar', 'me', 'pase', 'el', 'prueba', 'meses'], correct: 'apenas pase el período de prueba de tres meses me voy a buscar un departamento'}
-                ],
-                quiz: []
-            },
-            { 
-                id: 18, tier: 'intermedio', type: 'standard', title: 'Hito 10: Intercambio de Opiniones y Debates Cotidianos', desc: 'Construcción de argumentos de contraste utilizando expresiones idiomáticas locales.',
-                words: [
-                    {es: 'Te abre la cabeza', en: 'It opens your mind'}, {es: 'Tiene más contras que pros', en: 'It has more cons than pros'}, {es: 'Desde mi punto de vista', en: 'From my point of view'},
-                    {es: '¿Qué pensás vos?', en: 'What do you think? (voseo)'}, {es: 'Resignar', en: 'To give up / sacrifice'}, {es: 'Un punto medio', en: 'A middle ground'}
-                ],
-                sentences: [
-                    {english: 'From my point of view we should change strategy', scrambled: ['de', 'cambiar', 'tendríamos', 'estrategia', 'punto', 'vista', 'Desde', 'mi', 'que'], correct: 'Desde mi punto de vista tendríamos que cambiar de estrategia'},
-                    {english: 'We must look for a valid middle ground for both', scrambled: ['medio', 'válido', 'ambos', 'Debemos', 'un', 'para', 'buscar', 'punto'], correct: 'Debemos buscar un punto medio válido para ambos'}
-                ],
-                quiz: [
-                    {q: "¿Qué expresión coloquial significa 'open your mind'?", a: "Abrir la cabeza", alt: ["Abrir el cerebro", "Despejar los ojos"]},
-                    {q: "¿Cuál es el antónimo directo de 'pros' en una discusión informal?", a: "Contras", alt: ["Desventajas", "Negativos"]}
-                ]
-            },
-            {
-                id: 19, tier: 'intermedio', type: 'dialogue', title: 'Simulación Práctica 10: Debate sobre el estilo de vida actual', desc: 'Defiende posturas sobre las ventajas de vivir en urbes versus zonas rurales.',
-                words: [{es: 'Debate cotidiano', en: 'Lifestyle debate dialogue'}],
-                sentences: [
-                    {english: 'For me living in a big city nowadays has more cons than pros', scrambled: ['más', 'en', 'tiene', 'gran', 'hoy', 'una', 'contras', 'en', 'día', 'ciudad', 'que', 'Para', 'mí', 'vivir', 'pros'], correct: 'Para mí vivir en una gran ciudad hoy en día tiene más contras que pros'},
-                    {english: 'I would like to know what you think about all this situation', scrambled: ['toda', 'esta', 'situación', 'pensás', 'vos', 'sobre', 'gustaría', 'saber', 'qué', 'Me'], correct: 'Me gustaría saber qué pensás vos sobre toda esta situación'}
-                ],
-                quiz: []
-            },
-
-            // ==================== ADVANCED (C1-C2) ====================
-            { 
-                id: 20, tier: 'avanzado', type: 'standard', title: 'Hito 11: Oraciones Hipotéticas y Crítica Culinaria', desc: 'Dominio del subjuntivo imperfecto, pluscuamperfecto y condicionales compuestos.',
-                words: [
-                    {es: 'En caso de que', en: 'In case that'}, {es: 'Aunque la crítica haya...', en: 'Even if the review has...'}, {es: 'Desbalanceados', en: 'Unbalanced'},
-                    {es: 'Si hubiera sabido', en: 'If I had known'}, {es: 'Exigiremos un reembolso', en: 'We will demand a refund'}, {es: 'Establecimiento', en: 'Establishment'}
-                ],
-                sentences: [
-                    {english: 'If I had known that the kitchen closed so early I would have chosen another place', scrambled: ['habría', 'temprano', 'cerraba', 'otro', 'la', 'sido', 'cocina', 'elegido', 'lugar', 'Si', 'tan', 'a', 'la', 'noche', 'hubiera', 'sabido', 'que'], correct: 'Si hubiera sabido que la cocina cerraba tan temprano a la noche habría elegido otro lugar'},
-                    {english: 'In case that you find a defect we will demand a refund', scrambled: ['caso', 'un', 'exigiremos', 'En', 'de', 'que', 'reembolso', 'encuentre', 'defecto'], correct: 'En caso de que encuentre un defecto exigiremos un reembolso'}
-                ],
-                quiz: [
-                    {q: "Identifica la estructura correcta del período hipotético irreal en el pasado:", a: "Si hubiera sabido, habría ido", alt: ["Si habría sabido, hubiera ido", "Si supiera, habría ido"]},
-                    {q: "En una evaluación profesional, ¿cuál es el sinónimo formal de 'local o restaurante'?", a: "Establecimiento", alt: ["Negocio", "Boliche"]}
-                ]
-            },
-            {
-                id: 21, tier: 'avanzado', type: 'dialogue', title: 'Simulación Práctica 11: Reclamo por menú de autor', desc: 'Sostén una discusión formal de alta complejidad técnica con el gerente de un local.',
-                words: [{es: 'Alta gastronomía', en: 'Fine dining dispute context'}],
-                sentences: [
-                    {english: 'Aunque reservé esta cena con meses de anticipación nuestras advertencias fueron pasadas por alto', scrambled: ['anticipacióndetallando', 'fueron', 'cenas', 'advertencias', 'esta', 'pasadas', 'alto', 'por', 'Aunque', 'con', 'meses', 'de', 'nuestras', 'reservé'], correct: 'Aunque reservé esta cena con meses de anticipación nuestras advertencias fueron pasadas por alto'},
-                    {english: 'Si mi invitado hubiera ingerido aunque fuera una mínima porción habríamos terminado en la clínica', scrambled: ['habríamos', 'mínima', 'porción', 'hubiera', 'en', 'la', 'clínica', 'ingerido', 'una', 'mi', 'invitado', 'fuera', 'Si', 'aunque', 'terminado'], correct: 'Si mi invitado hubiera ingerido aunque fuera una mínima porción habríamos terminado en la clínica'}
-                ],
-                quiz: []
-            },
-            { 
-                id: 22, tier: 'avanzado', type: 'standard', title: 'Hito 12: Arquitectura Urbanística y Preservación Histórica', desc: 'Descripciones abstractas avanzadas de entornos físicos, demografías y geografía.',
-                words: [
-                    {es: 'Se levanta', en: 'Rises / stands'}, {es: 'Laberinto de callejuelas', en: 'Maze of narrow alleys'}, {es: 'Desembocando en la costanera', en: 'Ending up at the waterfront'},
-                    {es: 'Embotellamiento', en: 'Traffic jam / bottleneck'}, {es: 'Autopista de circunvalación', en: 'Ring road / bypass'}, {es: 'Especulación inmobiliaria', en: 'Real estate speculation'}
-                ],
-                sentences: [
-                    {english: 'The historic building rises in the middle of the maze', scrambled: ['laberinto', 'edificio', 'histórico', 'en', 'medio', 'se', 'del', 'levanta', 'El'], correct: 'El edificio histórico se levanta en medio del laberinto'},
-                    {english: 'The avenue finishes directly ending up at the waterfront', scrambled: ['directamente', 'costanera', 'La', 'avenida', 'termina', 'desembocando', 'en', 'la'], correct: 'La avenida termina directamente desembocando en la costanera'}
-                ],
-                quiz: [
-                    {q: "¿Qué palabra sudamericana reemplaza al término español 'atasco de tráfico'?", a: "Embotellamiento", alt: ["Atascamiento", "Trancón"]},
-                    {q: "¿Cómo se llama la avenida que bordea un río o el mar en muchas ciudades del Cono Sur?", a: "Costanera", alt: ["Paseo marítimo", "Malecón"]}
-                ]
-            },
-            {
-                id: 23, tier: 'avanzado', type: 'dialogue', title: 'Simulación Práctica 12: Análisis de preservación de barrios', desc: 'Compara transformaciones edilicias utilizando jerga arquitectónica y sociológica.',
-                words: [{es: 'Urbanismo', en: 'Urban morphology dialogue'}],
-                sentences: [
-                    {english: 'The current urban layout reflects the old walls of the colonial era', scrambled: ['trazado', 'antiguas', 'época', 'colonial', 'refleja', 'las', 'de', 'la', 'El', 'urbano', 'actual', 'murallas'], correct: 'El trazado urbano actual refleja las antiguas murallas de la época colonial'},
-                    {english: 'Para evitar que la especulación inmobiliaria destruya la identidad de la zona el gobierno impuso restricciones patrimoniales', scrambled: ['patrimoniales', 'la', 'destruya', 'zona', 'inmobiliaria', 'especulación', 'restricciones', 'el', 'evitar', 'identidad', 'de', 'la', 'impuso', 'gobierno', 'que', 'Para'], correct: 'Para evitar que la especulación inmobiliaria destruya la identidad de la zona el gobierno impuso restricciones patrimoniales'}
-                ],
-                quiz: []
-            },
-            { 
-                id: 24, tier: 'avanzado', type: 'standard', title: 'Hito 13: Burocracia Legal, Contratos y Plazos Fiscales', desc: 'Estudio de la prosa formal administrativa. Requisitos de radicación impositiva.',
-                words: [
-                    {es: 'Indefectiblemente', en: 'Unfailingly / without extension'}, {es: 'Prorrogados por decreto', en: 'Postponed by executive decree'}, {es: 'Hasta nuevo aviso', en: 'Until further notice'},
-                    {es: 'Días hábiles', en: 'Business days'}, {es: 'Apostillados', en: 'Apostilled (legalized internationally)'}, {es: 'Expediente', en: 'Official case file'}
-                ],
-                sentences: [
-                    {english: 'The application will be rejected immediately if the documentation is incomplete', scrambled: ['de', 'inmediato', 'la', 'será', 'incompleta', 'documentación', 'solicitud', 'sea', 'En', 'caso', 'de', 'que', 'rechazada'], correct: 'En caso de que la documentación sea incompleta la solicitud será rechazada de inmediato'},
-                    {english: 'The terms are postponed by executive decree until further notice', scrambled: ['aviso', 'Los', 'plazos', 'están', 'prorrogados', 'por', 'decreto', 'hasta', 'nuevo'], correct: 'Los plazos están prorrogados por decreto hasta nuevo aviso'}
-                ],
-                quiz: [
-                    {q: "En términos legales, ¿cómo se denominan los días de trabajo válidos (lunes a viernes)?", a: "Días hábiles", alt: ["Días laborables", "Días corrientes"]},
-                    {q: "¿Qué adverbio formal significa que un plazo no se puede alterar bajo ninguna circunstancia?", a: "Indefectiblemente", alt: ["Seguramente", "Prontamente"]}
-                ]
-            },
-            {
-                id: 25, tier: 'avanzado', type: 'dialogue', title: 'Simulación Práctica 13: Trámites de residencia y radicación', desc: 'Entabla una conversación en una oficina del estado para validar la carga de expedientes migratorios.',
-                words: [{es: 'Trámites oficiales', en: 'Legal bureaucracy dialogue'}],
-                sentences: [
-                    {english: 'In case the documents from abroad are not apostilled the file cannot be initiated', scrambled: ['extranjero', 'iniciado', 'no', 'del', 'los', 'papeles', 'caso', 'de', 'estén', 'el', 'expediente', 'que', 'apostillados', 'En', 'no', 'puede', 'ser'], correct: 'En caso de que los papeles del extranjero no estén apostillados el expediente no puede ser iniciado'},
-                    {english: 'The result will be notified to you via official email within the corresponding legal period', scrambled: ['electrónico', 'vía', 'período', 'legal', 'notificado', 'El', 'oficial', 'dentro', 'del', 'resultado', 'le', 'será', 'correo', 'correspondiente'], correct: 'El resultado le será notificado vía correo electrónico oficial dentro del período legal correspondiente'}
-                ],
-                quiz: []
-            },
-            { 
-                id: 26, tier: 'avanzado', type: 'standard', title: 'Hito 14: Sociopolítica, Macrosistemas e Ideologías Abstractas', desc: 'Discursos de alto nivel sobre automatización industrial, macroeconomía y flujos de capital.',
-                words: [
-                    {es: 'Es utópico pretender que...', en: 'It is utopian to claim that...'}, {es: 'Consenso', en: 'Consensus'}, {es: 'La precarización', en: 'Job insecurity / precariousness'},
-                    {es: 'Políticas de contención', en: 'Safety net / buffering policies'}, {es: 'A la altura de', en: 'On par with / keeping pace with'}, {es: 'Desigualdad', en: 'Inequality'}
-                ],
-                sentences: [
-                    {english: 'There is an urgent need to restructure the current study plans', scrambled: ['estudio', 'actuales', 'planes', 'urgente', 'reestructurar', 'necesidad', 'Existe', 'de', 'una', 'los'], correct: 'Existe una necesidad urgente de reestructurar los planes de estudio actuales'},
-                    {english: 'The inequality grows if there are no safety net policies', scrambled: ['contención', 'La', 'desigualdad', 'crece', 'si', 'no', 'hay', 'políticas', 'de'], correct: 'La desigualdad crece si no hay políticas de contención'}
-                ],
-                quiz: [
-                    {q: "¿Qué vocablo técnico define la inestabilidad crónica del mercado laboral moderno?", a: "Precarización", alt: ["Pobreza", "Flexibilidad"]},
-                    {q: "Completa la frase culta: 'Aun si se lograra un ________ sobre la transición energética...'", a: "consenso", alt: ["arreglo", "trato"]}
-                ]
-            },
-            {
-                id: 27, tier: 'avanzado', type: 'dialogue', title: 'Simulación Práctica 14: Debate sobre el impacto de la IA', desc: 'Analiza filosofías de mercado y el futuro tecnológico empleando la máxima complejidad expresiva.',
-                words: [{es: 'Alta oratoria', en: 'Sociopolitical debate dialogue'}],
-                sentences: [
-                    {english: 'Aun si la IA reemplazara muchas de las tareas operativas la historia nos demuestra que cada revolución termina creando', scrambled: ['reemplazara', 'operativas', 'historia', 'demuestra', 'las', 'revolución', 'IA', 'muchas', 'la', 'Aun', 'si', 'de', 'nos', 'que', 'cada', 'termina', 'tareas', 'creando'], correct: 'Aun si la IA reemplazara muchas de las tareas operativas la historia nos demuestra que cada revolución termina creando'},
-                    {english: 'Existe una necesidad urgente de aplicar políticas públicas de contención para que el impacto económico no termine golpeando a los sectores más vulnerables de la sociedad', scrambled: ['públicas', 'necesidad', 'de', 'públicas', 'contención', 'para', 'sociedad', 'vulnerables', 'aplicar', 'políticas', 'económico', 'urgente', 'golpeando', 'Existe', 'una', 'el', 'impacto', 'no', 'termine', 'a', 'los', 'sectores', 'más', 'de', 'la'], correct: 'Existe una necesidad urgente de aplicar políticas públicas de contención para que el impacto económico no termine golpeando a los sectores más vulnerables de la sociedad'}
+                    {english: 'From my point of view we must reach a consensus', scrambled: ['debemos', 'un', 'consenso', 'vista', 'mi', 'llegar', 'Desde', 'a'], correct: 'Desde mi punto de vista debemos llegar a un consenso'},
+                    {english: 'Job insecurity is not a utopia', scrambled: ['utopía', 'La', 'no', 'es', 'precarización', 'una'], correct: 'La precarización no es una utopía'}
                 ],
                 quiz: []
             }
@@ -572,7 +489,7 @@
                         <p class="text-slate-500 text-xs mt-0.5">${l.desc}</p>
                     </div>
                     <div class="shrink-0 text-right">
-                        ${isLocked ? '<span class="text-xs font-bold text-slate-400 bg-slate-100 px-2.5 py-1.5 rounded-lg">🔒 Manten 90% previo</span>' : 
+                        ${isLocked ? '<span class="text-xs font-bold text-slate-400 bg-slate-100 px-2.5 py-1.5 rounded-lg">🔒 Reclama 90% previo</span>' : 
                         `<button onclick="loadLesson(${l.id})" class="bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-bold px-4 py-2 rounded-lg transition shadow-sm w-full sm:w-auto">${score !== null ? `Reintentar (${score}%)` : 'Iniciar Unidad'}</button>`}
                     </div>
                 </div>`;
@@ -609,7 +526,7 @@
                     ${l.type === 'dialogue' ? '' : `<button onclick="speakWord('${w.es}')" class="bg-indigo-50 hover:bg-indigo-100 p-2.5 rounded-full text-indigo-600 font-bold tracking-wider text-sm transition">🔊 Escuchar</button>`}
                 </div>`;
             });
-            document.getElementById('audio-words-stack').innerHTML = l.type === 'dialogue' ? '<p class="text-sm text-amber-800 bg-amber-50 p-4 rounded-lg font-medium">Este módulo corresponde a un Hito de Simulación Conversacional Directa. Avanza directamente a la pestaña **Rendir Evaluación** para estructurar tus respuestas contextuales.</p>' : audioHtml;
+            document.getElementById('audio-words-stack').innerHTML = l.type === 'dialogue' ? '<p class="text-sm text-amber-800 bg-amber-50 p-4 rounded-lg font-medium">Este módulo corresponde a una Simulación Conversacional Activa. Pasa directo a la pestaña **Rendir Evaluación** para interactuar.</p>' : audioHtml;
 
             updateFlashcardView();
 
@@ -622,7 +539,7 @@
                 <div id="quiz-block-${idx}" class="bg-slate-50 p-5 rounded-xl border border-slate-100 space-y-3 relative">
                     <div class="flex justify-between items-center flex-wrap gap-2">
                         <p class="font-bold text-slate-800 text-sm"><span class="text-indigo-600">Pregunta ${idx+1}:</span></p>
-                        <button onclick="resetSingleQuestion(${idx})" id="q-reset-btn-${idx}" class="text-[11px] bg-slate-200 hover:bg-slate-300 text-slate-600 px-2.5 py-1 rounded font-semibold transition">Reiniciar Opción (3 intentos)</button>
+                        <button onclick="resetSingleQuestion(${idx})" id="q-reset-btn-${idx}" class="text-[11px] bg-slate-200 hover:bg-slate-300 text-slate-600 px-2.5 py-1 rounded font-semibold transition">Reiniciar (3 intentos)</button>
                     </div>
                     <p class="text-sm font-semibold text-slate-800">${q.q}</p>
                     <div id="q-options-container-${idx}" class="grid grid-cols-1 gap-2">
@@ -636,20 +553,20 @@
                 sentenceAttempts[sIdx] = 0; 
                 selectedSentenceWords[sIdx] = []; 
                 
-                let builderLabel = l.type === 'dialogue' ? '🗣️ Simulador de Respuesta Dialéctica:' : 'Constructor de Oraciones:';
-                let contextPrompt = l.type === 'dialogue' ? 'Ordena las estructuras lingüísticas para emitir tu respuesta en español regional:' : 'Organiza los bloques estructurales para formar la traducción correcta:';
+                let builderLabel = l.type === 'dialogue' ? '🗣️ Simulador Dialéctico:' : 'Constructor de Oraciones:';
+                let contextPrompt = l.type === 'dialogue' ? 'Ordena las estructuras lingüísticas para responder en el contexto simulado:' : 'Organiza los bloques estructurales para armar la traducción:';
 
                 quizHtml += `
                 <div id="sentence-block-${sIdx}" class="bg-slate-50 p-5 rounded-xl border border-slate-100 space-y-3">
                     <div class="flex justify-between items-center flex-wrap gap-2">
                         <p class="font-bold text-slate-800 text-sm"><span class="text-indigo-600">${builderLabel}</span></p>
-                        <button onclick="resetSingleSentence(${sIdx})" id="s-reset-btn-${sIdx}" class="text-[11px] bg-slate-200 hover:bg-slate-300 text-slate-600 px-2.5 py-1 rounded font-semibold transition">Reiniciar Sección (3 intentos)</button>
+                        <button onclick="resetSingleSentence(${sIdx})" id="s-reset-btn-${sIdx}" class="text-[11px] bg-slate-200 hover:bg-slate-300 text-slate-600 px-2.5 py-1 rounded font-semibold transition">Reiniciar Bloque (3 intentos)</button>
                     </div>
                     <p class="text-xs font-semibold text-slate-500 uppercase tracking-wider">${contextPrompt}</p>
-                    <p class="text-sm font-medium text-slate-700 bg-indigo-50 border border-indigo-100 px-3 py-2 rounded-lg">💬 Idea/Concepto base en Inglés: "${s.english}"</p>
+                    <p class="text-sm font-medium text-slate-700 bg-indigo-50 border border-indigo-100 px-3 py-2 rounded-lg">💬 Idea en Inglés: "${s.english}"</p>
                     
                     <div class="bg-white border-2 border-dashed border-slate-200 rounded-xl p-3 min-h-[3.5rem] flex flex-wrap gap-2 items-center" id="sentence-target-${sIdx}">
-                        <span class="text-slate-400 text-xs italic pointer-events-none">Haz clic en las palabras de abajo para estructurar tu respuesta...</span>
+                        <span class="text-slate-400 text-xs italic pointer-events-none">Haz clic en las palabras de abajo...</span>
                     </div>
 
                     <div class="flex flex-wrap gap-2 pt-2" id="sentence-bank-${sIdx}">
@@ -687,7 +604,7 @@
             }
 
             if (selectedSentenceWords[sIdx].length === 0) {
-                targetContainer.innerHTML = `<span class="text-slate-400 text-xs italic pointer-events-none">Haz clic en las palabras de abajo para estructurar tu respuesta...</span>`;
+                targetContainer.innerHTML = `<span class="text-slate-400 text-xs italic pointer-events-none">Haz clic en las palabras de abajo...</span>`;
             } else {
                 targetContainer.innerHTML = selectedSentenceWords[sIdx].map(item => `
                     <span class="bg-indigo-600 text-white text-sm font-semibold px-3 py-1.5 rounded-xl shadow">
@@ -709,11 +626,11 @@
             const warnTxt = document.getElementById(`q-warn-${idx}`);
 
             if (left > 0) {
-                resetBtn.innerText = `Reiniciar Opción (${left} restantes)`;
+                resetBtn.innerText = `Reiniciar (${left} restantes)`;
             } else {
                 resetBtn.classList.add('hidden');
                 warnTxt.classList.remove('hidden');
-                warnTxt.innerHTML = `⚠️ <strong>¡Pregunta bloqueada!</strong> Agotaste los intentos. Revisa tus <button class="text-indigo-600 font-bold underline" onclick="switchTab('flash')">Tarjetas</button> para consolidar el vocabulario regional.`;
+                warnTxt.innerHTML = `⚠️ Intentos agotados. Revisa tus tarjetas de estudio.`;
                 radios.forEach(r => r.disabled = true);
             }
         }
@@ -735,19 +652,15 @@
                 btn.className = `sentence-word-btn-${sIdx} bg-white border border-slate-300 text-slate-800 text-sm font-semibold px-3 py-2 rounded-xl shadow-sm hover:bg-slate-100 transition`;
             });
 
-            const resetBtn = document.getElementById scheduled = document.getElementById(`s-reset-btn-${sIdx}`);
+            const resetBtn = document.getElementById(`s-reset-btn-${sIdx}`);
             const warnTxt = document.getElementById(`s-warn-${sIdx}`);
 
             if (left > 0) {
-                scheduled.innerText = `Reiniciar Sección (${left} restantes)`;
+                resetBtn.innerText = `Reiniciar Bloque (${left} restantes)`;
             } else {
-                scheduled.classList.add('hidden');
+                resetBtn.classList.add('hidden');
                 warnTxt.classList.remove('hidden');
-                
-                let targetTabName = lessonData[activeId].type === 'dialogue' ? 'Tarjetas de Memoria' : 'Escuchar y Aprender';
-                let targetTabType = lessonData[activeId].type === 'dialogue' ? 'flash' : 'audio';
-
-                warnTxt.innerHTML = `⚠️ <strong>¡Sección bloqueada!</strong> Intentos máximos agotados. Dirígete a <button class="text-indigo-600 font-bold underline" onclick="switchTab('${targetTabType}')">${targetTabName}</button> para estudiar el orden gramatical.`;
+                warnTxt.innerHTML = `⚠️ Intentos máximos agotados para este módulo de traducción.`;
                 
                 phraseButtons.forEach(btn => {
                     btn.removeAttribute('onclick');
@@ -781,10 +694,10 @@
             
             if (finalPercent >= 90) {
                 banner.className = "p-4 rounded-xl text-center font-bold bg-emerald-100 text-emerald-800";
-                banner.innerText = `¡Excelente! ¡Evaluación aprobada con un ${finalPercent}% de precisión!`;
+                banner.innerText = `¡Excelente! ¡Aprobado con un ${finalPercent}%!`;
             } else {
                 banner.className = "p-4 rounded-xl text-center font-bold bg-rose-100 text-rose-800";
-                banner.innerText = `Calificación final: ${finalPercent}%. Necesitas un 90% o más para avanzar de manera oficial. ¡Corrige tus errores reintentando!`;
+                banner.innerText = `Calificación: ${finalPercent}%. Necesitas un 90% o más para validar de manera oficial.`;
             }
         }
 
