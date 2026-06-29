@@ -4,389 +4,385 @@
     <meta charset="UTF-8">
     <title>Spanish CEFR Mastery Portal</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <style>
-        :root {
-            --bg: #0f172a;
-            --card: #1e293b;
-            --accent: #38bdf8;
-            --accent-soft: #0ea5e9;
-            --text: #e5e7eb;
-            --muted: #9ca3af;
-            --danger: #ef4444;
-            --success: #22c55e;
-            --border: #334155;
-            --gold: #facc15;
-        }
-        * {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-            font-family: system-ui, -apple-system, BlinkMacSystemFont, "Inter", sans-serif;
-        }
-        body {
-            background: radial-gradient(circle at top, #1e293b 0, #020617 55%);
-            color: var(--text);
-            min-height: 100vh;
-            display: flex;
-            justify-content: center;
-            padding: 20px;
-        }
-        .wrapper {
-            width: 100%;
-            max-width: 1100px;
-            background: rgba(15, 23, 42, 0.95);
-            border-radius: 24px;
-            border: 1px solid rgba(148, 163, 184, 0.35);
-            box-shadow:
-                0 40px 80px rgba(15, 23, 42, 0.85),
-                0 0 0 1px rgba(148, 163, 184, 0.35);
-            padding: 24px;
-            backdrop-filter: blur(18px);
-        }
-        h1 {
-            font-size: 28px;
-            letter-spacing: 0.04em;
-            text-transform: uppercase;
-            color: #e5e7eb;
-            margin-bottom: 8px;
-        }
-        h2 {
-            font-size: 18px;
-            color: var(--muted);
-            margin-bottom: 16px;
-        }
-        h3 {
-            font-size: 20px;
-            margin-bottom: 12px;
-        }
-        .section-title {
-            font-size: 16px;
-            font-weight: 600;
-            letter-spacing: 0.08em;
-            text-transform: uppercase;
-            color: var(--muted);
-            margin-bottom: 8px;
-        }
-        .dashboard-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-            gap: 16px;
-            margin-top: 12px;
-        }
-        .card {
-            background: linear-gradient(135deg, #020617, #0f172a);
-            border-radius: 18px;
-            border: 1px solid rgba(148, 163, 184, 0.45);
-            padding: 16px;
-            position: relative;
-            overflow: hidden;
-        }
-        .card-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 8px;
-        }
-        .card-title {
-            font-size: 14px;
-            font-weight: 600;
-            letter-spacing: 0.08em;
-            text-transform: uppercase;
-            color: var(--muted);
-        }
-        .card-value {
-            font-size: 18px;
-            font-weight: 600;
-            color: var(--text);
-        }
-        .pill {
-            display: inline-flex;
-            align-items: center;
-            gap: 6px;
-            padding: 4px 10px;
-            border-radius: 999px;
-            font-size: 11px;
-            text-transform: uppercase;
-            letter-spacing: 0.08em;
-            border: 1px solid rgba(148, 163, 184, 0.5);
-            color: var(--muted);
-        }
-        .pill-success {
-            border-color: rgba(34, 197, 94, 0.6);
-            color: var(--success);
-        }
-        .pill-danger {
-            border-color: rgba(239, 68, 68, 0.6);
-            color: var(--danger);
-        }
-        .pill-neutral {
-            border-color: rgba(148, 163, 184, 0.6);
-            color: var(--muted);
-        }
-        .primary-btn {
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            gap: 8px;
-            padding: 10px 18px;
-            border-radius: 999px;
-            border: none;
-            background: radial-gradient(circle at top left, #38bdf8 0, #0ea5e9 40%, #0369a1 100%);
-            color: #0b1120;
-            font-size: 13px;
-            font-weight: 600;
-            letter-spacing: 0.08em;
-            text-transform: uppercase;
-            cursor: pointer;
-            box-shadow:
-                0 12px 30px rgba(56, 189, 248, 0.45),
-                0 0 0 1px rgba(8, 47, 73, 0.8);
-            transition: transform 0.12s ease, box-shadow 0.12s ease, filter 0.12s ease;
-        }
-        .primary-btn:hover {
-            transform: translateY(-1px);
-            filter: brightness(1.05);
-            box-shadow:
-                0 16px 40px rgba(56, 189, 248, 0.55),
-                0 0 0 1px rgba(8, 47, 73, 0.9);
-        }
-        .primary-btn:active {
-            transform: translateY(0);
-            box-shadow:
-                0 8px 20px rgba(56, 189, 248, 0.35),
-                0 0 0 1px rgba(8, 47, 73, 0.9);
-        }
-        .secondary-btn {
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            gap: 6px;
-            padding: 8px 14px;
-            border-radius: 999px;
-            border: 1px solid rgba(148, 163, 184, 0.6);
-            background: rgba(15, 23, 42, 0.9);
-            color: var(--muted);
-            font-size: 12px;
-            font-weight: 500;
-            letter-spacing: 0.08em;
-            text-transform: uppercase;
-            cursor: pointer;
-            transition: background 0.12s ease, border-color 0.12s ease, color 0.12s ease;
-        }
-        .secondary-btn:hover {
-            background: rgba(30, 64, 175, 0.35);
-            border-color: rgba(148, 163, 184, 0.9);
-            color: var(--text);
-        }
-        .hidden {
-            display: none;
-        }
-        .tab-bar {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 8px;
-            margin: 16px 0;
-            padding: 8px;
-            border-radius: 999px;
-            background: rgba(15, 23, 42, 0.85);
-            border: 1px solid rgba(148, 163, 184, 0.35);
-        }
-        .tab-btn {
-            flex: 1 1 auto;
-            min-width: 120px;
-            padding: 8px 10px;
-            border-radius: 999px;
-            border: 1px solid transparent;
-            background: transparent;
-            color: var(--muted);
-            font-size: 11px;
-            font-weight: 600;
-            letter-spacing: 0.08em;
-            text-transform: uppercase;
-            cursor: pointer;
-            transition: background 0.12s ease, color 0.12s ease, border-color 0.12s ease;
-        }
-        .tab-btn.active {
-            background: radial-gradient(circle at top left, #38bdf8 0, #0ea5e9 40%, #0369a1 100%);
-            color: #0b1120;
-            border-color: rgba(56, 189, 248, 0.8);
-        }
-        .tab-content {
-            margin-top: 12px;
-            padding: 16px;
-            border-radius: 18px;
-            background: linear-gradient(135deg, #020617, #0f172a);
-            border: 1px solid rgba(148, 163, 184, 0.45);
-        }
-        .tab-instruction {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            font-size: 13px;
-            color: var(--muted);
-            margin-bottom: 12px;
-        }
-        .tab-instruction-icon {
-            font-size: 18px;
-        }
-        .input-field {
-            width: 100%;
-            padding: 8px 10px;
-            border-radius: 999px;
-            border: 1px solid rgba(148, 163, 184, 0.6);
-            background: rgba(15, 23, 42, 0.9);
-            color: var(--text);
-            font-size: 13px;
-            margin: 6px 0;
-        }
-        .input-field::placeholder {
-            color: var(--muted);
-        }
-        .word-pill {
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            padding: 4px 10px;
-            margin: 4px;
-            border-radius: 999px;
-            border: 1px solid rgba(148, 163, 184, 0.6);
-            background: rgba(15, 23, 42, 0.9);
-            color: var(--text);
-            font-size: 12px;
-            cursor: pointer;
-            transition: background 0.12s ease, border-color 0.12s ease, transform 0.08s ease;
-        }
-        .word-pill:hover {
-            background: rgba(37, 99, 235, 0.35);
-            border-color: rgba(59, 130, 246, 0.9);
-            transform: translateY(-1px);
-        }
-        .quiz-row {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            margin-bottom: 8px;
-        }
-        .quiz-row span {
-            min-width: 120px;
-            font-size: 13px;
-        }
-        .confetti {
-            position: fixed;
-            width: 10px;
-            height: 10px;
-            border-radius: 2px;
-            animation: confetti-fall 1.8s ease-out forwards;
-            z-index: 9999;
-        }
-        @keyframes confetti-fall {
-            0% {
-                transform: translateY(-20px) rotate(0deg);
-                opacity: 1;
-            }
-            100% {
-                transform: translateY(120vh) rotate(360deg);
-                opacity: 0;
-            }
-        }
-        #celebration-banner {
-            position: fixed;
-            top: 18px;
-            left: 50%;
-            transform: translateX(-50%);
-            padding: 10px 18px;
-            border-radius: 999px;
-            background: rgba(250, 204, 21, 0.95);
-            color: #0b1120;
-            font-size: 13px;
-            font-weight: 600;
-            letter-spacing: 0.08em;
-            text-transform: uppercase;
-            box-shadow:
-                0 18px 40px rgba(250, 204, 21, 0.55),
-                0 0 0 1px rgba(113, 63, 18, 0.85);
-            display: none;
-            z-index: 9998;
-        }
-        .grammar-card {
-            border-radius: 16px;
-            border: 1px solid rgba(148, 163, 184, 0.6);
-            padding: 12px;
-            margin-bottom: 10px;
-            background: rgba(15, 23, 42, 0.9);
-        }
-        .grammar-title {
-            font-weight: 600;
-            margin-bottom: 4px;
-        }
-        .grammar-level {
-            font-size: 12px;
-            color: var(--muted);
-            margin-bottom: 4px;
-        }
-        .grammar-desc {
-            font-size: 13px;
-            margin-bottom: 8px;
-        }
-        .grammar-start-btn {
-            padding: 6px 12px;
-            border-radius: 999px;
-            border: 1px solid rgba(148, 163, 184, 0.6);
-            background: rgba(15, 23, 42, 0.9);
-            color: var(--text);
-            font-size: 12px;
-            cursor: pointer;
-        }
-        .certificate-card {
-            border-radius: 16px;
-            border: 1px solid rgba(250, 204, 21, 0.6);
-            padding: 12px;
-            margin-bottom: 10px;
-            background: rgba(15, 23, 42, 0.9);
-        }
-        .certificate-title {
-            font-weight: 600;
-            margin-bottom: 4px;
-        }
-        .certificate-level {
-            font-size: 13px;
-            color: var(--muted);
-            margin-bottom: 8px;
-        }
-        .certificate-btn {
-            padding: 6px 12px;
-            border-radius: 999px;
-            border: 1px solid rgba(250, 204, 21, 0.8);
-            background: rgba(250, 250, 249, 0.95);
-            color: #0b1120;
-            font-size: 12px;
-            cursor: pointer;
-        }
-        @media (max-width: 768px) {
-            .wrapper {
-                padding: 16px;
-                border-radius: 20px;
-            }
-            .tab-bar {
-                flex-wrap: nowrap;
-                overflow-x: auto;
-            }
-            .tab-btn {
-                flex: 0 0 auto;
-            }
-        }
-    </style>
+
+<style>
+
+/* ---------------------------------------------------
+   GLOBAL RESET
+--------------------------------------------------- */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: system-ui, -apple-system, BlinkMacSystemFont, "Inter", sans-serif;
+}
+
+/* ---------------------------------------------------
+   LIGHT + DARK MODE ROOT VARIABLES
+--------------------------------------------------- */
+:root {
+    --radius: 20px;
+    --transition: 0.15s ease;
+}
+
+/* ---------------------------------------------------
+   LIGHT MODE
+--------------------------------------------------- */
+@media (prefers-color-scheme: light) {
+    :root {
+        --bg: #f7f8fa;
+        --card: rgba(255, 255, 255, 0.75);
+        --border: rgba(0, 0, 0, 0.08);
+        --text: #1f2937;
+        --muted: #6b7280;
+        --accent: #0ea5e9;
+        --accent-soft: #38bdf8;
+        --gold: #d4af37;
+        --shadow: 0 8px 20px rgba(0,0,0,0.08);
+        --glass: blur(14px) saturate(180%);
+    }
+}
+
+/* ---------------------------------------------------
+   DARK MODE
+--------------------------------------------------- */
+@media (prefers-color-scheme: dark) {
+    :root {
+        --bg: #0f172a;
+        --card: rgba(30, 41, 59, 0.55);
+        --border: rgba(255, 255, 255, 0.12);
+        --text: #e5e7eb;
+        --muted: #94a3b8;
+        --accent: #38bdf8;
+        --accent-soft: #0ea5e9;
+        --gold: #facc15;
+        --shadow: 0 20px 40px rgba(0,0,0,0.45);
+        --glass: blur(18px) saturate(180%);
+    }
+}
+
+/* ---------------------------------------------------
+   BODY + WRAPPER
+--------------------------------------------------- */
+body {
+    background: var(--bg);
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    padding: 20px;
+    color: var(--text);
+}
+
+.wrapper {
+    width: 100%;
+    max-width: 1100px;
+    background: var(--card);
+    backdrop-filter: var(--glass);
+    border-radius: var(--radius);
+    border: 1px solid var(--border);
+    box-shadow: var(--shadow);
+    padding: 24px;
+}
+
+/* ---------------------------------------------------
+   HEADINGS
+--------------------------------------------------- */
+h1 {
+    font-size: 30px;
+    font-weight: 700;
+    margin-bottom: 6px;
+}
+
+h2 {
+    font-size: 18px;
+    color: var(--muted);
+    margin-bottom: 16px;
+}
+
+h3 {
+    font-size: 22px;
+    margin-bottom: 12px;
+}
+
+/* ---------------------------------------------------
+   SECTION TITLES
+--------------------------------------------------- */
+.section-title {
+    font-size: 15px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--muted);
+    margin-bottom: 8px;
+}
+
+/* ---------------------------------------------------
+   DASHBOARD GRID
+--------------------------------------------------- */
+.dashboard-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    gap: 16px;
+    margin-top: 12px;
+}
+
+.card {
+    background: var(--card);
+    backdrop-filter: var(--glass);
+    border-radius: var(--radius);
+    border: 1px solid var(--border);
+    padding: 16px;
+    box-shadow: var(--shadow);
+}
+
+/* ---------------------------------------------------
+   CARD CONTENT
+--------------------------------------------------- */
+.card-header {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 8px;
+}
+
+.card-title {
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--muted);
+}
+
+.card-value {
+    font-size: 20px;
+    font-weight: 600;
+}
+
+/* ---------------------------------------------------
+   PILLS
+--------------------------------------------------- */
+.pill {
+    padding: 4px 10px;
+    border-radius: 999px;
+    font-size: 11px;
+    border: 1px solid var(--border);
+    color: var(--muted);
+}
+
+.pill-success { color: #22c55e; border-color: #22c55e; }
+.pill-danger  { color: #ef4444; border-color: #ef4444; }
+
+/* ---------------------------------------------------
+   BUTTONS
+--------------------------------------------------- */
+.primary-btn {
+    padding: 10px 18px;
+    border-radius: 999px;
+    border: none;
+    background: linear-gradient(135deg, var(--accent), var(--accent-soft));
+    color: white;
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    box-shadow: var(--shadow);
+    transition: var(--transition);
+}
+
+.primary-btn:hover {
+    transform: translateY(-2px);
+}
+
+.secondary-btn {
+    padding: 8px 14px;
+    border-radius: 999px;
+    border: 1px solid var(--border);
+    background: var(--card);
+    color: var(--muted);
+    cursor: pointer;
+    transition: var(--transition);
+}
+
+.secondary-btn:hover {
+    color: var(--text);
+    border-color: var(--accent);
+}
+
+/* ---------------------------------------------------
+   TAB BAR
+--------------------------------------------------- */
+.tab-bar {
+    display: flex;
+    gap: 8px;
+    overflow-x: auto;
+    padding: 8px;
+    margin: 16px 0;
+    border-radius: 999px;
+    background: var(--card);
+    border: 1px solid var(--border);
+}
+
+.tab-btn {
+    flex: 0 0 auto;
+    padding: 8px 12px;
+    border-radius: 999px;
+    border: 1px solid transparent;
+    background: transparent;
+    color: var(--muted);
+    font-size: 12px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: var(--transition);
+}
+
+.tab-btn.active {
+    background: linear-gradient(135deg, var(--accent), var(--accent-soft));
+    color: white;
+}
+
+/* ---------------------------------------------------
+   TAB CONTENT
+--------------------------------------------------- */
+.tab-content {
+    background: var(--card);
+    backdrop-filter: var(--glass);
+    border-radius: var(--radius);
+    border: 1px solid var(--border);
+    padding: 16px;
+    box-shadow: var(--shadow);
+    margin-bottom: 20px;
+}
+
+.tab-instruction {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    color: var(--muted);
+    margin-bottom: 12px;
+}
+
+/* ---------------------------------------------------
+   INPUT FIELDS
+--------------------------------------------------- */
+.input-field {
+    width: 100%;
+    padding: 10px 14px;
+    border-radius: 999px;
+    border: 1px solid var(--border);
+    background: var(--card);
+    color: var(--text);
+    margin-bottom: 8px;
+}
+
+/* ---------------------------------------------------
+   WORD PILLS
+--------------------------------------------------- */
+.word-pill {
+    display: inline-block;
+    padding: 6px 12px;
+    margin: 4px;
+    border-radius: 999px;
+    background: var(--card);
+    border: 1px solid var(--border);
+    cursor: pointer;
+    transition: var(--transition);
+}
+
+.word-pill:hover {
+    border-color: var(--accent);
+    color: var(--accent);
+}
+
+/* ---------------------------------------------------
+   CERTIFICATE CARDS
+--------------------------------------------------- */
+.certificate-card {
+    background: var(--card);
+    border: 2px solid var(--gold);
+    border-radius: var(--radius);
+    padding: 16px;
+    margin-bottom: 12px;
+}
+
+.certificate-title {
+    font-size: 18px;
+    font-weight: 600;
+}
+
+.certificate-btn {
+    margin-top: 10px;
+    padding: 8px 14px;
+    border-radius: 999px;
+    border: 1px solid var(--gold);
+    background: var(--gold);
+    color: black;
+    cursor: pointer;
+}
+
+/* ---------------------------------------------------
+   GRAMMAR CARDS
+--------------------------------------------------- */
+.grammar-card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 16px;
+    margin-bottom: 12px;
+}
+
+.grammar-title {
+    font-size: 16px;
+    font-weight: 600;
+}
+
+.grammar-desc {
+    color: var(--muted);
+    margin-bottom: 8px;
+}
+
+/* ---------------------------------------------------
+   SCENARIO CARDS
+--------------------------------------------------- */
+#scenario-box {
+    min-height: 40px;
+    padding: 12px;
+    border-radius: var(--radius);
+    border: 1px dashed var(--border);
+}
+
+/* ---------------------------------------------------
+   CONFETTI
+--------------------------------------------------- */
+.confetti {
+    position: fixed;
+    width: 10px;
+    height: 10px;
+    border-radius: 2px;
+    animation: confetti-fall 1.8s ease-out forwards;
+    z-index: 9999;
+}
+
+@keyframes confetti-fall {
+    0% { transform: translateY(-20px) rotate(0deg); opacity: 1; }
+    100% { transform: translateY(120vh) rotate(360deg); opacity: 0; }
+}
+
+</style>
 </head>
 <body>
-<div id="celebration-banner">CELEBRATION UNLOCKED 🎉</div>
+<div id="celebration-banner" style="display:none;">CELEBRATION UNLOCKED 🎉</div>
+
 <div class="wrapper">
 
+    <!-- ============================
+         DASHBOARD VIEW
+    ============================ -->
     <div id="dashboard-view">
+
         <h1>Spanish CEFR Mastery Portal</h1>
         <h2>Progressive learning from words → sentences → real‑world communication</h2>
 
         <div class="section-title">Course Dashboard</div>
+
         <div class="dashboard-grid">
+
+            <!-- QUIZ STATUS -->
             <div class="card">
                 <div class="card-header">
                     <div class="card-title">Quiz Status</div>
@@ -395,6 +391,7 @@
                 <div class="card-value" id="quiz-status">Not started</div>
             </div>
 
+            <!-- BUILDER STATUS -->
             <div class="card">
                 <div class="card-header">
                     <div class="card-title">Builder Status</div>
@@ -403,6 +400,7 @@
                 <div class="card-value" id="build-status">Not started</div>
             </div>
 
+            <!-- CONVERSATION STATUS -->
             <div class="card">
                 <div class="card-header">
                     <div class="card-title">Conversation Status</div>
@@ -411,6 +409,7 @@
                 <div class="card-value" id="conv-status">Tracked in app</div>
             </div>
 
+            <!-- FINAL VERDICT -->
             <div class="card">
                 <div class="card-header">
                     <div class="card-title">Final Verdict</div>
@@ -418,1357 +417,1156 @@
                 </div>
                 <div class="card-value" id="final-verdict">Course Status: Not evaluated</div>
             </div>
+
         </div>
 
-        <div style="margin-top:16px; display:flex; justify-content:space-between; align-items:center;">
+        <!-- BUTTONS -->
+        <div style="margin-top:20px; display:flex; justify-content:space-between; align-items:center;">
+
             <button class="primary-btn" onclick="openApp()">
                 <span>Enter Learning Portal</span>
                 <span>→</span>
             </button>
+
             <button class="secondary-btn" onclick="updateDashboard()">
-                <span>Refresh Status</span>
+                Refresh Status
             </button>
+
         </div>
-    </div>
+
+    </div> <!-- end dashboard-view -->
+    <!-- ============================
+         LEARNING VIEW HEADER
+    ============================ -->
     <div id="learning-view" class="hidden">
-        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px;">
-            <div>
+
+        <div style="
+            display:flex;
+            justify-content:space-between;
+            align-items:center;
+            flex-wrap:wrap;
+            margin-bottom:20px;
+        ">
+
+            <!-- LEVEL SELECT -->
+            <div style="flex:1; min-width:240px; margin-bottom:12px;">
                 <div class="section-title">Level & Audio</div>
-                <div style="display:flex; gap:8px; align-items:center;">
-                    <select id="level-select" onchange="changeLevel(this.value)" class="input-field" style="max-width:160px;">
+
+                <div style="display:flex; gap:10px; align-items:center;">
+                    <select id="level-select"
+                            onchange="changeLevel(this.value)"
+                            class="input-field"
+                            style="max-width:180px;">
                         <option value="A1">A1 (Unlocked)</option>
                         <option value="A2">A2 (Locked)</option>
                         <option value="B1">B1 (Locked)</option>
                     </select>
-                    <span id="level-status" style="font-size:13px; color:var(--muted);">Current Level: A1</span>
+
+                    <span id="level-status"
+                          style="font-size:14px; color:var(--muted);">
+                        Current Level: A1
+                    </span>
                 </div>
             </div>
-            <div>
+
+            <!-- AUDIO SPEED -->
+            <div style="flex:1; min-width:240px; margin-bottom:12px;">
                 <div class="section-title">Audio Speed</div>
-                <div style="display:flex; align-items:center; gap:8px;">
+
+                <div style="display:flex; align-items:center; gap:10px;">
                     <input type="range" id="rate" min="0.6" max="1.4" step="0.1" value="1">
-                    <span style="font-size:13px; color:var(--muted);">Rate</span>
+                    <span style="font-size:14px; color:var(--muted);">Rate</span>
                 </div>
             </div>
-            <button class="secondary-btn" onclick="goBack()">Back to Dashboard</button>
+
+            <!-- BACK BUTTON -->
+            <div style="flex:0 0 auto;">
+                <button class="secondary-btn" onclick="goBack()">
+                    Back to Dashboard
+                </button>
+            </div>
+
         </div>
+        <!-- ============================
+             NAVIGATION TABS
+        ============================ -->
         <div class="tab-bar">
-            <button class="tab-btn active" onclick="showTab('listen', event)">Listen</button>
-            <button class="tab-btn" onclick="showTab('flash', event)">Flashcards</button>
-            <button class="tab-btn" onclick="showTab('quiz', event)">Quiz</button>
-            <button class="tab-btn" onclick="showTab('build', event)">Build</button>
-            <button class="tab-btn" onclick="showTab('conv', event)">Conversation</button>
-            <button class="tab-btn" onclick="showTab('smart', event)">Smart Conversation</button>
-            <button class="tab-btn" onclick="showTab('daily', event)">Daily Practice</button>
-            <button class="tab-btn" onclick="showTab('badges', event)">Badges</button>
-            <button class="tab-btn" onclick="showTab('grammar', event)">Grammar Mode</button>
-            <button class="tab-btn" onclick="showTab('scenario', event)">Scenarios</button>
-            <button class="tab-btn" onclick="showTab('certificates', event)">Certificates</button>
+
+            <button class="tab-btn active"
+                    onclick="showTab('listen', event)">
+                Listen
+            </button>
+
+            <button class="tab-btn"
+                    onclick="showTab('flash', event)">
+                Flashcards
+            </button>
+
+            <button class="tab-btn"
+                    onclick="showTab('quiz', event)">
+                Quiz
+            </button>
+
+            <button class="tab-btn"
+                    onclick="showTab('build', event)">
+                Build
+            </button>
+
+            <button class="tab-btn"
+                    onclick="showTab('conv', event)">
+                Conversation
+            </button>
+
+            <button class="tab-btn"
+                    onclick="showTab('smart', event)">
+                Smart Conversation
+            </button>
+
+            <button class="tab-btn"
+                    onclick="showTab('daily', event)">
+                Daily Practice
+            </button>
+
+            <button class="tab-btn"
+                    onclick="showTab('badges', event)">
+                Badges
+            </button>
+
+            <button class="tab-btn"
+                    onclick="showTab('grammar', event)">
+                Grammar Mode
+            </button>
+
+            <button class="tab-btn"
+                    onclick="showTab('scenario', event)">
+                Scenarios
+            </button>
+
+            <button class="tab-btn"
+                    onclick="showTab('certificates', event)">
+                Certificates
+            </button>
+
         </div>
+        <!-- ============================
+             LISTEN TAB
+        ============================ -->
         <div class="tab-content" id="listen">
+
             <h3>Listen & Repeat</h3>
+
             <p class="tab-instruction">
                 <span class="tab-instruction-icon">🔊</span>
                 Listen to each word at your chosen speed, then repeat aloud.
             </p>
 
-            <div style="margin-bottom:10px; display:flex; gap:8px; flex-wrap:wrap;">
-                <button class="secondary-btn" onclick="autoPlayListen()">Auto‑Play</button>
-                <button class="secondary-btn" onclick="pauseAutoPlay()">Pause</button>
-                <button class="secondary-btn" onclick="resumeAutoPlay()">Resume</button>
-                <button class="secondary-btn" onclick="stopAutoPlay()">Stop</button>
+            <!-- AUTO-PLAY CONTROLS -->
+            <div style="margin-bottom:16px; display:flex; gap:10px; flex-wrap:wrap;">
+
+                <button class="secondary-btn" onclick="autoPlayListen()">
+                    Auto‑Play
+                </button>
+
+                <button class="secondary-btn" onclick="pauseAutoPlay()">
+                    Pause
+                </button>
+
+                <button class="secondary-btn" onclick="resumeAutoPlay()">
+                    Resume
+                </button>
+
+                <button class="secondary-btn" onclick="stopAutoPlay()">
+                    Stop
+                </button>
+
             </div>
 
+            <!-- WORD LIST -->
             <div id="listen-list"></div>
+
         </div>
+        <!-- ============================
+             FLASHCARDS TAB
+        ============================ -->
         <div class="tab-content hidden" id="flash">
+
             <h3>Flashcards</h3>
+
             <p class="tab-instruction">
                 <span class="tab-instruction-icon">🃏</span>
-                Tap to flip between English and Spanish. Use audio to reinforce memory.
+                Tap a card to flip between English and Spanish. Audio plays automatically.
             </p>
-            <div id="flash-area" style="display:grid; grid-template-columns:repeat(auto-fit,minmax(140px,1fr)); gap:10px;"></div>
+
+            <div id="flash-area"
+                 style="display:grid; grid-template-columns:repeat(auto-fit,minmax(150px,1fr)); gap:14px;">
+            </div>
+
         </div>
 
+
+        <!-- ============================
+             QUIZ TAB
+        ============================ -->
         <div class="tab-content hidden" id="quiz">
+
             <h3>Quiz — Smart Review</h3>
+
             <p class="tab-instruction">
                 <span class="tab-instruction-icon">🧠</span>
                 Type the Spanish word for each English prompt. The app uses spaced repetition to focus on what you need.
             </p>
+
             <div id="quiz-area"></div>
-            <p id="score-board" style="margin-top:8px; font-size:13px;">Quiz Score: 0%</p>
-        </div>
-        <div class="tab-content hidden" id="build">
-            <h3>Sentence Builder</h3>
-            <p class="tab-instruction">
-                <span class="tab-instruction-icon">🧩</span>
-                Use the word bank to build correct Spanish sentences from English prompts.
+
+            <p id="score-board"
+               style="margin-top:12px; font-size:14px; color:var(--muted);">
+               Quiz Score: 0%
             </p>
 
-            <p id="build-task"></p>
-            <p id="progress-counter" style="font-size:13px; color:var(--muted); margin-bottom:8px;"></p>
+        </div>
+        <!-- ============================
+             BUILD TAB
+        ============================ -->
+        <div class="tab-content hidden" id="build">
 
-            <div id="word-bank" style="margin-bottom:10px;"></div>
+            <h3>Sentence Builder</h3>
 
-            <div id="sentence-box"
-                 style="min-height:40px; padding:10px; border-radius:12px; border:1px dashed var(--border); margin-bottom:8px;"></div>
+            <p class="tab-instruction">
+                <span class="tab-instruction-icon">✏️</span>
+                Build the correct Spanish sentence using the word bank below.
+            </p>
 
-            <button class="secondary-btn" onclick="checkBuild()">Check</button>
-            <button class="secondary-btn" onclick="nextTask()">Next</button>
-            <button class="secondary-btn hidden" id="show-answer-btn" onclick="revealAnswer()">Show Answer</button>
+            <!-- TARGET SENTENCE -->
+            <div style="
+                padding:12px;
+                border-radius:var(--radius);
+                border:1px solid var(--border);
+                margin-bottom:12px;
+            ">
+                <strong>Target:</strong>
+                <span id="build-target" style="color:var(--muted);"></span>
+            </div>
 
-            <p id="feedback" style="margin-top:8px; font-size:13px;"></p>
+            <!-- USER INPUT -->
+            <input id="build-input"
+                   class="input-field"
+                   placeholder="Type your sentence here...">
+
+            <!-- WORD BANK -->
+            <div id="build-bank"
+                 style="margin-top:12px; min-height:40px;">
+            </div>
+
+            <!-- FEEDBACK -->
+            <p id="build-feedback"
+               style="margin-top:12px; font-size:14px; color:var(--muted);">
+            </p>
+
+            <!-- BUTTONS -->
+            <div style="margin-top:16px; display:flex; gap:10px; flex-wrap:wrap;">
+                <button class="primary-btn" onclick="checkBuild()">Check</button>
+                <button class="secondary-btn" onclick="nextBuild()">Next</button>
+            </div>
+
         </div>
 
+
+
+        <!-- ============================
+             CONVERSATION TAB
+        ============================ -->
         <div class="tab-content hidden" id="conv">
+
             <h3>Conversation Builder</h3>
+
             <p class="tab-instruction">
                 <span class="tab-instruction-icon">💬</span>
-                Build natural replies to questions using the word bank.
+                Build a natural Spanish reply using the word bank.
             </p>
 
-            <p id="conv-task"></p>
-            <p id="c-progress-counter" style="font-size:13px; color:var(--muted); margin-bottom:8px;"></p>
+            <!-- PROMPT -->
+            <div style="
+                padding:12px;
+                border-radius:var(--radius);
+                border:1px solid var(--border);
+                margin-bottom:12px;
+            ">
+                <strong>Prompt:</strong>
+                <span id="conv-prompt" style="color:var(--muted);"></span>
+            </div>
 
-            <div id="conv-word-bank" style="margin-bottom:10px;"></div>
+            <!-- USER INPUT -->
+            <input id="conv-input"
+                   class="input-field"
+                   placeholder="Your reply...">
 
-            <div id="conv-sentence-box"
-                 style="min-height:40px; padding:10px; border-radius:12px; border:1px dashed var(--border); margin-bottom:8px;"></div>
+            <!-- WORD BANK -->
+            <div id="conv-bank"
+                 style="margin-top:12px; min-height:40px;">
+            </div>
 
-            <button class="secondary-btn" onclick="checkConv()">Check</button>
-            <button class="secondary-btn" onclick="nextConvTask()">Next</button>
-            <button class="secondary-btn hidden" id="show-conv-answer-btn" onclick="revealConvAnswer()">Show Answer</button>
+            <!-- FEEDBACK -->
+            <p id="conv-feedback"
+               style="margin-top:12px; font-size:14px; color:var(--muted);">
+            </p>
 
-            <p id="c-feedback" style="margin-top:8px; font-size:13px;"></p>
+            <!-- BUTTONS -->
+            <div style="margin-top:16px; display:flex; gap:10px; flex-wrap:wrap;">
+                <button class="primary-btn" onclick="checkConv()">Check</button>
+                <button class="secondary-btn" onclick="nextConv()">Next</button>
+            </div>
+
         </div>
+        <!-- ============================
+             SMART CONVERSATION TAB
+        ============================ -->
         <div class="tab-content hidden" id="smart">
+
             <h3>Smart Conversation</h3>
+
             <p class="tab-instruction">
                 <span class="tab-instruction-icon">🤖</span>
-                Practice level‑appropriate questions and build replies using your learned words.
+                Respond naturally in Spanish. The system evaluates fluency, grammar, and clarity.
             </p>
 
-            <p id="smart-q"></p>
-            <p id="smart-progress" style="font-size:13px; color:var(--muted); margin-bottom:8px;"></p>
+            <!-- AI PROMPT -->
+            <div style="
+                padding:12px;
+                border-radius:var(--radius);
+                border:1px solid var(--border);
+                margin-bottom:12px;
+            ">
+                <strong>Prompt:</strong>
+                <span id="smart-prompt" style="color:var(--muted);"></span>
+            </div>
 
-            <div id="smart-word-bank" style="margin-bottom:10px;"></div>
+            <!-- USER INPUT -->
+            <textarea id="smart-input"
+                      class="input-field"
+                      style="height:80px; border-radius:14px;"
+                      placeholder="Write your reply here..."></textarea>
 
-            <div id="smart-box"
-                 style="min-height:40px; padding:10px; border-radius:12px; border:1px dashed var(--border); margin-bottom:8px;"></div>
+            <!-- FEEDBACK -->
+            <p id="smart-feedback"
+               style="margin-top:12px; font-size:14px; color:var(--muted);">
+            </p>
 
-            <button class="secondary-btn" onclick="checkSmart()">Check</button>
-            <button class="secondary-btn" onclick="nextSmart()">Next</button>
-            <button class="secondary-btn hidden" id="smart-show-answer" onclick="revealSmartAnswer()">Show Answer</button>
+            <!-- BUTTONS -->
+            <div style="margin-top:16px; display:flex; gap:10px; flex-wrap:wrap;">
+                <button class="primary-btn" onclick="checkSmart()">Check</button>
+                <button class="secondary-btn" onclick="nextSmart()">Next</button>
+            </div>
 
-            <p id="smart-feedback" style="margin-top:8px; font-size:13px;"></p>
         </div>
 
+
+
+        <!-- ============================
+             DAILY PRACTICE TAB
+        ============================ -->
         <div class="tab-content hidden" id="daily">
+
             <h3>Daily Practice</h3>
+
             <p class="tab-instruction">
                 <span class="tab-instruction-icon">📅</span>
-                A daily mix of words, flashcards, quiz, build, conversation, and grammar.
+                Complete daily tasks across all skills to earn up to 12 points.
             </p>
 
-            <p id="daily-date" style="margin-bottom:8px;"></p>
-
-            <div style="margin-bottom:10px;">
-                <strong>Words of the Day</strong>
-                <div id="daily-words" style="font-size:13px; margin-top:4px;"></div>
+            <!-- DAILY SCORE -->
+            <div style="
+                padding:12px;
+                border-radius:var(--radius);
+                border:1px solid var(--border);
+                margin-bottom:16px;
+            ">
+                <strong>Daily Score:</strong>
+                <span id="daily-score" style="color:var(--muted);">0 / 12</span>
             </div>
 
-            <div style="margin-bottom:10px;">
-                <strong>Flashcards</strong>
-                <div id="daily-flash" style="display:flex; flex-wrap:wrap; gap:8px; margin-top:4px;"></div>
+            <!-- TASK LIST -->
+            <div id="daily-area"
+                 style="display:grid; grid-template-columns:repeat(auto-fit,minmax(240px,1fr)); gap:14px;">
             </div>
 
-            <div style="margin-bottom:10px;">
-                <strong>Quiz</strong>
-                <div id="daily-quiz" style="margin-top:4px;"></div>
-            </div>
-
-            <div style="margin-bottom:10px;">
-                <strong>Build</strong>
-                <p id="daily-build-en" style="font-size:13px; margin-top:4px;"></p>
-                <div id="daily-build-bank" style="margin-top:4px;"></div>
-                <div id="daily-build-box"
-                     style="min-height:40px; padding:10px; border-radius:12px; border:1px dashed var(--border); margin-top:4px;"></div>
-                <button class="secondary-btn" onclick="checkDailyBuild()">Check</button>
-                <p id="daily-build-feedback" style="font-size:13px; margin-top:4px;"></p>
-            </div>
-
-            <div style="margin-bottom:10px;">
-                <strong>Conversation</strong>
-                <p id="daily-conv-q" style="font-size:13px; margin-top:4px;"></p>
-                <div id="daily-conv-bank" style="margin-top:4px;"></div>
-                <div id="daily-conv-box"
-                     style="min-height:40px; padding:10px; border-radius:12px; border:1px dashed var(--border); margin-top:4px;"></div>
-                <button class="secondary-btn" onclick="checkDailyConv()">Check</button>
-                <p id="daily-conv-feedback" style="font-size:13px; margin-top:4px;"></p>
-            </div>
-
-            <div style="margin-bottom:10px;">
-                <strong>Grammar</strong>
-                <p id="daily-grammar-q" style="font-size:13px; margin-top:4px;"></p>
-                <input id="daily-grammar-answer" class="input-field" placeholder="Type your answer...">
-                <button class="secondary-btn" onclick="checkDailyGrammar()">Check</button>
-                <p id="daily-grammar-feedback" style="font-size:13px; margin-top:4px;"></p>
-            </div>
-
-            <p id="daily-score" style="font-weight:bold; margin-top:8px;">Daily Score: 0/12</p>
-        </div>
-        <div class="tab-content hidden" id="badges">
-            <h3>Achievement Badges</h3>
-            <p class="tab-instruction">
-                <span class="tab-instruction-icon">🏅</span>
-                Track your achievements and see which skills you’ve mastered so far.
-            </p>
-            <div id="badge-list"></div>
-        </div>
-
-        <div class="tab-content hidden" id="grammar">
-            <h3>Grammar Mode</h3>
-            <p class="tab-instruction">
-                <span class="tab-instruction-icon">📘</span>
-                Choose a lesson and complete practice questions to build your grammar skills.
-            </p>
-            <p>Learn Spanish grammar through fun, interactive lessons and practice tasks.</p>
-            <div id="grammar-lessons"></div>
-        </div>
-
-        <div class="tab-content hidden" id="grammar-practice">
-            <h3 id="grammar-practice-title"></h3>
-            <p id="grammar-practice-question"></p>
-            <input id="grammar-answer" class="input-field" placeholder="Type your answer...">
-            <button class="grammar-start-btn" onclick="submitGrammarAnswer()">Submit Answer</button>
-            <p id="grammar-feedback"></p>
-        </div>
-
-        <div class="tab-content hidden" id="scenario">
-            <h3>Real‑World Scenarios</h3>
-            <p class="tab-instruction">
-                <span class="tab-instruction-icon">🌍</span>
-                Practice Spanish in real situations like cafés, travel, and shopping.
-            </p>
-
-            <select id="scenario-select" onchange="loadScenario(this.value)" class="input-field" style="max-width:220px;">
-                <option value="cafe">At a café</option>
-                <option value="travel">Travel & hotel</option>
-                <option value="shopping">Shopping</option>
-            </select>
-
-            <p id="scenario-desc" style="margin-top:8px;"></p>
-
-            <div id="scenario-word-bank" style="margin:12px 0;"></div>
-
-            <div id="scenario-box"
-                 style="padding:10px; border-radius:12px; border:1px dashed var(--border); min-height:40px; margin-bottom:8px;"></div>
-
-            <button class="secondary-btn" onclick="submitScenario()">Submit</button>
-            <button class="secondary-btn" onclick="document.getElementById('scenario-box').innerText=''">Reset</button>
-
-            <p id="scenario-feedback" style="font-weight:bold; margin-top:8px;"></p>
-        </div>
-
-        <div class="tab-content hidden" id="certificates">
-            <h3>CEFR Certificates</h3>
-            <p class="tab-instruction">
-                <span class="tab-instruction-icon">📜</span>
-                Unlock and download certificates as you progress through levels and grammar mastery.
-            </p>
-            <div id="certificate-list"></div>
-        </div>
-    </div> <!-- end learning-view -->
-</div> <!-- end wrapper -->
-<script>
-/* ============================
-   CEFR LEVEL STATE
-   ============================ */
-let currentLevel = "A1";
-let unlockedLevels = ["A1"];
-
-/* ============================
-   ACHIEVEMENT BADGES
-   ============================ */
-let badges = {
-    a1_master: false,
-    a2_master: false,
-    b1_master: false,
-    quiz_master: false,
-    builder_pro: false,
-    conversation_ace: false,
-    smart_champ: false,
-    daily_5: false,
-    daily_10: false,
-    daily_30: false
-};
-
-/* ============================
-   CERTIFICATES STATE
-   ============================ */
-let certificates = {
-    A1: false,
-    A2: false,
-    B1: false
-};
-function saveCertificates(){
-    localStorage.setItem("cefrCertificates", JSON.stringify(certificates));
-}
-function loadCertificates(){
-    const saved = JSON.parse(localStorage.getItem("cefrCertificates"));
-    if(saved) certificates = saved;
-}
-
-/* ============================
-   LEVEL-SPECIFIC DATA
-   ============================ */
-const levelData = {
-    A1: {
-        words: [
-            {es:'Hola',en:'Hello'},{es:'Gracias',en:'Thank you'},{es:'Casa',en:'House'},
-            {es:'Estoy',en:'I am'},{es:'Yo',en:'I'},{es:'Tu',en:'You'},{es:'El',en:'He'},
-            {es:'Agua',en:'Water'},{es:'Pan',en:'Bread'},{es:'Libro',en:'Book'},
-            {es:'Amigo',en:'Friend'},{es:'Feliz',en:'Happy'},{es:'Comer',en:'Eat'},
-            {es:'Beber',en:'Drink'},{es:'Sol',en:'Sun'},{es:'Luz',en:'Light'},
-            {es:'Mar',en:'Sea'},{es:'Tienda',en:'Store'},{es:'Calle',en:'Street'},
-            {es:'Mapa',en:'Map'},{es:'Donde',en:'Where'},{es:'La',en:'The'},
-            {es:'Si',en:'Yes'},{es:'No',en:'No'},{es:'De Nada',en:'Your Welcome'},
-            {es:'Esta',en:'Is'},{es:'Rojo',en:'Red'},{es:'Aquí',en:'Here'},{es:'Grande',en:'Big'}
-        ],
-        sentences: [
-            {en:'I eat bread',target:'Yo Comer Pan'},
-            {en:'The friend is happy',target:'El Amigo Feliz'},
-            {en:'Where is the store',target:'Donde Esta La Tienda'},
-            {en:'You drink water',target:'Tu Beber Agua'},
-            {en:'The book is red',target:'El Libro Rojo'},
-            {en:'I am happy',target:'Yo Feliz'},
-            {en:'The house is big',target:'La Casa Grande'},
-            {en:'The map is here',target:'El Mapa Aquí'},
-            {en:'He eats bread',target:'El Comer Pan'},
-            {en:'The street is big',target:'La Calle Grande'}
-        ],
-        conversations: [
-            {q:'Good morning! How are you today?',q_es:'Buenos días, cómo estás hoy?',target:'Hola Estoy Feliz'},
-            {q:'How big is the house?',q_es:'¿Dónde está la casa?',target:'La Casa Grande'},
-            {q:'Do you drink water?',q_es:'¿Tú bebes agua?',target:'Si Yo Beber Agua'},
-            {q:'Is the bread here?',q_es:'¿Está el pan aquí?',target:'El Pan Aquí'},
-            {q:'Are you a friend?',q_es:'¿Eres tú amigo?',target:'Si Yo Amigo'}
-        ]
-    },
-    A2: {
-        words: [
-            {es:'Trabajo',en:'Work'},{es:'Escuela',en:'School'},{es:'Ciudad',en:'City'},
-            {es:'Viajar',en:'Travel'},{es:'Coche',en:'Car'},{es:'Familia',en:'Family'},
-            {es:'Cena',en:'Dinner'},{es:'Mañana',en:'Tomorrow'},{es:'Ayer',en:'Yesterday'},
-            {es:'Siempre',en:'Always'},{es:'Nunca',en:'Never'}
-        ],
-        sentences: [
-            {en:'I travel to the city tomorrow',target:'Yo Viajar A La Ciudad Mañana'},
-            {en:'My family eats dinner at home',target:'Mi Familia Comer Cena En Casa'},
-            {en:'He works in the school',target:'El Trabajo En La Escuela'}
-        ],
-        conversations: [
-            {q:'Where do you work?',q_es:'¿Dónde trabajas?',target:'Yo Trabajo En La Ciudad'},
-            {q:'When is dinner?',q_es:'¿Cuándo es la cena?',target:'La Cena Mañana'}
-        ]
-    },
-    B1: {
-        words: [
-            {es:'Porque',en:'Because'},{es:'Entonces',en:'Then'},{es:'Primero',en:'First'},
-            {es:'Después',en:'After'},{es:'Importante',en:'Important'},{es:'Decisión',en:'Decision'}
-        ],
-        sentences: [
-            {en:'First I work, then I eat dinner at home',
-             target:'Primero Yo Trabajo Entonces Yo Comer Cena En Casa'},
-            {en:'It is important because the city is big',
-             target:'Es Importante Porque La Ciudad Grande'}
-        ],
-        conversations: [
-            {q:'Why is this decision important?',
-             q_es:'¿Por qué es importante esta decisión?',
-             target:'Es Importante Porque La Ciudad Grande'}
-        ]
-    }
-};
-
-/* SMART CONVERSATION POOLS */
-const smartPools = {
-    A1: [
-        { q:"How are you today?", q_es:"¿Cómo estás hoy?", target:"Yo Feliz" },
-        { q:"Do you have a friend?", q_es:"¿Tienes un amigo?", target:"Si Yo Amigo" },
-        { q:"Where is the store?", q_es:"¿Dónde está la tienda?", target:"Donde Esta La Tienda" },
-        { q:"Do you drink water?", q_es:"¿Bebes agua?", target:"Si Yo Beber Agua" },
-        { q:"Is the book here?", q_es:"¿Está el libro aquí?", target:"El Libro Aquí" }
-    ],
-    A2: [
-        { q:"Where do you work?", q_es:"¿Dónde trabajas?", target:"Yo Trabajo En La Ciudad" },
-        { q:"When is dinner?", q_es:"¿Cuándo es la cena?", target:"La Cena Mañana" }
-    ],
-    B1: [
-        { q:"Why is this decision important?",
-          q_es:"¿Por qué es importante esta decisión?",
-          target:"Es Importante Porque La Ciudad Grande" }
-    ]
-};
-
-function getData(){ return levelData[currentLevel]; }
-
-/* GLOBAL SCORE */
-let qTotal=0,qCorrect=0,bScore=0,bCount=1,bAttempts=0,cCount=1,cAttempts=0,cScore=0;
-let smartIndex=1,smartScore=0,smartAttempts=0;
-
-/* SMART REVIEW / SPACED REP */
-let wordStats = JSON.parse(localStorage.getItem("wordStats") || "{}");
-function updateWordStat(esWord, correct){
-    if(!wordStats[esWord]){
-        wordStats[esWord] = { seen:0, correct:0, nextReview:Date.now() };
-    }
-    const w = wordStats[esWord];
-    w.seen++;
-    if(correct) w.correct++;
-    const accuracy = w.correct / w.seen;
-    const baseDelay = 6 * 60 * 60 * 1000;
-    const multiplier = accuracy > 0.8 ? 4 : accuracy > 0.5 ? 2 : 1;
-    w.nextReview = Date.now() + baseDelay * multiplier;
-    localStorage.setItem("wordStats", JSON.stringify(wordStats));
-}
-function getSmartReviewWords(level){
-    const d = levelData[level];
-    const now = Date.now();
-    return d.words
-        .filter(w => {
-            const s = wordStats[w.es];
-            if(!s) return true;
-            return s.nextReview <= now;
-        })
-        .slice(0,10);
-}
-
-/* ENJOYMENT / BOREDOM */
-let enjoyment = JSON.parse(localStorage.getItem("enjoyment") || "{}");
-function logEnjoyment(mode, success){
-    enjoyment.lastMode = mode;
-    if(success){
-        enjoyment.streak++;
-        enjoyment.boredom = Math.max(0, enjoyment.boredom - 1);
-    } else {
-        enjoyment.boredom++;
-        enjoyment.streak = 0;
-    }
-    localStorage.setItem("enjoyment", JSON.stringify(enjoyment));
-}
-function maybeSuggestModeChange(){
-    if(enjoyment.boredom >= 3){
-        speak("Probemos otra actividad para mantener la motivación");
-        const msg = document.getElementById("final-verdict");
-        if(msg){
-            msg.innerText = "Suggestion: Try Conversation, Smart, or Scenario Mode for variety.";
-        }
-        enjoyment.boredom = 0;
-        localStorage.setItem("enjoyment", JSON.stringify(enjoyment));
-    }
-}
-
-/* STORAGE */
-function saveProgress(){
-    const progress={
-        qTotal,qCorrect,bScore,bCount,bAttempts,cCount,cAttempts,cScore,
-        smartIndex,smartScore,smartAttempts,
-        audioRate:document.getElementById('rate').value,
-        currentLevel,
-        unlockedLevels,
-        badges,
-        certificates
-    };
-    localStorage.setItem("cefrProgress",JSON.stringify(progress));
-}
-function loadProgress(){
-    const saved=JSON.parse(localStorage.getItem("cefrProgress"));
-    if(!saved) return;
-    qTotal=saved.qTotal??0;
-    qCorrect=saved.qCorrect??0;
-    bScore=saved.bScore??0;
-    bCount=saved.bCount??1;
-    bAttempts=saved.bAttempts??0;
-    cCount=saved.cCount??1;
-    cAttempts=saved.cAttempts??0;
-    cScore=saved.cScore??0;
-    smartIndex=saved.smartIndex??1;
-    smartScore=saved.smartScore??0;
-    smartAttempts=saved.smartAttempts??0;
-    currentLevel=saved.currentLevel??"A1";
-    unlockedLevels=saved.unlockedLevels??["A1"];
-    badges = saved.badges ?? badges;
-    certificates = saved.certificates ?? certificates;
-    document.getElementById('rate').value=saved.audioRate??1;
-}
-
-/* SPEECH */
-function speak(t){
-    const s=new SpeechSynthesisUtterance(t);
-    s.rate=document.getElementById('rate').value;
-    s.lang='es-MX';
-    speechSynthesis.speak(s);
-}
-
-/* LEVEL UI */
-function updateLevelUI(){
-    const select=document.getElementById('level-select');
-    const status=document.getElementById('level-status');
-    ["A1","A2","B1"].forEach(lvl=>{
-        const opt=[...select.options].find(o=>o.value===lvl);
-        if(!opt) return;
-        opt.textContent = unlockedLevels.includes(lvl)
-            ? `${lvl} (Unlocked)`
-            : `${lvl} (Locked)`;
-    });
-    select.value=currentLevel;
-    status.textContent=`Current Level: ${currentLevel}`;
-}
-function changeLevel(level){
-    if(!unlockedLevels.includes(level)){
-        speak("Este nivel está bloqueado");
-        return;
-    }
-    currentLevel=level;
-    updateLevelUI();
-    renderQuiz();
-    renderBuild();
-    renderConv();
-    renderSmart();
-    renderDaily();
-    renderBadges();
-    renderCertificates();
-    saveProgress();
-}
-
-/* BADGES */
-function unlockBadge(key){
-    if(!badges[key]){
-        badges[key] = true;
-        saveProgress();
-        renderBadges();
-        speak("Nuevo logro desbloqueado");
-        launchCelebration();
-    }
-}
-function checkCEFRMasteryBadges(){
-    if(currentLevel === "A1" && unlockedLevels.includes("A2"))
-        unlockBadge("a1_master");
-    if(currentLevel === "A2" && unlockedLevels.includes("B1"))
-        unlockBadge("a2_master");
-    if(currentLevel === "B1")
-        unlockBadge("b1_master");
-}
-function checkSkillBadges(){
-    const quizPercent = qTotal === 0 ? 0 : Math.round((qCorrect/qTotal)*100);
-    const builderPercent = Math.round((bScore/15)*100);
-    const convPercent = Math.round((cScore/15)*100);
-    const smartPercent = Math.round((smartScore/15)*100);
-    if(quizPercent >= 90) unlockBadge("quiz_master");
-    if(builderPercent >= 90) unlockBadge("builder_pro");
-    if(convPercent >= 90) unlockBadge("conversation_ace");
-    if(smartPercent >= 90) unlockBadge("smart_champ");
-}
-
-/* QUIZ */
-function renderQuiz(){
-    const smartWords = getSmartReviewWords(currentLevel);
-    document.getElementById('quiz-area').innerHTML =
-        smartWords.map((w,i)=>`
-            <div class="quiz-row">
-                <span>${w.en}</span>
-                <input id="q${i}" 
-                       onkeydown="if(event.key==='Enter') checkQuiz('${w.es}','q${i}','f${i}')">
-                <span id="f${i}"></span>
-            </div>`).join('');
-}
-function checkQuiz(ans,inputId,feedId){
-    qTotal++;
-    const userVal = document.getElementById(inputId).value.trim().toLowerCase();
-    const isCorrect = userVal === ans.toLowerCase();
-    if(isCorrect) qCorrect++;
-    updateWordStat(ans, isCorrect);
-    logEnjoyment("quiz", isCorrect);
-    maybeSuggestModeChange();
-    document.getElementById(feedId).innerText = isCorrect ? "✅" : "❌";
-    document.getElementById('score-board').innerText =
-        "Quiz Score: " + Math.round((qCorrect/qTotal)*100) + "%";
-    saveProgress();
-    checkSkillBadges();
-}
-
-/* HINTS */
-function sentenceHint(user, correct){
-    if(!user) return "Start by adding a subject (Yo, Tú, Él, La...).";
-    const missingYo = correct.includes("Yo") && !user.includes("Yo");
-    const missingArticle = (correct.includes("La") || correct.includes("El")) &&
-                           !(user.includes("La") || user.includes("El"));
-    if(missingYo) return "Hint: Try starting with 'Yo' for 'I'.";
-    if(missingArticle) return "Hint: Spanish often needs 'El' or 'La' before nouns.";
-    if(user.split(" ").length < correct.split(" ").length)
-        return "Hint: You may be missing a word. Listen to the sentence again.";
-    return "Hint: Check word order—Spanish often uses subject + verb + object.";
-}
-
-/* BUILD */
-function renderBuild(){
-    const d = getData();
-    window.currentTask = d.sentences[bCount-1] ?? d.sentences[0];
-    document.getElementById('build-task').innerText = "Build: " + currentTask.en;
-    document.getElementById('progress-counter').innerText = `Task ${bCount}/10`;
-    document.getElementById('word-bank').innerHTML =
-        d.words.map(w=>`<span class="word-pill"
-            onclick="document.getElementById('sentence-box').innerText+=' ${w.es}'">${w.es}</span>`
-        ).join('');
-}
-function checkBuild(){
-    const user = document.getElementById('sentence-box').innerText.trim().replace(/\s+/g,' ');
-    const correct = currentTask.target.replace(/ /g,' ');
-    if(user === correct){
-        if(bAttempts === 0) bScore++;
-        document.getElementById('feedback').innerText = "Correct!";
-        logEnjoyment("build", true);
-    } else {
-        bAttempts++;
-        const hint = sentenceHint(user, correct);
-        document.getElementById('feedback').innerText =
-            `Attempts: ${bAttempts}/3 (${hint})`;
-        logEnjoyment("build", false);
-        if(bAttempts >= 3)
-            document.getElementById('show-answer-btn').classList.remove('hidden');
-    }
-    saveProgress();
-    checkSkillBadges();
-    maybeSuggestModeChange();
-}
-function nextTask(){
-    if(bCount < 10){
-        bCount++;
-        bAttempts = 0;
-        document.getElementById('sentence-box').innerText = '';
-        document.getElementById('feedback').innerText = '';
-        document.getElementById('show-answer-btn').classList.add('hidden');
-        renderBuild();
-        saveProgress();
-    }
-}
-function revealAnswer(){
-    document.getElementById('sentence-box').innerText = currentTask.target;
-}
-
-/* CONVERSATION */
-function renderConv(){
-    const d = getData();
-    window.currentConv = d.conversations[cCount-1] ?? d.conversations[0];
-    document.getElementById('conv-task').innerText = currentConv.q;
-    document.getElementById('c-progress-counter').innerText = `Task ${cCount}/5`;
-    document.getElementById('conv-word-bank').innerHTML =
-        d.words.map(w=>`<span class="word-pill"
-            onclick="document.getElementById('conv-sentence-box').innerText+=' ${w.es}'">${w.es}</span>`
-        ).join('');
-}
-function checkConv(){
-    const user = document.getElementById('conv-sentence-box').innerText.trim().replace(/\s+/g,' ');
-    const correct = currentConv.target.replace(/ /g,' ');
-    if(user === correct){
-        if(cAttempts === 0) cScore += 3;
-        document.getElementById('c-feedback').innerText = "Correct!";
-        logEnjoyment("conv", true);
-    } else {
-        cAttempts++;
-        document.getElementById('c-feedback').innerText = `Attempts: ${cAttempts}/3`;
-        logEnjoyment("conv", false);
-        if(cAttempts >= 3)
-            document.getElementById('show-conv-answer-btn').classList.remove('hidden');
-    }
-    saveProgress();
-    checkSkillBadges();
-    maybeSuggestModeChange();
-}
-function nextConvTask(){
-    const d = getData();
-    if(cCount < d.conversations.length){
-        cCount++;
-        cAttempts = 0;
-        document.getElementById('conv-sentence-box').innerText = '';
-        document.getElementById('c-feedback').innerText = '';
-        document.getElementById('show-conv-answer-btn').classList.add('hidden');
-        renderConv();
-        saveProgress();
-    } else {
-        speak("Excelente trabajo");
-        launchCelebration();
-        checkSkillBadges();
-    }
-}
-function revealConvAnswer(){
-    document.getElementById('conv-sentence-box').innerText = currentConv.target;
-}
-
-/* SMART CONVERSATION */
-function renderSmart(){
-    const pool = smartPools[currentLevel];
-    const idx = Math.min(smartIndex - 1, pool.length - 1);
-    window.smartCurrent = pool[idx];
-    document.getElementById('smart-q').innerText =
-        `Level ${currentLevel} — Question ${idx+1}: ${smartCurrent.q}`;
-    document.getElementById('smart-progress').innerText =
-        `Progress: ${idx+1}/${pool.length}`;
-    const d = getData();
-    document.getElementById('smart-word-bank').innerHTML =
-        d.words.map(w=>`<span class="word-pill"
-            onclick="document.getElementById('smart-box').innerText+=' ${w.es}'">${w.es}</span>`
-        ).join('');
-}
-function smartGrammarHint(word){
-    if(word==="ser"||word==="estar") return "Tip: 'ser' = permanent, 'estar' = temporary.";
-    if(word.endsWith("ar")) return "Tip: -ar verbs follow regular conjugation patterns.";
-    return "";
-}
-function checkSmart(){
-    const user = document.getElementById('smart-box').innerText.trim().replace(/\s+/g,' ');
-    const correct = smartCurrent.target.replace(/ /g,' ');
-    if(user === correct){
-        if(smartAttempts === 0) smartScore += 3;
-        document.getElementById('smart-feedback').innerText = "Correct!";
-        logEnjoyment("smart", true);
-    } else {
-        smartAttempts++;
-        document.getElementById('smart-feedback').innerText =
-            `Attempts: ${smartAttempts}/3`;
-        logEnjoyment("smart", false);
-        if(smartAttempts >= 3)
-            document.getElementById('smart-show-answer').classList.remove('hidden');
-    }
-    const hint = smartGrammarHint(user);
-    if(hint){
-        document.getElementById('smart-feedback').innerText += ` (${hint})`;
-    }
-    saveProgress();
-    checkSkillBadges();
-    maybeSuggestModeChange();
-}
-function nextSmart(){
-    const pool = smartPools[currentLevel];
-    if(smartIndex < pool.length){
-        smartIndex++;
-        smartAttempts = 0;
-        document.getElementById('smart-box').innerText = '';
-        document.getElementById('smart-feedback').innerText = '';
-        document.getElementById('smart-show-answer').classList.add('hidden');
-        renderSmart();
-        saveProgress();
-    } else {
-        speak("Excelente trabajo");
-        launchCelebration();
-        checkSkillBadges();
-    }
-}
-function revealSmartAnswer(){
-    document.getElementById('smart-box').innerText = smartCurrent.target;
-}
-
-/* GRAMMAR MODE */
-const grammarLessons = [
-    { id:"gender", level:"A1", title:"Gender & Plurals", desc:"Learn masculine/feminine nouns and plurals." },
-    { id:"articles", level:"A1", title:"Articles", desc:"Master el, la, los, las." },
-    { id:"present_regular", level:"A1", title:"Present Tense — Regular Verbs", desc:"Conjugate -ar, -er, -ir verbs." },
-    { id:"ser_vs_estar", level:"A1", title:"Ser vs Estar", desc:"Permanent vs temporary states." },
-    { id:"adjectives", level:"A2", title:"Adjective Agreement", desc:"Gender and number agreement." },
-    { id:"preterite", level:"A2", title:"Preterite Tense", desc:"Completed past actions." },
-    { id:"pronouns", level:"A2", title:"Pronouns", desc:"Direct and indirect pronouns." },
-    { id:"prepositions", level:"A2", title:"Prepositions", desc:"Common prepositions: en, a, de, con." },
-    { id:"future", level:"B1", title:"Future Tense", desc:"Learn future conjugations." },
-    { id:"imperfect", level:"B1", title:"Imperfect Tense", desc:"Ongoing past actions." },
-    { id:"subjunctive_intro", level:"B1", title:"Intro to Subjunctive", desc:"Basic subjunctive forms." }
-];
-const grammarIcons = {
-    gender:"🎭", articles:"📚", present_regular:"⚙️", ser_vs_estar:"🔮",
-    adjectives:"🎨", preterite:"⏳", pronouns:"🧠", prepositions:"🧭",
-    future:"🚀", imperfect:"📜", subjunctive_intro:"🌀"
-};
-function renderGrammarLessons(){
-    const box = document.getElementById("grammar-lessons");
-    if(!box) return;
-    box.innerHTML = "";
-    grammarLessons.forEach(lesson=>{
-        const icon = grammarIcons[lesson.id] || "📘";
-        box.innerHTML += `
-            <div class="grammar-card">
-                <div class="grammar-title">${icon} ${lesson.title}</div>
-                <div class="grammar-level">Level: ${lesson.level}</div>
-                <div class="grammar-desc">${lesson.desc}</div>
-                <button class="grammar-start-btn" onclick="startGrammarLesson('${lesson.id}')">
-                    Start Lesson
+            <!-- BUTTON -->
+            <div style="margin-top:16px;">
+                <button class="primary-btn" onclick="startDailyPractice()">
+                    Start Daily Practice
                 </button>
             </div>
-        `;
+
+        </div>
+        <!-- ============================
+             BADGES TAB
+        ============================ -->
+        <div class="tab-content hidden" id="badges">
+
+            <h3>Achievement Badges</h3>
+
+            <p class="tab-instruction">
+                <span class="tab-instruction-icon">🏅</span>
+                Earn badges by completing learning milestones.
+            </p>
+
+            <div id="badge-area"
+                 style="display:grid; grid-template-columns:repeat(auto-fit,minmax(200px,1fr)); gap:14px;">
+            </div>
+
+        </div>
+
+
+
+        <!-- ============================
+             GRAMMAR MODE TAB
+        ============================ -->
+        <div class="tab-content hidden" id="grammar">
+
+            <h3>Grammar Mode</h3>
+
+            <p class="tab-instruction">
+                <span class="tab-instruction-icon">📘</span>
+                Learn grammar through simple examples and visual icons.
+            </p>
+
+            <div id="grammar-area"></div>
+
+        </div>
+
+
+
+        <!-- ============================
+             SCENARIOS TAB
+        ============================ -->
+        <div class="tab-content hidden" id="scenario">
+
+            <h3>Real‑World Scenarios</h3>
+
+            <p class="tab-instruction">
+                <span class="tab-instruction-icon">🌍</span>
+                Practice Spanish in real situations using guided prompts.
+            </p>
+
+            <!-- SCENARIO SELECTOR -->
+            <select id="scenario-select"
+                    class="input-field"
+                    onchange="loadScenario(this.value)"
+                    style="max-width:260px;">
+                <option value="">Choose a scenario…</option>
+                <option value="cafe">Café</option>
+                <option value="hotel">Hotel</option>
+                <option value="shopping">Shopping</option>
+                <option value="transport">Transport</option>
+                <option value="restaurant">Restaurant</option>
+                <option value="emergency">Emergency</option>
+                <option value="directions">Directions</option>
+                <option value="phone">Phone Call</option>
+                <option value="grocery">Grocery Store</option>
+                <option value="pharmacy">Pharmacy</option>
+            </select>
+
+            <!-- SCENARIO BOX -->
+            <div id="scenario-box"
+                 style="margin-top:16px;">
+            </div>
+
+            <!-- BUTTONS -->
+            <div style="margin-top:16px; display:flex; gap:10px; flex-wrap:wrap;">
+                <button class="primary-btn" onclick="checkScenario()">Check</button>
+                <button class="secondary-btn" onclick="nextScenario()">Next</button>
+            </div>
+
+        </div>
+<script>
+// ============================
+// CORE DATA STRUCTURES
+// ============================
+
+// A1 VOCABULARY (you can extend to 300 words)
+const A1_WORDS = [
+    { en: "hello", es: "hola" },
+    { en: "goodbye", es: "adiós" },
+    { en: "please", es: "por favor" },
+    { en: "thank you", es: "gracias" },
+    { en: "yes", es: "sí" },
+    { en: "no", es: "no" },
+    { en: "excuse me", es: "perdón" },
+    { en: "sorry", es: "lo siento" },
+    { en: "bathroom", es: "baño" },
+    { en: "water", es: "agua" },
+    { en: "food", es: "comida" },
+    { en: "coffee", es: "café" },
+    { en: "tea", es: "té" },
+    { en: "hotel", es: "hotel" },
+    { en: "room", es: "habitación" },
+    { en: "key", es: "llave" },
+    { en: "ticket", es: "billete" },
+    { en: "train", es: "tren" },
+    { en: "bus", es: "autobús" },
+    { en: "airport", es: "aeropuerto" },
+    { en: "left", es: "izquierda" },
+    { en: "right", es: "derecha" },
+    { en: "straight", es: "recto" },
+    { en: "today", es: "hoy" },
+    { en: "tomorrow", es: "mañana" },
+    { en: "yesterday", es: "ayer" },
+    { en: "morning", es: "mañana" },
+    { en: "night", es: "noche" },
+    { en: "friend", es: "amigo" },
+    { en: "family", es: "familia" }
+    // …extend to 300 words as needed
+];
+
+// SIMPLE A2 / B1 PLACEHOLDERS (structure ready)
+const A2_WORDS = [
+    { en: "appointment", es: "cita" },
+    { en: "meeting", es: "reunión" }
+];
+
+const B1_WORDS = [
+    { en: "responsibility", es: "responsabilidad" },
+    { en: "experience", es: "experiencia" }
+];
+
+// ============================
+// SCENARIO PACKS
+// ============================
+const SCENARIOS = {
+    cafe: {
+        title: "Café",
+        prompt: "Order a coffee and a pastry politely.",
+        example: "Hola, ¿me pone un café con leche y un croissant, por favor?"
+    },
+    hotel: {
+        title: "Hotel",
+        prompt: "Ask for your room key and Wi‑Fi password.",
+        example: "Hola, ¿me puede dar la llave de la habitación y la contraseña del wifi?"
+    },
+    shopping: {
+        title: "Shopping",
+        prompt: "Ask the price of an item and if there is another size.",
+        example: "Perdón, ¿cuánto cuesta esta camiseta? ¿Tiene otra talla?"
+    },
+    transport: {
+        title: "Transport",
+        prompt: "Ask when the next bus to the city leaves.",
+        example: "Disculpe, ¿cuándo sale el próximo autobús al centro?"
+    },
+    restaurant: {
+        title: "Restaurant",
+        prompt: "Order a main dish and ask for the bill.",
+        example: "Quisiera la paella de marisco, por favor. ¿Me trae la cuenta?"
+    },
+    emergency: {
+        title: "Emergency",
+        prompt: "Say you need help and call an ambulance.",
+        example: "Necesito ayuda, por favor. Llamen a una ambulancia."
+    },
+    directions: {
+        title: "Directions",
+        prompt: "Ask how to get to the train station.",
+        example: "Perdón, ¿cómo llego a la estación de tren?"
+    },
+    phone: {
+        title: "Phone Call",
+        prompt: "Introduce yourself and ask to speak to a friend.",
+        example: "Hola, soy Marcos. ¿Puedo hablar con Ana, por favor?"
+    },
+    grocery: {
+        title: "Grocery Store",
+        prompt: "Ask where the bread and milk are.",
+        example: "Perdón, ¿dónde están el pan y la leche?"
+    },
+    pharmacy: {
+        title: "Pharmacy",
+        prompt: "Say you have a headache and ask for medicine.",
+        example: "Tengo dolor de cabeza. ¿Me puede dar algo para el dolor?"
+    }
+};
+
+// ============================
+// GRAMMAR LESSONS
+// ============================
+const GRAMMAR_LESSONS = [
+    {
+        title: "Ser vs Estar (To Be)",
+        icon: "🧩",
+        description: "Use 'ser' for permanent things and 'estar' for temporary states.",
+        examples: [
+            "Soy australiano. (I am Australian — permanent)",
+            "Estoy cansado. (I am tired — temporary)"
+        ]
+    },
+    {
+        title: "Gender & Articles",
+        icon: "⚖️",
+        description: "Most nouns ending in -o are masculine, -a are feminine.",
+        examples: [
+            "El libro (the book — masculine)",
+            "La mesa (the table — feminine)"
+        ]
+    },
+    {
+        title: "Present Tense -AR Verbs",
+        icon: "⏰",
+        description: "Drop -ar and add -o, -as, -a, -amos, -áis, -an.",
+        examples: [
+            "Yo hablo (I speak)",
+            "Nosotros hablamos (We speak)"
+        ]
+    },
+    {
+        title: "Question Words",
+        icon: "❓",
+        description: "Common question words to build basic questions.",
+        examples: [
+            "¿Dónde? (Where?)",
+            "¿Cuándo? (When?)",
+            "¿Por qué? (Why?)"
+        ]
+    }
+];
+
+// ============================
+// BADGES
+// ============================
+const BADGES = [
+    {
+        id: "a1-complete",
+        name: "A1 Completed",
+        description: "Finish all A1 core tasks.",
+        icon: "✅"
+    },
+    {
+        id: "daily-7",
+        name: "7‑Day Streak",
+        description: "Practice every day for 7 days.",
+        icon: "🔥"
+    },
+    {
+        id: "listener",
+        name: "Active Listener",
+        description: "Complete 50 listening items.",
+        icon: "🎧"
+    },
+    {
+        id: "speaker",
+        name: "Confident Speaker",
+        description: "Complete 50 conversation replies.",
+        icon: "💬"
+    }
+];
+
+// ============================
+// DAILY PRACTICE TASKS
+// ============================
+const DAILY_TASKS = [
+    { id: "listen-10", label: "Listen to 10 words", points: 2 },
+    { id: "flash-10",  label: "Review 10 flashcards", points: 2 },
+    { id: "quiz-10",   label: "Answer 10 quiz items", points: 2 },
+    { id: "build-3",   label: "Build 3 sentences", points: 2 },
+    { id: "conv-3",    label: "Write 3 conversation replies", points: 2 },
+    { id: "smart-1",   label: "Complete 1 smart conversation", points: 2 }
+];
+
+// ============================
+// SMART CONVERSATION PROMPTS
+// ============================
+const SMART_PROMPTS = [
+    {
+        prompt: "You arrive at a café in Madrid. Order something to drink and something to eat.",
+        hint: "Use 'quisiera' or 'me pone' to sound polite."
+    },
+    {
+        prompt: "You are checking into a hotel. Ask about breakfast time and Wi‑Fi.",
+        hint: "Ask '¿a qué hora es el desayuno?' and '¿cuál es la contraseña del wifi?'"
+    },
+    {
+        prompt: "You are lost in the city. Ask someone how to get to the main square.",
+        hint: "Start with 'Perdón, ¿cómo llego a...?'"
+    }
+];
+
+</script>
+<script>
+// =====================================================
+// PART 10B — LEARNING ENGINES
+// =====================================================
+
+// -----------------------------------------------------
+// FLASHCARDS ENGINE
+// -----------------------------------------------------
+function loadFlashcards(words) {
+    const area = document.getElementById("flash-area");
+    area.innerHTML = "";
+
+    words.forEach(w => {
+        const card = document.createElement("div");
+        card.style.padding = "20px";
+        card.style.borderRadius = "var(--radius)";
+        card.style.border = "1px solid var(--border)";
+        card.style.background = "var(--card)";
+        card.style.backdropFilter = "var(--glass)";
+        card.style.boxShadow = "var(--shadow)";
+        card.style.cursor = "pointer";
+        card.style.textAlign = "center";
+        card.style.transition = "0.3s";
+
+        let showing = "en";
+        card.innerHTML = w.en;
+
+        card.onclick = () => {
+            showing = showing === "en" ? "es" : "en";
+            card.innerHTML = w[showing];
+            speak(w[showing]);
+        };
+
+        area.appendChild(card);
     });
 }
-const grammarQuestions = {
-    gender:[
-        {q:"Make plural: el libro",a:"los libros"},
-        {q:"Make plural: la casa",a:"las casas"}
-    ],
-    articles:[
-        {q:"Correct article: ___ mesa",a:"la"},
-        {q:"Correct article: ___ perro",a:"el"}
-    ],
-    present_regular:[
-        {q:"Conjugate: yo hablar",a:"hablo"},
-        {q:"Conjugate: tú comer",a:"comes"}
-    ],
-    ser_vs_estar:[
-        {q:"Yo ___ feliz",a:"estoy"},
-        {q:"Ella ___ doctora",a:"es"}
-    ],
-    adjectives:[
-        {q:"Correct adjective: casa (blanco)",a:"blanca"},
-        {q:"Correct adjective: perros (rojo)",a:"rojos"}
-    ],
-    preterite:[
-        {q:"yo hablar (preterite)",a:"hablé"},
-        {q:"ellos comer (preterite)",a:"comieron"}
-    ],
-    pronouns:[
-        {q:"Yo veo el coche → Yo ___ veo",a:"lo"},
-        {q:"Ella compra la fruta → Ella ___ compra",a:"la"}
-    ],
-    prepositions:[
-        {q:"Estoy ___ la casa",a:"en"},
-        {q:"Vamos ___ Madrid",a:"a"}
-    ],
-    future:[
-        {q:"yo hablar (future)",a:"hablaré"},
-        {q:"tú vivir (future)",a:"vivirás"}
-    ],
-    imperfect:[
-        {q:"yo comer (imperfect)",a:"comía"},
-        {q:"ellos vivir (imperfect)",a:"vivían"}
-    ],
-    subjunctive_intro:[
-        {q:"yo hablar (subjunctive)",a:"hable"},
-        {q:"tú comer (subjunctive)",a:"comas"}
-    ]
-};
-let currentGrammarLesson = null;
-let currentGrammarQuestion = null;
-function startGrammarLesson(id){
-    currentGrammarLesson = id;
-    const lesson = grammarLessons.find(l=>l.id===id);
-    document.getElementById("grammar-practice-title").innerText = `Practice: ${lesson.title}`;
-    document.getElementById("grammar-feedback").innerText = "";
-    document.getElementById("grammar-answer").value = "";
-    loadGrammarQuestion();
-    showTab("grammar-practice", { target: document.querySelector("[onclick*='grammar']") });
-}
-function loadGrammarQuestion(){
-    const list = grammarQuestions[currentGrammarLesson];
-    currentGrammarQuestion = list[Math.floor(Math.random()*list.length)];
-    document.getElementById("grammar-practice-question").innerText = currentGrammarQuestion.q;
-    document.getElementById("grammar-answer").value = "";
-    document.getElementById("grammar-feedback").innerText = "";
-}
-const grammarXPReward = 40;
-function addGrammarXP(){
-    if(typeof addXP === "function"){
-        addXP(grammarXPReward);
-    }
-}
-let grammarCorrectCount = 0;
-let grammarBadgeUnlocked = false;
-function checkGrammarBadge(){
-    if(grammarCorrectCount >= 20 && !grammarBadgeUnlocked){
-        grammarBadgeUnlocked = true;
-        saveGrammarBadge();
-        speak("Insignia de gramática desbloqueada");
-        grammarBadgeCelebration();
-    }
-}
-function saveGrammarBadge(){
-    localStorage.setItem("grammarBadge",JSON.stringify({
-        grammarBadgeUnlocked,
-        grammarCorrectCount
-    }));
-}
-function loadGrammarBadge(){
-    const saved = JSON.parse(localStorage.getItem("grammarBadge"));
-    if(saved){
-        grammarBadgeUnlocked = saved.grammarBadgeUnlocked;
-        grammarCorrectCount = saved.grammarCorrectCount;
-    }
-}
-function grammarBadgeCelebration(){
-    for(let i=0;i<30;i++){
-        const c=document.createElement("div");
-        c.classList.add("confetti");
-        c.style.left=Math.random()*100+"%";
-        c.style.background="#f59e0b";
-        document.body.appendChild(c);
-        setTimeout(()=>c.remove(),1500);
-    }
-}
-let grammarCertificateUnlocked = false;
-function checkGrammarCertificate(){
-    if(grammarCorrectCount >= 50 && !grammarCertificateUnlocked){
-        grammarCertificateUnlocked = true;
-        saveGrammarCertificate();
-        unlockLevelCertificate("B1");
-        speak("Certificado de gramática desbloqueado");
-    }
-}
-function saveGrammarCertificate(){
-    localStorage.setItem("grammarCertificate",JSON.stringify({
-        grammarCertificateUnlocked
-    }));
-}
-function loadGrammarCertificate(){
-    const saved = JSON.parse(localStorage.getItem("grammarCertificate"));
-    if(saved){
-        grammarCertificateUnlocked = saved.grammarCertificateUnlocked;
-    }
-}
-function submitGrammarAnswer(){
-    const user = document.getElementById("grammar-answer").value.trim().toLowerCase();
-    const correct = currentGrammarQuestion.a.toLowerCase();
-    if(user === correct){
-        document.getElementById("grammar-feedback").innerText = "✅ Correct!";
-        speak("Correcto");
-        addGrammarXP();
-        grammarCorrectCount++;
-        checkGrammarBadge();
-        checkGrammarCertificate();
-        loadGrammarQuestion();
-    } else {
-        document.getElementById("grammar-feedback").innerText =
-            `❌ Incorrect. Correct answer: ${currentGrammarQuestion.a}`;
-        speak("Incorrecto");
-    }
-    saveGrammarBadge();
-    saveGrammarCertificate();
-}
-function dailyGrammarTask(){
-    const keys = Object.keys(grammarQuestions);
-    const lesson = keys[Math.floor(Math.random()*keys.length)];
-    const qs = grammarQuestions[lesson];
-    return qs[Math.floor(Math.random()*qs.length)];
+
+// -----------------------------------------------------
+// QUIZ ENGINE
+// -----------------------------------------------------
+let quizIndex = 0;
+let quizScore = 0;
+
+function loadQuiz(words) {
+    quizIndex = 0;
+    quizScore = 0;
+
+    const area = document.getElementById("quiz-area");
+    area.innerHTML = "";
+
+    words.forEach((w, i) => {
+        const row = document.createElement("div");
+        row.style.marginBottom = "10px";
+
+        row.innerHTML = `
+            <strong>${w.en}</strong><br>
+            <input class="input-field" id="quiz-${i}" placeholder="Spanish...">
+        `;
+
+        area.appendChild(row);
+    });
 }
 
-/* DAILY PRACTICE */
-let dailyData = null;
-function generateDailySet(){
-    const today = new Date().toLocaleDateString();
-    const saved = JSON.parse(localStorage.getItem("dailyPractice"));
-    if(saved && saved.date === today && saved.level === currentLevel){
-        dailyData = saved;
+function checkQuiz(words) {
+    let correct = 0;
+
+    words.forEach((w, i) => {
+        const val = document.getElementById(`quiz-${i}`).value.trim().toLowerCase();
+        if (val === w.es.toLowerCase()) correct++;
+    });
+
+    quizScore = Math.round((correct / words.length) * 100);
+    document.getElementById("score-board").innerText = `Quiz Score: ${quizScore}%`;
+
+    if (quizScore >= 80) fireConfetti();
+}
+
+// -----------------------------------------------------
+// SENTENCE BUILDER ENGINE
+// -----------------------------------------------------
+let buildIndex = 0;
+
+function loadBuild(words) {
+    const target = document.getElementById("build-target");
+    const bank = document.getElementById("build-bank");
+    const input = document.getElementById("build-input");
+
+    const sample = [
+        "hola amigo",
+        "gracias por todo",
+        "quiero agua por favor",
+        "dónde está el baño"
+    ];
+
+    const sentence = sample[buildIndex % sample.length];
+    target.innerText = sentence;
+
+    input.value = "";
+    bank.innerHTML = "";
+
+    sentence.split(" ").sort(() => Math.random() - 0.5).forEach(word => {
+        const pill = document.createElement("span");
+        pill.className = "word-pill";
+        pill.innerText = word;
+        pill.onclick = () => input.value += (input.value ? " " : "") + word;
+        bank.appendChild(pill);
+    });
+}
+
+function checkBuild() {
+    const target = document.getElementById("build-target").innerText.trim();
+    const val = document.getElementById("build-input").value.trim();
+    const fb = document.getElementById("build-feedback");
+
+    if (val === target) {
+        fb.innerText = "Perfect! ✔️";
+        fb.style.color = "#22c55e";
+        fireConfetti();
+    } else {
+        fb.innerText = "Not quite. Try again.";
+        fb.style.color = "var(--muted)";
+    }
+}
+
+function nextBuild() {
+    buildIndex++;
+    loadBuild(A1_WORDS);
+    document.getElementById("build-feedback").innerText = "";
+}
+
+// -----------------------------------------------------
+// CONVERSATION BUILDER ENGINE
+// -----------------------------------------------------
+let convIndex = 0;
+
+function loadConversation() {
+    const prompts = [
+        "Hola, ¿cómo estás?",
+        "¿Qué quieres comer?",
+        "¿Dónde vives?",
+        "¿Qué haces hoy?"
+    ];
+
+    const prompt = prompts[convIndex % prompts.length];
+    document.getElementById("conv-prompt").innerText = prompt;
+
+    const bank = document.getElementById("conv-bank");
+    const input = document.getElementById("conv-input");
+
+    bank.innerHTML = "";
+    input.value = "";
+
+    const words = ["estoy", "bien", "quiero", "vivir", "hoy", "comer", "en", "la", "ciudad"];
+    words.sort(() => Math.random() - 0.5).forEach(w => {
+        const pill = document.createElement("span");
+        pill.className = "word-pill";
+        pill.innerText = w;
+        pill.onclick = () => input.value += (input.value ? " " : "") + w;
+        bank.appendChild(pill);
+    });
+}
+
+function checkConv() {
+    const val = document.getElementById("conv-input").value.trim();
+    const fb = document.getElementById("conv-feedback");
+
+    if (val.length < 5) {
+        fb.innerText = "Try writing a fuller reply.";
+        fb.style.color = "var(--muted)";
         return;
     }
-    const d = getData();
-    dailyData = {
-        date: today,
-        level: currentLevel,
-        words: shuffle(d.words).slice(0,5),
-        flash: shuffle(d.words).slice(0,3),
-        quiz: shuffle(d.words).slice(0,2),
-        build: shuffle(d.sentences)[0],
-        conv: shuffle(d.conversations)[0],
-        grammar: dailyGrammarTask(),
-        buildAttempts: 0,
-        convAttempts: 0,
-        score: 0
-    };
-    localStorage.setItem("dailyPractice", JSON.stringify(dailyData));
-}
-function renderDaily(){
-    generateDailySet();
-    document.getElementById('daily-date').innerText =
-        "Today's Practice: " + dailyData.date;
-    document.getElementById('daily-words').innerHTML =
-        dailyData.words.map(w=>`${w.es} - ${w.en}`).join('<br>');
-    document.getElementById('daily-flash').innerHTML =
-        dailyData.flash.map(w=>`<div class="card"
-            onclick="this.innerText=(this.innerText=='${w.en}'?'${w.es}':'${w.en}')">${w.en}</div>`
-        ).join('');
-    document.getElementById('daily-quiz').innerHTML =
-        dailyData.quiz.map((w,i)=>`
-            <div class="quiz-row">
-                <span>${w.en}</span>
-                <input id="dq${i}" 
-                       onkeydown="if(event.key==='Enter') checkDailyQuiz('${w.es}','dq${i}','df${i}')">
-                <span id="df${i}"></span>
-            </div>`).join('');
-    document.getElementById('daily-build-en').innerText =
-        "Build: " + dailyData.build.en;
-    const d = getData();
-    document.getElementById('daily-build-bank').innerHTML =
-        d.words.map(w=>`<span class="word-pill"
-            onclick="document.getElementById('daily-build-box').innerText+=' ${w.es}'">${w.es}</span>`
-        ).join('');
-    document.getElementById('daily-conv-q').innerText =
-        dailyData.conv.q;
-    document.getElementById('daily-conv-bank').innerHTML =
-        d.words.map(w=>`<span class="word-pill"
-            onclick="document.getElementById('daily-conv-box').innerText+=' ${w.es}'">${w.es}</span>`
-        ).join('');
-    document.getElementById('daily-grammar-q').innerText =
-        "Grammar: " + dailyData.grammar.q;
-    updateDailyScore();
-}
-function checkDailyQuiz(ans,inputId,feedId){
-    const isCorrect = document.getElementById(inputId).value.toLowerCase() === ans.toLowerCase();
-    document.getElementById(feedId).innerText = isCorrect ? "✅" : "❌";
-    if(isCorrect) dailyData.score++;
-    saveDaily();
-}
-function checkDailyBuild(){
-    const user = document.getElementById('daily-build-box').innerText.trim().replace(/\s+/g,' ');
-    const correct = dailyData.build.target.replace(/ /g,' ');
-    if(user === correct){
-        if(dailyData.buildAttempts === 0) dailyData.score += 2;
-        document.getElementById('daily-build-feedback').innerText = "Correct!";
-    } else {
-        dailyData.buildAttempts++;
-        document.getElementById('daily-build-feedback').innerText =
-            `Attempts: ${dailyData.buildAttempts}/3`;
-    }
-    saveDaily();
-}
-function checkDailyConv(){
-    const user = document.getElementById('daily-conv-box').innerText.trim().replace(/\s+/g,' ');
-    const correct = dailyData.conv.target.replace(/ /g,' ');
-    if(user === correct){
-        if(dailyData.convAttempts === 0) dailyData.score += 2;
-        document.getElementById('daily-conv-feedback').innerText = "Correct!";
-    } else {
-        dailyData.convAttempts++;
-        document.getElementById('daily-conv-feedback').innerText =
-            `Attempts: ${dailyData.convAttempts}/3`;
-    }
-    saveDaily();
-}
-function checkDailyGrammar(){
-    const user = document.getElementById('daily-grammar-answer').value.trim().toLowerCase();
-    const correct = dailyData.grammar.a.toLowerCase();
-    if(user === correct){
-        dailyData.score += 2;
-        document.getElementById('daily-grammar-feedback').innerText = "Correct!";
-    } else {
-        document.getElementById('daily-grammar-feedback').innerText =
-            `Incorrect. Correct answer: ${dailyData.grammar.a}`;
-    }
-    saveDaily();
-}
-function updateDailyScore(){
-    document.getElementById('daily-score').innerText =
-        "Daily Score: " + dailyData.score + "/12";
-}
-function saveDaily(){
-    localStorage.setItem("dailyPractice", JSON.stringify(dailyData));
-    updateDailyScore();
-}
-function shuffle(arr){
-    return [...arr].sort(()=>Math.random()-0.5);
+
+    fb.innerText = "Nice reply! ✔️";
+    fb.style.color = "#22c55e";
+    fireConfetti();
 }
 
-/* SCENARIOS */
-const scenarioData = {
-    cafe:{
-        desc:"Order coffee and food politely in a café.",
-        target:"Quiero un café y pan, por favor"
-    },
-    travel:{
-        desc:"Ask about your room and location at a hotel.",
-        target:"Dónde está mi habitación en el hotel"
-    },
-    shopping:{
-        desc:"Ask for the price and size of an item.",
-        target:"Cuánto cuesta y qué talla es"
-    }
-};
-function loadScenario(key){
-    const s = scenarioData[key];
-    document.getElementById("scenario-desc").innerText = s.desc;
-    const d = getData();
-    document.getElementById("scenario-word-bank").innerHTML =
-        d.words.map(w=>`<span class="word-pill"
-            onclick="document.getElementById('scenario-box').innerText+=' ${w.es}'">${w.es}</span>`
-        ).join('');
-    document.getElementById("scenario-box").innerText = "";
-    document.getElementById("scenario-feedback").innerText = "";
-}
-function submitScenario(){
-    const key = document.getElementById("scenario-select").value;
-    const correct = scenarioData[key].target.replace(/ /g,' ');
-    const user = document.getElementById("scenario-box").innerText.trim().replace(/\s+/g,' ');
-    if(user === correct){
-        document.getElementById("scenario-feedback").innerText = "✅ Natural reply!";
-        speak("Muy bien, suena natural");
-        logEnjoyment("scenario", true);
-    } else {
-        document.getElementById("scenario-feedback").innerText =
-            "❌ Try again. Think about a natural café / travel / shopping phrase.";
-        logEnjoyment("scenario", false);
-    }
-    maybeSuggestModeChange();
+function nextConv() {
+    convIndex++;
+    loadConversation();
+    document.getElementById("conv-feedback").innerText = "";
 }
 
-/* AUTO‑PLAY LISTENING */
-let autoPlayIndex = 0;
-let autoPlayActive = false;
-let autoPlayPaused = false;
-function autoPlayListen(){
-    if(autoPlayActive) return;
-    autoPlayActive = true;
-    autoPlayPaused = false;
-    autoPlayIndex = 0;
-    const words = getData().words.map(w => w.es);
-    playNextWord(words);
+// -----------------------------------------------------
+// SMART CONVERSATION ENGINE
+// -----------------------------------------------------
+let smartIndex = 0;
+
+function loadSmart() {
+    const data = SMART_PROMPTS[smartIndex % SMART_PROMPTS.length];
+    document.getElementById("smart-prompt").innerText = data.prompt;
+    document.getElementById("smart-input").value = "";
+    document.getElementById("smart-feedback").innerText = "";
 }
-function playNextWord(words){
-    if(!autoPlayActive) return;
-    if(autoPlayIndex >= words.length){
-        autoPlayActive = false;
-        speak("Fin de la lista");
+
+function checkSmart() {
+    const val = document.getElementById("smart-input").value.trim();
+    const fb = document.getElementById("smart-feedback");
+
+    if (val.length < 10) {
+        fb.innerText = "Try writing a fuller reply.";
+        fb.style.color = "var(--muted)";
         return;
     }
-    const word = words[autoPlayIndex];
-    const rate = document.getElementById('rate').value;
-    const utter = new SpeechSynthesisUtterance(word);
-    utter.lang = "es-MX";
-    utter.rate = rate;
-    utter.onend = () => {
-        if(autoPlayPaused) return;
-        autoPlayIndex++;
-        setTimeout(() => playNextWord(words), 600);
-    };
+
+    fb.innerText = "Great! Your reply is natural and clear. ✔️";
+    fb.style.color = "#22c55e";
+    fireConfetti();
+}
+
+function nextSmart() {
+    smartIndex++;
+    loadSmart();
+}
+
+// -----------------------------------------------------
+// DAILY PRACTICE ENGINE
+// -----------------------------------------------------
+let dailyScore = 0;
+
+function startDailyPractice() {
+    const area = document.getElementById("daily-area");
+    area.innerHTML = "";
+
+    DAILY_TASKS.forEach(task => {
+        const card = document.createElement("div");
+        card.className = "card";
+        card.innerHTML = `
+            <div class="card-title">${task.label}</div>
+            <button class="primary-btn" onclick="completeDailyTask('${task.id}', ${task.points})">
+                Complete
+            </button>
+        `;
+        area.appendChild(card);
+    });
+}
+
+function completeDailyTask(id, points) {
+    dailyScore += points;
+    document.getElementById("daily-score").innerText = `${dailyScore} / 12`;
+
+    if (dailyScore >= 12) fireConfetti();
+}
+
+</script>
+<script>
+// =====================================================
+// PART 10C — SYSTEM LAYER
+// =====================================================
+
+// -----------------------------------------------------
+// AUDIO ENGINE
+// -----------------------------------------------------
+function speak(text) {
+    const utter = new SpeechSynthesisUtterance(text);
+    utter.rate = parseFloat(document.getElementById("rate").value);
+    utter.lang = "es-ES";
     speechSynthesis.speak(utter);
 }
-function stopAutoPlay(){
+
+// Auto-play listening
+let autoPlayIndex = 0;
+let autoPlayActive = false;
+
+function autoPlayListen() {
+    autoPlayActive = true;
+    autoPlayIndex = 0;
+    autoPlayLoop();
+}
+
+function autoPlayLoop() {
+    if (!autoPlayActive) return;
+
+    const words = A1_WORDS;
+    if (autoPlayIndex >= words.length) {
+        autoPlayActive = false;
+        return;
+    }
+
+    speak(words[autoPlayIndex].es);
+    autoPlayIndex++;
+
+    setTimeout(autoPlayLoop, 1200);
+}
+
+function pauseAutoPlay() {
     autoPlayActive = false;
-    autoPlayPaused = false;
-    speechSynthesis.cancel();
-}
-function pauseAutoPlay(){
-    if(!autoPlayActive) return;
-    autoPlayPaused = true;
-    speechSynthesis.pause();
-}
-function resumeAutoPlay(){
-    if(!autoPlayActive) return;
-    autoPlayPaused = false;
-    speechSynthesis.resume();
 }
 
-/* CELEBRATION */
-function launchCelebration() {
-    const banner = document.getElementById('celebration-banner');
-    banner.style.display = 'block';
-    setTimeout(() => banner.style.display = 'none', 3000);
+function resumeAutoPlay() {
+    if (!autoPlayActive) {
+        autoPlayActive = true;
+        autoPlayLoop();
+    }
+}
+
+function stopAutoPlay() {
+    autoPlayActive = false;
+    autoPlayIndex = 0;
+}
+
+// -----------------------------------------------------
+// CONFETTI ENGINE
+// -----------------------------------------------------
+function fireConfetti() {
     for (let i = 0; i < 40; i++) {
-        const confetti = document.createElement('div');
-        confetti.classList.add('confetti');
-        confetti.style.backgroundColor =
-            ['#ef4444','#f59e0b','#10b981','#3b82f6','#8b5cf6'][Math.floor(Math.random()*5)];
-        confetti.style.left = (50 + (Math.random()*40 - 20)) + '%';
-        const size = Math.random()*12 + 6;
-        confetti.style.width = size + 'px';
-        confetti.style.height = size + 'px';
-        document.body.appendChild(confetti);
-        setTimeout(() => confetti.remove(), 2000);
-    }
-    speak("Excelente trabajo");
-}
+        const c = document.createElement("div");
+        c.className = "confetti";
+        c.style.left = Math.random() * window.innerWidth + "px";
+        c.style.backgroundColor = `hsl(${Math.random()*360}, 80%, 60%)`;
+        document.body.appendChild(c);
 
-/* TABS + SWIPE */
-function showTab(id,event){
-    document.querySelectorAll('.tab-content').forEach(t=>t.classList.add('hidden'));
-    document.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('active'));
-    document.getElementById(id).classList.remove('hidden');
-    event.target.classList.add('active');
-    if(id === "badges") renderBadges();
-    if(id === "grammar") renderGrammarLessons();
-    if(id === "certificates") renderCertificates();
-    if(id === "scenario") loadScenario(document.getElementById("scenario-select").value || "cafe");
-}
-let touchStartX = 0;
-let touchEndX = 0;
-document.addEventListener("touchstart", e => {
-    touchStartX = e.changedTouches[0].screenX;
-});
-document.addEventListener("touchend", e => {
-    touchEndX = e.changedTouches[0].screenX;
-    handleSwipe();
-});
-function handleSwipe(){
-    const diff = touchEndX - touchStartX;
-    if(Math.abs(diff) < 50) return;
-    const tabs = [
-        "listen","flash","quiz","build","conv",
-        "smart","daily","badges","grammar","scenario","certificates"
-    ];
-    const activeIndex = tabs.findIndex(id =>
-        !document.getElementById(id).classList.contains("hidden")
-    );
-    if(activeIndex === -1) return;
-    let newIndex = activeIndex;
-    if(diff < 0) newIndex++;
-    if(diff > 0) newIndex--;
-    if(newIndex < 0 || newIndex >= tabs.length) return;
-    const nextTab = tabs[newIndex];
-    const btn = [...document.querySelectorAll(".tab-btn")]
-        .find(b => b.textContent.toLowerCase().includes(nextTab));
-    if(btn){
-        showTab(nextTab, { target: btn });
+        setTimeout(() => c.remove(), 2000);
     }
 }
 
-/* BADGES RENDERER */
-function renderBadges(){
-    const box = document.getElementById("badge-list");
-    if(!box) return;
-    box.innerHTML = `
-        <p>A1 Master: ${badges.a1_master ? "✅" : "❌"}</p>
-        <p>A2 Master: ${badges.a2_master ? "✅" : "❌"}</p>
-        <p>B1 Master: ${badges.b1_master ? "✅" : "❌"}</p>
-        <p>Quiz Master: ${badges.quiz_master ? "✅" : "❌"}</p>
-        <p>Builder Pro: ${badges.builder_pro ? "✅" : "❌"}</p>
-        <p>Conversation Ace: ${badges.conversation_ace ? "✅" : "❌"}</p>
-        <p>Smart Champ: ${badges.smart_champ ? "✅" : "❌"}</p>
-    `;
+// -----------------------------------------------------
+// TAB SWITCHING
+// -----------------------------------------------------
+function showTab(tab, event) {
+    document.querySelectorAll(".tab-content").forEach(t => t.classList.add("hidden"));
+    document.getElementById(tab).classList.remove("hidden");
+
+    document.querySelectorAll(".tab-btn").forEach(btn => btn.classList.remove("active"));
+    event.target.classList.add("active");
+
+    if (tab === "listen") loadListen();
+    if (tab === "flash") loadFlashcards(A1_WORDS);
+    if (tab === "quiz") loadQuiz(A1_WORDS);
+    if (tab === "build") loadBuild(A1_WORDS);
+    if (tab === "conv") loadConversation();
+    if (tab === "smart") loadSmart();
+    if (tab === "daily") startDailyPractice();
+    if (tab === "badges") loadBadges();
+    if (tab === "grammar") loadGrammar();
 }
 
-/* CERTIFICATES */
-function renderCertificates(){
-    const box = document.getElementById("certificate-list");
-    if(!box) return;
-    box.innerHTML = "";
-    ["A1","A2","B1"].forEach(level=>{
-        const unlocked = certificates[level];
-        box.innerHTML += `
-            <div class="certificate-card">
-                <div class="certificate-title">CEFR Certificate — ${level}</div>
-                <div class="certificate-level">
-                    Status: ${unlocked ? "Unlocked 🎉" : "Locked 🔒"}
-                </div>
-                ${unlocked ? `
-                    <button class="certificate-btn" onclick="downloadCertificate('${level}')">
-                        Download PDF
-                    </button>
-                ` : ""}
-            </div>
+// -----------------------------------------------------
+// LEVEL SWITCHING
+// -----------------------------------------------------
+function changeLevel(level) {
+    const status = document.getElementById("level-status");
+
+    if (level === "A1") {
+        status.innerText = "Current Level: A1";
+        loadListen();
+    }
+
+    if (level === "A2") {
+        status.innerText = "A2 is locked 🔒";
+    }
+
+    if (level === "B1") {
+        status.innerText = "B1 is locked 🔒";
+    }
+}
+
+// -----------------------------------------------------
+// LISTEN TAB LOADER
+// -----------------------------------------------------
+function loadListen() {
+    const list = document.getElementById("listen-list");
+    list.innerHTML = "";
+
+    A1_WORDS.forEach(w => {
+        const pill = document.createElement("span");
+        pill.className = "word-pill";
+        pill.innerText = `${w.en} → ${w.es}`;
+        pill.onclick = () => speak(w.es);
+        list.appendChild(pill);
+    });
+}
+
+// -----------------------------------------------------
+// BADGES LOADER
+// -----------------------------------------------------
+function loadBadges() {
+    const area = document.getElementById("badge-area");
+    area.innerHTML = "";
+
+    BADGES.forEach(b => {
+        const card = document.createElement("div");
+        card.className = "card";
+        card.innerHTML = `
+            <div class="card-title">${b.icon} ${b.name}</div>
+            <p style="color:var(--muted); font-size:14px;">${b.description}</p>
         `;
+        area.appendChild(card);
     });
 }
-function downloadCertificate(level){
-    const certHTML = `
-        <div style="
-            width: 800px;
-            padding: 40px;
-            background: #fffef2;
-            border: 4px solid #facc15;
-            border-radius: 20px;
-            text-align: center;
-            font-family: 'Inter';
-        ">
-            <h1 style="font-size: 40px; margin-bottom: 10px;">CEFR Certificate</h1>
-            <h2 style="font-size: 28px; margin-bottom: 20px;">Level ${level}</h2>
-            <p style="font-size: 20px; margin-bottom: 30px;">
-                This certifies that the learner has successfully completed the CEFR ${level} Spanish module.
-            </p>
-            <p style="font-size: 18px;">Awarded on: ${new Date().toLocaleDateString()}</p>
-        </div>
+
+// -----------------------------------------------------
+// GRAMMAR LOADER
+// -----------------------------------------------------
+function loadGrammar() {
+    const area = document.getElementById("grammar-area");
+    area.innerHTML = "";
+
+    GRAMMAR_LESSONS.forEach(g => {
+        const card = document.createElement("div");
+        card.className = "grammar-card";
+
+        let examplesHTML = "";
+        g.examples.forEach(ex => {
+            examplesHTML += `<li>${ex}</li>`;
+        });
+
+        card.innerHTML = `
+            <div class="grammar-title">${g.icon} ${g.title}</div>
+            <div class="grammar-desc">${g.description}</div>
+            <ul>${examplesHTML}</ul>
+        `;
+
+        area.appendChild(card);
+    });
+}
+
+// -----------------------------------------------------
+// SCENARIO ENGINE
+// -----------------------------------------------------
+function loadScenario(key) {
+    const box = document.getElementById("scenario-box");
+
+    if (!key) {
+        box.innerHTML = "";
+        return;
+    }
+
+    const s = SCENARIOS[key];
+
+    box.innerHTML = `
+        <strong>${s.title}</strong><br><br>
+        <em>${s.prompt}</em><br><br>
+        <strong>Example:</strong><br>
+        ${s.example}
     `;
-    const temp = document.createElement("div");
-    temp.innerHTML = certHTML;
-    document.body.appendChild(temp);
-    html2canvas(temp).then(canvas=>{
-        const img = canvas.toDataURL("image/png");
-        const pdf = new jsPDF("p","mm","a4");
-        const width = pdf.internal.pageSize.getWidth();
-        const height = (canvas.height * width) / canvas.width;
-        pdf.addImage(img, "PNG", 0, 0, width, height);
-        pdf.save(`CEFR_${level}_Certificate.pdf`);
-        temp.remove();
-    });
-}
-function unlockLevelCertificate(level){
-    if(!certificates[level]){
-        certificates[level] = true;
-        saveCertificates();
-        speak("Certificado desbloqueado");
-        launchCelebration();
-        renderCertificates();
-    }
 }
 
-/* DASHBOARD / LEVEL UNLOCK */
-function updateDashboard(){
-    const qPercent=qTotal===0?0:Math.round((qCorrect/qTotal)*100);
-    const bPercent=Math.round((bScore/15)*100);
-    const cPercent=Math.round((cScore/15)*100);
-    const sPercent=Math.round((smartScore/15)*100);
-    const combined=Math.round((qPercent+bPercent+cPercent+sPercent)/4);
-    document.getElementById('quiz-status').innerText=
-        qPercent>=90?`Passed (${qPercent}%)`:`Retry (${qPercent}%)`;
-    document.getElementById('build-status').innerText=
-        bPercent>=90?`Passed (${bPercent}%)`:`Retry (${bPercent}%)`;
-    document.getElementById('final-verdict').innerText=
-        combined>=90?"Course Status: PASSED (Celebration!)":
-                      "Course Status: Needs Improvement";
-    if(combined>=90){
-        if(!unlockedLevels.includes("A2")){
-            unlockedLevels.push("A2");
-            unlockLevelCertificate("A1");
-            speak("Has desbloqueado el nivel A2");
-        } else if(!unlockedLevels.includes("B1")){
-            unlockedLevels.push("B1");
-            unlockLevelCertificate("A2");
-            speak("Has desbloqueado el nivel B1");
-        } else {
-            unlockLevelCertificate("B1");
-        }
-    }
-    updateLevelUI();
-    checkCEFRMasteryBadges();
-    saveProgress();
+function checkScenario() {
+    fireConfetti();
 }
 
-/* INIT + NAV */
-function init(){
-    loadProgress();
-    loadGrammarBadge();
-    loadGrammarCertificate();
-    loadCertificates();
-    updateLevelUI();
-    const d=getData();
-    document.getElementById('listen-list').innerHTML=
-        d.words.map(w=>`<div><button onclick="speak('${w.es}')">🔊</button> ${w.es} - ${w.en}</div>`).join('');
-    document.getElementById('flash-area').innerHTML=
-        d.words.map(w=>`<div class="card"
-            onclick="this.innerText=(this.innerText=='${w.en}'?'${w.es}':'${w.en}');
-                     if(this.innerText=='${w.es}') speak('${w.es}')">${w.en}</div>`).join('');
-    renderQuiz();
-    renderBuild();
-    renderConv();
-    renderSmart();
-    renderDaily();
-    renderBadges();
-    renderGrammarLessons();
-    renderCertificates();
-    loadScenario("cafe");
+function nextScenario() {
+    document.getElementById("scenario-box").innerHTML = "";
+    document.getElementById("scenario-select").value = "";
 }
-function openApp(){
+
+// -----------------------------------------------------
+// CERTIFICATES ENGINE
+// -----------------------------------------------------
+function generateCertificate(level) {
+    const area = document.getElementById("cert-area");
+    const card = document.createElement("div");
+    card.className = "certificate-card";
+
+    card.innerHTML = `
+        <div class="certificate-title">Certificate of Completion</div>
+        <p>You have completed level ${level} of the Spanish CEFR Mastery Portal.</p>
+        <p style="color:var(--muted);">Issued on ${new Date().toLocaleDateString()}</p>
+    `;
+
+    area.appendChild(card);
+}
+
+// -----------------------------------------------------
+// INITIALIZATION
+// -----------------------------------------------------
+function openApp() {
     document.getElementById("dashboard-view").classList.add("hidden");
     document.getElementById("learning-view").classList.remove("hidden");
+    loadListen();
 }
-function goBack(){
+
+function goBack() {
     document.getElementById("learning-view").classList.add("hidden");
     document.getElementById("dashboard-view").classList.remove("hidden");
-    updateDashboard();
 }
-init();
+
 </script>
 </body>
 </html>
+
