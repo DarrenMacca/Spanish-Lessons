@@ -78,12 +78,22 @@
 
             <div>
                 <div class="section-title">Level & Audio</div>
+
+                <!-- Level Selector -->
                 <select id="level-select" onchange="changeLevel(this.value)" class="input-field">
                     <option value="A1">A1 (Unlocked)</option>
                     <option value="A2">A2 (Unlocked)</option>
                     <option value="B1">B1 (Unlocked)</option>
                 </select>
                 <span id="level-status">Current Level: A1</span>
+
+                <!-- Voice Selector (NEW) -->
+                <div style="margin-top: 12px;">
+                    <select id="voice-select" class="input-field">
+                        <option value="female">Female (LatAm)</option>
+                        <option value="male">Male (LatAm)</option>
+                    </select>
+                </div>
             </div>
 
             <div>
@@ -133,10 +143,10 @@
         <!-- Certificate Overlay -->
         <div id="certificate-overlay" class="hidden">
             <div id="certificate-overlay-bg" style="
-    position: absolute;
-    inset: 0;
-    background: rgba(0,0,0,0.45);
-"></div>
+                position: absolute;
+                inset: 0;
+                background: rgba(0,0,0,0.45);
+            "></div>
 
             <div id="certificate-overlay-content">
                 <button class="close-cert-btn" onclick="closeCertificate()">Close</button>
