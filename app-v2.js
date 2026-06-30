@@ -371,8 +371,8 @@ function resumeAutoPlay() {
 }
 
 /* ============================
-   FLASHCARDS ENGINE (SIMPLE)
-   Lazy‑Loading Compatible
+   FLASHCARDS — FINAL VERSION
+   Animated Flip + Grid View
 ============================ */
 
 function renderFlashcardsTab() {
@@ -383,51 +383,43 @@ function renderFlashcardsTab() {
 
     container.innerHTML = `
         <h3>Flashcards (${currentLevel})</h3>
-        <p>Tap the card to flip between Spanish ↔ English.</p>
+        <p>Tap any card to flip between Spanish ↔ English.</p>
 
-        <div id="flash-card" class="word-pill" style="font-size:20px; padding:20px;"></div>
-
-        <div style="margin-top:15px;">
-            <button class="secondary-btn" id="flash-prev">Prev</button>
-            <button class="primary-btn" id="flash-next">Next</button>
+        <div id="flash-grid"
+             style="display:grid; grid-template-columns:repeat(auto-fill, minmax(160px, 1fr)); gap:20px; margin-top:20px;">
         </div>
     `;
 
-    let index = 0;
-    let showingSpanish = true;
+    const grid = document.getElementById("flash-grid");
 
-    const card = document.getElementById("flash-card");
-    const prevBtn = document.getElementById("flash-prev");
-    const nextBtn = document.getElementById("flash-next");
+    words.forEach(item => {
+        const wrapper = document.createElement("div");
+        wrapper.className = "flip-wrapper";
 
-    function updateCard() {
-        const item = words[index];
-        if (!item) {
-            card.textContent = "No flashcards available.";
-            return;
-        }
-        card.textContent = showingSpanish ? item.es : item.en;
-    }
+        const card = document.createElement("div");
+        card.className = "flip-card";
 
-    card.onclick = () => {
-        showingSpanish = !showingSpanish;
-        updateCard();
-    };
+        const front = document.createElement("div");
+        front.className = "flip-face flip-front word-pill";
+        front.textContent = item.es;
 
-    prevBtn.onclick = () => {
-        index = (index - 1 + words.length) % words.length;
-        showingSpanish = true;
-        updateCard();
-    };
+        const back = document.createElement("div");
+        back.className = "flip-face flip-back word-pill";
+        back.textContent = item.en;
 
-    nextBtn.onclick = () => {
-        index = (index + 1) % words.length;
-        showingSpanish = true;
-        updateCard();
-    };
+        card.appendChild(front);
+        card.appendChild(back);
+        wrapper.appendChild(card);
 
-    updateCard();
+        wrapper.onclick = () => {
+            card.classList.toggle("flipped");
+        };
+
+        grid.appendChild(wrapper);
+    });
 }
+
+
 
 /* ============================
    BLENDED QUIZ ENGINE
