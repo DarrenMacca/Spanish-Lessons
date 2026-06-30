@@ -12,42 +12,168 @@ let convCount = 0;
 ============================ */
 
 const LEVEL_WORDS = {
+
+    /* ============================
+       A1 — Beginner Vocabulary
+       (Core + Everyday Packs)
+    ============================ */
+
     A1: [
+
+        // Core greetings & basics
         { en: "hello", es: "hola" },
         { en: "goodbye", es: "adiós" },
         { en: "please", es: "por favor" },
         { en: "thank you", es: "gracias" },
         { en: "yes", es: "sí" },
         { en: "no", es: "no" },
+        { en: "sorry", es: "lo siento" },
+        { en: "excuse me", es: "perdón" },
+
+        // People & pronouns
+        { en: "I", es: "yo" },
+        { en: "you", es: "tú" },
+        { en: "he", es: "él" },
+        { en: "she", es: "ella" },
+        { en: "we", es: "nosotros" },
+        { en: "they", es: "ellos" },
+
+        // Common nouns
         { en: "water", es: "agua" },
         { en: "food", es: "comida" },
+        { en: "coffee", es: "café" },
+        { en: "tea", es: "té" },
+        { en: "milk", es: "leche" },
+        { en: "bread", es: "pan" },
         { en: "bathroom", es: "baño" },
-        { en: "hotel", es: "hotel" }
-    ],
-    A2: [
+        { en: "hotel", es: "hotel" },
+        { en: "room", es: "habitación" },
+        { en: "key", es: "llave" },
+        { en: "table", es: "mesa" },
+        { en: "chair", es: "silla" },
+
+        // Café pack
+        { en: "menu", es: "menú" },
+        { en: "bill", es: "cuenta" },
+        { en: "waiter", es: "camarero" },
+        { en: "I want", es: "quiero" },
         { en: "I would like", es: "me gustaría" },
-        { en: "reservation", es: "reserva" },
+
+        // Travel basics
+        { en: "bus", es: "autobús" },
+        { en: "train", es: "tren" },
+        { en: "ticket", es: "boleto" },
+        { en: "station", es: "estación" },
+        { en: "airport", es: "aeropuerto" },
+
+        // Shopping basics
+        { en: "how much?", es: "¿cuánto cuesta?" },
+        { en: "cheap", es: "barato" },
+        { en: "expensive", es: "caro" },
+        { en: "open", es: "abierto" },
+        { en: "closed", es: "cerrado" },
+
+        // Emergency basics
+        { en: "help", es: "ayuda" },
+        { en: "doctor", es: "doctor" },
+        { en: "police", es: "policía" },
+        { en: "I am lost", es: "estoy perdido" }
+    ],
+
+    /* ============================
+       A2 — Elementary Vocabulary
+       (Core + Everyday Packs)
+    ============================ */
+
+    A2: [
+
+        // Core communication
+        { en: "I need", es: "necesito" },
+        { en: "I am looking for", es: "busco" },
+        { en: "I don't understand", es: "no entiendo" },
+        { en: "can you help me?", es: "¿puede ayudarme?" },
+
+        // Food & restaurant
         { en: "breakfast", es: "desayuno" },
         { en: "lunch", es: "almuerzo" },
         { en: "dinner", es: "cena" },
-        { en: "train station", es: "estación de tren" },
+        { en: "reservation", es: "reserva" },
+        { en: "table for two", es: "mesa para dos" },
+        { en: "allergic to", es: "alérgico a" },
+
+        // Travel & navigation
         { en: "city center", es: "centro de la ciudad" },
         { en: "pharmacy", es: "farmacia" },
         { en: "supermarket", es: "supermercado" },
-        { en: "I need help", es: "necesito ayuda" }
+        { en: "turn left", es: "gire a la izquierda" },
+        { en: "turn right", es: "gire a la derecha" },
+        { en: "straight ahead", es: "todo recto" },
+
+        // Shopping
+        { en: "receipt", es: "recibo" },
+        { en: "card", es: "tarjeta" },
+        { en: "cash", es: "efectivo" },
+        { en: "discount", es: "descuento" },
+        { en: "size", es: "talla" },
+
+        // Emergencies
+        { en: "I feel sick", es: "me siento enfermo" },
+        { en: "I need a doctor", es: "necesito un doctor" },
+        { en: "I lost my passport", es: "perdí mi pasaporte" },
+
+        // Communication phrases
+        { en: "I think that", es: "creo que" },
+        { en: "I prefer", es: "prefiero" },
+        { en: "I am going to", es: "voy a" },
+        { en: "I want to go", es: "quiero ir" }
     ],
+
+    /* ============================
+       B1 — Intermediate Vocabulary
+       (Core + Real‑World Packs)
+    ============================ */
+
     B1: [
+
+        // Daily life
         { en: "I have been learning Spanish", es: "he estado aprendiendo español" },
         { en: "in my free time", es: "en mi tiempo libre" },
         { en: "I enjoy traveling", es: "disfruto viajar" },
         { en: "I work as a developer", es: "trabajo como desarrollador" },
         { en: "I would like to improve", es: "me gustaría mejorar" },
-        { en: "communication skills", es: "habilidades de comunicación" },
+
+        // Communication
+        { en: "in my opinion", es: "en mi opinión" },
+        { en: "I agree", es: "estoy de acuerdo" },
+        { en: "I disagree", es: "no estoy de acuerdo" },
+        { en: "it depends", es: "depende" },
+
+        // Real situations
         { en: "real situations", es: "situaciones reales" },
         { en: "daily conversations", es: "conversaciones diarias" },
         { en: "future plans", es: "planes futuros" },
-        { en: "past experiences", es: "experiencias pasadas" }
+        { en: "past experiences", es: "experiencias pasadas" },
+
+        // Work & study
+        { en: "meeting", es: "reunión" },
+        { en: "project", es: "proyecto" },
+        { en: "deadline", es: "fecha límite" },
+        { en: "task", es: "tarea" },
+
+        // Travel & emergencies
+        { en: "insurance", es: "seguro" },
+        { en: "accident", es: "accidente" },
+        { en: "lost luggage", es: "equipaje perdido" },
+
+        // Storytelling
+        { en: "I went", es: "fui" },
+        { en: "I saw", es: "vi" },
+        { en: "I did", es: "hice" },
+        { en: "I met", es: "conocí" },
+        { en: "I learned", es: "aprendí" }
     ]
+};
+
     // B2, C1, C2 can be added here later
 };
 
