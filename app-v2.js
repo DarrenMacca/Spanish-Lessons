@@ -1,7 +1,7 @@
 /* ============================
    GLOBAL STATE
 ============================ */
-
+ 
 let currentLevel = "A1";
 let quizScore = 0;
 let buildScore = 0;
