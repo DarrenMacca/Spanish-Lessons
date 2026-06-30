@@ -87,24 +87,28 @@ const SCENARIOS_PACK = {
 };
 
 /* ============================
-   TAB SWITCHING
+   TAB SWITCHING (with smooth transitions)
 ============================ */
 
 function showTab(tabId, event) {
     // Hide all tabs
     document.querySelectorAll(".tab-content").forEach(tab => {
         tab.classList.add("hidden");
+        tab.classList.remove("active-tab");
     });
 
-    // Show selected tab
+    // Show selected tab with smooth transition
     const target = document.getElementById(tabId);
-    target.classList.remove("hidden");
+    if (target) {
+        target.classList.remove("hidden");
+        target.classList.add("active-tab");
+    }
 
     // Update tab button active state
     document.querySelectorAll(".tab-btn").forEach(btn => {
         btn.classList.remove("active");
     });
-    if (event) event.target.classList.add("active");
+    if (event && event.target) event.target.classList.add("active");
 
     // Lazy load content
     renderTab(tabId);
@@ -279,20 +283,17 @@ function renderFlashcardsTab() {
         card.textContent = showingSpanish ? item.es : item.en;
     }
 
-    // Flip card
     card.onclick = () => {
         showingSpanish = !showingSpanish;
         updateCard();
     };
 
-    // Previous card
     prevBtn.onclick = () => {
         index = (index - 1 + words.length) % words.length;
         showingSpanish = true;
         updateCard();
     };
 
-    // Next card
     nextBtn.onclick = () => {
         index = (index + 1) % words.length;
         showingSpanish = true;
@@ -337,7 +338,7 @@ function renderQuizTab() {
 
     function nextQuestion() {
         const item = words[Math.floor(Math.random() * words.length)];
-        const mode = Math.random() < 0.5 ? "mc" : "type"; // 50/50 blend
+        const mode = Math.random() < 0.5 ? "mc" : "type";
 
         if (mode === "mc") {
             renderMultipleChoice(item);
@@ -345,10 +346,6 @@ function renderQuizTab() {
             renderTypeAnswer(item);
         }
     }
-
-    /* ============================
-       MULTIPLE CHOICE MODE
-    ============================= */
 
     function renderMultipleChoice(item) {
         const options = generateOptions(item);
@@ -399,10 +396,6 @@ function renderQuizTab() {
         return arr.sort(() => Math.random() - 0.5);
     }
 
-    /* ============================
-       TYPE‑THE‑ANSWER MODE
-    ============================= */
-
     function renderTypeAnswer(item) {
         area.innerHTML = `
             <div class="quiz-block">
@@ -432,7 +425,6 @@ function renderQuizTab() {
         };
     }
 
-    // Start quiz
     nextQuestion();
     updateScore();
 }
@@ -499,7 +491,6 @@ const SENTENCE_TARGETS = {
     ]
 };
 
-
 function renderBuildTab() {
     const container = document.getElementById("build");
     if (!container) return;
@@ -507,7 +498,6 @@ function renderBuildTab() {
     const words = LEVEL_WORDS[currentLevel] || [];
     const targets = SENTENCE_TARGETS[currentLevel] || [];
 
-    // Pick a random target sentence pattern
     const target = targets[Math.floor(Math.random() * targets.length)];
 
     container.innerHTML = `
@@ -538,10 +528,6 @@ function renderBuildTab() {
     const output = document.getElementById("build-output");
     const feedback = document.getElementById("build-feedback");
 
-    /* ============================
-       WORD BANK (Level‑Aware)
-    ============================= */
-
     words.forEach(w => {
         const pill = document.createElement("span");
         pill.className = "word-pill";
@@ -552,10 +538,6 @@ function renderBuildTab() {
         wordBank.appendChild(pill);
     });
 
-    /* ============================
-       CHECK SENTENCE
-    ============================= */
-
     document.getElementById("build-check").onclick = () => {
         const text = output.value.trim();
         if (!text) {
@@ -563,7 +545,6 @@ function renderBuildTab() {
             return;
         }
 
-        // Basic scoring: length + target keywords
         let score = Math.min(100, text.split(" ").length * 10);
 
         let keywordHits = 0;
@@ -581,18 +562,9 @@ function renderBuildTab() {
 }
 
 /* ============================
-   CONVERSATION
-============================ */
-
-/* ============================
    CONVERSATION BUILDER (CEFR‑Scaled)
    Everyday Dialogue Practice
    Lazy‑Loading Compatible
-============================ */
-
-/* ============================
-   CEFR Conversation Prompts
-   Everyday Dialogue
 ============================ */
 
 const CONVERSATION_PROMPTS = {
@@ -613,7 +585,6 @@ const CONVERSATION_PROMPTS = {
             feedback: "Useful everyday decision making."
         }
     ],
-
     A2: [
         {
             prompt: "¿Qué planes tienes para hoy?",
@@ -631,7 +602,6 @@ const CONVERSATION_PROMPTS = {
             feedback: "Good descriptive practice."
         }
     ],
-
     B1: [
         {
             prompt: "Cuéntame sobre tu trabajo o estudios.",
@@ -651,14 +621,11 @@ const CONVERSATION_PROMPTS = {
     ]
 };
 
-
 function renderConversationTab() {
     const container = document.getElementById("conv");
     if (!container) return;
 
     const prompts = CONVERSATION_PROMPTS[currentLevel] || [];
-
-    // Pick a random conversation prompt
     const prompt = prompts[Math.floor(Math.random() * prompts.length)];
 
     container.innerHTML = `
@@ -686,10 +653,6 @@ function renderConversationTab() {
     const input = document.getElementById("conv-input");
     const feedback = document.getElementById("conv-feedback");
 
-    /* ============================
-       CHECK REPLY
-    ============================= */
-
     document.getElementById("conv-check").onclick = () => {
         const text = input.value.trim();
         if (!text) {
@@ -697,7 +660,6 @@ function renderConversationTab() {
             return;
         }
 
-        // Score based on keyword hits + length
         let score = Math.min(100, text.split(" ").length * 8);
 
         let keywordHits = 0;
@@ -748,7 +710,7 @@ function renderSmartTab() {
     const promptsEl = document.getElementById("smart-prompts");
     prompts.forEach(p => {
         const block = document.createElement("div");
-        block.className = "tab-content";
+        block.className = "tab-content smart-block";
         block.style.marginTop = "8px";
         block.textContent = p;
         promptsEl.appendChild(block);
@@ -836,7 +798,7 @@ function renderGrammarTab() {
     const listEl = document.getElementById("grammar-list");
     items.forEach(g => {
         const block = document.createElement("div");
-        block.className = "tab-content";
+        block.className = "tab-content grammar-block";
         block.style.marginTop = "8px";
         block.innerHTML = `<strong>${g.title}</strong><br>${g.text}`;
         listEl.appendChild(block);
@@ -988,7 +950,24 @@ function goBack() {
 }
 
 /* ============================
-   RENDER ALL TABS
+   RENDER ALL TABS (for level changes)
+============================ */
+
+function renderAllTabs() {
+    renderListenTab();
+    renderFlashcardsTab();
+    renderQuizTab();
+    renderBuildTab();
+    renderConversationTab();
+    renderSmartTab();
+    renderDailyTab();
+    renderBadgesTab();
+    renderGrammarTab();
+    renderScenarioTab();
+}
+
+/* ============================
+   RENDER SINGLE TAB (lazy)
 ============================ */
 
 function renderTab(tabId) {
@@ -1014,10 +993,9 @@ function renderTab(tabId) {
 document.addEventListener("DOMContentLoaded", () => {
     updateDashboard();
 
-    // Set initial level
     const levelSelect = document.getElementById("level-select");
     if (levelSelect) currentLevel = levelSelect.value;
 
-    // Show first tab lazily
-    showTab("listen", { target: document.querySelector(".tab-btn") });
+    const firstTabBtn = document.querySelector(".tab-btn");
+    showTab("listen", { target: firstTabBtn });
 });
