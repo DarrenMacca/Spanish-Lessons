@@ -427,7 +427,8 @@ function speakSpanish(text) {
 }
 
 /* ============================
-   QUIZ ENGINE
+   QUIZ ENGINE — UPGRADED
+   Progress Bar + Review Incorrect Answers
 ============================ */
 
 function renderQuizTab() {
@@ -436,23 +437,189 @@ function renderQuizTab() {
 
     const words = LEVEL_WORDS[currentLevel] || [];
 
+    // Track incorrect answers for review mode
+    let incorrectList = [];
+
+    // Total questions per session
+    const TOTAL_QUESTIONS = 10;
+    let correct = 0;
+    let total = 0;
+
     container.innerHTML = `
         <h3>Quiz (${currentLevel})</h3>
-        <p>Mixed practice: sometimes multiple choice, sometimes type the answer.</p>
+        <p>Mixed practice: multiple choice + type the answer.</p>
+
+        <div id="quiz-progress-wrapper" style="margin:10px 0;">
+            <div id="quiz-progress-bar" style="
+                height: 12px;
+                width: 0%;
+                background: #0ea5e9;
+                border-radius: 8px;
+                transition: width 0.3s ease;
+            "></div>
+        </div>
 
         <div id="quiz-area"></div>
         <div id="quiz-feedback" style="margin-top:10px;"></div>
         <div id="quiz-score-display" style="margin-top:10px;"></div>
-    `;
 
-    let correct = 0;
-    let total = 0;
+        <button id="review-btn" class="secondary-btn hidden" style="margin-top:15px;">
+            Review Incorrect Answers
+        </button>
+
+        <div id="review-area" style="margin-top:15px;"></div>
+    `;
 
     const area = document.getElementById("quiz-area");
     const feedback = document.getElementById("quiz-feedback");
     const scoreDisplay = document.getElementById("quiz-score-display");
+    const progressBar = document.getElementById("quiz-progress-bar");
+    const reviewBtn = document.getElementById("review-btn");
+    const reviewArea = document.getElementById("review-area");
+
+    function updateProgress() {
+        const pct = (total / TOTAL_QUESTIONS) * 100;
+        progressBar.style.width = pct + "%";
+    }
 
     function updateScore() {
-    quizScore = total === 0 ? 0 : Math.round((correct / total) * 100);
-    scoreDisplay.textContent = `Score: ${quizScore}% (${correct}/${total})`;
+        quizScore = total === 0 ? 0 : Math.round((correct / total) * 100);
+        scoreDisplay.textContent = `Score: ${quizScore}% (${correct}/${total})`;
+    }
+
+    function nextQuestion() {
+        if (total >= TOTAL_QUESTIONS) {
+            finishQuiz();
+            return;
+        }
+
+        const item = words[Math.floor(Math.random() * words.length)];
+        const mode = Math.random() < 0.5 ? "mc" : "type";
+
+        if (mode === "mc") {
+            renderMultipleChoice(item);
+        } else {
+            renderTypeAnswer(item);
+        }
+    }
+
+    function finishQuiz() {
+        area.innerHTML = `<h4>Quiz Complete!</h4>`;
+        feedback.textContent = "";
+
+        if (incorrectList.length > 0) {
+            reviewBtn.classList.remove("hidden");
+        }
+    }
+
+    function renderMultipleChoice(item) {
+        const options = generateOptions(item);
+
+        area.innerHTML = `
+            <div class="quiz-block">
+                <strong>Spanish:</strong> ${item.es}
+                <p>Select the correct English translation:</p>
+                <div id="mc-options"></div>
+            </div>
+        `;
+
+        const optContainer = document.getElementById("mc-options");
+
+        options.forEach(opt => {
+            const btn = document.createElement("button");
+            btn.className = "secondary-btn";
+            btn.style.margin = "5px";
+            btn.textContent = opt;
+
+            btn.onclick = () => {
+                total++;
+                updateProgress();
+
+                if (opt === item.en) {
+                    correct++;
+                    feedback.textContent = "✅ Correct!";
+                } else {
+                    feedback.textContent = `❌ Incorrect. Correct answer: ${item.en}`;
+                    incorrectList.push({ es: item.es, correct: item.en });
+                }
+
+                updateScore();
+                setTimeout(nextQuestion, 600);
+            };
+
+            optContainer.appendChild(btn);
+        });
+    }
+
+    function generateOptions(correctItem) {
+        const words = LEVEL_WORDS[currentLevel];
+        const options = [correctItem.en];
+
+        while (options.length < 4) {
+            const random = words[Math.floor(Math.random() * words.length)].en;
+            if (!options.includes(random)) options.push(random);
+        }
+
+        return shuffle(options);
+    }
+
+    function shuffle(arr) {
+        return arr.sort(() => Math.random() - 0.5);
+    }
+
+    function renderTypeAnswer(item) {
+        area.innerHTML = `
+            <div class="quiz-block">
+                <strong>Spanish:</strong> ${item.es}
+                <p>Type the English translation:</p>
+                <input id="quiz-input" class="input-field" placeholder="English answer">
+                <button class="primary-btn" id="quiz-submit">Submit</button>
+            </div>
+        `;
+
+        const input = document.getElementById("quiz-input");
+        const submit = document.getElementById("quiz-submit");
+
+        submit.onclick = () => {
+            const ans = input.value.trim().toLowerCase();
+            total++;
+            updateProgress();
+
+            if (ans === item.en.toLowerCase()) {
+                correct++;
+                feedback.textContent = "✅ Correct!";
+            } else {
+                feedback.textContent = `❌ Incorrect. Correct answer: ${item.en}`;
+                incorrectList.push({ es: item.es, correct: item.en });
+            }
+
+            updateScore();
+            setTimeout(nextQuestion, 600);
+        };
+    }
+
+    /* ============================
+       REVIEW INCORRECT ANSWERS
+    ============================ */
+
+    reviewBtn.onclick = () => {
+        reviewArea.innerHTML = `
+            <h4>Review Incorrect Answers</h4>
+            <p>Tap to hear pronunciation.</p>
+        `;
+
+        incorrectList.forEach(item => {
+            const block = document.createElement("div");
+            block.className = "word-pill";
+            block.style.marginTop = "8px";
+            block.textContent = `${item.es} → ${item.correct}`;
+            block.onclick = () => speakSpanish(item.es);
+            reviewArea.appendChild(block);
+        });
+    };
+
+    nextQuestion();
+    updateScore();
+    updateProgress();
 }
+
