@@ -132,7 +132,12 @@
 
         <!-- Certificate Overlay -->
         <div id="certificate-overlay" class="hidden">
-            <div id="certificate-overlay-bg" onclick="closeCertificate()"></div>
+            <div id="certificate-overlay-bg" style="
+    position: absolute;
+    inset: 0;
+    background: rgba(0,0,0,0.45);
+"></div>
+
             <div id="certificate-overlay-content">
                 <button class="close-cert-btn" onclick="closeCertificate()">Close</button>
                 <div id="certificate-preview-area"></div>
