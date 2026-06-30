@@ -1,15 +1,15 @@
-// ============================
-// GLOBAL STATE
-// ============================
+/* ============================
+   GLOBAL STATE
+============================ */
 
 let currentLevel = "A1";
 let quizScore = 0;
 let buildScore = 0;
 let convCount = 0;
 
-// ============================
-// DATA PACKS (A1 / A2 / B1)
-// ============================
+/* ============================
+   DATA PACKS
+============================ */
 
 const LEVEL_WORDS = {
     A1: [
@@ -56,12 +56,12 @@ const GRAMMAR_PACK = {
         { title: "Gender & Number", text: "Most nouns ending in -o are masculine, -a are feminine. Adjectives agree in gender and number." }
     ],
     A2: [
-        { title: "Past Tense (pretérito)", text: "Use pretérito for completed actions in the past: 'ayer', 'el año pasado', etc." },
+        { title: "Past Tense (pretérito)", text: "Use pretérito for completed actions in the past." },
         { title: "Future with 'ir a'", text: "Use 'ir a + infinitive' to talk about near future: 'voy a estudiar'." }
     ],
     B1: [
-        { title: "Present Perfect", text: "Use 'he + participio' to talk about experiences: 'he viajado', 'he comido'." },
-        { title: "Subjunctive (intro)", text: "Use subjunctive after expressions of doubt, desire, or emotion: 'quiero que', 'es posible que'." }
+        { title: "Present Perfect", text: "Use 'he + participio' to talk about experiences." },
+        { title: "Subjunctive (intro)", text: "Use subjunctive after doubt, desire, or emotion." }
     ]
 };
 
@@ -69,59 +69,59 @@ const SCENARIOS_PACK = {
     A1: [
         "Ordering a coffee in a café.",
         "Asking for the bathroom in a restaurant.",
-        "Checking into a hotel and asking for the Wi‑Fi password."
+        "Checking into a hotel and asking for Wi‑Fi."
     ],
     A2: [
-        "Making a restaurant reservation for two people at 8pm.",
-        "Explaining a simple problem at the pharmacy.",
+        "Making a restaurant reservation.",
+        "Explaining a problem at the pharmacy.",
         "Asking for directions to the city center."
     ],
     B1: [
-        "Talking about your job and daily routine.",
-        "Explaining your plans for the weekend.",
-        "Describing a past trip and what you enjoyed."
+        "Talking about your job and routine.",
+        "Explaining weekend plans.",
+        "Describing a past trip."
     ]
 };
 
-// ============================
-// TAB SWITCHING
-// ============================
+/* ============================
+   TAB SWITCHING
+============================ */
 
 function showTab(tabId, event) {
-    const contents = document.querySelectorAll(".tab-content");
-    contents.forEach(c => c.classList.add("hidden"));
+    document.querySelectorAll(".tab-content").forEach(tab => {
+        tab.classList.add("hidden");
+    });
 
-    const target = document.getElementById(tabId);
-    if (target) target.classList.remove("hidden");
+    document.getElementById(tabId).classList.remove("hidden");
 
-    const buttons = document.querySelectorAll(".tab-btn");
-    buttons.forEach(b => b.classList.remove("active"));
-    if (event && event.target) event.target.classList.add("active");
+    document.querySelectorAll(".tab-btn").forEach(btn => {
+        btn.classList.remove("active");
+    });
+
+    if (event) event.target.classList.add("active");
 }
 
-// ============================
-// LEVEL HANDLING
-// ============================
+/* ============================
+   LEVEL SWITCHING
+============================ */
 
 function changeLevel(level) {
     currentLevel = level;
-    const status = document.getElementById("level-status");
-    if (status) status.textContent = `Current Level: ${level}`;
+    document.getElementById("level-status").textContent = `Current Level: ${level}`;
     renderAllTabs();
 }
 
-// ============================
-// LISTEN ENGINE
-// ============================
+/* ============================
+   LISTEN ENGINE
+============================ */
 
 function renderListenTab() {
     const container = document.getElementById("listen");
-    if (!container) return;
+    const words = LEVEL_WORDS[currentLevel];
 
-    const words = LEVEL_WORDS[currentLevel] || [];
     container.innerHTML = `
         <h3>Listen & Repeat (${currentLevel})</h3>
-        <p>Select a word or phrase and press play.</p>
+        <p>Select a word and press play.</p>
         <div id="listen-list"></div>
         <button class="primary-btn" id="listen-play">Play Selected</button>
     `;
@@ -132,39 +132,32 @@ function renderListenTab() {
         btn.className = "word-pill";
         btn.textContent = `${w.es} (${w.en})`;
         btn.dataset.index = idx;
-        btn.onclick = () => {
-            container.dataset.selectedIndex = idx;
-        };
+        btn.onclick = () => container.dataset.selectedIndex = idx;
         list.appendChild(btn);
     });
 
-    const playBtn = container.querySelector("#listen-play");
-    playBtn.onclick = () => {
-        const idx = parseInt(container.dataset.selectedIndex || "0", 10);
+    document.getElementById("listen-play").onclick = () => {
+        const idx = container.dataset.selectedIndex || 0;
         const item = words[idx];
-        if (!item) return;
-        const rateSlider = document.getElementById("rate");
-        const rate = rateSlider ? parseFloat(rateSlider.value) : 1;
+        const rate = parseFloat(document.getElementById("rate").value);
         const utter = new SpeechSynthesisUtterance(item.es);
         utter.lang = "es-ES";
         utter.rate = rate;
-        window.speechSynthesis.speak(utter);
+        speechSynthesis.speak(utter);
     };
 }
 
-// ============================
-// FLASHCARDS ENGINE
-// ============================
+/* ============================
+   FLASHCARDS ENGINE
+============================ */
 
 function renderFlashcardsTab() {
     const container = document.getElementById("flash");
-    if (!container) return;
+    const words = LEVEL_WORDS[currentLevel];
 
-    const words = LEVEL_WORDS[currentLevel] || [];
     container.innerHTML = `
         <h3>Flashcards (${currentLevel})</h3>
-        <p>Tap to flip between English and Spanish.</p>
-        <div id="flash-card" class="tab-content-inner"></div>
+        <div id="flash-card" class="word-pill"></div>
         <div style="margin-top:10px;">
             <button class="secondary-btn" id="flash-prev">Prev</button>
             <button class="primary-btn" id="flash-next">Next</button>
@@ -174,34 +167,25 @@ function renderFlashcardsTab() {
     let index = 0;
     let showingEs = true;
 
-    const card = container.querySelector("#flash-card");
+    const card = document.getElementById("flash-card");
 
     function updateCard() {
         const item = words[index];
-        if (!item) {
-            card.textContent = "No cards available.";
-            return;
-        }
         card.textContent = showingEs ? item.es : item.en;
     }
 
-    card.classList.add("word-pill");
-    card.style.display = "inline-block";
     card.onclick = () => {
         showingEs = !showingEs;
         updateCard();
     };
 
-    const prevBtn = container.querySelector("#flash-prev");
-    const nextBtn = container.querySelector("#flash-next");
-
-    prevBtn.onclick = () => {
+    document.getElementById("flash-prev").onclick = () => {
         index = (index - 1 + words.length) % words.length;
         showingEs = true;
         updateCard();
     };
 
-    nextBtn.onclick = () => {
+    document.getElementById("flash-next").onclick = () => {
         index = (index + 1) % words.length;
         showingEs = true;
         updateCard();
@@ -210,246 +194,213 @@ function renderFlashcardsTab() {
     updateCard();
 }
 
-// ============================
-// QUIZ ENGINE
-// ============================
+/* ============================
+   QUIZ ENGINE
+============================ */
 
 function renderQuizTab() {
     const container = document.getElementById("quiz");
-    if (!container) return;
+    const words = LEVEL_WORDS[currentLevel];
 
-    const words = LEVEL_WORDS[currentLevel] || [];
     container.innerHTML = `
         <h3>Quiz (${currentLevel})</h3>
-        <p>Translate the Spanish word into English.</p>
         <div id="quiz-question"></div>
-        <input id="quiz-answer" class="input-field" placeholder="Type the English translation">
+        <input id="quiz-answer" class="input-field" placeholder="English translation">
         <button class="primary-btn" id="quiz-submit">Submit</button>
-        <div id="quiz-feedback" style="margin-top:8px;"></div>
-        <div id="quiz-score-display" style="margin-top:8px;"></div>
+        <div id="quiz-feedback"></div>
+        <div id="quiz-score-display"></div>
     `;
 
-    let currentIndex = 0;
-    let correctCount = 0;
-    let totalCount = 0;
+    let index = 0;
+    let correct = 0;
+    let total = 0;
 
-    const questionEl = container.querySelector("#quiz-question");
-    const answerEl = container.querySelector("#quiz-answer");
-    const feedbackEl = container.querySelector("#quiz-feedback");
-    const scoreEl = container.querySelector("#quiz-score-display");
-    const submitBtn = container.querySelector("#quiz-submit");
+    const qEl = document.getElementById("quiz-question");
+    const aEl = document.getElementById("quiz-answer");
+    const fEl = document.getElementById("quiz-feedback");
+    const sEl = document.getElementById("quiz-score-display");
 
-    function loadQuestion() {
-        if (words.length === 0) {
-            questionEl.textContent = "No quiz items available.";
-            return;
-        }
-        const item = words[currentIndex];
-        questionEl.textContent = `Spanish: ${item.es}`;
-        answerEl.value = "";
-        feedbackEl.textContent = "";
+    function loadQ() {
+        qEl.textContent = `Spanish: ${words[index].es}`;
+        aEl.value = "";
+        fEl.textContent = "";
     }
 
     function updateScore() {
-        if (totalCount === 0) {
-            scoreEl.textContent = "Score: 0%";
-            quizScore = 0;
-            return;
-        }
-        quizScore = Math.round((correctCount / totalCount) * 100);
-        scoreEl.textContent = `Score: ${quizScore}% (${correctCount}/${totalCount})`;
+        quizScore = total === 0 ? 0 : Math.round((correct / total) * 100);
+        sEl.textContent = `Score: ${quizScore}% (${correct}/${total})`;
     }
 
-    submitBtn.onclick = () => {
-        const item = words[currentIndex];
-        if (!item) return;
-        const userAns = answerEl.value.trim().toLowerCase();
-        const correctAns = item.en.toLowerCase();
-        totalCount++;
+    document.getElementById("quiz-submit").onclick = () => {
+        const item = words[index];
+        const ans = aEl.value.trim().toLowerCase();
+        total++;
 
-        if (userAns === correctAns) {
-            correctCount++;
-            feedbackEl.textContent = "✅ Correct!";
+        if (ans === item.en.toLowerCase()) {
+            correct++;
+            fEl.textContent = "Correct!";
         } else {
-            feedbackEl.textContent = `❌ Incorrect. Correct answer: ${item.en}`;
+            fEl.textContent = `Incorrect. Answer: ${item.en}`;
         }
 
         updateScore();
-        currentIndex = (currentIndex + 1) % words.length;
-        loadQuestion();
+        index = (index + 1) % words.length;
+        loadQ();
     };
 
-    loadQuestion();
+    loadQ();
     updateScore();
 }
 
-// ============================
-// SENTENCE BUILDER ENGINE
-// ============================
+/* ============================
+   SENTENCE BUILDER
+============================ */
 
 function renderBuildTab() {
     const container = document.getElementById("build");
-    if (!container) return;
+    const words = LEVEL_WORDS[currentLevel];
 
     container.innerHTML = `
         <h3>Sentence Builder (${currentLevel})</h3>
-        <p>Build a simple sentence using the words below.</p>
         <div id="build-words"></div>
-        <textarea id="build-output" class="input-field" rows="3" placeholder="Type your sentence here..."></textarea>
-        <button class="primary-btn" id="build-check">Check Sentence</button>
-        <div id="build-feedback" style="margin-top:8px;"></div>
+        <textarea id="build-output" class="input-field" rows="3"></textarea>
+        <button class="primary-btn" id="build-check">Check</button>
+        <div id="build-feedback"></div>
     `;
 
-    const words = LEVEL_WORDS[currentLevel] || [];
-    const wordsEl = container.querySelector("#build-words");
-    const outputEl = container.querySelector("#build-output");
-    const feedbackEl = container.querySelector("#build-feedback");
-    const checkBtn = container.querySelector("#build-check");
+    const wEl = document.getElementById("build-words");
+    const oEl = document.getElementById("build-output");
+    const fEl = document.getElementById("build-feedback");
 
     words.forEach(w => {
         const pill = document.createElement("span");
         pill.className = "word-pill";
         pill.textContent = w.es;
-        pill.onclick = () => {
-            outputEl.value = (outputEl.value + " " + w.es).trim();
-        };
-        wordsEl.appendChild(pill);
+        pill.onclick = () => oEl.value += (oEl.value ? " " : "") + w.es;
+        wEl.appendChild(pill);
     });
 
-    checkBtn.onclick = () => {
-        const text = outputEl.value.trim();
+    document.getElementById("build-check").onclick = () => {
+        const text = oEl.value.trim();
         if (!text) {
-            feedbackEl.textContent = "Write or build a sentence first.";
+            fEl.textContent = "Write a sentence first.";
             return;
         }
         buildScore = Math.min(100, text.split(" ").length * 10);
-        feedbackEl.textContent = `Nice! Estimated strength: ${buildScore}% (based on length and use of words).`;
+        fEl.textContent = `Estimated strength: ${buildScore}%`;
     };
 }
 
-// ============================
-// CONVERSATION ENGINE
-// ============================
+/* ============================
+   CONVERSATION
+============================ */
 
 function renderConversationTab() {
     const container = document.getElementById("conv");
-    if (!container) return;
 
     container.innerHTML = `
-        <h3>Conversation Builder (${currentLevel})</h3>
-        <p>Write a short dialogue using the vocabulary.</p>
-        <textarea id="conv-input" class="input-field" rows="4" placeholder="Write a short conversation in Spanish..."></textarea>
-        <button class="primary-btn" id="conv-save">Save Conversation</button>
-        <div id="conv-feedback" style="margin-top:8px;"></div>
+        <h3>Conversation (${currentLevel})</h3>
+        <textarea id="conv-input" class="input-field" rows="4"></textarea>
+        <button class="primary-btn" id="conv-save">Save</button>
+        <div id="conv-feedback"></div>
     `;
 
-    const inputEl = container.querySelector("#conv-input");
-    const feedbackEl = container.querySelector("#conv-feedback");
-    const saveBtn = container.querySelector("#conv-save");
+    const input = document.getElementById("conv-input");
+    const feedback = document.getElementById("conv-feedback");
 
-    saveBtn.onclick = () => {
-        const text = inputEl.value.trim();
-        if (!text) {
-            feedbackEl.textContent = "Write something first.";
+    document.getElementById("conv-save").onclick = () => {
+        if (!input.value.trim()) {
+            feedback.textContent = "Write something first.";
             return;
         }
         convCount++;
-        feedbackEl.textContent = `Conversation saved. Total conversations: ${convCount}.`;
+        feedback.textContent = `Saved. Total: ${convCount}`;
     };
 }
 
-// ============================
-// SMART CONVERSATION PROMPTS
-// ============================
+/* ============================
+   SMART CONVERSATION
+============================ */
 
 function renderSmartTab() {
     const container = document.getElementById("smart");
-    if (!container) return;
-
-    container.innerHTML = `
-        <h3>Smart Conversation (${currentLevel})</h3>
-        <p>Use these prompts with an AI chat to practice real dialogue.</p>
-        <div id="smart-prompts"></div>
-    `;
-
-    const promptsEl = container.querySelector("#smart-prompts");
 
     const prompts = {
         A1: [
-            "Pretend you are a friendly barista in Spain. Speak only in simple Spanish. Help me order coffee.",
-            "You are a hotel receptionist. Help me check in and ask basic questions in Spanish."
+            "Pretend you are a barista in Spain. Speak only in simple Spanish.",
+            "You are a hotel receptionist. Help me check in."
         ],
         A2: [
-            "You are a restaurant waiter. Help me make a reservation and order food using A2 Spanish.",
-            "You are a local guide. Help me ask for directions and talk about the city."
+            "You are a waiter. Help me make a reservation.",
+            "You are a local guide. Help me ask for directions."
         ],
         B1: [
-            "You are a colleague at work. Have a conversation with me about my job and daily routine.",
-            "You are a friend. Talk with me about past trips and future plans in B1 Spanish."
+            "You are a colleague. Talk with me about work.",
+            "You are a friend. Discuss past trips and future plans."
         ]
-    }[currentLevel] || [];
+    }[currentLevel];
 
+    container.innerHTML = `
+        <h3>Smart Conversation (${currentLevel})</h3>
+        <div id="smart-prompts"></div>
+    `;
+
+    const list = document.getElementById("smart-prompts");
     prompts.forEach(p => {
-        const block = document.createElement("div");
-        block.className = "tab-content";
-        block.style.marginTop = "8px";
-        block.textContent = p;
-        promptsEl.appendChild(block);
+        const div = document.createElement("div");
+        div.className = "tab-content";
+        div.textContent = p;
+        list.appendChild(div);
     });
 }
 
-// ============================
-// DAILY PRACTICE ENGINE
-// ============================
+/* ============================
+   DAILY PRACTICE
+============================ */
 
 function renderDailyTab() {
     const container = document.getElementById("daily");
-    if (!container) return;
-
-    container.innerHTML = `
-        <h3>Daily Practice (${currentLevel})</h3>
-        <p>Simple daily tasks to keep Spanish active.</p>
-        <ul id="daily-list"></ul>
-    `;
-
-    const listEl = container.querySelector("#daily-list");
 
     const tasks = {
         A1: [
-            "Say hello and goodbye in Spanish 5 times today.",
-            "Label 5 objects at home with Spanish words.",
-            "Listen to one short Spanish song and catch 3 words."
+            "Say hello and goodbye in Spanish 5 times.",
+            "Label 5 objects at home.",
+            "Listen to a Spanish song and catch 3 words."
         ],
         A2: [
-            "Write a short paragraph about your day in Spanish.",
-            "Order something (even imaginary) in Spanish.",
-            "Describe your room using at least 5 adjectives."
+            "Write a short paragraph about your day.",
+            "Order something in Spanish.",
+            "Describe your room using 5 adjectives."
         ],
         B1: [
-            "Write a short story about a past trip.",
-            "Record yourself talking about your job for 2 minutes.",
-            "Explain your weekend plans in Spanish and listen back."
+            "Write a story about a past trip.",
+            "Record yourself talking about your job.",
+            "Explain your weekend plans."
         ]
-    }[currentLevel] || [];
+    }[currentLevel];
 
+    container.innerHTML = `
+        <h3>Daily Practice (${currentLevel})</h3>
+        <ul id="daily-list"></ul>
+    `;
+
+    const list = document.getElementById("daily-list");
     tasks.forEach(t => {
         const li = document.createElement("li");
         li.textContent = t;
-        listEl.appendChild(li);
+        list.appendChild(li);
     });
 }
 
-// ============================
-// BADGES TAB (SIMPLE)
-// ============================
+/* ============================
+   BADGES
+============================ */
 
 function renderBadgesTab() {
     const container = document.getElementById("badges");
-    if (!container) return;
 
     container.innerHTML = `
         <h3>Badges & Milestones</h3>
-        <p>These unlock as you progress.</p>
         <ul>
             <li>🎖 Quiz Starter: Complete 5 quiz questions.</li>
             <li>🏅 Sentence Builder: Create 3 sentences.</li>
@@ -459,206 +410,123 @@ function renderBadgesTab() {
     `;
 }
 
-// ============================
-// GRAMMAR MODE
-// ============================
+/* ============================
+   GRAMMAR MODE
+============================ */
 
 function renderGrammarTab() {
     const container = document.getElementById("grammar");
-    if (!container) return;
+    const items = GRAMMAR_PACK[currentLevel];
 
     container.innerHTML = `
-        <h3>Grammar Mode (${currentLevel})</h3>
-        <p>Key grammar points for this level.</p>
+        <h3>Grammar (${currentLevel})</h3>
         <div id="grammar-list"></div>
     `;
 
-    const listEl = container.querySelector("#grammar-list");
-    const items = GRAMMAR_PACK[currentLevel] || [];
-
+    const list = document.getElementById("grammar-list");
     items.forEach(g => {
-        const block = document.createElement("div");
-        block.className = "tab-content";
-        block.style.marginTop = "8px";
-        block.innerHTML = `<strong>${g.title}</strong><br>${g.text}`;
-        listEl.appendChild(block);
+        const div = document.createElement("div");
+        div.className = "tab-content";
+        div.innerHTML = `<strong>${g.title}</strong><br>${g.text}`;
+        list.appendChild(div);
     });
 }
 
-// ============================
-// SCENARIOS MODE
-// ============================
+/* ============================
+   SCENARIOS
+============================ */
 
 function renderScenarioTab() {
     const container = document.getElementById("scenario");
-    if (!container) return;
+    const items = SCENARIOS_PACK[currentLevel];
 
     container.innerHTML = `
-        <h3>Real‑World Scenarios (${currentLevel})</h3>
-        <p>Practice these situations in Spanish.</p>
+        <h3>Scenarios (${currentLevel})</h3>
         <ul id="scenario-list"></ul>
     `;
 
-    const listEl = container.querySelector("#scenario-list");
-    const items = SCENARIOS_PACK[currentLevel] || [];
-
+    const list = document.getElementById("scenario-list");
     items.forEach(s => {
         const li = document.createElement("li");
         li.textContent = s;
-        listEl.appendChild(li);
+        list.appendChild(li);
     });
 }
 
-// ============================
-// CERTIFICATE SYSTEM
-// ============================
+/* ============================
+   CERTIFICATES
+============================ */
 
 function openCertificate(level) {
     const overlay = document.getElementById("certificate-overlay");
     const preview = document.getElementById("certificate-preview-area");
-    if (!overlay || !preview) return;
 
     overlay.style.display = "flex";
 
-    const levelTitle = {
+    const title = {
         A1: "A1 Beginner Spanish",
         A2: "A2 Elementary Spanish",
         B1: "B1 Intermediate Spanish"
-    }[level] || level;
+    }[level];
 
     preview.innerHTML = `
         <div class="certificate-container">
             <div class="certificate-title">Spanish CEFR Mastery Portal</div>
-            <div class="certificate-subtitle">${levelTitle}</div>
+            <div class="certificate-subtitle">${title}</div>
             <div class="certificate-statement">
-                This certifies that the learner has successfully completed the core path for level ${level}
-                in the Spanish CEFR Mastery Portal, demonstrating consistent practice and foundational communication skills.
+                This certifies completion of level ${level}.
             </div>
-            <div class="certificate-seal">
-                <span style="color:#1E293B; font-weight:700; font-size:20px;">${level}</span>
-            </div>
+            <div class="certificate-seal">${level}</div>
             <div class="certificate-meta">
-                Issued by: Spanish CEFR Mastery Portal<br>
-                Date: ${new Date().toLocaleDateString()}
+                Issued: ${new Date().toLocaleDateString()}
             </div>
         </div>
     `;
 }
 
 function closeCertificate() {
-    const overlay = document.getElementById("certificate-overlay");
-    if (overlay) overlay.style.display = "none";
+    document.getElementById("certificate-overlay").style.display = "none";
 }
 
-// ============================
-// DASHBOARD ENGINE
-// ============================
+/* ============================
+   DASHBOARD ENGINE
+============================ */
 
 function updateDashboard() {
-    const quizStatusEl = document.getElementById("quiz-status");
-    const buildStatusEl = document.getElementById("build-status");
-    const convStatusEl = document.getElementById("conv-status");
-    const finalEl = document.getElementById("final-verdict");
+    document.getElementById("quiz-status").textContent =
+        quizScore === 0 ? "Not started" :
+        quizScore < 60 ? `${quizScore}% — Needs improvement` :
+        `${quizScore}% — Good progress`;
 
-    // QUIZ
-    if (quizStatusEl) {
-        if (quizScore === 0) quizStatusEl.textContent = "Not started";
-        else if (quizScore < 60) quizStatusEl.textContent = `${quizScore}% — Needs improvement`;
-        else quizStatusEl.textContent = `${quizScore}% — Good progress`;
-    }
+    document.getElementById("build-status").textContent =
+        buildScore === 0 ? "Not started" :
+        buildScore < 60 ? `${buildScore}% — Keep practicing` :
+        `${buildScore}% — Strong sentences`;
 
-    // BUILDER
-    if (buildStatusEl) {
-        if (buildScore === 0) buildStatusEl.textContent = "Not started";
-        else if (buildScore < 60) buildStatusEl.textContent = `${buildScore}% — Keep practicing`;
-        else buildStatusEl.textContent = `${buildScore}% — Strong sentences`;
-    }
+    document.getElementById("conv-status").textContent =
+        convCount === 0 ? "No conversations yet" :
+        `${convCount} conversations completed`;
 
-    // CONVERSATION
-    if (convStatusEl) {
-        if (convCount === 0) convStatusEl.textContent = "No conversations yet";
-        else convStatusEl.textContent = `${convCount} conversations completed`;
-    }
+    const final = document.getElementById("final-verdict");
 
-    // FINAL VERDICT
-    if (finalEl) {
-        if (quizScore >= 70 && buildScore >= 70 && convCount >= 5) {
-            finalEl.textContent = "A1 Completed — Ready for A2";
-            triggerCelebration();
-        } else {
-            finalEl.textContent = "Course Status: In progress";
-        }
+    if (quizScore >= 70 && buildScore >= 70 && convCount >= 5) {
+        final.textContent = "A1 Completed — Ready for A2";
+        triggerCelebration();
+    } else {
+        final.textContent = "Course Status: In progress";
     }
 }
 
-// ============================
-// CELEBRATION SYSTEM
-// ============================
+/* ============================
+   CELEBRATION
+============================ */
 
 function triggerCelebration() {
     const banner = document.getElementById("celebration-banner");
-    if (!banner) return;
-
     banner.style.display = "block";
-    setTimeout(() => {
-        banner.style.display = "none";
-    }, 3000);
+    setTimeout(() => banner.style.display = "none", 3000);
 
     for (let i = 0; i < 40; i++) {
-        const confetti = document.createElement("div");
-        confetti.className = "confetti";
-        confetti.style.left = Math.random() * 100 + "vw";
-        confetti.style.background = `hsl(${Math.random() * 360}, 80%, 60%)`;
-        document.body.appendChild(confetti);
-        setTimeout(() => confetti.remove(), 1800);
-    }
-}
-
-// ============================
-// NAVIGATION
-// ============================
-
-function openApp() {
-    const dash = document.getElementById("dashboard-view");
-    const learn = document.getElementById("learning-view");
-    if (dash) dash.classList.add("hidden");
-    if (learn) learn.classList.remove("hidden");
-}
-
-function goBack() {
-    const dash = document.getElementById("dashboard-view");
-    const learn = document.getElementById("learning-view");
-    if (learn) learn.classList.add("hidden");
-    if (dash) dash.classList.remove("hidden");
-    updateDashboard();
-}
-
-// ============================
-// RENDER ALL TABS
-// ============================
-
-function renderAllTabs() {
-    renderListenTab();
-    renderFlashcardsTab();
-    renderQuizTab();
-    renderBuildTab();
-    renderConversationTab();
-    renderSmartTab();
-    renderDailyTab();
-    renderBadgesTab();
-    renderGrammarTab();
-    renderScenarioTab();
-}
-
-// ============================
-// INIT
-// ============================
-
-document.addEventListener("DOMContentLoaded", () => {
-    renderAllTabs();
-    updateDashboard();
-    const levelSelect = document.getElementById("level-select");
-    if (levelSelect) currentLevel = levelSelect.value || "A1";
-    const status = document.getElementById("level-status");
-    if (status) status.textContent = `Current Level: ${currentLevel}`;
-});
+        const c = document.createElement("div");
+        c.className = "confetti";
+        c.style.left = Math.random()
