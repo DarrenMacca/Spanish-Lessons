@@ -585,35 +585,48 @@ function renderQuizTab() {
     }
 
     function renderTypeAnswer(item) {
-        area.innerHTML = `
-            <div class="quiz-block">
-                <strong>Spanish:</strong> ${item.es}
-                <p>Type the English translation:</p>
-                <input id="quiz-input" class="input-field" placeholder="English answer">
-                <button class="primary-btn" id="quiz-submit">Submit</button>
-            </div>
-        `;
+    area.innerHTML = `
+        <div class="quiz-block">
+            <strong>Spanish:</strong> ${item.es}
+            <p>Type the English translation:</p>
+            <input id="quiz-input" class="input-field" placeholder="English answer">
+            <button class="primary-btn" id="quiz-submit">Submit</button>
+        </div>
+    `;
 
-        const input = document.getElementById("quiz-input");
-        const submit = document.getElementById("quiz-submit");
+    const input = document.getElementById("quiz-input");
+    const submit = document.getElementById("quiz-submit");
 
-        submit.onclick = () => {
-            const ans = input.value.trim().toLowerCase();
-            total++;
-            updateProgress();
+    function processAnswer() {
+        const ans = input.value.trim().toLowerCase();
+        total++;
+        updateProgress();
 
-            if (ans === item.en.toLowerCase()) {
-                correct++;
-                feedback.textContent = "✅ Correct!";
-            } else {
-                feedback.textContent = `❌ Incorrect. Correct answer: ${item.en}`;
-                incorrectList.push({ es: item.es, correct: item.en });
-            }
+        if (ans === item.en.toLowerCase()) {
+            correct++;
+            feedback.textContent = "✅ Correct!";
+        } else {
+            feedback.textContent = `❌ Incorrect. Correct answer: ${item.en}`;
+            incorrectList.push({ es: item.es, correct: item.en });
+        }
 
-            updateScore();
-            setTimeout(nextQuestion, 600);
-        };
+        updateScore();
+        setTimeout(nextQuestion, 600);
     }
+
+    // Click submit
+    submit.onclick = processAnswer;
+
+    // Press Enter
+    input.addEventListener("keydown", (e) => {
+        if (e.key === "Enter") {
+            e.preventDefault();
+            processAnswer();
+        }
+    });
+}
+
+
 
     reviewBtn.onclick = () => {
         reviewArea.innerHTML = `
