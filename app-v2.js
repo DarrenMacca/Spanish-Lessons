@@ -175,7 +175,7 @@ const LEVEL_WORDS = {
 };
 
     // B2, C1, C2 can be added here later
-};
+
 
 const GRAMMAR_PACK = {
     A1: [
