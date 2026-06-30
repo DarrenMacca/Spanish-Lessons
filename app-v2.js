@@ -485,6 +485,7 @@ function renderQuizTab() {
     function updateScore() {
         quizScore = total === 0 ? 0 : Math.round((correct / total) * 100);
         scoreDisplay.textContent = `Score: ${quizScore}% (${correct}/${total})`;
+
     }
 
     function nextQuestion() {
