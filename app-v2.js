@@ -371,8 +371,7 @@ function resumeAutoPlay() {
 }
 
 /* ============================
-   FLASHCARDS — FINAL VERSION
-   Animated Flip + Grid View
+   FLASHCARDS — ENGLISH FIRST + AUDIO
 ============================ */
 
 function renderFlashcardsTab() {
@@ -383,7 +382,7 @@ function renderFlashcardsTab() {
 
     container.innerHTML = `
         <h3>Flashcards (${currentLevel})</h3>
-        <p>Tap any card to flip between Spanish ↔ English.</p>
+        <p>Tap a card to flip and hear the Spanish pronunciation.</p>
 
         <div id="flash-grid"
              style="display:grid; grid-template-columns:repeat(auto-fill, minmax(160px, 1fr)); gap:20px; margin-top:20px;">
@@ -399,13 +398,15 @@ function renderFlashcardsTab() {
         const card = document.createElement("div");
         card.className = "flip-card";
 
+        // FRONT = English
         const front = document.createElement("div");
         front.className = "flip-face flip-front word-pill";
-        front.textContent = item.es;
+        front.textContent = item.en;
 
+        // BACK = Spanish
         const back = document.createElement("div");
         back.className = "flip-face flip-back word-pill";
-        back.textContent = item.en;
+        back.textContent = item.es;
 
         card.appendChild(front);
         card.appendChild(back);
@@ -413,11 +414,28 @@ function renderFlashcardsTab() {
 
         wrapper.onclick = () => {
             card.classList.toggle("flipped");
+
+            // Play Spanish audio when flipped
+            if (card.classList.contains("flipped")) {
+                speakSpanish(item.es);
+            }
         };
 
         grid.appendChild(wrapper);
     });
 }
+
+/* ============================
+   LATIN AMERICAN SPANISH AUDIO
+============================ */
+
+function speakSpanish(text) {
+    const utter = new SpeechSynthesisUtterance(text);
+    utter.lang = "es-MX";        // Latin American Spanish
+    utter.rate = 0.95;           // natural speed
+    speechSynthesis.speak(utter);
+}
+
 
 
 
