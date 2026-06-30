@@ -81,6 +81,18 @@ body {
     transform: rotateY(180deg);
 }
 
+
+/* Flashcard Hover Glow */
+.flip-wrapper:hover .flip-card {
+    box-shadow: 0 0 18px rgba(0, 200, 255, 0.55);
+    transform: scale(1.05);
+    transition: all 0.25s ease;
+}
+
+.flip-card {
+    transition: all 0.25s ease;
+}
+
 /* ============================
    TITLES & HEADERS
 ============================ */
