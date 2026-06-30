@@ -208,6 +208,11 @@ button {
     transition: 0.25s;
 }
 
+.word-pill {
+    color: #e2e8f0; /* clean white */
+}
+
+
 .word-pill:hover {
     background: rgba(255, 255, 255, 0.22);
     box-shadow: 0 0 10px rgba(103, 232, 249, 0.4);
