@@ -91,18 +91,23 @@ const SCENARIOS_PACK = {
 ============================ */
 
 function showTab(tabId, event) {
+    // Hide all tabs
     document.querySelectorAll(".tab-content").forEach(tab => {
         tab.classList.add("hidden");
     });
 
+    // Show selected tab
     const target = document.getElementById(tabId);
-    if (target) target.classList.remove("hidden");
+    target.classList.remove("hidden");
 
+    // Update tab button active state
     document.querySelectorAll(".tab-btn").forEach(btn => {
         btn.classList.remove("active");
     });
+    if (event) event.target.classList.add("active");
 
-    if (event && event.target) event.target.classList.add("active");
+    // Lazy load content
+    renderTab(tabId);
 }
 
 /* ============================
@@ -117,8 +122,13 @@ function changeLevel(level) {
 }
 
 /* ============================
-   LISTEN ENGINE
+   LISTEN ENGINE (FULL VERSION)
+   Lazy‑Loading Compatible
 ============================ */
+
+let autoPlayActive = false;
+let autoPlayPaused = false;
+let autoPlayIndex = 0;
 
 function renderListenTab() {
     const container = document.getElementById("listen");
@@ -128,39 +138,111 @@ function renderListenTab() {
 
     container.innerHTML = `
         <h3>Listen & Repeat (${currentLevel})</h3>
-        <p>Select a word and press play.</p>
+        <p>Tap a word to play it, or use Auto‑Play.</p>
+
         <div id="listen-list"></div>
-        <button class="primary-btn" id="listen-play">Play Selected</button>
+
+        <div style="margin-top:15px;">
+            <button class="primary-btn" onclick="autoPlayListen()">▶️ Play All (Auto‑Play)</button>
+            <button class="secondary-btn" onclick="stopAutoPlay()">⏹️ Stop</button>
+            <button class="secondary-btn" onclick="pauseAutoPlay()">⏸️ Pause</button>
+            <button class="primary-btn" onclick="resumeAutoPlay()">▶️ Resume</button>
+        </div>
     `;
 
-    const list = container.querySelector("#listen-list");
+    const list = document.getElementById("listen-list");
+
     words.forEach((w, idx) => {
-        const btn = document.createElement("button");
-        btn.className = "word-pill";
-        btn.textContent = `${w.es} (${w.en})`;
-        btn.dataset.index = idx;
-        btn.onclick = () => container.dataset.selectedIndex = idx;
-        list.appendChild(btn);
+        const pill = document.createElement("button");
+        pill.className = "word-pill";
+        pill.textContent = `${w.es} (${w.en})`;
+        pill.onclick = () => playSingleWord(idx);
+        list.appendChild(pill);
     });
-
-    const playBtn = document.getElementById("listen-play");
-    if (!playBtn) return;
-
-    playBtn.onclick = () => {
-        const idx = parseInt(container.dataset.selectedIndex || "0", 10);
-        const item = words[idx];
-        if (!item) return;
-        const rateEl = document.getElementById("rate");
-        const rate = rateEl ? parseFloat(rateEl.value) : 1;
-        const utter = new SpeechSynthesisUtterance(item.es);
-        utter.lang = "es-ES";
-        utter.rate = rate;
-        speechSynthesis.speak(utter);
-    };
 }
 
 /* ============================
-   FLASHCARDS ENGINE
+   SINGLE WORD PLAYBACK
+============================ */
+
+function playSingleWord(index) {
+    const words = LEVEL_WORDS[currentLevel];
+    const item = words[index];
+    const rate = parseFloat(document.getElementById("rate").value);
+
+    const utter = new SpeechSynthesisUtterance(item.es);
+    utter.lang = "es-ES";
+    utter.rate = rate;
+
+    speechSynthesis.cancel();
+    speechSynthesis.speak(utter);
+}
+
+/* ============================
+   AUTO‑PLAY SYSTEM
+============================ */
+
+function autoPlayListen() {
+    const words = LEVEL_WORDS[currentLevel];
+    if (!words.length) return;
+
+    autoPlayActive = true;
+    autoPlayPaused = false;
+    autoPlayIndex = 0;
+
+    playNextWord(words);
+}
+
+function playNextWord(words) {
+    if (!autoPlayActive || autoPlayPaused) return;
+
+    if (autoPlayIndex >= words.length) {
+        autoPlayActive = false;
+        return;
+    }
+
+    const item = words[autoPlayIndex];
+    const rate = parseFloat(document.getElementById("rate").value);
+
+    const utter = new SpeechSynthesisUtterance(item.es);
+    utter.lang = "es-ES";
+    utter.rate = rate;
+
+    utter.onend = () => {
+        if (autoPlayPaused) return;
+        autoPlayIndex++;
+        setTimeout(() => playNextWord(words), 600);
+    };
+
+    speechSynthesis.cancel();
+    speechSynthesis.speak(utter);
+}
+
+/* ============================
+   STOP / PAUSE / RESUME
+============================ */
+
+function stopAutoPlay() {
+    autoPlayActive = false;
+    autoPlayPaused = false;
+    speechSynthesis.cancel();
+}
+
+function pauseAutoPlay() {
+    if (!autoPlayActive) return;
+    autoPlayPaused = true;
+    speechSynthesis.pause();
+}
+
+function resumeAutoPlay() {
+    if (!autoPlayActive) return;
+    autoPlayPaused = false;
+    speechSynthesis.resume();
+}
+
+/* ============================
+   FLASHCARDS ENGINE (SIMPLE)
+   Lazy‑Loading Compatible
 ============================ */
 
 function renderFlashcardsTab() {
@@ -171,15 +253,18 @@ function renderFlashcardsTab() {
 
     container.innerHTML = `
         <h3>Flashcards (${currentLevel})</h3>
-        <div id="flash-card" class="word-pill"></div>
-        <div style="margin-top:10px;">
+        <p>Tap the card to flip between Spanish ↔ English.</p>
+
+        <div id="flash-card" class="word-pill" style="font-size:20px; padding:20px;"></div>
+
+        <div style="margin-top:15px;">
             <button class="secondary-btn" id="flash-prev">Prev</button>
             <button class="primary-btn" id="flash-next">Next</button>
         </div>
     `;
 
     let index = 0;
-    let showingEs = true;
+    let showingSpanish = true;
 
     const card = document.getElementById("flash-card");
     const prevBtn = document.getElementById("flash-prev");
@@ -188,26 +273,29 @@ function renderFlashcardsTab() {
     function updateCard() {
         const item = words[index];
         if (!item) {
-            card.textContent = "No cards available.";
+            card.textContent = "No flashcards available.";
             return;
         }
-        card.textContent = showingEs ? item.es : item.en;
+        card.textContent = showingSpanish ? item.es : item.en;
     }
 
+    // Flip card
     card.onclick = () => {
-        showingEs = !showingEs;
+        showingSpanish = !showingSpanish;
         updateCard();
     };
 
+    // Previous card
     prevBtn.onclick = () => {
         index = (index - 1 + words.length) % words.length;
-        showingEs = true;
+        showingSpanish = true;
         updateCard();
     };
 
+    // Next card
     nextBtn.onclick = () => {
         index = (index + 1) % words.length;
-        showingEs = true;
+        showingSpanish = true;
         updateCard();
     };
 
@@ -215,7 +303,9 @@ function renderFlashcardsTab() {
 }
 
 /* ============================
-   QUIZ ENGINE
+   BLENDED QUIZ ENGINE
+   Multiple Choice + Type Answer
+   Lazy‑Loading Compatible
 ============================ */
 
 function renderQuizTab() {
@@ -226,104 +316,267 @@ function renderQuizTab() {
 
     container.innerHTML = `
         <h3>Quiz (${currentLevel})</h3>
-        <div id="quiz-question"></div>
-        <input id="quiz-answer" class="input-field" placeholder="English translation">
-        <button class="primary-btn" id="quiz-submit">Submit</button>
-        <div id="quiz-feedback" style="margin-top:8px;"></div>
-        <div id="quiz-score-display" style="margin-top:8px;"></div>
+        <p>Mixed practice: sometimes multiple choice, sometimes type the answer.</p>
+
+        <div id="quiz-area"></div>
+        <div id="quiz-feedback" style="margin-top:10px;"></div>
+        <div id="quiz-score-display" style="margin-top:10px;"></div>
     `;
 
-    let index = 0;
     let correct = 0;
     let total = 0;
 
-    const qEl = document.getElementById("quiz-question");
-    const aEl = document.getElementById("quiz-answer");
-    const fEl = document.getElementById("quiz-feedback");
-    const sEl = document.getElementById("quiz-score-display");
-    const submitBtn = document.getElementById("quiz-submit");
-
-    function loadQuestion() {
-        if (words.length === 0) {
-            qEl.textContent = "No quiz items available.";
-            return;
-        }
-        const item = words[index];
-        qEl.textContent = `Spanish: ${item.es}`;
-        aEl.value = "";
-        fEl.textContent = "";
-    }
+    const area = document.getElementById("quiz-area");
+    const feedback = document.getElementById("quiz-feedback");
+    const scoreDisplay = document.getElementById("quiz-score-display");
 
     function updateScore() {
         quizScore = total === 0 ? 0 : Math.round((correct / total) * 100);
-        sEl.textContent = `Score: ${quizScore}% (${correct}/${total})`;
+        scoreDisplay.textContent = `Score: ${quizScore}% (${correct}/${total})`;
     }
 
-    submitBtn.onclick = () => {
-        const item = words[index];
-        if (!item) return;
+    function nextQuestion() {
+        const item = words[Math.floor(Math.random() * words.length)];
+        const mode = Math.random() < 0.5 ? "mc" : "type"; // 50/50 blend
 
-        const ans = aEl.value.trim().toLowerCase();
-        total++;
-
-        if (ans === item.en.toLowerCase()) {
-            correct++;
-            fEl.textContent = "✅ Correct!";
+        if (mode === "mc") {
+            renderMultipleChoice(item);
         } else {
-            fEl.textContent = `❌ Incorrect. Correct answer: ${item.en}`;
+            renderTypeAnswer(item);
+        }
+    }
+
+    /* ============================
+       MULTIPLE CHOICE MODE
+    ============================= */
+
+    function renderMultipleChoice(item) {
+        const options = generateOptions(item);
+
+        area.innerHTML = `
+            <div class="quiz-block">
+                <strong>Spanish:</strong> ${item.es}
+                <p>Select the correct English translation:</p>
+                <div id="mc-options"></div>
+            </div>
+        `;
+
+        const optContainer = document.getElementById("mc-options");
+
+        options.forEach(opt => {
+            const btn = document.createElement("button");
+            btn.className = "secondary-btn";
+            btn.style.margin = "5px";
+            btn.textContent = opt;
+            btn.onclick = () => {
+                total++;
+                if (opt === item.en) {
+                    correct++;
+                    feedback.textContent = "✅ Correct!";
+                } else {
+                    feedback.textContent = `❌ Incorrect. Correct answer: ${item.en}`;
+                }
+                updateScore();
+                setTimeout(nextQuestion, 600);
+            };
+            optContainer.appendChild(btn);
+        });
+    }
+
+    function generateOptions(correctItem) {
+        const words = LEVEL_WORDS[currentLevel];
+        const options = [correctItem.en];
+
+        while (options.length < 4) {
+            const random = words[Math.floor(Math.random() * words.length)].en;
+            if (!options.includes(random)) options.push(random);
         }
 
-        updateScore();
-        index = (index + 1) % words.length;
-        loadQuestion();
-    };
+        return shuffle(options);
+    }
 
-    loadQuestion();
+    function shuffle(arr) {
+        return arr.sort(() => Math.random() - 0.5);
+    }
+
+    /* ============================
+       TYPE‑THE‑ANSWER MODE
+    ============================= */
+
+    function renderTypeAnswer(item) {
+        area.innerHTML = `
+            <div class="quiz-block">
+                <strong>Spanish:</strong> ${item.es}
+                <p>Type the English translation:</p>
+                <input id="quiz-input" class="input-field" placeholder="English answer">
+                <button class="primary-btn" id="quiz-submit">Submit</button>
+            </div>
+        `;
+
+        const input = document.getElementById("quiz-input");
+        const submit = document.getElementById("quiz-submit");
+
+        submit.onclick = () => {
+            const ans = input.value.trim().toLowerCase();
+            total++;
+
+            if (ans === item.en.toLowerCase()) {
+                correct++;
+                feedback.textContent = "✅ Correct!";
+            } else {
+                feedback.textContent = `❌ Incorrect. Correct answer: ${item.en}`;
+            }
+
+            updateScore();
+            setTimeout(nextQuestion, 600);
+        };
+    }
+
+    // Start quiz
+    nextQuestion();
     updateScore();
 }
 
 /* ============================
-   SENTENCE BUILDER
+   SENTENCE BUILDER (CEFR‑Scaled)
+   Everyday Conversations
+   Lazy‑Loading Compatible
 ============================ */
+
+const SENTENCE_TARGETS = {
+    A1: [
+        {
+            prompt: "Introduce yourself politely.",
+            keywords: ["soy", "me llamo"],
+            feedback: "Great for basic introductions."
+        },
+        {
+            prompt: "Ask for something in a shop or café.",
+            keywords: ["quiero", "por favor"],
+            feedback: "Useful for everyday requests."
+        },
+        {
+            prompt: "Say where something is.",
+            keywords: ["está", "aquí", "allí"],
+            feedback: "Good location practice."
+        }
+    ],
+
+    A2: [
+        {
+            prompt: "Explain what you need in a store or pharmacy.",
+            keywords: ["necesito", "para"],
+            feedback: "Great for real‑world errands."
+        },
+        {
+            prompt: "Talk about your plans for today.",
+            keywords: ["voy a", "mañana", "hoy"],
+            feedback: "Strong future‑tense practice."
+        },
+        {
+            prompt: "Describe your room or home.",
+            keywords: ["hay", "tengo", "en mi"],
+            feedback: "Useful descriptive practice."
+        }
+    ],
+
+    B1: [
+        {
+            prompt: "Describe a past experience.",
+            keywords: ["fui", "hice", "vi"],
+            feedback: "Good past‑tense storytelling."
+        },
+        {
+            prompt: "Talk about your job or studies.",
+            keywords: ["trabajo", "estudio", "porque"],
+            feedback: "Useful for everyday conversations."
+        },
+        {
+            prompt: "Explain your future goals.",
+            keywords: ["quiero", "me gustaría", "plan"],
+            feedback: "Strong future‑planning practice."
+        }
+    ]
+};
+
 
 function renderBuildTab() {
     const container = document.getElementById("build");
     if (!container) return;
 
     const words = LEVEL_WORDS[currentLevel] || [];
+    const targets = SENTENCE_TARGETS[currentLevel] || [];
+
+    // Pick a random target sentence pattern
+    const target = targets[Math.floor(Math.random() * targets.length)];
 
     container.innerHTML = `
         <h3>Sentence Builder (${currentLevel})</h3>
-        <p>Tap words to add them to your sentence.</p>
-        <div id="build-words"></div>
-        <textarea id="build-output" class="input-field" rows="3" placeholder="Type or build your sentence..."></textarea>
-        <button class="primary-btn" id="build-check">Check Sentence</button>
-        <div id="build-feedback" style="margin-top:8px;"></div>
+        <p>Build a natural Spanish sentence for everyday conversation.</p>
+
+        <div style="
+            padding:12px;
+            border-radius:10px;
+            border:1px solid #cbd5e1;
+            margin-bottom:12px;
+        ">
+            <strong>Target:</strong>
+            <span id="build-target" style="color:#475569;">${target.prompt}</span>
+        </div>
+
+        <textarea id="build-output" class="input-field" rows="3"
+            placeholder="Build your Spanish sentence here..."></textarea>
+
+        <div id="build-words" style="margin-top:12px;"></div>
+
+        <button class="primary-btn" id="build-check" style="margin-top:12px;">Check Sentence</button>
+
+        <div id="build-feedback" style="margin-top:12px; font-size:14px; color:#475569;"></div>
     `;
 
-    const wEl = document.getElementById("build-words");
-    const oEl = document.getElementById("build-output");
-    const fEl = document.getElementById("build-feedback");
-    const checkBtn = document.getElementById("build-check");
+    const wordBank = document.getElementById("build-words");
+    const output = document.getElementById("build-output");
+    const feedback = document.getElementById("build-feedback");
+
+    /* ============================
+       WORD BANK (Level‑Aware)
+    ============================= */
 
     words.forEach(w => {
         const pill = document.createElement("span");
         pill.className = "word-pill";
         pill.textContent = w.es;
         pill.onclick = () => {
-            oEl.value = (oEl.value + " " + w.es).trim();
+            output.value = (output.value + " " + w.es).trim();
         };
-        wEl.appendChild(pill);
+        wordBank.appendChild(pill);
     });
 
-    checkBtn.onclick = () => {
-        const text = oEl.value.trim();
+    /* ============================
+       CHECK SENTENCE
+    ============================= */
+
+    document.getElementById("build-check").onclick = () => {
+        const text = output.value.trim();
         if (!text) {
-            fEl.textContent = "Write or build a sentence first.";
+            feedback.textContent = "Write or build a sentence first.";
             return;
         }
-        buildScore = Math.min(100, text.split(" ").length * 10);
-        fEl.textContent = `Nice! Estimated strength: ${buildScore}%`;
+
+        // Basic scoring: length + target keywords
+        let score = Math.min(100, text.split(" ").length * 10);
+
+        let keywordHits = 0;
+        target.keywords.forEach(k => {
+            if (text.toLowerCase().includes(k.toLowerCase())) keywordHits++;
+        });
+
+        score += keywordHits * 10;
+        score = Math.min(score, 100);
+
+        buildScore = score;
+
+        feedback.textContent = `Estimated strength: ${score}% — ${target.feedback}`;
     };
 }
 
@@ -331,30 +584,133 @@ function renderBuildTab() {
    CONVERSATION
 ============================ */
 
+/* ============================
+   CONVERSATION BUILDER (CEFR‑Scaled)
+   Everyday Dialogue Practice
+   Lazy‑Loading Compatible
+============================ */
+
+/* ============================
+   CEFR Conversation Prompts
+   Everyday Dialogue
+============================ */
+
+const CONVERSATION_PROMPTS = {
+    A1: [
+        {
+            prompt: "Hola, ¿cómo estás?",
+            keywords: ["bien", "mal", "más o menos"],
+            feedback: "Great basic greeting reply."
+        },
+        {
+            prompt: "¿De dónde eres?",
+            keywords: ["soy de", "vengo de"],
+            feedback: "Good introduction practice."
+        },
+        {
+            prompt: "¿Quieres comer algo?",
+            keywords: ["sí", "no", "quiero"],
+            feedback: "Useful everyday decision making."
+        }
+    ],
+
+    A2: [
+        {
+            prompt: "¿Qué planes tienes para hoy?",
+            keywords: ["voy a", "quiero", "planeo"],
+            feedback: "Strong future‑tense practice."
+        },
+        {
+            prompt: "¿Puedes ayudarme con esta tarea?",
+            keywords: ["claro", "puedo", "cómo"],
+            feedback: "Useful for real‑world interactions."
+        },
+        {
+            prompt: "¿Cómo es tu casa?",
+            keywords: ["hay", "tengo", "es"],
+            feedback: "Good descriptive practice."
+        }
+    ],
+
+    B1: [
+        {
+            prompt: "Cuéntame sobre tu trabajo o estudios.",
+            keywords: ["trabajo", "estudio", "porque"],
+            feedback: "Great everyday conversation topic."
+        },
+        {
+            prompt: "¿Qué hiciste el fin de semana?",
+            keywords: ["fui", "hice", "vi"],
+            feedback: "Strong past‑tense storytelling."
+        },
+        {
+            prompt: "¿Qué metas tienes para el futuro?",
+            keywords: ["quiero", "me gustaría", "plan"],
+            feedback: "Excellent future‑planning practice."
+        }
+    ]
+};
+
+
 function renderConversationTab() {
     const container = document.getElementById("conv");
     if (!container) return;
 
+    const prompts = CONVERSATION_PROMPTS[currentLevel] || [];
+
+    // Pick a random conversation prompt
+    const prompt = prompts[Math.floor(Math.random() * prompts.length)];
+
     container.innerHTML = `
-        <h3>Conversation (${currentLevel})</h3>
-        <p>Write a short dialogue using the vocabulary.</p>
-        <textarea id="conv-input" class="input-field" rows="4" placeholder="Write a short conversation in Spanish..."></textarea>
-        <button class="primary-btn" id="conv-save">Save Conversation</button>
-        <div id="conv-feedback" style="margin-top:8px;"></div>
+        <h3>Conversation Builder (${currentLevel})</h3>
+        <p>Write a natural Spanish reply to the prompt.</p>
+
+        <div style="
+            padding:12px;
+            border-radius:10px;
+            border:1px solid #cbd5e1;
+            margin-bottom:12px;
+        ">
+            <strong>Prompt:</strong>
+            <span id="conv-prompt" style="color:#475569;">${prompt.prompt}</span>
+        </div>
+
+        <textarea id="conv-input" class="input-field" rows="4"
+            placeholder="Write your Spanish reply..."></textarea>
+
+        <button class="primary-btn" id="conv-check" style="margin-top:12px;">Check Reply</button>
+
+        <div id="conv-feedback" style="margin-top:12px; font-size:14px; color:#475569;"></div>
     `;
 
-    const inputEl = document.getElementById("conv-input");
-    const feedbackEl = document.getElementById("conv-feedback");
-    const saveBtn = document.getElementById("conv-save");
+    const input = document.getElementById("conv-input");
+    const feedback = document.getElementById("conv-feedback");
 
-    saveBtn.onclick = () => {
-        const text = inputEl.value.trim();
+    /* ============================
+       CHECK REPLY
+    ============================= */
+
+    document.getElementById("conv-check").onclick = () => {
+        const text = input.value.trim();
         if (!text) {
-            feedbackEl.textContent = "Write something first.";
+            feedback.textContent = "Write your reply first.";
             return;
         }
+
+        // Score based on keyword hits + length
+        let score = Math.min(100, text.split(" ").length * 8);
+
+        let keywordHits = 0;
+        prompt.keywords.forEach(k => {
+            if (text.toLowerCase().includes(k.toLowerCase())) keywordHits++;
+        });
+
+        score += keywordHits * 10;
+        score = Math.min(score, 100);
+
         convCount++;
-        feedbackEl.textContent = `Conversation saved. Total conversations: ${convCount}.`;
+
+        feedback.textContent = `Reply strength: ${score}% — ${prompt.feedback}`;
     };
 }
 
@@ -635,17 +991,20 @@ function goBack() {
    RENDER ALL TABS
 ============================ */
 
-function renderAllTabs() {
-    renderListenTab();
-    renderFlashcardsTab();
-    renderQuizTab();
-    renderBuildTab();
-    renderConversationTab();
-    renderSmartTab();
-    renderDailyTab();
-    renderBadgesTab();
-    renderGrammarTab();
-    renderScenarioTab();
+function renderTab(tabId) {
+    switch (tabId) {
+        case "listen": renderListenTab(); break;
+        case "flash": renderFlashcardsTab(); break;
+        case "quiz": renderQuizTab(); break;
+        case "build": renderBuildTab(); break;
+        case "conv": renderConversationTab(); break;
+        case "smart": renderSmartTab(); break;
+        case "daily": renderDailyTab(); break;
+        case "badges": renderBadgesTab(); break;
+        case "grammar": renderGrammarTab(); break;
+        case "scenario": renderScenarioTab(); break;
+        case "certificates": /* certificates tab has static buttons */ break;
+    }
 }
 
 /* ============================
@@ -653,15 +1012,12 @@ function renderAllTabs() {
 ============================ */
 
 document.addEventListener("DOMContentLoaded", () => {
-    const levelSelect = document.getElementById("level-select");
-    if (levelSelect) currentLevel = levelSelect.value || "A1";
-
-    const status = document.getElementById("level-status");
-    if (status) status.textContent = `Current Level: ${currentLevel}`;
-
-    renderAllTabs();
     updateDashboard();
 
-    // Ensure only the first tab is visible initially
+    // Set initial level
+    const levelSelect = document.getElementById("level-select");
+    if (levelSelect) currentLevel = levelSelect.value;
+
+    // Show first tab lazily
     showTab("listen", { target: document.querySelector(".tab-btn") });
 });
