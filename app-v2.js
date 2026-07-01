@@ -105,7 +105,17 @@ const LEVEL_WORDS = {
     { en: "sorry", es: "lo siento" },
     { en: "excuse me", es: "perdón" },
 
-    { en: "and", es: "y" },   // ⭐ NEW WORD ADDED
+    /* ⭐ A1 CONNECTORS */
+    { en: "and", es: "y" },
+    { en: "but", es: "pero" },
+    { en: "or", es: "o" },
+    { en: "because", es: "porque" },
+    { en: "with", es: "con" },
+    { en: "without", es: "sin" },
+    { en: "also", es: "también" },
+    { en: "very", es: "muy" },
+    { en: "a little", es: "un poco" },
+    { en: "more", es: "más" },
 
     { en: "I", es: "yo" },
     { en: "you", es: "tú" },
@@ -150,6 +160,7 @@ const LEVEL_WORDS = {
     { en: "police", es: "policía" },
     { en: "I am lost", es: "estoy perdido" }
 ],
+
 
 
     A2: [
