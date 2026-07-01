@@ -455,15 +455,16 @@ function renderListenTab() {
             <button class="primary-btn" onclick="resumeAutoPlay()">▶️ Resume</button>
         </div>
 
-        <p>Select any word to hear it individually.</p>
+        <input id="listen-search" class="input-field" placeholder="Search words...">
 
         <div id="listen-categories"></div>
     `;
 
+    const searchInput = document.getElementById("listen-search");
     const catContainer = document.getElementById("listen-categories");
-    if (!catContainer) return;
 
-    // Icons for each category
+    if (!catContainer || !searchInput) return;
+
     const categoryIcons = {
         "Greetings & Basics": "👋",
         "Connectors": "🔗",
@@ -478,177 +479,99 @@ function renderListenTab() {
 
     let openCategory = null;
 
-    Object.entries(LISTEN_CATEGORIES).forEach(([categoryName, esList]) => {
-        const catWords = words.filter(w => esList.includes(w.es));
-        if (!catWords.length) return;
+    function renderCategories(filterText = "") {
+        catContainer.innerHTML = "";
 
-        const wrapper = document.createElement("div");
-        wrapper.className = "listen-category-wrapper";
-        wrapper.style.marginTop = "15px";
+        Object.entries(LISTEN_CATEGORIES).forEach(([categoryName, esList]) => {
+            const catWords = words.filter(w => esList.includes(w.es));
 
-        const header = document.createElement("div");
-        header.className = "listen-category-header";
-        header.style.cursor = "pointer";
-        header.style.padding = "10px";
-        header.style.border = "1px solid rgba(255,255,255,0.2)";
-        header.style.borderRadius = "8px";
-        header.style.color = "#a5f3fc";
-        header.style.fontWeight = "600";
-        header.style.display = "flex";
-        header.style.justifyContent = "space-between";
-        header.style.alignItems = "center";
+            if (filterText) {
+                const lower = filterText.toLowerCase();
+                const filtered = catWords.filter(w =>
+                    w.es.toLowerCase().includes(lower) ||
+                    w.en.toLowerCase().includes(lower)
+                );
+                if (!filtered.length) return;
+                catWords.length = 0;
+                catWords.push(...filtered);
+            }
 
-        header.innerHTML = `
-            <span>${categoryIcons[categoryName]} ${categoryName}</span>
-            <span class="listen-arrow" style="transition: transform 0.25s ease;">▼</span>
-        `;
+            if (!catWords.length) return;
 
-        const content = document.createElement("div");
-        content.className = "listen-category-content";
-        content.style.display = "none";
-        content.style.marginTop = "10px";
+            const wrapper = document.createElement("div");
+            wrapper.className = "listen-category-wrapper";
+            wrapper.style.marginTop = "15px";
 
-        const grid = document.createElement("div");
-        grid.className = "listen-grid";
-        grid.style.display = "grid";
-        grid.style.gridTemplateColumns = "repeat(auto-fill, minmax(160px, 1fr))";
-        grid.style.gap = "12px";
+            const header = document.createElement("div");
+            header.className = "listen-category-header";
+            header.style.cursor = "pointer";
+            header.style.padding = "10px";
+            header.style.border = "1px solid rgba(255,255,255,0.2)";
+            header.style.borderRadius = "8px";
+            header.style.color = "#a5f3fc";
+            header.style.fontWeight = "600";
+            header.style.display = "flex";
+            header.style.justifyContent = "space-between";
+            header.style.alignItems = "center";
 
-        catWords.forEach(w => {
-            const pill = document.createElement("button");
-            pill.className = "word-pill";
-            pill.style.width = "100%";
-            pill.textContent = `${w.es} (${w.en})`;
-            pill.onclick = () => {
-                const idx = words.indexOf(w);
-                if (idx >= 0) playSingleWord(idx);
-            };
-            grid.appendChild(pill);
-        });
+            header.innerHTML = `
+                <span>${categoryIcons[categoryName]} ${categoryName}</span>
+                <span class="listen-arrow">▼</span>
+            `;
 
-        content.appendChild(grid);
+            const content = document.createElement("div");
+            content.className = "listen-category-content";
 
-        header.onclick = () => {
-            const arrow = header.querySelector(".listen-arrow");
-            const isOpen = content.style.display === "block";
+            const grid = document.createElement("div");
+            grid.className = "listen-grid";
+            grid.style.display = "grid";
+            grid.style.gridTemplateColumns = "repeat(auto-fill, minmax(160px, 1fr))";
+            grid.style.gap = "12px";
 
-            // Auto-collapse other categories
-            if (!isOpen) {
+            catWords.forEach(w => {
+                const pill = document.createElement("button");
+                pill.className = "word-pill";
+                pill.style.width = "100%";
+                pill.textContent = `${w.es} (${w.en})`;
+                pill.onclick = () => {
+                    const idx = words.indexOf(w);
+                    if (idx >= 0) playSingleWord(idx);
+                };
+                grid.appendChild(pill);
+            });
+
+            content.appendChild(grid);
+
+            header.onclick = () => {
+                const arrow = header.querySelector(".listen-arrow");
+                const isOpen = content.classList.contains("open");
+
                 const allContents = document.querySelectorAll(".listen-category-content");
                 const allArrows = document.querySelectorAll(".listen-arrow");
 
-                allContents.forEach(c => c.style.display = "none");
+                allContents.forEach(c => c.classList.remove("open"));
                 allArrows.forEach(a => a.style.transform = "rotate(0deg)");
-            }
 
-            content.style.display = isOpen ? "none" : "block";
-            arrow.style.transform = isOpen ? "rotate(0deg)" : "rotate(180deg)";
-        };
+                if (!isOpen) {
+                    content.classList.add("open");
+                    arrow.style.transform = "rotate(180deg)";
+                }
+            };
 
-        wrapper.appendChild(header);
-        wrapper.appendChild(content);
-        catContainer.appendChild(wrapper);
-    });
-}
-
-
-function playSingleWord(index) {
-    const words = LEVEL_WORDS[currentLevel] || [];
-    if (!words.length || index < 0 || index >= words.length) return;
-    speakSpanish(words[index].es);
-}
-
-function autoPlayListen() {
-    const words = LEVEL_WORDS[currentLevel] || [];
-    if (!words.length) return;
-
-    autoPlayActive = true;
-    autoPlayPaused = false;
-    autoPlayIndex = 0;
-
-    playNextWord(words);
-}
-
-function playNextWord(words) {
-    if (!autoPlayActive || autoPlayPaused) return;
-    if (!words || !words.length) {
-        autoPlayActive = false;
-        return;
+            wrapper.appendChild(header);
+            wrapper.appendChild(content);
+            catContainer.appendChild(wrapper);
+        });
     }
 
-    if (autoPlayIndex >= words.length) {
-        autoPlayActive = false;
-        return;
-    }
+    renderCategories();
 
-    if (typeof speechSynthesis === "undefined" || typeof SpeechSynthesisUtterance === "undefined") {
-        console.warn("Speech synthesis not supported.");
-        autoPlayActive = false;
-        return;
-    }
-
-    const item = words[autoPlayIndex];
-
-    const utter = new SpeechSynthesisUtterance(item.es);
-    const rateControl = document.getElementById("rate");
-    const rate = rateControl ? parseFloat(rateControl.value) || 1.0 : 1.0;
-
-    utter.lang = "es-MX";
-    utter.rate = rate;
-
-    const voice = getLatAmVoice();
-    if (voice) utter.voice = voice;
-
-    utter.onend = () => {
-        if (autoPlayPaused) return;
-        autoPlayIndex++;
-        setTimeout(() => playNextWord(words), 600);
+    searchInput.oninput = () => {
+        const text = searchInput.value.trim();
+        renderCategories(text);
     };
-
-    try {
-        speechSynthesis.cancel();
-        speechSynthesis.speak(utter);
-    } catch (e) {
-        console.warn("Error in autoPlayListen:", e);
-        autoPlayActive = false;
-    }
 }
 
-function stopAutoPlay() {
-    autoPlayActive = false;
-    autoPlayPaused = false;
-    if (typeof speechSynthesis !== "undefined") {
-        try {
-            speechSynthesis.cancel();
-        } catch (e) {
-            console.warn("Error stopping autoplay:", e);
-        }
-    }
-}
-
-function pauseAutoPlay() {
-    if (!autoPlayActive) return;
-    autoPlayPaused = true;
-    if (typeof speechSynthesis !== "undefined") {
-        try {
-            speechSynthesis.pause();
-        } catch (e) {
-            console.warn("Error pausing autoplay:", e);
-        }
-    }
-}
-
-function resumeAutoPlay() {
-    if (!autoPlayActive) return;
-    autoPlayPaused = false;
-    if (typeof speechSynthesis !== "undefined") {
-        try {
-            speechSynthesis.resume();
-        } catch (e) {
-            console.warn("Error resuming autoplay:", e);
-        }
-    }
-}
 
 /* ============================
    FLASHCARDS (SAFE MODE)
