@@ -20,7 +20,9 @@ function saveStudentName() {
     if (!name) return;
 
     localStorage.setItem("studentName", name);
-    alert(`Name saved: ${name}`);
+
+    const status = document.getElementById("name-status");
+    if (status) status.textContent = `Name saved: ${name} — this will appear on your certificates and messages.`;
 }
 
 function loadStudentName() {
@@ -95,73 +97,71 @@ document.addEventListener("DOMContentLoaded", () => {
 ============================ */
 
 const LEVEL_WORDS = {
-   A1: [
-    { en: "hello", es: "hola" },
-    { en: "goodbye", es: "adiós" },
-    { en: "please", es: "por favor" },
-    { en: "thank you", es: "gracias" },
-    { en: "yes", es: "sí" },
-    { en: "no", es: "no" },
-    { en: "sorry", es: "lo siento" },
-    { en: "excuse me", es: "perdón" },
+    A1: [
+        { en: "hello", es: "hola" },
+        { en: "goodbye", es: "adiós" },
+        { en: "please", es: "por favor" },
+        { en: "thank you", es: "gracias" },
+        { en: "yes", es: "sí" },
+        { en: "no", es: "no" },
+        { en: "sorry", es: "lo siento" },
+        { en: "excuse me", es: "perdón" },
 
-    /* ⭐ A1 CONNECTORS */
-    { en: "and", es: "y" },
-    { en: "but", es: "pero" },
-    { en: "or", es: "o" },
-    { en: "because", es: "porque" },
-    { en: "with", es: "con" },
-    { en: "without", es: "sin" },
-    { en: "also", es: "también" },
-    { en: "very", es: "muy" },
-    { en: "a little", es: "un poco" },
-    { en: "more", es: "más" },
+        /* A1 CONNECTORS */
+        { en: "and", es: "y" },
+        { en: "but", es: "pero" },
+        { en: "or", es: "o" },
+        { en: "because", es: "porque" },
+        { en: "with", es: "con" },
+        { en: "without", es: "sin" },
+        { en: "also", es: "también" },
+        { en: "very", es: "muy" },
+        { en: "a little", es: "un poco" },
+        { en: "more", es: "más" },
 
-    { en: "I", es: "yo" },
-    { en: "you", es: "tú" },
-    { en: "he", es: "él" },
-    { en: "she", es: "ella" },
-    { en: "we", es: "nosotros" },
-    { en: "they", es: "ellos" },
+        { en: "I", es: "yo" },
+        { en: "you", es: "tú" },
+        { en: "he", es: "él" },
+        { en: "she", es: "ella" },
+        { en: "we", es: "nosotros" },
+        { en: "they", es: "ellos" },
 
-    { en: "water", es: "agua" },
-    { en: "food", es: "comida" },
-    { en: "coffee", es: "café" },
-    { en: "tea", es: "té" },
-    { en: "milk", es: "leche" },
-    { en: "bread", es: "pan" },
-    { en: "bathroom", es: "baño" },
-    { en: "hotel", es: "hotel" },
-    { en: "room", es: "habitación" },
-    { en: "key", es: "llave" },
-    { en: "table", es: "mesa" },
-    { en: "chair", es: "silla" },
+        { en: "water", es: "agua" },
+        { en: "food", es: "comida" },
+        { en: "coffee", es: "café" },
+        { en: "tea", es: "té" },
+        { en: "milk", es: "leche" },
+        { en: "bread", es: "pan" },
+        { en: "bathroom", es: "baño" },
+        { en: "hotel", es: "hotel" },
+        { en: "room", es: "habitación" },
+        { en: "key", es: "llave" },
+        { en: "table", es: "mesa" },
+        { en: "chair", es: "silla" },
 
-    { en: "menu", es: "menú" },
-    { en: "bill", es: "cuenta" },
-    { en: "waiter", es: "camarero" },
-    { en: "I want", es: "quiero" },
-    { en: "I would like", es: "me gustaría" },
+        { en: "menu", es: "menú" },
+        { en: "bill", es: "cuenta" },
+        { en: "waiter", es: "camarero" },
+        { en: "I want", es: "quiero" },
+        { en: "I would like", es: "me gustaría" },
 
-    { en: "bus", es: "autobús" },
-    { en: "train", es: "tren" },
-    { en: "ticket", es: "boleto" },
-    { en: "station", es: "estación" },
-    { en: "airport", es: "aeropuerto" },
+        { en: "bus", es: "autobús" },
+        { en: "train", es: "tren" },
+        { en: "ticket", es: "boleto" },
+        { en: "station", es: "estación" },
+        { en: "airport", es: "aeropuerto" },
 
-    { en: "how much?", es: "¿cuánto cuesta?" },
-    { en: "cheap", es: "barato" },
-    { en: "expensive", es: "caro" },
-    { en: "open", es: "abierto" },
-    { en: "closed", es: "cerrado" },
+        { en: "how much?", es: "¿cuánto cuesta?" },
+        { en: "cheap", es: "barato" },
+        { en: "expensive", es: "caro" },
+        { en: "open", es: "abierto" },
+        { en: "closed", es: "cerrado" },
 
-    { en: "help", es: "ayuda" },
-    { en: "doctor", es: "doctor" },
-    { en: "police", es: "policía" },
-    { en: "I am lost", es: "estoy perdido" }
-],
-
-
+        { en: "help", es: "ayuda" },
+        { en: "doctor", es: "doctor" },
+        { en: "police", es: "policía" },
+        { en: "I am lost", es: "estoy perdido" }
+    ],
 
     A2: [
         { en: "I need", es: "necesito" },
@@ -235,6 +235,7 @@ const LEVEL_WORDS = {
 
 const LISTEN_CATEGORIES = {
     "Greetings & Basics": ["hola", "adiós", "por favor", "gracias", "sí", "no", "lo siento", "perdón"],
+    "Connectors": ["y", "pero", "o", "porque", "también", "muy", "un poco", "más"],
     "People & Pronouns": ["yo", "tú", "él", "ella", "nosotros", "ellos"],
     "Common Nouns": ["agua", "comida", "café", "té", "leche", "pan", "baño", "hotel", "habitación", "llave", "mesa", "silla"],
     "Café & Restaurant": ["menú", "cuenta", "camarero", "quiero", "me gustaría"],
