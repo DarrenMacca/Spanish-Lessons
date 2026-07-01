@@ -943,8 +943,13 @@ function renderBuildTab() {
         </button>
 
         <!-- Hint Button -->
-        <button class="secondary-btn" id="hint-btn" style="margin-bottom:15px;">
+        <button class="secondary-btn" id="hint-btn" style="margin-bottom:10px;">
             💡 Show Hint
+        </button>
+
+        <!-- Reset Button -->
+        <button class="secondary-btn" id="reset-btn" style="margin-bottom:15px;">
+            🔄 Reset Answer
         </button>
 
         <!-- Output Box -->
@@ -969,13 +974,14 @@ function renderBuildTab() {
     const feedback = document.getElementById("build-feedback");
     const hearBtn = document.getElementById("hear-target-btn");
     const hintBtn = document.getElementById("hint-btn");
+    const resetBtn = document.getElementById("reset-btn");
     const checkBtn = document.getElementById("build-check");
 
-    if (!wordGrid || !output || !feedback || !hearBtn || !hintBtn || !checkBtn) return;
+    if (!wordGrid || !output || !feedback || !hearBtn || !hintBtn || !resetBtn || !checkBtn) return;
 
-    /* 🔊 Spanish audio */
+    /* 🔊 Accurate Spanish audio */
     hearBtn.onclick = () => {
-        speakSpanish(spanishSentence);
+        speakSpanish(spanishSentence); // Uses your global voice + speed
     };
 
     /* 💡 Hint Mode */
@@ -1001,6 +1007,12 @@ function renderBuildTab() {
         hintBtn.disabled = true;
     };
 
+    /* 🔄 Reset Answer */
+    resetBtn.onclick = () => {
+        output.value = "";
+        feedback.textContent = "";
+    };
+
     /* 🟦 Word grid contains ONLY the Spanish words needed */
     targetSentenceWords.forEach(w => {
         const pill = document.createElement("button");
@@ -1014,15 +1026,16 @@ function renderBuildTab() {
         wordGrid.appendChild(pill);
     });
 
-    /* ✔ Sentence checking */
+    /* ✔ Correct Spanish sentence checking */
     checkBtn.onclick = () => {
-        const text = output.value.trim();
-        if (!text) {
+        const learnerSentence = output.value.trim();
+
+        if (!learnerSentence) {
             feedback.textContent = "Write or build the Spanish sentence first.";
             return;
         }
 
-        const correct = text === spanishSentence;
+        const correct = learnerSentence === spanishSentence;
 
         if (correct) {
             buildScore = 100;
