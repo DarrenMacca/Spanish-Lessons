@@ -921,40 +921,85 @@ function renderBuildTab() {
 
     const words = LEVEL_WORDS[currentLevel] || [];
 
-    // English prompts for the learner
-    const englishPrompts = [
-        "Introduce yourself politely.",
-        "Ask for something in a café.",
-        "Say where something is.",
-        "Ask for help.",
-        "Order food or drink.",
-        "Describe something simple.",
-        "Ask for directions.",
-        "Talk about your plans."
+    /* ============================
+       ENGLISH → SPANISH PROMPTS
+    ============================= */
+
+    const promptPairs = [
+        /* DRINKS */
+        { en: "I want water", es: ["quiero", "agua"] },
+        { en: "I want milk", es: ["quiero", "leche"] },
+        { en: "I want coffee", es: ["quiero", "café"] },
+        { en: "I want tea", es: ["quiero", "té"] },
+        { en: "I want beer", es: ["quiero", "cerveza"] },
+
+        /* BASIC FOOD */
+        { en: "I want food", es: ["quiero", "comida"] },
+        { en: "I want bread", es: ["quiero", "pan"] },
+        { en: "I want an egg", es: ["quiero", "un", "huevo"] },
+        { en: "I want potato chips", es: ["quiero", "papas", "fritas"] },
+        { en: "I want steak", es: ["quiero", "bistec"] },
+
+        /* FRUIT */
+        { en: "I want fruit", es: ["quiero", "fruta"] },
+        { en: "I want an apple", es: ["quiero", "una", "manzana"] },
+        { en: "I want an orange", es: ["quiero", "una", "naranja"] },
+        { en: "I want a banana", es: ["quiero", "un", "plátano"] },
+
+        /* MEALS */
+        { en: "I want chicken", es: ["quiero", "pollo"] },
+        { en: "I want fish", es: ["quiero", "pescado"] },
+        { en: "I want soup", es: ["quiero", "sopa"] },
+        { en: "I want salad", es: ["quiero", "ensalada"] },
+        { en: "I want rice", es: ["quiero", "arroz"] },
+        { en: "I want beans", es: ["quiero", "frijoles"] },
+
+        /* COMBINATIONS */
+        { en: "I want beer and potato chips", es: ["quiero", "cerveza", "y", "papas", "fritas"] },
+        { en: "I want steak and water", es: ["quiero", "bistec", "y", "agua"] },
+        { en: "I want eggs and coffee", es: ["quiero", "huevos", "y", "café"] },
+        { en: "I want rice and beans", es: ["quiero", "arroz", "y", "frijoles"] },
+        { en: "I want bread and cheese", es: ["quiero", "pan", "y", "queso"] },
+        { en: "I want fruit and water", es: ["quiero", "fruta", "y", "agua"] },
+
+        /* RESTAURANT PHRASES */
+        { en: "I want the menu", es: ["quiero", "el", "menú"] },
+        { en: "I want the bill please", es: ["quiero", "la", "cuenta", "por favor"] },
+
+        /* EXISTING PROMPTS */
+        { en: "Where is the bathroom?", es: ["dónde", "está", "el", "baño"] },
+        { en: "I need help", es: ["necesito", "ayuda"] },
+        { en: "I am lost", es: ["estoy", "perdido"] },
+        { en: "Where is the train station?", es: ["dónde", "está", "la", "estación", "de", "tren"] },
+        { en: "Where is the hotel?", es: ["dónde", "está", "el", "hotel"] },
+        { en: "Where is my room?", es: ["dónde", "está", "mi", "habitación"] },
+        { en: "I want a ticket", es: ["quiero", "un", "boleto"] },
+        { en: "I want coffee and milk", es: ["quiero", "café", "y", "leche"] },
+        { en: "I want water and bread", es: ["quiero", "agua", "y", "pan"] },
+        { en: "Where is the airport?", es: ["dónde", "está", "el", "aeropuerto"] },
+        { en: "I need a doctor", es: ["necesito", "un", "doctor"] }
     ];
 
-    // Pick a random English prompt
-    const englishPrompt = englishPrompts[Math.floor(Math.random() * englishPrompts.length)];
+    /* Pick a random English → Spanish pair */
+    const pair = promptPairs[Math.floor(Math.random() * promptPairs.length)];
+    const englishPrompt = pair.en;
+    const spanishWordsNeeded = pair.es;
 
-    // Build a Spanish sentence ONLY using Listen-tab words
-    const spanishWords = words.map(w => w.es);
+    /* Spanish sentence */
+    const spanishSentence = spanishWordsNeeded.join(" ");
 
-    // Build a random 4–7 word Spanish sentence from known words
-    const sentenceLength = Math.floor(Math.random() * 3) + 4; // 4–7 words
-    const targetSentenceWords = [];
+    /* Randomise word order */
+    const shuffledWords = [...spanishWordsNeeded].sort(() => Math.random() - 0.5);
 
-    for (let i = 0; i < sentenceLength; i++) {
-        const w = spanishWords[Math.floor(Math.random() * spanishWords.length)];
-        targetSentenceWords.push(w);
-    }
-
-    const spanishSentence = targetSentenceWords.join(" ");
+    /* ============================
+       BUILD TAB UI
+    ============================= */
 
     container.innerHTML = `
         <h3>Sentence Builder (${currentLevel})</h3>
         <p>Read the English prompt, listen to the Spanish sentence, then rebuild it using the word grid.</p>
 
-        <!-- English Target Box -->
+        <!-- English Prompt -->
         <div style="
             padding:14px;
             border-radius:10px;
@@ -1012,7 +1057,7 @@ function renderBuildTab() {
 
     /* 🔊 Accurate Spanish audio */
     hearBtn.onclick = () => {
-        speakSpanish(spanishSentence); // Uses your global voice + speed
+        speakSpanish(spanishSentence);
     };
 
     /* 💡 Hint Mode */
@@ -1024,14 +1069,14 @@ function renderBuildTab() {
         hintBox.style.borderRadius = "8px";
         hintBox.style.color = "#e2e8f0";
 
-        const firstWord = targetSentenceWords[0];
-        const lastWord = targetSentenceWords[targetSentenceWords.length - 1];
+        const firstWord = spanishWordsNeeded[0];
+        const lastWord = spanishWordsNeeded[spanishWordsNeeded.length - 1];
 
         hintBox.innerHTML = `
             <strong>Hints:</strong><br>
-            • The sentence starts with: <span style="color:#a5f3fc;">${firstWord}</span><br>
-            • The sentence ends with: <span style="color:#a5f3fc;">${lastWord}</span><br>
-            • Number of words: <span style="color:#a5f3fc;">${targetSentenceWords.length}</span>
+            • Starts with: <span style="color:#a5f3fc;">${firstWord}</span><br>
+            • Ends with: <span style="color:#a5f3fc;">${lastWord}</span><br>
+            • Word count: <span style="color:#a5f3fc;">${spanishWordsNeeded.length}</span>
         `;
 
         hintBtn.after(hintBox);
@@ -1044,8 +1089,8 @@ function renderBuildTab() {
         feedback.textContent = "";
     };
 
-    /* 🟦 Word grid contains ONLY the Spanish words needed */
-    targetSentenceWords.forEach(w => {
+    /* 🟦 Word grid (shuffled) */
+    shuffledWords.forEach(w => {
         const pill = document.createElement("button");
         pill.className = "word-pill build-pill";
         pill.textContent = w;
@@ -1070,7 +1115,7 @@ function renderBuildTab() {
 
         if (correct) {
             buildScore = 100;
-            feedback.textContent = "✅ Perfect — you duplicated the Spanish sentence!";
+            feedback.textContent = "✅ Perfect — you matched the Spanish translation!";
         } else {
             buildScore = 40;
             feedback.textContent = `❌ Not quite. The correct sentence is: "${spanishSentence}"`;
