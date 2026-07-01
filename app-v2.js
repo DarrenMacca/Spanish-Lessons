@@ -27,8 +27,6 @@ const LEVEL_WORDS = {
         { en: "no", es: "no" },
         { en: "sorry", es: "lo siento" },
         { en: "excuse me", es: "perdón" },
-
-        /* A1 CONNECTORS */
         { en: "and", es: "y" },
         { en: "but", es: "pero" },
         { en: "or", es: "o" },
@@ -39,30 +37,22 @@ const LEVEL_WORDS = {
         { en: "very", es: "muy" },
         { en: "a little", es: "un poco" },
         { en: "more", es: "más" },
-
-        /* PRONOUNS */
         { en: "I", es: "yo" },
         { en: "you", es: "tú" },
         { en: "he", es: "él" },
         { en: "she", es: "ella" },
         { en: "we", es: "nosotros" },
         { en: "they", es: "ellos" },
-
-        /* FOOD & DRINK */
         { en: "water", es: "agua" },
         { en: "food", es: "comida" },
         { en: "coffee", es: "café" },
         { en: "tea", es: "té" },
         { en: "milk", es: "leche" },
         { en: "bread", es: "pan" },
-
-        /* NEW A1 FOOD WORDS */
         { en: "beer", es: "cerveza" },
         { en: "steak", es: "bistec" },
         { en: "potato chips", es: "papas fritas" },
         { en: "egg", es: "huevo" },
-
-        /* EXPANDED FOOD VOCAB */
         { en: "fruit", es: "fruta" },
         { en: "apple", es: "manzana" },
         { en: "orange", es: "naranja" },
@@ -77,37 +67,27 @@ const LEVEL_WORDS = {
         { en: "butter", es: "mantequilla" },
         { en: "sugar", es: "azúcar" },
         { en: "salt", es: "sal" },
-
-        /* PLACES & OBJECTS */
         { en: "bathroom", es: "baño" },
         { en: "hotel", es: "hotel" },
         { en: "room", es: "habitación" },
         { en: "key", es: "llave" },
         { en: "table", es: "mesa" },
         { en: "chair", es: "silla" },
-
-        /* RESTAURANT */
         { en: "menu", es: "menú" },
         { en: "bill", es: "cuenta" },
         { en: "waiter", es: "camarero" },
         { en: "I want", es: "quiero" },
         { en: "I would like", es: "me gustaría" },
-
-        /* TRANSPORT */
         { en: "bus", es: "autobús" },
         { en: "train", es: "tren" },
         { en: "ticket", es: "boleto" },
         { en: "station", es: "estación" },
         { en: "airport", es: "aeropuerto" },
-
-        /* SHOPPING */
         { en: "how much?", es: "¿cuánto cuesta?" },
         { en: "cheap", es: "barato" },
         { en: "expensive", es: "caro" },
         { en: "open", es: "abierto" },
         { en: "closed", es: "cerrado" },
-
-        /* EMERGENCY */
         { en: "help", es: "ayuda" },
         { en: "doctor", es: "doctor" },
         { en: "police", es: "policía" },
@@ -119,31 +99,26 @@ const LEVEL_WORDS = {
         { en: "I am looking for", es: "busco" },
         { en: "I don't understand", es: "no entiendo" },
         { en: "can you help me?", es: "¿puede ayudarme?" },
-
         { en: "breakfast", es: "desayuno" },
         { en: "lunch", es: "almuerzo" },
         { en: "dinner", es: "cena" },
         { en: "reservation", es: "reserva" },
         { en: "table for two", es: "mesa para dos" },
         { en: "allergic to", es: "alérgico a" },
-
         { en: "city center", es: "centro de la ciudad" },
         { en: "pharmacy", es: "farmacia" },
         { en: "supermarket", es: "supermercado" },
         { en: "turn left", es: "gire a la izquierda" },
         { en: "turn right", es: "gire a la derecha" },
         { en: "straight ahead", es: "todo recto" },
-
         { en: "receipt", es: "recibo" },
         { en: "card", es: "tarjeta" },
         { en: "cash", es: "efectivo" },
         { en: "discount", es: "descuento" },
         { en: "size", es: "talla" },
-
         { en: "I feel sick", es: "me siento enfermo" },
         { en: "I need a doctor", es: "necesito un doctor" },
         { en: "I lost my passport", es: "perdí mi pasaporte" },
-
         { en: "I think that", es: "creo que" },
         { en: "I prefer", es: "prefiero" },
         { en: "I am going to", es: "voy a" },
@@ -156,26 +131,21 @@ const LEVEL_WORDS = {
         { en: "I enjoy traveling", es: "disfruto viajar" },
         { en: "I work as a developer", es: "trabajo como desarrollador" },
         { en: "I would like to improve", es: "me gustaría mejorar" },
-
         { en: "in my opinion", es: "en mi opinión" },
         { en: "I agree", es: "estoy de acuerdo" },
         { en: "I disagree", es: "no estoy de acuerdo" },
         { en: "it depends", es: "depende" },
-
         { en: "real situations", es: "situaciones reales" },
         { en: "daily conversations", es: "conversaciones diarias" },
         { en: "future plans", es: "planes futuros" },
         { en: "past experiences", es: "experiencias pasadas" },
-
         { en: "meeting", es: "reunión" },
         { en: "project", es: "proyecto" },
         { en: "deadline", es: "fecha límite" },
         { en: "task", es: "tarea" },
-
         { en: "insurance", es: "seguro" },
         { en: "accident", es: "accidente" },
         { en: "lost luggage", es: "equipaje perdido" },
-
         { en: "I went", es: "fui" },
         { en: "I saw", es: "vi" },
         { en: "I did", es: "hice" },
@@ -184,11 +154,14 @@ const LEVEL_WORDS = {
     ]
 };
 
+/* ============================
+   LISTEN CATEGORIES
+============================ */
+
 const LISTEN_CATEGORIES = {
     "Greetings & Basics": ["hola", "adiós", "por favor", "gracias", "sí", "no", "lo siento", "perdón"],
     "Connectors": ["y", "pero", "o", "porque", "también", "muy", "un poco", "más"],
     "People & Pronouns": ["yo", "tú", "él", "ella", "nosotros", "ellos"],
-
     "Food & Drink": [
         "agua", "comida", "café", "té", "leche", "pan",
         "cerveza", "bistec", "papas fritas", "huevo",
@@ -197,17 +170,16 @@ const LISTEN_CATEGORIES = {
         "arroz", "frijoles", "queso", "mantequilla",
         "azúcar", "sal"
     ],
-
     "Café & Restaurant": ["menú", "cuenta", "camarero", "quiero", "me gustaría"],
-
     "Places & Objects": ["baño", "hotel", "habitación", "llave", "mesa", "silla"],
-
     "Travel": ["autobús", "tren", "boleto", "estación", "aeropuerto"],
-
     "Shopping": ["¿cuánto cuesta?", "barato", "caro", "abierto", "cerrado"],
-
     "Emergency": ["ayuda", "doctor", "policía", "estoy perdido"]
 };
+
+/* ============================
+   GRAMMAR PACK
+============================ */
 
 const GRAMMAR_PACK = {
     A1: [
@@ -223,6 +195,10 @@ const GRAMMAR_PACK = {
         { title: "Subjunctive (intro)", text: "Use subjunctive after doubt, desire, or emotion." }
     ]
 };
+
+/* ============================
+   SCENARIOS PACK
+============================ */
 
 const SCENARIOS_PACK = {
     A1: [
@@ -242,59 +218,9 @@ const SCENARIOS_PACK = {
     ]
 };
 
-const SENTENCE_TARGETS = {
-    A1: [
-        {
-            prompt: "Introduce yourself politely.",
-            keywords: ["soy", "me llamo"],
-            feedback: "Great for basic introductions."
-        },
-        {
-            prompt: "Ask for something in a shop or café.",
-            keywords: ["quiero", "por favor"],
-            feedback: "Useful for everyday requests."
-        },
-        {
-            prompt: "Say where something is.",
-            keywords: ["está", "aquí", "allí"],
-            feedback: "Good location practice."
-        }
-    ],
-    A2: [
-        {
-            prompt: "Explain what you need in a store or pharmacy.",
-            keywords: ["necesito", "para"],
-            feedback: "Great for real‑world errands."
-        },
-        {
-            prompt: "Talk about your plans for today.",
-            keywords: ["voy a", "mañana", "hoy"],
-            feedback: "Strong future‑tense practice."
-        },
-        {
-            prompt: "Describe your room or home.",
-            keywords: ["hay", "tengo", "en mi"],
-            feedback: "Useful descriptive practice."
-        }
-    ],
-    B1: [
-        {
-            prompt: "Describe a past experience.",
-            keywords: ["fui", "hice", "vi"],
-            feedback: "Good past‑tense storytelling."
-        },
-        {
-            prompt: "Talk about your job or studies.",
-            keywords: ["trabajo", "estudio", "porque"],
-            feedback: "Useful for everyday conversations."
-        },
-        {
-            prompt: "Explain your future goals.",
-            keywords: ["quiero", "me gustaría", "plan"],
-            feedback: "Strong future‑planning practice."
-        }
-    ]
-};
+/* ============================
+   CONVERSATION PROMPTS
+============================ */
 
 const CONVERSATION_PROMPTS = {
     A1: [
@@ -388,7 +314,7 @@ function loadStudentName() {
 }
 
 /* ============================
-   UNIVERSAL AUDIO ENGINE (SAFE MODE)
+   UNIVERSAL AUDIO ENGINE
 ============================ */
 
 function getLatAmVoice() {
@@ -435,17 +361,83 @@ function speakSpanish(text) {
 }
 
 /* ============================
-   SINGLE WORD AUDIO (REQUIRED)
+   LISTEN TAB AUDIO HELPERS
 ============================ */
 
 function playSingleWord(index) {
     const words = LEVEL_WORDS[currentLevel] || [];
-    if (!words.length || index < 0 || index >= words.length) return;
-    speakSpanish(words[index].es);
+    const item = words[index];
+    if (!item) return;
+    speakSpanish(item.es);
+}
+
+function autoPlayListen() {
+    const words = LEVEL_WORDS[currentLevel] || [];
+    if (!words.length) return;
+
+    autoPlayActive = true;
+    autoPlayPaused = false;
+    autoPlayIndex = 0;
+
+    speechSynthesis.cancel();
+
+    function playNext() {
+        if (!autoPlayActive || autoPlayPaused) return;
+        if (autoPlayIndex >= words.length) {
+            autoPlayActive = false;
+            return;
+        }
+
+                const item = words[autoPlayIndex];
+        autoPlayIndex++;
+
+        if (!item) {
+            playNext();
+            return;
+        }
+
+        const rateControl = document.getElementById("rate");
+        const rate = rateControl ? parseFloat(rateControl.value) || 1.0 : 1.0;
+
+        const utter = new SpeechSynthesisUtterance(item.es);
+        utter.lang = "es-MX";
+        utter.rate = rate;
+
+        const voice = getLatAmVoice();
+        if (voice) utter.voice = voice;
+
+        utter.onend = () => {
+            if (autoPlayActive && !autoPlayPaused) {
+                setTimeout(playNext, 400);
+            }
+        };
+
+        speechSynthesis.speak(utter);
+    }
+
+    playNext();
+}
+
+function stopAutoPlay() {
+    autoPlayActive = false;
+    autoPlayPaused = false;
+    autoPlayIndex = 0;
+    speechSynthesis.cancel();
+}
+
+function pauseAutoPlay() {
+    autoPlayPaused = true;
+    speechSynthesis.pause();
+}
+
+function resumeAutoPlay() {
+    if (!autoPlayActive) return;
+    autoPlayPaused = false;
+    speechSynthesis.resume();
 }
 
 /* ============================
-   LISTEN TAB (SAFE MODE)
+   LISTEN TAB RENDERING
 ============================ */
 
 function renderListenTab() {
@@ -487,7 +479,7 @@ function renderListenTab() {
     };
 
     function renderCategories(filterText = "") {
-        try { speechSynthesis.cancel(); } catch (e) {}
+        try { speechSynthesis.cancel(); } catch(e) {}
 
         catContainer.innerHTML = "";
 
@@ -579,7 +571,7 @@ function renderListenTab() {
 }
 
 /* ============================
-   FLASHCARDS (SAFE MODE)
+   FLASHCARDS
 ============================ */
 
 function renderFlashcardsTab() {
@@ -632,7 +624,7 @@ function renderFlashcardsTab() {
 }
 
 /* ============================
-   QUIZ ENGINE (SAFE MODE)
+   QUIZ ENGINE
 ============================ */
 
 function renderQuizTab() {
@@ -843,7 +835,7 @@ function renderQuizTab() {
 }
 
 /* ============================
-   SENTENCE BUILDER (ADVANCED)
+   SENTENCE BUILDER
 ============================ */
 
 function renderBuildTab() {
@@ -853,47 +845,34 @@ function renderBuildTab() {
     const levelWords = LEVEL_WORDS[currentLevel] || [];
 
     const promptPairs = [
-        /* DRINKS */
         { en: "I want water", es: ["quiero", "agua"] },
         { en: "I want milk", es: ["quiero", "leche"] },
         { en: "I want coffee", es: ["quiero", "café"] },
         { en: "I want tea", es: ["quiero", "té"] },
         { en: "I want beer", es: ["quiero", "cerveza"] },
-
-        /* BASIC FOOD */
         { en: "I want food", es: ["quiero", "comida"] },
         { en: "I want bread", es: ["quiero", "pan"] },
         { en: "I want an egg", es: ["quiero", "un", "huevo"] },
         { en: "I want potato chips", es: ["quiero", "papas", "fritas"] },
         { en: "I want steak", es: ["quiero", "bistec"] },
-
-        /* FRUIT */
         { en: "I want fruit", es: ["quiero", "fruta"] },
         { en: "I want an apple", es: ["quiero", "una", "manzana"] },
         { en: "I want an orange", es: ["quiero", "una", "naranja"] },
         { en: "I want a banana", es: ["quiero", "un", "plátano"] },
-
-        /* MEALS */
         { en: "I want chicken", es: ["quiero", "pollo"] },
         { en: "I want fish", es: ["quiero", "pescado"] },
         { en: "I want soup", es: ["quiero", "sopa"] },
         { en: "I want salad", es: ["quiero", "ensalada"] },
         { en: "I want rice", es: ["quiero", "arroz"] },
         { en: "I want beans", es: ["quiero", "frijoles"] },
-
-        /* COMBINATIONS */
         { en: "I want beer and potato chips", es: ["quiero", "cerveza", "y", "papas", "fritas"] },
         { en: "I want steak and water", es: ["quiero", "bistec", "y", "agua"] },
         { en: "I want eggs and coffee", es: ["quiero", "huevos", "y", "café"] },
         { en: "I want rice and beans", es: ["quiero", "arroz", "y", "frijoles"] },
         { en: "I want bread and cheese", es: ["quiero", "pan", "y", "queso"] },
         { en: "I want fruit and water", es: ["quiero", "fruta", "y", "agua"] },
-
-        /* RESTAURANT PHRASES */
         { en: "I want the menu", es: ["quiero", "el", "menú"] },
         { en: "I want the bill please", es: ["quiero", "la", "cuenta", "por favor"] },
-
-        /* EXISTING PROMPTS */
         { en: "Where is the bathroom?", es: ["dónde", "está", "el", "baño"] },
         { en: "I need help", es: ["necesito", "ayuda"] },
         { en: "I am lost", es: ["estoy", "perdido"] },
@@ -1201,7 +1180,6 @@ function showMiniCelebration(container, score) {
         </div>
     `;
 }
-
 /* ============================
    CONVERSATION BUILDER
 ============================ */
@@ -1488,7 +1466,7 @@ function closeCertificate() {
 }
 
 /* ============================
-   DASHBOARD ENGINE (SAFE MODE)
+   DASHBOARD ENGINE
 ============================ */
 
 function updateDashboard() {
@@ -1631,7 +1609,7 @@ function changeLevel(level) {
 }
 
 /* ============================
-   DOMContentLoaded (SAFE MODE)
+   DOMContentLoaded
 ============================ */
 
 document.addEventListener("DOMContentLoaded", () => {
