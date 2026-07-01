@@ -62,7 +62,7 @@ const LEVEL_WORDS = {
         { en: "potato chips", es: "papas fritas" },
         { en: "egg", es: "huevo" },
 
-        /* EXPANDED A1 FOOD VOCABULARY */
+        /* EXPANDED FOOD VOCAB */
         { en: "fruit", es: "fruta" },
         { en: "apple", es: "manzana" },
         { en: "orange", es: "naranja" },
@@ -188,12 +188,27 @@ const LISTEN_CATEGORIES = {
     "Greetings & Basics": ["hola", "adiós", "por favor", "gracias", "sí", "no", "lo siento", "perdón"],
     "Connectors": ["y", "pero", "o", "porque", "también", "muy", "un poco", "más"],
     "People & Pronouns": ["yo", "tú", "él", "ella", "nosotros", "ellos"],
-    "Common Nouns": ["agua", "comida", "café", "té", "leche", "pan", "baño", "hotel", "habitación", "llave", "mesa", "silla"],
+
+    "Food & Drink": [
+        "agua", "comida", "café", "té", "leche", "pan",
+        "cerveza", "bistec", "papas fritas", "huevo",
+        "fruta", "manzana", "naranja", "plátano",
+        "pollo", "pescado", "sopa", "ensalada",
+        "arroz", "frijoles", "queso", "mantequilla",
+        "azúcar", "sal"
+    ],
+
     "Café & Restaurant": ["menú", "cuenta", "camarero", "quiero", "me gustaría"],
+
+    "Places & Objects": ["baño", "hotel", "habitación", "llave", "mesa", "silla"],
+
     "Travel": ["autobús", "tren", "boleto", "estación", "aeropuerto"],
+
     "Shopping": ["¿cuánto cuesta?", "barato", "caro", "abierto", "cerrado"],
+
     "Emergency": ["ayuda", "doctor", "policía", "estoy perdido"]
 };
+
 
 const GRAMMAR_PACK = {
     A1: [
