@@ -27,6 +27,29 @@
 
         <div class="dashboard-grid">
 
+            <div class="dashboard-name-block" style="margin-bottom:20px;">
+    <label for="student-name" style="font-weight:600; font-size:18px; color:#e0f2fe;">
+        Your Name
+    </label>
+
+    <input id="student-name"
+           class="input-field"
+           placeholder="Enter your name…"
+           style="margin-top:8px;">
+
+    <button class="primary-btn"
+            onclick="saveStudentName()"
+            style="margin-top:10px;">
+        Save Name
+    </button>
+
+    <p id="name-status"
+       style="margin-top:10px; color:#94a3b8; font-size:14px;">
+       This name will appear on your certificates and personalised messages.
+    </p>
+</div>
+
+            
             <div class="card">
                 <div class="card-header">
                     <div class="card-title">Quiz Status</div>
