@@ -431,12 +431,19 @@ function renderFlashcardsTab() {
 
         wrapper.onclick = () => {
             card.classList.toggle("flipped");
-            if (card.classList.contains("flipped")) speakSpanish(item.es);
+
+            // Force mobile Safari/Chrome to repaint
+            card.style.transform = card.style.transform;
+
+            if (card.classList.contains("flipped")) {
+                speakSpanish(item.es);
+            }
         };
 
         grid.appendChild(wrapper);
     });
 }
+
 
 function speakSpanish(text) {
     const rate = parseFloat(document.getElementById("rate").value);
