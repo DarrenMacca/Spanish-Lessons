@@ -33,7 +33,6 @@ function loadStudentName() {
 
 /* ============================
    UNIVERSAL AUDIO ENGINE
-   (MUST LOAD BEFORE ANY TABS)
 ============================ */
 
 function getLatAmVoice() {
@@ -74,9 +73,7 @@ document.addEventListener("DOMContentLoaded", () => {
     const voiceSelect = document.getElementById("voice-select");
     if (voiceSelect) {
         voiceSelect.value = selectedVoice;
-        voiceSelect.onchange = () => {
-            selectedVoice = voiceSelect.value;
-        };
+        voiceSelect.onchange = () => selectedVoice = voiceSelect.value;
     }
 
     loadStudentName();
@@ -88,7 +85,7 @@ document.addEventListener("DOMContentLoaded", () => {
     const firstTabBtn = document.querySelector(".tab-btn");
     showTab("listen", { target: firstTabBtn });
 
-    speechSynthesis.onvoiceschanged = () => {};
+    speechSynthesis.onvoiceschanged = () => getLatAmVoice();
 });
 
 /* ============================
@@ -254,7 +251,7 @@ function changeLevel(level) {
 }
 
 /* ============================
-   LISTEN TAB (GROUPED)
+   LISTEN TAB
 ============================ */
 
 let autoPlayActive = false;
@@ -380,7 +377,7 @@ function resumeAutoPlay() {
 }
 
 /* ============================
-   FLASHCARDS (Audio Fixed)
+   FLASHCARDS
 ============================ */
 
 function renderFlashcardsTab() {
@@ -421,12 +418,10 @@ function renderFlashcardsTab() {
 
         wrapper.onclick = () => {
             card.classList.toggle("flipped");
-
-            // Mobile repaint fix
             card.style.transform = card.style.transform;
 
             if (card.classList.contains("flipped")) {
-                speakSpanish(item.es); // NOW WORKS
+                speakSpanish(item.es);
             }
         };
 
@@ -484,3 +479,8 @@ function renderQuizTab() {
     function updateProgress() {
         const pct = (total / TOTAL_QUESTIONS) * 100;
         progressBar.style.width = pct + "%";
+    }
+
+    function updateScore() {
+        quizScore = total === 0 ? 0 : Math.round((correct / total) * 100);
+        scoreDisplay.textContent = `Score: ${quizScore
