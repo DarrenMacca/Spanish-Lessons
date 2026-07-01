@@ -126,7 +126,7 @@ document.addEventListener("DOMContentLoaded", () => {
 ============================ */
 
 const LEVEL_WORDS = {
-    A1: [
+     A1: [
         { en: "hello", es: "hola" },
         { en: "goodbye", es: "adiós" },
         { en: "please", es: "por favor" },
@@ -148,6 +148,7 @@ const LEVEL_WORDS = {
         { en: "a little", es: "un poco" },
         { en: "more", es: "más" },
 
+        /* PRONOUNS */
         { en: "I", es: "yo" },
         { en: "you", es: "tú" },
         { en: "he", es: "él" },
@@ -155,12 +156,37 @@ const LEVEL_WORDS = {
         { en: "we", es: "nosotros" },
         { en: "they", es: "ellos" },
 
+        /* FOOD & DRINK */
         { en: "water", es: "agua" },
         { en: "food", es: "comida" },
         { en: "coffee", es: "café" },
         { en: "tea", es: "té" },
         { en: "milk", es: "leche" },
         { en: "bread", es: "pan" },
+
+        /* NEW A1 FOOD WORDS YOU ADDED */
+        { en: "beer", es: "cerveza" },
+        { en: "steak", es: "bistec" },
+        { en: "potato chips", es: "papas fritas" },
+        { en: "egg", es: "huevo" },
+
+        /* NEW EXPANDED A1 FOOD VOCABULARY */
+        { en: "fruit", es: "fruta" },
+        { en: "apple", es: "manzana" },
+        { en: "orange", es: "naranja" },
+        { en: "banana", es: "plátano" },
+        { en: "chicken", es: "pollo" },
+        { en: "fish", es: "pescado" },
+        { en: "soup", es: "sopa" },
+        { en: "salad", es: "ensalada" },
+        { en: "rice", es: "arroz" },
+        { en: "beans", es: "frijoles" },
+        { en: "cheese", es: "queso" },
+        { en: "butter", es: "mantequilla" },
+        { en: "sugar", es: "azúcar" },
+        { en: "salt", es: "sal" },
+
+        /* PLACES & OBJECTS */
         { en: "bathroom", es: "baño" },
         { en: "hotel", es: "hotel" },
         { en: "room", es: "habitación" },
@@ -168,29 +194,34 @@ const LEVEL_WORDS = {
         { en: "table", es: "mesa" },
         { en: "chair", es: "silla" },
 
+        /* RESTAURANT */
         { en: "menu", es: "menú" },
         { en: "bill", es: "cuenta" },
         { en: "waiter", es: "camarero" },
         { en: "I want", es: "quiero" },
         { en: "I would like", es: "me gustaría" },
 
+        /* TRANSPORT */
         { en: "bus", es: "autobús" },
         { en: "train", es: "tren" },
         { en: "ticket", es: "boleto" },
         { en: "station", es: "estación" },
         { en: "airport", es: "aeropuerto" },
 
+        /* SHOPPING */
         { en: "how much?", es: "¿cuánto cuesta?" },
         { en: "cheap", es: "barato" },
         { en: "expensive", es: "caro" },
         { en: "open", es: "abierto" },
         { en: "closed", es: "cerrado" },
 
+        /* EMERGENCY */
         { en: "help", es: "ayuda" },
         { en: "doctor", es: "doctor" },
         { en: "police", es: "policía" },
         { en: "I am lost", es: "estoy perdido" }
     ],
+
 
     A2: [
         { en: "I need", es: "necesito" },
