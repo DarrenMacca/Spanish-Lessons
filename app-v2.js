@@ -9,125 +9,16 @@ let buildStreak = 0;
 let convCount = 0;
 let selectedVoice = "female";
 
-/* ============================
-   STUDENT NAME STORAGE
-============================ */
-
-function saveStudentName() {
-    const input = document.getElementById("student-name");
-    if (!input) return;
-
-    const name = input.value.trim();
-    if (!name) return;
-
-    try {
-        localStorage.setItem("studentName", name);
-    } catch (e) {
-        console.warn("Unable to save student name:", e);
-    }
-
-    const status = document.getElementById("name-status");
-    if (status) status.textContent = `Name saved: ${name} — this will appear on your certificates and messages.`;
-}
-
-function loadStudentName() {
-    const input = document.getElementById("student-name");
-    if (!input) return;
-
-    let stored = null;
-    try {
-        stored = localStorage.getItem("studentName");
-    } catch (e) {
-        console.warn("Unable to load student name:", e);
-    }
-
-    if (stored) input.value = stored;
-}
-
-/* ============================
-   UNIVERSAL AUDIO ENGINE (SAFE MODE)
-============================ */
-
-function getLatAmVoice() {
-    if (typeof speechSynthesis === "undefined") return null;
-
-    const voices = speechSynthesis.getVoices ? speechSynthesis.getVoices() : [];
-    if (!voices || !voices.length) return null;
-
-    const latAmVoices = voices.filter(v =>
-        v.lang === "es-MX" || v.lang === "es-US" || v.lang === "es-419"
-    );
-
-    if (!latAmVoices.length) return voices[0];
-
-    if (selectedVoice === "female") {
-        return latAmVoices.find(v => v.name.toLowerCase().includes("female")) || latAmVoices[0];
-    } else {
-        return latAmVoices.find(v => v.name.toLowerCase().includes("male")) || latAmVoices[0];
-    }
-}
-
-function speakSpanish(text) {
-    if (typeof speechSynthesis === "undefined" || typeof SpeechSynthesisUtterance === "undefined") {
-        console.warn("Speech synthesis not supported in this browser.");
-        return;
-    }
-
-    const rateControl = document.getElementById("rate");
-    const rate = rateControl ? parseFloat(rateControl.value) || 1.0 : 1.0;
-
-    const utter = new SpeechSynthesisUtterance(text);
-    utter.lang = "es-MX";
-    utter.rate = rate;
-
-    const voice = getLatAmVoice();
-    if (voice) utter.voice = voice;
-
-    try {
-        speechSynthesis.cancel();
-        speechSynthesis.speak(utter);
-    } catch (e) {
-        console.warn("Error during speech synthesis:", e);
-    }
-}
-
-/* ============================
-   DOMContentLoaded (SAFE MODE)
-============================ */
-
-document.addEventListener("DOMContentLoaded", () => {
-    try {
-        const voiceSelect = document.getElementById("voice-select");
-        if (voiceSelect) {
-            voiceSelect.value = selectedVoice;
-            voiceSelect.onchange = () => selectedVoice = voiceSelect.value;
-        }
-
-        loadStudentName();
-        updateDashboard();
-
-        const levelSelect = document.getElementById("level-select");
-        if (levelSelect) currentLevel = levelSelect.value || "A1";
-
-        renderAllTabs();
-
-        const firstTabBtn = document.querySelector(".tab-btn");
-        if (firstTabBtn) showTab("listen", { target: firstTabBtn });
-
-        if (typeof speechSynthesis !== "undefined") {
-            speechSynthesis.onvoiceschanged = () => getLatAmVoice();
-        }
-    } catch (e) {
-        console.error("Error in DOMContentLoaded:", e);
-    }
-});
+let autoPlayActive = false;
+let autoPlayPaused = false;
+let autoPlayIndex = 0;
 
 /* ============================
    DATA PACKS
 ============================ */
 
 const LEVEL_WORDS = {
-     A1: [
+    A1: [
         { en: "hello", es: "hola" },
         { en: "goodbye", es: "adiós" },
         { en: "please", es: "por favor" },
@@ -165,13 +56,13 @@ const LEVEL_WORDS = {
         { en: "milk", es: "leche" },
         { en: "bread", es: "pan" },
 
-        /* NEW A1 FOOD WORDS YOU ADDED */
+        /* NEW A1 FOOD WORDS */
         { en: "beer", es: "cerveza" },
         { en: "steak", es: "bistec" },
         { en: "potato chips", es: "papas fritas" },
         { en: "egg", es: "huevo" },
 
-        /* NEW EXPANDED A1 FOOD VOCABULARY */
+        /* EXPANDED A1 FOOD VOCABULARY */
         { en: "fruit", es: "fruta" },
         { en: "apple", es: "manzana" },
         { en: "orange", es: "naranja" },
@@ -222,7 +113,6 @@ const LEVEL_WORDS = {
         { en: "police", es: "policía" },
         { en: "I am lost", es: "estoy perdido" }
     ],
-
 
     A2: [
         { en: "I need", es: "necesito" },
@@ -447,55 +337,99 @@ const CONVERSATION_PROMPTS = {
 };
 
 /* ============================
-   TAB SWITCHING (SAFE MODE)
+   STUDENT NAME STORAGE
 ============================ */
 
-function showTab(tabId, event) {
+function saveStudentName() {
+    const input = document.getElementById("student-name");
+    if (!input) return;
+
+    const name = input.value.trim();
+    if (!name) return;
+
     try {
-        document.querySelectorAll(".tab-content").forEach(tab => {
-            tab.classList.add("hidden");
-            tab.classList.remove("active-tab");
-        });
-
-        const target = document.getElementById(tabId);
-        if (target) {
-            target.classList.remove("hidden");
-            target.classList.add("active-tab");
-        }
-
-        document.querySelectorAll(".tab-btn").forEach(btn => btn.classList.remove("active"));
-        if (event && event.target) event.target.classList.add("active");
-
-        renderTab(tabId);
+        localStorage.setItem("studentName", name);
     } catch (e) {
-        console.error("Error in showTab:", e);
+        console.warn("Unable to save student name:", e);
+    }
+
+    const status = document.getElementById("name-status");
+    if (status) {
+        status.textContent = `Name saved: ${name} — this will appear on your certificates and messages.`;
     }
 }
 
+function loadStudentName() {
+    const input = document.getElementById("student-name");
+    if (!input) return;
+
+    let stored = null;
+    try {
+        stored = localStorage.getItem("studentName");
+    } catch (e) {
+        console.warn("Unable to load student name:", e);
+    }
+
+    if (stored) input.value = stored;
+}
+
 /* ============================
-   LEVEL SWITCHING
+   UNIVERSAL AUDIO ENGINE (SAFE MODE)
 ============================ */
 
-function changeLevel(level) {
-    currentLevel = level || "A1";
-    const status = document.getElementById("level-status");
-    if (status) status.textContent = `Current Level: ${currentLevel}`;
-    renderAllTabs();
+function getLatAmVoice() {
+    if (typeof speechSynthesis === "undefined") return null;
+
+    const voices = speechSynthesis.getVoices ? speechSynthesis.getVoices() : [];
+    if (!voices || !voices.length) return null;
+
+    const latAmVoices = voices.filter(v =>
+        v.lang === "es-MX" || v.lang === "es-US" || v.lang === "es-419"
+    );
+
+    if (!latAmVoices.length) return voices[0];
+
+    if (selectedVoice === "female") {
+        return latAmVoices.find(v => v.name.toLowerCase().includes("female")) || latAmVoices[0];
+    } else {
+        return latAmVoices.find(v => v.name.toLowerCase().includes("male")) || latAmVoices[0];
+    }
+}
+
+function speakSpanish(text) {
+    if (typeof speechSynthesis === "undefined" || typeof SpeechSynthesisUtterance === "undefined") {
+        console.warn("Speech synthesis not supported in this browser.");
+        return;
+    }
+
+    const rateControl = document.getElementById("rate");
+    const rate = rateControl ? parseFloat(rateControl.value) || 1.0 : 1.0;
+
+    const utter = new SpeechSynthesisUtterance(text);
+    utter.lang = "es-MX";
+    utter.rate = rate;
+
+    const voice = getLatAmVoice();
+    if (voice) utter.voice = voice;
+
+    try {
+        speechSynthesis.cancel();
+        speechSynthesis.speak(utter);
+    } catch (e) {
+        console.warn("Error during speech synthesis:", e);
+    }
 }
 
 /* ============================
    LISTEN TAB (SAFE MODE)
 ============================ */
 
-let autoPlayActive = false;
-let autoPlayPaused = false;
-let autoPlayIndex = 0;
-
 function renderListenTab() {
     const container = document.getElementById("listen");
     if (!container) return;
 
     const words = LEVEL_WORDS[currentLevel] || [];
+
     container.innerHTML = `
         <h3>Listen & Repeat (${currentLevel})</h3>
 
@@ -922,10 +856,6 @@ function renderBuildTab() {
 
     const levelWords = LEVEL_WORDS[currentLevel] || [];
 
-    /* ============================
-       ENGLISH → SPANISH PROMPTS
-    ============================= */
-
     const promptPairs = [
         /* DRINKS */
         { en: "I want water", es: ["quiero", "agua"] },
@@ -981,22 +911,14 @@ function renderBuildTab() {
         { en: "I need a doctor", es: ["necesito", "un", "doctor"] }
     ];
 
-    /* ============================
-       AI-LIKE SENTENCE GENERATION
-       (using only Listen-tab words)
-    ============================= */
-
     function generateSpanishSentence(pair, levelWords) {
-        // Base sentence from prompt mapping
         const base = [...pair.es];
 
-        // Optionally enrich with connectors from LEVEL_WORDS (still only Listen words)
         const connectors = ["y", "pero", "también", "con", "sin"];
         const availableConnectors = levelWords
             .map(w => w.es)
             .filter(w => connectors.includes(w));
 
-        // Simple heuristic: sometimes add one connector at the end (for AI-like variation)
         if (availableConnectors.length > 0 && Math.random() < 0.25) {
             const extra = availableConnectors[Math.floor(Math.random() * availableConnectors.length)];
             base.push(extra);
@@ -1005,31 +927,22 @@ function renderBuildTab() {
         return base;
     }
 
-    /* Pick a random English → Spanish pair */
     const pair = promptPairs[Math.floor(Math.random() * promptPairs.length)];
     const englishPrompt = pair.en;
 
-    // AI-generated Spanish sentence using only Listen-tab words
     const spanishWordsNeeded = generateSpanishSentence(pair, levelWords);
     const spanishSentence = spanishWordsNeeded.join(" ");
 
-    /* Randomise word order + add distractor words */
     const shuffledWords = createWordGridWithDistractors(spanishWordsNeeded, levelWords);
-
-    /* ============================
-       BUILD TAB UI
-    ============================= */
 
     container.innerHTML = `
         <h3>Sentence Builder (${currentLevel})</h3>
         <p>Read the English prompt, listen to the Spanish sentence, then rebuild it using the word grid.</p>
 
-        <!-- Streak display -->
         <div style="margin-bottom:8px; color:#e2e8f0; font-size:14px;">
             Streak: <span id="build-streak-value">${buildStreak}</span> 🔥
         </div>
 
-        <!-- English Prompt -->
         <div style="
             padding:14px;
             border-radius:10px;
@@ -1043,31 +956,25 @@ function renderBuildTab() {
             </span>
         </div>
 
-        <!-- Hear Spanish Audio -->
         <button class="primary-btn" id="hear-target-btn" style="margin-bottom:10px;">
             ▶️ Hear Spanish Sentence
         </button>
 
-        <!-- Hint Button -->
         <button class="secondary-btn" id="hint-btn" style="margin-bottom:10px;">
             💡 Show Hint
         </button>
 
-        <!-- Undo Last Word -->
         <button class="secondary-btn" id="undo-btn" style="margin-bottom:10px;">
             ↩ Undo Last Word
         </button>
 
-        <!-- Reset Button -->
         <button class="secondary-btn" id="reset-btn" style="margin-bottom:15px;">
             🔄 Reset Answer
         </button>
 
-        <!-- Output Box -->
         <textarea id="build-output" class="input-field" rows="3"
             placeholder="Rebuild the Spanish sentence here..."></textarea>
 
-        <!-- Word Grid -->
         <div id="build-words" style="
             margin-top:15px;
             display:grid;
@@ -1076,10 +983,10 @@ function renderBuildTab() {
         "></div>
 
         <button class="primary-btn" id="build-check" style="margin-top:12px;">Check Sentence</button>
+        <button class="primary-btn" id="build-next" style="margin-top:12px;">Next Sentence ➜</button>
 
         <div id="build-feedback" style="margin-top:12px; font-size:14px; color:#e2e8f0;"></div>
 
-        <!-- Celebration area -->
         <div id="build-celebration" style="margin-top:10px;"></div>
     `;
 
@@ -1091,17 +998,16 @@ function renderBuildTab() {
     const resetBtn = document.getElementById("reset-btn");
     const undoBtn = document.getElementById("undo-btn");
     const checkBtn = document.getElementById("build-check");
+    const nextBtn = document.getElementById("build-next");
     const streakValue = document.getElementById("build-streak-value");
     const celebrationBox = document.getElementById("build-celebration");
 
-    if (!wordGrid || !output || !feedback || !hearBtn || !hintBtn || !resetBtn || !undoBtn || !checkBtn || !streakValue || !celebrationBox) return;
+    if (!wordGrid || !output || !feedback || !hearBtn || !hintBtn || !resetBtn || !undoBtn || !checkBtn || !nextBtn || !streakValue || !celebrationBox) return;
 
-    /* 🔊 Accurate Spanish audio */
     hearBtn.onclick = () => {
         speakSpanish(spanishSentence);
     };
 
-    /* 💡 Progressive-style Hint (simple version) */
     hintBtn.onclick = () => {
         const hintBox = document.createElement("div");
         hintBox.style.marginTop = "10px";
@@ -1124,14 +1030,12 @@ function renderBuildTab() {
         hintBtn.disabled = true;
     };
 
-    /* 🔄 Reset Answer */
     resetBtn.onclick = () => {
         output.value = "";
         feedback.textContent = "";
         celebrationBox.innerHTML = "";
     };
 
-    /* ↩ Undo Last Word */
     undoBtn.onclick = () => {
         const current = output.value.trim();
         if (!current) return;
@@ -1140,7 +1044,6 @@ function renderBuildTab() {
         output.value = parts.join(" ");
     };
 
-    /* 🟦 Word grid (shuffled + distractors) */
     shuffledWords.forEach(w => {
         const pill = document.createElement("button");
         pill.className = "word-pill build-pill";
@@ -1153,7 +1056,6 @@ function renderBuildTab() {
         wordGrid.appendChild(pill);
     });
 
-    /* ✔ Smart checking + partial scoring + streak + celebration */
     checkBtn.onclick = () => {
         const learnerSentence = output.value.trim();
         celebrationBox.innerHTML = "";
@@ -1169,10 +1071,8 @@ function renderBuildTab() {
         const analysis = analyzeSentence(targetTokens, learnerTokens);
         buildScore = analysis.score;
 
-        // Smart error feedback
         feedback.innerHTML = buildFeedbackMessage(analysis, spanishSentence);
 
-        // Streak + celebration
         if (buildScore >= 90) {
             buildStreak += 1;
             streakValue.textContent = buildStreak.toString();
@@ -1185,143 +1085,126 @@ function renderBuildTab() {
         updateDashboard();
     };
 
-    /* ============================
-       Helper: create grid with distractors
-    ============================= */
-
-    function createWordGridWithDistractors(targetWords, levelWords) {
-        const base = [...targetWords];
-
-        // Collect possible distractors from LEVEL_WORDS (Listen tab) that are not in target
-        const allSpanish = levelWords.map(w => w.es);
-        const candidates = allSpanish.filter(w => !base.includes(w));
-
-        // Add up to 3 distractors
-        const distractors = [];
-        const maxDistractors = Math.min(3, candidates.length);
-        while (distractors.length < maxDistractors) {
-            const w = candidates[Math.floor(Math.random() * candidates.length)];
-            if (!distractors.includes(w)) distractors.push(w);
-        }
-
-        const combined = base.concat(distractors);
-        return combined.sort(() => Math.random() - 0.5);
-    }
-
-    /* ============================
-       Helper: analyze sentence
-       (partial scoring + smart feedback)
-    ============================= */
-
-    function analyzeSentence(targetTokens, learnerTokens) {
-        const targetSet = new Set(targetTokens);
-        const learnerSet = new Set(learnerTokens);
-
-        let correctCount = 0;
-        let missing = [];
-        let extra = [];
-        let wrongOrder = false;
-
-        // Count correct tokens
-        learnerTokens.forEach((tok, idx) => {
-            if (targetSet.has(tok)) {
-                correctCount++;
-            } else {
-                extra.push(tok);
-            }
-        });
-
-        // Missing tokens
-        targetTokens.forEach(tok => {
-            if (!learnerSet.has(tok)) {
-                missing.push(tok);
-            }
-        });
-
-        // Order check (simple)
-        const trimmedLearner = learnerTokens.filter(t => targetSet.has(t));
-        const orderMatches = trimmedLearner.join(" ") === targetTokens.join(" ");
-        wrongOrder = !orderMatches && correctCount > 0;
-
-        // Partial score: based on overlap and order
-        const totalTarget = targetTokens.length;
-        let baseScore = (correctCount / totalTarget) * 100;
-
-        if (wrongOrder) {
-            baseScore = Math.max(baseScore - 20, 0);
-        }
-
-        // Clamp
-        baseScore = Math.round(baseScore);
-
-        return {
-            score: baseScore,
-            correctCount,
-            totalTarget,
-            missing,
-            extra,
-            wrongOrder
-        };
-    }
-
-    /* ============================
-       Helper: build feedback message
-    ============================= */
-
-    function buildFeedbackMessage(analysis, spanishSentence) {
-        const { score, correctCount, totalTarget, missing, extra, wrongOrder } = analysis;
-
-        let msg = `Score: ${score}% — ${correctCount}/${totalTarget} key words correct.<br>`;
-
-        if (score === 100) {
-            msg += "✅ Perfect — you matched the Spanish sentence exactly!";
-        } else if (score >= 80) {
-            msg += "👍 Very good — just a small mistake.";
-        } else if (score >= 50) {
-            msg += "⚠️ Not bad — but there are several issues.";
-        } else {
-            msg += "❌ Needs work — let's review the sentence.";
-        }
-
-        if (missing.length > 0) {
-            msg += `<br>• Missing words: <span style="color:#fca5a5;">${missing.join(", ")}</span>`;
-        }
-
-        if (extra.length > 0) {
-            msg += `<br>• Extra words: <span style="color:#fca5a5;">${extra.join(", ")}</span>`;
-        }
-
-        if (wrongOrder) {
-            msg += `<br>• Word order: <span style="color:#facc15;">Some words are in the wrong order.</span>`;
-        }
-
-        msg += `<br><br>Target sentence: "<span style="color:#a5f3fc;">${spanishSentence}</span>"`;
-
-        return msg;
-    }
-
-    /* ============================
-       Helper: mini celebration
-    ============================= */
-
-    function showMiniCelebration(container, score) {
-        container.innerHTML = `
-            <div style="
-                margin-top:8px;
-                padding:10px;
-                border-radius:10px;
-                background:rgba(34,197,94,0.15);
-                border:1px solid rgba(34,197,94,0.6);
-                color:#bbf7d0;
-                font-size:14px;
-            ">
-                🎉 Amazing! You scored ${score}% or higher.<br>
-                Keep going — your Spanish production is improving fast.
-            </div>
-        `;
-    }
+    nextBtn.onclick = () => {
+        output.value = "";
+        feedback.textContent = "";
+        celebrationBox.innerHTML = "";
+        hintBtn.disabled = false;
+        renderBuildTab();
+    };
 }
 
+function createWordGridWithDistractors(targetWords, levelWords) {
+    const base = [...targetWords];
+
+    const allSpanish = levelWords.map(w => w.es);
+    const candidates = allSpanish.filter(w => !base.includes(w));
+
+    const distractors = [];
+    const maxDistractors = Math.min(3, candidates.length);
+    while (distractors.length < maxDistractors) {
+        const w = candidates[Math.floor(Math.random() * candidates.length)];
+        if (!distractors.includes(w)) distractors.push(w);
+    }
+
+    const combined = base.concat(distractors);
+    return combined.sort(() => Math.random() - 0.5);
+}
+
+function analyzeSentence(targetTokens, learnerTokens) {
+    const targetSet = new Set(targetTokens);
+    const learnerSet = new Set(learnerTokens);
+
+    let correctCount = 0;
+    let missing = [];
+    let extra = [];
+    let wrongOrder = false;
+
+    learnerTokens.forEach(tok => {
+        if (targetSet.has(tok)) {
+            correctCount++;
+        } else {
+            extra.push(tok);
+        }
+    });
+
+    targetTokens.forEach(tok => {
+        if (!learnerSet.has(tok)) {
+            missing.push(tok);
+        }
+    });
+
+    const trimmedLearner = learnerTokens.filter(t => targetSet.has(t));
+    const orderMatches = trimmedLearner.join(" ") === targetTokens.join(" ");
+    wrongOrder = !orderMatches && correctCount > 0;
+
+    const totalTarget = targetTokens.length;
+    let baseScore = (correctCount / totalTarget) * 100;
+
+    if (wrongOrder) {
+        baseScore = Math.max(baseScore - 20, 0);
+    }
+
+    baseScore = Math.round(baseScore);
+
+    return {
+        score: baseScore,
+        correctCount,
+        totalTarget,
+        missing,
+        extra,
+        wrongOrder
+    };
+}
+
+function buildFeedbackMessage(analysis, spanishSentence) {
+    const { score, correctCount, totalTarget, missing, extra, wrongOrder } = analysis;
+
+    let msg = `Score: ${score}% — ${correctCount}/${totalTarget} key words correct.<br>`;
+
+    if (score === 100) {
+        msg += "✅ Perfect — you matched the Spanish sentence exactly!";
+    } else if (score >= 80) {
+        msg += "👍 Very good — just a small mistake.";
+    } else if (score >= 50) {
+        msg += "⚠️ Not bad — but there are several issues.";
+    } else {
+        msg += "❌ Needs work — let's review the sentence.";
+    }
+
+    if (missing.length > 0) {
+        msg += `<br>• Missing words: <span style="color:#fca5a5;">${missing.join(", ")}</span>`;
+    }
+
+    if (extra.length > 0) {
+        msg += `<br>• Extra words: <span style="color:#fca5a5;">${extra.join(", ")}</span>`;
+    }
+
+    if (wrongOrder) {
+        msg += `<br>• Word order: <span style="color:#facc15;">Some words are in the wrong order.</span>`;
+    }
+
+    msg += `<br><br>Target sentence: "<span style="color:#a5f3fc;">${spanishSentence}</span>"`;
+
+    return msg;
+}
+
+function showMiniCelebration(container, score) {
+    container.innerHTML = `
+        <div style="
+            margin-top:8px;
+            padding:10px;
+            border-radius:10px;
+            background:rgba(34,197,94,0.15);
+            border:1px solid rgba(34,197,94,0.6);
+            color:#bbf7d0;
+            font-size:14px;
+        ">
+            🎉 Amazing! You scored ${score}% or higher.<br>
+            Keep going — your Spanish production is improving fast.
+        </div>
+    `;
+}
 
 /* ============================
    CONVERSATION BUILDER
@@ -1695,7 +1578,7 @@ function goBack() {
 }
 
 /* ============================
-   RENDER ALL TABS
+   TAB RENDERING
 ============================ */
 
 function renderAllTabs() {
@@ -1710,10 +1593,6 @@ function renderAllTabs() {
     renderGrammarTab();
     renderScenarioTab();
 }
-
-/* ============================
-   RENDER SINGLE TAB
-============================ */
 
 function renderTab(tabId) {
     switch (tabId) {
@@ -1730,3 +1609,58 @@ function renderTab(tabId) {
         case "certificates": break;
     }
 }
+
+function showTab(tabId, event) {
+    const contents = document.querySelectorAll(".tab-content");
+    contents.forEach(c => c.classList.add("hidden"));
+
+    const target = document.getElementById(tabId);
+    if (target) target.classList.remove("hidden");
+
+    const buttons = document.querySelectorAll(".tab-btn");
+    buttons.forEach(btn => btn.classList.remove("active"));
+
+    if (event && event.target) {
+        event.target.classList.add("active");
+    }
+
+    renderTab(tabId);
+}
+
+function changeLevel(level) {
+    currentLevel = level || "A1";
+    const status = document.getElementById("level-status");
+    if (status) status.textContent = `Current Level: ${currentLevel}`;
+    renderAllTabs();
+}
+
+/* ============================
+   DOMContentLoaded (SAFE MODE)
+============================ */
+
+document.addEventListener("DOMContentLoaded", () => {
+    try {
+        const voiceSelect = document.getElementById("voice-select");
+        if (voiceSelect) {
+            voiceSelect.value = selectedVoice;
+            voiceSelect.onchange = () => selectedVoice = voiceSelect.value;
+        }
+
+        loadStudentName();
+        updateDashboard();
+
+        const levelSelect = document.getElementById("level-select");
+        if (levelSelect) currentLevel = levelSelect.value || "A1";
+
+        renderAllTabs();
+
+        const firstTabBtn = document.querySelector(".tab-btn");
+        if (firstTabBtn) showTab("listen", { target: firstTabBtn });
+
+        if (typeof speechSynthesis !== "undefined") {
+            speechSynthesis.onvoiceschanged = () => getLatAmVoice();
+        }
+    } catch (e) {
+        console.error("Error in DOMContentLoaded:", e);
+    }
+});
