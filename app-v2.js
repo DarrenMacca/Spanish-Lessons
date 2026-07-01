@@ -318,23 +318,37 @@ function loadStudentName() {
 ============================ */
 
 function getLatAmVoice() {
-    if (typeof speechSynthesis === "undefined") return null;
-
-    const voices = speechSynthesis.getVoices ? speechSynthesis.getVoices() : [];
+    const voices = speechSynthesis.getVoices();
     if (!voices || !voices.length) return null;
 
-    const latAmVoices = voices.filter(v =>
-        v.lang === "es-MX" || v.lang === "es-US" || v.lang === "es-419"
+    // Known Latin-American voice name patterns
+    const voiceMap = {
+        sabina: ["sabina", "mexico"],
+        paulina: ["paulina", "latam", "español"],
+        raul: ["raul", "mexico"],
+        juan: ["juan", "latam", "español"]
+    };
+
+    const selected = selectedVoice.toLowerCase();
+    const patterns = voiceMap[selected] || [];
+
+    // Try to find a matching voice
+    const match = voices.find(v =>
+        patterns.some(p => v.name.toLowerCase().includes(p))
     );
 
-    if (!latAmVoices.length) return voices[0];
+    if (match) return match;
 
-    if (selectedVoice === "female") {
-        return latAmVoices.find(v => v.name.toLowerCase().includes("female")) || latAmVoices[0];
-    } else {
-        return latAmVoices.find(v => v.name.toLowerCase().includes("male")) || latAmVoices[0];
-    }
+    // Fallback: any Latin-American Spanish voice
+    const latAmFallback = voices.find(v =>
+        v.lang === "es-MX" ||
+        v.lang === "es-US" ||
+        v.lang === "es-419"
+    );
+
+    return latAmFallback || voices[0];
 }
+
 
 function speakSpanish(text) {
     if (typeof speechSynthesis === "undefined" || typeof SpeechSynthesisUtterance === "undefined") {
@@ -1612,13 +1626,32 @@ function changeLevel(level) {
    DOMContentLoaded
 ============================ */
 
+function previewSelectedVoice() {
+    const utter = new SpeechSynthesisUtterance("Hola, esta es una prueba de voz.");
+    utter.lang = "es-MX";
+    utter.rate = 1.0;
+
+    const voice = getLatAmVoice();
+    if (voice) utter.voice = voice;
+
+    speechSynthesis.cancel();
+    speechSynthesis.speak(utter);
+}
+
+document.getElementById("voice-preview-btn").onclick = previewSelectedVoice;
+
+
 document.addEventListener("DOMContentLoaded", () => {
     try {
         const voiceSelect = document.getElementById("voice-select");
-        if (voiceSelect) {
-            voiceSelect.value = selectedVoice;
-            voiceSelect.onchange = () => selectedVoice = voiceSelect.value;
-        }
+if (voiceSelect) {
+    voiceSelect.value = selectedVoice;
+    voiceSelect.onchange = () => {
+        selectedVoice = voiceSelect.value;
+        previewSelectedVoice(); // auto-preview on change
+    };
+}
+
 
         loadStudentName();
         updateDashboard();
