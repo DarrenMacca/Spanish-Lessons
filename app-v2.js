@@ -5,6 +5,7 @@
 let currentLevel = "A1";
 let quizScore = 0;
 let buildScore = 0;
+let buildStreak = 0;
 let convCount = 0;
 let selectedVoice = "female";
 
@@ -912,14 +913,14 @@ function renderQuizTab() {
 }
 
 /* ============================
-   SENTENCE BUILDER
+   SENTENCE BUILDER (ADVANCED)
 ============================ */
 
 function renderBuildTab() {
     const container = document.getElementById("build");
     if (!container) return;
 
-    const words = LEVEL_WORDS[currentLevel] || [];
+    const levelWords = LEVEL_WORDS[currentLevel] || [];
 
     /* ============================
        ENGLISH → SPANISH PROMPTS
@@ -980,16 +981,40 @@ function renderBuildTab() {
         { en: "I need a doctor", es: ["necesito", "un", "doctor"] }
     ];
 
+    /* ============================
+       AI-LIKE SENTENCE GENERATION
+       (using only Listen-tab words)
+    ============================= */
+
+    function generateSpanishSentence(pair, levelWords) {
+        // Base sentence from prompt mapping
+        const base = [...pair.es];
+
+        // Optionally enrich with connectors from LEVEL_WORDS (still only Listen words)
+        const connectors = ["y", "pero", "también", "con", "sin"];
+        const availableConnectors = levelWords
+            .map(w => w.es)
+            .filter(w => connectors.includes(w));
+
+        // Simple heuristic: sometimes add one connector at the end (for AI-like variation)
+        if (availableConnectors.length > 0 && Math.random() < 0.25) {
+            const extra = availableConnectors[Math.floor(Math.random() * availableConnectors.length)];
+            base.push(extra);
+        }
+
+        return base;
+    }
+
     /* Pick a random English → Spanish pair */
     const pair = promptPairs[Math.floor(Math.random() * promptPairs.length)];
     const englishPrompt = pair.en;
-    const spanishWordsNeeded = pair.es;
 
-    /* Spanish sentence */
+    // AI-generated Spanish sentence using only Listen-tab words
+    const spanishWordsNeeded = generateSpanishSentence(pair, levelWords);
     const spanishSentence = spanishWordsNeeded.join(" ");
 
-    /* Randomise word order */
-    const shuffledWords = [...spanishWordsNeeded].sort(() => Math.random() - 0.5);
+    /* Randomise word order + add distractor words */
+    const shuffledWords = createWordGridWithDistractors(spanishWordsNeeded, levelWords);
 
     /* ============================
        BUILD TAB UI
@@ -998,6 +1023,11 @@ function renderBuildTab() {
     container.innerHTML = `
         <h3>Sentence Builder (${currentLevel})</h3>
         <p>Read the English prompt, listen to the Spanish sentence, then rebuild it using the word grid.</p>
+
+        <!-- Streak display -->
+        <div style="margin-bottom:8px; color:#e2e8f0; font-size:14px;">
+            Streak: <span id="build-streak-value">${buildStreak}</span> 🔥
+        </div>
 
         <!-- English Prompt -->
         <div style="
@@ -1023,6 +1053,11 @@ function renderBuildTab() {
             💡 Show Hint
         </button>
 
+        <!-- Undo Last Word -->
+        <button class="secondary-btn" id="undo-btn" style="margin-bottom:10px;">
+            ↩ Undo Last Word
+        </button>
+
         <!-- Reset Button -->
         <button class="secondary-btn" id="reset-btn" style="margin-bottom:15px;">
             🔄 Reset Answer
@@ -1043,6 +1078,9 @@ function renderBuildTab() {
         <button class="primary-btn" id="build-check" style="margin-top:12px;">Check Sentence</button>
 
         <div id="build-feedback" style="margin-top:12px; font-size:14px; color:#e2e8f0;"></div>
+
+        <!-- Celebration area -->
+        <div id="build-celebration" style="margin-top:10px;"></div>
     `;
 
     const wordGrid = document.getElementById("build-words");
@@ -1051,16 +1089,19 @@ function renderBuildTab() {
     const hearBtn = document.getElementById("hear-target-btn");
     const hintBtn = document.getElementById("hint-btn");
     const resetBtn = document.getElementById("reset-btn");
+    const undoBtn = document.getElementById("undo-btn");
     const checkBtn = document.getElementById("build-check");
+    const streakValue = document.getElementById("build-streak-value");
+    const celebrationBox = document.getElementById("build-celebration");
 
-    if (!wordGrid || !output || !feedback || !hearBtn || !hintBtn || !resetBtn || !checkBtn) return;
+    if (!wordGrid || !output || !feedback || !hearBtn || !hintBtn || !resetBtn || !undoBtn || !checkBtn || !streakValue || !celebrationBox) return;
 
     /* 🔊 Accurate Spanish audio */
     hearBtn.onclick = () => {
         speakSpanish(spanishSentence);
     };
 
-    /* 💡 Hint Mode */
+    /* 💡 Progressive-style Hint (simple version) */
     hintBtn.onclick = () => {
         const hintBox = document.createElement("div");
         hintBox.style.marginTop = "10px";
@@ -1087,9 +1128,19 @@ function renderBuildTab() {
     resetBtn.onclick = () => {
         output.value = "";
         feedback.textContent = "";
+        celebrationBox.innerHTML = "";
     };
 
-    /* 🟦 Word grid (shuffled) */
+    /* ↩ Undo Last Word */
+    undoBtn.onclick = () => {
+        const current = output.value.trim();
+        if (!current) return;
+        const parts = current.split(/\s+/);
+        parts.pop();
+        output.value = parts.join(" ");
+    };
+
+    /* 🟦 Word grid (shuffled + distractors) */
     shuffledWords.forEach(w => {
         const pill = document.createElement("button");
         pill.className = "word-pill build-pill";
@@ -1102,29 +1153,174 @@ function renderBuildTab() {
         wordGrid.appendChild(pill);
     });
 
-    /* ✔ Correct Spanish sentence checking */
+    /* ✔ Smart checking + partial scoring + streak + celebration */
     checkBtn.onclick = () => {
         const learnerSentence = output.value.trim();
+        celebrationBox.innerHTML = "";
 
         if (!learnerSentence) {
             feedback.textContent = "Write or build the Spanish sentence first.";
             return;
         }
 
-        const correct = learnerSentence === spanishSentence;
+        const targetTokens = spanishSentence.split(/\s+/);
+        const learnerTokens = learnerSentence.split(/\s+/);
 
-        if (correct) {
-            buildScore = 100;
-            feedback.textContent = "✅ Perfect — you matched the Spanish translation!";
+        const analysis = analyzeSentence(targetTokens, learnerTokens);
+        buildScore = analysis.score;
+
+        // Smart error feedback
+        feedback.innerHTML = buildFeedbackMessage(analysis, spanishSentence);
+
+        // Streak + celebration
+        if (buildScore >= 90) {
+            buildStreak += 1;
+            streakValue.textContent = buildStreak.toString();
+            showMiniCelebration(celebrationBox, buildScore);
         } else {
-            buildScore = 40;
-            feedback.textContent = `❌ Not quite. The correct sentence is: "${spanishSentence}"`;
+            buildStreak = 0;
+            streakValue.textContent = "0";
         }
 
         updateDashboard();
     };
-}
 
+    /* ============================
+       Helper: create grid with distractors
+    ============================= */
+
+    function createWordGridWithDistractors(targetWords, levelWords) {
+        const base = [...targetWords];
+
+        // Collect possible distractors from LEVEL_WORDS (Listen tab) that are not in target
+        const allSpanish = levelWords.map(w => w.es);
+        const candidates = allSpanish.filter(w => !base.includes(w));
+
+        // Add up to 3 distractors
+        const distractors = [];
+        const maxDistractors = Math.min(3, candidates.length);
+        while (distractors.length < maxDistractors) {
+            const w = candidates[Math.floor(Math.random() * candidates.length)];
+            if (!distractors.includes(w)) distractors.push(w);
+        }
+
+        const combined = base.concat(distractors);
+        return combined.sort(() => Math.random() - 0.5);
+    }
+
+    /* ============================
+       Helper: analyze sentence
+       (partial scoring + smart feedback)
+    ============================= */
+
+    function analyzeSentence(targetTokens, learnerTokens) {
+        const targetSet = new Set(targetTokens);
+        const learnerSet = new Set(learnerTokens);
+
+        let correctCount = 0;
+        let missing = [];
+        let extra = [];
+        let wrongOrder = false;
+
+        // Count correct tokens
+        learnerTokens.forEach((tok, idx) => {
+            if (targetSet.has(tok)) {
+                correctCount++;
+            } else {
+                extra.push(tok);
+            }
+        });
+
+        // Missing tokens
+        targetTokens.forEach(tok => {
+            if (!learnerSet.has(tok)) {
+                missing.push(tok);
+            }
+        });
+
+        // Order check (simple)
+        const trimmedLearner = learnerTokens.filter(t => targetSet.has(t));
+        const orderMatches = trimmedLearner.join(" ") === targetTokens.join(" ");
+        wrongOrder = !orderMatches && correctCount > 0;
+
+        // Partial score: based on overlap and order
+        const totalTarget = targetTokens.length;
+        let baseScore = (correctCount / totalTarget) * 100;
+
+        if (wrongOrder) {
+            baseScore = Math.max(baseScore - 20, 0);
+        }
+
+        // Clamp
+        baseScore = Math.round(baseScore);
+
+        return {
+            score: baseScore,
+            correctCount,
+            totalTarget,
+            missing,
+            extra,
+            wrongOrder
+        };
+    }
+
+    /* ============================
+       Helper: build feedback message
+    ============================= */
+
+    function buildFeedbackMessage(analysis, spanishSentence) {
+        const { score, correctCount, totalTarget, missing, extra, wrongOrder } = analysis;
+
+        let msg = `Score: ${score}% — ${correctCount}/${totalTarget} key words correct.<br>`;
+
+        if (score === 100) {
+            msg += "✅ Perfect — you matched the Spanish sentence exactly!";
+        } else if (score >= 80) {
+            msg += "👍 Very good — just a small mistake.";
+        } else if (score >= 50) {
+            msg += "⚠️ Not bad — but there are several issues.";
+        } else {
+            msg += "❌ Needs work — let's review the sentence.";
+        }
+
+        if (missing.length > 0) {
+            msg += `<br>• Missing words: <span style="color:#fca5a5;">${missing.join(", ")}</span>`;
+        }
+
+        if (extra.length > 0) {
+            msg += `<br>• Extra words: <span style="color:#fca5a5;">${extra.join(", ")}</span>`;
+        }
+
+        if (wrongOrder) {
+            msg += `<br>• Word order: <span style="color:#facc15;">Some words are in the wrong order.</span>`;
+        }
+
+        msg += `<br><br>Target sentence: "<span style="color:#a5f3fc;">${spanishSentence}</span>"`;
+
+        return msg;
+    }
+
+    /* ============================
+       Helper: mini celebration
+    ============================= */
+
+    function showMiniCelebration(container, score) {
+        container.innerHTML = `
+            <div style="
+                margin-top:8px;
+                padding:10px;
+                border-radius:10px;
+                background:rgba(34,197,94,0.15);
+                border:1px solid rgba(34,197,94,0.6);
+                color:#bbf7d0;
+                font-size:14px;
+            ">
+                🎉 Amazing! You scored ${score}% or higher.<br>
+                Keep going — your Spanish production is improving fast.
+            </div>
+        `;
+    }
+}
 
 
 /* ============================
