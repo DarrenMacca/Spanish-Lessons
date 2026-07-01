@@ -321,18 +321,11 @@ function getLatAmVoice() {
     const voices = speechSynthesis.getVoices();
     if (!voices || !voices.length) return null;
 
-    // Known Latin-American voice name patterns
-    const voiceMap = {
-        sabina: ["sabina", "mexico"],
-        paulina: ["paulina", "latam", "español"],
-        raul: ["raul", "mexico"],
-        juan: ["juan", "latam", "español"]
-    };
+    const femalePatterns = ["sabina", "mexico"];
+    const malePatterns   = ["raul", "mexico"];
 
-    const selected = selectedVoice.toLowerCase();
-    const patterns = voiceMap[selected] || [];
+    const patterns = selectedVoice === "sabina" ? femalePatterns : malePatterns;
 
-    // Try to find a matching voice
     const match = voices.find(v =>
         patterns.some(p => v.name.toLowerCase().includes(p))
     );
@@ -340,14 +333,15 @@ function getLatAmVoice() {
     if (match) return match;
 
     // Fallback: any Latin-American Spanish voice
-    const latAmFallback = voices.find(v =>
+    const fallback = voices.find(v =>
         v.lang === "es-MX" ||
         v.lang === "es-US" ||
         v.lang === "es-419"
     );
 
-    return latAmFallback || voices[0];
+    return fallback || voices[0];
 }
+
 
 
 function speakSpanish(text) {
@@ -1639,6 +1633,7 @@ function previewSelectedVoice() {
 }
 
 document.getElementById("voice-preview-btn").onclick = previewSelectedVoice;
+
 
 
 document.addEventListener("DOMContentLoaded", () => {
