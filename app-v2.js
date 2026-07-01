@@ -575,7 +575,6 @@ function renderListenTab() {
 }
 
 
-}
 
 
 /* ============================
