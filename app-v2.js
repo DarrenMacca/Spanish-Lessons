@@ -463,24 +463,56 @@ function renderListenTab() {
     const catContainer = document.getElementById("listen-categories");
     if (!catContainer) return;
 
+    // Icons for each category
+    const categoryIcons = {
+        "Greetings & Basics": "👋",
+        "Connectors": "🔗",
+        "People & Pronouns": "🧑",
+        "Food & Drink": "🍎",
+        "Café & Restaurant": "☕",
+        "Places & Objects": "🏨",
+        "Travel": "🚌",
+        "Shopping": "🛒",
+        "Emergency": "⚠️"
+    };
+
+    let openCategory = null;
+
     Object.entries(LISTEN_CATEGORIES).forEach(([categoryName, esList]) => {
         const catWords = words.filter(w => esList.includes(w.es));
         if (!catWords.length) return;
 
-        const block = document.createElement("div");
-        block.style.marginTop = "20px";
+        const wrapper = document.createElement("div");
+        wrapper.className = "listen-category-wrapper";
+        wrapper.style.marginTop = "15px";
 
-        block.innerHTML = `
-            <h4 style="color:#a5f3fc; margin-bottom:10px;">${categoryName}</h4>
-            <div class="listen-grid" style="
-                display:grid;
-                grid-template-columns:repeat(auto-fill, minmax(160px, 1fr));
-                gap:12px;
-            "></div>
+        const header = document.createElement("div");
+        header.className = "listen-category-header";
+        header.style.cursor = "pointer";
+        header.style.padding = "10px";
+        header.style.border = "1px solid rgba(255,255,255,0.2)";
+        header.style.borderRadius = "8px";
+        header.style.color = "#a5f3fc";
+        header.style.fontWeight = "600";
+        header.style.display = "flex";
+        header.style.justifyContent = "space-between";
+        header.style.alignItems = "center";
+
+        header.innerHTML = `
+            <span>${categoryIcons[categoryName]} ${categoryName}</span>
+            <span class="listen-arrow" style="transition: transform 0.25s ease;">▼</span>
         `;
 
-        const grid = block.querySelector(".listen-grid");
-        if (!grid) return;
+        const content = document.createElement("div");
+        content.className = "listen-category-content";
+        content.style.display = "none";
+        content.style.marginTop = "10px";
+
+        const grid = document.createElement("div");
+        grid.className = "listen-grid";
+        grid.style.display = "grid";
+        grid.style.gridTemplateColumns = "repeat(auto-fill, minmax(160px, 1fr))";
+        grid.style.gap = "12px";
 
         catWords.forEach(w => {
             const pill = document.createElement("button");
@@ -494,9 +526,31 @@ function renderListenTab() {
             grid.appendChild(pill);
         });
 
-        catContainer.appendChild(block);
+        content.appendChild(grid);
+
+        header.onclick = () => {
+            const arrow = header.querySelector(".listen-arrow");
+            const isOpen = content.style.display === "block";
+
+            // Auto-collapse other categories
+            if (!isOpen) {
+                const allContents = document.querySelectorAll(".listen-category-content");
+                const allArrows = document.querySelectorAll(".listen-arrow");
+
+                allContents.forEach(c => c.style.display = "none");
+                allArrows.forEach(a => a.style.transform = "rotate(0deg)");
+            }
+
+            content.style.display = isOpen ? "none" : "block";
+            arrow.style.transform = isOpen ? "rotate(0deg)" : "rotate(180deg)";
+        };
+
+        wrapper.appendChild(header);
+        wrapper.appendChild(content);
+        catContainer.appendChild(wrapper);
     });
 }
+
 
 function playSingleWord(index) {
     const words = LEVEL_WORDS[currentLevel] || [];
