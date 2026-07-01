@@ -209,7 +209,6 @@ const LISTEN_CATEGORIES = {
     "Emergency": ["ayuda", "doctor", "policía", "estoy perdido"]
 };
 
-
 const GRAMMAR_PACK = {
     A1: [
         { title: "Ser vs Estar (basic)", text: "Use 'ser' for identity and permanent traits, 'estar' for states and locations." },
@@ -436,6 +435,16 @@ function speakSpanish(text) {
 }
 
 /* ============================
+   SINGLE WORD AUDIO (REQUIRED)
+============================ */
+
+function playSingleWord(index) {
+    const words = LEVEL_WORDS[currentLevel] || [];
+    if (!words.length || index < 0 || index >= words.length) return;
+    speakSpanish(words[index].es);
+}
+
+/* ============================
    LISTEN TAB (SAFE MODE)
 ============================ */
 
@@ -478,8 +487,7 @@ function renderListenTab() {
     };
 
     function renderCategories(filterText = "") {
-        // Reset speech engine so new DOM nodes bind correctly
-        try { speechSynthesis.cancel(); } catch(e) {}
+        try { speechSynthesis.cancel(); } catch (e) {}
 
         catContainer.innerHTML = "";
 
@@ -487,7 +495,6 @@ function renderListenTab() {
             let catWords = words.filter(w => esList.includes(w.es));
             if (!catWords.length) return;
 
-            // Apply search filter
             if (filterText) {
                 const lower = filterText.toLowerCase();
                 catWords = catWords.filter(w =>
@@ -545,7 +552,6 @@ function renderListenTab() {
                 const arrow = header.querySelector(".listen-arrow");
                 const isOpen = content.classList.contains("open");
 
-                // Auto-collapse all other categories
                 const allContents = document.querySelectorAll(".listen-category-content");
                 const allArrows = document.querySelectorAll(".listen-arrow");
 
@@ -564,18 +570,13 @@ function renderListenTab() {
         });
     }
 
-    // Initial render
     renderCategories();
 
-    // Live search
     searchInput.oninput = () => {
         const text = searchInput.value.trim();
         renderCategories(text);
     };
 }
-
-
-
 
 /* ============================
    FLASHCARDS (SAFE MODE)
@@ -620,7 +621,6 @@ function renderFlashcardsTab() {
 
         wrapper.onclick = () => {
             card.classList.toggle("flipped");
-            card.style.transform = card.style.transform;
 
             if (card.classList.contains("flipped")) {
                 speakSpanish(item.es);
@@ -1660,3 +1660,5 @@ document.addEventListener("DOMContentLoaded", () => {
         console.error("Error in DOMContentLoaded:", e);
     }
 });
+
+
