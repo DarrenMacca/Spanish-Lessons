@@ -899,45 +899,74 @@ function renderBuildTab() {
 
     container.innerHTML = `
         <h3>Sentence Builder (${currentLevel})</h3>
-        <p>Build a natural Spanish sentence for everyday conversation.</p>
+        <p>Listen to the target sentence, then rebuild it using the word grid.</p>
 
+        <!-- Target Box -->
         <div style="
-            padding:12px;
+            padding:14px;
             border-radius:10px;
             border:1px solid #cbd5e1;
             margin-bottom:12px;
+            background:rgba(255,255,255,0.08);
         ">
-            <strong>Target:</strong>
-            <span id="build-target" style="color:#475569;">${target.prompt}</span>
+            <strong style="color:white;">Target:</strong>
+            <span id="build-target" style="color:white; font-size:18px; font-weight:600;">
+                ${target.prompt}
+            </span>
         </div>
 
+        <!-- Hear Question Button -->
+        <button class="primary-btn" id="hear-target-btn" style="margin-bottom:15px;">
+            ▶️ Hear the Spanish Question
+        </button>
+
+        <!-- Output Box -->
         <textarea id="build-output" class="input-field" rows="3"
             placeholder="Build your Spanish sentence here..."></textarea>
 
-        <div id="build-words" style="margin-top:12px;"></div>
+        <!-- Word Grid -->
+        <div id="build-words" style="
+            margin-top:15px;
+            display:grid;
+            grid-template-columns:repeat(auto-fill, minmax(110px, 1fr));
+            gap:10px;
+        "></div>
 
         <button class="primary-btn" id="build-check" style="margin-top:12px;">Check Sentence</button>
 
-        <div id="build-feedback" style="margin-top:12px; font-size:14px; color:#475569;"></div>
+        <div id="build-feedback" style="margin-top:12px; font-size:14px; color:#e2e8f0;"></div>
     `;
 
-    const wordBank = document.getElementById("build-words");
+    const wordGrid = document.getElementById("build-words");
     const output = document.getElementById("build-output");
     const feedback = document.getElementById("build-feedback");
+    const hearBtn = document.getElementById("hear-target-btn");
     const checkBtn = document.getElementById("build-check");
 
-    if (!wordBank || !output || !feedback || !checkBtn) return;
+    if (!wordGrid || !output || !feedback || !hearBtn || !checkBtn) return;
 
+    /* 🔊 Hear the Spanish version of the target */
+    hearBtn.onclick = () => {
+        speakSpanish(target.prompt);
+    };
+
+    /* 🟦 Smaller pill styling */
     words.forEach(w => {
-        const pill = document.createElement("span");
+        const pill = document.createElement("button");
         pill.className = "word-pill";
+        pill.style.padding = "6px 10px";
+        pill.style.fontSize = "14px";
+        pill.style.width = "100%";
         pill.textContent = w.es;
+
         pill.onclick = () => {
             output.value = (output.value + " " + w.es).trim();
         };
-        wordBank.appendChild(pill);
+
+        wordGrid.appendChild(pill);
     });
 
+    /* ✔ Sentence checking */
     checkBtn.onclick = () => {
         const text = output.value.trim();
         if (!text) {
@@ -961,6 +990,7 @@ function renderBuildTab() {
         feedback.textContent = `Estimated strength: ${score}% — ${target.feedback}`;
     };
 }
+
 
 /* ============================
    CONVERSATION BUILDER
