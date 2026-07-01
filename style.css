@@ -403,3 +403,19 @@ button {
     display: inline-block;
     transition: transform 0.25s ease;
 }
+
+/* ============================
+   LISTEN TAB — SLIDE ANIMATION
+============================ */
+
+.listen-category-content {
+    overflow: hidden;
+    max-height: 0;
+    opacity: 0;
+    transition: max-height 0.35s ease, opacity 0.35s ease;
+}
+
+.listen-category-content.open {
+    max-height: 500px;
+    opacity: 1;
+}
