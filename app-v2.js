@@ -1,7 +1,7 @@
 /* ============================
    GLOBAL STATE
 ============================ */
- 
+
 let currentLevel = "A1";
 let quizScore = 0;
 let buildScore = 0;
@@ -9,16 +9,42 @@ let convCount = 0;
 let selectedVoice = "female";
 
 /* ============================
-   INIT
+   STUDENT NAME STORAGE
+============================ */
+
+function saveStudentName() {
+    const input = document.getElementById("student-name");
+    if (!input) return;
+
+    const name = input.value.trim();
+    if (!name) return;
+
+    localStorage.setItem("studentName", name);
+    alert(`Name saved: ${name}`);
+}
+
+function loadStudentName() {
+    const input = document.getElementById("student-name");
+    if (!input) return;
+
+    const stored = localStorage.getItem("studentName");
+    if (stored) input.value = stored;
+}
+
+/* ============================
+   UNIVERSAL AUDIO ENGINE
 ============================ */
 
 document.addEventListener("DOMContentLoaded", () => {
     const voiceSelect = document.getElementById("voice-select");
     if (voiceSelect) {
         voiceSelect.value = selectedVoice;
-        voiceSelect.onchange = () => (selectedVoice = voiceSelect.value);
+        voiceSelect.onchange = () => {
+            selectedVoice = voiceSelect.value;
+        };
     }
 
+    loadStudentName();
     updateDashboard();
 
     const levelSelect = document.getElementById("level-select");
@@ -29,6 +55,36 @@ document.addEventListener("DOMContentLoaded", () => {
 
     speechSynthesis.onvoiceschanged = () => {};
 });
+
+function getLatAmVoice() {
+    const voices = speechSynthesis.getVoices();
+    const latAmVoices = voices.filter(v =>
+        v.lang === "es-MX" || v.lang === "es-US" || v.lang === "es-419"
+    );
+
+    if (!latAmVoices.length) return null;
+
+    if (selectedVoice === "female") {
+        return latAmVoices.find(v => v.name.toLowerCase().includes("female")) || latAmVoices[0];
+    } else {
+        return latAmVoices.find(v => v.name.toLowerCase().includes("male")) || latAmVoices[0];
+    }
+}
+
+function speakSpanish(text) {
+    const rateControl = document.getElementById("rate");
+    const rate = rateControl ? parseFloat(rateControl.value) : 1.0;
+
+    const utter = new SpeechSynthesisUtterance(text);
+    utter.lang = "es-MX";
+    utter.rate = rate;
+
+    const voice = getLatAmVoice();
+    if (voice) utter.voice = voice;
+
+    speechSynthesis.cancel();
+    speechSynthesis.speak(utter);
+}
 
 /* ============================
    DATA PACKS
@@ -236,25 +292,6 @@ function changeLevel(level) {
 }
 
 /* ============================
-   VOICE SELECTION
-============================ */
-
-function getLatAmVoice() {
-    const voices = speechSynthesis.getVoices();
-    const latAmVoices = voices.filter(v =>
-        v.lang === "es-MX" || v.lang === "es-US" || v.lang === "es-419"
-    );
-
-    if (!latAmVoices.length) return null;
-
-    if (selectedVoice === "female") {
-        return latAmVoices.find(v => v.name.toLowerCase().includes("female")) || latAmVoices[0];
-    } else {
-        return latAmVoices.find(v => v.name.toLowerCase().includes("male")) || latAmVoices[0];
-    }
-}
-
-/* ============================
    LISTEN TAB (GROUPED)
 ============================ */
 
@@ -318,18 +355,7 @@ function renderListenTab() {
 
 function playSingleWord(index) {
     const words = LEVEL_WORDS[currentLevel];
-    const item = words[index];
-    const rate = parseFloat(document.getElementById("rate").value);
-
-    const utter = new SpeechSynthesisUtterance(item.es);
-    utter.lang = "es-MX";
-    utter.rate = rate;
-
-    const voice = getLatAmVoice();
-    if (voice) utter.voice = voice;
-
-    speechSynthesis.cancel();
-    speechSynthesis.speak(utter);
+    speakSpanish(words[index].es);
 }
 
 function autoPlayListen() {
@@ -352,9 +378,11 @@ function playNextWord(words) {
     }
 
     const item = words[autoPlayIndex];
-    const rate = parseFloat(document.getElementById("rate").value);
 
     const utter = new SpeechSynthesisUtterance(item.es);
+    const rateControl = document.getElementById("rate");
+    const rate = rateControl ? parseFloat(rateControl.value) : 1.0;
+
     utter.lang = "es-MX";
     utter.rate = rate;
 
@@ -444,21 +472,6 @@ function renderFlashcardsTab() {
     });
 }
 
-
-function speakSpanish(text) {
-    const rate = parseFloat(document.getElementById("rate").value);
-
-    const utter = new SpeechSynthesisUtterance(text);
-    utter.lang = "es-MX";
-    utter.rate = rate;
-
-    const voice = getLatAmVoice();
-    if (voice) utter.voice = voice;
-
-    speechSynthesis.cancel();
-    speechSynthesis.speak(utter);
-}
-
 /* ============================
    QUIZ ENGINE (progress + review)
 ============================ */
@@ -514,6 +527,7 @@ function renderQuizTab() {
     function updateScore() {
         quizScore = total === 0 ? 0 : Math.round((correct / total) * 100);
         scoreDisplay.textContent = `Score: ${quizScore}% (${correct}/${total})`;
+        updateDashboard();
     }
 
     function nextQuestion() {
@@ -592,48 +606,44 @@ function renderQuizTab() {
     }
 
     function renderTypeAnswer(item) {
-    area.innerHTML = `
-        <div class="quiz-block">
-            <strong>Spanish:</strong> ${item.es}
-            <p>Type the English translation:</p>
-            <input id="quiz-input" class="input-field" placeholder="English answer">
-            <button class="primary-btn" id="quiz-submit">Submit</button>
-        </div>
-    `;
+        area.innerHTML = `
+            <div class="quiz-block">
+                <strong>Spanish:</strong> ${item.es}
+                <p>Type the English translation:</p>
+                <input id="quiz-input" class="input-field" placeholder="English answer">
+                <button class="primary-btn" id="quiz-submit">Submit</button>
+            </div>
+        `;
 
-    const input = document.getElementById("quiz-input");
-    const submit = document.getElementById("quiz-submit");
+        const input = document.getElementById("quiz-input");
+        const submit = document.getElementById("quiz-submit");
 
-    function processAnswer() {
-        const ans = input.value.trim().toLowerCase();
-        total++;
-        updateProgress();
+        function processAnswer() {
+            const ans = input.value.trim().toLowerCase();
+            total++;
+            updateProgress();
 
-        if (ans === item.en.toLowerCase()) {
-            correct++;
-            feedback.textContent = "✅ Correct!";
-        } else {
-            feedback.textContent = `❌ Incorrect. Correct answer: ${item.en}`;
-            incorrectList.push({ es: item.es, correct: item.en });
+            if (ans === item.en.toLowerCase()) {
+                correct++;
+                feedback.textContent = "✅ Correct!";
+            } else {
+                feedback.textContent = `❌ Incorrect. Correct answer: ${item.en}`;
+                incorrectList.push({ es: item.es, correct: item.en });
+            }
+
+            updateScore();
+            setTimeout(nextQuestion, 600);
         }
 
-        updateScore();
-        setTimeout(nextQuestion, 600);
+        submit.onclick = processAnswer;
+
+        input.addEventListener("keydown", (e) => {
+            if (e.key === "Enter") {
+                e.preventDefault();
+                processAnswer();
+            }
+        });
     }
-
-    // Click submit
-    submit.onclick = processAnswer;
-
-    // Press Enter
-    input.addEventListener("keydown", (e) => {
-        if (e.key === "Enter") {
-            e.preventDefault();
-            processAnswer();
-        }
-    });
-}
-
-
 
     reviewBtn.onclick = () => {
         reviewArea.innerHTML = `
@@ -778,6 +788,7 @@ function renderBuildTab() {
         score = Math.min(score, 100);
 
         buildScore = score;
+        updateDashboard();
 
         feedback.textContent = `Estimated strength: ${score}% — ${target.feedback}`;
     };
@@ -891,6 +902,7 @@ function renderConversationTab() {
         score = Math.min(score, 100);
 
         convCount++;
+        updateDashboard();
 
         feedback.textContent = `Reply strength: ${score}% — ${prompt.feedback}`;
     };
@@ -987,9 +999,11 @@ function renderBadgesTab() {
     const container = document.getElementById("badges");
     if (!container) return;
 
+    const studentName = localStorage.getItem("studentName") || "Learner";
+
     container.innerHTML = `
         <h3>Badges & Milestones</h3>
-        <p>These unlock as you progress.</p>
+        <p>${studentName}, these unlock as you progress.</p>
         <ul>
             <li>🎖 Quiz Starter: Complete 5 quiz questions.</li>
             <li>🏅 Sentence Builder: Create 3 sentences.</li>
@@ -1060,6 +1074,8 @@ function openCertificate(level) {
 
     overlay.style.display = "flex";
 
+    const studentName = localStorage.getItem("studentName") || "Learner";
+
     const levelTitle = {
         A1: "A1 Beginner Spanish",
         A2: "A2 Elementary Spanish",
@@ -1069,9 +1085,10 @@ function openCertificate(level) {
     preview.innerHTML = `
         <div class="certificate-container">
             <div class="certificate-title">Spanish CEFR Mastery Portal</div>
+            <div class="certificate-student">Awarded to: ${studentName}</div>
             <div class="certificate-subtitle">${levelTitle}</div>
             <div class="certificate-statement">
-                This certifies that the learner has successfully completed the core path for level ${level}
+                This certifies that ${studentName} has successfully completed the core path for level ${level}
                 in the Spanish CEFR Mastery Portal, demonstrating consistent practice and foundational communication skills.
             </div>
             <div class="certificate-seal">
@@ -1100,6 +1117,8 @@ function updateDashboard() {
     const convStatusEl = document.getElementById("conv-status");
     const finalEl = document.getElementById("final-verdict");
 
+    const studentName = localStorage.getItem("studentName") || "Learner";
+
     if (quizStatusEl) {
         if (quizScore === 0) quizStatusEl.textContent = "Not started";
         else if (quizScore < 60) quizStatusEl.textContent = `${quizScore}% — Needs improvement`;
@@ -1119,10 +1138,10 @@ function updateDashboard() {
 
     if (finalEl) {
         if (quizScore >= 70 && buildScore >= 70 && convCount >= 5) {
-            finalEl.textContent = "A1 Completed — Ready for A2";
+            finalEl.textContent = `${studentName}, A1 Completed — Ready for A2`;
             triggerCelebration();
         } else {
-            finalEl.textContent = "Course Status: In progress";
+            finalEl.textContent = `${studentName}, your course status: In progress`;
         }
     }
 }
