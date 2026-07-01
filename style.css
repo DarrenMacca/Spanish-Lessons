@@ -378,3 +378,28 @@ button {
 .hidden {
     display: none !important;
 }
+
+/* ============================
+   HIDDEN CLASS
+============================ */
+
+.hidden {
+    display: none !important;
+}
+
+/* ============================
+   LISTEN TAB — COLLAPSIBLE SECTIONS
+============================ */
+
+.listen-category-content {
+    transition: all 0.25s ease;
+}
+
+.listen-category-header:hover {
+    background: rgba(255, 255, 255, 0.05);
+}
+
+.listen-arrow {
+    display: inline-block;
+    transition: transform 0.25s ease;
+}
