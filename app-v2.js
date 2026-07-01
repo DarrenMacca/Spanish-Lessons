@@ -889,19 +889,41 @@ function renderBuildTab() {
     if (!container) return;
 
     const words = LEVEL_WORDS[currentLevel] || [];
-    const targets = SENTENCE_TARGETS[currentLevel] || [];
-    if (!targets.length) {
-        container.innerHTML = "<p>No sentence targets for this level.</p>";
-        return;
+
+    // English prompts for the learner
+    const englishPrompts = [
+        "Introduce yourself politely.",
+        "Ask for something in a café.",
+        "Say where something is.",
+        "Ask for help.",
+        "Order food or drink.",
+        "Describe something simple.",
+        "Ask for directions.",
+        "Talk about your plans."
+    ];
+
+    // Pick a random English prompt
+    const englishPrompt = englishPrompts[Math.floor(Math.random() * englishPrompts.length)];
+
+    // Build a Spanish sentence ONLY using Listen-tab words
+    const spanishWords = words.map(w => w.es);
+
+    // Build a random 4–7 word Spanish sentence from known words
+    const sentenceLength = Math.floor(Math.random() * 3) + 4; // 4–7 words
+    const targetSentenceWords = [];
+
+    for (let i = 0; i < sentenceLength; i++) {
+        const w = spanishWords[Math.floor(Math.random() * spanishWords.length)];
+        targetSentenceWords.push(w);
     }
 
-    const target = targets[Math.floor(Math.random() * targets.length)];
+    const spanishSentence = targetSentenceWords.join(" ");
 
     container.innerHTML = `
         <h3>Sentence Builder (${currentLevel})</h3>
-        <p>Listen to the target sentence, then rebuild it using the word grid.</p>
+        <p>Read the English prompt, listen to the Spanish sentence, then rebuild it using the word grid.</p>
 
-        <!-- Target Box -->
+        <!-- English Target Box -->
         <div style="
             padding:14px;
             border-radius:10px;
@@ -909,20 +931,25 @@ function renderBuildTab() {
             margin-bottom:12px;
             background:rgba(255,255,255,0.08);
         ">
-            <strong style="color:white;">Target:</strong>
-            <span id="build-target" style="color:white; font-size:18px; font-weight:600;">
-                ${target.prompt}
+            <strong style="color:white;">English Prompt:</strong>
+            <span style="color:white; font-size:18px; font-weight:600;">
+                ${englishPrompt}
             </span>
         </div>
 
-        <!-- Hear Question Button -->
-        <button class="primary-btn" id="hear-target-btn" style="margin-bottom:15px;">
-            ▶️ Hear the Spanish Question
+        <!-- Hear Spanish Audio -->
+        <button class="primary-btn" id="hear-target-btn" style="margin-bottom:10px;">
+            ▶️ Hear Spanish Sentence
+        </button>
+
+        <!-- Hint Button -->
+        <button class="secondary-btn" id="hint-btn" style="margin-bottom:15px;">
+            💡 Show Hint
         </button>
 
         <!-- Output Box -->
         <textarea id="build-output" class="input-field" rows="3"
-            placeholder="Build your Spanish sentence here..."></textarea>
+            placeholder="Rebuild the Spanish sentence here..."></textarea>
 
         <!-- Word Grid -->
         <div id="build-words" style="
@@ -941,23 +968,47 @@ function renderBuildTab() {
     const output = document.getElementById("build-output");
     const feedback = document.getElementById("build-feedback");
     const hearBtn = document.getElementById("hear-target-btn");
+    const hintBtn = document.getElementById("hint-btn");
     const checkBtn = document.getElementById("build-check");
 
-    if (!wordGrid || !output || !feedback || !hearBtn || !checkBtn) return;
+    if (!wordGrid || !output || !feedback || !hearBtn || !hintBtn || !checkBtn) return;
 
-    /* 🔊 Hear the Spanish version of the target */
+    /* 🔊 Spanish audio */
     hearBtn.onclick = () => {
-        speakSpanish(target.prompt);
+        speakSpanish(spanishSentence);
     };
 
-    /* 🟦 Smaller pill styling */
-    words.forEach(w => {
+    /* 💡 Hint Mode */
+    hintBtn.onclick = () => {
+        const hintBox = document.createElement("div");
+        hintBox.style.marginTop = "10px";
+        hintBox.style.padding = "10px";
+        hintBox.style.border = "1px solid rgba(255,255,255,0.2)";
+        hintBox.style.borderRadius = "8px";
+        hintBox.style.color = "#e2e8f0";
+
+        const firstWord = targetSentenceWords[0];
+        const lastWord = targetSentenceWords[targetSentenceWords.length - 1];
+
+        hintBox.innerHTML = `
+            <strong>Hints:</strong><br>
+            • The sentence starts with: <span style="color:#a5f3fc;">${firstWord}</span><br>
+            • The sentence ends with: <span style="color:#a5f3fc;">${lastWord}</span><br>
+            • Number of words: <span style="color:#a5f3fc;">${targetSentenceWords.length}</span>
+        `;
+
+        hintBtn.after(hintBox);
+        hintBtn.disabled = true;
+    };
+
+    /* 🟦 Word grid contains ONLY the Spanish words needed */
+    targetSentenceWords.forEach(w => {
         const pill = document.createElement("button");
         pill.className = "word-pill build-pill";
-        pill.textContent = w.es;
+        pill.textContent = w;
 
         pill.onclick = () => {
-            output.value = (output.value + " " + w.es).trim();
+            output.value = (output.value + " " + w).trim();
         };
 
         wordGrid.appendChild(pill);
@@ -967,26 +1018,24 @@ function renderBuildTab() {
     checkBtn.onclick = () => {
         const text = output.value.trim();
         if (!text) {
-            feedback.textContent = "Write or build a sentence first.";
+            feedback.textContent = "Write or build the Spanish sentence first.";
             return;
         }
 
-        let score = Math.min(100, text.split(" ").length * 10);
+        const correct = text === spanishSentence;
 
-        let keywordHits = 0;
-        target.keywords.forEach(k => {
-            if (text.toLowerCase().includes(k.toLowerCase())) keywordHits++;
-        });
+        if (correct) {
+            buildScore = 100;
+            feedback.textContent = "✅ Perfect — you duplicated the Spanish sentence!";
+        } else {
+            buildScore = 40;
+            feedback.textContent = `❌ Not quite. The correct sentence is: "${spanishSentence}"`;
+        }
 
-        score += keywordHits * 10;
-        score = Math.min(score, 100);
-
-        buildScore = score;
         updateDashboard();
-
-        feedback.textContent = `Estimated strength: ${score}% — ${target.feedback}`;
     };
 }
+
 
 
 /* ============================
