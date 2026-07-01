@@ -477,26 +477,25 @@ function renderListenTab() {
         "Emergency": "⚠️"
     };
 
-    let openCategory = null;
-
     function renderCategories(filterText = "") {
+        // Reset speech engine so new DOM nodes bind correctly
+        try { speechSynthesis.cancel(); } catch(e) {}
+
         catContainer.innerHTML = "";
 
         Object.entries(LISTEN_CATEGORIES).forEach(([categoryName, esList]) => {
-            const catWords = words.filter(w => esList.includes(w.es));
+            let catWords = words.filter(w => esList.includes(w.es));
+            if (!catWords.length) return;
 
+            // Apply search filter
             if (filterText) {
                 const lower = filterText.toLowerCase();
-                const filtered = catWords.filter(w =>
+                catWords = catWords.filter(w =>
                     w.es.toLowerCase().includes(lower) ||
                     w.en.toLowerCase().includes(lower)
                 );
-                if (!filtered.length) return;
-                catWords.length = 0;
-                catWords.push(...filtered);
+                if (!catWords.length) return;
             }
-
-            if (!catWords.length) return;
 
             const wrapper = document.createElement("div");
             wrapper.className = "listen-category-wrapper";
@@ -546,6 +545,7 @@ function renderListenTab() {
                 const arrow = header.querySelector(".listen-arrow");
                 const isOpen = content.classList.contains("open");
 
+                // Auto-collapse all other categories
                 const allContents = document.querySelectorAll(".listen-category-content");
                 const allArrows = document.querySelectorAll(".listen-arrow");
 
@@ -562,23 +562,18 @@ function renderListenTab() {
             wrapper.appendChild(content);
             catContainer.appendChild(wrapper);
         });
-    }function renderListenTab() {
-
-    // ... your header, buttons, search bar, etc.
-
-    function renderCategories(filterText = "") {
-        try { speechSynthesis.cancel(); } catch(e) {}
-
-        // ... category rendering logic
     }
 
+    // Initial render
     renderCategories();
 
+    // Live search
     searchInput.oninput = () => {
         const text = searchInput.value.trim();
         renderCategories(text);
     };
 }
+
 
 }
 
