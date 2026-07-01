@@ -562,6 +562,14 @@ function renderListenTab() {
             wrapper.appendChild(content);
             catContainer.appendChild(wrapper);
         });
+    }function renderListenTab() {
+
+    // ... your header, buttons, search bar, etc.
+
+    function renderCategories(filterText = "") {
+        try { speechSynthesis.cancel(); } catch(e) {}
+
+        // ... category rendering logic
     }
 
     renderCategories();
@@ -570,6 +578,8 @@ function renderListenTab() {
         const text = searchInput.value.trim();
         renderCategories(text);
     };
+}
+
 }
 
 
