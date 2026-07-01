@@ -19,7 +19,11 @@ function saveStudentName() {
     const name = input.value.trim();
     if (!name) return;
 
-    localStorage.setItem("studentName", name);
+    try {
+        localStorage.setItem("studentName", name);
+    } catch (e) {
+        console.warn("Unable to save student name:", e);
+    }
 
     const status = document.getElementById("name-status");
     if (status) status.textContent = `Name saved: ${name} — this will appear on your certificates and messages.`;
@@ -29,21 +33,31 @@ function loadStudentName() {
     const input = document.getElementById("student-name");
     if (!input) return;
 
-    const stored = localStorage.getItem("studentName");
+    let stored = null;
+    try {
+        stored = localStorage.getItem("studentName");
+    } catch (e) {
+        console.warn("Unable to load student name:", e);
+    }
+
     if (stored) input.value = stored;
 }
 
 /* ============================
-   UNIVERSAL AUDIO ENGINE
+   UNIVERSAL AUDIO ENGINE (SAFE MODE)
 ============================ */
 
 function getLatAmVoice() {
-    const voices = speechSynthesis.getVoices();
+    if (typeof speechSynthesis === "undefined") return null;
+
+    const voices = speechSynthesis.getVoices ? speechSynthesis.getVoices() : [];
+    if (!voices || !voices.length) return null;
+
     const latAmVoices = voices.filter(v =>
         v.lang === "es-MX" || v.lang === "es-US" || v.lang === "es-419"
     );
 
-    if (!latAmVoices.length) return null;
+    if (!latAmVoices.length) return voices[0];
 
     if (selectedVoice === "female") {
         return latAmVoices.find(v => v.name.toLowerCase().includes("female")) || latAmVoices[0];
@@ -53,8 +67,13 @@ function getLatAmVoice() {
 }
 
 function speakSpanish(text) {
+    if (typeof speechSynthesis === "undefined" || typeof SpeechSynthesisUtterance === "undefined") {
+        console.warn("Speech synthesis not supported in this browser.");
+        return;
+    }
+
     const rateControl = document.getElementById("rate");
-    const rate = rateControl ? parseFloat(rateControl.value) : 1.0;
+    const rate = rateControl ? parseFloat(rateControl.value) || 1.0 : 1.0;
 
     const utter = new SpeechSynthesisUtterance(text);
     utter.lang = "es-MX";
@@ -63,33 +82,43 @@ function speakSpanish(text) {
     const voice = getLatAmVoice();
     if (voice) utter.voice = voice;
 
-    speechSynthesis.cancel();
-    speechSynthesis.speak(utter);
+    try {
+        speechSynthesis.cancel();
+        speechSynthesis.speak(utter);
+    } catch (e) {
+        console.warn("Error during speech synthesis:", e);
+    }
 }
 
 /* ============================
-   DOMContentLoaded
+   DOMContentLoaded (SAFE MODE)
 ============================ */
 
 document.addEventListener("DOMContentLoaded", () => {
-    const voiceSelect = document.getElementById("voice-select");
-    if (voiceSelect) {
-        voiceSelect.value = selectedVoice;
-        voiceSelect.onchange = () => selectedVoice = voiceSelect.value;
+    try {
+        const voiceSelect = document.getElementById("voice-select");
+        if (voiceSelect) {
+            voiceSelect.value = selectedVoice;
+            voiceSelect.onchange = () => selectedVoice = voiceSelect.value;
+        }
+
+        loadStudentName();
+        updateDashboard();
+
+        const levelSelect = document.getElementById("level-select");
+        if (levelSelect) currentLevel = levelSelect.value || "A1";
+
+        renderAllTabs();
+
+        const firstTabBtn = document.querySelector(".tab-btn");
+        if (firstTabBtn) showTab("listen", { target: firstTabBtn });
+
+        if (typeof speechSynthesis !== "undefined") {
+            speechSynthesis.onvoiceschanged = () => getLatAmVoice();
+        }
+    } catch (e) {
+        console.error("Error in DOMContentLoaded:", e);
     }
-
-    loadStudentName();
-    updateDashboard();
-
-    const levelSelect = document.getElementById("level-select");
-    if (levelSelect) currentLevel = levelSelect.value;
-
-    renderAllTabs();
-
-    const firstTabBtn = document.querySelector(".tab-btn");
-    if (firstTabBtn) showTab("listen", { target: firstTabBtn });
-
-    speechSynthesis.onvoiceschanged = () => getLatAmVoice();
 });
 
 /* ============================
@@ -386,25 +415,29 @@ const CONVERSATION_PROMPTS = {
 };
 
 /* ============================
-   TAB SWITCHING
+   TAB SWITCHING (SAFE MODE)
 ============================ */
 
 function showTab(tabId, event) {
-    document.querySelectorAll(".tab-content").forEach(tab => {
-        tab.classList.add("hidden");
-        tab.classList.remove("active-tab");
-    });
+    try {
+        document.querySelectorAll(".tab-content").forEach(tab => {
+            tab.classList.add("hidden");
+            tab.classList.remove("active-tab");
+        });
 
-    const target = document.getElementById(tabId);
-    if (target) {
-        target.classList.remove("hidden");
-        target.classList.add("active-tab");
+        const target = document.getElementById(tabId);
+        if (target) {
+            target.classList.remove("hidden");
+            target.classList.add("active-tab");
+        }
+
+        document.querySelectorAll(".tab-btn").forEach(btn => btn.classList.remove("active"));
+        if (event && event.target) event.target.classList.add("active");
+
+        renderTab(tabId);
+    } catch (e) {
+        console.error("Error in showTab:", e);
     }
-
-    document.querySelectorAll(".tab-btn").forEach(btn => btn.classList.remove("active"));
-    if (event && event.target) event.target.classList.add("active");
-
-    renderTab(tabId);
 }
 
 /* ============================
@@ -412,14 +445,14 @@ function showTab(tabId, event) {
 ============================ */
 
 function changeLevel(level) {
-    currentLevel = level;
+    currentLevel = level || "A1";
     const status = document.getElementById("level-status");
-    if (status) status.textContent = `Current Level: ${level}`;
+    if (status) status.textContent = `Current Level: ${currentLevel}`;
     renderAllTabs();
 }
 
 /* ============================
-   LISTEN TAB
+   LISTEN TAB (SAFE MODE)
 ============================ */
 
 let autoPlayActive = false;
@@ -431,7 +464,6 @@ function renderListenTab() {
     if (!container) return;
 
     const words = LEVEL_WORDS[currentLevel] || [];
-
     container.innerHTML = `
         <h3>Listen & Repeat (${currentLevel})</h3>
 
@@ -448,6 +480,7 @@ function renderListenTab() {
     `;
 
     const catContainer = document.getElementById("listen-categories");
+    if (!catContainer) return;
 
     Object.entries(LISTEN_CATEGORIES).forEach(([categoryName, esList]) => {
         const catWords = words.filter(w => esList.includes(w.es));
@@ -466,13 +499,17 @@ function renderListenTab() {
         `;
 
         const grid = block.querySelector(".listen-grid");
+        if (!grid) return;
 
         catWords.forEach(w => {
             const pill = document.createElement("button");
             pill.className = "word-pill";
             pill.style.width = "100%";
             pill.textContent = `${w.es} (${w.en})`;
-            pill.onclick = () => playSingleWord(words.indexOf(w));
+            pill.onclick = () => {
+                const idx = words.indexOf(w);
+                if (idx >= 0) playSingleWord(idx);
+            };
             grid.appendChild(pill);
         });
 
@@ -481,12 +518,13 @@ function renderListenTab() {
 }
 
 function playSingleWord(index) {
-    const words = LEVEL_WORDS[currentLevel];
+    const words = LEVEL_WORDS[currentLevel] || [];
+    if (!words.length || index < 0 || index >= words.length) return;
     speakSpanish(words[index].es);
 }
 
 function autoPlayListen() {
-    const words = LEVEL_WORDS[currentLevel];
+    const words = LEVEL_WORDS[currentLevel] || [];
     if (!words.length) return;
 
     autoPlayActive = true;
@@ -498,8 +536,18 @@ function autoPlayListen() {
 
 function playNextWord(words) {
     if (!autoPlayActive || autoPlayPaused) return;
+    if (!words || !words.length) {
+        autoPlayActive = false;
+        return;
+    }
 
     if (autoPlayIndex >= words.length) {
+        autoPlayActive = false;
+        return;
+    }
+
+    if (typeof speechSynthesis === "undefined" || typeof SpeechSynthesisUtterance === "undefined") {
+        console.warn("Speech synthesis not supported.");
         autoPlayActive = false;
         return;
     }
@@ -508,7 +556,7 @@ function playNextWord(words) {
 
     const utter = new SpeechSynthesisUtterance(item.es);
     const rateControl = document.getElementById("rate");
-    const rate = rateControl ? parseFloat(rateControl.value) : 1.0;
+    const rate = rateControl ? parseFloat(rateControl.value) || 1.0 : 1.0;
 
     utter.lang = "es-MX";
     utter.rate = rate;
@@ -522,30 +570,53 @@ function playNextWord(words) {
         setTimeout(() => playNextWord(words), 600);
     };
 
-    speechSynthesis.cancel();
-    speechSynthesis.speak(utter);
+    try {
+        speechSynthesis.cancel();
+        speechSynthesis.speak(utter);
+    } catch (e) {
+        console.warn("Error in autoPlayListen:", e);
+        autoPlayActive = false;
+    }
 }
 
 function stopAutoPlay() {
     autoPlayActive = false;
     autoPlayPaused = false;
-    speechSynthesis.cancel();
+    if (typeof speechSynthesis !== "undefined") {
+        try {
+            speechSynthesis.cancel();
+        } catch (e) {
+            console.warn("Error stopping autoplay:", e);
+        }
+    }
 }
 
 function pauseAutoPlay() {
     if (!autoPlayActive) return;
     autoPlayPaused = true;
-    speechSynthesis.pause();
+    if (typeof speechSynthesis !== "undefined") {
+        try {
+            speechSynthesis.pause();
+        } catch (e) {
+            console.warn("Error pausing autoplay:", e);
+        }
+    }
 }
 
 function resumeAutoPlay() {
     if (!autoPlayActive) return;
     autoPlayPaused = false;
-    speechSynthesis.resume();
+    if (typeof speechSynthesis !== "undefined") {
+        try {
+            speechSynthesis.resume();
+        } catch (e) {
+            console.warn("Error resuming autoplay:", e);
+        }
+    }
 }
 
 /* ============================
-   FLASHCARDS
+   FLASHCARDS (SAFE MODE)
 ============================ */
 
 function renderFlashcardsTab() {
@@ -564,6 +635,7 @@ function renderFlashcardsTab() {
     `;
 
     const grid = document.getElementById("flash-grid");
+    if (!grid) return;
 
     words.forEach(item => {
         const wrapper = document.createElement("div");
@@ -598,7 +670,7 @@ function renderFlashcardsTab() {
 }
 
 /* ============================
-   QUIZ ENGINE
+   QUIZ ENGINE (SAFE MODE)
 ============================ */
 
 function renderQuizTab() {
@@ -606,6 +678,10 @@ function renderQuizTab() {
     if (!container) return;
 
     const words = LEVEL_WORDS[currentLevel] || [];
+    if (!words.length) {
+        container.innerHTML = "<p>No words available for this level.</p>";
+        return;
+    }
 
     let incorrectList = [];
     const TOTAL_QUESTIONS = 10;
@@ -645,17 +721,21 @@ function renderQuizTab() {
     const reviewArea = document.getElementById("review-area");
 
     function updateProgress() {
+        if (!progressBar) return;
         const pct = (total / TOTAL_QUESTIONS) * 100;
         progressBar.style.width = pct + "%";
     }
 
     function updateScore() {
+        if (!scoreDisplay) return;
         quizScore = total === 0 ? 0 : Math.round((correct / total) * 100);
         scoreDisplay.textContent = `Score: ${quizScore}% (${correct}/${total})`;
         updateDashboard();
     }
 
     function nextQuestion() {
+        if (!area) return;
+
         if (total >= TOTAL_QUESTIONS) {
             finishQuiz();
             return;
@@ -672,6 +752,7 @@ function renderQuizTab() {
     }
 
     function finishQuiz() {
+        if (!area || !feedback || !reviewBtn) return;
         area.innerHTML = `<h4>Quiz Complete!</h4>`;
         feedback.textContent = "";
 
@@ -681,6 +762,8 @@ function renderQuizTab() {
     }
 
     function renderMultipleChoice(item) {
+        if (!area || !feedback) return;
+
         const options = generateOptions(item);
 
         area.innerHTML = `
@@ -692,6 +775,7 @@ function renderQuizTab() {
         `;
 
         const optContainer = document.getElementById("mc-options");
+        if (!optContainer) return;
 
         options.forEach(opt => {
             const btn = document.createElement("button");
@@ -722,7 +806,7 @@ function renderQuizTab() {
     function generateOptions(correctItem) {
         const options = [correctItem.en];
 
-        while (options.length < 4) {
+        while (options.length < 4 && LEVEL_WORDS[currentLevel] && LEVEL_WORDS[currentLevel].length) {
             const random = LEVEL_WORDS[currentLevel][Math.floor(Math.random() * LEVEL_WORDS[currentLevel].length)].en;
             if (!options.includes(random)) options.push(random);
         }
@@ -731,6 +815,8 @@ function renderQuizTab() {
     }
 
     function renderTypeAnswer(item) {
+        if (!area || !feedback) return;
+
         area.innerHTML = `
             <div class="quiz-block">
                 <strong>Spanish:</strong> ${item.es}
@@ -742,6 +828,7 @@ function renderQuizTab() {
 
         const input = document.getElementById("quiz-input");
         const submit = document.getElementById("quiz-submit");
+        if (!input || !submit) return;
 
         function processAnswer() {
             const ans = input.value.trim().toLowerCase();
@@ -770,21 +857,23 @@ function renderQuizTab() {
         });
     }
 
-    reviewBtn.onclick = () => {
-        reviewArea.innerHTML = `
-            <h4>Review Incorrect Answers</h4>
-            <p>Tap a word to hear the Spanish pronunciation.</p>
-        `;
+    if (reviewBtn && reviewArea) {
+        reviewBtn.onclick = () => {
+            reviewArea.innerHTML = `
+                <h4>Review Incorrect Answers</h4>
+                <p>Tap a word to hear the Spanish pronunciation.</p>
+            `;
 
-        incorrectList.forEach(item => {
-            const block = document.createElement("div");
-            block.className = "word-pill";
-            block.style.marginTop = "8px";
-            block.textContent = `${item.es} → ${item.correct}`;
-            block.onclick = () => speakSpanish(item.es);
-            reviewArea.appendChild(block);
-        });
-    };
+            incorrectList.forEach(item => {
+                const block = document.createElement("div");
+                block.className = "word-pill";
+                block.style.marginTop = "8px";
+                block.textContent = `${item.es} → ${item.correct}`;
+                block.onclick = () => speakSpanish(item.es);
+                reviewArea.appendChild(block);
+            });
+        };
+    }
 
     nextQuestion();
     updateScore();
@@ -801,6 +890,11 @@ function renderBuildTab() {
 
     const words = LEVEL_WORDS[currentLevel] || [];
     const targets = SENTENCE_TARGETS[currentLevel] || [];
+    if (!targets.length) {
+        container.innerHTML = "<p>No sentence targets for this level.</p>";
+        return;
+    }
+
     const target = targets[Math.floor(Math.random() * targets.length)];
 
     container.innerHTML = `
@@ -830,6 +924,9 @@ function renderBuildTab() {
     const wordBank = document.getElementById("build-words");
     const output = document.getElementById("build-output");
     const feedback = document.getElementById("build-feedback");
+    const checkBtn = document.getElementById("build-check");
+
+    if (!wordBank || !output || !feedback || !checkBtn) return;
 
     words.forEach(w => {
         const pill = document.createElement("span");
@@ -841,7 +938,7 @@ function renderBuildTab() {
         wordBank.appendChild(pill);
     });
 
-    document.getElementById("build-check").onclick = () => {
+    checkBtn.onclick = () => {
         const text = output.value.trim();
         if (!text) {
             feedback.textContent = "Write or build a sentence first.";
@@ -874,6 +971,11 @@ function renderConversationTab() {
     if (!container) return;
 
     const prompts = CONVERSATION_PROMPTS[currentLevel] || [];
+    if (!prompts.length) {
+        container.innerHTML = "<p>No conversation prompts for this level.</p>";
+        return;
+    }
+
     const prompt = prompts[Math.floor(Math.random() * prompts.length)];
 
     container.innerHTML = `
@@ -900,8 +1002,11 @@ function renderConversationTab() {
 
     const input = document.getElementById("conv-input");
     const feedback = document.getElementById("conv-feedback");
+    const checkBtn = document.getElementById("conv-check");
 
-    document.getElementById("conv-check").onclick = () => {
+    if (!input || !feedback || !checkBtn) return;
+
+    checkBtn.onclick = () => {
         const text = input.value.trim();
         if (!text) {
             feedback.textContent = "Write your reply first.";
@@ -957,6 +1062,8 @@ function renderSmartTab() {
     `;
 
     const promptsEl = document.getElementById("smart-prompts");
+    if (!promptsEl) return;
+
     prompts.forEach(p => {
         const block = document.createElement("div");
         block.className = "tab-content smart-block";
@@ -1001,6 +1108,8 @@ function renderDailyTab() {
     `;
 
     const listEl = document.getElementById("daily-list");
+    if (!listEl) return;
+
     tasks.forEach(t => {
         const li = document.createElement("li");
         li.textContent = t;
@@ -1016,7 +1125,12 @@ function renderBadgesTab() {
     const container = document.getElementById("badges");
     if (!container) return;
 
-    const studentName = localStorage.getItem("studentName") || "Learner";
+    let studentName = "Learner";
+    try {
+        studentName = localStorage.getItem("studentName") || "Learner";
+    } catch (e) {
+        console.warn("Unable to read student name for badges:", e);
+    }
 
     container.innerHTML = `
         <h3>Badges & Milestones</h3>
@@ -1047,6 +1161,8 @@ function renderGrammarTab() {
     `;
 
     const listEl = document.getElementById("grammar-list");
+    if (!listEl) return;
+
     items.forEach(g => {
         const block = document.createElement("div");
         block.className = "tab-content grammar-block";
@@ -1073,6 +1189,8 @@ function renderScenarioTab() {
     `;
 
     const listEl = document.getElementById("scenario-list");
+    if (!listEl) return;
+
     items.forEach(s => {
         const li = document.createElement("li");
         li.textContent = s;
@@ -1091,7 +1209,12 @@ function openCertificate(level) {
 
     overlay.style.display = "flex";
 
-    const studentName = localStorage.getItem("studentName") || "Learner";
+    let studentName = "Learner";
+    try {
+        studentName = localStorage.getItem("studentName") || "Learner";
+    } catch (e) {
+        console.warn("Unable to read student name for certificate:", e);
+    }
 
     const levelTitle = {
         A1: "A1 Beginner Spanish",
@@ -1125,7 +1248,7 @@ function closeCertificate() {
 }
 
 /* ============================
-   DASHBOARD ENGINE
+   DASHBOARD ENGINE (SAFE MODE)
 ============================ */
 
 function updateDashboard() {
@@ -1134,7 +1257,12 @@ function updateDashboard() {
     const convStatusEl = document.getElementById("conv-status");
     const finalEl = document.getElementById("final-verdict");
 
-    const studentName = localStorage.getItem("studentName") || "Learner";
+    let studentName = "Learner";
+    try {
+        studentName = localStorage.getItem("studentName") || "Learner";
+    } catch (e) {
+        console.warn("Unable to read student name for dashboard:", e);
+    }
 
     if (quizStatusEl) {
         if (quizScore === 0) quizStatusEl.textContent = "Not started";
