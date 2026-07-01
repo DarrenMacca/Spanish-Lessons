@@ -953,10 +953,7 @@ function renderBuildTab() {
     /* 🟦 Smaller pill styling */
     words.forEach(w => {
         const pill = document.createElement("button");
-        pill.className = "word-pill";
-        pill.style.padding = "6px 10px";
-        pill.style.fontSize = "14px";
-        pill.style.width = "100%";
+        pill.className = "word-pill build-pill";
         pill.textContent = w.es;
 
         pill.onclick = () => {
