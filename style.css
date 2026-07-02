@@ -84,6 +84,7 @@ body {
 }
 
 
+
 /* ============================
    FLASHCARD HOVER GLOW
 ============================ */
@@ -377,17 +378,19 @@ button {
 ============================ */
 
 .listen-category-content {
-    transition: all 0.25s ease;
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.25s ease;
 }
 
-.listen-category-header:hover {
-    background: rgba(255, 255, 255, 0.05);
+.listen-category-content.open {
+    max-height: 500px; /* enough for any category */
 }
 
 .listen-arrow {
-    display: inline-block;
     transition: transform 0.25s ease;
 }
+
 
 /* ============================
    LISTEN TAB — SLIDE ANIMATION
