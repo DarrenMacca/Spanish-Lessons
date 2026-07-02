@@ -2444,17 +2444,18 @@ function setLevel(level) {
 
 function showTab(tabId) {
     const tabs = [
-        "dashboard",
-        "listen",
-        "flash",
-        "quiz",
-        "build",
-        "conversation",
-        "grammar",
-        "certificates",
-        "badges",
-        "settings"
-    ];
+    "dashboard",
+    "listen",
+    "flash",
+    "quiz",
+    "build",
+    "conversation",
+    "grammar",
+    "certificates",
+    "badges",
+    "settings"
+];
+
 
     tabs.forEach(id => {
         const el = document.getElementById(id);
