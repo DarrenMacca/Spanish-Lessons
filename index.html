@@ -4,78 +4,130 @@
     <meta charset="UTF-8">
     <title>Spanish CEFR Trainer</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
     <link rel="stylesheet" href="styles.css">
 </head>
-
 <body>
 
 <header class="glass-header">
     <h1>Spanish CEFR Trainer</h1>
 </header>
 
-<!-- DASHBOARD WITH TAB LINKS (GLASS PANEL) -->
-<div class="dashboard glass-panel">
-    <div class="dash-item">
-        <button class="dash-link" data-tab="listen">Listen</button>
+<!-- SETTINGS AREA (ORIGINAL POSITION) -->
+<div class="settings-strip glass-panel">
+    <div class="settings-left">
+        <div class="level-select">
+            <button class="level-btn active" data-level="A1">A1</button>
+            <button class="level-btn" data-level="A2">A2</button>
+            <button class="level-btn" data-level="B1">B1</button>
+        </div>
+        <div class="rate-control">
+            <label for="rate">Speech Rate:</label>
+            <input type="range" id="rate" min="0.5" max="1.5" step="0.1" value="1.0">
+        </div>
     </div>
-    <div class="dash-item">
-        <button class="dash-link" data-tab="flash">Flashcards</button>
-    </div>
-    <div class="dash-item">
-        <button class="dash-link" data-tab="quiz">Quiz</button>
-    </div>
-    <div class="dash-item">
-        <button class="dash-link" data-tab="build">Build</button>
+    <div class="settings-right">
+        <input id="student-name" class="input-field" placeholder="Your name for certificates">
+        <button id="save-name-btn" class="primary-btn">Save Name</button>
+        <div id="name-status" class="name-status"></div>
     </div>
 </div>
 
-<!-- LEVEL SELECTOR -->
-<div class="level-select glass-panel">
-    <button class="level-btn active" data-level="A1">A1</button>
-    <button class="level-btn" data-level="A2">A2</button>
-    <button class="level-btn" data-level="B1">B1</button>
-</div>
-
-<!-- RATE CONTROL -->
-<div class="rate-control glass-panel">
-    <label for="rate">Speech Rate:</label><br>
-    <input type="range" id="rate" min="0.5" max="1.5" step="0.1" value="1.0">
-</div>
-
-<!-- STUDENT NAME -->
-<div class="student-name-box glass-panel">
-    <input id="student-name" class="input-field" placeholder="Your name for certificates">
-    <button id="save-name-btn" class="primary-btn">Save Name</button>
-    <div id="name-status" class="name-status"></div>
-</div>
-
-<!-- NAVIGATION (GLASS TAB BAR) -->
+<!-- DASHBOARD TAB BAR (10 TABS) -->
 <nav class="glass-panel nav-bar">
-    <button class="tab-btn active" data-tab="listen">Listen</button>
+    <button class="tab-btn active" data-tab="dashboard">Dashboard</button>
+    <button class="tab-btn" data-tab="listen">Listen</button>
     <button class="tab-btn" data-tab="flash">Flashcards</button>
     <button class="tab-btn" data-tab="quiz">Quiz</button>
     <button class="tab-btn" data-tab="build">Build</button>
     <button class="tab-btn" data-tab="conversation">Conversation</button>
     <button class="tab-btn" data-tab="grammar">Grammar</button>
+    <button class="tab-btn" data-tab="certificates">Certificates</button>
+    <button class="tab-btn" data-tab="badges">Badges</button>
+    <button class="tab-btn" data-tab="settings">Settings</button>
 </nav>
 
-<!-- TABS -->
-<div id="listen"></div>
-<div id="flash" class="hidden"></div>
-<div id="quiz" class="hidden"></div>
-<div id="build" class="hidden"></div>
-<div id="conversation" class="hidden"></div>
-<div id="grammar" class="hidden"></div>
+<!-- TAB CONTAINERS -->
+<div id="dashboard" class="tab-content">
+    <div class="dashboard glass-panel">
+        <h2>Dashboard</h2>
+        <p>Select a mode to begin:</p>
+        <div class="dashboard-grid">
+            <button class="dash-link" data-tab="listen">Listen</button>
+            <button class="dash-link" data-tab="flash">Flashcards</button>
+            <button class="dash-link" data-tab="quiz">Quiz</button>
+            <button class="dash-link" data-tab="build">Build</button>
+            <button class="dash-link" data-tab="conversation">Conversation</button>
+            <button class="dash-link" data-tab="grammar">Grammar</button>
+            <button class="dash-link" data-tab="certificates">Certificates</button>
+            <button class="dash-link" data-tab="badges">Badges</button>
+            <button class="dash-link" data-tab="settings">Settings</button>
+        </div>
+    </div>
+</div>
 
-<!-- BADGES -->
-<div class="badge-section glass-panel">
-    <h3>Your Badges</h3>
-    <ul id="badge-list"></ul>
+<div id="listen" class="tab-content hidden">
+    <div class="listen-wrapper">
+        <!-- JS will inject categories here -->
+    </div>
+</div>
+
+<div id="flash" class="tab-content hidden">
+    <div class="flash-wrapper">
+        <h2>Flashcards (A1)</h2>
+        <p>Tap a card to flip and hear the Spanish pronunciation.</p>
+        <div class="flash-grid">
+            <!-- JS will inject flashcards here -->
+        </div>
+    </div>
+</div>
+
+<div id="quiz" class="tab-content hidden">
+    <div class="quiz-card">
+        <!-- JS will inject quiz content here -->
+    </div>
+</div>
+
+<div id="build" class="tab-content hidden">
+    <div class="build-card">
+        <!-- JS will inject build content here -->
+    </div>
+</div>
+
+<div id="conversation" class="tab-content hidden">
+    <div class="glass-panel">
+        <h2>Conversation</h2>
+        <!-- JS conversation content -->
+    </div>
+</div>
+
+<div id="grammar" class="tab-content hidden">
+    <div class="glass-panel">
+        <h2>Grammar</h2>
+        <!-- JS grammar content -->
+    </div>
+</div>
+
+<div id="certificates" class="tab-content hidden">
+    <div class="glass-panel">
+        <h2>Certificates</h2>
+        <!-- JS certificate content -->
+    </div>
+</div>
+
+<div id="badges" class="tab-content hidden">
+    <div class="badge-section glass-panel">
+        <h2>Your Badges</h2>
+        <ul id="badge-list"></ul>
+    </div>
+</div>
+
+<div id="settings" class="tab-content hidden">
+    <div class="glass-panel">
+        <h2>Settings</h2>
+        <p>General configuration for your learning profile.</p>
+    </div>
 </div>
 
 <script src="app-v2.js"></script>
-
 </body>
 </html>
-
