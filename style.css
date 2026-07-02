@@ -1,52 +1,193 @@
 /* ============================
-   GLOBAL RESET & BASE
+   GLOBAL BASE STYLES
 ============================ */
-
-* {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-    font-family: "Inter", sans-serif;
-}
 
 body {
-    background: linear-gradient(135deg, #0f172a, #1e293b);
-    color: #f1f5f9;
-    min-height: 100vh;
+    background: #0f172a;
+    color: #e2e8f0;
+    font-family: system-ui, sans-serif;
+    margin: 0;
+    padding: 0;
+}
+
+header {
     padding: 20px;
+    text-align: center;
+    background: #1e293b;
+    border-bottom: 1px solid rgba(255,255,255,0.1);
 }
 
-/* Smooth fade-in for tab transitions */
-.active-tab {
-    animation: fadeIn 0.35s ease forwards;
-}
-
-@keyframes fadeIn {
-    from { opacity: 0; transform: translateY(6px); }
-    to { opacity: 1; transform: translateY(0); }
+h1 {
+    margin: 0;
+    color: #a5f3fc;
 }
 
 /* ============================
-   GLASS CARD BASE
+   DASHBOARD
 ============================ */
 
-.card,
-.tab-content,
-.certificate-container,
-.smart-block,
-.grammar-block {
-    background: rgba(255, 255, 255, 0.12);
-    backdrop-filter: blur(14px);
-    -webkit-backdrop-filter: blur(14px);
-    border: 1px solid rgba(255, 255, 255, 0.18);
-    border-radius: 14px;
-    padding: 18px;
-    margin-bottom: 16px;
-    box-shadow: 0 4px 18px rgba(0, 0, 0, 0.25);
+.dashboard {
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+    padding: 15px;
+    background: #1e293b;
+    border-bottom: 1px solid rgba(255,255,255,0.1);
+}
+
+.dash-item {
+    text-align: center;
+    font-size: 14px;
+}
+
+.dash-value {
+    font-size: 20px;
+    color: #a5f3fc;
+    font-weight: 600;
 }
 
 /* ============================
-   FLASHCARD FLIP ANIMATION
+   LEVEL SELECTOR
+============================ */
+
+.level-select {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    padding: 15px;
+}
+
+.level-btn {
+    padding: 8px 14px;
+    border-radius: 8px;
+    background: #475569;
+    color: white;
+    cursor: pointer;
+    border: none;
+}
+
+.level-btn.active {
+    background: #0ea5e9;
+}
+
+/* ============================
+   RATE CONTROL
+============================ */
+
+.rate-control {
+    text-align: center;
+    padding: 10px;
+}
+
+/* ============================
+   STUDENT NAME
+============================ */
+
+.student-name-box {
+    padding: 15px;
+    text-align: center;
+}
+
+.name-status {
+    margin-top: 10px;
+    font-size: 14px;
+}
+
+/* ============================
+   NAVIGATION
+============================ */
+
+nav {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    padding: 15px;
+    background: #0f172a;
+    border-bottom: 1px solid rgba(255,255,255,0.1);
+}
+
+.tab-btn {
+    padding: 10px 16px;
+    border-radius: 8px;
+    background: #334155;
+    color: white;
+    cursor: pointer;
+    border: none;
+}
+
+.tab-btn.active {
+    background: #0ea5e9;
+}
+
+.hidden {
+    display: none;
+}
+
+/* ============================
+   INPUTS & BUTTONS
+============================ */
+
+.input-field {
+    width: 100%;
+    padding: 10px;
+    border-radius: 8px;
+    border: 1px solid rgba(255,255,255,0.2);
+    background: rgba(255,255,255,0.05);
+    color: white;
+}
+
+.primary-btn {
+    padding: 10px 14px;
+    border-radius: 8px;
+    background: #0ea5e9;
+    color: white;
+    cursor: pointer;
+    border: none;
+}
+
+.secondary-btn {
+    padding: 10px 14px;
+    border-radius: 8px;
+    background: #334155;
+    color: white;
+    cursor: pointer;
+    border: none;
+}
+
+/* ============================
+   WORD PILLS
+============================ */
+
+.word-pill {
+    padding: 10px;
+    border-radius: 8px;
+    background: #1e293b;
+    color: white;
+    cursor: pointer;
+    text-align: center;
+    border: 1px solid rgba(255,255,255,0.1);
+}
+
+/* ============================
+   LISTEN TAB COLLAPSIBLE
+============================ */
+
+.listen-category-content {
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.25s ease;
+}
+
+.listen-category-content.open {
+    max-height: 500px;
+}
+
+.listen-arrow {
+    transition: transform 0.25s ease;
+}
+
+/* ============================
+   FLASHCARD FLIP SYSTEM
 ============================ */
 
 .flip-wrapper {
@@ -56,7 +197,7 @@ body {
 .flip-card {
     position: relative;
     width: 100%;
-    height: 80px;
+    height: 90px;
     transform-style: preserve-3d;
     transition: transform 0.4s ease;
 }
@@ -73,6 +214,7 @@ body {
     display: flex;
     align-items: center;
     justify-content: center;
+    border-radius: 8px;
 }
 
 .flip-front {
@@ -83,328 +225,10 @@ body {
     transform: rotateY(180deg);
 }
 
-
-
 /* ============================
-   FLASHCARD HOVER GLOW
+   BADGES
 ============================ */
 
-.flip-wrapper:hover .flip-card:not(.flipped) {
-    box-shadow: 0 0 18px rgba(0, 200, 255, 0.55);
-    transform: scale(1.05);
-    transition: all 0.25s ease;
-}
-
-/* ============================
-   TITLES & HEADERS
-============================ */
-
-h1 {
-    font-size: 32px;
-    margin-bottom: 10px;
-}
-
-h2 {
-    font-size: 18px;
-    font-weight: 300;
-    opacity: 0.8;
-    margin-bottom: 20px;
-}
-
-.section-title {
-    font-size: 18px;
-    font-weight: 600;
-    margin-bottom: 8px;
-    color: #a5f3fc;
-}
-
-/* ============================
-   DASHBOARD GRID
-============================ */
-
-.dashboard-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
-    gap: 18px;
-    margin-bottom: 20px;
-}
-
-.card-title {
-    font-size: 16px;
-    font-weight: 600;
-}
-
-.card-value {
-    font-size: 20px;
-    margin-top: 10px;
-}
-
-/* ============================
-   PILLS
-============================ */
-
-.pill {
-    padding: 4px 10px;
-    border-radius: 20px;
-    font-size: 12px;
-    background: rgba(255, 255, 255, 0.18);
-    color: #e2e8f0;
-}
-
-.pill-neutral {
-    border: 1px solid rgba(255, 255, 255, 0.25);
-}
-
-/* ============================
-   BUTTONS
-============================ */
-
-button {
-    cursor: pointer;
-    border: none;
-    transition: all 0.25s ease;
-}
-
-.primary-btn {
-    background: rgba(14, 165, 233, 0.35);
-    color: #e0f2fe;
-    padding: 10px 18px;
-    border-radius: 10px;
-    font-weight: 600;
-    backdrop-filter: blur(10px);
-}
-
-.primary-btn:hover {
-    background: rgba(14, 165, 233, 0.55);
-    box-shadow: 0 0 12px rgba(14, 165, 233, 0.6);
-}
-
-.secondary-btn {
-    background: rgba(255, 255, 255, 0.12);
-    color: #f1f5f9;
-    padding: 10px 18px;
-    border-radius: 10px;
-    font-weight: 500;
-}
-
-.secondary-btn:hover {
-    background: rgba(255, 255, 255, 0.22);
-}
-
-/* ============================
-   INPUTS
-============================ */
-
-.input-field {
-    width: 100%;
-    padding: 10px;
-    border-radius: 10px;
-    border: 1px solid rgba(255, 255, 255, 0.25);
-    background: rgba(255, 255, 255, 0.08);
-    color: #e2e8f0;
-    margin-top: 6px;
-}
-
-.input-field:focus {
-    outline: none;
-    border-color: #67e8f9;
-    box-shadow: 0 0 8px rgba(103, 232, 249, 0.6);
-}
-
-/* ============================
-   TAB BAR
-============================ */
-
-.tab-bar {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 8px;
-    margin: 20px 0;
-    padding: 12px;
-    background: rgba(255, 255, 255, 0.08);
-    border-radius: 14px;
-    backdrop-filter: blur(12px);
-}
-
-.tab-btn {
-    padding: 10px 14px;
-    border-radius: 10px;
-    background: rgba(255, 255, 255, 0.12);
-    color: #e2e8f0;
-    font-weight: 500;
-}
-
-.tab-btn:hover {
-    background: rgba(255, 255, 255, 0.22);
-}
-
-.tab-btn.active {
-    background: rgba(14, 165, 233, 0.45);
-    box-shadow: 0 0 10px rgba(14, 165, 233, 0.6);
-}
-
-/* ============================
-   WORD PILLS
-============================ */
-
-.word-pill {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    padding: 8px 14px;
-    margin: 6px;
-    border-radius: 20px;
-    background: rgba(255, 255, 255, 0.14);
-    border: 1px solid rgba(255, 255, 255, 0.22);
-    cursor: pointer;
-    transition: 0.25s;
-    color: #e2e8f0;
-}
-
-.word-pill:hover {
-    background: rgba(255, 255, 255, 0.22);
-    box-shadow: 0 0 10px rgba(103, 232, 249, 0.4);
-}
-
-.build-pill {
-    padding: 6px 10px;
-    font-size: 14px;
-    border-radius: 10px;
-}
-
-/* ============================
-   CERTIFICATE OVERLAY
-============================ */
-
-#certificate-overlay {
-    position: fixed;
-    inset: 0;
-    display: none;
-    justify-content: center;
-    align-items: center;
-    backdrop-filter: blur(18px);
-    background: rgba(0, 0, 0, 0.45);
-    z-index: 999;
-}
-
-#certificate-overlay-content {
-    background: rgba(255, 255, 255, 0.12);
-    backdrop-filter: blur(20px);
+.badge-section {
     padding: 20px;
-    border-radius: 16px;
-    width: 90%;
-    max-width: 480px;
-    box-shadow: 0 0 20px rgba(14, 165, 233, 0.4);
 }
-
-.close-cert-btn {
-    background: rgba(255, 255, 255, 0.18);
-    padding: 8px 12px;
-    border-radius: 8px;
-    margin-bottom: 12px;
-}
-
-.certificate-title {
-    font-size: 22px;
-    font-weight: 700;
-    margin-bottom: 8px;
-}
-
-.certificate-subtitle {
-    font-size: 16px;
-    margin-bottom: 12px;
-    color: #a5f3fc;
-}
-
-.certificate-statement {
-    font-size: 14px;
-    margin-bottom: 12px;
-}
-
-.certificate-seal {
-    text-align: center;
-    margin: 12px 0;
-}
-
-.certificate-meta {
-    font-size: 12px;
-    opacity: 0.8;
-}
-
-/* ============================
-   CELEBRATION BANNER
-============================ */
-
-#celebration-banner {
-    position: fixed;
-    top: 20px;
-    left: 50%;
-    transform: translateX(-50%);
-    background: rgba(14, 165, 233, 0.45);
-    padding: 12px 20px;
-    border-radius: 12px;
-    backdrop-filter: blur(12px);
-    box-shadow: 0 0 12px rgba(14, 165, 233, 0.6);
-    z-index: 999;
-    display: none;
-}
-
-/* Confetti */
-.confetti {
-    position: fixed;
-    top: -10px;
-    width: 10px;
-    height: 10px;
-    animation: fall 1.8s linear forwards;
-}
-
-@keyframes fall {
-    to {
-        transform: translateY(110vh) rotate(360deg);
-        opacity: 0;
-    }
-}
-
-/* ============================
-   HIDDEN CLASS
-============================ */
-
-.hidden {
-    display: none !important;
-}
-
-/* ============================
-   LISTEN TAB — COLLAPSIBLE
-============================ */
-
-.listen-category-content {
-    max-height: 0;
-    overflow: hidden;
-    transition: max-height 0.25s ease;
-}
-
-.listen-category-content.open {
-    max-height: 500px; /* enough for any category */
-}
-
-.listen-arrow {
-    transition: transform 0.25s ease;
-}
-
-
-/* ============================
-   LISTEN TAB — SLIDE ANIMATION
-============================ */
-
-.listen-category-content {
-    overflow: hidden;
-    max-height: 0;
-    opacity: 0;
-    transition: max-height 0.35s ease, opacity 0.35s ease;
-}
-
-.listen-category-content.open {
-    max-height: 500px;
-    opacity: 1;
-}
-
