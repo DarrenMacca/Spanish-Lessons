@@ -2,193 +2,188 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Spanish CEFR Mastery Portal</title>
+    <title>Spanish CEFR Trainer</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <link rel="stylesheet" href="style.css">
+    <!-- Stylesheet -->
+    <link rel="stylesheet" href="styles.css">
+
+    <style>
+        body {
+            background: #0f172a;
+            color: #e2e8f0;
+            font-family: system-ui, sans-serif;
+            margin: 0;
+            padding: 0;
+        }
+        header {
+            padding: 20px;
+            text-align: center;
+            background: #1e293b;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+        }
+        h1 {
+            margin: 0;
+            color: #a5f3fc;
+        }
+        .dashboard {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            padding: 15px;
+            background: #1e293b;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+        }
+        .dash-item {
+            text-align: center;
+            font-size: 14px;
+        }
+        .dash-value {
+            font-size: 20px;
+            color: #a5f3fc;
+            font-weight: 600;
+        }
+        nav {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            padding: 15px;
+            background: #0f172a;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+        }
+        .tab-btn {
+            padding: 10px 16px;
+            border-radius: 8px;
+            background: #334155;
+            color: white;
+            cursor: pointer;
+            border: none;
+        }
+        .tab-btn.active {
+            background: #0ea5e9;
+        }
+        .level-select {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            padding: 15px;
+        }
+        .level-btn {
+            padding: 8px 14px;
+            border-radius: 8px;
+            background: #475569;
+            color: white;
+            cursor: pointer;
+            border: none;
+        }
+        .level-btn.active {
+            background: #0ea5e9;
+        }
+        .hidden {
+            display: none;
+        }
+        .input-field {
+            width: 100%;
+            padding: 10px;
+            border-radius: 8px;
+            border: 1px solid rgba(255,255,255,0.2);
+            background: rgba(255,255,255,0.05);
+            color: white;
+        }
+        .primary-btn, .secondary-btn {
+            padding: 10px 14px;
+            border-radius: 8px;
+            cursor: pointer;
+            border: none;
+        }
+        .primary-btn {
+            background: #0ea5e9;
+            color: white;
+        }
+        .secondary-btn {
+            background: #334155;
+            color: white;
+        }
+        .word-pill {
+            padding: 10px;
+            border-radius: 8px;
+            background: #1e293b;
+            color: white;
+            cursor: pointer;
+            text-align: center;
+            border: 1px solid rgba(255,255,255,0.1);
+        }
+    </style>
 </head>
 
 <body>
 
-<!-- Celebration Banner -->
-<div id="celebration-banner" class="hidden">CELEBRATION UNLOCKED 🎉</div>
+<header>
+    <h1>Spanish CEFR Trainer</h1>
+</header>
 
-<div class="wrapper">
-
-    <!-- ============================
-         DASHBOARD VIEW
-    ============================ -->
-    <div id="dashboard-view">
-
-        <h1>Spanish CEFR Mastery Portal</h1>
-        <h2>Progressive learning from words → sentences → real‑world communication</h2>
-
-        <div class="section-title">Course Dashboard</div>
-
-        <div class="dashboard-grid">
-
-            <div class="dashboard-name-block" style="margin-bottom:20px;">
-    <label for="student-name" style="font-weight:600; font-size:18px; color:#e0f2fe;">
-        Your Name
-    </label>
-
-    <input id="student-name"
-           class="input-field"
-           placeholder="Enter your name…"
-           style="margin-top:8px;">
-
-    <button class="primary-btn" 
-            onclick="saveStudentName()"
-            style="margin-top:10px;">
-        Save Name
-    </button>
-
-    <p id="name-status"
-       style="margin-top:10px; color:#94a3b8; font-size:14px;">
-       This name will appear on your certificates and personalised messages.
-    </p>
+<!-- DASHBOARD -->
+<div class="dashboard">
+    <div class="dash-item">
+        Quiz<br><span id="dash-quiz-score" class="dash-value">0%</span>
+    </div>
+    <div class="dash-item">
+        Build<br><span id="dash-build-score" class="dash-value">0%</span>
+    </div>
+    <div class="dash-item">
+        Conversations<br><span id="dash-conv-count" class="dash-value">0</span>
+    </div>
+    <div class="dash-item">
+        Level<br><span id="dash-level" class="dash-value">A1</span>
+    </div>
 </div>
 
-            
-            <div class="card">
-                <div class="card-header">
-                    <div class="card-title">Quiz Status</div>
-                    <span class="pill pill-neutral">Words → Recall</span>
-                </div>
-                <div class="card-value" id="quiz-status">Not started</div>
-            </div>
-
-            <div class="card">
-                <div class="card-header">
-                    <div class="card-title">Builder Status</div>
-                    <span class="pill pill-neutral">Words → Sentences</span>
-                </div>
-                <div class="card-value" id="build-status">Not started</div>
-            </div>
-
-            <div class="card">
-                <div class="card-header">
-                    <div class="card-title">Conversation Status</div>
-                    <span class="pill pill-neutral">Sentences → Dialogue</span>
-                </div>
-                <div class="card-value" id="conv-status">Tracked in app</div>
-            </div>
-
-            <div class="card">
-                <div class="card-header">
-                    <div class="card-title">Final Verdict</div>
-                    <span class="pill pill-neutral">CEFR Path</span>
-                </div>
-                <div class="card-value" id="final-verdict">Course Status: Not evaluated</div>
-            </div>
-
-        </div>
-
-        <div class="dashboard-actions">
-            <button class="primary-btn" onclick="openApp()">Enter Learning Portal →</button>
-            <button class="secondary-btn" onclick="updateDashboard()">Refresh Status</button>
-        </div>
-
-    </div>
-
-    <!-- ============================
-         LEARNING VIEW
-    ============================ -->
-    <div id="learning-view" class="hidden">
-
-        <!-- Header -->
-        <div class="learning-header">
-
-            <div>
-                <div class="section-title">Level & Audio</div>
-
-                <!-- Level Selector -->
-                <select id="level-select" onchange="changeLevel(this.value)" class="input-field">
-                    <option value="A1">A1 (Unlocked)</option>
-                    <option value="A2">A2 (Unlocked)</option>
-                    <option value="B1">B1 (Unlocked)</option>
-                </select>
-                <span id="level-status">Current Level: A1</span>
-
-                <!-- Voice Selector (NEW) -->
-                <div style="margin-top: 12px;">
-                    <select id="voice-select" class="input-field">
-    <option value="female_latam">Female — Sabina (MX)</option>
-    <option value="male_spanish">Male — Diego (Spanish)</option>
-</select>
-
-<button id="voice-preview-btn" class="secondary-btn" style="margin-top:10px;">
-    ▶️ Preview Voice
-</button>
-
-
-
-            </div>
-
-            <div>
-                <div class="section-title">Audio Speed</div>
-                <input type="range" id="rate" min="0.6" max="1.4" step="0.1" value="1">
-            </div>
-
-            <button class="secondary-btn" onclick="goBack()">← Back to Dashboard</button>
-
-        </div>
-
-        <!-- Tabs -->
-        <div class="tab-bar">
-            <button class="tab-btn active" onclick="showTab('listen', event)">Listen</button>
-            <button class="tab-btn" onclick="showTab('flash', event)">Flashcards</button>
-            <button class="tab-btn" onclick="showTab('quiz', event)">Quiz</button>
-            <button class="tab-btn" onclick="showTab('build', event)">Build</button>
-            <button class="tab-btn" onclick="showTab('conv', event)">Conversation</button>
-            <button class="tab-btn" onclick="showTab('smart', event)">Smart Conversation</button>
-            <button class="tab-btn" onclick="showTab('daily', event)">Daily Practice</button>
-            <button class="tab-btn" onclick="showTab('badges', event)">Badges</button>
-            <button class="tab-btn" onclick="showTab('grammar', event)">Grammar Mode</button>
-            <button class="tab-btn" onclick="showTab('scenario', event)">Scenarios</button>
-            <button class="tab-btn" onclick="showTab('certificates', event)">Certificates</button>
-        </div>
-
-        <!-- Tab Content Containers -->
-        <div id="listen" class="tab-content"></div>
-        <div id="flash" class="tab-content hidden"></div>
-        <div id="quiz" class="tab-content hidden"></div>
-        <div id="build" class="tab-content hidden"></div>
-        <div id="conv" class="tab-content hidden"></div>
-        <div id="smart" class="tab-content hidden"></div>
-        <div id="daily" class="tab-content hidden"></div>
-        <div id="badges" class="tab-content hidden"></div>
-        <div id="grammar" class="tab-content hidden"></div>
-        <div id="scenario" class="tab-content hidden"></div>
-
-        <!-- Certificates Tab -->
-        <div id="certificates" class="tab-content hidden">
-            <h3>Certificates</h3>
-            <button class="primary-btn" onclick="openCertificate('A1')">Generate A1 Certificate</button>
-            <button class="primary-btn" onclick="openCertificate('A2')">Generate A2 Certificate</button>
-            <button class="primary-btn" onclick="openCertificate('B1')">Generate B1 Certificate</button>
-        </div>
-
-        <!-- Certificate Overlay -->
-        <div id="certificate-overlay" class="hidden">
-            <div id="certificate-overlay-bg" style="
-                position: absolute;
-                inset: 0;
-                background: rgba(0,0,0,0.45);
-            "></div>
-
-            <div id="certificate-overlay-content">
-                <button class="close-cert-btn" onclick="closeCertificate()">Close</button>
-                <div id="certificate-preview-area"></div>
-            </div>
-        </div>
-
-    </div>
-
+<!-- LEVEL SELECTOR -->
+<div class="level-select">
+    <button class="level-btn active" data-level="A1">A1</button>
+    <button class="level-btn" data-level="A2">A2</button>
+    <button class="level-btn" data-level="B1">B1</button>
 </div>
 
+<!-- RATE CONTROL -->
+<div style="text-align:center; padding:10px;">
+    <label for="rate">Speech Rate:</label><br>
+    <input type="range" id="rate" min="0.5" max="1.5" step="0.1" value="1.0">
+</div>
+
+<!-- STUDENT NAME -->
+<div style="padding:15px; text-align:center;">
+    <input id="student-name" class="input-field" placeholder="Your name for certificates">
+    <button id="save-name-btn" class="primary-btn" style="margin-top:10px;">Save Name</button>
+    <div id="name-status" style="margin-top:10px; font-size:14px;"></div>
+</div>
+
+<!-- NAVIGATION -->
+<nav>
+    <button class="tab-btn active" data-tab="listen">Listen</button>
+    <button class="tab-btn" data-tab="flash">Flashcards</button>
+    <button class="tab-btn" data-tab="quiz">Quiz</button>
+    <button class="tab-btn" data-tab="build">Build</button>
+    <button class="tab-btn" data-tab="conversation">Conversation</button>
+    <button class="tab-btn" data-tab="grammar">Grammar</button>
+</nav>
+
+<!-- TABS -->
+<div id="listen"></div>
+<div id="flash" class="hidden"></div>
+<div id="quiz" class="hidden"></div>
+<div id="build" class="hidden"></div>
+<div id="conversation" class="hidden"></div>
+<div id="grammar" class="hidden"></div>
+
+<!-- BADGES -->
+<div style="padding:20px;">
+    <h3>Your Badges</h3>
+    <ul id="badge-list"></ul>
+</div>
+
+<!-- JS -->
 <script src="app-v2.js"></script>
 
 </body>
 </html>
-
