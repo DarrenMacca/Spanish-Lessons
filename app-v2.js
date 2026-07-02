@@ -7,7 +7,8 @@ let quizScore = 0;
 let buildScore = 0;
 let buildStreak = 0;
 let convCount = 0;
-let selectedVoice = "female";
+
+let selectedVoice = "female_latam"; // patched default
 
 let autoPlayActive = false;
 let autoPlayPaused = false;
@@ -93,7 +94,6 @@ const LEVEL_WORDS = {
         { en: "police", es: "policía" },
         { en: "I am lost", es: "estoy perdido" }
     ],
-
     A2: [
         { en: "I need", es: "necesito" },
         { en: "I am looking for", es: "busco" },
@@ -124,7 +124,6 @@ const LEVEL_WORDS = {
         { en: "I am going to", es: "voy a" },
         { en: "I want to go", es: "quiero ir" }
     ],
-
     B1: [
         { en: "I have been learning Spanish", es: "he estado aprendiendo español" },
         { en: "in my free time", es: "en mi tiempo libre" },
@@ -314,22 +313,19 @@ function loadStudentName() {
 }
 
 /* ============================
-   UNIVERSAL AUDIO ENGINE
+   VOICE SELECTOR + PREVIEW (PATCHED)
 ============================ */
+
+const VOICE_PATTERNS = {
+    female_latam: ["sabina", "mexico", "latam"],
+    male_spanish: ["diego", "spanish", "español"]
+};
 
 function getLatAmVoice() {
     const voices = speechSynthesis.getVoices();
     if (!voices || !voices.length) return null;
 
-    // Female LATAM (Sabina)
-    const femalePatterns = ["sabina", "mexico", "latam"];
-
-    // Male Spanish (Diego)
-    const malePatterns = ["diego", "spanish", "español"];
-
-    const patterns = selectedVoice === "female_latam"
-        ? femalePatterns
-        : malePatterns;
+    const patterns = VOICE_PATTERNS[selectedVoice] || [];
 
     const match = voices.find(v =>
         patterns.some(p => v.name.toLowerCase().includes(p))
@@ -337,13 +333,9 @@ function getLatAmVoice() {
 
     if (match) return match;
 
-    // Fallback: any Spanish voice
     const fallback = voices.find(v => v.lang.startsWith("es"));
     return fallback || voices[0];
 }
-
-
-
 
 function speakSpanish(text) {
     if (typeof speechSynthesis === "undefined" || typeof SpeechSynthesisUtterance === "undefined") {
@@ -367,6 +359,18 @@ function speakSpanish(text) {
     } catch (e) {
         console.warn("Error during speech synthesis:", e);
     }
+}
+
+function previewSelectedVoice() {
+    const utter = new SpeechSynthesisUtterance("Hola, esta es una prueba de voz.");
+    utter.lang = "es-MX";
+    utter.rate = 1.0;
+
+    const voice = getLatAmVoice();
+    if (voice) utter.voice = voice;
+
+    speechSynthesis.cancel();
+    speechSynthesis.speak(utter);
 }
 
 /* ============================
@@ -397,7 +401,7 @@ function autoPlayListen() {
             return;
         }
 
-                const item = words[autoPlayIndex];
+        const item = words[autoPlayIndex];
         autoPlayIndex++;
 
         if (!item) {
@@ -1621,34 +1625,22 @@ function changeLevel(level) {
    DOMContentLoaded
 ============================ */
 
-function previewSelectedVoice() {
-    const utter = new SpeechSynthesisUtterance("Hola, esta es una prueba de voz.");
-    utter.lang = "es-MX";
-    utter.rate = 1.0;
-
-    const voice = getLatAmVoice();
-    if (voice) utter.voice = voice;
-
-    speechSynthesis.cancel();
-    speechSynthesis.speak(utter);
-}
-
-document.getElementById("voice-preview-btn").onclick = previewSelectedVoice;
-
-
-
-
 document.addEventListener("DOMContentLoaded", () => {
     try {
         const voiceSelect = document.getElementById("voice-select");
-if (voiceSelect) {
-    voiceSelect.value = selectedVoice;
-    voiceSelect.onchange = () => {
-        selectedVoice = voiceSelect.value;
-        previewSelectedVoice(); // auto-preview on change
-    };
-}
+        const previewBtn = document.getElementById("voice-preview-btn");
 
+        if (voiceSelect) {
+            voiceSelect.value = selectedVoice;
+            voiceSelect.onchange = () => {
+                selectedVoice = voiceSelect.value;
+                previewSelectedVoice();
+            };
+        }
+
+        if (previewBtn) {
+            previewBtn.onclick = previewSelectedVoice;
+        }
 
         loadStudentName();
         updateDashboard();
