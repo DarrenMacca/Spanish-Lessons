@@ -15,6 +15,976 @@ let autoPlayPaused = false;
 let autoPlayIndex = 0;
 
 /* ============================
+   NEW GLOBAL STATE (ADDED)
+============================ */
+
+// Daily streak system
+let streakCount = 0;
+
+// XP system
+let xpTotal = 0;
+let xpLevel = 1;
+
+// Achievement system
+let achievementQueue = [];
+
+/* ============================
+   DATA PACKS
+============================ */
+
+const LEVEL_WORDS = {
+    A1: [
+        { en: "hello", es: "hola" },
+        { en: "goodbye", es: "adiós" },
+        { en: "please", es: "por favor" },
+        { en: "thank you", es: "gracias" },
+        { en: "yes", es: "sí" },
+        { en: "no", es: "no" },
+        { en: "sorry", es: "lo siento" },
+        { en: "excuse me", es: "perdón" },
+        { en: "and", es: "y" },
+        { en: "but", es: "pero" },
+        { en: "or", es: "o" },
+        { en: "because", es: "porque" },
+        { en: "with", es: "con" },
+        { en: "without", es: "sin" },
+        { en: "also", es: "también" },
+        { en: "very", es: "muy" },
+        { en: "a little", es: "un poco" },
+        { en: "more", es: "más" },
+        { en: "I", es: "yo" },
+        { en: "you", es: "tú" },
+        { en: "he", es: "él" },
+        { en: "she", es: "ella" },
+        { en: "we", es: "nosotros" },
+        { en: "they", es: "ellos" },
+        { en: "water", es: "agua" },
+        { en: "food", es: "comida" },
+        { en: "coffee", es: "café" },
+        { en: "tea", es: "té" },
+        { en: "milk", es: "leche" },
+        { en: "bread", es: "pan" },
+        { en: "beer", es: "cerveza" },
+        { en: "steak", es: "bistec" },
+        { en: "potato chips", es: "papas fritas" },
+        { en: "egg", es: "huevo" },
+        { en: "fruit", es: "fruta" },
+        { en: "apple", es: "manzana" },
+        { en: "orange", es: "naranja" },
+        { en: "banana", es: "plátano" },
+        { en: "chicken", es: "pollo" },
+        { en: "fish", es: "pescado" },
+        { en: "soup", es: "sopa" },
+        { en: "salad", es: "ensalada" },
+        { en: "rice", es: "arroz" },
+        { en: "beans", es: "frijoles" },
+        { en: "cheese", es: "queso" },
+        { en: "butter", es: "mantequilla" },
+        { en: "sugar", es: "azúcar" },
+        { en: "salt", es: "sal" },
+        { en: "bathroom", es: "baño" },
+        { en: "hotel", es: "hotel" },
+        { en: "room", es: "habitación" },
+        { en: "key", es: "llave" },
+        { en: "table", es: "mesa" },
+        { en: "chair", es: "silla" },
+        { en: "menu", es: "menú" },
+        { en: "bill", es: "cuenta" },
+        { en: "waiter", es: "camarero" },
+        { en: "I want", es: "quiero" },
+        { en: "I would like", es: "me gustaría" },
+        { en: "bus", es: "autobús" },
+        { en: "train", es: "tren" },
+        { en: "ticket", es: "boleto" },
+        { en: "station", es: "estación" },
+        { en: "airport", es: "aeropuerto" },
+        { en: "how much?", es: "¿cuánto cuesta?" },
+        { en: "cheap", es: "barato" },
+        { en: "expensive", es: "caro" },
+        { en: "open", es: "abierto" },
+        { en: "closed", es: "cerrado" },
+        { en: "help", es: "ayuda" },
+        { en: "doctor", es: "doctor" },
+        { en: "police", es: "policía" },
+        { en: "I am lost", es: "estoy perdido" }
+    ],
+
+    A2: [
+        { en: "I need", es: "necesito" },
+        { en: "I am looking for", es: "busco" },
+        { en: "I don't understand", es: "no entiendo" },
+        { en: "can you help me?", es: "¿puede ayudarme?" },
+        { en: "breakfast", es: "desayayuno" },
+        { en: "lunch", es: "almuerzo" },
+        { en: "dinner", es: "cena" },
+        { en: "reservation", es: "reserva" },
+        { en: "table for two", es: "mesa para dos" },
+        { en: "allergic to", es: "alérgico a" },
+        { en: "city center", es: "centro de la ciudad" },
+        { en: "pharmacy", es: "farmacia" },
+        { en: "supermarket", es: "supermercado" },
+        { en: "turn left", es: "gire a la izquierda" },
+        { en: "turn right", es: "gire a la derecha" },
+        { en: "straight ahead", es: "todo recto" },
+        { en: "receipt", es: "recibo" },
+        { en: "card", es: "tarjeta" },
+        { en: "cash", es: "efectivo" },
+        { en: "discount", es: "descuento" },
+        { en: "size", es: "talla" },
+        { en: "I feel sick", es: "me siento enfermo" },
+        { en: "I need a doctor", es: "necesito un doctor" },
+        { en: "I lost my passport", es: "perdí mi pasaporte" },
+        { en: "I think that", es: "creo que" },
+        { en: "I prefer", es: "prefiero" },
+        { en: "I am going to", es: "voy a" },
+        { en: "I want to go", es: "quiero ir" }
+    ],
+
+    B1: [
+        { en: "I have been learning Spanish", es: "he estado aprendiendo español" },
+        { en: "in my free time", es: "en mi tiempo libre" },
+        { en: "I enjoy traveling", es: "disfruto viajar" },
+        { en: "I work as a developer", es: "trabajo como desarrollador" },
+        { en: "I would like to improve", es: "me gustaría mejorar" },
+        { en: "in my opinion", es: "en mi opinión" },
+        { en: "I agree", es: "estoy de acuerdo" },
+        { en: "I disagree", es: "no estoy de acuerdo" },
+        { en: "it depends", es: "depende" },
+        { en: "real situations", es: "situaciones reales" },
+        { en: "daily conversations", es: "conversaciones diarias" },
+        { en: "future plans", es: "planes futuros" },
+        { en: "past experiences", es: "experiencias pasadas" },
+        { en: "meeting", es: "reunión" },
+        { en: "project", es: "proyecto" },
+        { en: "deadline", es: "fecha límite" },
+        { en: "task", es: "tarea" },
+        { en: "insurance", es: "seguro" },
+        { en: "accident", es: "accidente" },
+        { en: "lost luggage", es: "equipaje perdido" },
+        { en: "I went", es: "fui" },
+        { en: "I saw", es: "vi" },
+        { en: "I did", es: "hice" },
+        { en: "I met", es: "conocí" },
+        { en: "I learned", es: "aprendí" }
+    ]
+};
+/* ============================
+   SINGLE LATAM FEMALE VOICE ENGINE
+============================ */
+
+const VOICE_PATTERNS = {
+    female_latam: ["sabina", "mexico", "latam", "español"]
+};
+
+function getLatAmVoice() {
+    const voices = speechSynthesis.getVoices();
+    if (!voices || !voices.length) return null;
+
+    const patterns = VOICE_PATTERNS.female_latam;
+
+    const match = voices.find(v =>
+        patterns.some(p => v.name.toLowerCase().includes(p))
+    );
+
+    if (match) return match;
+
+    const fallback = voices.find(v => v.lang.startsWith("es"));
+    return fallback || voices[0];
+}
+
+function speakSpanish(text) {
+    if (typeof speechSynthesis === "undefined" || typeof SpeechSynthesisUtterance === "undefined") {
+        console.warn("Speech synthesis not supported in this browser.");
+        return;
+    }
+
+    const rateControl = document.getElementById("rate");
+    const rate = rateControl ? parseFloat(rateControl.value) || 1.0 : 1.0;
+
+    const utter = new SpeechSynthesisUtterance(text);
+    utter.lang = "es-MX";
+    utter.rate = rate;
+
+    const voice = getLatAmVoice();
+    if (voice) utter.voice = voice;
+
+    try {
+        speechSynthesis.cancel();
+        speechSynthesis.speak(utter);
+    } catch (e) {
+        console.warn("Error during speech synthesis:", e);
+    }
+}
+
+/* ============================
+   LISTEN TAB AUDIO HELPERS
+============================ */
+
+function playSingleWord(index) {
+    const words = LEVEL_WORDS[currentLevel] || [];
+    const item = words[index];
+    if (!item) return;
+
+    speakSpanish(item.es);
+
+    // XP hook
+    addXP(2);
+}
+
+function autoPlayListen() {
+    const words = LEVEL_WORDS[currentLevel] || [];
+    if (!words.length) return;
+
+    autoPlayActive = true;
+    autoPlayPaused = false;
+    autoPlayIndex = 0;
+
+    speechSynthesis.cancel();
+
+    function playNext() {
+        if (!autoPlayActive || autoPlayPaused) return;
+        if (autoPlayIndex >= words.length) {
+            autoPlayActive = false;
+
+            // XP hook for completing autoplay
+            addXP(10);
+
+            return;
+        }
+
+        const item = words[autoPlayIndex];
+        autoPlayIndex++;
+
+        const rateControl = document.getElementById("rate");
+        const rate = rateControl ? parseFloat(rateControl.value) || 1.0 : 1.0;
+
+        const utter = new SpeechSynthesisUtterance(item.es);
+        utter.lang = "es-MX";
+        utter.rate = rate;
+
+        const voice = getLatAmVoice();
+        if (voice) utter.voice = voice;
+
+        utter.onend = () => {
+            if (autoPlayActive && !autoPlayPaused) {
+                setTimeout(playNext, 400);
+            }
+        };
+
+        speechSynthesis.speak(utter);
+    }
+
+    playNext();
+}
+
+function stopAutoPlay() {
+    autoPlayActive = false;
+    autoPlayPaused = false;
+    autoPlayIndex = 0;
+    speechSynthesis.cancel();
+}
+
+function pauseAutoPlay() {
+    autoPlayPaused = true;
+    speechSynthesis.pause();
+}
+
+function resumeAutoPlay() {
+    if (!autoPlayActive) return;
+    autoPlayPaused = false;
+    speechSynthesis.resume();
+}
+
+/* ============================
+   LISTEN TAB RENDERING
+============================ */
+
+function renderListenTab() {
+    const container = document.getElementById("listen");
+    if (!container) return;
+
+    const words = LEVEL_WORDS[currentLevel] || [];
+
+    container.innerHTML = `
+        <h3>Listen & Repeat (${currentLevel})</h3>
+
+        <div style="margin-bottom:15px; display:flex; flex-wrap:wrap; gap:10px;">
+            <button class="primary-btn" onclick="autoPlayListen()">▶️ Play All</button>
+            <button class="secondary-btn" onclick="stopAutoPlay()">⏹️ Stop</button>
+            <button class="secondary-btn" onclick="pauseAutoPlay()">⏸️ Pause</button>
+            <button class="primary-btn" onclick="resumeAutoPlay()">▶️ Resume</button>
+        </div>
+
+        <input id="listen-search" class="input-field" placeholder="Search words...">
+
+        <div id="listen-categories"></div>
+    `;
+
+    const searchInput = document.getElementById("listen-search");
+    const catContainer = document.getElementById("listen-categories");
+    if (!catContainer || !searchInput) return;
+
+    const categoryIcons = {
+        "Greetings & Basics": "👋",
+        "Connectors": "🔗",
+        "People & Pronouns": "🧑",
+        "Food & Drink": "🍎",
+        "Café & Restaurant": "☕",
+        "Places & Objects": "🏨",
+        "Travel": "🚌",
+        "Shopping": "🛒",
+        "Emergency": "⚠️"
+    };
+
+    function renderCategories(filterText = "") {
+        try { speechSynthesis.cancel(); } catch(e) {}
+
+        catContainer.innerHTML = "";
+
+        Object.entries(LISTEN_CATEGORIES).forEach(([categoryName, esList]) => {
+            let catWords = words.filter(w => esList.includes(w.es));
+            if (!catWords.length) return;
+
+            if (filterText) {
+                const lower = filterText.toLowerCase();
+                catWords = catWords.filter(w =>
+                    w.es.toLowerCase().includes(lower) ||
+                    w.en.toLowerCase().includes(lower)
+                );
+                if (!catWords.length) return;
+            }
+
+            const wrapper = document.createElement("div");
+            wrapper.className = "listen-category-wrapper";
+            wrapper.style.marginTop = "15px";
+
+            const header = document.createElement("div");
+            header.className = "listen-category-header";
+            header.style.cursor = "pointer";
+            header.style.padding = "10px";
+            header.style.border = "1px solid rgba(255,255,255,0.2)";
+            header.style.borderRadius = "8px";
+            header.style.color = "#a5f3fc";
+            header.style.fontWeight = "600";
+            header.style.display = "flex";
+            header.style.justifyContent = "space-between";
+            header.style.alignItems = "center";
+
+            header.innerHTML = `
+                <span>${categoryIcons[categoryName]} ${categoryName}</span>
+                <span class="listen-arrow">▼</span>
+            `;
+
+            const content = document.createElement("div");
+            content.className = "listen-category-content";
+            content.style.maxHeight = "0";
+            content.style.overflow = "hidden";
+            content.style.transition = "max-height 0.25s ease";
+
+            const grid = document.createElement("div");
+            grid.className = "listen-grid";
+            grid.style.display = "grid";
+            grid.style.gridTemplateColumns = "repeat(auto-fill, minmax(160px, 1fr))";
+            grid.style.gap = "12px";
+            grid.style.paddingTop = "10px";
+
+            catWords.forEach(w => {
+                const pill = document.createElement("button");
+                pill.className = "word-pill";
+                pill.style.width = "100%";
+                pill.textContent = `${w.es} (${w.en})`;
+                pill.onclick = () => {
+                    const idx = words.indexOf(w);
+                    if (idx >= 0) playSingleWord(idx);
+                };
+                grid.appendChild(pill);
+            });
+
+            content.appendChild(grid);
+
+            header.onclick = () => {
+                const arrow = header.querySelector(".listen-arrow");
+                const isOpen = content.classList.contains("open");
+
+                const allContents = document.querySelectorAll(".listen-category-content");
+                const allArrows = document.querySelectorAll(".listen-arrow");
+
+                allContents.forEach(c => {
+                    c.classList.remove("open");
+                    c.style.maxHeight = "0";
+                });
+                allArrows.forEach(a => a.style.transform = "rotate(0deg)");
+
+                if (!isOpen) {
+                    content.classList.add("open");
+                    content.style.maxHeight = content.scrollHeight + "px";
+                    arrow.style.transform = "rotate(180deg)";
+                }
+            };
+
+            wrapper.appendChild(header);
+            wrapper.appendChild(content);
+            catContainer.appendChild(wrapper);
+        });
+    }
+
+    renderCategories();
+
+    searchInput.oninput = () => {
+        const text = searchInput.value.trim();
+        renderCategories(text);
+    };
+}
+
+/* ============================
+   FLASHCARDS
+============================ */
+
+function renderFlashcardsTab() {
+    const container = document.getElementById("flash");
+    if (!container) return;
+
+    const words = LEVEL_WORDS[currentLevel] || [];
+
+    container.innerHTML = `
+        <h3>Flashcards (${currentLevel})</h3>
+        <p>Tap a card to flip and hear the Spanish pronunciation.</p>
+
+        <div id="flash-grid"
+             style="display:grid; grid-template-columns:repeat(auto-fill, minmax(160px, 1fr)); gap:20px; margin-top:20px;">
+        </div>
+    `;
+
+    const grid = document.getElementById("flash-grid");
+    if (!grid) return;
+
+    words.forEach(item => {
+        const wrapper = document.createElement("div");
+        wrapper.className = "flip-wrapper";
+
+        const card = document.createElement("div");
+        card.className = "flip-card";
+
+        const front = document.createElement("div");
+        front.className = "flip-face flip-front word-pill";
+        front.textContent = item.en;
+
+        const back = document.createElement("div");
+        back.className = "flip-face flip-back word-pill";
+        back.textContent = item.es;
+
+        card.appendChild(front);
+        card.appendChild(back);
+        wrapper.appendChild(card);
+
+        wrapper.onclick = () => {
+            card.classList.toggle("flipped");
+
+            if (card.classList.contains("flipped")) {
+                speakSpanish(item.es);
+
+                // XP hook
+                addXP(3);
+            }
+        };
+
+        grid.appendChild(wrapper);
+    });
+}
+/* ============================
+   QUIZ ENGINE
+============================ */
+
+function renderQuizTab() {
+    const container = document.getElementById("quiz");
+    if (!container) return;
+
+    const words = LEVEL_WORDS[currentLevel] || [];
+    if (!words.length) {
+        container.innerHTML = "<p>No words available for this level.</p>";
+        return;
+    }
+
+    let incorrectList = [];
+    const TOTAL_QUESTIONS = 10;
+    let correct = 0;
+    let total = 0;
+
+    container.innerHTML = `
+        <h3>Quiz (${currentLevel})</h3>
+        <p>Mixed practice: multiple choice + type the answer.</p>
+
+        <div id="quiz-progress-wrapper" style="margin:10px 0;">
+            <div id="quiz-progress-bar" style="
+                height: 12px;
+                width: 0%;
+                background: #0ea5e9;
+                border-radius: 8px;
+                transition: width 0.3s ease;
+            "></div>
+        </div>
+
+        <div id="quiz-area"></div>
+        <div id="quiz-feedback" style="margin-top:10px;"></div>
+        <div id="quiz-score-display" style="margin-top:10px;"></div>
+
+        <button id="review-btn" class="secondary-btn hidden" style="margin-top:15px;">
+            Review Incorrect Answers
+        </button>
+
+        <div id="review-area" style="margin-top:15px;"></div>
+    `;
+
+    const area = document.getElementById("quiz-area");
+    const feedback = document.getElementById("quiz-feedback");
+    const scoreDisplay = document.getElementById("quiz-score-display");
+    const progressBar = document.getElementById("quiz-progress-bar");
+    const reviewBtn = document.getElementById("review-btn");
+    const reviewArea = document.getElementById("review-area");
+
+    function updateProgress() {
+        if (!progressBar) return;
+        const pct = (total / TOTAL_QUESTIONS) * 100;
+        progressBar.style.width = pct + "%";
+    }
+
+    function updateScore() {
+        if (!scoreDisplay) return;
+        quizScore = total === 0 ? 0 : Math.round((correct / total) * 100);
+        scoreDisplay.textContent = `Score: ${quizScore}% (${correct}/${total})`;
+
+        // XP hook
+        addXP(quizScore);
+
+        updateDashboard();
+    }
+
+    function nextQuestion() {
+        if (!area) return;
+
+        if (total >= TOTAL_QUESTIONS) {
+            finishQuiz();
+            return;
+        }
+
+        const item = words[Math.floor(Math.random() * words.length)];
+        const mode = Math.random() < 0.5 ? "mc" : "type";
+
+        if (mode === "mc") {
+            renderMultipleChoice(item);
+        } else {
+            renderTypeAnswer(item);
+        }
+    }
+
+    function finishQuiz() {
+        if (!area || !feedback || !reviewBtn) return;
+        area.innerHTML = `<h4>Quiz Complete!</h4>`;
+        feedback.textContent = "";
+
+        // Achievement hook
+        if (quizScore >= 90) {
+            showAchievement("Quiz Master! You scored 90% or higher.");
+        }
+
+        if (incorrectList.length > 0) {
+            reviewBtn.classList.remove("hidden");
+        }
+    }
+
+    function renderMultipleChoice(item) {
+        if (!area || !feedback) return;
+
+        const options = generateOptions(item);
+
+        area.innerHTML = `
+            <div class="quiz-block">
+                <strong>Spanish:</strong> ${item.es}
+                <p>Select the correct English translation:</p>
+                <div id="mc-options"></div>
+            </div>
+        `;
+
+        const optContainer = document.getElementById("mc-options");
+        if (!optContainer) return;
+
+        options.forEach(opt => {
+            const btn = document.createElement("button");
+            btn.className = "secondary-btn";
+            btn.style.margin = "5px";
+            btn.textContent = opt;
+
+            btn.onclick = () => {
+                total++;
+                updateProgress();
+
+                if (opt === item.en) {
+                    correct++;
+                    feedback.textContent = "✅ Correct!";
+                } else {
+                    feedback.textContent = `❌ Incorrect. Correct answer: ${item.en}`;
+                    incorrectList.push({ es: item.es, correct: item.en });
+                }
+
+                updateScore();
+                setTimeout(nextQuestion, 600);
+            };
+
+            optContainer.appendChild(btn);
+        });
+    }
+
+    function generateOptions(correctItem) {
+        const options = [correctItem.en];
+
+        while (options.length < 4 && LEVEL_WORDS[currentLevel] && LEVEL_WORDS[currentLevel].length) {
+            const random = LEVEL_WORDS[currentLevel][Math.floor(Math.random() * LEVEL_WORDS[currentLevel].length)].en;
+            if (!options.includes(random)) options.push(random);
+        }
+
+        return options.sort(() => Math.random() - 0.5);
+    }
+
+    function renderTypeAnswer(item) {
+        if (!area || !feedback) return;
+
+        area.innerHTML = `
+            <div class="quiz-block">
+                <strong>Spanish:</strong> ${item.es}
+                <p>Type the English translation:</p>
+                <input id="quiz-input" class="input-field" placeholder="English answer">
+                <button class="primary-btn" id="quiz-submit">Submit</button>
+            </div>
+        `;
+
+        const input = document.getElementById("quiz-input");
+        const submit = document.getElementById("quiz-submit");
+        if (!input || !submit) return;
+
+        function processAnswer() {
+            const ans = input.value.trim().toLowerCase();
+            total++;
+            updateProgress();
+
+            if (ans === item.en.toLowerCase()) {
+                correct++;
+                feedback.textContent = "✅ Correct!";
+            } else {
+                feedback.textContent = `❌ Incorrect. Correct answer: ${item.en}`;
+                incorrectList.push({ es: item.es, correct: item.en });
+            }
+
+            updateScore();
+            setTimeout(nextQuestion, 600);
+        }
+
+        submit.onclick = processAnswer;
+
+        input.addEventListener("keydown", (e) => {
+            if (e.key === "Enter") {
+                e.preventDefault();
+                processAnswer();
+            }
+        });
+    }
+
+    if (reviewBtn && reviewArea) {
+        reviewBtn.onclick = () => {
+            reviewArea.innerHTML = `
+                <h4>Review Incorrect Answers</h4>
+                <p>Tap a word to hear the Spanish pronunciation.</p>
+            `;
+
+            incorrectList.forEach(item => {
+                const block = document.createElement("div");
+                block.className = "word-pill";
+                block.style.marginTop = "8px";
+                block.textContent = `${item.es} → ${item.correct}`;
+                block.onclick = () => speakSpanish(item.es);
+                reviewArea.appendChild(block);
+            });
+        };
+    }
+
+    nextQuestion();
+    updateScore();
+    updateProgress();
+}
+
+/* ============================
+   SENTENCE BUILDER
+============================ */
+
+function renderBuildTab() {
+    const container = document.getElementById("build");
+    if (!container) return;
+
+    const levelWords = LEVEL_WORDS[currentLevel] || [];
+
+    const promptPairs = [
+        { en: "I want water", es: ["quiero", "agua"] },
+        { en: "I want milk", es: ["quiero", "leche"] },
+        { en: "I want coffee", es: ["quiero", "café"] },
+        { en: "I want tea", es: ["quiero", "té"] },
+        { en: "I want beer", es: ["quiero", "cerveza"] },
+        { en: "I want food", es: ["quiero", "comida"] },
+        { en: "I want bread", es: ["quiero", "pan"] },
+        { en: "I want an egg", es: ["quiero", "un", "huevo"] },
+        { en: "I want potato chips", es: ["quiero", "papas", "fritas"] },
+        { en: "I want steak", es: ["quiero", "bistec"] },
+        { en: "I want fruit", es: ["quiero", "fruta"] },
+        { en: "I want an apple", es: ["quiero", "una", "manzana"] },
+        { en: "I want an orange", es: ["quiero", "una", "naranja"] },
+        { en: "I want a banana", es: ["quiero", "un", "plátano"] },
+        { en: "I want chicken", es: ["quiero", "pollo"] },
+        { en: "I want fish", es: ["quiero", "pescado"] },
+        { en: "I want soup", es: ["quiero", "sopa"] },
+        { en: "I want salad", es: ["quiero", "ensalada"] },
+        { en: "I want rice", es: ["quiero", "arroz"] },
+        { en: "I want beans", es: ["quiero", "frijoles"] },
+        { en: "I want beer and potato chips", es: ["quiero", "cerveza", "y", "papas", "fritas"] },
+        { en: "I want steak and water", es: ["quiero", "bistec", "y", "agua"] },
+        { en: "I want eggs and coffee", es: ["quiero", "huevos", "y", "café"] },
+        { en: "I want rice and beans", es: ["quiero", "arroz", "y", "frijoles"] },
+        { en: "I want bread and cheese", es: ["quiero", "pan", "y", "queso"] },
+        { en: "I want fruit and water", es: ["quiero", "fruta", "y", "agua"] },
+        { en: "I want the menu", es: ["quiero", "el", "menú"] },
+        { en: "I want the bill please", es: ["quiero", "la", "cuenta", "por favor"] },
+        { en: "Where is the bathroom?", es: ["dónde", "está", "el", "baño"] },
+        { en: "I need help", es: ["necesito", "ayuda"] },
+        { en: "I am lost", es: ["estoy", "perdido"] },
+        { en: "Where is the train station?", es: ["dónde", "está", "la", "estación", "de", "tren"] },
+        { en: "Where is the hotel?", es: ["dónde", "está", "el", "hotel"] },
+        { en: "Where is my room?", es: ["dónde", "está", "mi", "habitación"] },
+        { en: "I want a ticket", es: ["quiero", "un", "boleto"] },
+        { en: "I want coffee and milk", es: ["quiero", "café", "y", "leche"] },
+        { en: "I want water and bread", es: ["quiero", "agua", "y", "pan"] },
+        { en: "Where is the airport?", es: ["dónde", "está", "el", "aeropuerto"] },
+        { en: "I need a doctor", es: ["necesito", "un", "doctor"] }
+    ];
+function generateSpanishSentence(pair, levelWords) {
+    const base = [...pair.es];
+
+    const connectors = ["y", "pero", "también", "con", "sin"];
+    const availableConnectors = levelWords
+        .map(w => w.es)
+        .filter(w => connectors.includes(w));
+
+    if (availableConnectors.length > 0 && Math.random() < 0.25) {
+        const extra = availableConnectors[Math.floor(Math.random() * availableConnectors.length)];
+        base.push(extra);
+    }
+
+    return base;
+}
+
+const pair = promptPairs[Math.floor(Math.random() * promptPairs.length)];
+const englishPrompt = pair.en;
+const spanishWordsNeeded = generateSpanishSentence(pair, levelWords);
+const spanishSentence = spanishWordsNeeded.join(" ");
+
+const shuffledWords = createWordGridWithDistractors(spanishWordsNeeded, levelWords);
+
+container.innerHTML = `
+    <h3>Sentence Builder (${currentLevel})</h3>
+    <p>Read the English prompt, listen to the Spanish sentence, then rebuild it using the word grid.</p>
+
+    <div style="margin-bottom:8px; color:#e2e8f0; font-size:14px;">
+        Streak: <span id="build-streak-value">${buildStreak}</span> 🔥
+    </div>
+
+    <div style="
+        padding:14px;
+        border-radius:10px;
+        border:1px solid #cbd5e1;
+        margin-bottom:12px;
+        background:rgba(255,255,255,0.08);
+    ">
+        <strong style="color:white;">English Prompt:</strong>
+        <span style="color:white; font-size:18px; font-weight:600;">
+            ${englishPrompt}
+        </span>
+    </div>
+
+    <button class="primary-btn" id="hear-target-btn" style="margin-bottom:10px;">
+        ▶️ Hear Spanish Sentence
+    </button>
+
+    <button class="secondary-btn" id="hint-btn" style="margin-bottom:10px;">
+        💡 Show Hint
+    </button>
+
+    <button class="secondary-btn" id="undo-btn" style="margin-bottom:10px;">
+        ↩ Undo Last Word
+    </button>
+
+    <button class="secondary-btn" id="reset-btn" style="margin-bottom:15px;">
+        🔄 Reset Answer
+    </button>
+
+    <textarea id="build-output" class="input-field" rows="3"
+        placeholder="Rebuild the Spanish sentence here..."></textarea>
+
+    <div id="build-words" style="
+        margin-top:15px;
+        display:grid;
+        grid-template-columns:repeat(auto-fill, minmax(110px, 1fr));
+        gap:10px;
+    "></div>
+
+    <button class="primary-btn" id="build-check" style="margin-top:12px;">Check Sentence</button>
+    <button class="primary-btn" id="build-next" style="margin-top:12px;">Next Sentence ➜</button>
+
+    <div id="build-feedback" style="margin-top:12px; font-size:14px; color:#e2e8f0;"></div>
+
+    <div id="build-celebration" style="margin-top:10px;"></div>
+`;
+
+const wordGrid = document.getElementById("build-words");
+const output = document.getElementById("build-output");
+const feedback = document.getElementById("build-feedback");
+const hearBtn = document.getElementById("hear-target-btn");
+const hintBtn = document.getElementById("hint-btn");
+const resetBtn = document.getElementById("reset-btn");
+const undoBtn = document.getElementById("undo-btn");
+const checkBtn = document.getElementById("build-check");
+const nextBtn = document.getElementById("build-next");
+const streakValue = document.getElementById("build-streak-value");
+const celebrationBox = document.getElementById("build-celebration");
+
+if (!wordGrid || !output || !feedback || !hearBtn || !hintBtn || !resetBtn || !undoBtn || !checkBtn || !nextBtn || !streakValue || !celebrationBox) return;
+
+hearBtn.onclick = () => {
+    speakSpanish(spanishSentence);
+
+    // XP hook
+    addXP(2);
+};
+
+hintBtn.onclick = () => {
+    const hintBox = document.createElement("div");
+    hintBox.style.marginTop = "10px";
+    hintBox.style.padding = "10px";
+    hintBox.style.border = "1px solid rgba(255,255,255,0.2)";
+    hintBox.style.borderRadius = "8px";
+    hintBox.style.color = "#e2e8f0";
+
+    const firstWord = spanishWordsNeeded[0];
+    const lastWord = spanishWordsNeeded[spanishWordsNeeded.length - 1];
+
+    hintBox.innerHTML = `
+        <strong>Hints:</strong><br>
+        • Starts with: <span style="color:#a5f3fc;">${firstWord}</span><br>
+        • Ends with: <span style="color:#a5f3fc;">${lastWord}</span><br>
+        • Word count: <span style="color:#a5f3fc;">${spanishWordsNeeded.length}</span>
+    `;
+
+    hintBtn.after(hintBox);
+    hintBtn.disabled = true;
+
+    // XP hook
+    addXP(1);
+};
+
+resetBtn.onclick = () => {
+    output.value = "";
+    feedback.textContent = "";
+    celebrationBox.innerHTML = "";
+};
+
+undoBtn.onclick = () => {
+    const current = output.value.trim();
+    if (!current) return;
+    const parts = current.split(/\s+/);
+    parts.pop();
+    output.value = parts.join(" ");
+};
+
+shuffledWords.forEach(w => {
+    const pill = document.createElement("button");
+    pill.className = "word-pill build-pill";
+    pill.textContent = w;
+
+    pill.onclick = () => {
+        output.value = (output.value + " " + w).trim();
+
+        // XP hook
+        addXP(1);
+    };
+
+    wordGrid.appendChild(pill);
+});
+
+checkBtn.onclick = () => {
+    const learnerSentence = output.value.trim();
+    celebrationBox.innerHTML = "";
+
+    if (!learnerSentence) {
+        feedback.textContent = "Write or build the Spanish sentence first.";
+        return;
+    }
+
+    const targetTokens = spanishSentence.split(/\s+/);
+    const learnerTokens = learnerSentence.split(/\s+/);
+
+    const analysis = analyzeSentence(targetTokens, learnerTokens);
+    buildScore = analysis.score;
+
+    feedback.innerHTML = buildFeedbackMessage(analysis, spanishSentence);
+
+    if (buildScore >= 90) {
+        buildStreak += 1;
+        streakValue.textContent = buildStreak.toString();
+
+        // XP hook
+        addXP(10);
+
+        // Achievement hook
+        if (buildStreak >= 5) {
+            showAchievement("🔥 Build Streak! You built 5 correct sentences in a row.");
+        }
+
+        showMiniCelebration(celebrationBox, buildScore);
+    } else {
+        buildStreak = 0;
+        streakValue.textContent = "0";
+    }
+
+    updateDashboard();
+};
+
+nextBtn.onclick = () => {
+    output.value = "";
+    feedback.textContent = "";
+    celebrationBox.innerHTML = "";
+    hintBtn.disabled = false;
+    renderBuildTab();
+};
+/* ============================
+   GLOBAL STATE
+============================ */
+
+let currentLevel = "A1";
+let quizScore = 0;
+let buildScore = 0;
+let buildStreak = 0;
+let convCount = 0;
+
+let selectedVoice = "female_latam"; // locked to female LATAM
+
+let autoPlayActive = false;
+let autoPlayPaused = false;
+let autoPlayIndex = 0;
+
+/* ============================
+   NEW GLOBAL STATE (XP / STREAK / ACHIEVEMENTS)
+============================ */
+
+let streakCount = 0;
+let xpTotal = 0;
+let xpLevel = 1;
+
+/* ============================
    DATA PACKS
 ============================ */
 
@@ -312,7 +1282,9 @@ function playSingleWord(index) {
     const words = LEVEL_WORDS[currentLevel] || [];
     const item = words[index];
     if (!item) return;
+
     speakSpanish(item.es);
+    addXP(2);
 }
 
 function autoPlayListen() {
@@ -329,6 +1301,7 @@ function autoPlayListen() {
         if (!autoPlayActive || autoPlayPaused) return;
         if (autoPlayIndex >= words.length) {
             autoPlayActive = false;
+            addXP(10);
             return;
         }
 
@@ -374,6 +1347,7 @@ function resumeAutoPlay() {
     autoPlayPaused = false;
     speechSynthesis.resume();
 }
+
 /* ============================
    LISTEN TAB RENDERING
 ============================ */
@@ -515,7 +1489,6 @@ function renderListenTab() {
     };
 }
 
-
 /* ============================
    FLASHCARDS
 ============================ */
@@ -562,13 +1535,13 @@ function renderFlashcardsTab() {
 
             if (card.classList.contains("flipped")) {
                 speakSpanish(item.es);
+                addXP(3);
             }
         };
 
         grid.appendChild(wrapper);
     });
 }
-
 
 /* ============================
    QUIZ ENGINE
@@ -631,6 +1604,7 @@ function renderQuizTab() {
         if (!scoreDisplay) return;
         quizScore = total === 0 ? 0 : Math.round((correct / total) * 100);
         scoreDisplay.textContent = `Score: ${quizScore}% (${correct}/${total})`;
+        addXP(quizScore);
         updateDashboard();
     }
 
@@ -656,6 +1630,10 @@ function renderQuizTab() {
         if (!area || !feedback || !reviewBtn) return;
         area.innerHTML = `<h4>Quiz Complete!</h4>`;
         feedback.textContent = "";
+
+        if (quizScore >= 90) {
+            showAchievement("Quiz Master! You scored 90% or higher.");
+        }
 
         if (incorrectList.length > 0) {
             reviewBtn.classList.remove("hidden");
@@ -927,6 +1905,7 @@ function renderBuildTab() {
 
     hearBtn.onclick = () => {
         speakSpanish(spanishSentence);
+        addXP(2);
     };
 
     hintBtn.onclick = () => {
@@ -949,6 +1928,7 @@ function renderBuildTab() {
 
         hintBtn.after(hintBox);
         hintBtn.disabled = true;
+        addXP(1);
     };
 
     resetBtn.onclick = () => {
@@ -972,6 +1952,7 @@ function renderBuildTab() {
 
         pill.onclick = () => {
             output.value = (output.value + " " + w).trim();
+            addXP(1);
         };
 
         wordGrid.appendChild(pill);
@@ -997,6 +1978,12 @@ function renderBuildTab() {
         if (buildScore >= 90) {
             buildStreak += 1;
             streakValue.textContent = buildStreak.toString();
+            addXP(10);
+
+            if (buildStreak >= 5) {
+                showAchievement("🔥 Build Streak! You built 5 correct sentences in a row.");
+            }
+
             showMiniCelebration(celebrationBox, buildScore);
         } else {
             buildStreak = 0;
@@ -1126,9 +2113,23 @@ function showMiniCelebration(container, score) {
         </div>
     `;
 }
+
 /* ============================
    CONVERSATION TRAINER
 ============================ */
+
+const CONVERSATION_PROMPTS = {
+    A1: [
+        { prompt: "¿Qué te gusta comer?", keywords: ["me gusta", "comer"] },
+        { prompt: "¿Dónde está el baño?", keywords: ["baño", "dónde"] }
+    ],
+    A2: [
+        { prompt: "Describe tu rutina diaria.", keywords: ["todos los días", "normalmente"] }
+    ],
+    B1: [
+        { prompt: "Habla sobre tu trabajo y tus planes futuros.", keywords: ["trabajo", "planes futuros"] }
+    ]
+};
 
 function renderConversationTab() {
     const container = document.getElementById("conversation");
@@ -1177,6 +2178,7 @@ function renderConversationTab() {
 
     hearBtn.onclick = () => {
         speakSpanish(prompt.prompt);
+        addXP(2);
     };
 
     checkBtn.onclick = () => {
@@ -1209,6 +2211,7 @@ function renderConversationTab() {
                 🎉 Excellent — you used all the key phrases!<br>
                 Keep going, your conversational Spanish is growing.
             `;
+            addXP(8);
         }
     };
 }
@@ -1265,7 +2268,7 @@ function renderGrammarTab() {
 }
 
 /* ============================
-   CERTIFICATES & BADGES
+   CERTIFICATES & BADGES + DASHBOARD
 ============================ */
 
 function updateDashboard() {
@@ -1280,6 +2283,8 @@ function updateDashboard() {
     if (levelEl) levelEl.textContent = currentLevel;
 
     updateBadges();
+    updateStreakUI();
+    updateXPUi();
 }
 
 function updateBadges() {
@@ -1314,6 +2319,97 @@ function updateBadges() {
         li.style.color = "#a5f3fc";
         badgeList.appendChild(li);
     });
+}
+
+/* ============================
+   XP / STREAK / LEVEL-UP / ACHIEVEMENTS / CERTIFICATE
+============================ */
+
+function incrementStreak() {
+    streakCount++;
+    updateStreakUI();
+}
+
+function addXP(amount) {
+    xpTotal += amount;
+    updateXPLevel();
+    updateXPUi();
+}
+
+function updateStreakUI() {
+    const el = document.getElementById('streak-count');
+    if (el) el.textContent = streakCount;
+}
+
+function updateXPUi() {
+    const totalEl = document.getElementById('xp-total');
+    const barEl = document.getElementById('xp-progress');
+    const levelEl = document.getElementById('xp-level');
+
+    if (totalEl) totalEl.textContent = xpTotal;
+    if (levelEl) levelEl.textContent = xpLevel;
+
+    const currentLevelXP = xpLevel * 100;
+    const prevLevelXP = (xpLevel - 1) * 100;
+    const span = currentLevelXP - prevLevelXP;
+    const progress = Math.max(0, Math.min(1, (xpTotal - prevLevelXP) / span));
+
+    if (barEl) barEl.style.width = (progress * 100).toFixed(0) + '%';
+}
+
+function updateXPLevel() {
+    const newLevel = Math.floor(xpTotal / 100) + 1;
+    if (newLevel > xpLevel) {
+        xpLevel = newLevel;
+        triggerLevelUpAnimation(newLevel);
+    }
+}
+
+function triggerLevelUpAnimation(levelNumber) {
+    const container = document.getElementById('levelup-animation');
+    const numEl = document.getElementById('levelup-number');
+    if (!container) return;
+
+    if (numEl) numEl.textContent = levelNumber;
+    container.classList.remove('levelup-hidden');
+
+    setTimeout(() => {
+        container.classList.add('levelup-hidden');
+    }, 2500);
+}
+
+function showAchievement(message) {
+    const container = document.getElementById('achievement-popup');
+    const textEl = document.getElementById('achievement-text');
+    if (!container) return;
+
+    if (textEl) textEl.textContent = message;
+    container.classList.remove('achievement-hidden');
+
+    setTimeout(() => {
+        container.classList.add('achievement-hidden');
+    }, 2500);
+}
+
+function updateCertificatePreview(name, level) {
+    const preview = document.getElementById('certificate-preview');
+    if (!preview) return;
+
+    const safeName = name || 'Student';
+    const safeLevel = level || 'A1';
+
+    preview.innerHTML = `
+        <div>
+            <h4>Certificate of Spanish Achievement</h4>
+            <p>This certifies that <strong>${safeName}</strong></p>
+            <p>has successfully completed level <strong>${safeLevel}</strong>.</p>
+        </div>
+    `;
+}
+
+function getCurrentLevelFromUI() {
+    const active = document.querySelector('.level-btn.active');
+    return active ? active.textContent.trim() : currentLevel;
 }
 
 /* ============================
@@ -1394,7 +2490,15 @@ document.addEventListener("DOMContentLoaded", () => {
         };
     });
 
-    // Initial render
+    const certBtn = document.getElementById('generate-certificate-btn');
+    const nameInput = document.getElementById('student-name');
+    if (certBtn) {
+        certBtn.addEventListener('click', () => {
+            const name = nameInput ? nameInput.value.trim() : '';
+            updateCertificatePreview(name, getCurrentLevelFromUI());
+        });
+    }
+
     renderListenTab();
     renderFlashcardsTab();
     renderQuizTab();
@@ -1403,14 +2507,13 @@ document.addEventListener("DOMContentLoaded", () => {
     renderGrammarTab();
     updateDashboard();
 
-    // Default tab
     showTab("listen");
 
-    // Ensure voices are loaded for the single LATAM female voice
     if (typeof speechSynthesis !== "undefined") {
         speechSynthesis.onvoiceschanged = () => {
             getLatAmVoice();
         };
     }
 });
+
 
