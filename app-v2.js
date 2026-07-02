@@ -401,7 +401,6 @@ function renderListenTab() {
 
     const searchInput = document.getElementById("listen-search");
     const catContainer = document.getElementById("listen-categories");
-
     if (!catContainer || !searchInput) return;
 
     const categoryIcons = {
@@ -457,12 +456,16 @@ function renderListenTab() {
 
             const content = document.createElement("div");
             content.className = "listen-category-content";
+            content.style.maxHeight = "0";
+            content.style.overflow = "hidden";
+            content.style.transition = "max-height 0.25s ease";
 
             const grid = document.createElement("div");
             grid.className = "listen-grid";
             grid.style.display = "grid";
             grid.style.gridTemplateColumns = "repeat(auto-fill, minmax(160px, 1fr))";
             grid.style.gap = "12px";
+            grid.style.paddingTop = "10px";
 
             catWords.forEach(w => {
                 const pill = document.createElement("button");
@@ -485,11 +488,15 @@ function renderListenTab() {
                 const allContents = document.querySelectorAll(".listen-category-content");
                 const allArrows = document.querySelectorAll(".listen-arrow");
 
-                allContents.forEach(c => c.classList.remove("open"));
+                allContents.forEach(c => {
+                    c.classList.remove("open");
+                    c.style.maxHeight = "0";
+                });
                 allArrows.forEach(a => a.style.transform = "rotate(0deg)");
 
                 if (!isOpen) {
                     content.classList.add("open");
+                    content.style.maxHeight = content.scrollHeight + "px";
                     arrow.style.transform = "rotate(180deg)";
                 }
             };
@@ -507,6 +514,7 @@ function renderListenTab() {
         renderCategories(text);
     };
 }
+
 
 /* ============================
    FLASHCARDS
@@ -560,6 +568,7 @@ function renderFlashcardsTab() {
         grid.appendChild(wrapper);
     });
 }
+
 
 /* ============================
    QUIZ ENGINE
