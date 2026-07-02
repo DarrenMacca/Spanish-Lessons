@@ -2443,7 +2443,19 @@ function setLevel(level) {
 ============================ */
 
 function showTab(tabId) {
-    const tabs = ["listen", "flash", "quiz", "build", "conversation", "grammar"];
+    const tabs = [
+        "dashboard",
+        "listen",
+        "flash",
+        "quiz",
+        "build",
+        "conversation",
+        "grammar",
+        "certificates",
+        "badges",
+        "settings"
+    ];
+
     tabs.forEach(id => {
         const el = document.getElementById(id);
         const btn = document.querySelector(`[data-tab="${id}"]`);
@@ -2461,6 +2473,7 @@ function showTab(tabId) {
 
     try { speechSynthesis.cancel(); } catch (e) {}
 }
+
 
 /* ============================
    DOMContentLoaded INIT
