@@ -321,10 +321,15 @@ function getLatAmVoice() {
     const voices = speechSynthesis.getVoices();
     if (!voices || !voices.length) return null;
 
-    const femalePatterns = ["sabina", "mexico"];
-    const malePatterns   = ["raul", "mexico"];
+    // Female LATAM (Sabina)
+    const femalePatterns = ["sabina", "mexico", "latam"];
 
-    const patterns = selectedVoice === "sabina" ? femalePatterns : malePatterns;
+    // Male Spanish (Diego)
+    const malePatterns = ["diego", "spanish", "español"];
+
+    const patterns = selectedVoice === "female_latam"
+        ? femalePatterns
+        : malePatterns;
 
     const match = voices.find(v =>
         patterns.some(p => v.name.toLowerCase().includes(p))
@@ -332,15 +337,11 @@ function getLatAmVoice() {
 
     if (match) return match;
 
-    // Fallback: any Latin-American Spanish voice
-    const fallback = voices.find(v =>
-        v.lang === "es-MX" ||
-        v.lang === "es-US" ||
-        v.lang === "es-419"
-    );
-
+    // Fallback: any Spanish voice
+    const fallback = voices.find(v => v.lang.startsWith("es"));
     return fallback || voices[0];
 }
+
 
 
 
@@ -1633,6 +1634,7 @@ function previewSelectedVoice() {
 }
 
 document.getElementById("voice-preview-btn").onclick = previewSelectedVoice;
+
 
 
 
