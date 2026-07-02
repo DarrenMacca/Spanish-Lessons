@@ -5,7 +5,6 @@
     <title>Spanish CEFR Trainer</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <!-- External CSS -->
     <link rel="stylesheet" href="styles.css">
 </head>
 
@@ -15,19 +14,19 @@
     <h1>Spanish CEFR Trainer</h1>
 </header>
 
-<!-- DASHBOARD -->
+<!-- DASHBOARD WITH TAB LINKS -->
 <div class="dashboard">
     <div class="dash-item">
-        Quiz<br><span id="dash-quiz-score" class="dash-value">0%</span>
+        <button class="dash-link" data-tab="listen">Listen</button>
     </div>
     <div class="dash-item">
-        Build<br><span id="dash-build-score" class="dash-value">0%</span>
+        <button class="dash-link" data-tab="flash">Flashcards</button>
     </div>
     <div class="dash-item">
-        Conversations<br><span id="dash-conv-count" class="dash-value">0</span>
+        <button class="dash-link" data-tab="quiz">Quiz</button>
     </div>
     <div class="dash-item">
-        Level<br><span id="dash-level" class="dash-value">A1</span>
+        <button class="dash-link" data-tab="build">Build</button>
     </div>
 </div>
 
@@ -75,7 +74,6 @@
     <ul id="badge-list"></ul>
 </div>
 
-<!-- JS -->
 <script src="app-v2.js"></script>
 
 </body>
