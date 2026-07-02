@@ -114,27 +114,106 @@ h1 {
     display: none;
 }
 
-/* DASHBOARD */
-.dashboard {
-    padding: 20px;
+/* DASHBOARD SECTIONS */
+.dash-section {
+    padding: 16px;
+    margin-bottom: 16px;
 }
 
-.dashboard-grid {
+/* STATS LIST */
+.stats-list {
+    list-style: none;
+    padding-left: 0;
+    margin: 8px 0 0;
+}
+.stats-list li {
+    margin: 4px 0;
+    font-size: 14px;
+}
+
+/* PROGRESS BARS */
+.progress-block {
+    margin-bottom: 10px;
+}
+.progress-bar {
+    width: 100%;
+    height: 10px;
+    border-radius: 999px;
+    background: rgba(30, 41, 59, 0.9);
+    overflow: hidden;
+}
+.progress-fill {
+    height: 100%;
+    width: 0%;
+    border-radius: 999px;
+    background: linear-gradient(90deg, #22c55e, #14b8a6);
+    transition: width 0.3s ease;
+}
+
+/* STREAK FIRE */
+.streak-fire {
+    margin-top: 8px;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background: radial-gradient(circle at 30% 20%, #f97316, #b91c1c);
+    box-shadow: 0 0 18px rgba(248, 113, 22, 0.8);
+    animation: streakPulse 1.2s infinite;
+}
+@keyframes streakPulse {
+    0% { transform: scale(1); opacity: 0.9; }
+    50% { transform: scale(1.1); opacity: 1; }
+    100% { transform: scale(1); opacity: 0.9; }
+}
+
+/* LEVEL-UP ANIMATION */
+.levelup-hidden {
+    display: none;
+}
+.levelup-popup {
+    position: fixed;
+    inset: 0;
+    margin: auto;
+    max-width: 320px;
+    text-align: center;
+    z-index: 50;
+}
+.levelup-popup h2 {
+    color: #a5f3fc;
+}
+.levelup-popup p {
+    margin-top: 6px;
+}
+
+/* ACHIEVEMENT POPUP */
+.achievement-hidden {
+    display: none;
+}
+.achievement-popup {
+    position: fixed;
+    bottom: 24px;
+    right: 24px;
+    max-width: 280px;
+    z-index: 40;
+}
+.achievement-popup h2 {
+    color: #facc15;
+}
+
+/* CERTIFICATE PREVIEW */
+.certificate-preview {
+    min-height: 120px;
+    border-radius: 16px;
+    border: 1px dashed rgba(148, 163, 184, 0.7);
+    padding: 12px;
+    background: rgba(15, 23, 42, 0.7);
     display: flex;
-    flex-wrap: wrap;
-    gap: 10px;
-    margin-top: 12px;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    font-size: 14px;
 }
 
-.dash-link {
-    background: rgba(51, 65, 85, 0.8);
-    color: #e2e8f0;
-    padding: 10px 16px;
-    border-radius: 14px;
-    border: 1px solid rgba(148, 163, 184, 0.5);
-    cursor: pointer;
-    font-size: 13px;
-}
 
 /* INPUTS & BUTTONS */
 .input-field {
