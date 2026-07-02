@@ -187,7 +187,7 @@ nav {
 }
 
 /* ============================
-   FLASHCARD FLIP SYSTEM
+   FLASHCARD FLIP SYSTEM (Medium Size)
 ============================ */
 
 .flip-wrapper {
@@ -197,7 +197,7 @@ nav {
 .flip-card {
     position: relative;
     width: 100%;
-    height: 90px;
+    height: 140px; /* Medium size */
     transform-style: preserve-3d;
     transition: transform 0.4s ease;
 }
@@ -215,13 +215,18 @@ nav {
     align-items: center;
     justify-content: center;
     border-radius: 8px;
+    font-size: 20px;
+    padding: 10px;
 }
 
 .flip-front {
+    background: #1e293b;
     transform: rotateY(0deg);
 }
 
 .flip-back {
+    background: #0ea5e9;
+    color: white;
     transform: rotateY(180deg);
 }
 
