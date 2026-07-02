@@ -1,4 +1,4 @@
-/* GLOBAL BACKGROUND WITH SUBTLE GRADIENT */
+/* GLOBAL */
 body {
     margin: 0;
     padding: 0;
@@ -7,7 +7,7 @@ body {
     background: linear-gradient(135deg, #0f172a 0%, #1a2538 100%);
 }
 
-/* GLASSMORPHISM BASE (MEDIUM, ROUNDED) */
+/* GLASS BASE */
 .glass-panel {
     background: rgba(15, 23, 42, 0.6);
     border-radius: 18px;
@@ -31,38 +31,32 @@ h1 {
     color: #a5f3fc;
 }
 
-/* DASHBOARD */
-.dashboard {
+/* SETTINGS STRIP */
+.settings-strip {
     display: flex;
-    justify-content: center;
+    justify-content: space-between;
     gap: 20px;
-    padding: 15px;
-    margin: 16px auto;
-    max-width: 900px;
+    padding: 16px;
+    margin: 16px auto 8px;
+    max-width: 1000px;
 }
 
-.dash-item {
-    text-align: center;
+.settings-left {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
 }
 
-.dash-link {
-    background: rgba(51, 65, 85, 0.8);
-    color: #e2e8f0;
-    padding: 10px 16px;
-    border-radius: 14px;
-    border: 1px solid rgba(148, 163, 184, 0.5);
-    cursor: pointer;
-    font-size: 14px;
+.settings-right {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
 }
 
-/* LEVEL SELECTOR */
+/* LEVEL + RATE */
 .level-select {
     display: flex;
-    justify-content: center;
-    gap: 10px;
-    padding: 12px;
-    margin: 12px auto;
-    max-width: 500px;
+    gap: 8px;
 }
 
 .level-btn {
@@ -80,45 +74,29 @@ h1 {
     color: #0f172a;
 }
 
-/* RATE CONTROL */
-.rate-control {
-    text-align: center;
-    padding: 12px;
-    margin: 12px auto;
-    max-width: 500px;
+.rate-control label {
+    font-size: 13px;
 }
 
-/* STUDENT NAME */
-.student-name-box {
-    padding: 15px;
-    margin: 12px auto;
-    max-width: 500px;
-    text-align: center;
-}
-
-.name-status {
-    margin-top: 10px;
-    font-size: 14px;
-}
-
-/* NAVIGATION (GLASS TAB BAR) */
+/* NAV BAR */
 .nav-bar {
     display: flex;
+    flex-wrap: wrap;
     justify-content: center;
-    gap: 10px;
+    gap: 8px;
     padding: 12px;
-    margin: 16px auto;
-    max-width: 900px;
+    margin: 8px auto 16px;
+    max-width: 1000px;
 }
 
 .tab-btn {
-    padding: 10px 16px;
+    padding: 8px 14px;
     border-radius: 14px;
     background: rgba(51, 65, 85, 0.9);
     color: #e2e8f0;
     cursor: pointer;
     border: 1px solid rgba(148, 163, 184, 0.5);
-    font-size: 14px;
+    font-size: 13px;
 }
 
 .tab-btn.active {
@@ -126,8 +104,36 @@ h1 {
     color: #0f172a;
 }
 
+/* TAB CONTENT */
+.tab-content {
+    max-width: 1000px;
+    margin: 0 auto 24px;
+}
+
 .hidden {
     display: none;
+}
+
+/* DASHBOARD */
+.dashboard {
+    padding: 20px;
+}
+
+.dashboard-grid {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-top: 12px;
+}
+
+.dash-link {
+    background: rgba(51, 65, 85, 0.8);
+    color: #e2e8f0;
+    padding: 10px 16px;
+    border-radius: 14px;
+    border: 1px solid rgba(148, 163, 184, 0.5);
+    cursor: pointer;
+    font-size: 13px;
 }
 
 /* INPUTS & BUTTONS */
@@ -147,31 +153,18 @@ h1 {
     color: #0f172a;
     cursor: pointer;
     border: none;
-    margin-top: 8px;
 }
 
-.secondary-btn {
-    padding: 10px 14px;
-    border-radius: 14px;
-    background: rgba(51, 65, 85, 0.9);
-    color: #e2e8f0;
-    cursor: pointer;
-    border: 1px solid rgba(148, 163, 184, 0.5);
+.name-status {
+    font-size: 13px;
 }
 
-/* WORD PILLS (LISTEN CONTENT — DARK, NOT GLASS) */
-.word-pill {
-    padding: 10px;
-    border-radius: 12px;
-    background: #1e293b;
-    color: #e2e8f0;
-    cursor: pointer;
-    text-align: center;
-    border: 1px solid rgba(148, 163, 184, 0.4);
-    font-size: 14px;
+/* LISTEN */
+.listen-wrapper {
+    padding: 12px;
 }
 
-/* LISTEN TAB COLLAPSIBLE (HEADER GLASS, CONTENT DARK) */
+/* Header glass, content dark */
 .listen-category-header {
     display: flex;
     justify-content: space-between;
@@ -210,7 +203,31 @@ h1 {
     padding-top: 8px;
 }
 
-/* FLASHCARDS — GLASS CARDS, MEDIUM SIZE */
+/* Word pills (dark) */
+.word-pill {
+    padding: 10px;
+    border-radius: 12px;
+    background: #1e293b;
+    color: #e2e8f0;
+    cursor: pointer;
+    text-align: center;
+    border: 1px solid rgba(148, 163, 184, 0.4);
+    font-size: 14px;
+    margin: 4px;
+}
+
+/* FLASHCARDS */
+.flash-wrapper {
+    padding: 16px;
+}
+
+.flash-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+    gap: 16px; /* extra padding between cards */
+}
+
+/* Flip card */
 .flip-wrapper {
     perspective: 1000px;
 }
@@ -255,7 +272,7 @@ h1 {
     transform: rotateY(180deg);
 }
 
-/* QUIZ & BUILD CARDS — GLASS */
+/* QUIZ & BUILD */
 .quiz-card,
 .build-card {
     background: rgba(15, 23, 42, 0.7);
@@ -265,13 +282,9 @@ h1 {
     backdrop-filter: blur(14px);
     -webkit-backdrop-filter: blur(14px);
     padding: 16px;
-    margin: 16px auto;
-    max-width: 700px;
 }
 
 /* BADGES */
 .badge-section {
     padding: 20px;
-    margin: 16px auto;
-    max-width: 700px;
 }
