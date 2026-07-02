@@ -1,7 +1,4 @@
-/* ============================
-   GLOBAL BASE STYLES
-============================ */
-
+/* GLOBAL */
 body {
     background: #0f172a;
     color: #e2e8f0;
@@ -22,34 +19,25 @@ h1 {
     color: #a5f3fc;
 }
 
-/* ============================
-   DASHBOARD
-============================ */
-
+/* DASHBOARD */
 .dashboard {
     display: flex;
     justify-content: center;
     gap: 20px;
     padding: 15px;
     background: #1e293b;
-    border-bottom: 1px solid rgba(255,255,255,0.1);
 }
 
-.dash-item {
-    text-align: center;
-    font-size: 14px;
+.dash-link {
+    background: #334155;
+    color: white;
+    padding: 10px 16px;
+    border-radius: 8px;
+    border: none;
+    cursor: pointer;
 }
 
-.dash-value {
-    font-size: 20px;
-    color: #a5f3fc;
-    font-weight: 600;
-}
-
-/* ============================
-   LEVEL SELECTOR
-============================ */
-
+/* LEVEL SELECTOR */
 .level-select {
     display: flex;
     justify-content: center;
@@ -70,19 +58,13 @@ h1 {
     background: #0ea5e9;
 }
 
-/* ============================
-   RATE CONTROL
-============================ */
-
+/* RATE CONTROL */
 .rate-control {
     text-align: center;
     padding: 10px;
 }
 
-/* ============================
-   STUDENT NAME
-============================ */
-
+/* STUDENT NAME */
 .student-name-box {
     padding: 15px;
     text-align: center;
@@ -93,17 +75,13 @@ h1 {
     font-size: 14px;
 }
 
-/* ============================
-   NAVIGATION
-============================ */
-
+/* NAVIGATION */
 nav {
     display: flex;
     justify-content: center;
     gap: 10px;
     padding: 15px;
     background: #0f172a;
-    border-bottom: 1px solid rgba(255,255,255,0.1);
 }
 
 .tab-btn {
@@ -123,10 +101,7 @@ nav {
     display: none;
 }
 
-/* ============================
-   INPUTS & BUTTONS
-============================ */
-
+/* INPUTS & BUTTONS */
 .input-field {
     width: 100%;
     padding: 10px;
@@ -154,10 +129,7 @@ nav {
     border: none;
 }
 
-/* ============================
-   WORD PILLS
-============================ */
-
+/* WORD PILLS */
 .word-pill {
     padding: 10px;
     border-radius: 8px;
@@ -168,10 +140,7 @@ nav {
     border: 1px solid rgba(255,255,255,0.1);
 }
 
-/* ============================
-   LISTEN TAB COLLAPSIBLE
-============================ */
-
+/* LISTEN TAB COLLAPSIBLE */
 .listen-category-content {
     max-height: 0;
     overflow: hidden;
@@ -186,10 +155,7 @@ nav {
     transition: transform 0.25s ease;
 }
 
-/* ============================
-   FLASHCARD FLIP SYSTEM (Medium Size)
-============================ */
-
+/* FLASHCARDS — MEDIUM SIZE */
 .flip-wrapper {
     perspective: 1000px;
 }
@@ -197,7 +163,7 @@ nav {
 .flip-card {
     position: relative;
     width: 100%;
-    height: 140px; /* Medium size */
+    height: 140px;
     transform-style: preserve-3d;
     transition: transform 0.4s ease;
 }
@@ -221,7 +187,6 @@ nav {
 
 .flip-front {
     background: #1e293b;
-    transform: rotateY(0deg);
 }
 
 .flip-back {
@@ -230,10 +195,7 @@ nav {
     transform: rotateY(180deg);
 }
 
-/* ============================
-   BADGES
-============================ */
-
+/* BADGES */
 .badge-section {
     padding: 20px;
 }
