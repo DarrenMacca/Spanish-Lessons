@@ -3,152 +3,210 @@
 <head>
     <meta charset="UTF-8">
     <title>Spanish CEFR Trainer</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
-<header class="glass-header">
-    <h1>Spanish CEFR Trainer</h1>
-</header>
+    <!-- TOP BAR: LEVELS, RATE, NAME -->
+    <header class="glass-panel" style="max-width:1100px;margin:20px auto;">
+        <div style="display:flex;flex-wrap:wrap;gap:16px;align-items:center;justify-content:space-between;">
 
-<!-- SETTINGS AREA -->
-<div class="settings-strip glass-panel">
-    <div class="settings-left">
-        <div class="level-select">
-            <button class="level-btn active" data-level="A1">A1</button>
-            <button class="level-btn" data-level="A2">A2</button>
-            <button class="level-btn" data-level="B1">B1</button>
+            <!-- Levels -->
+            <div>
+                <span style="margin-right:8px;color:#e2e8f0;font-weight:600;">Level:</span>
+                <button class="secondary-btn level-btn active" data-level="A1">A1</button>
+                <button class="secondary-btn level-btn" data-level="A2">A2</button>
+                <button class="secondary-btn level-btn" data-level="B1">B1</button>
+            </div>
+
+            <!-- Speech rate -->
+            <div>
+                <label for="rate" style="color:#e2e8f0;font-weight:600;margin-right:8px;">Speech Rate:</label>
+                <input type="range" id="rate" min="0.7" max="1.3" step="0.1" value="1.0">
+            </div>
+
+            <!-- Name -->
+            <div style="display:flex;gap:8px;align-items:center;">
+                <input id="student-name" class="input-field" placeholder="Your name">
+                <button id="save-name-btn" class="primary-btn">Save Name</button>
+            </div>
+
         </div>
-        <div class="rate-control">
-            <label for="rate">Speech Rate:</label>
-            <input type="range" id="rate" min="0.5" max="1.5" step="0.1" value="1.0">
+        <div id="name-status" style="margin-top:8px;font-size:14px;color:#a5f3fc;"></div>
+    </header>
+
+    <!-- NAV TABS -->
+    <nav style="max-width:1100px;margin:0 auto 20px auto;display:flex;flex-wrap:wrap;gap:8px;">
+        <button class="tab-btn active" data-tab="dashboard">Dashboard</button>
+        <button class="tab-btn" data-tab="listen">Listen</button>
+        <button class="tab-btn" data-tab="flash">Flashcards</button>
+        <button class="tab-btn" data-tab="quiz">Quiz</button>
+        <button class="tab-btn" data-tab="build">Build</button>
+        <button class="tab-btn" data-tab="conversation">Conversation</button>
+        <button class="tab-btn" data-tab="grammar">Grammar</button>
+        <button class="tab-btn" data-tab="certificates">Certificates</button>
+        <button class="tab-btn" data-tab="badges">Badges</button>
+        <button class="tab-btn" data-tab="settings">Settings</button>
+    </nav>
+
+    <!-- DASHBOARD TAB -->
+    <div id="dashboard" class="tab-section">
+        <div class="dashboard-wrapper glass-panel">
+
+            <!-- Title -->
+            <h1 class="dashboard-title">Spanish CEFR Trainer</h1>
+
+            <!-- Hero Graphic -->
+            <div class="dashboard-hero">
+                <!-- Replace src with your actual hero image -->
+                <img src="images/dashboard-hero.png"
+                     alt="Spanish learning hero graphic"
+                     class="hero-image">
+            </div>
+
+            <!-- Welcome -->
+            <h2>Welcome back, <span id="student-display">Student</span>!</h2>
+            <p>Your personalised Spanish CEFR learning dashboard.</p>
+
+            <!-- Dashboard grid -->
+            <div class="dashboard-grid">
+
+                <!-- Daily Streak -->
+                <div class="dash-card streak-card">
+                    <h3>Daily Streak 🔥</h3>
+                    <p>You have practiced for <span id="dash-streak">0</span> days in a row.</p>
+                    <img src="images/streak-flame.png" alt="Streak flame" class="streak-icon">
+                </div>
+
+                <!-- XP Progress -->
+                <div class="dash-card xp-card">
+                    <h3>Your XP</h3>
+                    <p>Total XP: <span id="dash-xp">0</span></p>
+
+                    <div class="xp-bar">
+                        <div class="xp-fill" id="xp-progress"></div>
+                    </div>
+
+                    <p class="xp-level">Level <span id="xp-level">1</span></p>
+                </div>
+
+                <!-- Current Level -->
+                <div class="dash-card">
+                    <h3>Current Level</h3>
+                    <p>Level: <span id="dash-level">A1</span></p>
+                </div>
+
+                <!-- Quiz Performance -->
+                <div class="dash-card">
+                    <h3>Quiz Performance</h3>
+                    <p>Average quiz score: <span id="dash-quiz-score">0%</span></p>
+                </div>
+
+                <!-- Sentence Builder -->
+                <div class="dash-card">
+                    <h3>Sentence Builder</h3>
+                    <p>Latest build score: <span id="dash-build-score">0%</span></p>
+                </div>
+
+                <!-- Conversation Practice -->
+                <div class="dash-card">
+                    <h3>Conversation Practice</h3>
+                    <p>Prompts completed: <span id="dash-conv-count">0</span></p>
+                </div>
+
+            </div>
+
+            <!-- Achievements -->
+            <div class="dash-card achievements-card" style="margin-top:20px;">
+                <h3>Achievements</h3>
+
+                <div class="badge-grid">
+                    <div class="badge-item">
+                        <img src="images/badge-quiz.png" alt="Quiz Master badge">
+                        <p>Quiz Master</p>
+                    </div>
+                    <div class="badge-item">
+                        <img src="images/badge-build.png" alt="Sentence Streak badge">
+                        <p>Sentence Streak</p>
+                    </div>
+                    <div class="badge-item">
+                        <img src="images/badge-conversation.png" alt="Conversation Explorer badge">
+                        <p>Conversation Explorer</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Achievement Popups -->
+            <div id="achievement-popups"></div>
+
         </div>
     </div>
-    <div class="settings-right">
-        <input id="student-name" class="input-field" placeholder="Your name for certificates">
-        <button id="save-name-btn" class="primary-btn">Save Name</button>
-        <div id="name-status" class="name-status"></div>
-    </div>
-</div>
 
-<!-- TAB BAR -->
-<nav class="glass-panel nav-bar">
-    <button class="tab-btn" data-tab="dashboard">Dashboard</button>
-<button class="tab-btn" data-tab="listen">Listen</button>
-<button class="tab-btn" data-tab="flash">Flashcards</button>
-<button class="tab-btn" data-tab="quiz">Quiz</button>
-<button class="tab-btn" data-tab="build">Build</button>
-<button class="tab-btn" data-tab="conversation">Conversation</button>
-<button class="tab-btn" data-tab="grammar">Grammar</button>
-<button class="tab-btn" data-tab="certificates">Certificates</button>
-<button class="tab-btn" data-tab="badges">Badges</button>
-<button class="tab-btn" data-tab="settings">Settings</button>
-
-</nav>
-
-<!-- DASHBOARD -->
-<div id="dashboard" class="tab-content">
-
-    <!-- Welcome Panel -->
-    <div class="glass-panel dash-section">
-        <h2>Welcome back, <span id="welcome-name">Student</span>!</h2>
-        <p>Your personalised Spanish CEFR learning dashboard.</p>
-    </div>
-
-    <!-- Daily Streak -->
-    <div class="glass-panel dash-section">
-        <h3>Daily Streak</h3>
-        <p>You have practiced for <span id="streak-count">0</span> days in a row.</p>
-        <div class="streak-fire" id="streak-fire"></div>
-    </div>
-
-    <!-- XP System -->
-    <div class="glass-panel dash-section">
-        <h3>Your XP</h3>
-        <p>Total XP: <span id="xp-total">0</span></p>
-        <div class="progress-bar">
-            <div id="xp-progress" class="progress-fill"></div>
-        </div>
-        <p>Level: <span id="xp-level">1</span></p>
-    </div>
-
-    <!-- Level-Up Animation -->
-    <div id="levelup-animation" class="levelup-hidden">
-        <div class="levelup-popup glass-panel">
-            <h2>Level Up!</h2>
-            <p>You reached level <span id="levelup-number">1</span>!</p>
+    <!-- LISTEN TAB -->
+    <div id="listen" class="tab-section hidden">
+        <div class="glass-panel">
+            <!-- JS will render content here -->
         </div>
     </div>
 
-    <!-- Certificate Preview -->
-    <div class="glass-panel dash-section">
-        <h3>Certificate Preview</h3>
-        <div id="certificate-preview" class="certificate-preview">
-            <!-- JS will inject certificate preview -->
-        </div>
-        <button id="generate-certificate-btn" class="primary-btn">Generate Certificate</button>
-    </div>
-
-    <!-- Achievement Popups -->
-    <div id="achievement-popup" class="achievement-hidden">
-        <div class="achievement-popup glass-panel">
-            <h2>Achievement Unlocked!</h2>
-            <p id="achievement-text">You earned a new badge!</p>
+    <!-- FLASHCARDS TAB -->
+    <div id="flash" class="tab-section hidden">
+        <div class="glass-panel">
+            <!-- JS will render content here -->
         </div>
     </div>
 
-    <!-- Stats Panel -->
-    <div class="glass-panel dash-section">
-        <h3>Your Learning Stats</h3>
-        <ul class="stats-list">
-            <li>Listen items completed: <span id="stat-listen">0</span></li>
-            <li>Flashcards flipped: <span id="stat-flash">0</span></li>
-            <li>Quiz score: <span id="stat-quiz">0</span></li>
-            <li>Build completions: <span id="stat-build">0</span></li>
-            <li>Conversations done: <span id="stat-conversation">0</span></li>
-            <li>Badges earned: <span id="stat-badges">0</span></li>
-        </ul>
-    </div>
-
-    <!-- CEFR Progress -->
-    <div class="glass-panel dash-section">
-        <h3>CEFR Progress</h3>
-
-        <div class="progress-block">
-            <label>A1 Progress</label>
-            <div class="progress-bar"><div id="prog-A1" class="progress-fill"></div></div>
-        </div>
-
-        <div class="progress-block">
-            <label>A2 Progress</label>
-            <div class="progress-bar"><div id="prog-A2" class="progress-fill"></div></div>
-        </div>
-
-        <div class="progress-block">
-            <label>B1 Progress</label>
-            <div class="progress-bar"><div id="prog-B1" class="progress-fill"></div></div>
+    <!-- QUIZ TAB -->
+    <div id="quiz" class="tab-section hidden">
+        <div class="glass-panel">
+            <!-- JS will render content here -->
         </div>
     </div>
 
-</div>
+    <!-- BUILD TAB -->
+    <div id="build" class="tab-section hidden">
+        <div class="glass-panel">
+            <!-- JS will render content here -->
+        </div>
+    </div>
 
-<!-- OTHER TABS -->
-<div id="dashboard" class="tab-section">
-    <div class="dashboard-wrapper"></div>
-</div>
+    <!-- CONVERSATION TAB -->
+    <div id="conversation" class="tab-section hidden">
+        <div class="glass-panel">
+            <!-- JS will render content here -->
+        </div>
+    </div>
 
-<div id="listen" class="tab-section hidden"><div class="listen-wrapper"></div></div>
-<div id="flash" class="tab-section hidden"><div class="flash-wrapper"><h2>Flashcards (A1)</h2><p>Tap a card to flip and hear the Spanish pronunciation.</p><div class="flash-grid"></div></div></div>
-<div id="quiz" class="tab-section hidden"><div class="quiz-card"></div></div>
-<div id="build" class="tab-section hidden"><div class="build-card"></div></div>
-<div id="conversation" class="tab-section hidden"><div class="glass-panel"><h2>Conversation</h2></div></div>
-<div id="grammar" class="tab-section hidden"><div class="glass-panel"><h2>Grammar</h2></div></div>
-<div id="certificates" class="tab-section hidden"><div class="glass-panel"><h2>Certificates</h2></div></div>
-<div id="badges" class="tab-section hidden"><div class="badge-section glass-panel"><h2>Your Badges</h2><ul id="badge-list"></ul></div></div>
-<div id="settings" class="tab-section hidden"><div class="glass-panel"><h2>Settings</h2></div></div>
+    <!-- GRAMMAR TAB -->
+    <div id="grammar" class="tab-section hidden">
+        <div class="glass-panel">
+            <!-- JS will render content here -->
+        </div>
+    </div>
 
+    <!-- CERTIFICATES TAB -->
+    <div id="certificates" class="tab-section hidden">
+        <div class="glass-panel">
+            <!-- JS will render content here -->
+        </div>
+    </div>
 
-<script src="app-v2.js"></script>
+    <!-- BADGES TAB -->
+    <div id="badges" class="tab-section hidden">
+        <div class="badge-section glass-panel">
+            <h2>Your Badges</h2>
+            <ul id="badge-list"></ul>
+        </div>
+    </div>
+
+    <!-- SETTINGS TAB -->
+    <div id="settings" class="tab-section hidden">
+        <div class="glass-panel">
+            <h2>Settings</h2>
+            <p>Future settings controls will go here.</p>
+        </div>
+    </div>
+
+    <script src="app-v2.js"></script>
 </body>
 </html>
