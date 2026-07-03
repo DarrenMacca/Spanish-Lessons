@@ -279,114 +279,13 @@ window.addEventListener('DOMContentLoaded', () => {
 });
 
 /* =========================
-   Dashboard Renderer
+   PART 2 — UI Systems
+   Name Saving • Speech Rate • Level Pills • Tab Enhancements • Streak
    ========================= */
 
-function renderDashboard() {
-    const dash = document.getElementById('dashboard');
-    if (!dash) return;
-
-    const state = CEFRProgressionEngine.getState();
-
-    dash.innerHTML = `
-        <div class="glass-panel dashboard-wrapper">
-
-            <!-- HERO IMAGE -->
-            <div class="dashboard-hero">
-                <img src="images/hero-mountains.jpg" class="hero-image" alt="Spanish learning hero">
-            </div>
-
-            <!-- WELCOME -->
-            <h1 class="dashboard-title">Welcome back, ${AppState.userName || 'Learner'}!</h1>
-            <p>Your personalised Spanish CEFR learning dashboard.</p>
-
-            <!-- TOP ROW: STREAK + XP -->
-            <div class="dashboard-grid">
-
-                <!-- DAILY STREAK -->
-                <div class="dash-card streak-card">
-                    <img src="images/flame.png" class="streak-icon" alt="Streak flame">
-                    <h3>Daily Streak</h3>
-                    <p id="streak-days">${state.streakDays} Days</p>
-                </div>
-
-                <!-- XP CARD -->
-                <div class="dash-card xp-card">
-                    <h3>Your XP</h3>
-                    <p id="xp-total">${state.xp} XP</p>
-                    <div class="xp-bar">
-                        <div class="xp-fill"></div>
-                    </div>
-                    <p class="xp-level">Level: ${state.currentLevel}</p>
-                </div>
-
-                <!-- CURRENT LEVEL -->
-                <div class="dash-card">
-                    <h3>Current Level</h3>
-                    <p id="current-level">${state.currentLevel}</p>
-                </div>
-
-            </div>
-
-            <!-- SECOND ROW: QUIZ / BUILDER / CONVERSATION -->
-            <div class="dashboard-grid">
-
-                <!-- QUIZ PERFORMANCE -->
-                <div class="dash-card">
-                    <h3>Quiz Performance</h3>
-                    <p id="quiz-average">${Math.round(CEFRProgressionEngine.getMasteryForLevel(state.currentLevel) * 100)}%</p>
-                </div>
-
-                <!-- SENTENCE BUILDER -->
-                <div class="dash-card">
-                    <h3>Sentence Builder</h3>
-                    <p id="builder-score">
-                        ${state.builderScores.length
-                            ? state.builderScores[state.builderScores.length - 1].score + '%'
-                            : '0%'}
-                    </p>
-                </div>
-
-                <!-- CONVERSATION PRACTICE -->
-                <div class="dash-card">
-                    <h3>Conversation Practice</h3>
-                    <p id="conversation-count">${state.conversationCount} Prompts completed</p>
-                </div>
-
-            </div>
-
-            <!-- ACHIEVEMENTS -->
-            <div class="dash-card achievements-card">
-                <h3>Achievements</h3>
-                <div class="badge-grid">
-
-                    <div class="badge-item">
-                        <img src="images/badge-quiz.png" alt="Quiz Master">
-                        <p>Quiz Master</p>
-                    </div>
-
-                    <div class="badge-item">
-                        <img src="images/badge-streak.png" alt="Sentence Streak">
-                        <p>Sentence Streak</p>
-                    </div>
-
-                    <div class="badge-item">
-                        <img src="images/badge-conversation.png" alt="Conversation Explorer">
-                        <p>Conversation Explorer</p>
-                    </div>
-
-                </div>
-            </div>
-
-        </div>
-    `;
-
-    // After injecting HTML, update XP bar fill
-    CEFRProgressionEngine.load();
-}
-/* =========================
+/* -------------------------
    Achievement Popup System
-   ========================= */
+   ------------------------- */
 
 function showAchievement(message) {
     const container = document.getElementById('achievement-popups');
@@ -403,17 +302,15 @@ function showAchievement(message) {
         popup.style.transform = 'translateY(10px)';
     }, 2500);
 
-    setTimeout(() => {
-        popup.remove();
-    }, 3500);
+    setTimeout(() => popup.remove(), 3500);
 }
 
 window.showAchievement = showAchievement;
 
 
-/* =========================
+/* -------------------------
    Name Saving System
-   ========================= */
+   ------------------------- */
 
 function initNameSaving() {
     const input = document.getElementById('user-name-input');
@@ -441,9 +338,9 @@ function initNameSaving() {
 }
 
 
-/* =========================
+/* -------------------------
    Speech Rate Slider
-   ========================= */
+   ------------------------- */
 
 function initSpeechRate() {
     const slider = document.getElementById('speech-rate-slider');
@@ -467,9 +364,9 @@ function initSpeechRate() {
 }
 
 
-/* =========================
+/* -------------------------
    Level Pill Buttons
-   ========================= */
+   ------------------------- */
 
 function initLevelPills() {
     const pills = document.querySelectorAll('.level-btn');
@@ -481,7 +378,7 @@ function initLevelPills() {
 
             AppState.currentLevel = level;
 
-            // Sync CEFR engine
+            // Sync CEFR engine state
             const state = CEFRProgressionEngine.getState();
             state.currentLevel = level;
             localStorage.setItem('cefr_progress', JSON.stringify(state));
@@ -496,9 +393,9 @@ function initLevelPills() {
 }
 
 
-/* =========================
-   Tab Pill Enhancements
-   ========================= */
+/* -------------------------
+   Tab Pill Hover Enhancements
+   ------------------------- */
 
 function enhanceTabPills() {
     const tabs = document.querySelectorAll('.tab-btn');
@@ -517,32 +414,20 @@ function enhanceTabPills() {
 }
 
 
-/* =========================
+/* -------------------------
    Daily Streak Auto-Update
-   ========================= */
+   ------------------------- */
 
 function updateDailyStreak() {
     CEFRProgressionEngine.updateStreak();
 }
 
 
-/* =========================
-   UI Helper: Smooth Scroll
-   ========================= */
+/* -------------------------
+   PART 2 Initializer
+   ------------------------- */
 
-function smoothScrollToTop() {
-    window.scrollTo({
-        top: 0,
-        behavior: 'smooth'
-    });
-}
-
-
-/* =========================
-   Initialize Part 3 Systems
-   ========================= */
-
-function initPart3() {
+function initPart2() {
     initNameSaving();
     initSpeechRate();
     initLevelPills();
@@ -550,14 +435,21 @@ function initPart3() {
     updateDailyStreak();
 }
 
-window.addEventListener('DOMContentLoaded', initPart3);
+window.addEventListener('DOMContentLoaded', initPart2);
+
 /* =========================
-   LISTEN TAB ENGINE
+   PART 3 — Learning Engines
+   Listen • Flashcards • Quiz • Builder • Conversation
    ========================= */
+
+
+/* ============================================================
+   LISTEN ENGINE
+   ============================================================ */
 
 const ListenEngine = (() => {
 
-    const audioElements = [];
+    let audioElements = [];
     let isPlayingAll = false;
 
     function init() {
@@ -566,7 +458,7 @@ const ListenEngine = (() => {
         const pauseBtn = document.getElementById('listen-pause');
         const resumeBtn = document.getElementById('listen-resume');
 
-        if (!playAllBtn) return;
+        if (!playAllBtn) return; // Tab not loaded yet
 
         playAllBtn.addEventListener('click', playAll);
         stopBtn.addEventListener('click', stopAll);
@@ -578,7 +470,7 @@ const ListenEngine = (() => {
 
     function loadAudio() {
         const words = document.querySelectorAll('.listen-word');
-        audioElements.length = 0;
+        audioElements = [];
 
         words.forEach(word => {
             const audio = new Audio(word.dataset.audio);
@@ -621,166 +513,199 @@ const ListenEngine = (() => {
 })();
 
 
-/* =========================
+
+/* ============================================================
    FLASHCARDS ENGINE
-   ========================= */
+   ============================================================ */
 
 const FlashcardsEngine = (() => {
 
-    let cards = [];
-    let currentIndex = 0;
+    const data = {
+        A1: [
+            { front: "Hola", back: "Hello" },
+            { front: "Gracias", back: "Thank you" },
+            { front: "Casa", back: "House" }
+        ],
+        A2: [
+            { front: "Cansado", back: "Tired" },
+            { front: "Rápido", back: "Fast" }
+        ],
+        B1: [
+            { front: "Desafío", back: "Challenge" },
+            { front: "Mejorar", back: "To improve" }
+        ]
+    };
+
+    let index = 0;
 
     function init() {
+        const card = document.getElementById('flashcard');
         const nextBtn = document.getElementById('flash-next');
         const prevBtn = document.getElementById('flash-prev');
         const flipBtn = document.getElementById('flash-flip');
 
-        if (!nextBtn) return;
+        if (!card) return;
 
-        nextBtn.addEventListener('click', nextCard);
-        prevBtn.addEventListener('click', prevCard);
-        flipBtn.addEventListener('click', flipCard);
+        nextBtn.addEventListener('click', next);
+        prevBtn.addEventListener('click', prev);
+        flipBtn.addEventListener('click', flip);
 
-        loadCards();
-        renderCard();
+        render();
     }
 
-    function loadCards() {
-        const level = AppState.currentLevel;
-
-        const data = {
-            A1: [
-                { front: 'Hola', back: 'Hello' },
-                { front: 'Gracias', back: 'Thank you' },
-                { front: 'Por favor', back: 'Please' }
-            ],
-            A2: [
-                { front: 'Aunque', back: 'Although' },
-                { front: 'Depende', back: 'It depends' }
-            ],
-            B1: [
-                { front: 'Sin embargo', back: 'However' },
-                { front: 'A pesar de', back: 'Despite' }
-            ]
-        };
-
-        cards = data[level] || [];
-        currentIndex = 0;
+    function getCards() {
+        return data[AppState.currentLevel] || [];
     }
 
-    function renderCard() {
-        const cardEl = document.getElementById('flashcard');
-        if (!cardEl) return;
+    function render() {
+        const card = document.getElementById('flashcard');
+        const cards = getCards();
+        if (!cards.length) {
+            card.innerHTML = `<div class="flash-inner"><div class="flash-front">No cards</div></div>`;
+            return;
+        }
 
-        const card = cards[currentIndex];
-        cardEl.innerHTML = `
+        const { front, back } = cards[index];
+
+        card.innerHTML = `
             <div class="flash-inner">
-                <div class="flash-front">${card.front}</div>
-                <div class="flash-back">${card.back}</div>
+                <div class="flash-front">${front}</div>
+                <div class="flash-back">${back}</div>
             </div>
         `;
     }
 
-    function nextCard() {
-        currentIndex = (currentIndex + 1) % cards.length;
+    function next() {
+        const cards = getCards();
+        index = (index + 1) % cards.length;
+        render();
         CEFRProgressionEngine.addXP('flashcards');
-        renderCard();
     }
 
-    function prevCard() {
-        currentIndex = (currentIndex - 1 + cards.length) % cards.length;
-        renderCard();
+    function prev() {
+        const cards = getCards();
+        index = (index - 1 + cards.length) % cards.length;
+        render();
     }
 
-    function flipCard() {
-        const cardEl = document.getElementById('flashcard');
-        cardEl.classList.toggle('flipped');
+    function flip() {
+        const card = document.getElementById('flashcard');
+        card.classList.toggle('flipped');
     }
 
     return { init };
 })();
 
 
-/* =========================
+
+/* ============================================================
    QUIZ ENGINE
-   ========================= */
+   ============================================================ */
 
 const QuizEngine = (() => {
 
-    let questions = [];
+    const data = {
+        A1: [
+            {
+                q: "What does 'Hola' mean?",
+                a: "Hello",
+                options: ["Hello", "Goodbye", "Please"]
+            },
+            {
+                q: "What does 'Gracias' mean?",
+                a: "Thank you",
+                options: ["Thank you", "Sorry", "Good night"]
+            }
+        ],
+        A2: [
+            {
+                q: "What does 'Rápido' mean?",
+                a: "Fast",
+                options: ["Fast", "Slow", "Happy"]
+            }
+        ],
+        B1: [
+            {
+                q: "What does 'Desafío' mean?",
+                a: "Challenge",
+                options: ["Challenge", "Victory", "Effort"]
+            }
+        ]
+    };
+
     let index = 0;
     let score = 0;
 
     function init() {
         const startBtn = document.getElementById('quiz-start');
-        if (!startBtn) return;
+        const area = document.getElementById('quiz-area');
 
-        startBtn.addEventListener('click', startQuiz);
+        if (!startBtn || !area) return;
+
+        startBtn.addEventListener('click', start);
     }
 
-    function startQuiz() {
-        loadQuestions();
+    function start() {
         index = 0;
         score = 0;
         renderQuestion();
     }
 
-    function loadQuestions() {
-        const level = AppState.currentLevel;
-
-        const data = {
-            A1: [
-                { q: 'Hola means?', a: 'Hello', options: ['Goodbye', 'Hello', 'Please'] },
-                { q: 'Gracias means?', a: 'Thank you', options: ['Thank you', 'Sorry', 'Please'] }
-            ],
-            A2: [
-                { q: 'Aunque means?', a: 'Although', options: ['Although', 'Despite', 'However'] }
-            ],
-            B1: [
-                { q: 'Sin embargo means?', a: 'However', options: ['However', 'Although', 'Despite'] }
-            ]
-        };
-
-        questions = data[level] || [];
+    function getQuestions() {
+        return data[AppState.currentLevel] || [];
     }
 
     function renderQuestion() {
-        const qEl = document.getElementById('quiz-area');
-        if (!qEl) return;
+        const area = document.getElementById('quiz-area');
+        const questions = getQuestions();
 
-        if (index >= questions.length) {
-            finishQuiz();
+        if (!questions.length) {
+            area.innerHTML = `<p>No quiz available.</p>`;
             return;
         }
 
         const q = questions[index];
 
-        qEl.innerHTML = `
+        area.innerHTML = `
             <div class="quiz-card">
                 <h3>${q.q}</h3>
                 ${q.options.map(opt => `
-                    <button class="quiz-option">${opt}</button>
+                    <button class="quiz-option" data-opt="${opt}">${opt}</button>
                 `).join('')}
             </div>
         `;
 
         document.querySelectorAll('.quiz-option').forEach(btn => {
-            btn.addEventListener('click', () => {
-                if (btn.textContent === q.a) score++;
-                index++;
-                renderQuestion();
-            });
+            btn.addEventListener('click', () => checkAnswer(btn.dataset.opt));
         });
     }
 
-    function finishQuiz() {
+    function checkAnswer(selected) {
+        const questions = getQuestions();
+        const q = questions[index];
+
+        if (selected === q.a) score++;
+
+        index++;
+
+        if (index >= questions.length) {
+            finish();
+        } else {
+            renderQuestion();
+        }
+    }
+
+    function finish() {
+        const area = document.getElementById('quiz-area');
+        const questions = getQuestions();
         const percent = Math.round((score / questions.length) * 100);
+
         CEFRProgressionEngine.recordQuizResult(AppState.currentLevel, percent);
 
-        const qEl = document.getElementById('quiz-area');
-        qEl.innerHTML = `
+        area.innerHTML = `
             <div class="quiz-card">
-                <h3>Your Score: ${percent}%</h3>
+                <h3>Quiz Complete!</h3>
+                <p>Your score: ${percent}%</p>
             </div>
         `;
     }
@@ -789,125 +714,136 @@ const QuizEngine = (() => {
 })();
 
 
-/* =========================
+
+/* ============================================================
    SENTENCE BUILDER ENGINE
-   ========================= */
+   ============================================================ */
 
 const BuilderEngine = (() => {
 
-    let words = [];
-    let correctSentence = '';
-    let userSentence = [];
+    const data = {
+        A1: {
+            correct: "Yo soy estudiante",
+            words: ["Yo", "soy", "estudiante"]
+        },
+        A2: {
+            correct: "Ella corre rápidamente",
+            words: ["Ella", "corre", "rápidamente"]
+        },
+        B1: {
+            correct: "Quiero mejorar mi español",
+            words: ["Quiero", "mejorar", "mi", "español"]
+        }
+    };
+
+    let selected = [];
 
     function init() {
-        const buildBtn = document.getElementById('builder-check');
-        if (!buildBtn) return;
+        const area = document.getElementById('builder-area');
+        const checkBtn = document.getElementById('builder-check');
 
-        buildBtn.addEventListener('click', checkSentence);
+        if (!area || !checkBtn) return;
 
-        loadSentence();
         renderWords();
-    }
 
-    function loadSentence() {
-        const level = AppState.currentLevel;
-
-        const data = {
-            A1: {
-                correct: 'Yo soy estudiante',
-                words: ['Yo', 'soy', 'estudiante']
-            },
-            A2: {
-                correct: 'Aunque estoy cansado',
-                words: ['Aunque', 'estoy', 'cansado']
-            },
-            B1: {
-                correct: 'Sin embargo no tengo tiempo',
-                words: ['Sin', 'embargo', 'no', 'tengo', 'tiempo']
-            }
-        };
-
-        correctSentence = data[level].correct;
-        words = shuffle([...data[level].words]);
-        userSentence = [];
+        checkBtn.addEventListener('click', checkSentence);
     }
 
     function renderWords() {
         const area = document.getElementById('builder-area');
-        if (!area) return;
+        const levelData = data[AppState.currentLevel];
 
-        area.innerHTML = words.map(w => `
-            <button class="builder-word">${w}</button>
-        `).join('');
+        selected = [];
+
+        area.innerHTML = levelData.words.map(w =>
+            `<button class="builder-word" data-word="${w}">${w}</button>`
+        ).join('');
 
         document.querySelectorAll('.builder-word').forEach(btn => {
             btn.addEventListener('click', () => {
-                userSentence.push(btn.textContent);
+                selected.push(btn.dataset.word);
                 btn.disabled = true;
             });
         });
     }
 
     function checkSentence() {
-        const result = userSentence.join(' ');
-        const percent = result === correctSentence ? 100 : 0;
+        const levelData = data[AppState.currentLevel];
+        const resultEl = document.getElementById('builder-result');
 
-        CEFRProgressionEngine.recordBuilderResult(AppState.currentLevel, percent);
+        const userSentence = selected.join(' ');
+        const correct = levelData.correct;
 
-        const out = document.getElementById('builder-result');
-        out.textContent = `Score: ${percent}%`;
-    }
+        const score = userSentence === correct ? 100 : 0;
 
-    function shuffle(arr) {
-        return arr.sort(() => Math.random() - 0.5);
+        CEFRProgressionEngine.recordBuilderResult(AppState.currentLevel, score);
+
+        resultEl.textContent = `Score: ${score}%`;
     }
 
     return { init };
 })();
 
 
-/* =========================
+
+/* ============================================================
    CONVERSATION ENGINE
-   ========================= */
+   ============================================================ */
 
 const ConversationEngine = (() => {
 
     const prompts = {
         A1: [
-            'Introduce yourself.',
-            'Say where you live.',
-            'Say what you like.'
+            "¿Cómo te llamas?",
+            "¿De dónde eres?",
+            "¿Cómo estás?"
         ],
         A2: [
-            'Explain your daily routine.',
-            'Describe a recent experience.'
+            "¿Qué hiciste ayer?",
+            "Describe tu casa."
         ],
         B1: [
-            'Give your opinion on a topic.',
-            'Explain a problem and solution.'
+            "¿Cuál es tu mayor desafío aprendiendo español?",
+            "Describe una experiencia inolvidable."
         ]
     };
 
-    function init() {
-        const btn = document.getElementById('conversation-next');
-        if (!btn) return;
+    let index = 0;
 
-        btn.addEventListener('click', nextPrompt);
+    function init() {
+        const area = document.getElementById('conversation-area');
+        const nextBtn = document.getElementById('conversation-next');
+
+        if (!area || !nextBtn) return;
+
+        nextBtn.addEventListener('click', nextPrompt);
+
         renderPrompt();
+    }
+
+    function getPrompts() {
+        return prompts[AppState.currentLevel] || [];
     }
 
     function renderPrompt() {
         const area = document.getElementById('conversation-area');
-        if (!area) return;
+        const list = getPrompts();
 
-        const levelPrompts = prompts[AppState.currentLevel];
-        const random = levelPrompts[Math.floor(Math.random() * levelPrompts.length)];
+        if (!list.length) {
+            area.textContent = "No prompts available.";
+            return;
+        }
 
-        area.textContent = random;
+        area.textContent = list[index];
     }
 
     function nextPrompt() {
+        const list = getPrompts();
+
+        index = (index + 1) % list.length;
+
         CEFRProgressionEngine.recordConversationPromptCompleted();
+
         renderPrompt();
     }
 
@@ -915,9 +851,28 @@ const ConversationEngine = (() => {
 })();
 
 
+
+/* ============================================================
+   PART 3 INITIALIZER
+   ============================================================ */
+
+function initPart3() {
+    ListenEngine.init();
+    FlashcardsEngine.init();
+    QuizEngine.init();
+    BuilderEngine.init();
+    ConversationEngine.init();
+}
+
+window.addEventListener('DOMContentLoaded', initPart3);
+
 /* =========================
-   CERTIFICATES ENGINE
+   PART 4 — Certificates & Badges
    ========================= */
+
+/* ============================================================
+   CERTIFICATES ENGINE
+   ============================================================ */
 
 const CertificatesEngine = (() => {
 
@@ -925,33 +880,36 @@ const CertificatesEngine = (() => {
         const area = document.getElementById('certificates-area');
         if (!area) return;
 
+        renderCertificates();
+    }
+
+    function renderCertificates() {
+        const area = document.getElementById('certificates-area');
         const state = CEFRProgressionEngine.getState();
 
-        area.innerHTML = `
-            <div class="certificate-card">
-                <h3>A1 Certificate</h3>
-                <p>${state.currentLevel !== 'A1' ? 'Unlocked' : 'In progress'}</p>
-            </div>
+        const levels = ['A1', 'A2', 'B1'];
 
-            <div class="certificate-card">
-                <h3>A2 Certificate</h3>
-                <p>${state.currentLevel === 'B1' ? 'Unlocked' : 'In progress'}</p>
-            </div>
+        area.innerHTML = levels.map(level => {
+            const unlocked = state.currentLevel === level || levels.indexOf(state.currentLevel) > levels.indexOf(level);
 
-            <div class="certificate-card">
-                <h3>B1 Certificate</h3>
-                <p>${state.currentLevel === 'B1' ? 'Unlocked' : 'In progress'}</p>
-            </div>
-        `;
+            return `
+                <div class="certificate-card">
+                    <h3>Certificate: ${level}</h3>
+                    <p>Status: ${unlocked ? 'Unlocked' : 'Locked'}</p>
+                    ${unlocked ? `<button class="primary-btn">Download</button>` : ''}
+                </div>
+            `;
+        }).join('');
     }
 
     return { init };
 })();
 
 
-/* =========================
+
+/* ============================================================
    BADGES ENGINE
-   ========================= */
+   ============================================================ */
 
 const BadgesEngine = (() => {
 
@@ -959,13 +917,34 @@ const BadgesEngine = (() => {
         const list = document.getElementById('badge-list');
         if (!list) return;
 
+        renderBadges();
+    }
+
+    function renderBadges() {
+        const list = document.getElementById('badge-list');
         const state = CEFRProgressionEngine.getState();
 
         const badges = [];
 
-        if (state.quizScores.length >= 3) badges.push('Quiz Master');
-        if (state.streakDays >= 5) badges.push('Streak Champion');
-        if (state.conversationCount >= 5) badges.push('Conversation Explorer');
+        /* Quiz Master */
+        if (state.quizScores.length >= 3) {
+            badges.push('Quiz Master');
+        }
+
+        /* Sentence Streak */
+        if (state.builderScores.length >= 3) {
+            badges.push('Sentence Streak');
+        }
+
+        /* Conversation Explorer */
+        if (state.conversationCount >= 5) {
+            badges.push('Conversation Explorer');
+        }
+
+        if (!badges.length) {
+            list.innerHTML = `<li>No badges earned yet.</li>`;
+            return;
+        }
 
         list.innerHTML = badges.map(b => `<li>${b}</li>`).join('');
     }
@@ -974,163 +953,96 @@ const BadgesEngine = (() => {
 })();
 
 
-/* =========================
-   Initialize Part 4 Modules
-   ========================= */
+
+/* ============================================================
+   PART 4 INITIALIZER
+   ============================================================ */
 
 function initPart4() {
-    ListenEngine.init();
-    FlashcardsEngine.init();
-    QuizEngine.init();
-    BuilderEngine.init();
-    ConversationEngine.init();
     CertificatesEngine.init();
     BadgesEngine.init();
 }
 
 window.addEventListener('DOMContentLoaded', initPart4);
-/* =========================
-   PART 5 — FINAL INTEGRATION
-   ========================= */
-
-/* ---------- Sync Level Pills with CEFR Engine ---------- */
-
-function syncLevelPillsToState() {
-    const pills = document.querySelectorAll('.level-btn');
-    const current = AppState.currentLevel;
-
-    pills.forEach(p => {
-        if (p.dataset.level === current) {
-            p.classList.add('active');
-        } else {
-            p.classList.remove('active');
-        }
-    });
-}
-
-
-/* ---------- Sync Tab Pills to Active Tab ---------- */
-
-function syncTabPillsToState() {
-    const tabs = document.querySelectorAll('.tab-btn');
-    const active = AppState.activeTab;
-
-    tabs.forEach(t => {
-        if (t.dataset.tab === active) {
-            t.classList.add('active');
-        } else {
-            t.classList.remove('active');
-        }
-    });
-}
-
-
-/* ---------- Global XP Hooks for UI Actions ---------- */
-
-function attachGlobalXPEvents() {
-    // Listen tab buttons
-    const listenButtons = [
-        '#listen-play-all',
-        '#listen-stop',
-        '#listen-pause',
-        '#listen-resume'
-    ];
-
-    listenButtons.forEach(sel => {
-        const btn = document.querySelector(sel);
-        if (btn) {
-            btn.addEventListener('click', () => {
-                CEFRProgressionEngine.addXP('listen');
-                renderDashboard();
-            });
-        }
-    });
-
-    // Flashcards next/prev/flip
-    const flashButtons = [
-        '#flash-next',
-        '#flash-prev',
-        '#flash-flip'
-    ];
-
-    flashButtons.forEach(sel => {
-        const btn = document.querySelector(sel);
-        if (btn) {
-            btn.addEventListener('click', () => {
-                CEFRProgressionEngine.addXP('flashcards');
-                renderDashboard();
-            });
-        }
-    });
-
-    // Quiz start
-    const quizStart = document.getElementById('quiz-start');
-    if (quizStart) {
-        quizStart.addEventListener('click', () => {
-            CEFRProgressionEngine.addXP('quiz');
-            renderDashboard();
-        });
-    }
-
-    // Builder check
-    const builderCheck = document.getElementById('builder-check');
-    if (builderCheck) {
-        builderCheck.addEventListener('click', () => {
-            CEFRProgressionEngine.addXP('builder');
-            renderDashboard();
-        });
-    }
-
-    // Conversation next
-    const convNext = document.getElementById('conversation-next');
-    if (convNext) {
-        convNext.addEventListener('click', () => {
-            CEFRProgressionEngine.addXP('conversation');
-            renderDashboard();
-        });
-    }
-}
-
-
-/* ---------- Remove Settings Tab Completely ---------- */
-
-function removeSettingsTab() {
-    const settingsBtn = document.querySelector('[data-tab="settings"]');
-    const settingsSection = document.getElementById('settings');
-
-    if (settingsBtn) settingsBtn.remove();
-    if (settingsSection) settingsSection.remove();
-}
-
-
-/* ---------- Ensure Dashboard Refreshes on Tab Switch ---------- */
-
-function ensureDashboardRefreshOnTabSwitch() {
-    const tabs = document.querySelectorAll('.tab-btn');
-
-    tabs.forEach(tab => {
-        tab.addEventListener('click', () => {
-            if (tab.dataset.tab === 'dashboard') {
-                renderDashboard();
-            }
-        });
-    });
-}
-
-
-/* ---------- Global Initialization ---------- */
-
-function initFinalIntegration() {
-    removeSettingsTab();
-    syncLevelPillsToState();
-    syncTabPillsToState();
-    attachGlobalXPEvents();
-    ensureDashboardRefreshOnTabSwitch();
-}
-
-window.addEventListener('DOMContentLoaded', initFinalIntegration);
-
 
 /* =========================
-   END OF APP-V2.JS
+   PART 5 — Integration Layer
    ========================= */
+
+/* ----------
+   XP Hooks (optional extension points)
+   ---------- */
+
+function awardListenXP() {
+    CEFRProgressionEngine.addXP('listen');
+    renderDashboard();
+}
+
+function awardFlashcardsXP() {
+    CEFRProgressionEngine.addXP('flashcards');
+    renderDashboard();
+}
+
+function awardQuizXP(percent) {
+    CEFRProgressionEngine.recordQuizResult(AppState.currentLevel, percent);
+    renderDashboard();
+}
+
+function awardBuilderXP(percent) {
+    CEFRProgressionEngine.recordBuilderResult(AppState.currentLevel, percent);
+    renderDashboard();
+}
+
+function awardConversationXP() {
+    CEFRProgressionEngine.recordConversationPromptCompleted();
+    renderDashboard();
+}
+
+
+/* ----------
+   Tab-aware refresh (optional if you want per-tab re-init)
+   ---------- */
+
+function refreshActiveTab() {
+    switch (AppState.activeTab) {
+        case 'dashboard':
+            renderDashboard();
+            break;
+        case 'listen':
+            ListenEngine.init();
+            break;
+        case 'flash':
+            FlashcardsEngine.init();
+            break;
+        case 'quiz':
+            QuizEngine.init();
+            break;
+        case 'build':
+            BuilderEngine.init();
+            break;
+        case 'conversation':
+            ConversationEngine.init();
+            break;
+        case 'certificates':
+            CertificatesEngine.init();
+            break;
+        case 'badges':
+            BadgesEngine.init();
+            break;
+        default:
+            break;
+    }
+}
+
+/* ----------
+   Global refresh helper
+   ---------- */
+
+function fullRefresh() {
+    CEFRProgressionEngine.load();
+    renderDashboard();
+    refreshActiveTab();
+}
+
+window.fullRefresh = fullRefresh;
+
