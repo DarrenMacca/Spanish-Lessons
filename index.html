@@ -2,214 +2,121 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Spanish CEFR Trainer</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Spanish Lessons</title>
+
+    <!-- Core Styles -->
     <link rel="stylesheet" href="styles.css">
+
+    <!-- Prevent GitHub Pages caching -->
+    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
+    <meta http-equiv="Pragma" content="no-cache" />
+    <meta http-equiv="Expires" content="0" />
 </head>
+
 <body>
 
-<header class="glass-panel" style="max-width:1100px;margin:20px auto;">
-    <div style="display:flex;flex-wrap:wrap;gap:16px;align-items:center;justify-content:space-between;">
-        
-        <!-- Level Pills -->
+    <!-- Achievement Popups -->
+    <div id="achievement-popups"></div>
+
+    <!-- Tabs -->
+    <nav class="tabs">
+        <button class="tab-btn active" data-tab="dashboard">Dashboard</button>
+        <button class="tab-btn" data-tab="listen">Listen</button>
+        <button class="tab-btn" data-tab="flash">Flashcards</button>
+        <button class="tab-btn" data-tab="quiz">Quiz</button>
+        <button class="tab-btn" data-tab="build">Builder</button>
+        <button class="tab-btn" data-tab="conversation">Conversation</button>
+        <button class="tab-btn" data-tab="certificates">Certificates</button>
+        <button class="tab-btn" data-tab="badges">Badges</button>
+    </nav>
+
+    <!-- Dashboard -->
+    <section id="dashboard" class="tab-section">
+        <h2>Dashboard</h2>
+        <p>Level: <span id="current-level"></span></p>
+        <p>XP: <span id="xp-total"></span></p>
+        <div class="xp-bar"><div class="xp-fill"></div></div>
+        <p>Quiz Mastery: <span id="quiz-average"></span></p>
+        <p>Builder Score: <span id="builder-score"></span></p>
+        <p>Conversation Count: <span id="conversation-count"></span></p>
+        <p>Streak: <span id="streak-days"></span></p>
+
+        <h3>User Settings</h3>
+        <input id="user-name-input" placeholder="Your name">
+        <button id="save-name-btn">Save Name</button>
+
         <div>
-            <span style="margin-right:8px;color:#e2e8f0;font-weight:600;">Level:</span>
-            <button class="secondary-btn level-btn active" data-level="A1">A1</button>
-            <button class="secondary-btn level-btn" data-level="A2">A2</button>
-            <button class="secondary-btn level-btn" data-level="B1">B1</button>
+            <label>Speech Rate: <span id="speech-rate-label"></span></label>
+            <input type="range" id="speech-rate-slider" min="0.5" max="2.0" step="0.05">
         </div>
 
-        <!-- Speech Rate -->
-        <div style="display:flex;align-items:center;gap:8px;">
-            <label for="speech-rate-slider" style="color:#e2e8f0;font-weight:600;">Speech Rate:</label>
-            <input type="range" id="speech-rate-slider" min="0.7" max="1.3" step="0.1" value="1.0">
-            <span id="speech-rate-label" style="color:#a5f3fc;font-size:14px;">1.00</span>
+        <div class="level-select">
+            <button class="level-btn" data-level="A1">A1</button>
+            <button class="level-btn" data-level="A2">A2</button>
+            <button class="level-btn" data-level="B1">B1</button>
         </div>
+    </section>
 
-        <!-- Name Saving -->
-        <div style="display:flex;gap:8px;align-items:center;">
-            <input id="user-name-input" class="input-field" placeholder="Your name">
-            <button id="save-name-btn" class="primary-btn">Save Name</button>
+    <!-- Listen -->
+    <section id="listen" class="tab-section hidden">
+        <h2>Listen</h2>
+        <div id="listen-area">
+            <button id="listen-play-all">Play All</button>
+            <button id="listen-stop">Stop</button>
+            <button id="listen-pause">Pause</button>
+            <button id="listen-resume">Resume</button>
+
+            <div class="listen-word" data-audio="audio/hola.mp3">Hola</div>
+            <div class="listen-word" data-audio="audio/gracias.mp3">Gracias</div>
         </div>
+    </section>
 
-    </div>
-</header>
-
-<!-- Navigation Tabs -->
-<nav style="max-width:1100px;margin:0 auto 20px auto;display:flex;flex-wrap:wrap;gap:8px;">
-    <button class="tab-btn active" data-tab="dashboard">Dashboard</button>
-    <button class="tab-btn" data-tab="listen">Listen</button>
-    <button class="tab-btn" data-tab="flash">Flashcards</button>
-    <button class="tab-btn" data-tab="quiz">Quiz</button>
-    <button class="tab-btn" data-tab="build">Build</button>
-    <button class="tab-btn" data-tab="conversation">Conversation</button>
-    <button class="tab-btn" data-tab="grammar">Grammar</button>
-    <button class="tab-btn" data-tab="certificates">Certificates</button>
-    <button class="tab-btn" data-tab="badges">Badges</button>
-</nav>
-
-<!-- DASHBOARD -->
-<div id="dashboard" class="tab-section">
-    <div class="glass-panel dashboard-wrapper">
-
-        <div class="dashboard-hero">
-            <img src="images/dashboard-hero.png" alt="Spanish learning hero graphic" class="hero-image">
-        </div>
-
-        <h1 class="dashboard-title">
-            Welcome back, <span id="student-display">Learner</span>!
-        </h1>
-
-        <p>Your personalised Spanish CEFR learning dashboard.</p>
-
-        <!-- XP + Streak + Level -->
-        <div class="dashboard-grid">
-
-            <div class="dash-card streak-card">
-                <img src="images/streak-flame.png" alt="Streak flame" class="streak-icon">
-                <h3>Daily Streak</h3>
-                <p id="streak-days">0 Days</p>
-            </div>
-
-            <div class="dash-card xp-card">
-                <h3>Your XP</h3>
-                <p id="xp-total">0 XP</p>
-                <div class="xp-bar"><div class="xp-fill"></div></div>
-                <p class="xp-level">Level: <span id="current-level">A1</span></p>
-            </div>
-
-            <div class="dash-card">
-                <h3>Mastery Average</h3>
-                <p id="quiz-average">0%</p>
-            </div>
-
-        </div>
-
-        <!-- Builder + Conversation -->
-        <div class="dashboard-grid">
-
-            <div class="dash-card">
-                <h3>Sentence Builder</h3>
-                <p id="builder-score">0%</p>
-            </div>
-
-            <div class="dash-card">
-                <h3>Conversation Practice</h3>
-                <p id="conversation-count">0 Prompts completed</p>
-            </div>
-
-        </div>
-
-        <!-- Achievements -->
-        <div class="dash-card achievements-card">
-            <h3>Achievements</h3>
-            <div class="badge-grid">
-                <div class="badge-item">
-                    <img src="images/badge-quiz.png" alt="Quiz Master badge">
-                    <p>Quiz Master</p>
-                </div>
-                <div class="badge-item">
-                    <img src="images/badge-build.png" alt="Sentence Streak badge">
-                    <p>Sentence Streak</p>
-                </div>
-                <div class="badge-item">
-                    <img src="images/badge-conversation.png" alt="Conversation Explorer badge">
-                    <p>Conversation Explorer</p>
-                </div>
-            </div>
-        </div>
-
-        <div id="achievement-popups"></div>
-
-    </div>
-</div>
-
-<!-- LISTEN TAB -->
-<div id="listen" class="tab-section hidden">
-    <div class="glass-panel">
-        <h2>Listen & Repeat</h2>
-
-        <div style="display:flex;gap:8px;margin-bottom:12px;">
-            <button id="listen-play-all" class="primary-btn">Play All</button>
-            <button id="listen-stop" class="secondary-btn">Stop</button>
-            <button id="listen-pause" class="secondary-btn">Pause</button>
-            <button id="listen-resume" class="secondary-btn">Resume</button>
-        </div>
-
-        <div class="listen-list">
-            <button class="pill-btn listen-word" data-audio="audio/hola.mp3">Hola</button>
-            <button class="pill-btn listen-word" data-audio="audio/gracias.mp3">Gracias</button>
-            <button class="pill-btn listen-word" data-audio="audio/por-favor.mp3">Por favor</button>
-        </div>
-    </div>
-</div>
-
-<!-- FLASHCARDS TAB -->
-<div id="flash" class="tab-section hidden">
-    <div class="glass-panel">
+    <!-- Flashcards -->
+    <section id="flash" class="tab-section hidden">
         <h2>Flashcards</h2>
-        <div id="flashcard" class="flashcard"></div>
+        <div id="flashcard"></div>
+        <button id="flash-prev">Previous</button>
+        <button id="flash-flip">Flip</button>
+        <button id="flash-next">Next</button>
+    </section>
 
-        <div style="display:flex;gap:8px;margin-top:12px;">
-            <button id="flash-prev" class="secondary-btn">Previous</button>
-            <button id="flash-next" class="primary-btn">Next</button>
-            <button id="flash-flip" class="secondary-btn">Flip</button>
-        </div>
-    </div>
-</div>
-
-<!-- QUIZ TAB -->
-<div id="quiz" class="tab-section hidden">
-    <div class="glass-panel">
+    <!-- Quiz -->
+    <section id="quiz" class="tab-section hidden">
         <h2>Quiz</h2>
-        <button id="quiz-start" class="primary-btn">Start Quiz</button>
-        <div id="quiz-area" style="margin-top:16px;"></div>
-    </div>
-</div>
+        <button id="quiz-start">Start Quiz</button>
+        <div id="quiz-area"></div>
+    </section>
 
-<!-- BUILDER TAB -->
-<div id="build" class="tab-section hidden">
-    <div class="glass-panel">
+    <!-- Builder -->
+    <section id="build" class="tab-section hidden">
         <h2>Sentence Builder</h2>
-        <div id="builder-area" style="margin-bottom:12px;"></div>
-        <button id="builder-check" class="primary-btn">Check Sentence</button>
-        <p id="builder-result" style="margin-top:12px;">Score: 0%</p>
-    </div>
-</div>
+        <div id="builder-area"></div>
+        <button id="builder-check">Check Sentence</button>
+        <p id="builder-result"></p>
+    </section>
 
-<!-- CONVERSATION TAB -->
-<div id="conversation" class="tab-section hidden">
-    <div class="glass-panel">
+    <!-- Conversation -->
+    <section id="conversation" class="tab-section hidden">
         <h2>Conversation Practice</h2>
-        <p id="conversation-area" style="margin-bottom:12px;"></p>
-        <button id="conversation-next" class="primary-btn">Next Prompt</button>
-    </div>
-</div>
+        <p id="conversation-area"></p>
+        <button id="conversation-next">Next Prompt</button>
+    </section>
 
-<!-- GRAMMAR TAB -->
-<div id="grammar" class="tab-section hidden">
-    <div class="glass-panel">
-        <h2>Grammar</h2>
-        <p>Grammar activities coming soon.</p>
-    </div>
-</div>
-
-<!-- CERTIFICATES TAB -->
-<div id="certificates" class="tab-section hidden">
-    <div class="glass-panel">
+    <!-- Certificates -->
+    <section id="certificates" class="tab-section hidden">
         <h2>Certificates</h2>
         <div id="certificates-area"></div>
-    </div>
-</div>
+    </section>
 
-<!-- BADGES TAB -->
-<div id="badges" class="tab-section hidden">
-    <div class="badge-section glass-panel">
-        <h2>Your Badges</h2>
+    <!-- Badges -->
+    <section id="badges" class="tab-section hidden">
+        <h2>Badges</h2>
         <ul id="badge-list"></ul>
-    </div>
-</div>
-<script src="app-v2-new.js?v=1"></script>
+    </section>
+
+    <!-- Load Updated JS -->
+    <script src="app-v2-new.js?v=2"></script>
 
 </body>
 </html>
-
