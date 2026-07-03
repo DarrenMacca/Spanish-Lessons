@@ -1,5 +1,5 @@
-// app-v2.js
-// Spanish CEFR Trainer – full rebuild with CEFR engine + pill buttons
+// app-v2.js — PART 1
+// Core App State + CEFR Engine + Tab Navigation + Dashboard Updater
 
 /* =========================
    Global App State
@@ -7,7 +7,7 @@
 
 const AppState = {
     userName: '',
-    currentLevel: 'A1',      // synced with CEFR engine
+    currentLevel: 'A1',
     speechRate: 1.0,
     activeTab: 'dashboard'
 };
@@ -45,8 +45,8 @@ const CEFRProgressionEngine = (() => {
         currentLevel: 'A1',
         xp: 0,
         streakDays: 0,
-        quizScores: [],      // { level, score }
-        builderScores: [],   // { level, score }
+        quizScores: [],
+        builderScores: [],
         conversationCount: 0,
         lastActiveDate: null
     };
@@ -140,10 +140,8 @@ const CEFRProgressionEngine = (() => {
     function getMasteryForLevel(level) {
         const quizzes = state.quizScores.filter(q => q.level === level);
         const builders = state.builderScores.filter(b => b.level === level);
-
         const allScores = [...quizzes, ...builders].map(x => x.score);
         if (!allScores.length) return 0;
-
         const avg = allScores.reduce((sum, s) => sum + s, 0) / allScores.length;
         return avg / 100;
     }
@@ -165,22 +163,25 @@ const CEFRProgressionEngine = (() => {
             xpFill.style.width = `${pct}%`;
         }
 
-        const xpLevelLabel = document.querySelector('.xp-level');
-        if (xpLevelLabel) {
-            xpLevelLabel.textContent = `Level: ${state.currentLevel}`;
-        }
-
-        const streakEl = document.getElementById('streak-days');
-        if (streakEl) streakEl.textContent = `${state.streakDays} Days`;
-
         const quizAvgEl = document.getElementById('quiz-average');
         if (quizAvgEl) {
             const mastery = getMasteryForLevel(state.currentLevel);
             quizAvgEl.textContent = `${Math.round(mastery * 100)}%`;
         }
 
+        const builderScoreEl = document.getElementById('builder-score');
+        if (builderScoreEl) {
+            builderScoreEl.textContent =
+                state.builderScores.length
+                    ? state.builderScores[state.builderScores.length - 1].score + '%'
+                    : '0%';
+        }
+
         const convEl = document.getElementById('conversation-count');
         if (convEl) convEl.textContent = `${state.conversationCount} Prompts completed`;
+
+        const streakEl = document.getElementById('streak-days');
+        if (streakEl) streakEl.textContent = `${state.streakDays} Days`;
     }
 
     /* ---------- Helpers ---------- */
@@ -205,7 +206,7 @@ const CEFRProgressionEngine = (() => {
 })();
 
 /* =========================
-   Tab Navigation & Pill Buttons
+   Tab Navigation
    ========================= */
 
 function initTabs() {
@@ -223,11 +224,7 @@ function initTabs() {
             btn.classList.add('active');
 
             sections.forEach(sec => {
-                if (sec.id === target) {
-                    sec.classList.remove('hidden');
-                } else {
-                    sec.classList.add('hidden');
-                }
+                sec.classList.toggle('hidden', sec.id !== target);
             });
 
             if (target === 'dashboard') {
@@ -235,6 +232,40 @@ function initTabs() {
             }
         });
     });
+}
+
+/* =========================
+   Dashboard Updater (HTML stays intact)
+   ========================= */
+
+function renderDashboard() {
+    const state = CEFRProgressionEngine.getState();
+
+    const streakEl = document.getElementById('streak-days');
+    if (streakEl) streakEl.textContent = `${state.streakDays} Days`;
+
+    const xpEl = document.getElementById('xp-total');
+    if (xpEl) xpEl.textContent = `${state.xp} XP`;
+
+    const levelEl = document.getElementById('current-level');
+    if (levelEl) levelEl.textContent = state.currentLevel;
+
+    const quizAvgEl = document.getElementById('quiz-average');
+    if (quizAvgEl) {
+        quizAvgEl.textContent =
+            `${Math.round(CEFRProgressionEngine.getMasteryForLevel(state.currentLevel) * 100)}%`;
+    }
+
+    const builderScoreEl = document.getElementById('builder-score');
+    if (builderScoreEl) {
+        builderScoreEl.textContent =
+            state.builderScores.length
+                ? state.builderScores[state.builderScores.length - 1].score + '%'
+                : '0%';
+    }
+
+    const convEl = document.getElementById('conversation-count');
+    if (convEl) convEl.textContent = `${state.conversationCount} Prompts completed`;
 }
 
 /* =========================
@@ -246,6 +277,7 @@ window.addEventListener('DOMContentLoaded', () => {
     initTabs();
     renderDashboard();
 });
+
 /* =========================
    Dashboard Renderer
    ========================= */
