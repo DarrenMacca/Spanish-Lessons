@@ -21,16 +21,9 @@ const CEFRProgressionEngine = (() => {
 
     const LEVELS = ['A1', 'A2', 'B1'];
 
-    const XP_THRESHOLDS = {
-        A1: 0,
-        A2: 300,
-        B1: 700
-    };
+    const XP_THRESHOLDS = { A1: 0, A2: 300, B1: 700 };
 
-    const MASTER_REQUIREMENTS = {
-        A1: 0.70,
-        A2: 0.75
-    };
+    const MASTER_REQUIREMENTS = { A1: 0.70, A2: 0.75 };
 
     const XP_REWARDS = {
         listen: 5,
@@ -51,8 +44,6 @@ const CEFRProgressionEngine = (() => {
         lastActiveDate: null
     };
 
-    /* ---------- Persistence ---------- */
-
     function load() {
         const raw = localStorage.getItem(STORAGE_KEY);
         if (raw) {
@@ -70,8 +61,6 @@ const CEFRProgressionEngine = (() => {
     function save() {
         localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
     }
-
-    /* ---------- Progress Events ---------- */
 
     function addXP(source) {
         const amount = XP_REWARDS[source] || 0;
@@ -110,8 +99,6 @@ const CEFRProgressionEngine = (() => {
         updateDashboardUI();
     }
 
-    /* ---------- Level & Mastery ---------- */
-
     function evaluateLevelUp() {
         const current = state.currentLevel;
         const nextLevel = getNextLevel(current);
@@ -145,8 +132,6 @@ const CEFRProgressionEngine = (() => {
         const avg = allScores.reduce((sum, s) => sum + s, 0) / allScores.length;
         return avg / 100;
     }
-
-    /* ---------- UI Integration ---------- */
 
     function updateDashboardUI() {
         const levelEl = document.getElementById('current-level');
@@ -183,8 +168,6 @@ const CEFRProgressionEngine = (() => {
         const streakEl = document.getElementById('streak-days');
         if (streakEl) streakEl.textContent = `${state.streakDays} Days`;
     }
-
-    /* ---------- Helpers ---------- */
 
     function isNextDay(prev, current) {
         const p = new Date(prev);
@@ -227,19 +210,13 @@ function initTabs() {
                 sec.classList.toggle('hidden', sec.id !== target);
             });
 
-            // always refresh the active tab’s engine / dashboard
-            if (typeof refreshActiveTab === 'function') {
-                refreshActiveTab();
-            } else if (target === 'dashboard') {
-                // fallback if Part 5 not yet loaded
-                renderDashboard();
-            }
+            refreshActiveTab();
         });
     });
 }
 
 /* =========================
-   Dashboard Updater (HTML stays intact)
+   Dashboard Updater
    ========================= */
 
 function renderDashboard() {
@@ -279,12 +256,13 @@ function renderDashboard() {
 window.addEventListener('DOMContentLoaded', () => {
     CEFRProgressionEngine.load();
     initTabs();
+    AppState.activeTab = 'dashboard';
     renderDashboard();
+    initPart2();
+    refreshActiveTab();
 });
-
-/* =========================
-   PART 2 — UI Systems
-   ========================= */
+// app-v2.js — PART 2
+// UI Systems: Achievement, Name, Speech Rate, Level Pills, Tab Hover, Streak
 
 /* Achievement Popup */
 function showAchievement(message) {
@@ -377,10 +355,7 @@ function initLevelPills() {
 
             showAchievement(`Switched to ${level} content`);
             renderDashboard();
-
-            if (typeof refreshActiveTab === 'function') {
-                refreshActiveTab();
-            }
+            refreshActiveTab();
         });
     });
 }
@@ -410,7 +385,7 @@ function updateDailyStreak() {
 }
 
 
-/* PART 2 Init — called by Part 5 */
+/* PART 2 Initializer */
 function initPart2() {
     initNameSaving();
     initSpeechRate();
@@ -418,32 +393,364 @@ function initPart2() {
     enhanceTabPills();
     updateDailyStreak();
 }
-/* ============================================================
-   PART 3 INITIALIZER — FIXED
-   ============================================================ */
+// app-v2.js — PART 3
+// Learning Engines: Listen • Flashcards • Quiz • Builder • Conversation
 
-function initPart3() {
-    ListenEngine.init();
-    FlashcardsEngine.init();
-    QuizEngine.init();
-    BuilderEngine.init();
-    ConversationEngine.init();
-}
+/* LISTEN ENGINE */
+const ListenEngine = (() => {
 
-// ❌ REMOVE THIS (it breaks all tabs)
-// window.addEventListener('DOMContentLoaded', initPart3);
+    let audioElements = [];
+    let isPlayingAll = false;
 
-// Part 3 is now initialized ONLY by refreshActiveTab() in Part 5
+    function init() {
+        const playAllBtn = document.getElementById('listen-play-all');
+        const stopBtn = document.getElementById('listen-stop');
+        const pauseBtn = document.getElementById('listen-pause');
+        const resumeBtn = document.getElementById('listen-resume');
+
+        if (!playAllBtn) return;
+
+        playAllBtn.onclick = playAll;
+        stopBtn.onclick = stopAll;
+        pauseBtn.onclick = pauseAll;
+        resumeBtn.onclick = resumeAll;
+
+        loadAudio();
+    }
+
+    function loadAudio() {
+        const words = document.querySelectorAll('.listen-word');
+        audioElements = [];
+
+        words.forEach(word => {
+            const audio = new Audio(word.dataset.audio);
+            audio.playbackRate = AppState.speechRate;
+            audioElements.push(audio);
+        });
+    }
+
+    async function playAll() {
+        isPlayingAll = true;
+        CEFRProgressionEngine.addXP('listen');
+
+        for (const audio of audioElements) {
+            if (!isPlayingAll) break;
+            audio.playbackRate = AppState.speechRate;
+            await audio.play();
+            await new Promise(res => audio.addEventListener('ended', res, { once: true }));
+        }
+    }
+
+    function stopAll() {
+        isPlayingAll = false;
+        audioElements.forEach(a => {
+            a.pause();
+            a.currentTime = 0;
+        });
+    }
+
+    function pauseAll() {
+        isPlayingAll = false;
+        audioElements.forEach(a => a.pause());
+    }
+
+    function resumeAll() {
+        isPlayingAll = true;
+        audioElements.forEach(a => a.play());
+    }
+
+    return { init };
+})();
 
 
-/* =========================
-   PART 4 — Certificates & Badges
-   ========================= */
+/* FLASHCARDS ENGINE */
+const FlashcardsEngine = (() => {
 
-/* ============================================================
-   CERTIFICATES ENGINE
-   ============================================================ */
+    const data = {
+        A1: [
+            { front: "Hola", back: "Hello" },
+            { front: "Gracias", back: "Thank you" },
+            { front: "Casa", back: "House" }
+        ],
+        A2: [
+            { front: "Cansado", back: "Tired" },
+            { front: "Rápido", back: "Fast" }
+        ],
+        B1: [
+            { front: "Desafío", back: "Challenge" },
+            { front: "Mejorar", back: "To improve" }
+        ]
+    };
 
+    let index = 0;
+
+    function init() {
+        const card = document.getElementById('flashcard');
+        const nextBtn = document.getElementById('flash-next');
+        const prevBtn = document.getElementById('flash-prev');
+        const flipBtn = document.getElementById('flash-flip');
+
+        if (!card) return;
+
+        nextBtn.onclick = next;
+        prevBtn.onclick = prev;
+        flipBtn.onclick = flip;
+
+        render();
+    }
+
+    function getCards() {
+        return data[AppState.currentLevel] || [];
+    }
+
+    function render() {
+        const card = document.getElementById('flashcard');
+        const cards = getCards();
+
+        if (!cards.length) {
+            card.innerHTML = `<div class="flash-inner"><div class="flash-front">No cards</div></div>`;
+            return;
+        }
+
+        const { front, back } = cards[index];
+
+        card.innerHTML = `
+            <div class="flash-inner">
+                <div class="flash-front">${front}</div>
+                <div class="flash-back">${back}</div>
+            </div>
+        `;
+    }
+
+    function next() {
+        const cards = getCards();
+        index = (index + 1) % cards.length;
+        render();
+        CEFRProgressionEngine.addXP('flashcards');
+    }
+
+    function prev() {
+        const cards = getCards();
+        index = (index - 1 + cards.length) % cards.length;
+        render();
+    }
+
+    function flip() {
+        const card = document.getElementById('flashcard');
+        card.classList.toggle('flipped');
+    }
+
+    return { init };
+})();
+
+
+/* QUIZ ENGINE */
+const QuizEngine = (() => {
+
+    const data = {
+        A1: [
+            { q: "What does 'Hola' mean?", a: "Hello", options: ["Hello", "Goodbye", "Please"] },
+            { q: "What does 'Gracias' mean?", a: "Thank you", options: ["Thank you", "Sorry", "Good night"] }
+        ],
+        A2: [
+            { q: "What does 'Rápido' mean?", a: "Fast", options: ["Fast", "Slow", "Happy"] }
+        ],
+        B1: [
+            { q: "What does 'Desafío' mean?", a: "Challenge", options: ["Challenge", "Victory", "Effort"] }
+        ]
+    };
+
+    let index = 0;
+    let score = 0;
+
+    function init() {
+        const startBtn = document.getElementById('quiz-start');
+        const area = document.getElementById('quiz-area');
+
+        if (!startBtn || !area) return;
+
+        startBtn.onclick = start;
+    }
+
+    function start() {
+        index = 0;
+        score = 0;
+        renderQuestion();
+    }
+
+    function getQuestions() {
+        return data[AppState.currentLevel] || [];
+    }
+
+    function renderQuestion() {
+        const area = document.getElementById('quiz-area');
+        const questions = getQuestions();
+
+        if (!questions.length) {
+            area.innerHTML = `<p>No quiz available.</p>`;
+            return;
+        }
+
+        const q = questions[index];
+
+        area.innerHTML = `
+            <div class="quiz-card">
+                <h3>${q.q}</h3>
+                ${q.options.map(opt => `
+                    <button class="quiz-option" data-opt="${opt}">${opt}</button>
+                `).join('')}
+            </div>
+        `;
+
+        document.querySelectorAll('.quiz-option').forEach(btn => {
+            btn.onclick = () => checkAnswer(btn.dataset.opt);
+        });
+    }
+
+    function checkAnswer(selected) {
+        const questions = getQuestions();
+        const q = questions[index];
+
+        if (selected === q.a) score++;
+
+        index++;
+
+        if (index >= questions.length) {
+            finish();
+        } else {
+            renderQuestion();
+        }
+    }
+
+    function finish() {
+        const area = document.getElementById('quiz-area');
+        const questions = getQuestions();
+        const percent = Math.round((score / questions.length) * 100);
+
+        CEFRProgressionEngine.recordQuizResult(AppState.currentLevel, percent);
+
+        area.innerHTML = `
+            <div class="quiz-card">
+                <h3>Quiz Complete!</h3>
+                <p>Your score: ${percent}%</p>
+            </div>
+        `;
+    }
+
+    return { init };
+})();
+
+
+/* SENTENCE BUILDER ENGINE */
+const BuilderEngine = (() => {
+
+    const data = {
+        A1: { correct: "Yo soy estudiante", words: ["Yo", "soy", "estudiante"] },
+        A2: { correct: "Ella corre rápidamente", words: ["Ella", "corre", "rápidamente"] },
+        B1: { correct: "Quiero mejorar mi español", words: ["Quiero", "mejorar", "mi", "español"] }
+    };
+
+    let selected = [];
+
+    function init() {
+        const area = document.getElementById('builder-area');
+        const checkBtn = document.getElementById('builder-check');
+
+        if (!area || !checkBtn) return;
+
+        renderWords();
+        checkBtn.onclick = checkSentence;
+    }
+
+    function renderWords() {
+        const area = document.getElementById('builder-area');
+        const levelData = data[AppState.currentLevel];
+
+        selected = [];
+
+        area.innerHTML = levelData.words.map(w =>
+            `<button class="builder-word" data-word="${w}">${w}</button>`
+        ).join('');
+
+        document.querySelectorAll('.builder-word').forEach(btn => {
+            btn.onclick = () => {
+                selected.push(btn.dataset.word);
+                btn.disabled = true;
+            };
+        });
+    }
+
+    function checkSentence() {
+        const levelData = data[AppState.currentLevel];
+        const resultEl = document.getElementById('builder-result');
+
+        const userSentence = selected.join(' ');
+        const correct = levelData.correct;
+
+        const score = userSentence === correct ? 100 : 0;
+
+        CEFRProgressionEngine.recordBuilderResult(AppState.currentLevel, score);
+
+        resultEl.textContent = `Score: ${score}%`;
+    }
+
+    return { init };
+})();
+
+
+/* CONVERSATION ENGINE */
+const ConversationEngine = (() => {
+
+    const prompts = {
+        A1: ["¿Cómo te llamas?", "¿De dónde eres?", "¿Cómo estás?"],
+        A2: ["¿Qué hiciste ayer?", "Describe tu casa."],
+        B1: ["¿Cuál es tu mayor desafío aprendiendo español?", "Describe una experiencia inolvidable."]
+    };
+
+    let index = 0;
+
+    function init() {
+        const area = document.getElementById('conversation-area');
+        const nextBtn = document.getElementById('conversation-next');
+
+        if (!area || !nextBtn) return;
+
+        nextBtn.onclick = nextPrompt;
+        renderPrompt();
+    }
+
+    function getPrompts() {
+        return prompts[AppState.currentLevel] || [];
+    }
+
+    function renderPrompt() {
+        const area = document.getElementById('conversation-area');
+        const list = getPrompts();
+
+        if (!list.length) {
+            area.textContent = "No prompts available.";
+            return;
+        }
+
+        area.textContent = list[index];
+    }
+
+    function nextPrompt() {
+        const list = getPrompts();
+
+        index = (index + 1) % list.length;
+
+        CEFRProgressionEngine.recordConversationPromptCompleted();
+
+        renderPrompt();
+    }
+
+    return { init };
+})();
+// app-v2.js — PART 4
+// Certificates & Badges
+
+/* CERTIFICATES ENGINE */
 const CertificatesEngine = (() => {
 
     function init() {
@@ -477,12 +784,7 @@ const CertificatesEngine = (() => {
     return { init };
 })();
 
-
-
-/* ============================================================
-   BADGES ENGINE
-   ============================================================ */
-
+/* BADGES ENGINE */
 const BadgesEngine = (() => {
 
     function init() {
@@ -512,25 +814,8 @@ const BadgesEngine = (() => {
 
     return { init };
 })();
-
-/* ============================================================
-   PART 4 INITIALIZER — FIXED
-   ============================================================ */
-
-function initPart4() {
-    CertificatesEngine.init();
-    BadgesEngine.init();
-}
-
-// ❌ REMOVE THIS — it breaks all tabs
-// window.addEventListener('DOMContentLoaded', initPart4);
-
-// Part 4 now initializes ONLY when its tab becomes active via refreshActiveTab()
-
-
-/* =========================
-   PART 5 — Integration Layer
-   ========================= */
+// app-v2.js — PART 5
+// Integration Layer
 
 /* XP Hook Helpers */
 function awardListenXP() {
@@ -557,7 +842,6 @@ function awardConversationXP() {
     CEFRProgressionEngine.recordConversationPromptCompleted();
     renderDashboard();
 }
-
 
 /* Tab-aware Refresh */
 function refreshActiveTab() {
@@ -598,7 +882,6 @@ function refreshActiveTab() {
             break;
     }
 }
-
 
 /* Full Refresh */
 function fullRefresh() {
