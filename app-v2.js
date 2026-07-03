@@ -970,7 +970,8 @@ window.addEventListener('DOMContentLoaded', initPart4);
    ========================= */
 
 /* ----------
-   XP Hooks (optional extension points)
+   XP Hook Helpers
+   These allow engines to award XP cleanly.
    ---------- */
 
 function awardListenXP() {
@@ -1000,7 +1001,8 @@ function awardConversationXP() {
 
 
 /* ----------
-   Tab-aware refresh (optional if you want per-tab re-init)
+   Tab-aware Refresh
+   Ensures each tab re-initializes correctly when activated.
    ---------- */
 
 function refreshActiveTab() {
@@ -1008,34 +1010,44 @@ function refreshActiveTab() {
         case 'dashboard':
             renderDashboard();
             break;
+
         case 'listen':
             ListenEngine.init();
             break;
+
         case 'flash':
             FlashcardsEngine.init();
             break;
+
         case 'quiz':
             QuizEngine.init();
             break;
+
         case 'build':
             BuilderEngine.init();
             break;
+
         case 'conversation':
             ConversationEngine.init();
             break;
+
         case 'certificates':
             CertificatesEngine.init();
             break;
+
         case 'badges':
             BadgesEngine.init();
             break;
+
         default:
             break;
     }
 }
 
+
 /* ----------
-   Global refresh helper
+   Full Refresh
+   Reload CEFR state + update dashboard + refresh active tab.
    ---------- */
 
 function fullRefresh() {
@@ -1045,4 +1057,3 @@ function fullRefresh() {
 }
 
 window.fullRefresh = fullRefresh;
-
