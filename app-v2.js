@@ -1,5 +1,5 @@
-// app-v2.js — PART 1
-// Core App State + CEFR Engine + Tab Navigation + Dashboard Updater
+// app-v2.js
+// Professional, updated version with improved state management, streaks, mastery, engines, and UI integration.
 
 /* =========================
    Global App State
@@ -23,7 +23,7 @@ const CEFRProgressionEngine = (() => {
 
     const XP_THRESHOLDS = { A1: 0, A2: 300, B1: 700 };
 
-    const MASTER_REQUIREMENTS = { A1: 0.70, A2: 0.75 };
+    const MASTER_REQUIREMENTS = { A1: 0.70, A2: 0.75, B1: 0.80 };
 
     const XP_REWARDS = {
         listen: 5,
@@ -44,18 +44,47 @@ const CEFRProgressionEngine = (() => {
         lastActiveDate: null
     };
 
+    function validateLoadedState(saved) {
+        const result = { ...state };
+        if (typeof saved.currentLevel === 'string' && LEVELS.includes(saved.currentLevel)) {
+            result.currentLevel = saved.currentLevel;
+        }
+        if (typeof saved.xp === 'number' && saved.xp >= 0) {
+            result.xp = saved.xp;
+        }
+        if (typeof saved.streakDays === 'number' && saved.streakDays >= 0) {
+            result.streakDays = saved.streakDays;
+        }
+        if (Array.isArray(saved.quizScores)) {
+            result.quizScores = saved.quizScores.filter(
+                q => q && LEVELS.includes(q.level) && typeof q.score === 'number'
+            );
+        }
+        if (Array.isArray(saved.builderScores)) {
+            result.builderScores = saved.builderScores.filter(
+                b => b && LEVELS.includes(b.level) && typeof b.score === 'number'
+            );
+        }
+        if (typeof saved.conversationCount === 'number' && saved.conversationCount >= 0) {
+            result.conversationCount = saved.conversationCount;
+        }
+        if (typeof saved.lastActiveDate === 'string') {
+            result.lastActiveDate = saved.lastActiveDate;
+        }
+        return result;
+    }
+
     function load() {
         const raw = localStorage.getItem(STORAGE_KEY);
         if (raw) {
             try {
                 const saved = JSON.parse(raw);
-                state = { ...state, ...saved };
+                state = validateLoadedState(saved);
             } catch (e) {
                 console.warn('CEFR engine: invalid stored state, resetting.');
             }
         }
         AppState.currentLevel = state.currentLevel;
-        updateDashboardUI();
     }
 
     function save() {
@@ -67,16 +96,17 @@ const CEFRProgressionEngine = (() => {
         state.xp += amount;
         save();
         evaluateLevelUp();
-        updateDashboardUI();
     }
 
     function recordQuizResult(level, scorePercent) {
         state.quizScores.push({ level, score: scorePercent });
+        trimArrays();
         addXP('quiz');
     }
 
     function recordBuilderResult(level, scorePercent) {
         state.builderScores.push({ level, score: scorePercent });
+        trimArrays();
         addXP('builder');
     }
 
@@ -85,18 +115,32 @@ const CEFRProgressionEngine = (() => {
         addXP('conversation');
     }
 
+    function trimArrays() {
+        const MAX_ENTRIES = 100;
+        if (state.quizScores.length > MAX_ENTRIES) {
+            state.quizScores = state.quizScores.slice(-MAX_ENTRIES);
+        }
+        if (state.builderScores.length > MAX_ENTRIES) {
+            state.builderScores = state.builderScores.slice(-MAX_ENTRIES);
+        }
+    }
+
     function updateStreak(todayStr) {
         const today = todayStr || new Date().toISOString().slice(0, 10);
         if (!state.lastActiveDate) {
             state.streakDays = 1;
-        } else if (isNextDay(state.lastActiveDate, today)) {
-            state.streakDays += 1;
-        } else if (state.lastActiveDate !== today) {
-            state.streakDays = 1;
+        } else {
+            const prevDate = new Date(state.lastActiveDate + 'T00:00:00Z');
+            const currDate = new Date(today + 'T00:00:00Z');
+            const diffDays = Math.round((currDate - prevDate) / (1000 * 60 * 60 * 24));
+            if (diffDays === 1) {
+                state.streakDays += 1;
+            } else if (diffDays > 1) {
+                state.streakDays = 1;
+            }
         }
         state.lastActiveDate = today;
         save();
-        updateDashboardUI();
     }
 
     function evaluateLevelUp() {
@@ -105,7 +149,7 @@ const CEFRProgressionEngine = (() => {
         if (!nextLevel) return;
 
         const xpEnough = state.xp >= XP_THRESHOLDS[nextLevel];
-        const masteryEnough = getMasteryForLevel(current) >= (MASTER_REQUIREMENTS[current] || 1);
+        const masteryEnough = getMasteryForLevel(current) >= (MASTER_REQUIREMENTS[current] || 0.8);
 
         if (xpEnough && masteryEnough) {
             state.currentLevel = nextLevel;
@@ -114,7 +158,6 @@ const CEFRProgressionEngine = (() => {
             if (window.showAchievement) {
                 window.showAchievement(`Level up! You are now ${nextLevel}.`);
             }
-            updateDashboardUI();
         }
     }
 
@@ -129,51 +172,16 @@ const CEFRProgressionEngine = (() => {
         const builders = state.builderScores.filter(b => b.level === level);
         const allScores = [...quizzes, ...builders].map(x => x.score);
         if (!allScores.length) return 0;
-        const avg = allScores.reduce((sum, s) => sum + s, 0) / allScores.length;
+        const recent = allScores.slice(-10);
+        const avg = recent.reduce((sum, s) => sum + s, 0) / recent.length;
         return avg / 100;
     }
 
-    function updateDashboardUI() {
-        const levelEl = document.getElementById('current-level');
-        if (levelEl) levelEl.textContent = state.currentLevel;
-
-        const xpEl = document.getElementById('xp-total');
-        if (xpEl) xpEl.textContent = `${state.xp} XP`;
-
-        const xpFill = document.querySelector('.xp-fill');
-        if (xpFill) {
-            const next = getNextLevel(state.currentLevel) || state.currentLevel;
-            const threshold = XP_THRESHOLDS[next] || 1;
-            const pct = Math.min(100, (state.xp / threshold) * 100);
-            xpFill.style.width = `${pct}%`;
-        }
-
-        const quizAvgEl = document.getElementById('quiz-average');
-        if (quizAvgEl) {
-            const mastery = getMasteryForLevel(state.currentLevel);
-            quizAvgEl.textContent = `${Math.round(mastery * 100)}%`;
-        }
-
-        const builderScoreEl = document.getElementById('builder-score');
-        if (builderScoreEl) {
-            builderScoreEl.textContent =
-                state.builderScores.length
-                    ? state.builderScores[state.builderScores.length - 1].score + '%'
-                    : '0%';
-        }
-
-        const convEl = document.getElementById('conversation-count');
-        if (convEl) convEl.textContent = `${state.conversationCount} Prompts completed`;
-
-        const streakEl = document.getElementById('streak-days');
-        if (streakEl) streakEl.textContent = `${state.streakDays} Days`;
-    }
-
-    function isNextDay(prev, current) {
-        const p = new Date(prev);
-        const c = new Date(current);
-        const diff = (c - p) / (1000 * 60 * 60 * 24);
-        return diff >= 1 && diff < 2;
+    function forceLevel(level) {
+        if (!LEVELS.includes(level)) return;
+        state.currentLevel = level;
+        AppState.currentLevel = level;
+        save();
     }
 
     return {
@@ -184,7 +192,8 @@ const CEFRProgressionEngine = (() => {
         recordConversationPromptCompleted,
         updateStreak,
         getMasteryForLevel,
-        getState: () => ({ ...state })
+        getState: () => ({ ...state }),
+        forceLevel
     };
 })();
 
@@ -247,24 +256,21 @@ function renderDashboard() {
 
     const convEl = document.getElementById('conversation-count');
     if (convEl) convEl.textContent = `${state.conversationCount} Prompts completed`;
+
+    const xpFill = document.querySelector('.xp-fill');
+    if (xpFill) {
+        const next = CEFRProgressionEngine.getState().currentLevel;
+        const nextLevel = CEFRProgressionEngine.getState().currentLevel;
+        const threshold = XP_THRESHOLDS[nextLevel] || 1;
+        const pct = Math.min(100, (state.xp / threshold) * 100);
+        xpFill.style.width = `${pct}%`;
+    }
 }
 
 /* =========================
-   Bootstrapping
+   Achievement Popup
    ========================= */
 
-window.addEventListener('DOMContentLoaded', () => {
-    CEFRProgressionEngine.load();
-    initTabs();
-    AppState.activeTab = 'dashboard';
-    renderDashboard();
-    initPart2();
-    refreshActiveTab();
-});
-// app-v2.js — PART 2
-// UI Systems: Achievement, Name, Speech Rate, Level Pills, Tab Hover, Streak
-
-/* Achievement Popup */
 function showAchievement(message) {
     const container = document.getElementById('achievement-popups');
     if (!container) return;
@@ -272,12 +278,13 @@ function showAchievement(message) {
     const popup = document.createElement('div');
     popup.className = 'achievement-popup';
     popup.textContent = message;
+    popup.setAttribute('role', 'status');
+    popup.setAttribute('aria-live', 'polite');
 
     container.appendChild(popup);
 
     setTimeout(() => {
-        popup.style.opacity = '0';
-        popup.style.transform = 'translateY(10px)';
+        popup.classList.add('fade-out');
     }, 2500);
 
     setTimeout(() => popup.remove(), 3500);
@@ -285,8 +292,10 @@ function showAchievement(message) {
 
 window.showAchievement = showAchievement;
 
+/* =========================
+   Name Saving
+   ========================= */
 
-/* Name Saving */
 function initNameSaving() {
     const input = document.getElementById('user-name-input');
     const btn = document.getElementById('save-name-btn');
@@ -311,8 +320,10 @@ function initNameSaving() {
     });
 }
 
+/* =========================
+   Speech Rate
+   ========================= */
 
-/* Speech Rate */
 function initSpeechRate() {
     const slider = document.getElementById('speech-rate-slider');
     const label = document.getElementById('speech-rate-label');
@@ -321,21 +332,28 @@ function initSpeechRate() {
 
     const saved = localStorage.getItem('cefr_speech_rate');
     if (saved) {
-        AppState.speechRate = parseFloat(saved);
-        slider.value = AppState.speechRate;
-        label.textContent = AppState.speechRate.toFixed(2);
+        const parsed = parseFloat(saved);
+        if (!isNaN(parsed)) {
+            AppState.speechRate = Math.min(2.0, Math.max(0.5, parsed));
+        }
     }
+    slider.value = AppState.speechRate;
+    label.textContent = AppState.speechRate.toFixed(2);
 
     slider.addEventListener('input', () => {
-        const rate = parseFloat(slider.value);
+        let rate = parseFloat(slider.value);
+        if (isNaN(rate)) return;
+        rate = Math.min(2.0, Math.max(0.5, rate));
         AppState.speechRate = rate;
         localStorage.setItem('cefr_speech_rate', rate);
         label.textContent = rate.toFixed(2);
     });
 }
 
+/* =========================
+   Level Pills
+   ========================= */
 
-/* Level Pills */
 function initLevelPills() {
     const pills = document.querySelectorAll('.level-btn');
 
@@ -344,11 +362,7 @@ function initLevelPills() {
             const level = pill.dataset.level;
             if (!level) return;
 
-            AppState.currentLevel = level;
-
-            const state = CEFRProgressionEngine.getState();
-            state.currentLevel = level;
-            localStorage.setItem('cefr_progress', JSON.stringify(state));
+            CEFRProgressionEngine.forceLevel(level);
 
             pills.forEach(p => p.classList.remove('active'));
             pill.classList.add('active');
@@ -358,47 +372,46 @@ function initLevelPills() {
             refreshActiveTab();
         });
     });
+
+    const current = CEFRProgressionEngine.getState().currentLevel;
+    pills.forEach(p => {
+        if (p.dataset.level === current) {
+            p.classList.add('active');
+        }
+    });
 }
 
+/* =========================
+   Tab Hover
+   ========================= */
 
-/* Tab Hover */
 function enhanceTabPills() {
     const tabs = document.querySelectorAll('.tab-btn');
 
     tabs.forEach(tab => {
         tab.addEventListener('mouseenter', () => {
-            tab.style.boxShadow = '0 0 0 1px rgba(56,189,248,0.4)';
+            tab.classList.add('tab-hover');
         });
 
         tab.addEventListener('mouseleave', () => {
-            if (!tab.classList.contains('active')) {
-                tab.style.boxShadow = 'none';
-            }
+            tab.classList.remove('tab-hover');
         });
     });
 }
 
+/* =========================
+   Daily Streak
+   ========================= */
 
-/* Daily Streak */
 function updateDailyStreak() {
     CEFRProgressionEngine.updateStreak();
 }
 
+/* =========================
+   LISTEN ENGINE
+   ========================= */
 
-/* PART 2 Initializer */
-function initPart2() {
-    initNameSaving();
-    initSpeechRate();
-    initLevelPills();
-    enhanceTabPills();
-    updateDailyStreak();
-}
-// app-v2.js — PART 3
-// Learning Engines: Listen • Flashcards • Quiz • Builder • Conversation
-
-/* LISTEN ENGINE */
 const ListenEngine = (() => {
-
     let audioElements = [];
     let isPlayingAll = false;
 
@@ -411,9 +424,9 @@ const ListenEngine = (() => {
         if (!playAllBtn) return;
 
         playAllBtn.onclick = playAll;
-        stopBtn.onclick = stopAll;
-        pauseBtn.onclick = pauseAll;
-        resumeBtn.onclick = resumeAll;
+        if (stopBtn) stopBtn.onclick = stopAll;
+        if (pauseBtn) pauseBtn.onclick = pauseAll;
+        if (resumeBtn) resumeBtn.onclick = resumeAll;
 
         loadAudio();
     }
@@ -423,22 +436,33 @@ const ListenEngine = (() => {
         audioElements = [];
 
         words.forEach(word => {
-            const audio = new Audio(word.dataset.audio);
+            const src = word.dataset.audio;
+            if (!src) return;
+            const audio = new Audio(src);
             audio.playbackRate = AppState.speechRate;
             audioElements.push(audio);
         });
     }
 
     async function playAll() {
+        if (!audioElements.length) return;
         isPlayingAll = true;
         CEFRProgressionEngine.addXP('listen');
+        updateDailyStreak();
+        renderDashboard();
 
         for (const audio of audioElements) {
             if (!isPlayingAll) break;
             audio.playbackRate = AppState.speechRate;
-            await audio.play();
+            try {
+                await audio.play();
+            } catch (e) {
+                console.warn('Audio play failed', e);
+                continue;
+            }
             await new Promise(res => audio.addEventListener('ended', res, { once: true }));
         }
+        isPlayingAll = false;
     }
 
     function stopAll() {
@@ -455,17 +479,19 @@ const ListenEngine = (() => {
     }
 
     function resumeAll() {
-        isPlayingAll = true;
-        audioElements.forEach(a => a.play());
+        if (!audioElements.length) return;
+        if (isPlayingAll) return;
+        playAll();
     }
 
     return { init };
 })();
 
+/* =========================
+   FLASHCARDS ENGINE
+   ========================= */
 
-/* FLASHCARDS ENGINE */
 const FlashcardsEngine = (() => {
-
     const data = {
         A1: [
             { front: "Hola", back: "Hello" },
@@ -492,15 +518,18 @@ const FlashcardsEngine = (() => {
 
         if (!card) return;
 
-        nextBtn.onclick = next;
-        prevBtn.onclick = prev;
-        flipBtn.onclick = flip;
+        if (nextBtn) nextBtn.onclick = next;
+        if (prevBtn) prevBtn.onclick = prev;
+        if (flipBtn) flipBtn.onclick = flip;
 
+        index = 0;
         render();
     }
 
     function getCards() {
-        return data[AppState.currentLevel] || [];
+        const cards = data[AppState.currentLevel] || [];
+        if (index >= cards.length) index = 0;
+        return cards;
     }
 
     function render() {
@@ -520,33 +549,40 @@ const FlashcardsEngine = (() => {
                 <div class="flash-back">${back}</div>
             </div>
         `;
+        card.classList.remove('flipped');
     }
 
     function next() {
         const cards = getCards();
+        if (!cards.length) return;
         index = (index + 1) % cards.length;
         render();
         CEFRProgressionEngine.addXP('flashcards');
+        updateDailyStreak();
+        renderDashboard();
     }
 
     function prev() {
         const cards = getCards();
+        if (!cards.length) return;
         index = (index - 1 + cards.length) % cards.length;
         render();
     }
 
     function flip() {
         const card = document.getElementById('flashcard');
+        if (!card) return;
         card.classList.toggle('flipped');
     }
 
     return { init };
 })();
 
+/* =========================
+   QUIZ ENGINE
+   ========================= */
 
-/* QUIZ ENGINE */
 const QuizEngine = (() => {
-
     const data = {
         A1: [
             { q: "What does 'Hola' mean?", a: "Hello", options: ["Hello", "Goodbye", "Please"] },
@@ -579,19 +615,24 @@ const QuizEngine = (() => {
     }
 
     function getQuestions() {
-        return data[AppState.currentLevel] || [];
+        const questions = data[AppState.currentLevel] || [];
+        return shuffleArray(questions.slice());
     }
+
+    let currentQuestions = [];
 
     function renderQuestion() {
         const area = document.getElementById('quiz-area');
-        const questions = getQuestions();
+        if (!currentQuestions.length) {
+            currentQuestions = getQuestions();
+        }
 
-        if (!questions.length) {
+        if (!currentQuestions.length) {
             area.innerHTML = `<p>No quiz available.</p>`;
             return;
         }
 
-        const q = questions[index];
+        const q = currentQuestions[index];
 
         area.innerHTML = `
             <div class="quiz-card">
@@ -603,19 +644,26 @@ const QuizEngine = (() => {
         `;
 
         document.querySelectorAll('.quiz-option').forEach(btn => {
-            btn.onclick = () => checkAnswer(btn.dataset.opt);
+            btn.onclick = () => {
+                document.querySelectorAll('.quiz-option').forEach(b => b.disabled = true);
+                checkAnswer(btn.dataset.opt);
+            };
         });
     }
 
     function checkAnswer(selected) {
-        const questions = getQuestions();
-        const q = questions[index];
+        const q = currentQuestions[index];
 
-        if (selected === q.a) score++;
+        if (selected === q.a) {
+            score++;
+            showAchievement('Correct!');
+        } else {
+            showAchievement(`Incorrect. Correct answer: ${q.a}`);
+        }
 
         index++;
 
-        if (index >= questions.length) {
+        if (index >= currentQuestions.length) {
             finish();
         } else {
             renderQuestion();
@@ -624,10 +672,11 @@ const QuizEngine = (() => {
 
     function finish() {
         const area = document.getElementById('quiz-area');
-        const questions = getQuestions();
-        const percent = Math.round((score / questions.length) * 100);
+        const percent = Math.round((score / currentQuestions.length) * 100);
 
         CEFRProgressionEngine.recordQuizResult(AppState.currentLevel, percent);
+        updateDailyStreak();
+        renderDashboard();
 
         area.innerHTML = `
             <div class="quiz-card">
@@ -635,15 +684,25 @@ const QuizEngine = (() => {
                 <p>Your score: ${percent}%</p>
             </div>
         `;
+        currentQuestions = [];
+    }
+
+    function shuffleArray(arr) {
+        for (let i = arr.length - 1; i > 0; i--) {
+            const j = Math.floor(Math.random() * (i + 1));
+            [arr[i], arr[j]] = [arr[j], arr[i]];
+        }
+        return arr;
     }
 
     return { init };
 })();
 
+/* =========================
+   SENTENCE BUILDER ENGINE
+   ========================= */
 
-/* SENTENCE BUILDER ENGINE */
 const BuilderEngine = (() => {
-
     const data = {
         A1: { correct: "Yo soy estudiante", words: ["Yo", "soy", "estudiante"] },
         A2: { correct: "Ella corre rápidamente", words: ["Ella", "corre", "rápidamente"] },
@@ -666,9 +725,16 @@ const BuilderEngine = (() => {
         const area = document.getElementById('builder-area');
         const levelData = data[AppState.currentLevel];
 
+        if (!levelData) {
+            area.textContent = 'No sentence available.';
+            return;
+        }
+
         selected = [];
 
-        area.innerHTML = levelData.words.map(w =>
+        const shuffled = levelData.words.slice().sort(() => Math.random() - 0.5);
+
+        area.innerHTML = shuffled.map(w =>
             `<button class="builder-word" data-word="${w}">${w}</button>`
         ).join('');
 
@@ -678,29 +744,49 @@ const BuilderEngine = (() => {
                 btn.disabled = true;
             };
         });
+
+        const resultEl = document.getElementById('builder-result');
+        if (resultEl) resultEl.textContent = '';
     }
 
     function checkSentence() {
         const levelData = data[AppState.currentLevel];
         const resultEl = document.getElementById('builder-result');
 
+        if (!levelData || !resultEl) return;
+
         const userSentence = selected.join(' ');
         const correct = levelData.correct;
 
-        const score = userSentence === correct ? 100 : 0;
+        const correctWords = correct.split(' ');
+        const userWords = selected;
+
+        let matches = 0;
+        for (let i = 0; i < correctWords.length; i++) {
+            if (userWords[i] === correctWords[i]) matches++;
+        }
+        const score = Math.round((matches / correctWords.length) * 100);
 
         CEFRProgressionEngine.recordBuilderResult(AppState.currentLevel, score);
+        updateDailyStreak();
+        renderDashboard();
 
         resultEl.textContent = `Score: ${score}%`;
+        if (score === 100) {
+            showAchievement('Perfect sentence!');
+        } else {
+            showAchievement(`Target: "${correct}"`);
+        }
     }
 
     return { init };
 })();
 
+/* =========================
+   CONVERSATION ENGINE
+   ========================= */
 
-/* CONVERSATION ENGINE */
 const ConversationEngine = (() => {
-
     const prompts = {
         A1: ["¿Cómo te llamas?", "¿De dónde eres?", "¿Cómo estás?"],
         A2: ["¿Qué hiciste ayer?", "Describe tu casa."],
@@ -716,11 +802,14 @@ const ConversationEngine = (() => {
         if (!area || !nextBtn) return;
 
         nextBtn.onclick = nextPrompt;
+        index = 0;
         renderPrompt();
     }
 
     function getPrompts() {
-        return prompts[AppState.currentLevel] || [];
+        const list = prompts[AppState.currentLevel] || [];
+        if (index >= list.length) index = 0;
+        return list;
     }
 
     function renderPrompt() {
@@ -737,22 +826,25 @@ const ConversationEngine = (() => {
 
     function nextPrompt() {
         const list = getPrompts();
+        if (!list.length) return;
 
         index = (index + 1) % list.length;
 
         CEFRProgressionEngine.recordConversationPromptCompleted();
+        updateDailyStreak();
+        renderDashboard();
 
         renderPrompt();
     }
 
     return { init };
 })();
-// app-v2.js — PART 4
-// Certificates & Badges
 
-/* CERTIFICATES ENGINE */
+/* =========================
+   CERTIFICATES ENGINE
+   ========================= */
+
 const CertificatesEngine = (() => {
-
     function init() {
         const area = document.getElementById('certificates-area');
         if (!area) return;
@@ -767,26 +859,38 @@ const CertificatesEngine = (() => {
         const levels = ['A1', 'A2', 'B1'];
 
         area.innerHTML = levels.map(level => {
+            const mastery = CEFRProgressionEngine.getMasteryForLevel(level);
             const unlocked =
                 state.currentLevel === level ||
                 levels.indexOf(state.currentLevel) > levels.indexOf(level);
 
+            const mastered = mastery >= (MASTER_REQUIREMENTS[level] || 0.8);
+
             return `
                 <div class="certificate-card">
                     <h3>Certificate: ${level}</h3>
-                    <p>Status: ${unlocked ? 'Unlocked' : 'Locked'}</p>
-                    ${unlocked ? `<button class="primary-btn">Download</button>` : ''}
+                    <p>Status: ${unlocked && mastered ? 'Unlocked' : 'Locked'}</p>
+                    ${unlocked && mastered ? `<button class="primary-btn" data-level="${level}">Download</button>` : ''}
                 </div>
             `;
         }).join('');
+
+        area.querySelectorAll('.primary-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                const level = btn.dataset.level;
+                showAchievement(`Certificate for ${level} ready to download (placeholder).`);
+            });
+        });
     }
 
     return { init };
 })();
 
-/* BADGES ENGINE */
-const BadgesEngine = (() => {
+/* =========================
+   BADGES ENGINE
+   ========================= */
 
+const BadgesEngine = (() => {
     function init() {
         const list = document.getElementById('badge-list');
         if (!list) return;
@@ -800,9 +904,15 @@ const BadgesEngine = (() => {
 
         const badges = [];
 
-        if (state.quizScores.length >= 3) badges.push('Quiz Master');
-        if (state.builderScores.length >= 3) badges.push('Sentence Streak');
-        if (state.conversationCount >= 5) badges.push('Conversation Explorer');
+        const a1Mastery = CEFRProgressionEngine.getMasteryForLevel('A1');
+        const a2Mastery = CEFRProgressionEngine.getMasteryForLevel('A2');
+        const b1Mastery = CEFRProgressionEngine.getMasteryForLevel('B1');
+
+        if (state.quizScores.length >= 5 && a1Mastery >= 0.8) badges.push('Quiz Master A1');
+        if (state.builderScores.length >= 5 && a2Mastery >= 0.8) badges.push('Sentence Streak A2');
+        if (state.conversationCount >= 10 && b1Mastery >= 0.8) badges.push('Conversation Explorer B1');
+        if (state.streakDays >= 7) badges.push('7-Day Streak');
+        if (state.xp >= 1000) badges.push('XP Champion');
 
         if (!badges.length) {
             list.innerHTML = `<li>No badges earned yet.</li>`;
@@ -814,32 +924,38 @@ const BadgesEngine = (() => {
 
     return { init };
 })();
-// app-v2.js — PART 5
-// Integration Layer
 
-/* XP Hook Helpers */
+/* =========================
+   Integration Layer
+   ========================= */
+
 function awardListenXP() {
     CEFRProgressionEngine.addXP('listen');
+    updateDailyStreak();
     renderDashboard();
 }
 
 function awardFlashcardsXP() {
     CEFRProgressionEngine.addXP('flashcards');
+    updateDailyStreak();
     renderDashboard();
 }
 
 function awardQuizXP(percent) {
     CEFRProgressionEngine.recordQuizResult(AppState.currentLevel, percent);
+    updateDailyStreak();
     renderDashboard();
 }
 
 function awardBuilderXP(percent) {
     CEFRProgressionEngine.recordBuilderResult(AppState.currentLevel, percent);
+    updateDailyStreak();
     renderDashboard();
 }
 
 function awardConversationXP() {
     CEFRProgressionEngine.recordConversationPromptCompleted();
+    updateDailyStreak();
     renderDashboard();
 }
 
@@ -849,35 +965,27 @@ function refreshActiveTab() {
         case 'dashboard':
             renderDashboard();
             break;
-
         case 'listen':
             ListenEngine.init();
             break;
-
         case 'flash':
             FlashcardsEngine.init();
             break;
-
         case 'quiz':
             QuizEngine.init();
             break;
-
         case 'build':
             BuilderEngine.init();
             break;
-
         case 'conversation':
             ConversationEngine.init();
             break;
-
         case 'certificates':
             CertificatesEngine.init();
             break;
-
         case 'badges':
             BadgesEngine.init();
             break;
-
         default:
             break;
     }
@@ -891,3 +999,24 @@ function fullRefresh() {
 }
 
 window.fullRefresh = fullRefresh;
+
+/* =========================
+   Bootstrapping
+   ========================= */
+
+function initPart2() {
+    initNameSaving();
+    initSpeechRate();
+    initLevelPills();
+    enhanceTabPills();
+    updateDailyStreak();
+}
+
+window.addEventListener('DOMContentLoaded', () => {
+    CEFRProgressionEngine.load();
+    initTabs();
+    AppState.activeTab = 'dashboard';
+    initPart2();
+    renderDashboard();
+    refreshActiveTab();
+});
