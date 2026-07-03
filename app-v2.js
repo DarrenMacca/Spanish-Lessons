@@ -227,7 +227,11 @@ function initTabs() {
                 sec.classList.toggle('hidden', sec.id !== target);
             });
 
-            if (target === 'dashboard') {
+            // always refresh the active tab’s engine / dashboard
+            if (typeof refreshActiveTab === 'function') {
+                refreshActiveTab();
+            } else if (target === 'dashboard') {
+                // fallback if Part 5 not yet loaded
                 renderDashboard();
             }
         });
@@ -280,13 +284,9 @@ window.addEventListener('DOMContentLoaded', () => {
 
 /* =========================
    PART 2 — UI Systems
-   Name Saving • Speech Rate • Level Pills • Tab Enhancements • Streak
    ========================= */
 
-/* -------------------------
-   Achievement Popup System
-   ------------------------- */
-
+/* Achievement Popup */
 function showAchievement(message) {
     const container = document.getElementById('achievement-popups');
     if (!container) return;
@@ -308,17 +308,13 @@ function showAchievement(message) {
 window.showAchievement = showAchievement;
 
 
-/* -------------------------
-   Name Saving System
-   ------------------------- */
-
+/* Name Saving */
 function initNameSaving() {
     const input = document.getElementById('user-name-input');
     const btn = document.getElementById('save-name-btn');
 
     if (!input || !btn) return;
 
-    // Load saved name
     const saved = localStorage.getItem('cefr_user_name');
     if (saved) {
         AppState.userName = saved;
@@ -338,10 +334,7 @@ function initNameSaving() {
 }
 
 
-/* -------------------------
-   Speech Rate Slider
-   ------------------------- */
-
+/* Speech Rate */
 function initSpeechRate() {
     const slider = document.getElementById('speech-rate-slider');
     const label = document.getElementById('speech-rate-label');
@@ -364,10 +357,7 @@ function initSpeechRate() {
 }
 
 
-/* -------------------------
-   Level Pill Buttons
-   ------------------------- */
-
+/* Level Pills */
 function initLevelPills() {
     const pills = document.querySelectorAll('.level-btn');
 
@@ -378,7 +368,6 @@ function initLevelPills() {
 
             AppState.currentLevel = level;
 
-            // Sync CEFR engine state
             const state = CEFRProgressionEngine.getState();
             state.currentLevel = level;
             localStorage.setItem('cefr_progress', JSON.stringify(state));
@@ -388,15 +377,16 @@ function initLevelPills() {
 
             showAchievement(`Switched to ${level} content`);
             renderDashboard();
+
+            if (typeof refreshActiveTab === 'function') {
+                refreshActiveTab();
+            }
         });
     });
 }
 
 
-/* -------------------------
-   Tab Pill Hover Enhancements
-   ------------------------- */
-
+/* Tab Hover */
 function enhanceTabPills() {
     const tabs = document.querySelectorAll('.tab-btn');
 
@@ -414,19 +404,13 @@ function enhanceTabPills() {
 }
 
 
-/* -------------------------
-   Daily Streak Auto-Update
-   ------------------------- */
-
+/* Daily Streak */
 function updateDailyStreak() {
     CEFRProgressionEngine.updateStreak();
 }
 
 
-/* -------------------------
-   PART 2 Initializer
-   ------------------------- */
-
+/* PART 2 Init — called by Part 5 */
 function initPart2() {
     initNameSaving();
     initSpeechRate();
@@ -434,426 +418,8 @@ function initPart2() {
     enhanceTabPills();
     updateDailyStreak();
 }
-
-window.addEventListener('DOMContentLoaded', initPart2);
-
-/* =========================
-   PART 3 — Learning Engines
-   Listen • Flashcards • Quiz • Builder • Conversation
-   ========================= */
-
-
 /* ============================================================
-   LISTEN ENGINE
-   ============================================================ */
-
-const ListenEngine = (() => {
-
-    let audioElements = [];
-    let isPlayingAll = false;
-
-    function init() {
-        const playAllBtn = document.getElementById('listen-play-all');
-        const stopBtn = document.getElementById('listen-stop');
-        const pauseBtn = document.getElementById('listen-pause');
-        const resumeBtn = document.getElementById('listen-resume');
-
-        if (!playAllBtn) return; // Tab not loaded yet
-
-        playAllBtn.addEventListener('click', playAll);
-        stopBtn.addEventListener('click', stopAll);
-        pauseBtn.addEventListener('click', pauseAll);
-        resumeBtn.addEventListener('click', resumeAll);
-
-        loadAudio();
-    }
-
-    function loadAudio() {
-        const words = document.querySelectorAll('.listen-word');
-        audioElements = [];
-
-        words.forEach(word => {
-            const audio = new Audio(word.dataset.audio);
-            audio.playbackRate = AppState.speechRate;
-            audioElements.push(audio);
-        });
-    }
-
-    async function playAll() {
-        isPlayingAll = true;
-        CEFRProgressionEngine.addXP('listen');
-
-        for (const audio of audioElements) {
-            if (!isPlayingAll) break;
-            audio.playbackRate = AppState.speechRate;
-            await audio.play();
-            await new Promise(res => audio.addEventListener('ended', res, { once: true }));
-        }
-    }
-
-    function stopAll() {
-        isPlayingAll = false;
-        audioElements.forEach(a => {
-            a.pause();
-            a.currentTime = 0;
-        });
-    }
-
-    function pauseAll() {
-        isPlayingAll = false;
-        audioElements.forEach(a => a.pause());
-    }
-
-    function resumeAll() {
-        isPlayingAll = true;
-        audioElements.forEach(a => a.play());
-    }
-
-    return { init };
-})();
-
-
-
-/* ============================================================
-   FLASHCARDS ENGINE
-   ============================================================ */
-
-const FlashcardsEngine = (() => {
-
-    const data = {
-        A1: [
-            { front: "Hola", back: "Hello" },
-            { front: "Gracias", back: "Thank you" },
-            { front: "Casa", back: "House" }
-        ],
-        A2: [
-            { front: "Cansado", back: "Tired" },
-            { front: "Rápido", back: "Fast" }
-        ],
-        B1: [
-            { front: "Desafío", back: "Challenge" },
-            { front: "Mejorar", back: "To improve" }
-        ]
-    };
-
-    let index = 0;
-
-    function init() {
-        const card = document.getElementById('flashcard');
-        const nextBtn = document.getElementById('flash-next');
-        const prevBtn = document.getElementById('flash-prev');
-        const flipBtn = document.getElementById('flash-flip');
-
-        if (!card) return;
-
-        nextBtn.addEventListener('click', next);
-        prevBtn.addEventListener('click', prev);
-        flipBtn.addEventListener('click', flip);
-
-        render();
-    }
-
-    function getCards() {
-        return data[AppState.currentLevel] || [];
-    }
-
-    function render() {
-        const card = document.getElementById('flashcard');
-        const cards = getCards();
-        if (!cards.length) {
-            card.innerHTML = `<div class="flash-inner"><div class="flash-front">No cards</div></div>`;
-            return;
-        }
-
-        const { front, back } = cards[index];
-
-        card.innerHTML = `
-            <div class="flash-inner">
-                <div class="flash-front">${front}</div>
-                <div class="flash-back">${back}</div>
-            </div>
-        `;
-    }
-
-    function next() {
-        const cards = getCards();
-        index = (index + 1) % cards.length;
-        render();
-        CEFRProgressionEngine.addXP('flashcards');
-    }
-
-    function prev() {
-        const cards = getCards();
-        index = (index - 1 + cards.length) % cards.length;
-        render();
-    }
-
-    function flip() {
-        const card = document.getElementById('flashcard');
-        card.classList.toggle('flipped');
-    }
-
-    return { init };
-})();
-
-
-
-/* ============================================================
-   QUIZ ENGINE
-   ============================================================ */
-
-const QuizEngine = (() => {
-
-    const data = {
-        A1: [
-            {
-                q: "What does 'Hola' mean?",
-                a: "Hello",
-                options: ["Hello", "Goodbye", "Please"]
-            },
-            {
-                q: "What does 'Gracias' mean?",
-                a: "Thank you",
-                options: ["Thank you", "Sorry", "Good night"]
-            }
-        ],
-        A2: [
-            {
-                q: "What does 'Rápido' mean?",
-                a: "Fast",
-                options: ["Fast", "Slow", "Happy"]
-            }
-        ],
-        B1: [
-            {
-                q: "What does 'Desafío' mean?",
-                a: "Challenge",
-                options: ["Challenge", "Victory", "Effort"]
-            }
-        ]
-    };
-
-    let index = 0;
-    let score = 0;
-
-    function init() {
-        const startBtn = document.getElementById('quiz-start');
-        const area = document.getElementById('quiz-area');
-
-        if (!startBtn || !area) return;
-
-        startBtn.addEventListener('click', start);
-    }
-
-    function start() {
-        index = 0;
-        score = 0;
-        renderQuestion();
-    }
-
-    function getQuestions() {
-        return data[AppState.currentLevel] || [];
-    }
-
-    function renderQuestion() {
-        const area = document.getElementById('quiz-area');
-        const questions = getQuestions();
-
-        if (!questions.length) {
-            area.innerHTML = `<p>No quiz available.</p>`;
-            return;
-        }
-
-        const q = questions[index];
-
-        area.innerHTML = `
-            <div class="quiz-card">
-                <h3>${q.q}</h3>
-                ${q.options.map(opt => `
-                    <button class="quiz-option" data-opt="${opt}">${opt}</button>
-                `).join('')}
-            </div>
-        `;
-
-        document.querySelectorAll('.quiz-option').forEach(btn => {
-            btn.addEventListener('click', () => checkAnswer(btn.dataset.opt));
-        });
-    }
-
-    function checkAnswer(selected) {
-        const questions = getQuestions();
-        const q = questions[index];
-
-        if (selected === q.a) score++;
-
-        index++;
-
-        if (index >= questions.length) {
-            finish();
-        } else {
-            renderQuestion();
-        }
-    }
-
-    function finish() {
-        const area = document.getElementById('quiz-area');
-        const questions = getQuestions();
-        const percent = Math.round((score / questions.length) * 100);
-
-        CEFRProgressionEngine.recordQuizResult(AppState.currentLevel, percent);
-
-        area.innerHTML = `
-            <div class="quiz-card">
-                <h3>Quiz Complete!</h3>
-                <p>Your score: ${percent}%</p>
-            </div>
-        `;
-    }
-
-    return { init };
-})();
-
-
-
-/* ============================================================
-   SENTENCE BUILDER ENGINE
-   ============================================================ */
-
-const BuilderEngine = (() => {
-
-    const data = {
-        A1: {
-            correct: "Yo soy estudiante",
-            words: ["Yo", "soy", "estudiante"]
-        },
-        A2: {
-            correct: "Ella corre rápidamente",
-            words: ["Ella", "corre", "rápidamente"]
-        },
-        B1: {
-            correct: "Quiero mejorar mi español",
-            words: ["Quiero", "mejorar", "mi", "español"]
-        }
-    };
-
-    let selected = [];
-
-    function init() {
-        const area = document.getElementById('builder-area');
-        const checkBtn = document.getElementById('builder-check');
-
-        if (!area || !checkBtn) return;
-
-        renderWords();
-
-        checkBtn.addEventListener('click', checkSentence);
-    }
-
-    function renderWords() {
-        const area = document.getElementById('builder-area');
-        const levelData = data[AppState.currentLevel];
-
-        selected = [];
-
-        area.innerHTML = levelData.words.map(w =>
-            `<button class="builder-word" data-word="${w}">${w}</button>`
-        ).join('');
-
-        document.querySelectorAll('.builder-word').forEach(btn => {
-            btn.addEventListener('click', () => {
-                selected.push(btn.dataset.word);
-                btn.disabled = true;
-            });
-        });
-    }
-
-    function checkSentence() {
-        const levelData = data[AppState.currentLevel];
-        const resultEl = document.getElementById('builder-result');
-
-        const userSentence = selected.join(' ');
-        const correct = levelData.correct;
-
-        const score = userSentence === correct ? 100 : 0;
-
-        CEFRProgressionEngine.recordBuilderResult(AppState.currentLevel, score);
-
-        resultEl.textContent = `Score: ${score}%`;
-    }
-
-    return { init };
-})();
-
-
-
-/* ============================================================
-   CONVERSATION ENGINE
-   ============================================================ */
-
-const ConversationEngine = (() => {
-
-    const prompts = {
-        A1: [
-            "¿Cómo te llamas?",
-            "¿De dónde eres?",
-            "¿Cómo estás?"
-        ],
-        A2: [
-            "¿Qué hiciste ayer?",
-            "Describe tu casa."
-        ],
-        B1: [
-            "¿Cuál es tu mayor desafío aprendiendo español?",
-            "Describe una experiencia inolvidable."
-        ]
-    };
-
-    let index = 0;
-
-    function init() {
-        const area = document.getElementById('conversation-area');
-        const nextBtn = document.getElementById('conversation-next');
-
-        if (!area || !nextBtn) return;
-
-        nextBtn.addEventListener('click', nextPrompt);
-
-        renderPrompt();
-    }
-
-    function getPrompts() {
-        return prompts[AppState.currentLevel] || [];
-    }
-
-    function renderPrompt() {
-        const area = document.getElementById('conversation-area');
-        const list = getPrompts();
-
-        if (!list.length) {
-            area.textContent = "No prompts available.";
-            return;
-        }
-
-        area.textContent = list[index];
-    }
-
-    function nextPrompt() {
-        const list = getPrompts();
-
-        index = (index + 1) % list.length;
-
-        CEFRProgressionEngine.recordConversationPromptCompleted();
-
-        renderPrompt();
-    }
-
-    return { init };
-})();
-
-
-
-/* ============================================================
-   PART 3 INITIALIZER
+   PART 3 INITIALIZER — FIXED
    ============================================================ */
 
 function initPart3() {
@@ -864,7 +430,11 @@ function initPart3() {
     ConversationEngine.init();
 }
 
-window.addEventListener('DOMContentLoaded', initPart3);
+// ❌ REMOVE THIS (it breaks all tabs)
+// window.addEventListener('DOMContentLoaded', initPart3);
+
+// Part 3 is now initialized ONLY by refreshActiveTab() in Part 5
+
 
 /* =========================
    PART 4 — Certificates & Badges
@@ -890,7 +460,9 @@ const CertificatesEngine = (() => {
         const levels = ['A1', 'A2', 'B1'];
 
         area.innerHTML = levels.map(level => {
-            const unlocked = state.currentLevel === level || levels.indexOf(state.currentLevel) > levels.indexOf(level);
+            const unlocked =
+                state.currentLevel === level ||
+                levels.indexOf(state.currentLevel) > levels.indexOf(level);
 
             return `
                 <div class="certificate-card">
@@ -926,20 +498,9 @@ const BadgesEngine = (() => {
 
         const badges = [];
 
-        /* Quiz Master */
-        if (state.quizScores.length >= 3) {
-            badges.push('Quiz Master');
-        }
-
-        /* Sentence Streak */
-        if (state.builderScores.length >= 3) {
-            badges.push('Sentence Streak');
-        }
-
-        /* Conversation Explorer */
-        if (state.conversationCount >= 5) {
-            badges.push('Conversation Explorer');
-        }
+        if (state.quizScores.length >= 3) badges.push('Quiz Master');
+        if (state.builderScores.length >= 3) badges.push('Sentence Streak');
+        if (state.conversationCount >= 5) badges.push('Conversation Explorer');
 
         if (!badges.length) {
             list.innerHTML = `<li>No badges earned yet.</li>`;
@@ -952,10 +513,8 @@ const BadgesEngine = (() => {
     return { init };
 })();
 
-
-
 /* ============================================================
-   PART 4 INITIALIZER
+   PART 4 INITIALIZER — FIXED
    ============================================================ */
 
 function initPart4() {
@@ -963,17 +522,17 @@ function initPart4() {
     BadgesEngine.init();
 }
 
-window.addEventListener('DOMContentLoaded', initPart4);
+// ❌ REMOVE THIS — it breaks all tabs
+// window.addEventListener('DOMContentLoaded', initPart4);
+
+// Part 4 now initializes ONLY when its tab becomes active via refreshActiveTab()
+
 
 /* =========================
    PART 5 — Integration Layer
    ========================= */
 
-/* ----------
-   XP Hook Helpers
-   These allow engines to award XP cleanly.
-   ---------- */
-
+/* XP Hook Helpers */
 function awardListenXP() {
     CEFRProgressionEngine.addXP('listen');
     renderDashboard();
@@ -1000,11 +559,7 @@ function awardConversationXP() {
 }
 
 
-/* ----------
-   Tab-aware Refresh
-   Ensures each tab re-initializes correctly when activated.
-   ---------- */
-
+/* Tab-aware Refresh */
 function refreshActiveTab() {
     switch (AppState.activeTab) {
         case 'dashboard':
@@ -1045,11 +600,7 @@ function refreshActiveTab() {
 }
 
 
-/* ----------
-   Full Refresh
-   Reload CEFR state + update dashboard + refresh active tab.
-   ---------- */
-
+/* Full Refresh */
 function fullRefresh() {
     CEFRProgressionEngine.load();
     renderDashboard();
