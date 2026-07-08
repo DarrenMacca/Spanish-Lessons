@@ -1,80 +1,139 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <title>CEFR Spanish Trainer</title>
-    <link rel="stylesheet" href="style.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <!-- Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
+
+    <!-- CSS -->
+    <link rel="stylesheet" href="styles.css">
+
+    <!-- Libraries for certificate download -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 </head>
 
 <body>
 
-    <!-- ============================
-         GLOBAL DASHBOARD + SUMMARY
-         (NEW ADDITIONS)
-    ============================ -->
+<div class="page-wrapper">
 
-    <div id="dashboard" class="glass"></div>
-    <div id="progress-summary" class="glass"></div>
-    <div id="achievements" class="glass"></div>
-    <div id="daily-summary" class="glass"></div>
-    <div id="recommendations" class="glass"></div>
+  
 
-    <!-- ============================
-         NAVIGATION TABS
-    ============================ -->
-    <div id="nav">
-        <button onclick="showTab('listen')">Listen</button>
-        <button onclick="showTab('flashcards')">Flashcards</button>
-        <button onclick="showTab('build')">Build</button>
-        <button onclick="showTab('sentence')">Sentence</button>
-        <button onclick="showTab('wordbank')">Word Bank</button>
+    <!-- ============================================================
+         MAIN CONTENT AREA
+    ============================================================ -->
+    <main class="main-content">
+
+    <!-- ============================================================
+     DASHBOARD TAB
+============================================================ -->
+<div id="tab-dashboard" style="display:none;">
+
+    <div id="dashboard-content">
+
+        <!-- HERO -->
+        <div class="dashboard-hero"></div>
+
+        <!-- TABS (global navigation) -->
+        <div class="dashboard-tabs">
+            <button class="tab-btn" onclick="showTab('dashboard')">Dashboard</button>
+            <button class="tab-btn" onclick="showTab('listen')">Listen</button>
+            <button class="tab-btn" onclick="showTab('flashcards')">Flashcards</button>
+            <button class="tab-btn" onclick="showTab('build')">Build</button>
+            <button class="tab-btn" onclick="showTab('sentence')">Sentence</button>
+            <button class="tab-btn" onclick="showTab('conversation')">Conversation</button>
+            <button class="tab-btn" onclick="showTab('certificates')">Certificates</button>
+        </div>
+
+        <!-- CONTROLS -->
+        <div class="dashboard-controls"></div>
+
+        <!-- TILE GRID -->
+        <div class="dashboard-row"></div>
+
+        <!-- BADGES -->
+        <div class="dashboard-badges"></div>
+
+        <!-- PROMOTED BADGES -->
+        <div class="dashboard-promoted-badges"></div>
+
+        <!-- CERTIFICATES -->
+        <div class="dashboard-certificates-preview"></div>
+
+        <!-- SUMMARY -->
+        <div id="progress-summary" class="dashboard-summary"></div>
+
     </div>
 
-    <!-- ============================
-         LISTEN TAB
-    ============================ -->
-    <div id="tab-listen" class="tab glass">
-        <h2>Listen</h2>
-        <div id="listen-content"></div>
-    </div>
+</div>
 
-    <!-- ============================
-         FLASHCARDS TAB
-    ============================ -->
-    <div id="tab-flashcards" class="tab glass">
-        <h2>Flashcards</h2>
-        <div id="flashcards-content"></div>
-    </div>
 
-    <!-- ============================
-         BUILD TAB
-    ============================ -->
-    <div id="tab-build" class="tab glass">
-        <h2>Build a Sentence</h2>
-        <div id="build-content"></div>
-    </div>
 
-    <!-- ============================
-         SENTENCE TAB
-    ============================ -->
-    <div id="tab-sentence" class="tab glass">
-        <h2>Sentence Practice</h2>
-        <div id="sentence-content"></div>
-    </div>
 
-    <!-- ============================
-         WORD BANK TAB
-    ============================ -->
-    <div id="tab-wordbank" class="tab glass">
-        <h2>Word Bank</h2>
-        <div id="wordbank-content"></div>
-    </div>
 
-    <!-- ============================
-         JAVASCRIPT ENGINE
-    ============================ -->
-    <script src="app.js"></script>
+
+        <!-- ============================================================
+             LISTEN TAB
+        ============================================================ -->
+        <div id="tab-listen" style="display:none;">
+            <div id="listen-categories"></div>
+        </div>
+
+        <!-- ============================================================
+             FLASHCARDS TAB
+        ============================================================ -->
+        <div id="tab-flashcards" style="display:none;">
+            <div id="flashcards-content"></div>
+        </div>
+
+        <!-- ============================================================
+             BUILD TAB
+        ============================================================ -->
+        <div id="tab-build" style="display:none;">
+            <div id="build-content"></div>
+        </div>
+
+        <!-- ============================================================
+             SENTENCE TAB
+        ============================================================ -->
+        <div id="tab-sentence" style="display:none;">
+            <div id="sentence-content"></div>
+        </div>
+
+        <!-- ============================================================
+             CONVERSATION TAB
+        ============================================================ -->
+        <div id="tab-conversation" style="display:none;">
+            <div id="conversation-content"></div>
+        </div>
+
+        <!-- ============================================================
+             CERTIFICATES TAB
+        ============================================================ -->
+        <div id="tab-certificates" style="display:none;">
+            <div id="certificates-content"></div>
+        </div>
+
+    </main>
+
+    <!-- ============================================================
+         OPTIONAL FOOTER
+    ============================================================ -->
+    <footer class="footer glass-card">
+        <p>CEFR Spanish Trainer — Built with ❤️ by Macca</p>
+        <p>All progress is saved locally on your device.</p>
+    </footer>
+
+</div> <!-- end page-wrapper -->
+
+<!-- ============================================================
+     MAIN JAVASCRIPT FILE
+============================================================ -->
+<script src="app.js"></script>
 
 </body>
+
 </html>
