@@ -1,883 +1,305 @@
 /* ============================================================
-   GLOBAL + RESET
+   GLOBAL BASE
 ============================================================ */
 
 body {
+    font-family: "Inter", system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+    background: radial-gradient(circle at top left, #0ea5e9 0%, #0f172a 40%, #020617 100%);
     margin: 0;
     padding: 0;
-    font-family: 'Inter', sans-serif;
-    background: linear-gradient(135deg, #0f172a, #1e293b);
-    color: #ffffff;
+    color: #e5e7eb;
 }
 
-h2, h3, h4 {
-    margin: 0 0 12px 0;.dashboard-row    font-weight: 700;
-}
-
-/* Glassmorphism base */
-.glass-card {
-    background: rgba(255,255,255,0.20);
-    backdrop-filter: blur(12px);
-    border-radius: 16px;
-    padding: 20px;
-    border: 1px solid rgba(255,255,255,0.28);
-    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
-    transition: transform 0.2s ease, box-shadow 0.2s ease;
-}
-
-.glass-card:hover {
-    transform: translateY(-3px);
-    box-shadow: 0 8px 20px rgba(0,0,0,0.25);
-}
-
-/* Neon glow */
-.neon-glow {
-    filter: drop-shadow(0 0 6px rgba(255,255,255,0.45));
-}
-
-/* Pill buttons */
-.pill-btn {
-    background: rgba(255,255,255,0.22);
-    border: 1px solid rgba(255,255,255,0.32);
-    color: #f8faff;
-    font-weight: 500;
-    letter-spacing: 0.3px;
-    padding: 10px 18px;
-    border-radius: 30px;
-    backdrop-filter: blur(6px);
-    cursor: pointer;
-    font-size: 15px;
-    transition: 0.25s ease;
-}
-
-.pill-btn:hover {
-    background: rgba(255,255,255,0.35);
-    transform: translateY(-2px);
+h2, h3 {
+    margin-top: 0;
 }
 
 /* ============================================================
-   TAB ANIMATION
+   HEADER + NAV
 ============================================================ */
 
-.tab-active {
-    animation: fadeIn 0.4s ease;
-}
-
-@keyframes fadeIn {
-    from { opacity: 0; transform: translateY(6px); }
-    to { opacity: 1; transform: translateY(0); }
-}
-
-/* ============================================================
-   DASHBOARD — CONTAINER + RESPONSIVE LAYOUT
-============================================================ */
-
-/* MAIN CONTAINER */
-#dashboard-content {
-    width: 100%;
-    max-width: 1100px;
-    margin: 0 auto;
-    padding: 0 16px;
-}
-
-/* ============================================================
-   MOBILE (portrait phones)
-============================================================ */
-@media (max-width: 480px) {
-
-    #dashboard-content {
-        max-width: 100%;
-        padding: 0 12px;
-    }
-
-    /* All tile grids collapse to 1 column */
-    .dashboard-row,
-    .dashboard-badges,
-    .dashboard-promoted-badges,
-    .dashboard-certificates-preview,
-    .dashboard-summary {
-        display: grid;
-        grid-template-columns: 1fr;
-        gap: 20px;
-        margin-bottom: 24px;
-    }
-
-    .dashboard-hero-img {
-        max-width: 100%;
-    }
-}
-
-/* ============================================================
-   TABLET (landscape phones + tablets)
-============================================================ */
-@media (max-width: 900px) {
-
-    #dashboard-content {
-        max-width: 700px;
-        padding: 0 16px;
-    }
-
-    /* Medium tiles for tablet */
-    .dashboard-row,
-    .dashboard-badges,
-    .dashboard-promoted-badges,
-    .dashboard-certificates-preview,
-    .dashboard-summary {
-        display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
-        gap: 20px;
-        margin-bottom: 24px;
-    }
-}
-
-/* ============================================================
-   DESKTOP
-============================================================ */
-@media (min-width: 901px) {
-
-    #dashboard-content {
-        max-width: 1100px;
-        padding: 0 20px;
-    }
-
-    /* Full-size tiles for desktop */
-    .dashboard-row,
-    .dashboard-badges,
-    .dashboard-promoted-badges,
-    .dashboard-certificates-preview,
-    .dashboard-summary {
-        display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-        gap: 20px;
-        margin-bottom: 24px;
-    }
-}
-
-/* ============================================================
-   HERO SECTION
-============================================================ */
-
-.dashboard-hero {
-    width: 100%;
-    min-height: 200px;
-    margin-bottom: 24px;
-}
-
-.hero-card {
-    background: rgba(255,255,255,0.16);
-    border-radius: 24px;
-    border: 1px solid rgba(255,255,255,0.35);
-    box-shadow: 0 18px 45px rgba(15,23,42,0.55);
-    backdrop-filter: blur(18px);
+header {
     padding: 20px;
     text-align: center;
-}
-
-.dashboard-hero-img {
-    width: 100%;
-    max-width: 420px;
-    border-radius: 18px;
-    opacity: 0.95;
-}
-
-/* ============================================================
-   TABS (below hero, above controls)
-============================================================ */
-
-.dashboard-tabs {
-    display: flex;
-    justify-content: center;
-    gap: 12px;
-
-    padding: 16px 0;     /* gap above and below tabs */
-    margin-bottom: 24px; /* gap before controls */
-}
-
-/* Tab buttons */
-.tab-btn {
-    background: rgba(255,255,255,0.18);
-    border: 1px solid rgba(255,255,255,0.28);
-    padding: 10px 18px;
-    border-radius: 12px;
-    color: #fff;
-    cursor: pointer;
-    font-size: 15px;
-    backdrop-filter: blur(12px);
-    transition: all 0.25s ease;
-}
-
-.tab-btn:hover {
-    background: rgba(255,255,255,0.28);
-    box-shadow: 0 0 12px rgba(0,140,255,0.35);
-}
-
-/* ============================================================
-   TILE GRID — ALL TILE SECTIONS
-============================================================ */
-
-.dashboard-row,
-.dashboard-badges,
-.dashboard-promoted-badges,
-.dashboard-certificates-preview,
-.dashboard-summary {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-    gap: 20px;
-    margin-bottom: 24px;
-}
-
-/* ============================================================
-   CERTIFICATE GRID (INSIDE CERTIFICATE TILE)
-============================================================ */
-
-.certificate-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
-    gap: 16px;
-    margin-top: 12px;
-}
-
-/* Make certificate tiles match all other dashboard tiles */
-.certificate-item {
-    padding: 16px;
-
-    background: rgba(255,255,255,0.18) !important;
-    backdrop-filter: blur(18px) saturate(180%) !important;
-    border: 1px solid rgba(255,255,255,0.28) !important;
-
-    box-shadow:
-        0 4px 12px rgba(0,0,0,0.18),
-        0 0 12px rgba(0,140,255,0.25) !important;
-
-    border-radius: 18px;
-
-    padding: 16px;
-}
-
-/* Mini progress bars inside certificate tiles */
-.cert-progress p {
-    margin: 4px 0;
-    font-size: 14px;
-    opacity: 0.85;
-    color: #ffffff;
-}
-
-.cert-bar-wrapper {
-    width: 100%;
-    height: 10px;
-    background: rgba(255,255,255,0.20);
-    border-radius: 999px;
-    overflow: hidden;
-    margin-top: 6px;
-}
-
-.cert-bar {
-    height: 100%;
-    border-radius: 999px;
-    transition: width 0.3s ease, background 0.3s ease;
-}
-
-
-/* ============================================================
-   TILE CARD — BEAUTIFUL GLASS + NEON
-============================================================ */
-.tile-card,
-.glass-card {
-    background: rgba(255,255,255,0.18);
-    backdrop-filter: blur(18px) saturate(180%);
-    -webkit-backdrop-filter: blur(18px) saturate(180%);
-    border-radius: 24px;
-
-    border: 1px solid rgba(255,255,255,0.28);
-    box-shadow:
-        0 4px 12px rgba(0,0,0,0.18),
-        0 0 12px rgba(0,140,255,0.25);
-
-    padding: 20px;
-    text-align: center;
-    transition: transform 0.25s ease, box-shadow 0.25s ease;
-}
-
-/* Hover lift */
-.tile-card:hover,
-.glass-card:hover {
-    transform: translateY(-4px);
-    box-shadow:
-        0 6px 18px rgba(0,0,0,0.22),
-        0 0 18px rgba(0,140,255,0.35);
-}
-
-/* Neon glow accent */
-.neon-glow {
-    box-shadow:
-        0 0 12px rgba(0,255,255,0.55),
-        inset 0 0 8px rgba(0,255,255,0.35);
-}
-
-/* ============================================================
-   ICONS
-============================================================ */
-.dash-icon {
-    width: 48px;
-    height: 48px;
-    margin-bottom: 10px;
-    opacity: 0.95;
-    filter: drop-shadow(0 0 4px rgba(0,140,255,0.4));
-}
-
-/* ============================================================
-   LABELS
-============================================================ */
-.dash-label {
-    font-size: 15px;
-    font-weight: 600;
-    opacity: 0.9;
-    margin-bottom: 8px;
-    color: #ffffff;
-    text-shadow: 0 0 4px rgba(0,140,255,0.4);
-}
-
-/* ============================================================
-   VALUES
-============================================================ */
-.dash-value {
-    font-size: 24px;
+    font-size: 26px;
     font-weight: 700;
-    color: #ffffff;
-    margin-top: 4px;
+    color: #f9fafb;
 }
 
-/* ============================================================
-   XP BAR
-============================================================ */
-.xp-bar-wrapper {
-    width: 100%;
-    height: 14px;
-    background: rgba(255,255,255,0.15);
-    border-radius: 999px;
-    overflow: hidden;
-    margin: 10px 0;
-}
-
-.xp-bar {
-    height: 100%;
-    background: linear-gradient(90deg, #38bdf8, #0ea5e9);
-    border-radius: 999px;
-    transition: width 0.3s ease;
-}
-
-.xp-text {
-    font-size: 14px;
-    opacity: 0.85;
-}
-
-/* ============================================================
-   BADGE GRID
-============================================================ */
-.badge-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
-    gap: 12px;
-}
-
-.badge-item {
-    background: rgba(255,255,255,0.16);
-    border-radius: 16px;
-    padding: 12px;
-    text-align: center;
-    font-size: 14px;
-    opacity: 0.9;
-    color: #ffffff;
-    backdrop-filter: blur(10px);
-}
-
-/* ============================================================
-   DASHBOARD CONTROLS
-============================================================ */
-.dashboard-controls {
-    margin-top: 20px;
-    margin-bottom: 24px;
-    display: flex;
-    flex-wrap: wrap;
-    gap: 20px;
-    text-align: center;
-    align-items: center;
-    justify-content: center;
-    max-width: 600px;
-    margin-left: auto;
-    margin-right: auto;
-}
-
-.control-block {
-    flex: 1;
-    min-width: 220px;
-}
-
-.control-block label {
-    display: block;
-    margin-bottom: 6px;
-    font-size: 14px;
-    opacity: 0.85;
-    color: #ffffff;
-}
-
-.control-block select,
-.control-block input[type="range"],
-.control-block input[type="text"] {
-    width: 100%;
-    padding: 8px 12px;
-    border-radius: 999px;
-    border: 1px solid rgba(255,255,255,0.35);
-    background: rgba(255,255,255,0.20);
-    color: #ffffff;
-    backdrop-filter: blur(6px);
-}
-
-/* ============================================================
-   BADGES (Missing classes added)
-============================================================ */
-
-.badge-title {
-    margin-top: 20px;
-    margin-bottom: 10px;
-    font-size: 20px;
-}
-
-.badge-row {
+nav {
     display: flex;
     flex-wrap: wrap;
     gap: 10px;
+    padding: 12px 20px;
+    justify-content: center;
 }
 
-.badge-item {
+nav button {
+    padding: 10px 18px;
+    border-radius: 999px;
+    border: none;
+    background: rgba(15, 23, 42, 0.6);
+    color: #e5e7eb;
+    cursor: pointer;
+    backdrop-filter: blur(12px);
+    box-shadow: 0 0 0 1px rgba(148, 163, 184, 0.4);
+    transition: background 0.2s ease, transform 0.1s ease;
+}
+
+nav button:hover {
+    background: rgba(56, 189, 248, 0.6);
+    transform: translateY(-1px);
+}
+
+/* ============================================================
+   TAB CONTAINERS
+============================================================ */
+
+.tab {
+    display: none;
+    padding: 20px;
+}
+
+/* ============================================================
+   GLASS CARDS
+============================================================ */
+
+.glass-card {
+    background: rgba(15, 23, 42, 0.6);
+    border-radius: 18px;
+    padding: 18px;
+    backdrop-filter: blur(18px);
+    box-shadow: 0 18px 40px rgba(15, 23, 42, 0.7);
+    border: 1px solid rgba(148, 163, 184, 0.4);
+    margin-bottom: 20px;
+}
+
+/* ============================================================
+   PILL BUTTONS
+============================================================ */
+
+.pill-btn {
+    border-radius: 999px;
+    border: none;
     padding: 8px 14px;
-    border-radius: 12px;
-    background: rgba(255,255,255,0.20);
-    border: 1px solid rgba(255,255,255,0.28);
-    color: #fff;
-    text-align: center;
+    background: rgba(56, 189, 248, 0.7);
+    color: #0f172a;
+    cursor: pointer;
     font-size: 14px;
+    margin: 2px;
+    transition: background 0.2s ease, transform 0.1s ease;
 }
 
-.badge-item.unlocked {
-    background: rgba(34,197,94,0.35);
-    border-color: rgba(34,197,94,0.55);
-    box-shadow: 0 0 10px rgba(34,197,94,0.45);
+.pill-btn:hover {
+    background: rgba(56, 189, 248, 1);
+    transform: translateY(-1px);
+}
+
+/* ============================================================
+   DASHBOARD
+============================================================ */
+
+#dashboard-content .badge-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-top: 10px;
+}
+
+.badge-pill {
+    border-radius: 999px;
+    padding: 6px 12px;
+    font-size: 13px;
+    border: 1px solid rgba(148, 163, 184, 0.6);
+}
+
+.badge-on {
+    background: rgba(34, 197, 94, 0.3);
+}
+
+.badge-off {
+    background: rgba(148, 163, 184, 0.2);
+}
+
+.level-selector,
+.audio-speed,
+.cert-name {
+    margin-top: 10px;
+}
+
+.level-selector select,
+.cert-name input {
+    border-radius: 999px;
+    border: 1px solid rgba(148, 163, 184, 0.6);
+    padding: 6px 10px;
+    background: rgba(15, 23, 42, 0.8);
+    color: #e5e7eb;
 }
 
 /* ============================================================
    LISTEN TAB
 ============================================================ */
 
-#tab-listen {
-    padding: 24px;
-    border-radius: 22px;
-}
-
 .listen-section {
-    margin-bottom: 20px;
+    margin-bottom: 16px;
 }
 
 .listen-header {
     display: flex;
     justify-content: space-between;
+    cursor: pointer;
+    font-weight: 600;
+    margin-bottom: 8px;
+}
+
+.listen-body {
+    margin-top: 8px;
+}
+
+.listen-row {
+    display: flex;
+    justify-content: space-between;
     align-items: center;
-    cursor: pointer;
-    padding: 12px 16px;
-    border-radius: 14px;
-    background: rgba(255,255,255,0.20);
-    border: 1px solid rgba(255,255,255,0.28);
-    backdrop-filter: blur(10px);
+    padding: 6px 0;
+    border-bottom: 1px solid rgba(148, 163, 184, 0.3);
 }
 
-.listen-header h3 {
-    margin: 0;
-    font-size: 20px;
+.listen-row:last-child {
+    border-bottom: none;
 }
 
-.listen-arrow {
-    font-size: 18px;
-    opacity: 0.8;
+.audio-controls {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 4px;
 }
 
-.listen-content {
-    display: none;
-    padding: 16px;
-}
+/* ============================================================
+   FLASHCARDS GRID
+============================================================ */
 
-.listen-content.open {
-    display: block;
-    animation: fadeIn 0.35s ease;
-}
-
-/* Missing class added */
-.listen-word-grid {
+.flash-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
-    gap: 14px;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: 16px;
 }
 
-.listen-word {
-    padding: 12px;
-    border-radius: 14px;
-    background: rgba(255,255,255,0.22);
-    border: 1px solid rgba(255,255,255,0.32);
-    text-align: center;
+.flashcard {
+    position: relative;
+    height: 140px;
+    perspective: 1000px;
     cursor: pointer;
-    transition: 0.25s ease;
 }
 
-.listen-word:hover {
-    background: rgba(255,255,255,0.35);
-    transform: translateY(-2px);
+.flashcard .front,
+.flashcard .back {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    backface-visibility: hidden;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    transition: transform 0.6s ease;
+}
+
+.flashcard .front {
+    transform: rotateY(0deg);
+}
+
+.flashcard .back {
+    transform: rotateY(180deg);
+}
+
+.flashcard.flipped .front {
+    transform: rotateY(180deg);
+}
+
+.flashcard.flipped .back {
+    transform: rotateY(0deg);
 }
 
 /* ============================================================
    BUILD TAB
 ============================================================ */
 
-#tab-build {
-    padding: 24px;
-    border-radius: 22px;
-}
-
-.build-card {
-    margin-bottom: 20px;
-}
-
-.build-english {
-    font-size: 18px;
-    margin-bottom: 12px;
+.build-card .build-english {
+    font-size: 16px;
+    margin-bottom: 10px;
 }
 
 .build-selected {
-    min-height: 40px;
-    padding: 10px;
+    min-height: 30px;
+    padding: 8px;
     border-radius: 999px;
-    border: 1px dashed rgba(255,255,255,0.35);
-    margin-bottom: 14px;
+    border: 1px dashed rgba(148, 163, 184, 0.6);
+    margin-bottom: 10px;
 }
 
-/* Missing class added */
-.build-word-grid {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 10px;
+.build-words {
+    margin-bottom: 10px;
 }
 
 .build-input-row {
-    margin-top: 14px;
     display: flex;
-    gap: 10px;
+    gap: 8px;
+    margin-top: 8px;
 }
 
 .build-input-row input {
     flex: 1;
-    padding: 10px 14px;
     border-radius: 999px;
-    border: 1px solid rgba(255,255,255,0.35);
-    background: rgba(255,255,255,0.20);
-    color: #ffffff;
+    border: 1px solid rgba(148, 163, 184, 0.6);
+    padding: 6px 10px;
+    background: rgba(15, 23, 42, 0.8);
+    color: #e5e7eb;
 }
 
 /* ============================================================
    SENTENCE TAB
 ============================================================ */
 
-#tab-sentence {
-    padding: 24px;
-    border-radius: 22px;
-}
-
-.sentence-card {
-    margin-bottom: 20px;
-}
-
-/* Missing classes added */
-.sentence-english {
-    font-size: 18px;
-    margin-bottom: 12px;
+.sentence-card .sentence-english {
+    margin-bottom: 10px;
 }
 
 .sentence-options {
     display: flex;
     flex-direction: column;
-    gap: 10px;
-}
-
-.sentence-option {
-    width: 100%;
+    gap: 6px;
 }
 
 /* ============================================================
    CONVERSATION TAB
 ============================================================ */
 
-#tab-conversation {
-    padding: 24px;
-    border-radius: 22px;
-}
-
-.conversation-card {
-    margin-bottom: 20px;
-}
-
-/* Missing class added */
-.conversation-english {
+.conversation-card pre {
     white-space: pre-wrap;
-    font-size: 16px;
-    margin-bottom: 12px;
+    background: rgba(15, 23, 42, 0.7);
+    border-radius: 12px;
+    padding: 10px;
+    font-size: 14px;
 }
 
 .conversation-answer {
-    margin-top: 14px;
+    margin-top: 10px;
 }
 
 .conversation-answer textarea {
     width: 100%;
     border-radius: 12px;
-    border: 1px solid rgba(255,255,255,0.35);
-    padding: 10px;
-    background: rgba(255,255,255,0.20);
-    color: #ffffff;
+    border: 1px solid rgba(148, 163, 184, 0.6);
+    padding: 8px;
+    background: rgba(15, 23, 42, 0.8);
+    color: #e5e7eb;
 }
 
 /* ============================================================
-   FLASHCARDS TAB
+   CERTIFICATES TAB
 ============================================================ */
 
-#tab-flashcards {
-    padding: 24px;
-    border-radius: 22px;
-}
-
-.flashcard-section {
-    margin-bottom: 20px;
-}
-
-.flashcard-header {
-    padding: 10px 14px;
-    border-radius: 14px;
-    background: rgba(255,255,255,0.20);
-    border: 1px solid rgba(255,255,255,0.28);
-    margin-bottom: 12px;
-}
-
-.flashcard-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
-    gap: 16px;
-}
-
-/* Flashcard base */
-.flashcard {
-    width: 100%;
-    height: 120px;
-    perspective: 800px;
-    cursor: pointer;
-}
-
-.flashcard-inner {
-    width: 100%;
-    height: 100%;
-    border-radius: 14px;
-    background: rgba(255,255,255,0.22);
-    border: 1px solid rgba(255,255,255,0.32);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    transition: transform 0.6s;
-    transform-style: preserve-3d;
-}
-
-.flashcard.flipped .flashcard-inner {
-    transform: rotateY(180deg);
-}
-
-.flashcard-text {
-    font-size: 18px;
-    font-weight: 600;
-    backface-visibility: hidden;
-}
-
-/* Back side */
-.flashcard.flipped .flashcard-text {
-    transform: rotateY(180deg);
-}
-
-/* Missing class added */
-.no-flashcards {
-    opacity: 0.8;
-    font-size: 14px;
-    padding: 10px;
-    text-align: center;
-}
-
-/* ============================================================
-   CERTIFICATES TAB — MAIN
-============================================================ */
-
-#tab-certificates {
-    padding: 24px;
-    border-radius: 22px;
-}
-
-.certificate-preview {
-    background: rgba(255,255,255,0.20);
-    backdrop-filter: blur(12px);
-    border-radius: 16px;
-    padding: 20px;
-    margin-bottom: 22px;
-    border: 1px solid rgba(255,255,255,0.28);
-    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
-    transition: transform 0.2s ease, box-shadow 0.2s ease;
-}
-
-.certificate-preview:hover {
-    transform: translateY(-3px);
-    box-shadow: 0 8px 20px rgba(0,0,0,0.25);
-}
-
-.certificate-unlocked {
-    background: rgba(34,197,94,0.25);
-    border-color: rgba(34,197,94,0.55);
-    box-shadow: 0 0 12px rgba(34,197,94,0.45);
-}
-
-.cert-id {
-    margin-top: 10px;
-    font-size: 14px;
-    color: #f0f4ff;
-}
-
-/* QR box */
-.cert-qr img {
-    margin-top: 12px;
-    border-radius: 12px;
-}
-
-/* Download button */
-.cert-download-btn {
-    margin-top: 14px;
-    padding: 10px 18px;
-    border-radius: 30px;
-    background: rgba(255,255,255,0.25);
-    border: 1px solid rgba(255,255,255,0.35);
-    backdrop-filter: blur(6px);
-    cursor: pointer;
-    font-size: 15px;
-    color: #ffffff;
-    transition: 0.25s ease;
-}
-
-.cert-download-btn:hover {
-    background: rgba(255,255,255,0.35);
-    transform: translateY(-2px);
-}
-
-/* ============================================================
-   CERTIFICATE GALLERY
-============================================================ */
-
-.cert-gallery {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
-    gap: 16px;
-    margin-top: 20px;
-}
-
-.cert-gallery-item {
-    background: rgba(255,255,255,0.20);
-    border-radius: 14px;
-    padding: 14px;
-    text-align: center;
-    border: 1px solid rgba(255,255,255,0.28);
-    color: #ffffff;
-    transition: 0.25s ease;
-}
-
-.cert-gallery-item.locked {
-    opacity: 0.5;
-}
-
-.cert-gallery-item:hover {
-    transform: translateY(-2px);
-}
-
-/* Refresh button row */
-.cert-btn-row {
-    margin-top: 20px;
-    text-align: center;
-}
-
-.cert-btn {
-    padding: 10px 18px;
-    border-radius: 30px;
-    background: rgba(255,255,255,0.25);
-    border: 1px solid rgba(255,255,255,0.35);
-    backdrop-filter: blur(6px);
-    cursor: pointer;
-    font-size: 15px;
-    color: #ffffff;
-    transition: 0.25s ease;
-}
-
-.cert-btn:hover {
-    background: rgba(255,255,255,0.35);
-    transform: translateY(-2px);
-}
-
-/* ============================================================
-   CELEBRATION POPUP
-============================================================ */
-
-.celebration-popup {
-    position: fixed;
-    top: 20px;
-    right: 20px;
-    background: rgba(255,255,255,0.25);
-    border: 1px solid rgba(255,255,255,0.35);
-    backdrop-filter: blur(10px);
-    padding: 14px 20px;
-    border-radius: 14px;
-    color: #ffffff;
-    font-size: 16px;
-    opacity: 0;
-    transform: translateY(-10px);
-    transition: opacity 0.4s ease, transform 0.4s ease;
-    z-index: 9999;
-}
-
-.celebration-popup.show {
-    opacity: 1;
-    transform: translateY(0);
-}
-
-/* ============================================================
-   CONFETTI
-============================================================ */
-
-.confetti-container {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    pointer-events: none;
-    z-index: 9998;
-}
-
-.confetti-piece {
-    position: absolute;
-    width: 10px;
-    height: 10px;
-    border-radius: 2px;
-    animation: confettiFall 1.4s linear forwards;
-}
-
-@keyframes confettiFall {
-    from { transform: translateY(-20px); opacity: 1; }
-    to { transform: translateY(120vh); opacity: 0; }
+.cert-card p {
+    margin-bottom: 8px;
 }
 
 /* ============================================================
@@ -887,27 +309,4 @@ h2, h3, h4 {
 #progress-summary {
     padding: 10px 20px;
     font-size: 14px;
-    line-height: 1.6;
-}
-
-/* ============================================================
-   HERO IMAGE (Dashboard + Certificates)
-============================================================ */
-
-.hero-image,
-.dashboard-hero-img {
-    width: 100%;
-    height: auto;
-    object-fit: cover;
-    opacity: 0.9;
-    border-radius: 18px;
-}
-
-/* ============================================================
-   SMALL HERO (optional)
-============================================================ */
-
-.small-hero {
-    max-height: 220px;
-    overflow: hidden;
 }
