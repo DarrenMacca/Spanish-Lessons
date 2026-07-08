@@ -1,44 +1,4 @@
 /* ============================================================
-   SABINA VOICE (es-MX)
-============================================================ */
-
-let sabinaVoice = null;
-
-function loadSabinaVoice() {
-    const voices = speechSynthesis.getVoices();
-
-    sabinaVoice =
-        voices.find(v => v.lang === "es-MX") ||      // Microsoft Sabina (Chrome/Edge)
-        voices.find(v => v.lang === "es-US") ||      // fallback Spanish US
-        voices.find(v => v.lang === "es-419") ||     // fallback Latin America
-        voices.find(v => v.lang.startsWith("es")) || // any Spanish voice
-        voices[0];                                   // absolute fallback
-}
-
-speechSynthesis.onvoiceschanged = loadSabinaVoice;
-
-
-
-/* ============================================================
-   GLOBAL SPEAK FUNCTION (uses Sabina)
-============================================================ */
-
-function speakSpanish(text) {
-    const utter = new SpeechSynthesisUtterance(text);
-    utter.lang = "es-MX";
-    utter.rate = parseFloat(document.getElementById("audio-speed").value);
-
-    if (sabinaVoice) {
-        utter.voice = sabinaVoice;
-    }
-
-    speechSynthesis.cancel();
-    speechSynthesis.speak(utter);
-}
-
-
-
-/* ============================================================
    CEFR WORD BANK (A1 → B2)
 ============================================================ */
 
@@ -198,16 +158,34 @@ const CEFR_WORDS = [
 ];
 
 /* ============================================================
-   AUDIO SYSTEM
+   AUDIO SYSTEM (FILES + LATAM SABINA TTS)
 ============================================================ */
 
 let AUDIO_RATE = 1.0;
 let currentAudio = null;
+let sabinaVoice = null;
+
+function initVoices() {
+    const voices = speechSynthesis.getVoices();
+    sabinaVoice = voices.find(v =>
+        v.lang.toLowerCase().startsWith("es-mx") ||
+        v.name.toLowerCase().includes("sabina")
+    ) || voices.find(v => v.lang.toLowerCase().startsWith("es"));
+}
+if (typeof speechSynthesis !== "undefined") {
+    speechSynthesis.onvoiceschanged = initVoices;
+    initVoices();
+}
 
 function playFileAudio(filename) {
-    stopFileAudio();
-    currentAudio = new Audio(`audio/${filename}`);
-    currentAudio.play();
+    if (currentAudio) {
+        currentAudio.pause();
+        currentAudio = null;
+    }
+    const audio = new Audio(`audio/${filename}`);
+    audio.playbackRate = AUDIO_RATE;
+    audio.play();
+    currentAudio = audio;
 }
 
 function pauseFileAudio() {
@@ -249,13 +227,6 @@ const WORD_PROGRESS = CEFR_WORDS.map((w, index) => ({
     mastery: 0
 }));
 
-// Simple SRS data aligned with WORD_PROGRESS
-let SRS_DATA = WORD_PROGRESS.map(w => ({
-    id: w.id,
-    interval: 1, // days
-    nextReview: Date.now()
-}));
-
 const PROGRESS_KEY = "cefr_progress_v2";
 const DAILY_KEY = "cefr_daily_v2";
 const SRS_KEY = "cefr_srs_v2";
@@ -267,13 +238,20 @@ let dailyData = {
     goal: 50
 };
 
+const SRS_DATA = WORD_PROGRESS.map(w => ({
+    id: w.id,
+    nextReview: Date.now(),
+    interval: 1
+}));
+
 function loadProgress() {
     const raw = localStorage.getItem(PROGRESS_KEY);
     if (!raw) return;
     try {
         const saved = JSON.parse(raw);
-        WORD_PROGRESS.forEach((w, i) => {
-            if (saved[i]) w.mastery = saved[i].mastery || 0;
+        saved.forEach(s => {
+            const target = WORD_PROGRESS.find(w => w.id === s.id);
+            if (target) target.mastery = s.mastery;
         });
     } catch {}
 }
@@ -285,7 +263,10 @@ function saveProgress() {
 function loadDaily() {
     const raw = localStorage.getItem(DAILY_KEY);
     if (!raw) return;
-    try { dailyData = { ...dailyData, ...JSON.parse(raw) }; } catch {}
+    try {
+        const saved = JSON.parse(raw);
+        dailyData = { ...dailyData, ...saved };
+    } catch {}
 }
 
 function saveDaily() {
@@ -297,10 +278,11 @@ function loadSRS() {
     if (!raw) return;
     try {
         const saved = JSON.parse(raw);
-        SRS_DATA.forEach((s, i) => {
-            if (saved[i]) {
-                s.interval = saved[i].interval;
-                s.nextReview = saved[i].nextReview;
+        saved.forEach(s => {
+            const t = SRS_DATA.find(x => x.id === s.id);
+            if (t) {
+                t.nextReview = s.nextReview;
+                t.interval = s.interval;
             }
         });
     } catch {}
@@ -310,152 +292,9 @@ function saveSRS() {
     localStorage.setItem(SRS_KEY, JSON.stringify(SRS_DATA));
 }
 
-/* ============================================================
-   BADGES SYSTEM
-============================================================ */
-
-let badges = {
-    conversationBeginner: false,
-    conversationSpeaker: false
-};
-
-const BADGES_KEY = "cefr_badges_v1";
-
-function loadBadges() {
-    const raw = localStorage.getItem(BADGES_KEY);
-    if (!raw) return;
-    try {
-        badges = { ...badges, ...JSON.parse(raw) };
-    } catch {}
-}
-
-function saveBadges() {
-    localStorage.setItem(BADGES_KEY, JSON.stringify(badges));
-}
-
-function renderBadges() {
-    const container = document.getElementById("badges-content");
-    if (!container) return;
-
-    container.innerHTML = `
-        <div class="badge-list">
-            <div class="badge-item ${badges.conversationBeginner ? "unlocked" : ""}">
-                Conversational Beginner
-            </div>
-            <div class="badge-item ${badges.conversationSpeaker ? "unlocked" : ""}">
-                Conversational Speaker
-            </div>
-        </div>
-    `;
-}
-
-/* ============================================================
-   BADGE CELEBRATION
-============================================================ */
-
-function launchCelebration() {
-    console.log("🎉 Celebration triggered!");
-}
-
-// Conversation stats for badge logic
-let conversationStats = {
-    correct: 0,
-    attempts: 0
-};
-
-function checkConversationBadges() {
-
-    if (conversationStats.correct >= 10 && !badges.conversationBeginner) {
-        badges.conversationBeginner = true;
-        saveBadges();
-        renderBadges();
-        launchCelebration();
-        speakSpanish("Nuevo logro desbloqueado");
-    }
-
-    if (conversationStats.correct >= 50 && !badges.conversationSpeaker) {
-        badges.conversationSpeaker = true;
-        saveBadges();
-        renderBadges();
-        launchCelebration();
-        speakSpanish("Nuevo logro desbloqueado");
-    }
-}
-
-/* ============================================================
-   CERTIFICATE SYSTEM
-============================================================ */
-
-let certificates = {
-    a1: false,
-    a2: false,
-    b1: false,
-    quiz: false,
-    builder: false,
-    conversation: false,
-    smart: false,
-    daily: false
-};
-
-const CERT_KEY = "cefr_certificates_v1";
-
-function loadCertificates() {
-    const raw = localStorage.getItem(CERT_KEY);
-    if (!raw) return;
-    try {
-        certificates = { ...certificates, ...JSON.parse(raw) };
-    } catch {}
-}
-
-function saveCertificates() {
-    localStorage.setItem(CERT_KEY, JSON.stringify(certificates));
-}
-
-/* Persistent certificate IDs */
-const CERT_IDS_KEY = "cefr_cert_ids_v1";
-let certificateIDs = {};
-
-function loadCertificateIDs() {
-    const raw = localStorage.getItem(CERT_IDS_KEY);
-    if (raw) {
-        try { certificateIDs = JSON.parse(raw); } catch {}
-    }
-}
-
-function saveCertificateIDs() {
-    localStorage.setItem(CERT_IDS_KEY, JSON.stringify(certificateIDs));
-}
-
-function generateCertificateID(key) {
-    if (!certificateIDs[key]) {
-        certificateIDs[key] = `${key.toUpperCase()}-${Date.now().toString(36)}`;
-        saveCertificateIDs();
-    }
-    return certificateIDs[key];
-}
-
-/* ============================================================
-   XP SYSTEM + ACHIEVEMENTS + LEVELS
-============================================================ */
-
 loadProgress();
 loadDaily();
 loadSRS();
-loadBadges();
-loadCertificates();
-loadCertificateIDs();
-
-const xpRewards = {
-    quizCorrect: 20,
-    buildCorrect: 40,
-    convCorrect: 60,
-    smartCorrect: 80,
-    dailyComplete: 100,
-    levelUnlock: 400,
-    certificateUnlock: 600,
-    conversationCorrect: 20,
-    conversationSession: 50
-};
 
 function addXP(amount = 2) {
     const now = Date.now();
@@ -498,7 +337,9 @@ function getDueWords() {
     });
 }
 
-/* LEVEL STATS + CURRENT LEVEL */
+/* ============================================================
+   LEVEL STATS + CURRENT LEVEL
+============================================================ */
 
 function getLevelStats() {
     const levels = ["A1","A2","B1","B2"];
@@ -525,23 +366,17 @@ function getCurrentCEFRLevel() {
     return "A1";
 }
 
-
-
-/* ACHIEVEMENTS — 90% SCORING SYSTEM */
+/* ============================================================
+   ACHIEVEMENTS + CERTIFICATES
+============================================================ */
 
 const ACHIEVEMENTS = [
-    { id: "a1_master", label: "A1 Master", condition: s => s.A1.avg >= 90 },
-    { id: "a2_master", label: "A2 Master", condition: s => s.A2.avg >= 90 },
-    { id: "b1_master", label: "B1 Master", condition: s => s.B1.avg >= 90 },
-    { id: "b2_master", label: "B2 Master", condition: s => s.B2.avg >= 90 },
-
-    // Overall CEFR mastery achievement
-    { id: "full_progress", label: "200‑Word Explorer", condition: s => {
-        const totalAvg = Math.round(
-            (s.A1.avg + s.A2.avg + s.B1.avg + s.B2.avg) / 4
-        );
-        return totalAvg >= 90;
-    }}
+    { id: "a1_master", label: "A1 Master", condition: s => s.A1.mastered >= 10 },
+    { id: "a2_master", label: "A2 Master", condition: s => s.A2.mastered >= 15 },
+    { id: "b1_master", label: "B1 Master", condition: s => s.B1.mastered >= 20 },
+    { id: "b2_master", label: "B2 Master", condition: s => s.B2.mastered >= 10 },
+    { id: "full_progress", label: "200‑Word Explorer", condition: s =>
+        s.A1.mastered + s.A2.mastered + s.B1.mastered + s.B2.mastered >= 100 }
 ];
 
 const ACH_KEY = "cefr_achievements_v2";
@@ -559,7 +394,6 @@ loadAchievements();
 
 function evaluateAchievements() {
     const stats = getLevelStats();
-
     ACHIEVEMENTS.forEach(a => {
         if (!unlockedAchievements.includes(a.id) && a.condition(stats)) {
             unlockedAchievements.push(a.id);
@@ -572,309 +406,162 @@ function evaluateAchievements() {
    DASHBOARD TAB
 ============================================================ */
 
-function updateAudioSpeedUI() {
-    const speedValue = document.querySelector(".audio-speed-value");
-    if (speedValue) speedValue.textContent = `${AUDIO_RATE.toFixed(1)}x`;
-}
-
-function saveLearnerName() {
-    const input = document.getElementById("cert-name-input");
-    if (!input) return;
-    localStorage.setItem("cefr_learner_name", input.value.trim());
-}
-
-function loadLearnerName() {
-    const saved = localStorage.getItem("cefr_learner_name");
-    return saved || "";
-}
-
-/* -----------------------------------------------------------
-   HERO RENDER FUNCTION
------------------------------------------------------------ */
-function renderHero() {
-    return `
-        <div class="glass-card hero-card neon-glow">
-            <img src="images/hero-dashboard.png" class="dashboard-hero-img">
-        </div>
-    `;
-}
-
-/* -----------------------------------------------------------
-   EXPERIENCE TILE RENDERER
------------------------------------------------------------ */
-function renderExperienceTiles(current, due) {
-    return `
-        <div class="glass-card tile-card neon-glow">
-            <img src="images/icon-level.png" class="dash-icon">
-            <div class="dash-label">Current Level</div>
-            <div class="dash-value">${current}</div>
-        </div>
-
-        <div class="glass-card tile-card neon-glow">
-            <img src="images/icon-review.png" class="dash-icon">
-            <div class="dash-label">Due Words</div>
-            <div class="dash-value">${due}</div>
-        </div>
-
-        <div class="glass-card tile-card neon-glow">
-            <img src="images/streak-flame.png" class="dash-icon">
-            <div class="dash-label">Streak</div>
-            <div class="dash-value">${dailyData.streak} days</div>
-        </div>
-
-        <div class="glass-card tile-card neon-glow">
-            <div class="dash-label">XP Today</div>
-            <div class="xp-bar-wrapper">
-                <div class="xp-bar neon-glow" style="width:${Math.min((dailyData.xpToday / dailyData.goal) * 100, 100)}%"></div>
-            </div>
-            <div class="xp-text">${dailyData.xpToday} / ${dailyData.goal}</div>
-        </div>
-    `;
-}
-
-/* -----------------------------------------------------------
-   CONTROLS RENDERER
------------------------------------------------------------ */
-function renderControls(current, learnerName) {
-    return `
-        <div class="control-block">
-            <label>Level of difficulty:</label>
-            <select id="level-select">
-                <option value="">Auto (${current})</option>
-                <option value="A1">A1</option>
-                <option value="A2">A2</option>
-                <option value="B1">B1</option>
-                <option value="B2">B2</option>
-            </select>
-        </div>
-
-        <div class="control-block">
-            <label>Audio speed:</label>
-            <input type="range" id="audio-speed" min="0.6" max="1.4" step="0.1" value="${AUDIO_RATE}">
-            <span class="audio-speed-value">${AUDIO_RATE.toFixed(1)}x</span>
-        </div>
-
-        <div class="control-block">
-            <label>Your name (for certificate):</label>
-            <input type="text" id="cert-name-input" value="${learnerName}" placeholder="Your name">
-        </div>
-    `;
-}
-
-/* -----------------------------------------------------------
-   BADGE TILE RENDERER
------------------------------------------------------------ */
-function renderBadgeTiles() {
-    return `
-        <div class="glass-card tile-card neon-glow">
-            <div class="dash-label">Badges</div>
-            <div class="badge-grid">
-                ${ACHIEVEMENTS.map(a => `
-                    <div class="badge-item ${unlockedAchievements.includes(a.id) ? "badge-on" : "badge-off"}">
-                        ${a.label}
-                    </div>
-                `).join("")}
-            </div>
-        </div>
-    `;
-}
-
-/* -----------------------------------------------------------
-   PROMOTED BADGES RENDERER
------------------------------------------------------------ */
-function renderPromotedBadgeTiles() {
-    if (!unlockedAchievements.length) {
-        return `<div class="glass-card tile-card">No badges collected yet.</div>`;
-    }
-
-    return unlockedAchievements.map(id => {
-        const badge = ACHIEVEMENTS.find(a => a.id === id);
-        return `
-            <div class="glass-card tile-card neon-glow">
-                <div class="dash-label">${badge.label}</div>
-            </div>
-        `;
-    }).join("");
-}
-
-/* -----------------------------------------------------------
-   CERTIFICATE TILE RENDERER
------------------------------------------------------------ */
-function renderCertificateTiles(stats, currentLevel) {
-    const levels = ["A1", "A2", "B1", "B2"];
-
-    return `
-        <div class="certificate-grid">
-            ${levels.map(level => {
-                const unlocked = stats.certificates?.[level]?.unlocked || false;
-                const avg = stats.certificates?.[level]?.average || 0;
-
-                return `
-                    <div class="certificate-item">
-                        <div class="dash-label">Certificate: ${level}</div>
-                        <div class="dash-value">${unlocked ? "Unlocked" : "Locked"}</div>
-
-                        <div class="cert-progress">
-                            <p>Avg: ${avg}%</p>
-                            <div class="cert-bar-wrapper">
-                                <div class="cert-bar" style="width:${avg}%; background:${avg > 0 ? "#00c6ff" : "rgba(255,255,255,0.35)"}"></div>
-                            </div>
-                        </div>
-                    </div>
-                `;
-            }).join("")}
-        </div>
-    `;
-}
-
-/* -----------------------------------------------------------
-   SUMMARY TILE RENDERER
------------------------------------------------------------ */
-function renderSummaryTile(stats, current, due) {
-    return `
-        <div class="glass-card tile-card neon-glow">
-            <div class="dash-label">Current CEFR Level: ${current}</div>
-            <p>A1: ${stats.A1.mastered}/${stats.A1.total} mastered (avg ${stats.A1.avg}%)</p>
-            <p>A2: ${stats.A2.mastered}/${stats.A2.total} mastered (avg ${stats.A2.avg}%)</p>
-            <p>B1: ${stats.B1.mastered}/${stats.B1.total} mastered (avg ${stats.B1.avg}%)</p>
-            <p>B2: ${stats.B2.mastered}/${stats.B2.total} mastered (avg ${stats.B2.avg}%)</p>
-            <p>Due for review: ${due}</p>
-        </div>
-    `;
-}
-
-/* -----------------------------------------------------------
-   MAIN DASHBOARD RENDERER
------------------------------------------------------------ */
 function renderDashboardTab() {
-    const hero = document.querySelector(".dashboard-hero");
-    const row = document.querySelector(".dashboard-row");
-    const controls = document.querySelector(".dashboard-controls");
-    const badges = document.querySelector(".dashboard-badges");
-    const promoted = document.querySelector(".dashboard-promoted-badges");
-    const certs = document.querySelector(".dashboard-certificates-preview");
-    const summary = document.getElementById("progress-summary");
-
-    if (!hero || !row || !controls || !badges || !promoted || !certs || !summary) return;
+    const el = document.getElementById("dashboard-content");
+    if (!el) return;
 
     const stats = getLevelStats();
     const current = getCurrentCEFRLevel();
     const due = getDueWords().length;
-    const learnerName = loadLearnerName();
 
     evaluateAchievements();
 
-    hero.innerHTML = renderHero();
-    row.innerHTML = renderExperienceTiles(current, due);
-    controls.innerHTML = renderControls(current, learnerName);
-    badges.innerHTML = renderBadgeTiles();
-    promoted.innerHTML = renderPromotedBadgeTiles();
-    certs.innerHTML = renderCertificateTiles(stats, current);
-    summary.innerHTML = renderSummaryTile(stats, current, due);
+    const badgesHtml = ACHIEVEMENTS.map(a =>
+        `<div class="badge-pill ${unlockedAchievements.includes(a.id) ? "badge-on" : "badge-off"}">
+            ${unlockedAchievements.includes(a.id) ? "✅" : "⬜"} ${a.label}
+        </div>`
+    ).join("");
 
-    document.getElementById("level-select").onchange = e => {
-        levelOverride = e.target.value || null;
-        renderDashboardTab();
-    };
+    el.innerHTML = `
+        <div class="glass-card">
+            <h2>Dashboard</h2>
+            <p><strong>Current Level:</strong> ${current}</p>
+            <p><strong>Due for review:</strong> ${due} words</p>
+            <p><strong>XP Today:</strong> ${dailyData.xpToday}/${dailyData.goal} — Streak: ${dailyData.streak} days</p>
 
-    document.getElementById("audio-speed").oninput = e => {
-        AUDIO_RATE = parseFloat(e.target.value);
-        updateAudioSpeedUI();
-    };
+            <div class="level-selector">
+                <label>Level of difficulty:</label>
+                <select id="level-select">
+                    <option value="">Auto (${current})</option>
+                    <option value="A1">A1</option>
+                    <option value="A2">A2</option>
+                    <option value="B1">B1</option>
+                    <option value="B2">B2</option>
+                </select>
+            </div>
 
-    document.getElementById("cert-name-input").oninput = () => saveLearnerName();
+            <div class="audio-speed">
+                <label>Audio speed:</label>
+                <input type="range" id="audio-speed" min="0.6" max="1.4" step="0.1" value="${AUDIO_RATE}">
+                <span>${AUDIO_RATE.toFixed(1)}x</span>
+            </div>
+
+            <div class="cert-name">
+                <label>Your name (for certificate):</label>
+                <input type="text" id="cert-name-input" placeholder="Your name">
+            </div>
+
+            <h3>Badges</h3>
+            <div class="badge-row">
+                ${badgesHtml}
+            </div>
+        </div>
+    `;
+
+    const levelSelect = document.getElementById("level-select");
+    if (levelSelect) {
+        levelSelect.onchange = () => {
+            levelOverride = levelSelect.value || null;
+            renderDashboardTab();
+        };
+    }
+
+    const speedInput = document.getElementById("audio-speed");
+    if (speedInput) {
+        speedInput.oninput = () => {
+            AUDIO_RATE = parseFloat(speedInput.value);
+            renderDashboardTab();
+        };
+    }
 }
 
 /* ============================================================
-   LISTEN TAB — FIXED + ANIMATED
+   LISTEN TAB (CATEGORIES + FULL AUDIO CONTROLS)
 ============================================================ */
 
-const LISTEN_CATEGORIES = [
-    { id: "daily-life", name: "Daily Life" },
-    { id: "family", name: "Family" },
-    { id: "food-drink", name: "Food & Drink" },
-    { id: "connector", name: "Connectors" },
-    { id: "number", name: "Numbers" },
-    { id: "verb", name: "Verbs" },
-    { id: "adjective", name: "Adjectives" },
-    { id: "travel", name: "Travel" },
-    { id: "work", name: "Work" }
-];
-
 function renderListenTab() {
-    const container = document.getElementById("listen-categories");
+    const container = document.getElementById("listen-content");
     if (!container) return;
     container.innerHTML = "";
 
-    LISTEN_CATEGORIES.forEach(cat => {
+    const categories = [...new Set(CEFR_WORDS.map(w => w.category))];
+
+    categories.forEach(cat => {
         const section = document.createElement("div");
-        section.className = "listen-section glass-card";
+        section.className = "glass-card listen-section";
 
-        section.innerHTML = `
-            <div class="listen-header" onclick="toggleListenCategory('${cat.id}')">
-                <h3>${cat.name}</h3>
-                <span class="listen-arrow">▼</span>
-            </div>
-            <div id="listen-${cat.id}" class="listen-content"></div>
-        `;
+        const header = document.createElement("div");
+        header.className = "listen-header";
+        header.innerHTML = `<span>${cat.toUpperCase()}</span><span>▼</span>`;
+        section.appendChild(header);
 
+        const body = document.createElement("div");
+        body.className = "listen-body";
+        body.style.display = "none";
+
+        CEFR_WORDS.filter(w => w.category === cat).forEach(word => {
+            const row = document.createElement("div");
+            row.className = "listen-row";
+            row.innerHTML = `
+                <span>${word.spanish} (${word.english})</span>
+                <div class="audio-controls">
+                    <button class="pill-btn" onclick="playFileAudio('${word.audio}')">Play</button>
+                    <button class="pill-btn" onclick="pauseFileAudio()">Pause</button>
+                    <button class="pill-btn" onclick="resumeFileAudio()">Resume</button>
+                    <button class="pill-btn" onclick="stopFileAudio()">Stop</button>
+                </div>
+            `;
+            body.appendChild(row);
+        });
+
+        header.onclick = () => {
+            body.style.display = body.style.display === "none" ? "block" : "none";
+        };
+
+        section.appendChild(body);
         container.appendChild(section);
     });
 }
+/* ============================================================
+   FLASHCARDS TAB (GRID, FLIP, SPANISH AUDIO)
+============================================================ */
 
-function loadListenCategory(catId) {
-    const content = document.getElementById(`listen-${catId}`);
-    if (!content) return;
-
-    const currentLevel = getCurrentCEFRLevel();
-
-    const words = CEFR_WORDS.filter(w =>
-        w.category === catId && w.level === currentLevel
-    );
-
-    if (!words.length) {
-        content.innerHTML = "<p>No words found for this level.</p>";
-        return;
-    }
+function renderFlashcardsTab() {
+    const container = document.getElementById("flashcards-content");
+    if (!container) return;
+    container.innerHTML = "";
 
     const grid = document.createElement("div");
-    grid.className = "listen-word-grid";
+    grid.className = "flash-grid";
 
-    words.forEach(w => {
-        const tile = document.createElement("div");
-        tile.className = "listen-word";
-        tile.textContent = `${w.spanish} (${w.english})`;
-        tile.onclick = () => playFileAudio(w.audio);
-        grid.appendChild(tile);
+    CEFR_WORDS.forEach(word => {
+        const card = document.createElement("div");
+        card.className = "flashcard glass-card";
+
+        card.innerHTML = `
+            <div class="front">
+                <h3>${word.english}</h3>
+            </div>
+            <div class="back">
+                <h3>${word.spanish}</h3>
+            </div>
+        `;
+
+        card.onclick = () => {
+            card.classList.toggle("flipped");
+            speakSpanish(word.spanish);
+            bumpMastery(word.id, 2);
+            addXP(2);
+        };
+
+        grid.appendChild(card);
     });
 
-    content.innerHTML = "";
-    content.appendChild(grid);
-}
-
-let currentOpenCategory = null;
-
-function toggleListenCategory(catId) {
-    const newSection = document.getElementById(`listen-${catId}`);
-
-    if (currentOpenCategory === catId) {
-        newSection.classList.remove("open");
-        currentOpenCategory = null;
-        return;
-    }
-
-    if (currentOpenCategory) {
-        const oldSection = document.getElementById(`listen-${currentOpenCategory}`);
-        if (oldSection) oldSection.classList.remove("open");
-    }
-
-    newSection.classList.add("open");
-    loadListenCategory(catId);
-    currentOpenCategory = catId;
+    container.appendChild(grid);
 }
 
 /* ============================================================
-   BUILD TAB — FIXED + GRID + XP
+   BUILD TAB (DUPLICATE ENGLISH SENTENCE IN SPANISH)
 ============================================================ */
 
 const BUILD_SENTENCES = [
@@ -919,7 +606,7 @@ function renderBuildTab() {
         <h2>Duplicate this sentence in Spanish</h2>
         <p class="build-english">${sentence.english}</p>
         <div id="build-selected" class="build-selected"></div>
-        <div id="build-words" class="build-word-grid"></div>
+        <div id="build-words" class="build-words"></div>
         <div class="build-input-row">
             <input type="text" id="build-input" placeholder="Type the Spanish sentence">
             <button class="pill-btn" id="build-check">Check</button>
@@ -958,7 +645,7 @@ function renderBuildTab() {
 }
 
 /* ============================================================
-   SENTENCE TAB — FIXED + XP
+   SENTENCE TAB (ENGLISH → CHOOSE CORRECT SPANISH)
 ============================================================ */
 
 const SENTENCE_ITEMS = [
@@ -1042,7 +729,7 @@ function renderSentenceTab() {
 }
 
 /* ============================================================
-   CONVERSATION TAB — FIXED + BADGES + XP
+   CONVERSATION TAB
 ============================================================ */
 
 const CONVERSATIONS = [
@@ -1067,11 +754,6 @@ const CONVERSATIONS = [
         spanishPrompt: "Compañero: Necesitamos analizar la situación.\nTú: Estoy de acuerdo, evaluemos todas las opciones."
     }
 ];
-
-function speakIncorrect(correctAnswer) {
-    const message = `Incorrecto. La respuesta correcta es: ${correctAnswer}`;
-    speakSpanish(message);
-}
 
 function renderConversationTab() {
     const container = document.getElementById("conversation-content");
@@ -1105,27 +787,11 @@ function renderConversationTab() {
     };
 
     checkBtn.onclick = () => {
-        const learnerAnswer = input.value.trim();
-        if (!learnerAnswer) {
+        const val = input.value.trim();
+        if (!val) {
             alert("Try writing a response in Spanish.");
             return;
         }
-
-        const correctAnswer = convo.spanishPrompt.split("\n")[1].replace("Tú: ", "").trim();
-
-        conversationStats.attempts++;
-
-        if (learnerAnswer.toLowerCase() !== correctAnswer.toLowerCase()) {
-            alert("Incorrect. Listen to Sabina for the correct answer.");
-            setTimeout(() => {
-                speakIncorrect(correctAnswer);
-            }, 600);
-            return;
-        }
-
-        conversationStats.correct++;
-        checkConversationBadges();
-
         addXP(10);
         alert("Nice! Keep practicing your Spanish responses.");
         renderConversationTab();
@@ -1133,77 +799,7 @@ function renderConversationTab() {
 }
 
 /* ============================================================
-   FLASHCARDS TAB — FIXED + FLIP ANIMATION + AUDIO
-============================================================ */
-
-function renderFlashcardsTab() {
-    const container = document.getElementById("flashcards-content");
-    if (!container) return;
-    container.innerHTML = "";
-
-    const currentLevel = getCurrentCEFRLevel();
-
-    LISTEN_CATEGORIES.forEach(cat => {
-        const section = document.createElement("div");
-        section.className = "flashcard-section";
-
-        section.innerHTML = `
-            <div class="flashcard-header">
-                <span>${cat.name}</span>
-            </div>
-            <div id="flashcards-${cat.id}" class="flashcard-grid"></div>
-        `;
-
-        container.appendChild(section);
-
-        loadFlashcardCategory(cat.id, currentLevel);
-    });
-}
-
-function loadFlashcardCategory(catId, level) {
-    const grid = document.getElementById(`flashcards-${catId}`);
-    if (!grid) return;
-
-    const words = CEFR_WORDS.filter(w => w.category === catId && w.level === level);
-
-    if (!words.length) {
-        grid.innerHTML = `<p class="no-flashcards">No flashcards for this level.</p>`;
-        return;
-    }
-
-    words.forEach(w => {
-        const card = document.createElement("div");
-        card.className = "flashcard";
-
-        const inner = document.createElement("div");
-        inner.className = "flashcard-inner";
-
-        // FRONT = English
-        inner.innerHTML = `
-            <div class="flashcard-text">${w.english}</div>
-        `;
-
-        card.appendChild(inner);
-
-        card.onclick = () => {
-            const flipped = card.classList.toggle("flipped");
-
-            if (flipped) {
-                // BACK = Spanish + audio
-                inner.innerHTML = `<div class="flashcard-text">${w.spanish}</div>`;
-                speakSpanish(w.spanish);
-            } else {
-                // FRONT = English (no audio)
-                inner.innerHTML = `<div class="flashcard-text">${w.english}</div>`;
-            }
-        };
-
-        grid.appendChild(card);
-    });
-}
-
-/* ============================================================
-   CERTIFICATES TAB — FINAL VERSION
+   CERTIFICATES TAB
 ============================================================ */
 
 function renderCertificatesTab() {
@@ -1211,173 +807,26 @@ function renderCertificatesTab() {
     if (!container) return;
     container.innerHTML = "";
 
+    const stats = getLevelStats();
+    const current = getCurrentCEFRLevel();
+
     const nameInput = document.getElementById("cert-name-input");
     const name = nameInput ? nameInput.value.trim() || "Learner" : "Learner";
 
-    const certList = [
-        { key: "a1", label: "A1 Certificate" },
-        { key: "a2", label: "A2 Certificate" },
-        { key: "b1", label: "B1 Certificate" },
-        { key: "quiz", label: "Quiz Mastery" },
-        { key: "builder", label: "Sentence Builder Mastery" },
-        { key: "conversation", label: "Conversation Mastery" },
-        { key: "smart", label: "Smart Conversation Mastery" },
-        { key: "daily", label: "Daily Streak Award" }
-    ];
-
-    /* ============================================================
-       1. CERTIFICATE PREVIEW ELEMENTS
-    ============================================================ */
-    certList.forEach(cert => {
-        const preview = document.createElement("div");
-        preview.className = "certificate-preview";
-        preview.id = `cert-${cert.key}`;
-
-        const certID = generateCertificateID(cert.key);
-
-        preview.innerHTML = `
-            <h3>${cert.label}</h3>
-            <p>This certifies that <strong>${name}</strong> has unlocked <strong>${cert.label}</strong>.</p>
-            <div class="cert-id">Certificate ID: ${certID}</div>
-        `;
-
-        const qrBox = document.createElement("div");
-        qrBox.className = "cert-qr";
-        qrBox.appendChild(generateQR(`https://yourapp.com/cert/${certID}`));
-        preview.appendChild(qrBox);
-
-        const downloadBtn = document.createElement("button");
-        downloadBtn.className = "cert-download-btn";
-        downloadBtn.textContent = "Download Certificate";
-        downloadBtn.onclick = () => downloadCertificate(cert.key);
-        preview.appendChild(downloadBtn);
-
-        if (certificates[cert.key]) {
-            preview.classList.add("certificate-unlocked");
-        }
-
-        container.appendChild(preview);
-    });
-
-    /* ============================================================
-       2. CERTIFICATE GALLERY
-    ============================================================ */
-    const gallery = document.createElement("div");
-    gallery.className = "cert-gallery";
-
-    certList.forEach(cert => {
-        const item = document.createElement("div");
-        item.className = "cert-gallery-item";
-        if (!certificates[cert.key]) item.classList.add("locked");
-
-        item.innerHTML = `
-            <h4>${cert.label}</h4>
-            <p>${certificates[cert.key] ? "Unlocked" : "Locked"}</p>
-        `;
-
-        gallery.appendChild(item);
-    });
-
-    container.appendChild(gallery);
-
-    /* ============================================================
-       3. REFRESH BUTTON
-    ============================================================ */
-    const btnRow = document.createElement("div");
-    btnRow.className = "cert-btn-row";
-
-    btnRow.innerHTML = `
-        <button class="cert-btn" id="cert-refresh">Refresh Certificates</button>
+    const card = document.createElement("div");
+    card.className = "glass-card cert-card";
+    card.innerHTML = `
+        <h2>Certificates</h2>
+        <p>This certificate confirms that <strong>${name}</strong> has reached level <strong>${current}</strong> in Spanish CEFR training.</p>
+        <p>Mastered words: A1 ${stats.A1.mastered}, A2 ${stats.A2.mastered}, B1 ${stats.B1.mastered}, B2 ${stats.B2.mastered}</p>
+        <button class="pill-btn" id="cert-generate">Refresh certificate</button>
     `;
-    container.appendChild(btnRow);
+    container.appendChild(card);
 
-    document.getElementById("cert-refresh").onclick = () => renderCertificatesTab();
-}
-
-/* ============================================================
-   MODERN CELEBRATION — CONFETTI + POPUP
-============================================================ */
-
-function launchCertificateConfetti() {
-    document.querySelectorAll(".confetti-container").forEach(c => c.remove());
-
-    const confettiContainer = document.createElement("div");
-    confettiContainer.className = "confetti-container";
-    document.body.appendChild(confettiContainer);
-
-    for (let i = 0; i < 40; i++) {
-        const piece = document.createElement("div");
-        piece.className = "confetti-piece";
-        piece.style.left = Math.random() * 100 + "vw";
-        piece.style.backgroundColor = `hsl(${Math.random() * 360}, 80%, 60%)`;
-        piece.style.animationDelay = (Math.random() * 1) + "s";
-        confettiContainer.appendChild(piece);
+    const btn = document.getElementById("cert-generate");
+    if (btn) {
+        btn.onclick = () => renderCertificatesTab();
     }
-
-    setTimeout(() => confettiContainer.remove(), 3000);
-}
-
-function unlockCertificate(key) {
-    if (!certificates[key]) {
-        certificates[key] = true;
-        saveCertificates();
-        renderCertificatesTab();
-
-        const certEl = document.getElementById(`cert-${key}`);
-        if (certEl) certEl.classList.add("certificate-unlocked");
-
-        const popup = document.createElement("div");
-        popup.className = "celebration-popup";
-        popup.textContent = "🎉 Certificado desbloqueado";
-        document.body.appendChild(popup);
-
-        setTimeout(() => popup.classList.add("show"), 50);
-        setTimeout(() => popup.classList.remove("show"), 2500);
-        setTimeout(() => popup.remove(), 3000);
-
-        launchCertificateConfetti();
-        speakSpanish("Certificado desbloqueado");
-    }
-}
-
-/* ============================================================
-   CERTIFICATE ID + QR CODE
-============================================================ */
-
-function generateCertificateID(key) {
-    if (!certificateIDs[key]) {
-        certificateIDs[key] = `${key.toUpperCase()}-${Date.now().toString(36)}`;
-        saveCertificateIDs();
-    }
-    return certificateIDs[key];
-}
-
-function generateQR(url) {
-    const img = document.createElement("img");
-    img.src = `https://api.qrserver.com/v1/create-qr-code/?size=120x120&data=${encodeURIComponent(url)}`;
-    img.alt = "QR Code";
-    img.style.borderRadius = "12px";
-    return img;
-}
-
-/* ============================================================
-   CERTIFICATE DOWNLOAD (html2canvas + jsPDF)
-============================================================ */
-
-function downloadCertificate(certKey) {
-    const certEl = document.getElementById(`cert-${certKey}`);
-    if (!certEl) return;
-
-    html2canvas(certEl).then(canvas => {
-        const imgData = canvas.toDataURL("image/png");
-        const pdf = new jsPDF("p", "mm", "a4");
-
-        const width = pdf.internal.pageSize.getWidth();
-        const height = (canvas.height * width) / canvas.width;
-
-        pdf.addImage(imgData, "PNG", 0, 0, width, height);
-        pdf.save(`${certKey}-certificate.pdf`);
-    });
 }
 
 /* ============================================================
@@ -1403,7 +852,7 @@ function renderProgressSummary() {
 }
 
 /* ============================================================
-   TAB ROUTER — FINAL VERSION
+   TAB ROUTER
 ============================================================ */
 
 const tabs = {
@@ -1417,18 +866,8 @@ const tabs = {
 };
 
 function showTab(name) {
-    Object.values(tabs).forEach(t => {
-        if (t) {
-            t.style.display = "none";
-            t.classList.remove("tab-active");
-        }
-    });
-
-    if (tabs[name]) {
-        tabs[name].style.display = "block";
-        void tabs[name].offsetWidth; // force reflow
-        tabs[name].classList.add("tab-active");
-    }
+    Object.values(tabs).forEach(t => t && (t.style.display = "none"));
+    if (tabs[name]) tabs[name].style.display = "block";
 
     switch(name) {
         case "listen": renderListenTab(); break;
@@ -1444,7 +883,7 @@ function showTab(name) {
 }
 
 /* ============================================================
-   INITIAL TAB LOAD
+   INITIAL TAB
 ============================================================ */
 
 document.addEventListener("DOMContentLoaded", () => {
