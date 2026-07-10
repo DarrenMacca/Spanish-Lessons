@@ -474,19 +474,7 @@ function initRateControl() {
 /* ============================================================
    NAVIGATION
    ============================================================ */
-function initNavigation() {
-    document.querySelectorAll(".dash-link").forEach(btn => {
-        btn.onclick = () => setTab(btn.dataset.tab);
-    });
-
-    document.querySelectorAll(".tab-btn").forEach(btn => {
-        btn.onclick = () => setTab(btn.dataset.tab);
-    });
-
-    document.querySelectorAll(".level-btn").forEach(btn => {
-        btn.onclick = () => setLevel(btn.dataset.level);
-    });
-}
+function initNavigation() { }
 
 /* ============================================================
    STARTUP
@@ -498,6 +486,25 @@ document.addEventListener("DOMContentLoaded", () => {
     initNameBox();
 
     setLevel(appState.currentLevel);
-    setTab(appState.currentTab);
     updateBadges();
 });
+
+document.querySelectorAll('.tab-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+        const tabName = btn.dataset.tab;
+
+        // Hide all tabs
+        document.querySelectorAll('#listen, #flash, #quiz, #build, #conversation, #grammar')
+            .forEach(tab => tab.classList.add('hidden'));
+
+        // Show selected tab
+        document.getElementById(tabName).classList.remove('hidden');
+
+        // Update active button
+        document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+    });
+});
+
+
+
