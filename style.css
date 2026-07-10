@@ -1,1108 +1,277 @@
-/* ============================================================
-   GLOBAL BASE
-============================================================ */
-
+/* GLOBAL BACKGROUND WITH SUBTLE GRADIENT */
 body {
-    font-family: "Inter", system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
-    background: radial-gradient(circle at top left, #0ea5e9 0%, #0f172a 40%, #020617 100%);
     margin: 0;
     padding: 0;
-    color: #e5e7eb;
+    font-family: system-ui, sans-serif;
+    color: #e2e8f0;
+    background: linear-gradient(135deg, #0f172a 0%, #1a2538 100%);
 }
 
-h2, h3 {
-    margin-top: 0;
-}
-
-/* ============================================================
-   HEADER + NAV
-============================================================ */
-
-header {
-    padding: 20px;
-    text-align: center;
-    font-size: 26px;
-    font-weight: 700;
-    color: #f9fafb;
-}
-
-nav {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 10px;
-    padding: 12px 20px;
-    justify-content: center;
-    margin-top: 15px;
-}
-
-
-
-nav button {
-    padding: 10px 18px;
-    border-radius: 999px;
-    border: none;
-    background: rgba(15, 23, 42, 0.6);
-    color: #e5e7eb;
-    cursor: pointer;
-    backdrop-filter: blur(12px);
-    box-shadow: 0 0 0 1px rgba(148, 163, 184, 0.4);
-    transition: background 0.2s ease, transform 0.1s ease;
-}
-
-nav button:hover {
-    background: rgba(56, 189, 248, 0.6);
-    transform: translateY(-1px);
-}
-
-/* ============================================================
-   TAB CONTAINERS
-============================================================ */
-
-.tab {
-    display: none;
-    padding: 20px;
-}
-.dashboard-hero {
-    text-align: center;
-    margin-bottom: 20px;
-}
-
-.dashboard-hero-img {
-    width: 90%;
-    max-width: 600px;
-    filter: drop-shadow(0 0 20px rgba(0,255,255,0.4));
-}
-
-.dashboard-main {
-    padding: 20px;
-}
-
-.dashboard-row {
-    display: flex;
-    justify-content: space-around;
-    margin-bottom: 25px;
-}
-
-.dashboard-item {
-    text-align: center;
-}
-
-.dash-icon {
-    width: 60px;
-    margin-bottom: 10px;
-}
-
-.neon-glow {
-    filter: drop-shadow(0 0 10px rgba(0,255,255,0.7));
-}
-
-.xp-section {
-    margin: 20px 0;
-}
-
-.xp-bar-wrapper {
-    width: 100%;
-    height: 12px;
-    background: rgba(255,255,255,0.1);
-    border-radius: 10px;
-    overflow: hidden;
-}
-
-.xp-bar {
-    height: 12px;
-    background: linear-gradient(90deg, #00eaff, #00ff9d);
-}
-
-.dashboard-controls {
-    margin-top: 20px;
-}
-
-.control-block {
-    margin-bottom: 15px;
-}
-
-.badge-title {
-    margin-top: 30px;
-    text-align: center;
-}
-
-.badge-row {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 10px;
-    justify-content: center;
-}
-
-/* ============================================================
-   GLASS CARDS
-============================================================ */
-
-.glass-card {
+/* GLASSMORPHISM BASE (MEDIUM, ROUNDED) */
+.glass-panel {
     background: rgba(15, 23, 42, 0.6);
     border-radius: 18px;
-    padding: 18px;
-    backdrop-filter: blur(18px);
-    box-shadow: 0 18px 40px rgba(15, 23, 42, 0.7);
     border: 1px solid rgba(148, 163, 184, 0.4);
-    margin-bottom: 20px;
-}
-
-/* ============================================================
-   PILL BUTTONS
-============================================================ */
-
-.pill-btn {
-    border-radius: 999px;
-    border: none;
-    padding: 8px 14px;
-    background: rgba(56, 189, 248, 0.7);
-    color: #0f172a;
-    cursor: pointer;
-    font-size: 14px;
-    margin: 2px;
-    transition: background 0.2s ease, transform 0.1s ease;
-}
-
-.pill-btn:hover {
-    background: rgba(56, 189, 248, 1);
-    transform: translateY(-1px);
-}
-
-/* ============================================================
-   DASHBOARD
-============================================================ */
-
-#dashboard-content .badge-row {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 8px;
-    margin-top: 10px;
-}
-
-.badge-pill {
-    border-radius: 999px;
-    padding: 6px 12px;
-    font-size: 13px;
-    border: 1px solid rgba(148, 163, 184, 0.6);
-}
-
-.badge-on {
-    background: rgba(34, 197, 94, 0.3);
-}
-
-.badge-off {
-    background: rgba(148, 163, 184, 0.2);
-}
-
-.level-selector,
-.audio-speed,
-.cert-name {
-    margin-top: 10px;
-}
-
-.level-selector select,
-.cert-name input {
-    border-radius: 999px;
-    border: 1px solid rgba(148, 163, 184, 0.6);
-    padding: 6px 10px;
-    background: rgba(15, 23, 42, 0.8);
-    color: #e5e7eb;
-}
-
-/* ============================================================
-   LISTEN TAB
-============================================================ */
-
-/* LISTEN TAB STYLES (FULL POLISH + ANIMATIONS) */
-
-/* 1. Category cards */
-.listen-section {
-    background: rgba(255,255,255,0.18);
-    backdrop-filter: blur(10px);
-    border-radius: 16px;
-    padding: 18px;
-    margin-bottom: 22px;
-    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
-    transition: transform 0.2s ease, box-shadow 0.2s ease;
-}
-
-.listen-section:hover {
-    transform: translateY(-3px);
-    box-shadow: 0 8px 20px rgba(0,0,0,0.25);
-}
-
-/* 2. Category header */
-.listen-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    cursor: pointer;
-    font-weight: 600;
-    padding: 14px 10px;
-    margin-bottom: 8px;
-    font-size: 18px;
-    letter-spacing: 0.3px;
-}
-
-/* Optional arrow icon animation */
-.listen-arrow {
-    display: inline-block;
-    transition: transform 0.35s ease;
-}
-
-/* 3. Word tiles */
-.listen-word {
-    padding: 14px;
-    border-radius: 14px;
-    background: rgba(255,255,255,0.25);
-    backdrop-filter: blur(6px);
-    cursor: pointer;
-    text-align: center;
-    font-size: 16px;
-    transition: 0.25s ease;
-    border: 1px solid rgba(255,255,255,0.35);
-    animation: fadeInUp 0.35s ease;
-}
-
-.listen-word:hover {
-    background: rgba(255,255,255,0.35);
-    transform: scale(1.05) translateY(-2px);
-    box-shadow: 0 4px 10px rgba(0,0,0,0.15);
-}
-
-/* Word tile fade-in animation */
-@keyframes fadeInUp {
-    from {
-        opacity: 0;
-        transform: translateY(6px);
-    }
-    to {
-        opacity: 1;
-        transform: translateY(0);
-    }
-}
-
-/* 4. Global audio controls */
-.listen-controls {
-    margin-bottom: 25px;
-    padding: 16px;
-    background: rgba(255,255,255,0.18);
-    backdrop-filter: blur(8px);
-    border-radius: 16px;
-    display: flex;
-    gap: 12px;
-    flex-wrap: wrap;
-    animation: fadeIn 0.4s ease;
-}
-
-/* Fade-in animation */
-@keyframes fadeIn {
-    from { opacity: 0; }
-    to { opacity: 1; }
-}
-
-/* 5. Pill buttons */
-.pill-btn {
-    padding: 10px 18px;
-    border-radius: 30px;
-    background: rgba(255,255,255,0.25);
-    border: 1px solid rgba(255,255,255,0.35);
-    backdrop-filter: blur(6px);
-    cursor: pointer;
-    font-size: 15px;
-    transition: 0.25s ease;
-}
-
-.pill-btn:hover {
-    background: rgba(255,255,255,0.35);
-    transform: translateY(-2px);
-}
-
-/* 6. Listen tab title */
-#tab-listen h2 {
-    margin-bottom: 18px;
-    font-size: 26px;
-    font-weight: 700;
-    letter-spacing: 0.4px;
-}
-
-/* Enhanced slide-down animation for category content */
-.listen-content {
-    overflow: hidden;
-    max-height: 0;
-    opacity: 0;
-    transition: max-height 0.35s ease, opacity 0.35s ease;
-}
-
-.listen-content.open {
-    max-height: 600px;
-    opacity: 1;
-}
-
-/* LISTEN TAB — UNIFIED DASHBOARD THEME */
-
-/* Cool-tone glassmorphism background */
-#tab-listen {
-    background: linear-gradient(135deg, rgba(30,60,90,0.35), rgba(20,40,60,0.35));
+    box-shadow: 0 18px 40px rgba(15, 23, 42, 0.7);
     backdrop-filter: blur(14px);
-    padding: 24px;
-    border-radius: 22px;
+    -webkit-backdrop-filter: blur(14px);
 }
 
-/* Category cards match dashboard glass panels */
-.listen-section {
-    background: rgba(255,255,255,0.20);
-    backdrop-filter: blur(12px);
-    border: 1px solid rgba(255,255,255,0.28);
+.glass-header {
+    background: rgba(15, 23, 42, 0.7);
+    border-bottom: 1px solid rgba(148, 163, 184, 0.4);
+    backdrop-filter: blur(14px);
+    -webkit-backdrop-filter: blur(14px);
+    padding: 20px;
+    text-align: center;
 }
 
-/* Category header typography matches dashboard */
-.listen-header {
-    font-family: 'Inter', sans-serif;
-    font-weight: 600;
-    color: #f0f4ff;
+h1 {
+    margin: 0;
+    color: #a5f3fc;
 }
 
-/* Word tiles match dashboard tile geometry */
-.listen-word {
-    background: rgba(255,255,255,0.22);
-    border: 1px solid rgba(255,255,255,0.32);
-    color: #f8faff;
-    font-family: 'Inter', sans-serif;
-}
-
-/* Hover glow matches dashboard buttons */
-.listen-word:hover {
-    box-shadow: 0 6px 18px rgba(0,0,0,0.25);
-}
-
-/* Global audio controls match dashboard toolbar */
-.listen-controls {
-    background: rgba(255,255,255,0.20);
-    border: 1px solid rgba(255,255,255,0.28);
-}
-
-/* Pill buttons match dashboard CTA buttons */
-.pill-btn {
-    background: rgba(255,255,255,0.22);
-    border: 1px solid rgba(255,255,255,0.32);
-    color: #f8faff;
-    font-weight: 500;
-    letter-spacing: 0.3px;
-}
-
-/* Title matches dashboard hero typography */
-#tab-listen h2 {
-    color: #ffffff;
-    text-shadow: 0 2px 6px rgba(0,0,0,0.35);
-}
-
-
-/* ============================================================
-   FLASHCARDS GRID
-============================================================ */
-
-.flash-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
-    gap: 16px;
-}
-
-.flashcard {
-    position: relative;
-    height: 140px;
-    perspective: 1000px;
-    cursor: pointer;
-}
-
-.flashcard .front,
-.flashcard .back {
-    position: absolute;
-    width: 100%;
-    height: 100%;
-    backface-visibility: hidden;
+/* DASHBOARD */
+.dashboard {
     display: flex;
     justify-content: center;
-    align-items: center;
-    transition: transform 0.6s ease;
+    gap: 20px;
+    padding: 15px;
+    margin: 16px auto;
+    max-width: 900px;
 }
 
-.flashcard .front {
-    transform: rotateY(0deg);
+.dash-item {
+    text-align: center;
 }
 
-.flashcard .back {
-    transform: rotateY(180deg);
-}
-
-.flashcard.flipped .front {
-    transform: rotateY(180deg);
-}
-
-.flashcard.flipped .back {
-    transform: rotateY(0deg);
-}
-
-/* ============================================================
-   FLASHCARDS — UNIFIED DASHBOARD THEME
-============================================================ */
-
-.flashcard-section {
-    background: rgba(255,255,255,0.20);
-    backdrop-filter: blur(12px);
-    border-radius: 16px;
-    padding: 18px;
-    margin-bottom: 22px;
-    border: 1px solid rgba(255,255,255,0.28);
-    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
-    transition: transform 0.2s ease, box-shadow 0.2s ease;
-}
-
-.flashcard-section:hover {
-    transform: translateY(-3px);
-    box-shadow: 0 8px 20px rgba(0,0,0,0.25);
-}
-
-.flashcard-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
+.dash-link {
+    background: rgba(51, 65, 85, 0.8);
+    color: #e2e8f0;
+    padding: 10px 16px;
+    border-radius: 14px;
+    border: 1px solid rgba(148, 163, 184, 0.5);
     cursor: pointer;
-    font-weight: 600;
-    padding: 14px 10px;
-    margin-bottom: 8px;
-    font-size: 18px;
-    color: #f0f4ff;
+    font-size: 14px;
 }
 
-.flashcard-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
-    gap: 14px;
+/* LEVEL SELECTOR */
+.level-select {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    padding: 12px;
+    margin: 12px auto;
+    max-width: 500px;
+}
+
+.level-btn {
+    padding: 8px 14px;
+    border-radius: 14px;
+    background: rgba(71, 85, 105, 0.9);
+    color: #e2e8f0;
+    cursor: pointer;
+    border: 1px solid rgba(148, 163, 184, 0.5);
+    font-size: 13px;
+}
+
+.level-btn.active {
+    background: rgba(14, 165, 233, 0.9);
+    color: #0f172a;
+}
+
+/* RATE CONTROL */
+.rate-control {
+    text-align: center;
+    padding: 12px;
+    margin: 12px auto;
+    max-width: 500px;
+}
+
+/* STUDENT NAME */
+.student-name-box {
+    padding: 15px;
+    margin: 12px auto;
+    max-width: 500px;
+    text-align: center;
+}
+
+.name-status {
     margin-top: 10px;
+    font-size: 14px;
 }
 
-.flashcard {
-    perspective: 1000px;
-    cursor: pointer;
-}
-
-.flashcard-inner {
-    background: rgba(255,255,255,0.22);
-    border: 1px solid rgba(255,255,255,0.32);
-    border-radius: 14px;
-    padding: 20px;
-    text-align: center;
-    font-size: 18px;
-    color: #ffffff;
-    transition: transform 0.6s;
-    transform-style: preserve-3d;
-}
-
-.flashcard-text {
-    backface-visibility: hidden;
-    position: relative;
-}
-
-
-/* ============================================================
-   BUILD TAB
-============================================================ */
-
-/* BUILD TAB — UNIFIED DASHBOARD THEME */
-
-/* Build container */
-#tab-build {
-    background: linear-gradient(135deg, rgba(30,60,90,0.35), rgba(20,40,60,0.35));
-    backdrop-filter: blur(14px);
-    padding: 24px;
-    border-radius: 22px;
-}
-
-/* Build card */
-.build-card {
-    background: rgba(255,255,255,0.20);
-    backdrop-filter: blur(12px);
-    border-radius: 16px;
-    padding: 20px;
-    margin-bottom: 22px;
-    border: 1px solid rgba(255,255,255,0.28);
-    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
-    transition: transform 0.2s ease, box-shadow 0.2s ease;
-}
-
-.build-card:hover {
-    transform: translateY(-3px);
-    box-shadow: 0 8px 20px rgba(0,0,0,0.25);
-}
-
-/* Build title */
-#tab-build h2 {
-    font-size: 26px;
-    font-weight: 700;
-    letter-spacing: 0.4px;
-    color: #ffffff;
-    margin-bottom: 18px;
-    text-shadow: 0 2px 6px rgba(0,0,0,0.35);
-}
-
-/* Word bank grid */
-.build-word-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
-    gap: 14px;
-    margin-top: 12px;
-}
-
-/* Word pill */
-.build-word {
-    padding: 12px 16px;
-    border-radius: 30px;
-    background: rgba(255,255,255,0.25);
-    border: 1px solid rgba(255,255,255,0.35);
-    backdrop-filter: blur(6px);
-    cursor: pointer;
-    text-align: center;
-    font-size: 16px;
-    color: #ffffff;
-    transition: 0.25s ease;
-}
-
-.build-word:hover {
-    background: rgba(255,255,255,0.35);
-    transform: translateY(-2px);
-}
-
-/* Sentence output box */
-.build-output {
-    background: rgba(255,255,255,0.22);
-    border: 1px solid rgba(255,255,255,0.32);
-    border-radius: 14px;
-    padding: 18px;
-    margin-top: 18px;
-    color: #ffffff;
-    font-size: 18px;
-    box-shadow: 0 4px 10px rgba(0,0,0,0.15);
-}
-
-/* Build buttons */
-.build-controls {
-    margin-top: 20px;
+/* NAVIGATION (GLASS TAB BAR) */
+.nav-bar {
     display: flex;
-    gap: 12px;
-    flex-wrap: wrap;
+    justify-content: center;
+    gap: 10px;
+    padding: 12px;
+    margin: 16px auto;
+    max-width: 900px;
 }
 
-.build-btn {
-    padding: 10px 18px;
-    border-radius: 30px;
-    background: rgba(255,255,255,0.25);
-    border: 1px solid rgba(255,255,255,0.35);
-    backdrop-filter: blur(6px);
+.tab-btn {
+    padding: 10px 16px;
+    border-radius: 14px;
+    background: rgba(51, 65, 85, 0.9);
+    color: #e2e8f0;
     cursor: pointer;
-    font-size: 15px;
-    color: #ffffff;
-    transition: 0.25s ease;
+    border: 1px solid rgba(148, 163, 184, 0.5);
+    font-size: 14px;
 }
 
-.build-btn:hover {
-    background: rgba(255,255,255,0.35);
-    transform: translateY(-2px);
+.tab-btn.active {
+    background: rgba(14, 165, 233, 0.95);
+    color: #0f172a;
 }
 
-/* Animated word placement */
-@keyframes buildPop {
-    from { transform: scale(0.8); opacity: 0; }
-    to { transform: scale(1); opacity: 1; }
+.hidden {
+    display: none;
 }
 
-.build-output span {
-    animation: buildPop 0.25s ease;
+/* INPUTS & BUTTONS */
+.input-field {
+    width: 100%;
+    padding: 10px;
+    border-radius: 14px;
+    border: 1px solid rgba(148, 163, 184, 0.6);
+    background: rgba(15, 23, 42, 0.7);
+    color: #e2e8f0;
 }
 
-.build-card .build-english {
-    font-size: 16px;
-    margin-bottom: 10px;
-}
-
-.build-selected {
-    min-height: 30px;
-    padding: 8px;
-    border-radius: 999px;
-    border: 1px dashed rgba(148, 163, 184, 0.6);
-    margin-bottom: 10px;
-}
-
-.build-words {
-    margin-bottom: 10px;
-}
-
-.build-input-row {
-    display: flex;
-    gap: 8px;
+.primary-btn {
+    padding: 10px 14px;
+    border-radius: 14px;
+    background: rgba(14, 165, 233, 0.95);
+    color: #0f172a;
+    cursor: pointer;
+    border: none;
     margin-top: 8px;
 }
 
-.build-input-row input {
-    flex: 1;
-    border-radius: 999px;
-    border: 1px solid rgba(148, 163, 184, 0.6);
-    padding: 6px 10px;
-    background: rgba(15, 23, 42, 0.8);
-    color: #e5e7eb;
-}
-
-/* ============================================================
-   SENTENCE TAB
-============================================================ */
-/* SENTENCE TAB — UNIFIED DASHBOARD THEME */
-
-/* Container */
-#tab-sentence {
-    background: linear-gradient(135deg, rgba(30,60,90,0.35), rgba(20,40,60,0.35));
-    backdrop-filter: blur(14px);
-    padding: 24px;
-    border-radius: 22px;
-}
-
-/* Card wrapper */
-.sentence-card {
-    background: rgba(255,255,255,0.20);
-    backdrop-filter: blur(12px);
-    border-radius: 16px;
-    padding: 20px;
-    margin-bottom: 22px;
-    border: 1px solid rgba(255,255,255,0.28);
-    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
-    transition: transform 0.2s ease, box-shadow 0.2s ease;
-}
-
-.sentence-card:hover {
-    transform: translateY(-3px);
-    box-shadow: 0 8px 20px rgba(0,0,0,0.25);
-}
-
-/* Title */
-#tab-sentence h2 {
-    font-size: 26px;
-    font-weight: 700;
-    letter-spacing: 0.4px;
-    color: #ffffff;
-    margin-bottom: 18px;
-    text-shadow: 0 2px 6px rgba(0,0,0,0.35);
-}
-
-/* Sentence rows */
-.sentence-row {
-    background: rgba(255,255,255,0.22);
-    border: 1px solid rgba(255,255,255,0.32);
+.secondary-btn {
+    padding: 10px 14px;
     border-radius: 14px;
-    padding: 14px;
-    margin-bottom: 12px;
+    background: rgba(51, 65, 85, 0.9);
+    color: #e2e8f0;
+    cursor: pointer;
+    border: 1px solid rgba(148, 163, 184, 0.5);
+}
+
+/* WORD PILLS (LISTEN CONTENT — DARK, NOT GLASS) */
+.word-pill {
+    padding: 10px;
+    border-radius: 12px;
+    background: #1e293b;
+    color: #e2e8f0;
+    cursor: pointer;
+    text-align: center;
+    border: 1px solid rgba(148, 163, 184, 0.4);
+    font-size: 14px;
+}
+
+/* LISTEN TAB COLLAPSIBLE (HEADER GLASS, CONTENT DARK) */
+.listen-category-header {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    color: #ffffff;
-    box-shadow: 0 4px 10px rgba(0,0,0,0.15);
-    transition: 0.25s ease;
-}
-
-.sentence-row:hover {
-    transform: translateY(-2px);
-    background: rgba(255,255,255,0.30);
-}
-
-/* Play button */
-.sentence-row button {
-    padding: 8px 14px;
-    border-radius: 30px;
-    background: rgba(255,255,255,0.25);
-    border: 1px solid rgba(255,255,255,0.35);
-    backdrop-filter: blur(6px);
-    cursor: pointer;
-    font-size: 15px;
-    color: #ffffff;
-    transition: 0.25s ease;
-}
-
-.sentence-row button:hover {
-    background: rgba(255,255,255,0.35);
-    transform: translateY(-2px);
-}
-
-/* Fade-in animation */
-@keyframes sentenceFade {
-    from { opacity: 0; transform: translateY(6px); }
-    to { opacity: 1; transform: translateY(0); }
-}
-
-.sentence-row {
-    animation: sentenceFade 0.35s ease;
-}
-
-/* ============================================================
-   CONVERSATION TAB
-============================================================ */
-
-/* CONVERSATION TAB — UNIFIED DASHBOARD THEME */
-
-/* Container */
-#tab-conversation {
-    background: linear-gradient(135deg, rgba(30,60,90,0.35), rgba(20,40,60,0.35));
-    backdrop-filter: blur(14px);
-    padding: 24px;
-    border-radius: 22px;
-}
-
-/* Card wrapper */
-.conversation-card {
-    background: rgba(255,255,255,0.20);
-    backdrop-filter: blur(12px);
-    border-radius: 16px;
-    padding: 20px;
-    margin-bottom: 22px;
-    border: 1px solid rgba(255,255,255,0.28);
-    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
-    transition: transform 0.2s ease, box-shadow 0.2s ease;
-}
-
-.conversation-card:hover {
-    transform: translateY(-3px);
-    box-shadow: 0 8px 20px rgba(0,0,0,0.25);
-}
-
-/* Title */
-#tab-conversation h2 {
-    font-size: 26px;
-    font-weight: 700;
-    letter-spacing: 0.4px;
-    color: #ffffff;
-    margin-bottom: 18px;
-    text-shadow: 0 2px 6px rgba(0,0,0,0.35);
-}
-
-/* Conversation message bubble */
-.convo-bubble {
-    background: rgba(255,255,255,0.22);
-    border: 1px solid rgba(255,255,255,0.32);
-    border-radius: 14px;
-    padding: 14px 18px;
-    margin-bottom: 14px;
-    color: #ffffff;
-    font-size: 17px;
-    box-shadow: 0 4px 10px rgba(0,0,0,0.15);
-    animation: convoFade 0.35s ease;
-}
-
-/* User bubble alignment */
-.convo-user {
-    text-align: right;
-    background: rgba(255,255,255,0.35);
-}
-
-/* AI bubble alignment */
-.convo-ai {
-    text-align: left;
-}
-
-/* Input row */
-.convo-input-row {
-    display: flex;
-    gap: 10px;
-    margin-top: 18px;
-}
-
-.convo-input-row input {
-    flex: 1;
-    border-radius: 30px;
-    border: 1px solid rgba(255,255,255,0.35);
     padding: 10px 14px;
-    background: rgba(255,255,255,0.20);
-    backdrop-filter: blur(6px);
-    color: #ffffff;
-    font-size: 16px;
-}
-
-/* Send button */
-.convo-send-btn {
-    padding: 10px 18px;
-    border-radius: 30px;
-    background: rgba(255,255,255,0.25);
-    border: 1px solid rgba(255,255,255,0.35);
-    backdrop-filter: blur(6px);
+    margin: 10px 0;
     cursor: pointer;
-    font-size: 15px;
-    color: #ffffff;
-    transition: 0.25s ease;
-}
-
-.convo-send-btn:hover {
-    background: rgba(255,255,255,0.35);
-    transform: translateY(-2px);
-}
-
-/* Fade-in animation */
-@keyframes convoFade {
-    from { opacity: 0; transform: translateY(6px); }
-    to { opacity: 1; transform: translateY(0); }
-}
-
-
-
-.conversation-card pre {
-    white-space: pre-wrap;
-    background: rgba(255,255,255,0.20);
-    border: 1px solid rgba(255,255,255,0.28);
-    backdrop-filter: blur(8px);
-    border-radius: 12px;
-    padding: 10px;
-    font-size: 14px;
-    color: #ffffff;
-}
-
-.conversation-answer {
-    margin-top: 10px;
-}
-
-.conversation-answer textarea {
-    width: 100%;
-    border-radius: 12px;
-    border: 1px solid rgba(148, 163, 184, 0.6);
-    padding: 8px;
-    background: rgba(15, 23, 42, 0.8);
-    color: #e5e7eb;
-}
-
-/* ============================================================
-   CERTIFICATES TAB — STYLING
-============================================================ */
-
-#tab-certificates {
-    background: linear-gradient(135deg, rgba(30,60,90,0.35), rgba(20,40,60,0.35));
+    border-radius: 14px;
+    background: rgba(15, 23, 42, 0.7);
+    border: 1px solid rgba(148, 163, 184, 0.5);
     backdrop-filter: blur(14px);
-    padding: 24px;
-    border-radius: 22px;
+    -webkit-backdrop-filter: blur(14px);
 }
 
-.certificate-preview {
-    background: rgba(255,255,255,0.20);
-    backdrop-filter: blur(12px);
-    border-radius: 16px;
-    padding: 20px;
-    margin-bottom: 22px;
-    border: 1px solid rgba(255,255,255,0.28);
-    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
-    transition: transform 0.2s ease, box-shadow 0.2s ease;
-}
-
-.certificate-preview:hover {
-    transform: translateY(-3px);
-    box-shadow: 0 8px 20px rgba(0,0,0,0.25);
-}
-
-.cert-id {
-    margin-top: 10px;
-    font-size: 14px;
-    color: #f0f4ff;
-}
-
-.cert-qr img {
-    margin-top: 12px;
-    border-radius: 12px;
-}
-
-.cert-download-btn {
-    margin-top: 14px;
-    padding: 10px 18px;
-    border-radius: 30px;
-    background: rgba(255,255,255,0.25);
-    border: 1px solid rgba(255,255,255,0.35);
-    backdrop-filter: blur(6px);
-    cursor: pointer;
+.listen-category-title {
     font-size: 15px;
-    color: #ffffff;
-    transition: 0.25s ease;
 }
 
-.cert-download-btn:hover {
-    background: rgba(255,255,255,0.35);
-    transform: translateY(-2px);
+.listen-arrow {
+    transition: transform 0.25s ease;
 }
 
-.cert-gallery {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
-    gap: 16px;
-    margin-top: 20px;
+.listen-arrow.open {
+    transform: rotate(90deg);
 }
 
-.cert-gallery-item {
-    background: rgba(255,255,255,0.20);
-    border-radius: 14px;
-    padding: 14px;
-    text-align: center;
-    border: 1px solid rgba(255,255,255,0.28);
-    color: #ffffff;
+.listen-category-content {
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.25s ease;
+    padding: 0 4px;
 }
 
-.cert-gallery-item.locked {
-    opacity: 0.5;
+.listen-category-content.open {
+    max-height: 500px;
+    padding-top: 8px;
 }
 
-.cert-btn-row {
-    margin-top: 20px;
-    text-align: center;
+/* FLASHCARDS — GLASS CARDS, MEDIUM SIZE */
+.flip-wrapper {
+    perspective: 1000px;
 }
 
-.cert-btn {
-    padding: 10px 18px;
-    border-radius: 30px;
-    background: rgba(255,255,255,0.25);
-    border: 1px solid rgba(255,255,255,0.35);
-    backdrop-filter: blur(6px);
-    cursor: pointer;
-    font-size: 15px;
-    color: #ffffff;
-    transition: 0.25s ease;
+.flip-card {
+    position: relative;
+    width: 100%;
+    height: 140px;
+    transform-style: preserve-3d;
+    transition: transform 0.4s ease;
 }
 
-.cert-btn:hover {
-    background: rgba(255,255,255,0.35);
-    transform: translateY(-2px);
+.flip-card.flipped {
+    transform: rotateY(180deg);
 }
 
-/* Celebration popup */
-.celebration-popup {
-    position: fixed;
-    top: 20px;
-    right: 20px;
-    background: rgba(255,255,255,0.25);
-    border: 1px solid rgba(255,255,255,0.35);
-    backdrop-filter: blur(10px);
-    padding: 14px 20px;
-    border-radius: 14px;
-    color: #ffffff;
-    font-size: 16px;
-    opacity: 0;
-    transform: translateY(-10px);
-    transition: opacity 0.4s ease, transform 0.4s ease;
-}
-
-.celebration-popup.show {
-    opacity: 1;
-    transform: translateY(0);
-}
-
-/* Confetti */
-.confetti-container {
-    position: fixed;
-    top: 0;
-    left: 0;
+.flip-face {
+    position: absolute;
     width: 100%;
     height: 100%;
-    pointer-events: none;
-}
-
-.confetti-piece {
-    position: absolute;
-    width: 10px;
-    height: 10px;
-    border-radius: 2px;
-    animation: confettiFall 1.4s linear forwards;
-}
-
-@keyframes confettiFall {
-    from { transform: translateY(-20px); opacity: 1; }
-    to { transform: translateY(120vh); opacity: 0; }
-}
-
-/* ============================================================
-   PROGRESS SUMMARY
-============================================================ */
-
-#progress-summary {
-    padding: 10px 20px;
-    font-size: 14px;
-}
-
-/* ============================================================
-   NEON ICONS + GLOW ANIMATION
-============================================================ */
-
-.icon {
-  width: 64px;
-  height: 64px;
-  display: inline-block;
-}
-
-.icon.neon {
-  filter:
-    drop-shadow(0 0 4px  rgba(0, 255, 255, 0.9))
-    drop-shadow(0 0 12px rgba(0, 255, 136, 0.7))
-    drop-shadow(0 0 24px rgba(180, 79, 232, 0.6));
-  transition: filter 0.3s ease;
-}
-
-@keyframes neon-pulse {
-  0%, 100% {
-    filter:
-      drop-shadow(0 0 4px  rgba(0, 255, 255, 0.9))
-      drop-shadow(0 0 12px rgba(0, 255, 136, 0.7))
-      drop-shadow(0 0 24px rgba(180, 79, 232, 0.6));
-  }
-  50% {
-    filter:
-      drop-shadow(0 0 2px  rgba(0, 255, 255, 0.7))
-      drop-shadow(0 0 8px  rgba(0, 255, 136, 0.5))
-      drop-shadow(0 0 16px rgba(180, 79, 232, 0.4));
-  }
-}
-
-.icon.neon-animated {
-  animation: neon-pulse 2.5s ease-in-out infinite;
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .icon.neon-animated {
-    animation: none;
-  }
-}
-/* ============================================================
-   HERO BANNER SIZE CONTROL
-============================================================ */
-
-.small-hero {
-    max-height: 220px;
-    overflow: hidden;
-}
-
-.hero-image {
-    width: 100%;
-    height: auto;
-    object-fit: cover;
-    opacity: 0.9;
-}
-
-/* ============================================================
-   DASHBOARD — AUDIO SPEED CONTROL
-============================================================ */
-
-.audio-speed-card {
-    padding: 15px;
-    margin-top: 15px;
+    backface-visibility: hidden;
     display: flex;
-    gap: 12px;
     align-items: center;
+    justify-content: center;
+    border-radius: 18px;
+    font-size: 20px;
+    padding: 10px;
+    border: 1px solid rgba(148, 163, 184, 0.5);
+    box-shadow: 0 18px 40px rgba(15, 23, 42, 0.7);
+    backdrop-filter: blur(14px);
+    -webkit-backdrop-filter: blur(14px);
 }
 
-/* ============================================================
-   DASHBOARD — LEARNER NAME FIELD
-============================================================ */
+.flip-front {
+    background: rgba(15, 23, 42, 0.7);
+    color: #e2e8f0;
+}
 
-.learner-name-card {
-    padding: 15px;
-    margin-top: 15px;
-    display: flex;
-    gap: 12px;
-    align-items: center;
+.flip-back {
+    background: rgba(14, 165, 233, 0.95);
+    color: #0f172a;
+    transform: rotateY(180deg);
+}
+
+/* QUIZ & BUILD CARDS — GLASS */
+.quiz-card,
+.build-card {
+    background: rgba(15, 23, 42, 0.7);
+    border-radius: 18px;
+    border: 1px solid rgba(148, 163, 184, 0.5);
+    box-shadow: 0 18px 40px rgba(15, 23, 42, 0.7);
+    backdrop-filter: blur(14px);
+    -webkit-backdrop-filter: blur(14px);
+    padding: 16px;
+    margin: 16px auto;
+    max-width: 700px;
+}
+
+/* BADGES */
+.badge-section {
+    padding: 20px;
+    margin: 16px auto;
+    max-width: 700px;
 }
