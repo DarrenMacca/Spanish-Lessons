@@ -2,138 +2,79 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>CEFR Spanish Trainer</title>
+    <title>Spanish CEFR Trainer</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <!-- Fonts -->
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
-
-    <!-- CSS -->
     <link rel="stylesheet" href="styles.css">
-
-    <!-- Libraries for certificate download -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 </head>
 
 <body>
 
-<div class="page-wrapper">
+<header class="glass-header">
+    <h1>Spanish CEFR Trainer</h1>
+</header>
 
-  
-
-    <!-- ============================================================
-         MAIN CONTENT AREA
-    ============================================================ -->
-    <main class="main-content">
-
-    <!-- ============================================================
-     DASHBOARD TAB
-============================================================ -->
-<div id="tab-dashboard" style="display:none;">
-
-    <div id="dashboard-content">
-
-        <!-- HERO -->
-        <div class="dashboard-hero"></div>
-
-        <!-- TABS (global navigation) -->
-        <div class="dashboard-tabs">
-            <button class="tab-btn" onclick="showTab('dashboard')">Dashboard</button>
-            <button class="tab-btn" onclick="showTab('listen')">Listen</button>
-            <button class="tab-btn" onclick="showTab('flashcards')">Flashcards</button>
-            <button class="tab-btn" onclick="showTab('build')">Build</button>
-            <button class="tab-btn" onclick="showTab('sentence')">Sentence</button>
-            <button class="tab-btn" onclick="showTab('conversation')">Conversation</button>
-            <button class="tab-btn" onclick="showTab('certificates')">Certificates</button>
-        </div>
-
-        <!-- CONTROLS -->
-        <div class="dashboard-controls"></div>
-
-        <!-- TILE GRID -->
-        <div class="dashboard-row"></div>
-
-        <!-- BADGES -->
-        <div class="dashboard-badges"></div>
-
-        <!-- PROMOTED BADGES -->
-        <div class="dashboard-promoted-badges"></div>
-
-        <!-- CERTIFICATES -->
-        <div class="dashboard-certificates-preview"></div>
-
-        <!-- SUMMARY -->
-        <div id="progress-summary" class="dashboard-summary"></div>
-
+<!-- DASHBOARD WITH TAB LINKS (GLASS PANEL) -->
+<div class="dashboard glass-panel">
+    <div class="dash-item">
+        <button class="dash-link" data-tab="listen">Listen</button>
     </div>
-
+    <div class="dash-item">
+        <button class="dash-link" data-tab="flash">Flashcards</button>
+    </div>
+    <div class="dash-item">
+        <button class="dash-link" data-tab="quiz">Quiz</button>
+    </div>
+    <div class="dash-item">
+        <button class="dash-link" data-tab="build">Build</button>
+    </div>
 </div>
 
+<!-- LEVEL SELECTOR -->
+<div class="level-select glass-panel">
+    <button class="level-btn active" data-level="A1">A1</button>
+    <button class="level-btn" data-level="A2">A2</button>
+    <button class="level-btn" data-level="B1">B1</button>
+</div>
 
+<!-- RATE CONTROL -->
+<div class="rate-control glass-panel">
+    <label for="rate">Speech Rate:</label><br>
+    <input type="range" id="rate" min="0.5" max="1.5" step="0.1" value="1.0">
+</div>
 
+<!-- STUDENT NAME -->
+<div class="student-name-box glass-panel">
+    <input id="student-name" class="input-field" placeholder="Your name for certificates">
+    <button id="save-name-btn" class="primary-btn">Save Name</button>
+    <div id="name-status" class="name-status"></div>
+</div>
 
+<!-- NAVIGATION (GLASS TAB BAR) -->
+<nav class="glass-panel nav-bar">
+    <button class="tab-btn active" data-tab="listen">Listen</button>
+    <button class="tab-btn" data-tab="flash">Flashcards</button>
+    <button class="tab-btn" data-tab="quiz">Quiz</button>
+    <button class="tab-btn" data-tab="build">Build</button>
+    <button class="tab-btn" data-tab="conversation">Conversation</button>
+    <button class="tab-btn" data-tab="grammar">Grammar</button>
+</nav>
 
+<!-- TABS -->
+<div id="listen"></div>
+<div id="flash" class="hidden"></div>
+<div id="quiz" class="hidden"></div>
+<div id="build" class="hidden"></div>
+<div id="conversation" class="hidden"></div>
+<div id="grammar" class="hidden"></div>
 
-        <!-- ============================================================
-             LISTEN TAB
-        ============================================================ -->
-        <div id="tab-listen" style="display:none;">
-            <div id="listen-categories"></div>
-        </div>
+<!-- BADGES -->
+<div class="badge-section glass-panel">
+    <h3>Your Badges</h3>
+    <ul id="badge-list"></ul>
+</div>
 
-        <!-- ============================================================
-             FLASHCARDS TAB
-        ============================================================ -->
-        <div id="tab-flashcards" style="display:none;">
-            <div id="flashcards-content"></div>
-        </div>
-
-        <!-- ============================================================
-             BUILD TAB
-        ============================================================ -->
-        <div id="tab-build" style="display:none;">
-            <div id="build-content"></div>
-        </div>
-
-        <!-- ============================================================
-             SENTENCE TAB
-        ============================================================ -->
-        <div id="tab-sentence" style="display:none;">
-            <div id="sentence-content"></div>
-        </div>
-
-        <!-- ============================================================
-             CONVERSATION TAB
-        ============================================================ -->
-        <div id="tab-conversation" style="display:none;">
-            <div id="conversation-content"></div>
-        </div>
-
-        <!-- ============================================================
-             CERTIFICATES TAB
-        ============================================================ -->
-        <div id="tab-certificates" style="display:none;">
-            <div id="certificates-content"></div>
-        </div>
-
-    </main>
-
-    <!-- ============================================================
-         OPTIONAL FOOTER
-    ============================================================ -->
-    <footer class="footer glass-card">
-        <p>CEFR Spanish Trainer — Built with ❤️ by Macca</p>
-        <p>All progress is saved locally on your device.</p>
-    </footer>
-
-</div> <!-- end page-wrapper -->
-
-<!-- ============================================================
-     MAIN JAVASCRIPT FILE
-============================================================ -->
-<script src="app.js"></script>
+<script src="app-v2.js"></script>
 
 </body>
-
 </html>
