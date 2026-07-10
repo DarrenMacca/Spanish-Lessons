@@ -537,22 +537,48 @@ document.querySelectorAll('.tab-btn').forEach(btn => {
     });
 });
 
-
 /* ============================================================
-   TAB SYSTEM — CLEAN VERSION
+   TAB SWITCHER — FINAL VERSION WITH DASHBOARD
    ============================================================ */
+
+const TABS = [
+    "dashboard",
+    "listen",
+    "flash",
+    "quiz",
+    "build",
+    "conversation",
+    "grammar"
+];
 
 function activateTab(tabName) {
     // Hide all tabs
-    document.querySelectorAll('#listen, #flash, #quiz, #build, #conversation, #grammar')
-        .forEach(tab => tab.classList.add('hidden'));
+    TABS.forEach(id => {
+        const panel = document.getElementById(id);
+        if (panel) panel.classList.add("hidden");
+    });
 
     // Show selected tab
-    document.getElementById(tabName).classList.remove('hidden');
+    const activePanel = document.getElementById(tabName);
+    if (activePanel) activePanel.classList.remove("hidden");
 
     // Update active button
-    document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
-    document.querySelector(`.tab-btn[data-tab="${tabName}"]`).classList.add('active');
+    document.querySelectorAll('.tab-btn').forEach(btn => {
+        btn.classList.toggle("active", btn.dataset.tab === tabName);
+    });
+
+    // Render tab content
+    switch (tabName) {
+        case "listen": renderListenTab(); break;
+        case "flash": renderFlashTab(); break;
+        case "quiz": renderQuizTab(); break;
+        case "build": renderBuildTab(); break;
+        case "conversation": renderConversationTab(); break;
+        case "grammar": renderGrammarTab(); break;
+        case "dashboard":
+            // Dashboard is static
+            break;
+    }
 }
 
 // Attach listeners
@@ -561,6 +587,8 @@ document.querySelectorAll('.tab-btn').forEach(btn => {
         activateTab(btn.dataset.tab);
     });
 });
+
+
 
 
 
