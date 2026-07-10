@@ -99,6 +99,45 @@ body {
     margin: 20px auto;
 }
 
+.nav-bar {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 14px;
+    padding: 14px;
+}
+
+.word-pill {
+    display: inline-block;
+    padding: 10px 16px;
+    margin: 6px;
+    background: rgba(51, 65, 85, 0.75);
+    border-radius: 14px;
+    border: 1px solid rgba(148, 163, 184, 0.35);
+    color: #e2e8f0;
+    cursor: pointer;
+    font-size: 15px;
+    transition: background 0.25s ease, transform 0.15s ease;
+}
+
+.word-pill:hover {
+    background: rgba(14, 165, 233, 0.95);
+    color: #0f172a;
+    transform: translateY(-2px);
+}
+
+.word-pill:active {
+    transform: scale(0.96);
+}
+
+/* Smaller pills ONLY for Build tab */
+.build-pill {
+    padding: 6px 10px;
+    font-size: 14px;
+    border-radius: 10px;
+}
+
+
 /* Make both dashboard boxes equal height */
 .dash-left,
 .dash-right {
