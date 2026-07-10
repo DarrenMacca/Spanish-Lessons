@@ -10,20 +10,49 @@
 
 <body>
 
-<div class="glass-header">
-    <h1>Spanish Trainer</h1>
+<!-- HEADER + HERO IMAGE (inside Dashboard tab now) -->
+<div id="dashboard">
+    <div class="glass-header">
+        <h1>Spanish Trainer</h1>
+        <img src="images/dashboard-hero.png" 
+             alt="Dashboard Hero" 
+             class="dashboard-hero-img">
+    </div>
 
-    <img src="images/dashboard-hero.png" 
-         alt="Dashboard Hero" 
-         class="dashboard-hero-img">
+    <div class="dashboard-row">
+        <div class="dash-left glass-panel">
+            <label class="section-title">Audio Speed</label>
+            <input type="range" id="rate" min="0.6" max="1.4" step="0.1" value="1">
+        </div>
+
+        <div class="dash-right glass-panel">
+            <label class="section-title">Skill Level</label>
+            <div class="level-buttons">
+                <button class="level-btn" data-level="A1">A1</button>
+                <button class="level-btn" data-level="A2">A2</button>
+                <button class="level-btn" data-level="B1">B1</button>
+                <button class="level-btn" data-level="B2">B2</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="student-name-box glass-panel">
+        <label class="section-title">Your name for certificates</label>
+        <input id="student-name" class="input-field" type="text" placeholder="Enter your name">
+        <button id="save-name-btn" class="primary-btn">Save Name</button>
+        <div id="name-status" class="name-status"></div>
+    </div>
+
+    <div class="badge-section glass-panel">
+        <h3>Your Badges</h3>
+        <ul id="badge-list"></ul>
+    </div>
 </div>
 
-
-
-    
-<!-- NAVIGATION (GLASS TAB BAR) -->
+<!-- NAVIGATION -->
 <nav class="glass-panel nav-bar">
-    <button class="tab-btn active" data-tab="listen">Listen</button>
+    <button class="tab-btn active" data-tab="dashboard">Dashboard</button>
+    <button class="tab-btn" data-tab="listen">Listen</button>
     <button class="tab-btn" data-tab="flash">Flashcards</button>
     <button class="tab-btn" data-tab="quiz">Quiz</button>
     <button class="tab-btn" data-tab="build">Build</button>
@@ -31,84 +60,38 @@
     <button class="tab-btn" data-tab="grammar">Grammar</button>
 </nav>
 
-<!-- LISTEN TAB -->
-<div id="listen">
+<!-- TABS -->
+<div id="listen" class="hidden">
     <div id="listen-controls"></div>
     <div id="listen-categories"></div>
 </div>
 
-<!-- FLASHCARDS TAB -->
 <div id="flash" class="hidden">
     <div id="flashcards-container"></div>
 </div>
 
-<!-- QUIZ TAB -->
 <div id="quiz" class="hidden">
     <div id="quiz-container"></div>
 </div>
 
-<!-- BUILD TAB -->
 <div id="build" class="hidden">
     <div id="build-container"></div>
 </div>
 
-<!-- CONVERSATION TAB -->
 <div id="conversation" class="hidden">
     <div id="conversation-container"></div>
 </div>
 
-<!-- GRAMMAR TAB -->
 <div id="grammar" class="hidden">
     <div id="grammar-container"></div>
-</div>
-
-<div class="dashboard-row">
-
-    <!-- LEFT: Global Audio Speed -->
-    <div class="dash-left glass-panel">
-        <label class="section-title">Audio Speed</label>
-        <input type="range" id="rate" min="0.6" max="1.4" step="0.1" value="1">
-    </div>
-
-    <!-- RIGHT: CEFR Levels -->
-    <div class="dash-right glass-panel">
-        <label class="section-title">Skill Level</label>
-        <div class="level-buttons">
-            <button class="level-btn" data-level="A1">A1</button>
-            <button class="level-btn" data-level="A2">A2</button>
-            <button class="level-btn" data-level="B1">B1</button>
-            <button class="level-btn" data-level="B2">B2</button>
-        </div>
-    </div>
-
-</div>
-
-
-<!-- STUDENT NAME -->
-<div class="student-name-box glass-panel">
-    <label for="student-name-input" class="section-title">Your name for certificates</label>
-    <input id="student-name-input" class="input-field" type="text" placeholder="Enter your name">
-    <button id="save-name-btn" class="primary-btn">Save Name</button>
-    <div id="name-status" class="name-status"></div>
-</div>
-
-
-
-
-<!-- BADGES -->
-<div class="badge-section glass-panel">
-    <h3>Your Badges</h3>
-    <ul id="badge-list"></ul>
 </div>
 
 <script src="wordbanks/A1.js"></script>
 <script src="wordbanks/A2.js"></script>
 <script src="wordbanks/B1.js"></script>
 <script src="wordbanks/B2.js"></script>
-
 <script src="app.js"></script>
 
-
-
 </body>
+
 </html>
