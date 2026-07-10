@@ -80,6 +80,10 @@ body {
 /* ------------------------------------------------------------
    DASHBOARD
 ------------------------------------------------------------ */
+/* --------------------------------------------------------------
+   DASHBOARD
+-------------------------------------------------------------- */
+
 .dashboard {
     display: flex;
     justify-content: center;
@@ -87,6 +91,21 @@ body {
     max-width: 900px;
     margin: 20px auto;
 }
+
+.dashboard-row {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 20px;
+    max-width: 900px;
+    margin: 20px auto;
+}
+
+.dash-link {
+    background: rgba(51, 65, 85, 0.85);
+    color: #e2e8f0;
+
+
 
 .dash-link {
     background: rgba(51, 65, 85, 0.85);
