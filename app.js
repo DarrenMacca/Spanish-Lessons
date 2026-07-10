@@ -74,29 +74,6 @@ function setLevel(level) {
     updateBadges();
 }
 
-/* ============================================================
-   TAB SWITCHING
-   ============================================================ */
-function setTab(tab) {
-    appState.currentTab = tab;
-    saveState();
-
-    document.querySelectorAll(".tab-btn").forEach(btn => {
-        btn.classList.toggle("active", btn.dataset.tab === tab);
-    });
-
-    document.querySelectorAll(".dash-link").forEach(btn => {
-        btn.classList.toggle("active", btn.dataset.tab === tab);
-    });
-
-    ["listen", "flash", "quiz", "build", "conversation", "grammar"].forEach(id => {
-        const panel = document.getElementById(id);
-        if (!panel) return;
-        panel.classList.toggle("hidden", id !== tab);
-    });
-
-    renderCurrentTab();
-}
 
 /* ============================================================
    RENDER DISPATCHER
