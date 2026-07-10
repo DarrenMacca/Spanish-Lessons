@@ -76,20 +76,6 @@ function setLevel(level) {
 
 
 /* ============================================================
-   RENDER DISPATCHER
-   ============================================================ */
-function renderCurrentTab() {
-    switch (appState.currentTab) {
-        case "listen": renderListenTab(); break;
-        case "flash": renderFlashTab(); break;
-        case "quiz": renderQuizTab(); break;
-        case "build": renderBuildTab(); break;
-        case "conversation": renderConversationTab(); break;
-        case "grammar": renderGrammarTab(); break;
-    }
-}
-
-/* ============================================================
    LISTEN TAB
    ============================================================ */
 function groupByCategory(words) {
