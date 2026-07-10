@@ -487,6 +487,9 @@ document.addEventListener("DOMContentLoaded", () => {
 
     setLevel(appState.currentLevel);
     updateBadges();
+   
+// Show the default tab
+    activateTab('listen');
 });
 
 document.querySelectorAll('.tab-btn').forEach(btn => {
@@ -506,5 +509,28 @@ document.querySelectorAll('.tab-btn').forEach(btn => {
     });
 });
 
+/* ============================================================
+   TAB SYSTEM — CLEAN VERSION
+   ============================================================ */
+
+function activateTab(tabName) {
+    // Hide all tabs
+    document.querySelectorAll('#listen, #flash, #quiz, #build, #conversation, #grammar')
+        .forEach(tab => tab.classList.add('hidden'));
+
+    // Show selected tab
+    document.getElementById(tabName).classList.remove('hidden');
+
+    // Update active button
+    document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+    document.querySelector(`.tab-btn[data-tab="${tabName}"]`).classList.add('active');
+}
+
+// Attach listeners
+document.querySelectorAll('.tab-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+        activateTab(btn.dataset.tab);
+    });
+});
 
 
