@@ -1,13 +1,18 @@
-/* GLOBAL BACKGROUND WITH SUBTLE GRADIENT */
+/* ============================================================
+   GLOBAL BASE — DARK GLASS CEFR THEME
+   ============================================================ */
+
 body {
     margin: 0;
     padding: 0;
     font-family: system-ui, sans-serif;
-    color: #e2e8f0;
     background: linear-gradient(135deg, #0f172a 0%, #1a2538 100%);
+    color: #e2e8f0;
 }
 
-/* GLASSMORPHISM BASE (MEDIUM, ROUNDED) */
+/* ------------------------------------------------------------
+   GLASS PANELS
+------------------------------------------------------------ */
 .glass-panel {
     background: rgba(15, 23, 42, 0.6);
     border-radius: 18px;
@@ -15,15 +20,19 @@ body {
     box-shadow: 0 18px 40px rgba(15, 23, 42, 0.7);
     backdrop-filter: blur(14px);
     -webkit-backdrop-filter: blur(14px);
+    padding: 16px;
+    margin: 16px auto;
 }
 
+/* ------------------------------------------------------------
+   HEADER
+------------------------------------------------------------ */
 .glass-header {
     background: rgba(15, 23, 42, 0.7);
     border-bottom: 1px solid rgba(148, 163, 184, 0.4);
-    backdrop-filter: blur(14px);
-    -webkit-backdrop-filter: blur(14px);
     padding: 20px;
     text-align: center;
+    backdrop-filter: blur(14px);
 }
 
 h1 {
@@ -31,18 +40,15 @@ h1 {
     color: #a5f3fc;
 }
 
-/* DASHBOARD */
+/* ------------------------------------------------------------
+   DASHBOARD
+------------------------------------------------------------ */
 .dashboard {
     display: flex;
     justify-content: center;
     gap: 20px;
-    padding: 15px;
-    margin: 16px auto;
     max-width: 900px;
-}
-
-.dash-item {
-    text-align: center;
+    margin: 20px auto;
 }
 
 .dash-link {
@@ -55,14 +61,20 @@ h1 {
     font-size: 14px;
 }
 
-/* LEVEL SELECTOR */
+.dash-link.active {
+    background: rgba(14, 165, 233, 0.95);
+    color: #0f172a;
+}
+
+/* ------------------------------------------------------------
+   LEVEL SELECTOR
+------------------------------------------------------------ */
 .level-select {
     display: flex;
     justify-content: center;
     gap: 10px;
-    padding: 12px;
-    margin: 12px auto;
     max-width: 500px;
+    margin: 16px auto;
 }
 
 .level-btn {
@@ -76,61 +88,28 @@ h1 {
 }
 
 .level-btn.active {
-    background: rgba(14, 165, 233, 0.9);
-    color: #0f172a;
-}
-
-/* RATE CONTROL */
-.rate-control {
-    text-align: center;
-    padding: 12px;
-    margin: 12px auto;
-    max-width: 500px;
-}
-
-/* STUDENT NAME */
-.student-name-box {
-    padding: 15px;
-    margin: 12px auto;
-    max-width: 500px;
-    text-align: center;
-}
-
-.name-status {
-    margin-top: 10px;
-    font-size: 14px;
-}
-
-/* NAVIGATION (GLASS TAB BAR) */
-.nav-bar {
-    display: flex;
-    justify-content: center;
-    gap: 10px;
-    padding: 12px;
-    margin: 16px auto;
-    max-width: 900px;
-}
-
-.tab-btn {
-    padding: 10px 16px;
-    border-radius: 14px;
-    background: rgba(51, 65, 85, 0.9);
-    color: #e2e8f0;
-    cursor: pointer;
-    border: 1px solid rgba(148, 163, 184, 0.5);
-    font-size: 14px;
-}
-
-.tab-btn.active {
     background: rgba(14, 165, 233, 0.95);
     color: #0f172a;
 }
 
-.hidden {
-    display: none;
+/* ------------------------------------------------------------
+   SPEECH RATE CONTROL
+------------------------------------------------------------ */
+.rate-control {
+    max-width: 500px;
+    margin: 16px auto;
+    text-align: center;
 }
 
-/* INPUTS & BUTTONS */
+/* ------------------------------------------------------------
+   STUDENT NAME INPUT
+------------------------------------------------------------ */
+.student-name-box {
+    max-width: 500px;
+    margin: 16px auto;
+    text-align: center;
+}
+
 .input-field {
     width: 100%;
     padding: 10px;
@@ -159,7 +138,40 @@ h1 {
     border: 1px solid rgba(148, 163, 184, 0.5);
 }
 
-/* WORD PILLS (LISTEN CONTENT — DARK, NOT GLASS) */
+/* ------------------------------------------------------------
+   TAB BAR
+------------------------------------------------------------ */
+.nav-bar {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    max-width: 900px;
+    margin: 20px auto;
+}
+
+.tab-btn {
+    padding: 10px 16px;
+    border-radius: 14px;
+    background: rgba(51, 65, 85, 0.9);
+    color: #e2e8f0;
+    cursor: pointer;
+    border: 1px solid rgba(148, 163, 184, 0.5);
+    font-size: 14px;
+}
+
+.tab-btn.active {
+    background: rgba(14, 165, 233, 0.95);
+    color: #0f172a;
+}
+
+.hidden {
+    display: none;
+}
+
+/* ============================================================
+   LISTEN TAB
+   ============================================================ */
+
 .word-pill {
     padding: 10px;
     border-radius: 12px;
@@ -171,7 +183,6 @@ h1 {
     font-size: 14px;
 }
 
-/* LISTEN TAB COLLAPSIBLE (HEADER GLASS, CONTENT DARK) */
 .listen-category-header {
     display: flex;
     justify-content: space-between;
@@ -183,7 +194,6 @@ h1 {
     background: rgba(15, 23, 42, 0.7);
     border: 1px solid rgba(148, 163, 184, 0.5);
     backdrop-filter: blur(14px);
-    -webkit-backdrop-filter: blur(14px);
 }
 
 .listen-category-title {
@@ -210,7 +220,10 @@ h1 {
     padding-top: 8px;
 }
 
-/* FLASHCARDS — GLASS CARDS, MEDIUM SIZE */
+/* ============================================================
+   FLASHCARDS
+   ============================================================ */
+
 .flip-wrapper {
     perspective: 1000px;
 }
@@ -241,7 +254,6 @@ h1 {
     border: 1px solid rgba(148, 163, 184, 0.5);
     box-shadow: 0 18px 40px rgba(15, 23, 42, 0.7);
     backdrop-filter: blur(14px);
-    -webkit-backdrop-filter: blur(14px);
 }
 
 .flip-front {
@@ -255,7 +267,10 @@ h1 {
     transform: rotateY(180deg);
 }
 
-/* QUIZ & BUILD CARDS — GLASS */
+/* ============================================================
+   QUIZ & BUILD CARDS
+   ============================================================ */
+
 .quiz-card,
 .build-card {
     background: rgba(15, 23, 42, 0.7);
@@ -263,15 +278,30 @@ h1 {
     border: 1px solid rgba(148, 163, 184, 0.5);
     box-shadow: 0 18px 40px rgba(15, 23, 42, 0.7);
     backdrop-filter: blur(14px);
-    -webkit-backdrop-filter: blur(14px);
     padding: 16px;
-    margin: 16px auto;
     max-width: 700px;
+    margin: 16px auto;
 }
 
-/* BADGES */
+/* ============================================================
+   BADGES
+   ============================================================ */
+
 .badge-section {
     padding: 20px;
     margin: 16px auto;
     max-width: 700px;
+}
+
+.badge-section ul {
+    list-style: none;
+    padding-left: 0;
+}
+
+.badge-section li {
+    background: rgba(51, 65, 85, 0.8);
+    padding: 8px 12px;
+    border-radius: 12px;
+    margin-bottom: 6px;
+    border: 1px solid rgba(148, 163, 184, 0.4);
 }
