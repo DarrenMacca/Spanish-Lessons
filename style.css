@@ -107,28 +107,7 @@ body {
     padding: 14px;
 }
 
-.word-pill {
-    display: inline-block;
-    padding: 10px 16px;
-    margin: 6px;
-    background: rgba(51, 65, 85, 0.75);
-    border-radius: 14px;
-    border: 1px solid rgba(148, 163, 184, 0.35);
-    color: #e2e8f0;
-    cursor: pointer;
-    font-size: 15px;
-    transition: background 0.25s ease, transform 0.15s ease;
-}
 
-.word-pill:hover {
-    background: rgba(14, 165, 233, 0.95);
-    color: #0f172a;
-    transform: translateY(-2px);
-}
-
-.word-pill:active {
-    transform: scale(0.96);
-}
 
 /* Smaller pills ONLY for Build tab */
 .build-pill {
@@ -289,21 +268,7 @@ body {
    LISTEN TAB
    ============================================================ */
 
-.word-pill {
-    padding: 10px;
-    border-radius: 12px;
-    background: #1e293b;
-    color: #e2e8f0;
-    cursor: pointer;
-    text-align: center;
-    border: 1px solid rgba(148, 163, 184, 0.4);
-    font-size: 14px;
-    transition: background 0.25s ease;
-}
 
-.word-pill:hover {
-    background: #334155;
-}
 
 .listen-category-header {
     display: flex;
@@ -454,4 +419,31 @@ body {
     margin-bottom: 6px;
     border: 1px solid rgba(148, 163, 184, 0.4);
     font-size: 14px;
+}
+
+/* --------------------------------------------------------------
+   WORD PILLS — FINAL OVERRIDE
+-------------------------------------------------------------- */
+
+.word-pill {
+    display: inline-block;
+    padding: 10px 16px;
+    margin: 6px;
+    background: rgba(51, 65, 85, 0.75);
+    border-radius: 14px;
+    border: 1px solid rgba(148, 163, 184, 0.35);
+    color: #e2e8f0;
+    cursor: pointer;
+    font-size: 15px;
+    transition: background 0.25s ease, transform 0.15s ease;
+}
+
+.word-pill:hover {
+    background: rgba(14, 165, 233, 0.95);
+    color: #0f172a;
+    transform: translateY(-2px);
+}
+
+.word-pill:active {
+    transform: scale(0.96);
 }
