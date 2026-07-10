@@ -140,41 +140,57 @@ body {
 }
 
 /* ------------------------------------------------------------
-   STUDENT NAME INPUT
+   STUDENT NAME BOX
 ------------------------------------------------------------ */
 .student-name-box {
-    max-width: 500px;
-    margin: 16px auto;
-    text-align: center;
+    margin: 20px auto;
+    max-width: 900px;
+    padding: 16px;
+    background: rgba(15, 23, 42, 0.55);
+    border-radius: 18px;
+    border: 1px solid rgba(148, 163, 184, 0.35);
+    backdrop-filter: blur(14px);
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.student-name-box .section-title {
+    font-size: 14px;
+    color: #a5f3fc;
 }
 
 .input-field {
     width: 100%;
-    padding: 10px;
-    border-radius: 14px;
-    border: 1px solid rgba(148, 163, 184, 0.6);
-    background: rgba(15, 23, 42, 0.7);
+    padding: 10px 14px;
+    border-radius: 12px;
+    border: 1px solid rgba(148, 163, 184, 0.45);
+    background: rgba(30, 41, 59, 0.6);
     color: #e2e8f0;
+    font-size: 14px;
 }
 
 .primary-btn {
-    padding: 10px 14px;
-    border-radius: 14px;
     background: rgba(14, 165, 233, 0.95);
     color: #0f172a;
-    cursor: pointer;
+    padding: 10px 16px;
+    border-radius: 14px;
     border: none;
-    margin-top: 8px;
+    cursor: pointer;
+    font-size: 14px;
+    transition: background 0.25s ease;
 }
 
-.secondary-btn {
-    padding: 10px 14px;
-    border-radius: 14px;
-    background: rgba(51, 65, 85, 0.9);
-    color: #e2e8f0;
-    cursor: pointer;
-    border: 1px solid rgba(148, 163, 184, 0.5);
+.primary-btn:hover {
+    background: rgba(14, 165, 233, 1);
 }
+
+.name-status {
+    font-size: 13px;
+    color: #a5f3fc;
+    min-height: 18px;
+}
+
 
 /* ------------------------------------------------------------
    TAB BAR
