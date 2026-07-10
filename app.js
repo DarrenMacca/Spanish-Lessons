@@ -1,6 +1,5 @@
 /* ============================================================
-   CEFR TRAINER — FULL APP.JS
-   Uses A1_WORDS, A2_WORDS, B1_WORDS, B2_WORDS (loaded globally)
+   CEFR TRAINER — CLEAN APP.JS (PART 1)
    ============================================================ */
 
 const CEFR_LEVELS = {
@@ -10,20 +9,19 @@ const CEFR_LEVELS = {
     B2: B2_WORDS
 };
 
-const STORAGE_KEY = "cefr_trainer_state_v1";
+const STORAGE_KEY = "cefr_trainer_state_v2";
 
 let appState = {
     currentLevel: "A1",
-    currentTab: "listen",
     speechRate: 1.0,
     studentName: "",
+    badges: [],
     levelStats: {
         A1: { listens: 0, flashSeen: 0, quizScore: null, buildCompleted: 0 },
         A2: { listens: 0, flashSeen: 0, quizScore: null, buildCompleted: 0 },
         B1: { listens: 0, flashSeen: 0, quizScore: null, buildCompleted: 0 },
         B2: { listens: 0, flashSeen: 0, quizScore: null, buildCompleted: 0 }
-    },
-    badges: []
+    }
 };
 
 /* ============================================================
@@ -32,9 +30,9 @@ let appState = {
 function loadState() {
     try {
         const raw = localStorage.getItem(STORAGE_KEY);
-        if (raw) appState = Object.assign(appState, JSON.parse(raw));
+        if (raw) Object.assign(appState, JSON.parse(raw));
     } catch (e) {
-        console.error(e);
+        console.error("State load error:", e);
     }
 }
 
@@ -42,7 +40,7 @@ function saveState() {
     try {
         localStorage.setItem(STORAGE_KEY, JSON.stringify(appState));
     } catch (e) {
-        console.error(e);
+        console.error("State save error:", e);
     }
 }
 
@@ -52,9 +50,11 @@ function saveState() {
 function speakSpanish(text) {
     if (!("speechSynthesis" in window)) return;
     window.speechSynthesis.cancel();
+
     const u = new SpeechSynthesisUtterance(text);
     u.lang = "es-ES";
     u.rate = appState.speechRate;
+
     window.speechSynthesis.speak(u);
 }
 
@@ -63,6 +63,7 @@ function speakSpanish(text) {
    ============================================================ */
 function setLevel(level) {
     if (!CEFR_LEVELS[level]) return;
+
     appState.currentLevel = level;
     saveState();
 
@@ -70,14 +71,65 @@ function setLevel(level) {
         btn.classList.toggle("active", btn.dataset.level === level);
     });
 
-    renderCurrentTab();
-    updateBadges();
+    activateTab(currentTab);
 }
 
+/* ============================================================
+   TAB SYSTEM — SINGLE, CLEAN VERSION
+   ============================================================ */
+
+const TABS = [
+    "dashboard",
+    "listen",
+    "flash",
+    "quiz",
+    "build",
+    "conversation",
+    "grammar"
+];
+
+let currentTab = "dashboard";
+
+function activateTab(tabName) {
+    if (!TABS.includes(tabName)) return;
+    currentTab = tabName;
+
+    TABS.forEach(id => {
+        const panel = document.getElementById(id);
+        if (panel) panel.classList.add("hidden");
+    });
+
+    const activePanel = document.getElementById(tabName);
+    if (activePanel) activePanel.classList.remove("hidden");
+
+    document.querySelectorAll(".tab-btn").forEach(btn => {
+        btn.classList.toggle("active", btn.dataset.tab === tabName);
+    });
+
+    switch (tabName) {
+        case "listen":        renderListenTab();        break;
+        case "flash":         renderFlashTab();         break;
+        case "quiz":          renderQuizTab();          break;
+        case "build":         renderBuildTab();         break;
+        case "conversation":  renderConversationTab();  break;
+        case "grammar":       renderGrammarTab();       break;
+        case "dashboard":
+            break;
+    }
+}
+
+function initTabNavigation() {
+    document.querySelectorAll(".tab-btn").forEach(btn => {
+        btn.addEventListener("click", () => {
+            activateTab(btn.dataset.tab);
+        });
+    });
+}
 
 /* ============================================================
    LISTEN TAB
    ============================================================ */
+
 function groupByCategory(words) {
     const groups = {};
     words.forEach(w => {
@@ -143,6 +195,7 @@ function renderListenTab() {
 /* ============================================================
    FLASHCARDS TAB
    ============================================================ */
+
 let flashIndex = 0;
 
 function renderFlashTab() {
@@ -200,6 +253,7 @@ function renderFlashTab() {
 /* ============================================================
    QUIZ TAB
    ============================================================ */
+
 function renderQuizTab() {
     const container = document.getElementById("quiz");
     const words = CEFR_LEVELS[appState.currentLevel];
@@ -263,6 +317,7 @@ function renderQuizTab() {
 /* ============================================================
    BUILD TAB — Sentence Builder
    ============================================================ */
+
 function renderBuildTab() {
     const container = document.getElementById("build");
     const words = CEFR_LEVELS[appState.currentLevel];
@@ -324,6 +379,7 @@ function renderBuildTab() {
 /* ============================================================
    CONVERSATION TAB
    ============================================================ */
+
 function renderConversationTab() {
     const container = document.getElementById("conversation");
     const words = CEFR_LEVELS[appState.currentLevel];
@@ -352,6 +408,7 @@ function renderConversationTab() {
 /* ============================================================
    GRAMMAR TAB
    ============================================================ */
+
 function renderGrammarTab() {
     const container = document.getElementById("grammar");
     const words = CEFR_LEVELS[appState.currentLevel];
@@ -377,6 +434,7 @@ function renderGrammarTab() {
 /* ============================================================
    BADGES
    ============================================================ */
+
 function updateBadges() {
     const list = document.getElementById("badge-list");
     const badges = new Set(appState.badges);
@@ -401,14 +459,15 @@ function updateBadges() {
 }
 
 /* ============================================================
-   STUDENT NAME
+   STUDENT NAME BOX
    ============================================================ */
+
 function initNameBox() {
     const input = document.getElementById("student-name");
     const btn = document.getElementById("save-name-btn");
     const status = document.getElementById("name-status");
 
-    input.value = appState.studentName;
+    input.value = appState.studentName || "";
 
     btn.onclick = () => {
         const name = input.value.trim();
@@ -423,11 +482,13 @@ function initNameBox() {
 }
 
 /* ============================================================
-   SPEECH RATE
+   SPEECH RATE CONTROL
    ============================================================ */
+
 function initRateControl() {
     const slider = document.getElementById("rate");
     slider.value = appState.speechRate;
+
     slider.oninput = () => {
         appState.speechRate = parseFloat(slider.value);
         saveState();
@@ -435,103 +496,18 @@ function initRateControl() {
 }
 
 /* ============================================================
-   NAVIGATION
-   ============================================================ */
-function initNavigation() { }
-
-/* ============================================================
    STARTUP
    ============================================================ */
+
 document.addEventListener("DOMContentLoaded", () => {
     loadState();
-    initNavigation();
+
+    initTabNavigation();
     initRateControl();
     initNameBox();
 
-    setLevel(appState.currentLevel);
     updateBadges();
-   
-// Show the default tab
-    activateTab('listen');
+
+    activateTab("dashboard");
 });
-
-/* ============================================================
-   RENDER FUNCTIONS
-   ============================================================ */
-
-function renderListen() {
-    const container = document.getElementById("listen-categories");
-    container.innerHTML = "";
-
-    const words = LEVEL_WORDS[appState.currentLevel] || [];
-
-    words.forEach(w => {
-        const pill = document.createElement("button");
-        pill.className = "word-pill";
-        pill.textContent = `${w.es} (${w.en})`;
-
-        pill.onclick = () => {
-            const idx = words.indexOf(w);
-            if (idx >= 0) playSingleWord(idx);
-        };
-
-        container.appendChild(pill);
-    });
-}
-
-
-/* ============================================================
-   TAB SWITCHER — FINAL VERSION WITH DASHBOARD
-   ============================================================ */
-
-const TABS = [
-    "dashboard",
-    "listen",
-    "flash",
-    "quiz",
-    "build",
-    "conversation",
-    "grammar"
-];
-
-function activateTab(tabName) {
-    // Hide all tabs
-    TABS.forEach(id => {
-        const panel = document.getElementById(id);
-        if (panel) panel.classList.add("hidden");
-    });
-
-    // Show selected tab
-    const activePanel = document.getElementById(tabName);
-    if (activePanel) activePanel.classList.remove("hidden");
-
-    // Update active button
-    document.querySelectorAll('.tab-btn').forEach(btn => {
-        btn.classList.toggle("active", btn.dataset.tab === tabName);
-    });
-
-    // Render tab content
-    switch (tabName) {
-        case "listen": renderListenTab(); break;
-        case "flash": renderFlashTab(); break;
-        case "quiz": renderQuizTab(); break;
-        case "build": renderBuildTab(); break;
-        case "conversation": renderConversationTab(); break;
-        case "grammar": renderGrammarTab(); break;
-        case "dashboard":
-            // Dashboard is static
-            break;
-    }
-}
-
-// Attach listeners
-document.querySelectorAll('.tab-btn').forEach(btn => {
-    btn.addEventListener('click', () => {
-        activateTab(btn.dataset.tab);
-    });
-});
-
-
-
-
 
