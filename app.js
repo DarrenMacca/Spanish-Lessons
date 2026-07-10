@@ -480,26 +480,6 @@ function renderListen() {
 }
 
 
-document.querySelectorAll('.tab-btn').forEach(btn => {
-    btn.addEventListener('click', () => {
-        const tabName = btn.dataset.tab;
-
-        // Hide all tabs
-        document.querySelectorAll('#listen, #flash, #quiz, #build, #conversation, #grammar')
-            .forEach(tab => tab.classList.add('hidden'));
-
-        // Show selected tab
-        document.getElementById(tabName).classList.remove('hidden');
-
-        // Update active button
-        document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
-        btn.classList.add('active');
-
-        // Render Listen pills when Listen tab is activated
-        if (tabName === "listen") renderListen();
-    });
-});
-
 /* ============================================================
    TAB SWITCHER — FINAL VERSION WITH DASHBOARD
    ============================================================ */
