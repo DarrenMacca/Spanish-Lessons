@@ -492,3 +492,12 @@ function initNavigation() {
    STARTUP
    ============================================================ */
 document.addEventListener("DOMContentLoaded", () => {
+    loadState();
+    initNavigation();
+    initRateControl();
+    initNameBox();
+
+    setLevel(appState.currentLevel);
+    setTab(appState.currentTab);
+    updateBadges();
+});
