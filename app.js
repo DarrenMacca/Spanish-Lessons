@@ -492,6 +492,31 @@ document.addEventListener("DOMContentLoaded", () => {
     activateTab('listen');
 });
 
+/* ============================================================
+   RENDER FUNCTIONS
+   ============================================================ */
+
+function renderListen() {
+    const container = document.getElementById("listen-categories");
+    container.innerHTML = "";
+
+    const words = LEVEL_WORDS[appState.currentLevel] || [];
+
+    words.forEach(w => {
+        const pill = document.createElement("button");
+        pill.className = "word-pill";
+        pill.textContent = `${w.es} (${w.en})`;
+
+        pill.onclick = () => {
+            const idx = words.indexOf(w);
+            if (idx >= 0) playSingleWord(idx);
+        };
+
+        container.appendChild(pill);
+    });
+}
+
+
 document.querySelectorAll('.tab-btn').forEach(btn => {
     btn.addEventListener('click', () => {
         const tabName = btn.dataset.tab;
@@ -506,8 +531,12 @@ document.querySelectorAll('.tab-btn').forEach(btn => {
         // Update active button
         document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
         btn.classList.add('active');
+
+        // Render Listen pills when Listen tab is activated
+        if (tabName === "listen") renderListen();
     });
 });
+
 
 /* ============================================================
    TAB SYSTEM — CLEAN VERSION
