@@ -21,27 +21,15 @@
 
 <!-- DASHBOARD WITH TAB LINKS (GLASS PANEL) -->
 
+.dashboard-row {
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+    max-width: 900px;
+    margin: 20px auto;
+}
 
-<!-- LEVEL SELECTOR -->
-<div class="level-select glass-panel">
-    <button class="level-btn active" data-level="A1">A1</button>
-    <button class="level-btn" data-level="A2">A2</button>
-    <button class="level-btn" data-level="B1">B1</button>
-</div>
-
-<!-- RATE CONTROL -->
-<div class="rate-control glass-panel">
-    <label for="rate">Speech Rate:</label><br>
-    <input type="range" id="rate" min="0.5" max="1.5" step="0.1" value="1.0">
-</div>
-
-<!-- STUDENT NAME -->
-<div class="student-name-box glass-panel">
-    <input id="student-name" class="input-field" placeholder="Your name for certificates">
-    <button id="save-name-btn" class="primary-btn">Save Name</button>
-    <div id="name-status" class="name-status"></div>
-</div>
-
+    
 <!-- NAVIGATION (GLASS TAB BAR) -->
 <nav class="glass-panel nav-bar">
     <button class="tab-btn active" data-tab="listen">Listen</button>
@@ -59,6 +47,37 @@
 <div id="build" class="hidden"></div>
 <div id="conversation" class="hidden"></div>
 <div id="grammar" class="hidden"></div>
+    
+<div class="dashboard-row">
+
+    <!-- LEFT: Global Audio Speed -->
+    <div class="dash-left glass-panel">
+        <label class="section-title">Audio Speed</label>
+        <input type="range" id="rate" min="0.6" max="1.4" step="0.1" value="1">
+    </div>
+
+    <!-- RIGHT: CEFR Levels -->
+    <div class="dash-right glass-panel">
+        <label class="section-title">Skill Level</label>
+        <div class="level-buttons">
+            <button class="level-btn" data-level="A1">A1</button>
+            <button class="level-btn" data-level="A2">A2</button>
+            <button class="level-btn" data-level="B1">B1</button>
+            <button class="level-btn" data-level="B2">B2</button>
+        </div>
+    </div>
+
+</div>
+
+
+<!-- STUDENT NAME -->
+<div class="student-name-box glass-panel">
+    <input id="student-name" class="input-field" placeholder="Your name for certificates">
+    <button id="save-name-btn" class="primary-btn">Save Name</button>
+    <div id="name-status" class="name-status"></div>
+</div>
+
+
 
 <!-- BADGES -->
 <div class="badge-section glass-panel">
