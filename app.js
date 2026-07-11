@@ -494,6 +494,52 @@ function initRateControl() {
         saveState();
     };
 }
+/* ------------------------------------------------------------
+   PROGRESS METER CONTROLLER
+------------------------------------------------------------ */
+
+function animateNumber(id, target) {
+    let current = 0;
+    const step = target / 40;
+
+    const interval = setInterval(() => {
+        current += step;
+        if (current >= target) {
+            current = target;
+            clearInterval(interval);
+        }
+        document.getElementById(id).textContent = Math.round(current) + "%";
+    }, 20);
+}
+
+function updateProgressMeters() {
+
+    // New bar widths
+    document.getElementById("quiz-progress").style.width = "60%";
+    document.getElementById("build-progress").style.width = "45%";
+    document.getElementById("sentence-progress").style.width = "30%";
+
+    // Existing bar widths
+    document.getElementById("xp-progress").style.width = "70%";
+    document.getElementById("streak-progress").style.width = "40%";
+    document.getElementById("score-progress").style.width = "85%";
+    document.getElementById("review-progress").style.width = "20%";
+
+    // New animated numbers
+    animateNumber("quiz-number", 60);
+    animateNumber("build-number", 45);
+    animateNumber("sentence-number", 30);
+
+    // Existing animated numbers
+    animateNumber("xp-number", 70);
+    animateNumber("streak-number", 40);
+    animateNumber("score-number", 85);
+    animateNumber("review-number", 20);
+}
+
+// Run once when dashboard loads
+updateProgressMeters();
+
 
 /* ============================================================
    STARTUP
