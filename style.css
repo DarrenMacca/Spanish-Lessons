@@ -242,15 +242,31 @@ body {
     display: block;
 }
 
+/* Base pill button style */
+.primary-btn {
+    background: rgba(14, 165, 233, 0.95);
+    color: #0f172a;
+    padding: 10px 22px;            /* Wider padding = pill shape */
+    border-radius: 999px;          /* FULL PILL */
+    border: 1px solid rgba(148, 163, 184, 0.45);
+    cursor: pointer;
+    font-size: 14px;
+    transition: background 0.25s ease, transform 0.15s ease;
+}
+
 /* FIXED — compact save button */
 .student-name-box .primary-btn {
     max-width: 140px;
     margin: 0 auto;
 }
 
+/* Hover lift */
 .primary-btn:hover {
     background: rgba(14, 165, 233, 1);
+    transform: translateY(-1px);
 }
+
+
 
 .name-status {
     font-size: 13px;
