@@ -287,17 +287,12 @@ body {
 }
 
 
-.progress-tile {
-    padding: 14px;
-   
-}
-
 /* ------------------------------------------------------------
    PROGRESS TILE — NEON GLOW SYSTEM
 ------------------------------------------------------------ */
 
-/* Base glow */
 .progress-tile {
+    padding: 14px;
     position: relative;
     transition: transform 0.25s ease, box-shadow 0.25s ease;
     box-shadow: 0 0 10px rgba(0,255,255,0.15);
@@ -310,6 +305,7 @@ body {
         0 0 12px rgba(0,255,255,0.35),
         0 0 22px rgba(0,255,255,0.25);
 }
+
 
 /* ------------------------------------------------------------
    PROGRESS TILE — PULSE ANIMATION (correct version)
