@@ -30,6 +30,7 @@
 
 <!-- DASHBOARD TAB CONTENT -->
 <div id="dashboard">
+
     <div class="dashboard-row">
         <div class="dash-left glass-panel">
             <label class="section-title">Audio Speed</label>
@@ -54,13 +55,48 @@
         <div id="name-status" class="name-status"></div>
     </div>
 
+    <!-- PROGRESS METERS -->
+    <div class="progress-section">
+
+        <div class="progress-tile glass-panel">
+            <label class="section-title">XP Progress</label>
+            <div class="progress-bar">
+                <div class="progress-fill" id="xp-progress"></div>
+            </div>
+        </div>
+
+        <div class="progress-tile glass-panel">
+            <label class="section-title">Streak</label>
+            <div class="progress-bar">
+                <div class="progress-fill" id="streak-progress"></div>
+            </div>
+        </div>
+
+        <div class="progress-tile glass-panel">
+            <label class="section-title">Score Rating</label>
+            <div class="progress-bar">
+                <div class="progress-fill" id="score-progress"></div>
+            </div>
+        </div>
+
+        <div class="progress-tile glass-panel">
+            <label class="section-title">Due for Review</label>
+            <div class="progress-bar">
+                <div class="progress-fill" id="review-progress"></div>
+            </div>
+        </div>
+
+    </div>
+
     <div class="badge-section glass-panel">
         <h3>Your Badges</h3>
         <ul id="badge-list"></ul>
     </div>
+
 </div>
 
 <!-- OTHER TABS -->
+
 <div id="listen" class="hidden"></div>
 <div id="flash" class="hidden"></div>
 <div id="quiz" class="hidden"></div>
