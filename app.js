@@ -553,13 +553,103 @@ function renderSentenceTab() {
     const panel = document.getElementById("sentence");
     if (!panel) return;
 
+    const level = appState.currentLevel;
+    const bank = wordbanks[level]?.sentences;
+    if (!bank || bank.length === 0) {
+        panel.innerHTML = `
+            <div class="glass-panel quiz-card">
+                <h2>Sentence Practice — Level ${level}</h2>
+                <p>No sentences available for this level.</p>
+            </div>
+        `;
+        return;
+    }
+
+    // Pick a random sentence
+    const item = bank[Math.floor(Math.random() * bank.length)];
+    const english = item.en;
+    const spanish = item.es;
+
+    // Scramble Spanish words
+    const words = spanish.split(" ");
+    const scrambled = [...words].sort(() => Math.random() - 0.5);
+
+    // Build UI
     panel.innerHTML = `
         <div class="glass-panel quiz-card">
-            <h2>Sentence Practice — Level ${appState.currentLevel}</h2>
-            <p>Sentence builder will appear here.</p>
+
+            <h2>Sentence Practice — Level ${level}</h2>
+            <p class="sentence-english"><strong>${english}</strong></p>
+
+            <div id="sentence-output" class="sentence-output"></div>
+
+            <div id="sentence-options" class="sentence-options"></div>
+
+            <div class="sentence-controls">
+                <button id="undo-btn" class="primary-btn">Undo</button>
+                <button id="reset-btn" class="primary-btn">Reset</button>
+                <button id="check-btn" class="primary-btn">Check</button>
+            </div>
+
+            <div id="sentence-feedback" class="sentence-feedback"></div>
+
         </div>
     `;
+
+    const output = document.getElementById("sentence-output");
+    const options = document.getElementById("sentence-options");
+    const feedback = document.getElementById("sentence-feedback");
+
+    let built = [];
+
+    // Render scrambled word tiles
+    scrambled.forEach(word => {
+        const btn = document.createElement("button");
+        btn.className = "word-btn";
+        btn.textContent = word;
+
+        btn.addEventListener("click", () => {
+            built.push(word);
+            renderOutput();
+        });
+
+        options.appendChild(btn);
+    });
+
+    function renderOutput() {
+        output.textContent = built.join(" ");
+    }
+
+    // Undo last word
+    document.getElementById("undo-btn").addEventListener("click", () => {
+        built.pop();
+        renderOutput();
+    });
+
+    // Reset sentence
+    document.getElementById("reset-btn").addEventListener("click", () => {
+        built = [];
+        renderOutput();
+    });
+
+    // Check answer
+    document.getElementById("check-btn").addEventListener("click", () => {
+        const attempt = built.join(" ");
+        if (attempt === spanish) {
+            feedback.textContent = "Correct! 🎉";
+            feedback.style.color = "limegreen";
+
+            // Update progress
+            appState.levelStats[level].sentenceCompleted++;
+            updateProgressMeters();
+
+        } else {
+            feedback.textContent = "Not quite — try again.";
+            feedback.style.color = "orange";
+        }
+    });
 }
+
 
 /* ============================================================
    STARTUP
