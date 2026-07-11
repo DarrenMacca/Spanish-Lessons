@@ -364,6 +364,11 @@ body {
     box-shadow: 0 0 10px rgba(239, 68, 68, 0.6);
 }
 
+.progress-svg {
+    width: 26px;
+    height: 26px;
+    fill: #38bdf8;
+}
 
 /* ------------------------------------------------------------
    TAB BAR
