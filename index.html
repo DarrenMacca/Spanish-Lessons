@@ -4,21 +4,32 @@
     <meta charset="UTF-8">
     <title>Spanish CEFR Trainer</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
     <link rel="stylesheet" href="style.css">
 </head>
 
 <body>
 
-<!-- HEADER + HERO IMAGE (inside Dashboard tab now) -->
-<div id="dashboard">
-    <div class="glass-header">
-        <h1>Spanish Trainer</h1>
-        <img src="images/dashboard-hero.png" 
-             alt="Dashboard Hero" 
-             class="dashboard-hero-img">
-    </div>
+<!-- HEADER + HERO -->
+<div class="glass-header">
+    <h1>Spanish Trainer</h1>
+    <img src="images/dashboard-hero.png" 
+         alt="Dashboard Hero" 
+         class="dashboard-hero-img">
+</div>
 
+<!-- NAVIGATION (outside dashboard tab!) -->
+<nav class="glass-panel nav-bar">
+    <button class="tab-btn active" data-tab="dashboard">Dashboard</button>
+    <button class="tab-btn" data-tab="listen">Listen</button>
+    <button class="tab-btn" data-tab="flash">Flashcards</button>
+    <button class="tab-btn" data-tab="quiz">Quiz</button>
+    <button class="tab-btn" data-tab="build">Build</button>
+    <button class="tab-btn" data-tab="conversation">Conversation</button>
+    <button class="tab-btn" data-tab="grammar">Grammar</button>
+</nav>
+
+<!-- DASHBOARD TAB CONTENT -->
+<div id="dashboard">
     <div class="dashboard-row">
         <div class="dash-left glass-panel">
             <label class="section-title">Audio Speed</label>
@@ -49,26 +60,13 @@
     </div>
 </div>
 
-<!-- NAVIGATION -->
-<nav class="glass-panel nav-bar">
-    <button class="tab-btn active" data-tab="dashboard">Dashboard</button>
-    <button class="tab-btn" data-tab="listen">Listen</button>
-    <button class="tab-btn" data-tab="flash">Flashcards</button>
-    <button class="tab-btn" data-tab="quiz">Quiz</button>
-    <button class="tab-btn" data-tab="build">Build</button>
-    <button class="tab-btn" data-tab="conversation">Conversation</button>
-    <button class="tab-btn" data-tab="grammar">Grammar</button>
-</nav>
-
-<!-- TABS -->
-<div id="dashboard"></div>
+<!-- OTHER TABS -->
 <div id="listen" class="hidden"></div>
 <div id="flash" class="hidden"></div>
 <div id="quiz" class="hidden"></div>
 <div id="build" class="hidden"></div>
 <div id="conversation" class="hidden"></div>
 <div id="grammar" class="hidden"></div>
-
 
 <script src="wordbanks/A1.js"></script>
 <script src="wordbanks/A2.js"></script>
@@ -77,5 +75,4 @@
 <script src="app.js"></script>
 
 </body>
-
 </html>
