@@ -1,4 +1,62 @@
-<div class="progress-section">
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Spanish CEFR Trainer</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+<!-- HEADER + HERO -->
+<div class="glass-header">
+    <h1>Spanish Trainer</h1>
+    <img src="images/dashboard-hero.png" 
+         alt="Dashboard Hero" 
+         class="dashboard-hero-img">
+</div>
+
+<!-- NAVIGATION (outside dashboard tab!) -->
+<nav class="glass-panel nav-bar">
+    <button class="tab-btn active" data-tab="dashboard">Dashboard</button>
+    <button class="tab-btn" data-tab="listen">Listen</button>
+    <button class="tab-btn" data-tab="flash">Flashcards</button>
+    <button class="tab-btn" data-tab="quiz">Quiz</button>
+    <button class="tab-btn" data-tab="build">Build</button>
+    <button class="tab-btn" data-tab="conversation">Conversation</button>
+    <button class="tab-btn" data-tab="grammar">Grammar</button>
+</nav>
+
+<!-- DASHBOARD TAB CONTENT -->
+<div id="dashboard">
+
+    <div class="dashboard-row">
+        <div class="dash-left glass-panel">
+            <label class="section-title">Audio Speed</label>
+            <input type="range" id="rate" min="0.6" max="1.4" step="0.1" value="1">
+        </div>
+
+        <div class="dash-right glass-panel">
+            <label class="section-title">Skill Level</label>
+            <div class="level-buttons">
+                <button class="level-btn" data-level="A1">A1</button>
+                <button class="level-btn" data-level="A2">A2</button>
+                <button class="level-btn" data-level="B1">B1</button>
+                <button class="level-btn" data-level="B2">B2</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="student-name-box glass-panel">
+        <label class="section-title">Your name for certificates</label>
+        <input id="student-name" class="input-field" type="text" placeholder="Enter your name">
+        <button id="save-name-btn" class="primary-btn">Save Name</button>
+        <div id="name-status" class="name-status"></div>
+    </div>
+
+   <!-- PROGRESS METERS -->
+    <div class="progress-section">
 
     <!-- QUIZ -->
     <div class="progress-tile glass-panel">
