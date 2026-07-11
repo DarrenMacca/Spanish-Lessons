@@ -549,11 +549,11 @@ document.addEventListener("DOMContentLoaded", () => {
     loadState();
 
     initTabNavigation();
-    initRateControl();
     initNameBox();
-
     updateBadges();
 
-    activateTab("dashboard");
+    activateTab("dashboard");   // Load dashboard first
+
+    initRateControl();          // ✔ Now the slider exists
 });
 
