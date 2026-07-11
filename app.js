@@ -550,12 +550,13 @@ document.addEventListener("DOMContentLoaded", () => {
 
     initTabNavigation();
 
-    activateTab("dashboard");   // Load dashboard first
+    activateTab("dashboard");   // ⭐ Make dashboard visible FIRST
 
-    initRateControl();          // Now safe
-    initNameBox();              // Now safe
+    initRateControl();          // ⭐ Now #rate exists
+    initNameBox();              // ⭐ Now #student-name exists
 
     updateBadges();
+    updateProgressMeters();     // optional but recommended
 });
 
 
