@@ -24,6 +24,7 @@
     <button class="tab-btn" data-tab="flash">Flashcards</button>
     <button class="tab-btn" data-tab="quiz">Quiz</button>
     <button class="tab-btn" data-tab="build">Build</button>
+    <button class="tab-btn" data-tab="sentence">Sentence</button>
     <button class="tab-btn" data-tab="conversation">Conversation</button>
     <button class="tab-btn" data-tab="grammar">Grammar</button>
 </nav>
@@ -57,6 +58,42 @@
 
    <!-- PROGRESS METERS -->
 <div class="progress-section">
+
+    <!-- QUIZ -->
+<div class="progress-tile glass-panel">
+    <div class="progress-icon-row">
+        <span class="progress-icon gradient-a1">📘</span>
+        <label class="section-title">Quiz Progress</label>
+        <span class="progress-number" id="quiz-number">0%</span>
+    </div>
+    <div class="progress-bar">
+        <div class="progress-fill" id="quiz-progress"></div>
+    </div>
+</div>
+
+<!-- BUILD -->
+<div class="progress-tile glass-panel">
+    <div class="progress-icon-row">
+        <span class="progress-icon gradient-a2">🧩</span>
+        <label class="section-title">Build Progress</label>
+        <span class="progress-number" id="build-number">0%</span>
+    </div>
+    <div class="progress-bar">
+        <div class="progress-fill" id="build-progress"></div>
+    </div>
+</div>
+
+<!-- SENTENCE -->
+<div class="progress-tile glass-panel">
+    <div class="progress-icon-row">
+        <span class="progress-icon gradient-b1">✏️</span>
+        <label class="section-title">Sentence Progress</label>
+        <span class="progress-number" id="sentence-number">0%</span>
+    </div>
+    <div class="progress-bar">
+        <div class="progress-fill" id="sentence-progress"></div>
+    </div>
+</div>
 
     <div class="progress-tile glass-panel">
         <div class="progress-icon-row">
@@ -118,6 +155,7 @@
 <div id="flash" class="hidden"></div>
 <div id="quiz" class="hidden"></div>
 <div id="build" class="hidden"></div>
+    <div id="sentence" class="hidden"></div>
 <div id="conversation" class="hidden"></div>
 <div id="grammar" class="hidden"></div>
 
