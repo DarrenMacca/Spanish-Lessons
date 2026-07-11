@@ -17,13 +17,14 @@
          class="dashboard-hero-img">
 </div>
 
-<!-- NAVIGATION (outside dashboard tab!) -->
+<!-- NAVIGATION -->
 <nav class="glass-panel nav-bar">
     <button class="tab-btn active" data-tab="dashboard">Dashboard</button>
     <button class="tab-btn" data-tab="listen">Listen</button>
     <button class="tab-btn" data-tab="flash">Flashcards</button>
     <button class="tab-btn" data-tab="quiz">Quiz</button>
     <button class="tab-btn" data-tab="build">Build</button>
+    <button class="tab-btn" data-tab="sentence">Sentence</button>
     <button class="tab-btn" data-tab="conversation">Conversation</button>
     <button class="tab-btn" data-tab="grammar">Grammar</button>
 </nav>
@@ -60,13 +61,12 @@
 
     <div class="progress-tile glass-panel">
         <div class="progress-icon-row">
-    <svg class="progress-svg xp-icon" viewBox="0 0 24 24">
-        <path d="M12 2C9 5 8 7.5 8 9.5C8 12 9.5 13.5 12 15C14.5 13.5 16 12 16 9.5C16 7.5 15 5 12 2Z" />
-    </svg>
-    <label class="section-title">XP Progress</label>
-    <span class="progress-number" id="xp-number">0%</span>
-</div>
-
+            <svg class="progress-svg xp-icon" viewBox="0 0 24 24">
+                <path d="M12 2C9 5 8 7.5 8 9.5C8 12 9.5 13.5 12 15C14.5 13.5 16 12 16 9.5C16 7.5 15 5 12 2Z" />
+            </svg>
+            <label class="section-title">XP Progress</label>
+            <span class="progress-number" id="xp-number">0%</span>
+        </div>
         <div class="progress-bar">
             <div class="progress-fill" id="xp-progress"></div>
         </div>
@@ -107,7 +107,6 @@
 
 </div>
 
-
     <div class="badge-section glass-panel">
         <h3>Your Badges</h3>
         <ul id="badge-list"></ul>
@@ -116,12 +115,15 @@
 </div>
 
 <!-- OTHER TABS -->
-
 <div id="listen" class="hidden"></div>
 <div id="flash" class="hidden"></div>
 <div id="quiz" class="hidden"></div>
 <div id="build" class="hidden"></div>
+
+<!-- SENTENCE BEFORE CONVERSATION -->
+<div id="sentence" class="hidden"></div>
 <div id="conversation" class="hidden"></div>
+
 <div id="grammar" class="hidden"></div>
 
 <script src="wordbanks/A1.js"></script>
