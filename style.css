@@ -327,6 +327,15 @@ body {
     color: #fff;
 }
 
+.progress-img {
+    width: 28px;
+    height: 28px;
+    border-radius: 8px;
+    object-fit: cover;
+    box-shadow: 0 0 6px rgba(0,0,0,0.35);
+}
+
+
 .progress-number {
     margin-left: auto;
     font-size: 14px;
