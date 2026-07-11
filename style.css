@@ -93,11 +93,13 @@ body {
 .dashboard-row {
     display: flex;
     justify-content: center;
-    align-items: center;
+    align-items: stretch;
     gap: 20px;
-    max-width: 900px;
+    max-width: 700px;
     margin: 20px auto;
 }
+
+
 
 .nav-bar {
     display: flex;
@@ -120,8 +122,12 @@ body {
 /* Make both dashboard boxes equal height */
 .dash-left,
 .dash-right {
-    min-height: 120px;
+    flex: 1;
+    min-width: 280px;
+    max-width: 320px;
+    padding: 16px;
 }
+
 
 
 .dash-link {
@@ -166,6 +172,21 @@ body {
     background: rgba(14, 165, 233, 0.95);
     color: #0f172a;
 }
+
+.level-buttons {
+    display: flex;
+    justify-content: space-between;
+    gap: 8px;
+}
+
+
+.section-title {
+    font-size: 14px;
+    margin-bottom: 8px;
+    display: block;
+}
+
+
 /* ------------------------------------------------------------
    SPEECH RATE CONTROL
 ------------------------------------------------------------ */
