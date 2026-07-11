@@ -29,7 +29,7 @@ let appState = {
    ============================================================ */
 function loadState() {
     try {
-        const raw = localStorage.getItem(STORAGE_KEY);
+         raw = localStorage.getItem(STORAGE_KEY);
         if (raw) Object.assign(appState, JSON.parse(raw));
     } catch (e) {
         console.error("State load error:", e);
@@ -51,7 +51,7 @@ function speakSpanish(text) {
     if (!("speechSynthesis" in window)) return;
     window.speechSynthesis.cancel();
 
-    const u = new SpeechSynthesisUtterance(text);
+     u = new SpeechSynthesisUtterance(text);
     u.lang = "es-ES";
     u.rate = appState.speechRate;
 
@@ -84,9 +84,11 @@ const TABS = [
     "flash",
     "quiz",
     "build",
+    "sentence",
     "conversation",
     "grammar"
 ];
+
 
 let currentTab = "dashboard";
 
@@ -111,6 +113,7 @@ function activateTab(tabName) {
         case "flash":         renderFlashTab();         break;
         case "quiz":          renderQuizTab();          break;
         case "build":         renderBuildTab();         break;
+        case "sentence":      renderSentenceTab();      break;
         case "conversation":  renderConversationTab();  break;
         case "grammar":       renderGrammarTab();       break;
         case "dashboard":
@@ -188,6 +191,8 @@ function renderListenTab() {
             appState.levelStats[appState.currentLevel].listens++;
             saveState();
             updateBadges();
+           
+
         });
     });
 }
@@ -311,6 +316,8 @@ function renderQuizTab() {
         appState.levelStats[appState.currentLevel].quizScore = percent;
         saveState();
         updateBadges();
+       updateProgressMeters();
+
     };
 }
 
@@ -373,8 +380,11 @@ function renderBuildTab() {
 
         saveState();
         updateBadges();
+        updateProgressMeters();   // ⭐ Correct placement
     };
 }
+
+
 
 /* ============================================================
    CONVERSATION TAB
@@ -538,8 +548,18 @@ function updateProgressMeters() {
 }
 
 // Run once when dashboard loads
-updateProgressMeters();
 
+function renderSentenceTab() {
+    const panel = document.getElementById("sentence");
+    if (!panel) return;
+
+    panel.innerHTML = `
+        <div class="glass-panel quiz-card">
+            <h2>Sentence Practice — Level ${appState.currentLevel}</h2>
+            <p>Sentence builder will appear here.</p>
+        </div>
+    `;
+}
 
 /* ============================================================
    STARTUP
@@ -550,13 +570,14 @@ document.addEventListener("DOMContentLoaded", () => {
 
     initTabNavigation();
 
-    activateTab("dashboard");   // ⭐ Make dashboard visible FIRST
+    activateTab("dashboard");   // Dashboard must be visible first
 
-    initRateControl();          // ⭐ Now #rate exists
-    initNameBox();              // ⭐ Now #student-name exists
+    initRateControl();          // Now #rate exists
+    initNameBox();              // Now #student-name exists
 
     updateBadges();
-    updateProgressMeters();     // optional but recommended
+    updateProgressMeters();     // Now safe
 });
+
 
 
