@@ -545,7 +545,17 @@ function updateProgressMeters() {
     animateNumber("streak-number", 40);
     animateNumber("score-number", 85);
     animateNumber("review-number", 20);
+
+    // ⭐ Pulse animations (this is the missing part)
+    pulseTile("quiz-tile");
+    pulseTile("build-tile");
+    pulseTile("sentence-tile");
+    pulseTile("xp-tile");
+    pulseTile("streak-tile");
+    pulseTile("score-tile");
+    pulseTile("review-tile");
 }
+
 
 // Run once when dashboard loads
 
@@ -648,6 +658,16 @@ function renderSentenceTab() {
             feedback.style.color = "orange";
         }
     });
+}
+
+
+function pulseTile(id) {
+    const tile = document.getElementById(id);
+    if (!tile) return;
+
+    tile.classList.remove("pulse");   // reset animation
+    void tile.offsetWidth;            // force reflow
+    tile.classList.add("pulse");      // trigger animation
 }
 
 
