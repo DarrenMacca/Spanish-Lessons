@@ -311,6 +311,13 @@ body {
     color: #fff;
 }
 
+.progress-number {
+    margin-left: auto;
+    font-size: 14px;
+    color: #a5f3fc;
+    font-weight: 600;
+}
+
 /* CEFR gradient styles */
 .gradient-a1 {
     background: linear-gradient(135deg, #3b82f6, #06b6d4);
