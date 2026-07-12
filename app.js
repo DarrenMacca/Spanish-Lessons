@@ -1,6 +1,7 @@
 /* ============================================================
    CEFR TRAINER — CLEAN APP.JS (PART 1)
    ============================================================ */
+
 function groupByCategory(words) {
     const out = {};
     words.forEach(w => {
@@ -9,7 +10,6 @@ function groupByCategory(words) {
     });
     return out;
 }
- 
 
 const CEFR_LEVELS = {
     A1: A1_WORDS,
@@ -26,17 +26,15 @@ let appState = {
     studentName: "",
     badges: [],
     levelStats: {
-    A1: { listens: 0, flashSeen: 0, quizScore: null, buildCompleted: 0, conversationCompleted: 0 },
-    A2: { listens: 0, flashSeen: 0, quizScore: null, buildCompleted: 0, conversationCompleted: 0 },
-    B1: { listens: 0, flashSeen: 0, quizScore: null, buildCompleted: 0, conversationCompleted: 0 },
-    B2: { listens: 0, flashSeen: 0, quizScore: null, buildCompleted: 0, conversationCompleted: 0 }
-}
-
+        A1: { listens: 0, flashSeen: 0, quizScore: null, buildCompleted: 0, sentenceCompleted: 0, conversationCompleted: 0 },
+        A2: { listens: 0, flashSeen: 0, quizScore: null, buildCompleted: 0, sentenceCompleted: 0, conversationCompleted: 0 },
+        B1: { listens: 0, flashSeen: 0, quizScore: null, buildCompleted: 0, sentenceCompleted: 0, conversationCompleted: 0 },
+        B2: { listens: 0, flashSeen: 0, quizScore: null, buildCompleted: 0, sentenceCompleted: 0, conversationCompleted: 0 }
+    }
 };
 
-
 /* ============================================================
-   CATEGORY AUTO‑ASSIGNER — PLACE HERE
+   CATEGORY AUTO‑ASSIGNER
    ============================================================ */
 
 function autoAssignCategory(word) {
@@ -98,7 +96,7 @@ function autoAssignCategory(word) {
 }
 
 /* ============================================================
-   APPLY CATEGORIES TO ALL CEFR LEVELS — PLACE HERE
+   APPLY CATEGORIES TO ALL CEFR LEVELS
    ============================================================ */
 
 Object.keys(CEFR_LEVELS).forEach(level => {
@@ -111,9 +109,10 @@ Object.keys(CEFR_LEVELS).forEach(level => {
 /* ============================================================
    STATE LOAD / SAVE
    ============================================================ */
+
 function loadState() {
     try {
-        raw = localStorage.getItem(STORAGE_KEY);
+        const raw = localStorage.getItem(STORAGE_KEY);
         if (raw) Object.assign(appState, JSON.parse(raw));
     } catch (e) {
         console.error("State load error:", e);
@@ -131,12 +130,13 @@ function saveState() {
 /* ============================================================
    SABINA VOICE (Spanish TTS for explanations)
    ============================================================ */
+
 function speak(text) {
     if (!("speechSynthesis" in window)) return;
     window.speechSynthesis.cancel();
 
     const u = new SpeechSynthesisUtterance(text);
-    u.lang = "es-ES";        // Sabina Spanish voice
+    u.lang = "es-ES";
     u.rate = appState.speechRate;
     u.pitch = 1.0;
 
@@ -146,11 +146,12 @@ function speak(text) {
 /* ============================================================
    SPEECH SYNTHESIS — Spanish word pronunciation
    ============================================================ */
+
 function speakSpanish(text) {
     if (!("speechSynthesis" in window)) return;
     window.speechSynthesis.cancel();
 
-    u = new SpeechSynthesisUtterance(text);
+    const u = new SpeechSynthesisUtterance(text);
     u.lang = "es-ES";
     u.rate = appState.speechRate;
 
@@ -160,16 +161,16 @@ function speakSpanish(text) {
 /* ============================================================
    QUIZ AUDIO — Sabina (correct + incorrect)
    ============================================================ */
+
 function speakQuiz(correctAnswer) {
     const message = `La respuesta correcta es: ${correctAnswer}`;
-    speak(message); // Sabina voice
+    speak(message);
 }
-
-
 
 /* ============================================================
    LEVEL SELECTOR
    ============================================================ */
+
 function setLevel(level) {
     if (!CEFR_LEVELS[level]) return;
 
@@ -182,6 +183,7 @@ function setLevel(level) {
 
     activateTab(currentTab);
 }
+
 
 /* ============================================================
    TAB SYSTEM — FINAL CLEAN VERSION
@@ -200,70 +202,51 @@ const TABS = [
 
 let currentTab = "dashboard";
 
-/* ============================================================
-   ACTIVATE TAB
-   ============================================================ */
 function activateTab(tabName) {
     if (!TABS.includes(tabName)) return;
     currentTab = tabName;
 
-    // Hide all tabs
     TABS.forEach(id => {
         const panel = document.getElementById(id);
         if (panel) panel.classList.add("hidden");
     });
 
-    // Show active tab
     const activePanel = document.getElementById(tabName);
     if (activePanel) activePanel.classList.remove("hidden");
 
-    // Update nav button highlight
     document.querySelectorAll(".tab-btn").forEach(btn => {
         btn.classList.toggle("active", btn.dataset.tab === tabName);
     });
 
-    // Load dynamic content
     switch (tabName) {
         case "listen":
             renderListenTab();
             break;
-
         case "flash":
             renderFlashcardsTab();
             break;
-
         case "quiz":
             renderQuizTab();
             break;
-
         case "build":
             renderBuildTab();
             break;
-
         case "sentence":
             renderSentenceTab();
             break;
-
         case "conversation":
             renderConversationTab();
             break;
-
         case "grammar":
             renderGrammarTab();
             break;
-
         case "dashboard":
-            // static
             break;
     }
 }
 
-/* ============================================================
-   TAB NAVIGATION WIRING
-   ============================================================ */
 function initTabNavigation() {
     const buttons = document.querySelectorAll(".tab-btn");
-
     buttons.forEach(btn => {
         btn.addEventListener("click", () => {
             const tab = btn.dataset.tab;
@@ -271,13 +254,6 @@ function initTabNavigation() {
         });
     });
 }
-
-// Initialize navigation + default tab
-initTabNavigation();
-activateTab("dashboard");
-
-
-
 
 /* ============================================================
    LISTEN TAB — CATEGORY + AUDIO PLAYER + CLEAN UI
@@ -315,9 +291,6 @@ function renderListenTab() {
         </div>
     `;
 
-    /* ============================================================
-       CATEGORY LIST
-       ============================================================ */
     Object.keys(grouped).forEach(cat => {
         html += `
         <div class="glass-panel">
@@ -346,9 +319,6 @@ function renderListenTab() {
 
     container.innerHTML = html;
 
-    /* ============================================================
-       CATEGORY COLLAPSE
-       ============================================================ */
     container.querySelectorAll(".listen-category-header").forEach(header => {
         header.addEventListener("click", () => {
             const cat = header.dataset.cat;
@@ -359,12 +329,11 @@ function renderListenTab() {
         });
     });
 
-    /* ============================================================
-       SINGLE WORD PLAYBACK
-       ============================================================ */
     container.querySelectorAll(".word-pill").forEach(btn => {
         btn.addEventListener("click", () => {
-            speakSpanish(btn.dataset.spanish);
+            const spanish = btn.dataset.spanish;
+            if (!spanish) return;
+            speakSpanish(spanish);
             appState.levelStats[appState.currentLevel].listens++;
             saveState();
             updateBadges();
@@ -372,9 +341,6 @@ function renderListenTab() {
         });
     });
 
-    /* ============================================================
-       AUTO PLAY — PLAY ALL WORDS
-       ============================================================ */
     listenAutoPlay.list = words.map(w => w.spanish);
 
     document.getElementById("listen-playall").onclick = () => {
@@ -406,6 +372,7 @@ function renderListenTab() {
 /* ============================================================
    AUTO PLAY ENGINE
    ============================================================ */
+
 function playNextListenWord() {
     if (!listenAutoPlay.active || listenAutoPlay.paused) return;
 
@@ -432,7 +399,7 @@ function playNextListenWord() {
 }
 
 /* ============================================================
-   FLASHCARDS — CATEGORY GROUPED + FLIP + AUDIO (STABLE VERSION)
+   FLASHCARDS — CATEGORY GROUPED + FLIP + AUDIO
    ============================================================ */
 
 function renderFlashcardsTab() {
@@ -501,7 +468,6 @@ function renderFlashcardsTab() {
     });
 }
 
-
 /* ============================================================
    SHARED QUIZ / BUILD / SENTENCE / CONVERSATION STATE
    ============================================================ */
@@ -515,17 +481,20 @@ let quizState = {
 
 let buildState = {
     currentWord: null,
-    tokens: []
+    tokens: [],
+    answer: []
 };
 
 let sentenceState = {
     currentSentence: null,
-    tokens: []
+    tokens: [],
+    answer: []
 };
 
 let convoState = {
     currentPrompt: null,
-    tokens: []
+    tokens: [],
+    answer: []
 };
 
 function generateQuizOptions(words, correctWord) {
@@ -596,7 +565,6 @@ function setupQuizEvents() {
 
     quizState.selected = null;
 
-    // Pill selection
     grid.querySelectorAll(".qb-opt").forEach(btn => {
         btn.addEventListener("click", () => {
             grid.querySelectorAll(".qb-opt").forEach(b => b.classList.remove("active"));
@@ -606,49 +574,41 @@ function setupQuizEvents() {
         });
     });
 
-    // Check button
     submitBtn.addEventListener("click", () => {
-    if (!quizState.selected) {
-        feedback.textContent = "Choose an answer first.";
-        return;
-    }
+        if (!quizState.selected) {
+            feedback.textContent = "Choose an answer first.";
+            return;
+        }
 
-    const correct = quizState.currentWord.spanish;
+        const correct = quizState.currentWord.spanish;
 
-    // ⭐ Ensure quizScore is not null before incrementing
-    if (appState.levelStats[appState.currentLevel].quizScore === null) {
-        appState.levelStats[appState.currentLevel].quizScore = 0;
-    }
+        if (appState.levelStats[appState.currentLevel].quizScore === null) {
+            appState.levelStats[appState.currentLevel].quizScore = 0;
+        }
 
-    if (quizState.selected === correct) {
-        feedback.textContent = "Correct! 🎉";
-        appState.levelStats[appState.currentLevel].quizScore++;
-        updateBadges();
-        updateProgressMeters();
-    } else {
-        feedback.textContent = `Incorrect — correct answer: ${correct}`;
-    }
+        if (quizState.selected === correct) {
+            feedback.textContent = "Correct! 🎉";
+            appState.levelStats[appState.currentLevel].quizScore++;
+            updateBadges();
+            updateProgressMeters();
+        } else {
+            feedback.textContent = `Incorrect — correct answer: ${correct}`;
+        }
 
-    // Sabina audio
-    setTimeout(() => speakQuiz(correct), 300);
+        setTimeout(() => speakQuiz(correct), 300);
+        saveState();
+    });
 
-    saveState();
-});
-
-
-    // Next button
     nextBtn.addEventListener("click", () => {
         renderQuizTab();
     });
 
-    // Harder mode toggle
     harderBtn.addEventListener("click", () => {
         quizState.harderMode = !quizState.harderMode;
-        harderBtn.classList.toggle("active");
+        harderBtn.classList.toggle("active", quizState.harderMode);
         renderQuizTab();
     });
 }
-
 
 /* ============================================================
    BUILD TAB — RENDER + EVENTS (FINAL MASTER VERSION)
@@ -665,11 +625,9 @@ function renderBuildTab() {
         return;
     }
 
-    // Pick random word
     buildState.currentWord = words[Math.floor(Math.random() * words.length)];
     const spanish = buildState.currentWord.spanish;
 
-    // Tokenise Spanish sentence
     buildState.tokens = spanish.split(" ").sort(() => Math.random() - 0.5);
     buildState.answer = [];
 
@@ -717,7 +675,6 @@ function setupBuildEvents() {
 
     buildState.answer = [];
 
-    // Word-pill selection
     grid.querySelectorAll(".build-opt").forEach(btn => {
         btn.addEventListener("click", () => {
             buildState.answer.push(btn.dataset.token);
@@ -727,18 +684,15 @@ function setupBuildEvents() {
         });
     });
 
-    // Typing mode
     typeBox.addEventListener("input", () => {
         buildState.answer = typeBox.value.trim().split(" ");
         answerBox.textContent = buildState.answer.join(" ");
     });
 
-    // Undo last word
     undoBtn.addEventListener("click", () => {
         buildState.answer.pop();
         answerBox.textContent = buildState.answer.join(" ");
 
-        // Re-enable last used pill
         grid.querySelectorAll(".build-opt").forEach(btn => {
             if (!buildState.answer.includes(btn.dataset.token)) {
                 btn.classList.remove("used");
@@ -747,7 +701,6 @@ function setupBuildEvents() {
         });
     });
 
-    // Reset
     resetBtn.addEventListener("click", () => {
         buildState.answer = [];
         answerBox.textContent = "";
@@ -758,7 +711,6 @@ function setupBuildEvents() {
         });
     });
 
-    // Check
     checkBtn.addEventListener("click", () => {
         const correct = buildState.currentWord.spanish;
         const user = buildState.answer.join(" ").trim();
@@ -777,12 +729,10 @@ function setupBuildEvents() {
         saveState();
     });
 
-    // Next
     nextBtn.addEventListener("click", () => {
         renderBuildTab();
     });
 }
-
 
 /* ============================================================
    SENTENCE TAB — RENDER + EVENTS (FINAL MASTER VERSION)
@@ -821,7 +771,6 @@ function setupSentenceCategoryEvents(grouped) {
             const cat = btn.dataset.cat;
             const list = grouped[cat];
 
-            // Pick random sentence
             sentenceState.currentSentence = list[Math.floor(Math.random() * list.length)];
             const spanish = sentenceState.currentSentence.spanish;
 
@@ -869,7 +818,6 @@ function setupSentenceEvents() {
 
     sentenceState.answer = [];
 
-    // Word-pill selection
     grid.querySelectorAll(".sent-opt").forEach(btn => {
         btn.addEventListener("click", () => {
             sentenceState.answer.push(btn.dataset.token);
@@ -879,13 +827,11 @@ function setupSentenceEvents() {
         });
     });
 
-    // Typing mode
     typeBox.addEventListener("input", () => {
         sentenceState.answer = typeBox.value.trim().split(" ");
         answerBox.textContent = sentenceState.answer.join(" ");
     });
 
-    // Undo
     undoBtn.addEventListener("click", () => {
         sentenceState.answer.pop();
         answerBox.textContent = sentenceState.answer.join(" ");
@@ -898,7 +844,6 @@ function setupSentenceEvents() {
         });
     });
 
-    // Reset
     resetBtn.addEventListener("click", () => {
         sentenceState.answer = [];
         answerBox.textContent = "";
@@ -909,7 +854,6 @@ function setupSentenceEvents() {
         });
     });
 
-    // Check
     checkBtn.addEventListener("click", () => {
         const correct = sentenceState.currentSentence.spanish;
         const user = sentenceState.answer.join(" ").trim();
@@ -928,7 +872,6 @@ function setupSentenceEvents() {
         saveState();
     });
 
-    // Next
     nextBtn.addEventListener("click", () => {
         renderSentenceTab();
     });
@@ -958,29 +901,24 @@ function renderConversationTab() {
         return;
     }
 
-    // Pick random prompt
     convoState.currentPrompt = CONVO_PROMPTS[Math.floor(Math.random() * CONVO_PROMPTS.length)];
     const target = convoState.currentPrompt.spanishTarget;
 
-    // Build wordbank from level words + disruptors
     const coreTokens = target.replace(/[¿?]/g, "").split(" ");
     const levelTokens = words.map(w => w.spanish.split(" ")).flat();
     const disruptors = ["rápido", "lento", "siempre", "nunca", "ayer", "mañana", "porque", "pero"];
 
     let bank = [...coreTokens];
 
-    // Add some level words
     while (bank.length < coreTokens.length + 4) {
         const t = levelTokens[Math.floor(Math.random() * levelTokens.length)];
         if (t && !bank.includes(t)) bank.push(t);
     }
 
-    // Add disruptors
     disruptors.forEach(d => {
         if (!bank.includes(d)) bank.push(d);
     });
 
-    // Shuffle bank
     bank = bank.sort(() => Math.random() - 0.5);
 
     convoState.tokens = bank;
@@ -1017,8 +955,6 @@ function renderConversationTab() {
     setupConversationEvents();
 }
 
-
-
 function setupConversationEvents() {
     const grid = document.getElementById("convo-grid");
     const answerBox = document.getElementById("convo-answer");
@@ -1032,7 +968,6 @@ function setupConversationEvents() {
 
     convoState.answer = [];
 
-    // Word-pill selection
     grid.querySelectorAll(".convo-opt").forEach(btn => {
         btn.addEventListener("click", () => {
             convoState.answer.push(btn.dataset.token);
@@ -1042,13 +977,11 @@ function setupConversationEvents() {
         });
     });
 
-    // Typing mode
     typeBox.addEventListener("input", () => {
         convoState.answer = typeBox.value.trim().split(" ");
         answerBox.textContent = convoState.answer.join(" ");
     });
 
-    // Undo
     undoBtn.addEventListener("click", () => {
         convoState.answer.pop();
         answerBox.textContent = convoState.answer.join(" ");
@@ -1061,7 +994,6 @@ function setupConversationEvents() {
         });
     });
 
-    // Reset
     resetBtn.addEventListener("click", () => {
         convoState.answer = [];
         answerBox.textContent = "";
@@ -1072,18 +1004,13 @@ function setupConversationEvents() {
         });
     });
 
-    // Check
     checkBtn.addEventListener("click", () => {
         const correct = convoState.currentPrompt.spanishTarget.replace(/[¿?]/g, "").trim();
         const user = convoState.answer.join(" ").trim();
 
         if (user === correct) {
             feedback.textContent = "Nice! That’s a natural response. 🎉";
-            // Use quizScore as a general conversation score for now
-            if (appState.levelStats[appState.currentLevel].quizScore === null) {
-                appState.levelStats[appState.currentLevel].quizScore = 0;
-            }
-            appState.levelStats[appState.currentLevel].quizScore++;
+            appState.levelStats[appState.currentLevel].conversationCompleted++;
             updateBadges();
             updateProgressMeters();
             setTimeout(() => speakQuiz(correct), 300);
@@ -1095,12 +1022,10 @@ function setupConversationEvents() {
         saveState();
     });
 
-    // Next
     nextBtn.addEventListener("click", () => {
         renderConversationTab();
     });
 }
-
 
 /* ============================================================
    GRAMMAR TAB
@@ -1138,18 +1063,15 @@ function updateBadges() {
     const list = document.getElementById("badge-list");
     const badges = new Set(appState.badges);
 
-   Object.keys(appState.levelStats).forEach(level => {
-    const s = appState.levelStats[level];
-    if (s.listens >= 20) badges.add(`${level} Listener`);
-    if (s.flashSeen >= 30) badges.add(`${level} Flash Master`);
-    if (s.quizScore !== null && s.quizScore >= 80) badges.add(`${level} Quiz Ace`);
-    if (s.buildCompleted >= 10) badges.add(`${level} Builder`);
-
-    // ⭐ NEW BADGES — paste here
-    if (s.sentenceCompleted >= 10) badges.add(`${level} Sentence Pro`);
-    if (s.conversationCompleted >= 10) badges.add(`${level} Conversationalist`);
-});
-
+    Object.keys(appState.levelStats).forEach(level => {
+        const s = appState.levelStats[level];
+        if (s.listens >= 20) badges.add(`${level} Listener`);
+        if (s.flashSeen >= 30) badges.add(`${level} Flash Master`);
+        if (s.quizScore !== null && s.quizScore >= 80) badges.add(`${level} Quiz Ace`);
+        if (s.buildCompleted >= 10) badges.add(`${level} Builder`);
+        if (s.sentenceCompleted >= 10) badges.add(`${level} Sentence Pro`);
+        if (s.conversationCompleted >= 10) badges.add(`${level} Conversationalist`);
+    });
 
     appState.badges = Array.from(badges);
     saveState();
@@ -1218,8 +1140,6 @@ function animateNumber(id, target) {
 }
 
 function updateProgressMeters() {
-
-    // Bar widths
     document.getElementById("quiz-progress").style.width = "60%";
     document.getElementById("build-progress").style.width = "45%";
     document.getElementById("sentence-progress").style.width = "30%";
@@ -1229,7 +1149,6 @@ function updateProgressMeters() {
     document.getElementById("score-progress").style.width = "85%";
     document.getElementById("review-progress").style.width = "20%";
 
-    // Animated numbers
     animateNumber("quiz-number", 60);
     animateNumber("build-number", 45);
     animateNumber("sentence-number", 30);
@@ -1239,7 +1158,6 @@ function updateProgressMeters() {
     animateNumber("score-number", 85);
     animateNumber("review-number", 20);
 
-    // Pulse animations
     pulseTile("quiz-tile");
     pulseTile("build-tile");
     pulseTile("sentence-tile");
@@ -1269,16 +1187,13 @@ function pulseTile(id) {
 document.addEventListener("DOMContentLoaded", () => {
     loadState();
 
-    initTabNavigation();     // tab buttons now exist
-    activateTab("dashboard"); // show dashboard first
+    initTabNavigation();
+    activateTab("dashboard");
 
-    initRateControl();       // slider exists now
-    initNameBox();           // name box exists now
+    initRateControl();
+    initNameBox();
 
     updateBadges();
     updateProgressMeters();
 });
-
-
-
 
