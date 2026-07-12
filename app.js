@@ -777,8 +777,8 @@ function renderBuildTab() {
    ============================================================ */
 
 function renderSentenceTab() {
-    const container = document.getElementById("sentence");
-    const words = CEFR_LEVELS[appState.currentLevel];
+const container = document.getElementById("sentence-content");
+   const words = CEFR_LEVELS[appState.currentLevel];
     const categories = groupByCategory(words);
 
     const catNames = Object.keys(categories);
@@ -1077,21 +1077,7 @@ function updateProgressMeters() {
 
 // Run once when dashboard loads
 
-function renderSentenceTab() {
-    const panel = document.getElementById("sentence");
-    if (!panel) return;
 
-    const level = appState.currentLevel;
-    const bank = wordbanks[level]?.sentences;
-    if (!bank || bank.length === 0) {
-        panel.innerHTML = `
-            <div class="glass-panel quiz-card">
-                <h2>Sentence Practice — Level ${level}</h2>
-                <p>No sentences available for this level.</p>
-            </div>
-        `;
-        return;
-    }
 
     // Pick a random sentence
     const item = bank[Math.floor(Math.random() * bank.length)];
