@@ -238,13 +238,42 @@ function activateTab(tabName) {
     }
 }
 
+/* ============================================================
+   TAB NAVIGATION (STABLE VERSION)
+   ============================================================ */
+
 function initTabNavigation() {
-    document.querySelectorAll(".tab-btn").forEach(btn => {
+    const buttons = document.querySelectorAll(".tab-btn");
+
+    buttons.forEach(btn => {
         btn.addEventListener("click", () => {
-            activateTab(btn.dataset.tab);
+            const tab = btn.dataset.tab;
+            activateTab(tab);
+
+            buttons.forEach(b => b.classList.remove("active"));
+            btn.classList.add("active");
         });
     });
 }
+
+function activateTab(tabName) {
+    const tabs = document.querySelectorAll("#dashboard, #listen, #flash, #quiz, #build, #sentence, #conversation, #grammar");
+
+    tabs.forEach(tab => tab.classList.add("hidden"));
+
+    const activeTab = document.getElementById(tabName);
+    if (activeTab) activeTab.classList.remove("hidden");
+
+    // Render dynamic tabs
+    if (tabName === "listen") renderListenTab();
+    if (tabName === "flash") renderFlashcardsTab();
+    if (tabName === "quiz") renderQuizTab();
+    if (tabName === "build") renderBuildTab();
+    if (tabName === "sentence") renderSentenceTab();
+    if (tabName === "conversation") renderConversationTab();
+    if (tabName === "grammar") renderGrammarTab();
+}
+
 
 
 function groupByCategory(words) {
