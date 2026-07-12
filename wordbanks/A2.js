@@ -74,4 +74,18 @@ const A2_WORDS = [
     { english: "few", spanish: "pocos", audio: "pocos.mp3", category: "number" },
     { english: "more", spanish: "más", audio: "mas.mp3", category: "number" },
     { english: "less", spanish: "menos", audio: "menos.mp3", category: "number" }
+
+// NUMBERS (NEW A1)
+    { english: "eleven", spanish: "once", audio: "once.mp3", category: "number" },
+{ english: "twelve", spanish: "doce", audio: "doce.mp3", category: "number" },
+{ english: "thirteen", spanish: "trece", audio: "trece.mp3", category: "number" },
+{ english: "fourteen", spanish: "catorce", audio: "catorce.mp3", category: "number" },
+{ english: "fifteen", spanish: "quince", audio: "quince.mp3", category: "number" },
+{ english: "sixteen", spanish: "dieciséis", audio: "dieciseis.mp3", category: "number" },
+{ english: "seventeen", spanish: "diecisiete", audio: "diecisiete.mp3", category: "number" },
+{ english: "eighteen", spanish: "dieciocho", audio: "dieciocho.mp3", category: "number" },
+{ english: "nineteen", spanish: "diecinueve", audio: "diecinueve.mp3", category: "number" },
+{ english: "twenty", spanish: "veinte", audio: "veinte.mp3", category: "number" }
+
+
 ];
