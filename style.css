@@ -831,66 +831,68 @@ body {
     .listen-category-header {
         padding: 8px 10px;
     }
+}
 
-    /* ============================================================
-       ULTRA‑SMALL PHONES — 320–360px (nested inside mobile)
-       ============================================================ */
-    @media (max-width: 360px) {
+/* ============================================================
+   ULTRA‑SMALL PHONES — 320–360px
+   ============================================================ */
+@media (max-width: 360px) {
 
-        /* Stack dashboard panels vertically */
-        .dashboard-row {
-            flex-direction: column;
-            gap: 14px;
-            max-width: 100%;
-        }
-
-        /* Progress tiles: switch from 4 → 1 column */
-        .progress-section {
-            grid-template-columns: 1fr;
-            gap: 12px;
-            width: 100%;
-            max-width: 100%;
-        }
-
-        /* Progress tiles: tighter padding */
-        .progress-tile {
-            padding: 10px;
-        }
-
-        /* Icons: slightly smaller */
-        .progress-img {
-            width: 24px;
-            height: 24px;
-        }
-
-        /* Section titles: reduce font size */
-        .section-title {
-            font-size: 13px;
-        }
-
-        /* Progress numbers: reduce font size */
-        .progress-number {
-            font-size: 13px;
-        }
-
-        /* Flashcards: allow flexible height */
-        .flip-card {
-            height: auto;
-            min-height: 110px;
-        }
-
-        /* Tab bar: tighter spacing */
-        .tab-btn {
-            padding: 8px 12px;
-            font-size: 13px;
-        }
-
-        /* Glass panels: prevent overflow */
-        .glass-panel {
-            margin: 12px;
-            padding: 12px;
-        }
+    /* Stack dashboard panels vertically */
+    .dashboard-row {
+        flex-direction: column;
+        gap: 14px;
+        max-width: 100%;
     }
+
+    /* Progress tiles: switch from 4 → 1 column */
+    .progress-section {
+        grid-template-columns: 1fr;
+        gap: 12px;
+        width: 100%;
+        max-width: 100%;
+    }
+
+    /* Progress tiles: tighter padding */
+    .progress-tile {
+        padding: 10px;
+    }
+
+    /* Icons: slightly smaller */
+    .progress-img {
+        width: 24px;
+        height: 24px;
+    }
+
+    /* Section titles: reduce font size */
+    .section-title {
+        font-size: 13px;
+    }
+
+    /* Progress numbers: reduce font size */
+    .progress-number {
+        font-size: 13px;
+    }
+
+    /* Flashcards: allow flexible height */
+    .flip-card {
+        height: auto;
+        min-height: 110px;
+    }
+
+    /* Tab bar: tighter spacing */
+    .tab-btn {
+        padding: 8px 12px;
+        font-size: 13px;
+    }
+
+    /* Glass panels: prevent overflow */
+    .glass-panel {
+        margin: 12px;
+        padding: 12px;
+    }
+}
+
 }
 
 
