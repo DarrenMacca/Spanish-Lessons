@@ -541,7 +541,7 @@ function renderQuizTab() {
 
             <div id="qb-grid" class="sb-grid">
                 ${quizState.options.map(opt => `
-                    <button class="qb-opt" data-spanish="${opt}">${opt}</button>
+                    <button class="word-pill qb-opt" data-spanish="${opt}">${opt}</button>
                 `).join("")}
             </div>
 
@@ -595,8 +595,14 @@ function setupQuizEvents() {
             feedback.textContent = `Incorrect — correct answer: ${correct}`;
         }
 
+        // ⭐ Sabina speaks the correct Spanish answer (with delay)
+        setTimeout(() => speakQuizIncorrect(correct), 300);
+
         saveState();
     });
+}
+
+
 
     nextBtn.addEventListener("click", () => renderQuizTab());
 
