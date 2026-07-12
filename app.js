@@ -643,7 +643,7 @@ function setupQuizEvents() {
 
 
 /* ============================================================
-   BUILD TAB — RENDER + EVENTS
+   BUILD TAB — RENDER + EVENTS (FINAL MASTER VERSION)
    ============================================================ */
 
 function renderBuildTab() {
@@ -651,40 +651,44 @@ function renderBuildTab() {
     const words = CEFR_LEVELS[appState.currentLevel];
 
     if (!words || !words.length) {
-        container.innerHTML = `<div class="glass-panel quiz-card">
+        container.innerHTML = `<div class="glass-panel build-card">
             <p>No words found for level ${appState.currentLevel}.</p>
         </div>`;
         return;
     }
 
+    // Pick random word
     buildState.currentWord = words[Math.floor(Math.random() * words.length)];
-    buildState.tokens = buildState.currentWord.spanish.split(" ");
-    const shuffled = [...buildState.tokens].sort(() => Math.random() - 0.5);
+    const spanish = buildState.currentWord.spanish;
+
+    // Tokenise Spanish sentence
+    buildState.tokens = spanish.split(" ").sort(() => Math.random() - 0.5);
+    buildState.answer = [];
 
     container.innerHTML = `
-        <div class="glass-panel quiz-card">
+        <div class="glass-panel build-card">
             <h2>Build — Level ${appState.currentLevel}</h2>
-            <p>Tap the words in the correct order to build the Spanish phrase.</p>
+            <p>Rebuild the Spanish sentence from the scrambled words.</p>
 
-            <div id="bb-meta">
-                <strong>English:</strong> ${buildState.currentWord.english}
-            </div>
+            <div id="build-meta"><strong>English:</strong> ${buildState.currentWord.english}</div>
 
-            <div id="bb-grid" class="sb-grid">
-                ${shuffled.map(t => `
-                    <button class="bb-token" data-token="${t}">
-                        ${t}
-                    </button>
+            <div id="build-grid" class="sb-grid">
+                ${buildState.tokens.map(t => `
+                    <button class="word-pill build-opt" data-token="${t}">${t}</button>
                 `).join("")}
             </div>
 
-            <div id="bb-answer"></div>
-            <div id="bb-feedback"></div>
+            <div id="build-answer" class="build-answer"></div>
+
+            <input id="build-type" class="build-type" placeholder="Or type the sentence…" />
+
+            <div id="build-feedback"></div>
 
             <div class="sb-controls">
-                <button id="bb-submit">Check</button>
-                <button id="bb-next">Next</button>
-                <button id="bb-harder">Harder</button>
+                <button id="build-undo">Undo</button>
+                <button id="build-reset">Reset</button>
+                <button id="build-check">Check</button>
+                <button id="build-next">Next</button>
             </div>
         </div>
     `;
@@ -693,136 +697,235 @@ function renderBuildTab() {
 }
 
 function setupBuildEvents() {
-    const answerBox = document.getElementById("bb-answer");
-    const submitBtn = document.getElementById("bb-submit");
-    const nextBtn = document.getElementById("bb-next");
-    const harderBtn = document.getElementById("bb-harder");
-    const feedback = document.getElementById("bb-feedback");
+    const grid = document.getElementById("build-grid");
+    const answerBox = document.getElementById("build-answer");
+    const typeBox = document.getElementById("build-type");
+    const feedback = document.getElementById("build-feedback");
 
-    let answer = [];
+    const undoBtn = document.getElementById("build-undo");
+    const resetBtn = document.getElementById("build-reset");
+    const checkBtn = document.getElementById("build-check");
+    const nextBtn = document.getElementById("build-next");
 
-    document.querySelectorAll(".bb-token").forEach(btn => {
+    buildState.answer = [];
+
+    // Word-pill selection
+    grid.querySelectorAll(".build-opt").forEach(btn => {
         btn.addEventListener("click", () => {
-            answer.push(btn.dataset.token);
-            btn.style.opacity = "0.4";
-            btn.style.pointerEvents = "none";
-            answerBox.textContent = answer.join(" ");
+            buildState.answer.push(btn.dataset.token);
+            btn.classList.add("used");
+            btn.disabled = true;
+            answerBox.textContent = buildState.answer.join(" ");
         });
     });
 
-    submitBtn.addEventListener("click", () => {
-        const correct = buildState.tokens.join(" ");
-        if (answer.join(" ") === correct) {
+    // Typing mode
+    typeBox.addEventListener("input", () => {
+        buildState.answer = typeBox.value.trim().split(" ");
+        answerBox.textContent = buildState.answer.join(" ");
+    });
+
+    // Undo last word
+    undoBtn.addEventListener("click", () => {
+        buildState.answer.pop();
+        answerBox.textContent = buildState.answer.join(" ");
+
+        // Re-enable last used pill
+        grid.querySelectorAll(".build-opt").forEach(btn => {
+            if (!buildState.answer.includes(btn.dataset.token)) {
+                btn.classList.remove("used");
+                btn.disabled = false;
+            }
+        });
+    });
+
+    // Reset
+    resetBtn.addEventListener("click", () => {
+        buildState.answer = [];
+        answerBox.textContent = "";
+        typeBox.value = "";
+        grid.querySelectorAll(".build-opt").forEach(btn => {
+            btn.classList.remove("used");
+            btn.disabled = false;
+        });
+    });
+
+    // Check
+    checkBtn.addEventListener("click", () => {
+        const correct = buildState.currentWord.spanish;
+        const user = buildState.answer.join(" ").trim();
+
+        if (user === correct) {
             feedback.textContent = "Correct! 🎉";
             appState.levelStats[appState.currentLevel].buildCompleted++;
             updateBadges();
             updateProgressMeters();
+            setTimeout(() => speakQuiz(correct), 300);
         } else {
             feedback.textContent = `Incorrect — correct answer: ${correct}`;
+            setTimeout(() => speakQuiz(correct), 300);
         }
+
         saveState();
     });
 
-    nextBtn.addEventListener("click", () => renderBuildTab());
-
-    // Simple harder mode: reverse tokens
-    harderBtn.addEventListener("click", () => {
-        buildState.tokens.reverse();
-        harderBtn.classList.toggle("active");
+    // Next
+    nextBtn.addEventListener("click", () => {
         renderBuildTab();
     });
 }
 
+
 /* ============================================================
-   SENTENCE TAB — RENDER + EVENTS
+   SENTENCE TAB — RENDER + EVENTS (FINAL MASTER VERSION)
    ============================================================ */
 
 function renderSentenceTab() {
     const container = document.getElementById("sentence-content");
     const words = CEFR_LEVELS[appState.currentLevel];
 
-    if (!words || !words.length) {
-        container.innerHTML = `<div class="glass-panel quiz-card">
-            <p>No words found for level ${appState.currentLevel}.</p>
-        </div>`;
-        return;
-    }
-
-    // For now, reuse word entries as "sentences"
-    sentenceState.currentSentence = words[Math.floor(Math.random() * words.length)];
-    sentenceState.tokens = sentenceState.currentSentence.spanish.split(" ");
-    const shuffled = [...sentenceState.tokens].sort(() => Math.random() - 0.5);
+    const grouped = groupByCategory(words);
+    const categories = Object.keys(grouped);
 
     container.innerHTML = `
-        <div class="glass-panel quiz-card">
-            <h2>Sentence — Level ${appState.currentLevel}</h2>
-            <p>Build the full Spanish sentence from the tokens.</p>
+        <div class="glass-panel sentence-card">
+            <h2>Sentence Builder — Level ${appState.currentLevel}</h2>
+            <p>Select a category to build a Spanish sentence.</p>
 
-            <div id="sb-meta">
-                <strong>English:</strong> ${sentenceState.currentSentence.english}
-            </div>
-
-            <div id="sb-grid" class="sb-grid">
-                ${shuffled.map(t => `
-                    <button class="sb-token" data-token="${t}">
-                        ${t}
-                    </button>
+            <div id="sent-cats">
+                ${categories.map(cat => `
+                    <button class="word-pill sent-cat" data-cat="${cat}">${cat}</button>
                 `).join("")}
             </div>
 
-            <div id="sb-answer"></div>
-            <div id="sb-feedback"></div>
-
-            <div class="sb-controls">
-                <button id="sb-submit">Check</button>
-                <button id="sb-next">Next</button>
-                <button id="sb-harder">Harder</button>
-            </div>
+            <div id="sent-work"></div>
         </div>
     `;
 
-    setupSentenceEvents();
+    setupSentenceCategoryEvents(grouped);
+}
+
+function setupSentenceCategoryEvents(grouped) {
+    const work = document.getElementById("sent-work");
+
+    document.querySelectorAll(".sent-cat").forEach(btn => {
+        btn.addEventListener("click", () => {
+            const cat = btn.dataset.cat;
+            const list = grouped[cat];
+
+            // Pick random sentence
+            sentenceState.currentSentence = list[Math.floor(Math.random() * list.length)];
+            const spanish = sentenceState.currentSentence.spanish;
+
+            sentenceState.tokens = spanish.split(" ").sort(() => Math.random() - 0.5);
+            sentenceState.answer = [];
+
+            work.innerHTML = `
+                <div><strong>English:</strong> ${sentenceState.currentSentence.english}</div>
+
+                <div id="sent-grid" class="sb-grid">
+                    ${sentenceState.tokens.map(t => `
+                        <button class="word-pill sent-opt" data-token="${t}">${t}</button>
+                    `).join("")}
+                </div>
+
+                <div id="sent-answer"></div>
+
+                <input id="sent-type" class="sent-type" placeholder="Or type the sentence…" />
+
+                <div id="sent-feedback"></div>
+
+                <div class="sb-controls">
+                    <button id="sent-undo">Undo</button>
+                    <button id="sent-reset">Reset</button>
+                    <button id="sent-check">Check</button>
+                    <button id="sent-next">Next</button>
+                </div>
+            `;
+
+            setupSentenceEvents();
+        });
+    });
 }
 
 function setupSentenceEvents() {
-    const answerBox = document.getElementById("sb-answer");
-    const submitBtn = document.getElementById("sb-submit");
-    const nextBtn = document.getElementById("sb-next");
-    const harderBtn = document.getElementById("sb-harder");
-    const feedback = document.getElementById("sb-feedback");
+    const grid = document.getElementById("sent-grid");
+    const answerBox = document.getElementById("sent-answer");
+    const typeBox = document.getElementById("sent-type");
+    const feedback = document.getElementById("sent-feedback");
 
-    let answer = [];
+    const undoBtn = document.getElementById("sent-undo");
+    const resetBtn = document.getElementById("sent-reset");
+    const checkBtn = document.getElementById("sent-check");
+    const nextBtn = document.getElementById("sent-next");
 
-    document.querySelectorAll(".sb-token").forEach(btn => {
+    sentenceState.answer = [];
+
+    // Word-pill selection
+    grid.querySelectorAll(".sent-opt").forEach(btn => {
         btn.addEventListener("click", () => {
-            answer.push(btn.dataset.token);
-            btn.style.opacity = "0.4";
-            btn.style.pointerEvents = "none";
-            answerBox.textContent = answer.join(" ");
+            sentenceState.answer.push(btn.dataset.token);
+            btn.classList.add("used");
+            btn.disabled = true;
+            answerBox.textContent = sentenceState.answer.join(" ");
         });
     });
 
-    submitBtn.addEventListener("click", () => {
-        const correct = sentenceState.tokens.join(" ");
-        if (answer.join(" ") === correct) {
+    // Typing mode
+    typeBox.addEventListener("input", () => {
+        sentenceState.answer = typeBox.value.trim().split(" ");
+        answerBox.textContent = sentenceState.answer.join(" ");
+    });
+
+    // Undo
+    undoBtn.addEventListener("click", () => {
+        sentenceState.answer.pop();
+        answerBox.textContent = sentenceState.answer.join(" ");
+
+        grid.querySelectorAll(".sent-opt").forEach(btn => {
+            if (!sentenceState.answer.includes(btn.dataset.token)) {
+                btn.classList.remove("used");
+                btn.disabled = false;
+            }
+        });
+    });
+
+    // Reset
+    resetBtn.addEventListener("click", () => {
+        sentenceState.answer = [];
+        answerBox.textContent = "";
+        typeBox.value = "";
+        grid.querySelectorAll(".sent-opt").forEach(btn => {
+            btn.classList.remove("used");
+            btn.disabled = false;
+        });
+    });
+
+    // Check
+    checkBtn.addEventListener("click", () => {
+        const correct = sentenceState.currentSentence.spanish;
+        const user = sentenceState.answer.join(" ").trim();
+
+        if (user === correct) {
             feedback.textContent = "Correct! 🎉";
-            appState.levelStats[appState.currentLevel].sentenceCompleted++;
+            appState.levelStats[appState.currentLevel].buildCompleted++;
             updateBadges();
             updateProgressMeters();
+            setTimeout(() => speakQuiz(correct), 300);
         } else {
             feedback.textContent = `Incorrect — correct answer: ${correct}`;
+            setTimeout(() => speakQuiz(correct), 300);
         }
+
         saveState();
     });
 
-    nextBtn.addEventListener("click", () => renderSentenceTab());
-
-    harderBtn.addEventListener("click", () => {
-        sentenceState.tokens.reverse();
-        harderBtn.classList.toggle("active");
+    // Next
+    nextBtn.addEventListener("click", () => {
         renderSentenceTab();
     });
 }
+
 
 /* ============================================================
    CONVERSATION TAB — RENDER + EVENTS
