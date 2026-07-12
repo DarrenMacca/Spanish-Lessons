@@ -25,11 +25,84 @@ let appState = {
 };
 
 /* ============================================================
+   CATEGORY AUTO‑ASSIGNER — PLACE HERE
+   ============================================================ */
+
+function autoAssignCategory(word) {
+    const w = word.spanish.toLowerCase();
+
+    // Verbs (infinitives)
+    if (w.endsWith("ar") || w.endsWith("er") || w.endsWith("ir"))
+        return "verbs";
+
+    // Adjectives
+    if (w.endsWith("o") || w.endsWith("a") || w.endsWith("os") || w.endsWith("as"))
+        return "adjectives";
+
+    // Numbers
+    if (!isNaN(parseInt(w)))
+        return "numbers";
+
+    // Food & drink
+    if (["manzana","pan","agua","carne","café","té","huevo","cerveza","vino","arroz","pollo","pescado","ensalada","verdura","fruta"].includes(w))
+        return "food-drink";
+
+    // Travel
+    if (["aeropuerto","hotel","taxi","tren","avión","billete","mapa","ciudad","país","viaje","turista"].includes(w))
+        return "travel";
+
+    // Daily life
+    if (["mañana","tarde","noche","casa","trabajo","escuela","día","semana","mes"].includes(w))
+        return "daily-life";
+
+    // Family
+    if (["madre","padre","hermano","hermana","abuelo","abuela","tío","tía","primo","prima","familia"].includes(w))
+        return "family";
+
+    // Shopping
+    if (["dinero","precio","tienda","comprar","vender","mercado","producto"].includes(w))
+        return "shopping";
+
+    // Emergency
+    if (["ayuda","policía","hospital","ambulancia","fuego","emergencia"].includes(w))
+        return "emergency";
+
+    // Work
+    if (["trabajo","oficina","jefe","empleado","empresa","reunión"].includes(w))
+        return "work";
+
+    // Places / objects
+    if (["casa","escuela","parque","calle","puerta","mesa","silla","coche","habitacion","baño"].includes(w))
+        return "places-objects";
+
+    // Connectors
+    if (["y","pero","porque","aunque","cuando","si","o","entonces","luego","después","antes"].includes(w))
+        return "connectors";
+
+    // Grammar words
+    if (["el","la","los","las","un","una","unos","unas","yo","tú","él","ella","nosotros","vosotros","ellos"].includes(w))
+        return "grammar";
+
+    return "daily-life";
+}
+
+/* ============================================================
+   APPLY CATEGORIES TO ALL CEFR LEVELS — PLACE HERE
+   ============================================================ */
+
+Object.keys(CEFR_LEVELS).forEach(level => {
+    CEFR_LEVELS[level] = CEFR_LEVELS[level].map(w => ({
+        ...w,
+        category: w.category || autoAssignCategory(w)
+    }));
+});
+
+/* ============================================================
    STATE LOAD / SAVE
    ============================================================ */
 function loadState() {
     try {
-         raw = localStorage.getItem(STORAGE_KEY);
+        raw = localStorage.getItem(STORAGE_KEY);
         if (raw) Object.assign(appState, JSON.parse(raw));
     } catch (e) {
         console.error("State load error:", e);
@@ -51,7 +124,7 @@ function speakSpanish(text) {
     if (!("speechSynthesis" in window)) return;
     window.speechSynthesis.cancel();
 
-     u = new SpeechSynthesisUtterance(text);
+    u = new SpeechSynthesisUtterance(text);
     u.lang = "es-ES";
     u.rate = appState.speechRate;
 
@@ -77,6 +150,7 @@ function setLevel(level) {
 /* ============================================================
    TAB SYSTEM — SINGLE, CLEAN VERSION
    ============================================================ */
+
 
 const TABS = [
     "dashboard",
@@ -198,62 +272,107 @@ function renderListenTab() {
 }
 
 /* ============================================================
-   FLASHCARDS TAB
+   FLASHCARDS v2 — CEFR + Audio + Difficulty + SRS
    ============================================================ */
 
-let flashIndex = 0;
+const FLASHCARD_STATE = {
+    level: appState.currentLevel,
+    cards: [],
+    known: new Set(),
+    difficultyMap: {}, // word → difficulty score
+};
 
-function renderFlashTab() {
-    const container = document.getElementById("flash");
-    const words = CEFR_LEVELS[appState.currentLevel];
+// ------------------------------------------------------------
+// 1. Build flashcard list from CEFR level
+// ------------------------------------------------------------
+function buildFlashcardsForLevel(level) {
+    const words = CEFR_LEVELS[level];
+    return words.map(w => ({
+        english: w.english,
+        spanish: w.spanish,
+        audio: w.audio || null,
+        difficulty: FLASHCARD_STATE.difficultyMap[w.spanish] || 0,
+    }));
+}
 
-    if (flashIndex >= words.length) flashIndex = 0;
-    const current = words[flashIndex];
+// ------------------------------------------------------------
+// 2. Shuffle utility
+// ------------------------------------------------------------
+function fcShuffle(arr) {
+    return [...arr].sort(() => Math.random() - 0.5);
+}
+
+// ------------------------------------------------------------
+// 3. Play audio (if available)
+function playFlashcardAudio(url) {
+    if (!url) return;
+    const audio = new Audio(url);
+    audio.play();
+}
+
+// ------------------------------------------------------------
+// 4. Difficulty tracking
+// ------------------------------------------------------------
+function updateFlashcardDifficulty(spanishWord, correct) {
+    const current = FLASHCARD_STATE.difficultyMap[spanishWord] || 0;
+    const newScore = correct ? Math.max(0, current - 1) : current + 1;
+    FLASHCARD_STATE.difficultyMap[spanishWord] = newScore;
+}
+
+// ------------------------------------------------------------
+// 5. Render Flashcards Tab
+// ------------------------------------------------------------
+function renderFlashcardsTab() {
+    const container = document.getElementById("flashcards");
+
+    FLASHCARD_STATE.level = appState.currentLevel;
+    FLASHCARD_STATE.cards = fcShuffle(buildFlashcardsForLevel(FLASHCARD_STATE.level));
 
     container.innerHTML = `
-        <div class="glass-panel quiz-card">
-            <h2>Flashcards — Level ${appState.currentLevel}</h2>
-            <p>Tap the card to flip.</p>
-        </div>
+        <div class="glass-panel">
+            <h2>Flashcards — Level ${FLASHCARD_STATE.level}</h2>
+            <p>Tap a card to flip. Tap 🔊 to hear pronunciation.</p>
 
-        <div class="glass-panel" style="max-width:500px;margin:16px auto;">
-            <div class="flip-wrapper">
-                <div id="flash-card" class="flip-card">
-                    <div class="flip-face flip-front">${current.english}</div>
-                    <div class="flip-face flip-back">${current.spanish}</div>
-                </div>
-            </div>
-
-            <div style="display:flex;justify-content:space-between;margin-top:12px;">
-                <button class="secondary-btn" id="flash-prev">Prev</button>
-                <button class="secondary-btn" id="flash-next">Next</button>
-                <button class="primary-btn" id="flash-play">Play</button>
-            </div>
+            <div id="fc-grid" class="fc-grid"></div>
         </div>
     `;
 
-    const card = document.getElementById("flash-card");
-    card.addEventListener("click", () => {
-        card.classList.toggle("flipped");
-        appState.levelStats[appState.currentLevel].flashSeen++;
-        saveState();
-        updateBadges();
+    const grid = document.getElementById("fc-grid");
+
+    FLASHCARD_STATE.cards.forEach(card => {
+        const cardEl = document.createElement("div");
+        cardEl.className = "fc-card";
+
+        cardEl.innerHTML = `
+            <div class="fc-inner">
+                <div class="fc-front">
+                    <span>${card.english}</span>
+                </div>
+                <div class="fc-back">
+                    <span>${card.spanish}</span>
+                    ${card.audio ? `<button class="fc-audio">🔊</button>` : ""}
+                </div>
+            </div>
+        `;
+
+        // Flip on tap
+        cardEl.addEventListener("click", () => {
+            cardEl.classList.toggle("fc-flipped");
+        });
+
+        // Audio button
+        const audioBtn = cardEl.querySelector(".fc-audio");
+        if (audioBtn) {
+            audioBtn.addEventListener("click", (e) => {
+                e.stopPropagation();
+                playFlashcardAudio(card.audio);
+            });
+        }
+
+        grid.appendChild(cardEl);
     });
-
-    document.getElementById("flash-prev").onclick = () => {
-        flashIndex = (flashIndex - 1 + words.length) % words.length;
-        renderFlashTab();
-    };
-
-    document.getElementById("flash-next").onclick = () => {
-        flashIndex = (flashIndex + 1) % words.length;
-        renderFlashTab();
-    };
-
-    document.getElementById("flash-play").onclick = () => {
-        speakSpanish(current.spanish);
-    };
 }
+
 
 /* ============================================================
    QUIZ TAB
@@ -322,18 +441,34 @@ function renderQuizTab() {
 }
 
 /* ============================================================
-   BUILD TAB — Sentence Builder
+   BUILD TAB — Smart Sentence Builder v2
    ============================================================ */
 
 function renderBuildTab() {
     const container = document.getElementById("build");
-    const words = CEFR_LEVELS[appState.currentLevel];
 
+    // Pick two CEFR words for the prompt
+    const words = CEFR_LEVELS[appState.currentLevel];
     const shuffled = [...words].sort(() => Math.random() - 0.5);
     const w1 = shuffled[0];
     const w2 = shuffled[1];
-    const correctTokens = [w1.spanish, "y", w2.spanish];
-    const scrambled = [...correctTokens].sort(() => Math.random() - 0.5);
+
+    // Correct Spanish sentence
+    const correctSentence = `${w1.spanish} y ${w2.spanish}`;
+    const correctTokens = correctSentence.split(" ");
+
+    // Distractors (simple but effective)
+    const distractors = [
+        "el", "la", "los", "las",
+        "un", "una",
+        "quiero", "quieres",
+        "nuevo", "nueva"
+    ];
+
+    // Build grid tokens
+    const gridTokens = [...correctTokens, ...distractors]
+        .sort(() => Math.random() - 0.5)
+        .slice(0, correctTokens.length + 3); // limit distractors
 
     container.innerHTML = `
         <div class="glass-panel build-card">
@@ -346,10 +481,12 @@ function renderBuildTab() {
             </div>
 
             <div id="build-bank" style="display:flex;flex-wrap:wrap;gap:8px;margin-top:12px;">
-                ${scrambled.map(tok => `<button class="secondary-btn" data-token="${tok}">${tok}</button>`).join("")}
+                ${gridTokens.map(tok => `<button class="secondary-btn" data-token="${tok}">${tok}</button>`).join("")}
             </div>
 
             <button class="primary-btn" id="build-check" style="margin-top:12px;">Check</button>
+            <button class="secondary-btn" id="build-next" style="margin-top:12px;">Next Sentence</button>
+
             <div id="build-result" style="margin-top:10px;font-weight:bold;"></div>
         </div>
     `;
@@ -358,6 +495,7 @@ function renderBuildTab() {
     const targetBox = document.getElementById("build-target");
     const resultDom = document.getElementById("build-result");
 
+    // Token selection
     document.querySelectorAll("#build-bank button").forEach(btn => {
         btn.onclick = () => {
             btn.disabled = true;
@@ -367,20 +505,58 @@ function renderBuildTab() {
         };
     });
 
+    // Grammar-aware validation
     document.getElementById("build-check").onclick = () => {
         const userSentence = selected.join(" ").trim().toLowerCase();
-        const correctSentence = correctTokens.join(" ").trim().toLowerCase();
+        const correct = correctSentence.trim().toLowerCase();
 
-        if (userSentence === correctSentence) {
-            resultDom.textContent = "✅ Correct!";
+        let score = 100;
+        let errors = [];
+
+        // Word order check
+        const userTokens = selected;
+        correctTokens.forEach((tok, idx) => {
+            if (userTokens[idx] !== tok) {
+                score -= 20;
+                errors.push(`Word order issue near "${tok}"`);
+            }
+        });
+
+        // Article check
+        const articles = ["el","la","los","las","un","una"];
+        const correctArticles = correctTokens.filter(t => articles.includes(t));
+        const userArticles = userTokens.filter(t => articles.includes(t));
+        if (correctArticles.join(" ") !== userArticles.join(" ")) {
+            score -= 20;
+            errors.push("Incorrect article usage");
+        }
+
+        // Length check
+        if (userTokens.length !== correctTokens.length) {
+            score -= 20;
+            errors.push("Incorrect number of words");
+        }
+
+        // Final result
+        if (score >= 90) {
+            resultDom.textContent = `✅ Excellent! Score: ${score}%`;
             appState.levelStats[appState.currentLevel].buildCompleted++;
         } else {
-            resultDom.textContent = `❌ Correct answer: "${correctSentence}"`;
+            resultDom.innerHTML = `
+                ❌ Score: ${score}%<br>
+                Correct answer: "${correctSentence}"<br>
+                ${errors.map(e => `<div style="color:#f88;">${e}</div>`).join("")}
+            `;
         }
 
         saveState();
         updateBadges();
-        updateProgressMeters();   // ⭐ Correct placement
+        updateProgressMeters();
+    };
+
+    // Next sentence button
+    document.getElementById("build-next").onclick = () => {
+        renderBuildTab();
     };
 }
 
