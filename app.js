@@ -160,6 +160,16 @@ function setLevel(level) {
    TAB SYSTEM — UNIFIED VERSION (UPDATED FOR NEW UI)
    ============================================================ */
 
+function groupByCategory(words) {
+    const groups = {};
+    words.forEach(w => {
+        if (!groups[w.category]) groups[w.category] = [];
+        groups[w.category].push(w);
+    });
+    return groups;
+}
+
+
 const TABS = [
     "dashboard",
     "listen",
@@ -237,10 +247,6 @@ function initTabNavigation() {
 }
 
 
-/* ============================================================
-   LISTEN TAB — CATEGORY + AUDIO
-   ============================================================ */
-
 function groupByCategory(words) {
     const groups = {};
     words.forEach(w => {
@@ -250,62 +256,6 @@ function groupByCategory(words) {
     return groups;
 }
 
-
-function renderListenTab() {
-    const container = document.getElementById("listen");
-    const words = CEFR_LEVELS[appState.currentLevel];
-    const grouped = groupByCategory(words);
-
-    let html = `
-        <div class="glass-panel quiz-card">
-            <h2>Listen — Level ${appState.currentLevel}</h2>
-            <p>Tap a category, then click a word pill to hear it.</p>
-        </div>
-    `;
-
-    Object.keys(grouped).forEach(cat => {
-        html += `
-        <div class="glass-panel">
-            <div class="listen-category-header" data-cat="${cat}">
-                <span class="listen-category-title">${cat.toUpperCase()}</span>
-                <span class="listen-arrow">▶</span>
-            </div>
-            <div class="listen-category-content" data-cat="${cat}">
-                <div style="display:flex;flex-wrap:wrap;gap:8px;margin-top:8px;">
-                    ${grouped[cat].map(w => `
-                        <button class="word-pill" data-spanish="${w.spanish}">
-                            ${w.english} <span style="opacity:0.7;">(${w.spanish})</span>
-                        </button>
-                    `).join("")}
-                </div>
-            </div>
-        </div>`;
-    });
-
-    container.innerHTML = html;
-
-    // Collapse / expand categories
-    container.querySelectorAll(".listen-category-header").forEach(header => {
-        header.addEventListener("click", () => {
-            const cat = header.dataset.cat;
-            const content = container.querySelector(`.listen-category-content[data-cat="${cat}"]`);
-            const arrow = header.querySelector(".listen-arrow");
-            const open = content.classList.toggle("open");
-            arrow.classList.toggle("open", open);
-        });
-    });
-
-    // Play audio + track listens
-    container.querySelectorAll(".word-pill").forEach(btn => {
-        btn.addEventListener("click", () => {
-            speakSpanish(btn.dataset.spanish);
-            appState.levelStats[appState.currentLevel].listens++;
-            saveState();
-            updateBadges();
-            updateProgressMeters();
-        });
-    });
-}
 
 
 /* ============================================================
