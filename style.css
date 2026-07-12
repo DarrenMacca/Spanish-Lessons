@@ -791,6 +791,23 @@ body {
         gap: 16px;
     }
 
+    /* HARD FIX — Prevent dashboard overflow on mobile */
+    .dashboard,
+    .dashboard-row {
+        max-width: 100% !important;
+        width: 100% !important;
+        margin-left: 0 !important;
+        margin-right: 0 !important;
+    }
+
+    /* Allow dashboard boxes to shrink instead of overflow */
+    .dash-left,
+    .dash-right {
+        min-width: 0 !important;
+        max-width: 100% !important;
+        width: 100% !important;
+    }
+
     /* Progress tiles: switch from 4 columns → 2 columns */
     .progress-section {
         grid-template-columns: repeat(2, 1fr);
@@ -875,6 +892,7 @@ body {
         }
     }
 }
+
 
 /* ============================================================
    TABLETS — 600–900px
