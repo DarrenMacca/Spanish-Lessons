@@ -474,9 +474,32 @@ function renderFlashcardsTab() {
     });
 }
 
+
 /* ============================================================
-   QUIZ OPTION GENERATOR
+   SHARED QUIZ / BUILD / SENTENCE / CONVERSATION STATE
    ============================================================ */
+
+let quizState = {
+    currentWord: null,
+    options: [],
+    harderMode: false,
+    selected: null
+};
+
+let buildState = {
+    currentWord: null,
+    tokens: []
+};
+
+let sentenceState = {
+    currentSentence: null,
+    tokens: []
+};
+
+let convoState = {
+    currentPrompt: null,
+    tokens: []
+};
 
 function generateQuizOptions(words, correctWord) {
     let opts = [correctWord.spanish];
