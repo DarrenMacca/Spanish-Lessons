@@ -2,6 +2,9 @@
    CEFR TRAINER — CLEAN APP.JS (FINAL VERSION)
    ============================================================ */
 
+/* ------------------------------------------------------------
+   CATEGORY GROUPING
+------------------------------------------------------------ */
 function groupByCategory(words) {
     const out = {};
     words.forEach(w => {
@@ -11,6 +14,9 @@ function groupByCategory(words) {
     return out;
 }
 
+/* ------------------------------------------------------------
+   CEFR LEVEL BANKS
+------------------------------------------------------------ */
 const CEFR_LEVELS = {
     A1: A1_WORDS,
     A2: A2_WORDS,
@@ -18,6 +24,9 @@ const CEFR_LEVELS = {
     B2: B2_WORDS
 };
 
+/* ------------------------------------------------------------
+   APP STATE
+------------------------------------------------------------ */
 const STORAGE_KEY = "cefr_trainer_state_v2";
 
 let appState = {
@@ -26,17 +35,16 @@ let appState = {
     studentName: "",
     badges: [],
     levelStats: {
-        A1: { listens: 0, flashSeen: 0, quizScore: null, buildCompleted: 0, sentenceCompleted: 0, conversationCompleted: 0 },
-        A2: { listens: 0, flashSeen: 0, quizScore: null, buildCompleted: 0, sentenceCompleted: 0, conversationCompleted: 0 },
-        B1: { listens: 0, flashSeen: 0, quizScore: null, buildCompleted: 0, sentenceCompleted: 0, conversationCompleted: 0 },
-        B2: { listens: 0, flashSeen: 0, quizScore: null, buildCompleted: 0, sentenceCompleted: 0, conversationCompleted: 0 }
+        A1: { listens: 0, flashSeen: 0, quiz: 0, buildCompleted: 0, sentenceCompleted: 0, conversationCompleted: 0 },
+        A2: { listens: 0, flashSeen: 0, quiz: 0, buildCompleted: 0, sentenceCompleted: 0, conversationCompleted: 0 },
+        B1: { listens: 0, flashSeen: 0, quiz: 0, buildCompleted: 0, sentenceCompleted: 0, conversationCompleted: 0 },
+        B2: { listens: 0, flashSeen: 0, quiz: 0, buildCompleted: 0, sentenceCompleted: 0, conversationCompleted: 0 }
     }
 };
 
-/* ============================================================
+/* ------------------------------------------------------------
    CATEGORY AUTO‑ASSIGNER
-   ============================================================ */
-
+------------------------------------------------------------ */
 function autoAssignCategory(word) {
     const w = word.spanish.toLowerCase();
 
@@ -77,10 +85,9 @@ function autoAssignCategory(word) {
     return "daily-life";
 }
 
-/* ============================================================
+/* ------------------------------------------------------------
    APPLY CATEGORIES
-   ============================================================ */
-
+------------------------------------------------------------ */
 Object.keys(CEFR_LEVELS).forEach(level => {
     CEFR_LEVELS[level] = CEFR_LEVELS[level].map(w => ({
         ...w,
@@ -88,13 +95,12 @@ Object.keys(CEFR_LEVELS).forEach(level => {
     }));
 });
 
-/* ============================================================
+/* ------------------------------------------------------------
    STATE LOAD / SAVE
-   ============================================================ */
-
+------------------------------------------------------------ */
 function loadState() {
     try {
-        let raw = localStorage.getItem(STORAGE_KEY);
+        const raw = localStorage.getItem(STORAGE_KEY);
         if (raw) Object.assign(appState, JSON.parse(raw));
     } catch (e) {
         console.error("State load error:", e);
@@ -109,25 +115,23 @@ function saveState() {
     }
 }
 
-/* ============================================================
+/* ------------------------------------------------------------
    SPEECH SYNTHESIS
-   ============================================================ */
-
+------------------------------------------------------------ */
 function speakSpanish(text) {
     if (!("speechSynthesis" in window)) return;
-    window.speechSynthesis.cancel();
+    speechSynthesis.cancel();
 
-    let u = new SpeechSynthesisUtterance(text);
+    const u = new SpeechSynthesisUtterance(text);
     u.lang = "es-ES";
     u.rate = appState.speechRate;
 
-    window.speechSynthesis.speak(u);
+    speechSynthesis.speak(u);
 }
 
-/* ============================================================
+/* ------------------------------------------------------------
    LEVEL SELECTOR
-   ============================================================ */
-
+------------------------------------------------------------ */
 function setLevel(level) {
     if (!CEFR_LEVELS[level]) return;
 
@@ -141,10 +145,9 @@ function setLevel(level) {
     activateTab(currentTab);
 }
 
-/* ============================================================
+/* ------------------------------------------------------------
    TAB SYSTEM
-   ============================================================ */
-
+------------------------------------------------------------ */
 const TABS = [
     "dashboard",
     "listen",
@@ -188,14 +191,12 @@ function activateTab(tabName) {
 
 function initTabNavigation() {
     document.querySelectorAll(".tab-btn").forEach(btn => {
-        btn.addEventListener("click", () => {
-            activateTab(btn.dataset.tab);
-        });
+        btn.addEventListener("click", () => activateTab(btn.dataset.tab));
     });
 }
 
 /* ============================================================
-   LISTEN TAB
+   LISTEN TAB — CATEGORY + AUDIO PLAYER + CLEAN UI
    ============================================================ */
 
 let listenAutoPlay = {
@@ -230,6 +231,9 @@ function renderListenTab() {
         </div>
     `;
 
+    /* ============================================================
+       CATEGORY LIST
+       ============================================================ */
     Object.keys(grouped).forEach(cat => {
         html += `
         <div class="glass-panel">
@@ -258,6 +262,9 @@ function renderListenTab() {
 
     container.innerHTML = html;
 
+    /* ============================================================
+       CATEGORY COLLAPSE
+       ============================================================ */
     container.querySelectorAll(".listen-category-header").forEach(header => {
         header.addEventListener("click", () => {
             const cat = header.dataset.cat;
@@ -268,6 +275,9 @@ function renderListenTab() {
         });
     });
 
+    /* ============================================================
+       SINGLE WORD PLAYBACK
+       ============================================================ */
     container.querySelectorAll(".word-pill").forEach(btn => {
         btn.addEventListener("click", () => {
             speakSpanish(btn.dataset.spanish);
@@ -278,6 +288,9 @@ function renderListenTab() {
         });
     });
 
+    /* ============================================================
+       AUTO PLAY — PLAY ALL WORDS
+       ============================================================ */
     listenAutoPlay.list = words.map(w => w.spanish);
 
     document.getElementById("listen-playall").onclick = () => {
@@ -306,6 +319,9 @@ function renderListenTab() {
     };
 }
 
+/* ============================================================
+   AUTO PLAY ENGINE
+   ============================================================ */
 function playNextListenWord() {
     if (!listenAutoPlay.active || listenAutoPlay.paused) return;
 
@@ -332,7 +348,7 @@ function playNextListenWord() {
 }
 
 /* ============================================================
-   FLASHCARDS TAB
+   FLASHCARDS — CATEGORY GROUPED + FLIP + AUDIO (A1–B2)
    ============================================================ */
 
 function renderFlashcardsTab() {
@@ -376,6 +392,7 @@ function renderFlashcardsTab() {
 
     container.innerHTML = html;
 
+    /* CATEGORY COLLAPSE */
     container.querySelectorAll(".listen-category-header").forEach(header => {
         header.addEventListener("click", () => {
             const cat = header.dataset.cat;
@@ -386,6 +403,7 @@ function renderFlashcardsTab() {
         });
     });
 
+    /* FLASHCARD FLIP + AUDIO */
     container.querySelectorAll(".fc-card").forEach(card => {
         card.addEventListener("click", () => {
             const inner = card.querySelector(".fc-inner");
@@ -395,6 +413,10 @@ function renderFlashcardsTab() {
 
             if (flipped) {
                 speakSpanish(spanish);
+                appState.levelStats[appState.currentLevel].flashSeen++;
+                saveState();
+                updateBadges();
+                updateProgressMeters();
             } else {
                 speechSynthesis.cancel();
             }
@@ -403,7 +425,7 @@ function renderFlashcardsTab() {
 }
 
 /* ============================================================
-   QUIZ TAB
+   QUIZ TAB — MULTIPLE CHOICE (A1–B2)
    ============================================================ */
 
 const QUIZ_STATE = {
@@ -416,8 +438,10 @@ const QUIZ_STATE = {
     total: 0,
 };
 
+/* BUILD QUIZ QUESTION */
 function buildQuizQuestion(level, harder = false) {
     const words = CEFR_LEVELS[level];
+
     const pool = harder ? words.slice(Math.floor(words.length * 0.5)) : words;
 
     const correctItem = pool[Math.floor(Math.random() * pool.length)];
@@ -439,6 +463,7 @@ function buildQuizQuestion(level, harder = false) {
     };
 }
 
+/* RENDER QUIZ TAB */
 function renderQuizTab() {
     QUIZ_STATE.level = appState.currentLevel;
 
@@ -473,6 +498,7 @@ function renderQuizTab() {
         grid.appendChild(btn);
     });
 
+    /* SUBMIT */
     document.getElementById("qb-submit").onclick = () => {
         if (!QUIZ_STATE.selected) {
             feedback.innerHTML = `<div class="glass-panel">Choose an answer first.</div>`;
@@ -494,10 +520,12 @@ function renderQuizTab() {
         updateQuizProgress();
     };
 
+    /* NEXT QUESTION */
     document.getElementById("qb-next").onclick = () => {
         renderQuizTab();
     };
 
+    /* HARDER MODE */
     document.getElementById("qb-harder").onclick = () => {
         const q2 = buildQuizQuestion(QUIZ_STATE.level, true);
         QUIZ_STATE.question = q2.english;
@@ -525,19 +553,24 @@ function renderQuizTab() {
     };
 }
 
+/* UPDATE QUIZ PROGRESS TILE */
 function updateQuizProgress() {
     const percent = Math.round((QUIZ_STATE.score / QUIZ_STATE.total) * 100);
 
     document.getElementById("quiz-number").textContent = `${percent}%`;
-    document.getElementById
+    document.getElementById("quiz-progress").style.width = `${percent}%`;
 
+    appState.levelStats[appState.currentLevel].quiz = percent;
+    saveState();
+    updateBadges();
+}
 
 /* ============================================================
    BUILD TAB — FULL LOGIC
    ============================================================ */
 
 function renderBuildTab() {
-    const container = document.getElementById("build");
+    const container = document.getElementById("build-content");
     const words = CEFR_LEVELS[appState.currentLevel];
     const categories = groupByCategory(words);
 
@@ -610,12 +643,12 @@ function renderBuildTab() {
 }
 
 /* ============================================================
-   SENTENCE TAB — FULL SMART BUILDER LOGIC
+   SENTENCE TAB — FULL SMART BUILDER LOGIC (OPTION A)
    ============================================================ */
 
 function renderSentenceTab() {
-const container = document.getElementById("sentence-content");
-   const words = CEFR_LEVELS[appState.currentLevel];
+    const container = document.getElementById("sentence-content");
+    const words = CEFR_LEVELS[appState.currentLevel];
     const categories = groupByCategory(words);
 
     const catNames = Object.keys(categories);
@@ -687,14 +720,12 @@ const container = document.getElementById("sentence-content");
     };
 }
 
-
-
 /* ============================================================
    CONVERSATION TAB — FULL LOGIC
    ============================================================ */
 
 function renderConversationTab() {
-    const container = document.getElementById("conversation");
+    const container = document.getElementById("conversation-content");
     const words = CEFR_LEVELS[appState.currentLevel];
     const categories = groupByCategory(words);
 
@@ -768,8 +799,6 @@ function renderConversationTab() {
     };
 }
 
-
-
 /* ============================================================
    GRAMMAR TAB
    ============================================================ */
@@ -808,8 +837,10 @@ function updateBadges() {
         const s = appState.levelStats[level];
         if (s.listens >= 20) badges.add(`${level} Listener`);
         if (s.flashSeen >= 30) badges.add(`${level} Flash Master`);
-        if (s.quizScore !== null && s.quizScore >= 80) badges.add(`${level} Quiz Ace`);
+        if (s.quiz >= 80) badges.add(`${level} Quiz Ace`);
         if (s.buildCompleted >= 10) badges.add(`${level} Builder`);
+        if (s.sentenceCompleted >= 10) badges.add(`${level} Sentence Pro`);
+        if (s.conversationCompleted >= 10) badges.add(`${level} Conversationalist`);
     });
 
     appState.badges = Array.from(badges);
@@ -859,9 +890,10 @@ function initRateControl() {
         saveState();
     };
 }
-/* ------------------------------------------------------------
+
+/* ============================================================
    PROGRESS METER CONTROLLER
------------------------------------------------------------- */
+   ============================================================ */
 
 function animateNumber(id, target) {
     let current = 0;
@@ -901,7 +933,7 @@ function updateProgressMeters() {
     animateNumber("score-number", 85);
     animateNumber("review-number", 20);
 
-    // ⭐ Pulse animations (this is the missing part)
+    // Pulse animations
     pulseTile("quiz-tile");
     pulseTile("build-tile");
     pulseTile("sentence-tile");
@@ -911,106 +943,14 @@ function updateProgressMeters() {
     pulseTile("review-tile");
 }
 
-
-// Run once when dashboard loads
-
-
-
-    // Pick a random sentence
-    const item = bank[Math.floor(Math.random() * bank.length)];
-    const english = item.en;
-    const spanish = item.es;
-
-    // Scramble Spanish words
-    const words = spanish.split(" ");
-    const scrambled = [...words].sort(() => Math.random() - 0.5);
-
-    // Build UI
-    panel.innerHTML = `
-        <div class="glass-panel quiz-card">
-
-            <h2>Sentence Practice — Level ${level}</h2>
-            <p class="sentence-english"><strong>${english}</strong></p>
-
-            <div id="sentence-output" class="sentence-output"></div>
-
-            <div id="sentence-options" class="sentence-options"></div>
-
-            <div class="sentence-controls">
-                <button id="undo-btn" class="primary-btn">Undo</button>
-                <button id="reset-btn" class="primary-btn">Reset</button>
-                <button id="check-btn" class="primary-btn">Check</button>
-            </div>
-
-            <div id="sentence-feedback" class="sentence-feedback"></div>
-
-        </div>
-    `;
-
-    const output = document.getElementById("sentence-output");
-    const options = document.getElementById("sentence-options");
-    const feedback = document.getElementById("sentence-feedback");
-
-    let built = [];
-
-    // Render scrambled word tiles
-    scrambled.forEach(word => {
-        const btn = document.createElement("button");
-        btn.className = "word-btn";
-        btn.textContent = word;
-
-        btn.addEventListener("click", () => {
-            built.push(word);
-            renderOutput();
-        });
-
-        options.appendChild(btn);
-    });
-
-    function renderOutput() {
-        output.textContent = built.join(" ");
-    }
-
-    // Undo last word
-    document.getElementById("undo-btn").addEventListener("click", () => {
-        built.pop();
-        renderOutput();
-    });
-
-    // Reset sentence
-    document.getElementById("reset-btn").addEventListener("click", () => {
-        built = [];
-        renderOutput();
-    });
-
-    // Check answer
-    document.getElementById("check-btn").addEventListener("click", () => {
-        const attempt = built.join(" ");
-        if (attempt === spanish) {
-            feedback.textContent = "Correct! 🎉";
-            feedback.style.color = "limegreen";
-
-            // Update progress
-            appState.levelStats[level].sentenceCompleted++;
-            updateProgressMeters();
-
-        } else {
-            feedback.textContent = "Not quite — try again.";
-            feedback.style.color = "orange";
-        }
-    });
-}
-
-
 function pulseTile(id) {
     const tile = document.getElementById(id);
     if (!tile) return;
 
-    tile.classList.remove("pulse");   // reset animation
-    void tile.offsetWidth;            // force reflow
-    tile.classList.add("pulse");      // trigger animation
+    tile.classList.remove("pulse");
+    void tile.offsetWidth;
+    tile.classList.add("pulse");
 }
-
 
 /* ============================================================
    STARTUP
@@ -1020,15 +960,12 @@ document.addEventListener("DOMContentLoaded", () => {
     loadState();
 
     initTabNavigation();
+    activateTab("dashboard");
 
-    activateTab("dashboard");   // Dashboard must be visible first
-
-    initRateControl();          // Now #rate exists
-    initNameBox();              // Now #student-name exists
+    initRateControl();
+    initNameBox();
 
     updateBadges();
-    updateProgressMeters();     // Now safe
+    updateProgressMeters();
 });
-
-
 
