@@ -281,16 +281,18 @@ function renderListenTab() {
             <p>Tap a category, then click a word pill to hear it.</p>
 
             <div class="listen-player-controls" style="
-                display:flex;
-                gap:10px;
-                flex-wrap:wrap;
-                margin-top:10px;
-            ">
-                <button class="primary-btn" id="listen-playall">▶️ Play All</button>
-                <button class="secondary-btn" id="listen-pause">⏸️ Pause</button>
-                <button class="primary-btn" id="listen-resume">▶️ Resume</button>
-                <button class="secondary-btn" id="listen-stop">⏹️ Stop</button>
-            </div>
+    display:flex;
+    gap:6px;
+    flex-wrap:wrap;
+    margin-top:6px;
+    justify-content:flex-start;
+">
+    <button class="word-pill" id="listen-playall">Play All</button>
+    <button class="word-pill" id="listen-pause">Pause</button>
+    <button class="word-pill" id="listen-resume">Resume</button>
+    <button class="word-pill" id="listen-stop">Stop</button>
+</div>
+
         </div>
     `;
 
