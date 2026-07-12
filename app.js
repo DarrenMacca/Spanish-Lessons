@@ -1,6 +1,15 @@
 /* ============================================================
    CEFR TRAINER — CLEAN APP.JS (PART 1)
    ============================================================ */
+function groupByCategory(words) {
+    const out = {};
+    words.forEach(w => {
+        if (!out[w.category]) out[w.category] = [];
+        out[w.category].push(w);
+    });
+    return out;
+}
+
 
 const CEFR_LEVELS = {
     A1: A1_WORDS,
@@ -148,9 +157,8 @@ function setLevel(level) {
 }
 
 /* ============================================================
-   TAB SYSTEM — SINGLE, CLEAN VERSION
+   TAB SYSTEM — UNIFIED VERSION (UPDATED FOR NEW UI)
    ============================================================ */
-
 
 const TABS = [
     "dashboard",
@@ -163,34 +171,59 @@ const TABS = [
     "grammar"
 ];
 
-
 let currentTab = "dashboard";
 
 function activateTab(tabName) {
     if (!TABS.includes(tabName)) return;
     currentTab = tabName;
 
+    // Hide all tabs
     TABS.forEach(id => {
         const panel = document.getElementById(id);
         if (panel) panel.classList.add("hidden");
     });
 
+    // Show active tab
     const activePanel = document.getElementById(tabName);
     if (activePanel) activePanel.classList.remove("hidden");
 
+    // Update nav button highlight
     document.querySelectorAll(".tab-btn").forEach(btn => {
         btn.classList.toggle("active", btn.dataset.tab === tabName);
     });
 
+    // Load tab content
     switch (tabName) {
-        case "listen":        renderListenTab();        break;
-        case "flash":         renderFlashTab();         break;
-        case "quiz":          renderQuizTab();          break;
-        case "build":         renderBuildTab();         break;
-        case "sentence":      renderSentenceTab();      break;
-        case "conversation":  renderConversationTab();  break;
-        case "grammar":       renderGrammarTab();       break;
+        case "listen":
+            renderListenTab();
+            break;
+
+        case "flash":
+            renderFlashcardsTab();
+            break;
+
+        case "quiz":
+            renderQuizTab();
+            break;
+
+        case "build":
+            renderBuildTab();
+            break;
+
+        case "sentence":
+            renderSentenceTab();
+            break;
+
+        case "conversation":
+            renderConversationTab();
+            break;
+
+        case "grammar":
+            renderGrammarTab();
+            break;
+
         case "dashboard":
+            // Dashboard has static content
             break;
     }
 }
@@ -202,6 +235,7 @@ function initTabNavigation() {
         });
     });
 }
+
 
 /* ============================================================
    LISTEN TAB
@@ -375,221 +409,321 @@ function renderFlashcardsTab() {
 
 
 /* ============================================================
-   QUIZ TAB
+   QUIZ TAB — FULL LOGIC
    ============================================================ */
 
 function renderQuizTab() {
     const container = document.getElementById("quiz");
     const words = CEFR_LEVELS[appState.currentLevel];
+    const categories = groupByCategory(words);
 
-    const shuffled = [...words].sort(() => Math.random() - 0.5);
-    const questions = shuffled.slice(0, Math.min(5, shuffled.length)).map((w, idx) => {
-        const distractors = words.filter(o => o !== w).sort(() => Math.random() - 0.5).slice(0, 2);
-        const options = [...distractors, w].sort(() => Math.random() - 0.5);
-        return { id: idx, english: w.english, correct: w.spanish, options: options.map(o => o.spanish) };
-    });
+    // Pick a random category
+    const catNames = Object.keys(categories);
+    const chosenCat = catNames[Math.floor(Math.random() * catNames.length)];
+    const catWords = categories[chosenCat];
 
-    let html = `
-        <div class="glass-panel quiz-card">
-            <h2>Quiz — Level ${appState.currentLevel}</h2>
-            <p>Select the correct Spanish translation.</p>
-        </div>
+    // Pick a random word
+    const w = catWords[Math.floor(Math.random() * catWords.length)];
 
-        <form id="quiz-form" class="glass-panel quiz-card">
-    `;
+    // Build distractors
+    const distractors = [...catWords]
+        .filter(x => x.spanish !== w.spanish)
+        .sort(() => Math.random() - 0.5)
+        .slice(0, 3);
 
-    questions.forEach(q => {
-        html += `
-            <div style="margin-bottom:16px;">
-                <p><strong>${q.english}</strong></p>
-                ${q.options.map(opt => `
-                    <label style="display:block;margin:4px 0;">
-                        <input type="radio" name="q-${q.id}" value="${opt}"> ${opt}
-                    </label>
-                `).join("")}
+    const options = [...distractors.map(d => d.spanish), w.spanish]
+        .sort(() => Math.random() - 0.5);
+
+    container.innerHTML = `
+        <div id="quiz-builder">
+            <div id="qb-meta">Category: ${chosenCat}</div>
+            <div id="qb-question">Translate: <strong>${w.english}</strong></div>
+            <div id="qb-grid" class="sb-grid">
+                ${options.map(o => `<button class="secondary-btn qb-opt" data-opt="${o}">${o}</button>`).join("")}
             </div>
-        `;
-    });
-
-    html += `
-            <button class="primary-btn" type="submit">Evaluate</button>
-            <div id="quiz-result" style="margin-top:12px;font-weight:bold;"></div>
-        </form>
+            <div id="qb-answer"></div>
+            <div id="qb-feedback"></div>
+            <div class="sb-controls">
+                <button id="qb-submit">Check</button>
+                <button id="qb-next">Next</button>
+                <button id="qb-harder">Harder</button>
+            </div>
+        </div>
     `;
 
-    container.innerHTML = html;
+    let selected = null;
 
-    document.getElementById("quiz-form").onsubmit = e => {
-        e.preventDefault();
-        let correctCount = 0;
+    document.querySelectorAll(".qb-opt").forEach(btn => {
+        btn.onclick = () => {
+            selected = btn.dataset.opt;
+            document.getElementById("qb-answer").textContent = selected;
+        };
+    });
 
-        questions.forEach(q => {
-            const chosen = document.querySelector(`input[name="q-${q.id}"]:checked`);
-            if (chosen && chosen.value === q.correct) correctCount++;
-        });
+    document.getElementById("qb-submit").onclick = () => {
+        const fb = document.getElementById("qb-feedback");
+        if (!selected) {
+            fb.textContent = "Choose an answer first.";
+            return;
+        }
 
-        const percent = Math.round((correctCount / questions.length) * 100);
-        document.getElementById("quiz-result").textContent =
-            `Score: ${percent}% (${correctCount}/${questions.length})`;
+        if (selected === w.spanish) {
+            fb.textContent = "Correct! 🎉";
+            appState.levelStats[appState.currentLevel].quizScore =
+                (appState.levelStats[appState.currentLevel].quizScore || 0) + 10;
+        } else {
+            fb.textContent = `Incorrect. Correct answer: ${w.spanish}`;
+        }
 
-        appState.levelStats[appState.currentLevel].quizScore = percent;
         saveState();
-        updateBadges();
-       updateProgressMeters();
+        updateProgressMeters();
+    };
 
+    document.getElementById("qb-next").onclick = renderQuizTab;
+    document.getElementById("qb-harder").onclick = () => {
+        appState.currentLevel = "B1";
+        renderQuizTab();
     };
 }
 
+
 /* ============================================================
-   BUILD TAB — Smart Sentence Builder v2
+   BUILD TAB — FULL LOGIC
    ============================================================ */
 
 function renderBuildTab() {
     const container = document.getElementById("build");
-
-    // Pick two CEFR words for the prompt
     const words = CEFR_LEVELS[appState.currentLevel];
-    const shuffled = [...words].sort(() => Math.random() - 0.5);
+    const categories = groupByCategory(words);
+
+    const catNames = Object.keys(categories);
+    const chosenCat = catNames[Math.floor(Math.random() * catNames.length)];
+    const catWords = categories[chosenCat];
+
+    const shuffled = [...catWords].sort(() => Math.random() - 0.5);
     const w1 = shuffled[0];
     const w2 = shuffled[1];
 
-    // Correct Spanish sentence
     const correctSentence = `${w1.spanish} y ${w2.spanish}`;
     const correctTokens = correctSentence.split(" ");
 
-    // Distractors (simple but effective)
-    const distractors = [
-        "el", "la", "los", "las",
-        "un", "una",
-        "quiero", "quieres",
-        "nuevo", "nueva"
-    ];
+    const distractors = [...catWords]
+        .filter(x => !correctTokens.includes(x.spanish))
+        .slice(0, 3)
+        .map(x => x.spanish);
 
-    // Build grid tokens
-    const gridTokens = [...correctTokens, ...distractors]
-        .sort(() => Math.random() - 0.5)
-        .slice(0, correctTokens.length + 3); // limit distractors
+    const gridTokens = [...correctTokens, ...distractors].sort(() => Math.random() - 0.5);
 
     container.innerHTML = `
-        <div class="glass-panel build-card">
-            <h2>Build — Level ${appState.currentLevel}</h2>
-            <p>Construct the Spanish sentence:</p>
-            <p><strong>${w1.english} and ${w2.english}</strong></p>
-
-            <div id="build-target" style="min-height:40px;border:1px dashed rgba(148,163,184,0.6);padding:8px;margin-top:8px;">
-                <span style="opacity:0.6;">Your sentence will appear here...</span>
+        <div id="build-builder">
+            <div id="bb-meta">Category: ${chosenCat}</div>
+            <div id="bb-english">${w1.english} and ${w2.english}</div>
+            <div id="bb-grid" class="sb-grid">
+                ${gridTokens.map(t => `<button class="secondary-btn bb-tok" data-tok="${t}">${t}</button>`).join("")}
             </div>
-
-            <div id="build-bank" style="display:flex;flex-wrap:wrap;gap:8px;margin-top:12px;">
-                ${gridTokens.map(tok => `<button class="secondary-btn" data-token="${tok}">${tok}</button>`).join("")}
+            <div id="bb-answer"></div>
+            <div id="bb-feedback"></div>
+            <div class="sb-controls">
+                <button id="bb-submit">Check</button>
+                <button id="bb-next">Next</button>
+                <button id="bb-harder">Harder</button>
             </div>
-
-            <button class="primary-btn" id="build-check" style="margin-top:12px;">Check</button>
-            <button class="secondary-btn" id="build-next" style="margin-top:12px;">Next Sentence</button>
-
-            <div id="build-result" style="margin-top:10px;font-weight:bold;"></div>
         </div>
     `;
 
     const selected = [];
-    const targetBox = document.getElementById("build-target");
-    const resultDom = document.getElementById("build-result");
 
-    // Token selection
-    document.querySelectorAll("#build-bank button").forEach(btn => {
+    document.querySelectorAll(".bb-tok").forEach(btn => {
         btn.onclick = () => {
+            selected.push(btn.dataset.tok);
             btn.disabled = true;
             btn.style.opacity = "0.5";
-            selected.push(btn.dataset.token);
-            targetBox.innerHTML = selected.map(t => `<span>${t}</span>`).join(" ");
+            document.getElementById("bb-answer").textContent = selected.join(" ");
         };
     });
 
-    // Grammar-aware validation
-    document.getElementById("build-check").onclick = () => {
-        const userSentence = selected.join(" ").trim().toLowerCase();
-        const correct = correctSentence.trim().toLowerCase();
+    document.getElementById("bb-submit").onclick = () => {
+        const user = selected.join(" ");
+        const fb = document.getElementById("bb-feedback");
 
-        let score = 100;
-        let errors = [];
-
-        // Word order check
-        const userTokens = selected;
-        correctTokens.forEach((tok, idx) => {
-            if (userTokens[idx] !== tok) {
-                score -= 20;
-                errors.push(`Word order issue near "${tok}"`);
-            }
-        });
-
-        // Article check
-        const articles = ["el","la","los","las","un","una"];
-        const correctArticles = correctTokens.filter(t => articles.includes(t));
-        const userArticles = userTokens.filter(t => articles.includes(t));
-        if (correctArticles.join(" ") !== userArticles.join(" ")) {
-            score -= 20;
-            errors.push("Incorrect article usage");
-        }
-
-        // Length check
-        if (userTokens.length !== correctTokens.length) {
-            score -= 20;
-            errors.push("Incorrect number of words");
-        }
-
-        // Final result
-        if (score >= 90) {
-            resultDom.textContent = `✅ Excellent! Score: ${score}%`;
+        if (user === correctSentence) {
+            fb.textContent = "Correct! 🎉";
             appState.levelStats[appState.currentLevel].buildCompleted++;
         } else {
-            resultDom.innerHTML = `
-                ❌ Score: ${score}%<br>
-                Correct answer: "${correctSentence}"<br>
-                ${errors.map(e => `<div style="color:#f88;">${e}</div>`).join("")}
-            `;
+            fb.textContent = `Incorrect. Correct answer: ${correctSentence}`;
         }
 
         saveState();
-        updateBadges();
         updateProgressMeters();
     };
 
-    // Next sentence button
-    document.getElementById("build-next").onclick = () => {
+    document.getElementById("bb-next").onclick = renderBuildTab;
+    document.getElementById("bb-harder").onclick = () => {
+        appState.currentLevel = "B1";
         renderBuildTab();
+    };
+}
+
+/* ============================================================
+   SENTENCE TAB — FULL SMART BUILDER LOGIC
+   ============================================================ */
+
+function renderSentenceTab() {
+    const container = document.getElementById("sentence");
+    const words = CEFR_LEVELS[appState.currentLevel];
+    const categories = groupByCategory(words);
+
+    const catNames = Object.keys(categories);
+    const chosenCat = catNames[Math.floor(Math.random() * catNames.length)];
+    const catWords = categories[chosenCat];
+
+    const shuffled = [...catWords].sort(() => Math.random() - 0.5);
+    const w1 = shuffled[0];
+    const w2 = shuffled[1];
+
+    const correctSentence = `${w1.spanish} y ${w2.spanish}`;
+    const correctTokens = correctSentence.split(" ");
+
+    const distractors = [...catWords]
+        .filter(x => !correctTokens.includes(x.spanish))
+        .slice(0, 3)
+        .map(x => x.spanish);
+
+    const gridTokens = [...correctTokens, ...distractors].sort(() => Math.random() - 0.5);
+
+    container.innerHTML = `
+        <div id="sentence-builder">
+            <div id="sb-meta">Category: ${chosenCat}</div>
+            <div id="sb-english">${w1.english} and ${w2.english}</div>
+            <div id="sb-grid" class="sb-grid">
+                ${gridTokens.map(t => `<button class="secondary-btn sb-tok" data-tok="${t}">${t}</button>`).join("")}
+            </div>
+            <div id="sb-answer"></div>
+            <div id="sb-feedback"></div>
+            <div class="sb-controls">
+                <button id="sb-submit">Check</button>
+                <button id="sb-next">Next</button>
+                <button id="sb-harder">Harder</button>
+            </div>
+        </div>
+    `;
+
+    const selected = [];
+
+    document.querySelectorAll(".sb-tok").forEach(btn => {
+        btn.onclick = () => {
+            selected.push(btn.dataset.tok);
+            btn.disabled = true;
+            btn.style.opacity = "0.5";
+            document.getElementById("sb-answer").textContent = selected.join(" ");
+        };
+    });
+
+    document.getElementById("sb-submit").onclick = () => {
+        const user = selected.join(" ");
+        const fb = document.getElementById("sb-feedback");
+
+        if (user === correctSentence) {
+            fb.textContent = "Correct! 🎉";
+            appState.levelStats[appState.currentLevel].sentenceCompleted =
+                (appState.levelStats[appState.currentLevel].sentenceCompleted || 0) + 1;
+        } else {
+            fb.textContent = `Incorrect. Correct answer: ${correctSentence}`;
+        }
+
+        saveState();
+        updateProgressMeters();
+    };
+
+    document.getElementById("sb-next").onclick = renderSentenceTab;
+    document.getElementById("sb-harder").onclick = () => {
+        appState.currentLevel = "B1";
+        renderSentenceTab();
     };
 }
 
 
 
 /* ============================================================
-   CONVERSATION TAB
+   CONVERSATION TAB — FULL LOGIC
    ============================================================ */
 
 function renderConversationTab() {
     const container = document.getElementById("conversation");
     const words = CEFR_LEVELS[appState.currentLevel];
+    const categories = groupByCategory(words);
 
-    const connectors = words.filter(w => w.category === "connector").slice(0, 6);
-    const core = words.filter(w => w.category === "core").slice(0, 6);
+    const catNames = Object.keys(categories);
+    const chosenCat = catNames[Math.floor(Math.random() * catNames.length)];
+    const catWords = categories[chosenCat];
+
+    const shuffled = [...catWords].sort(() => Math.random() - 0.5);
+    const w1 = shuffled[0];
+    const w2 = shuffled[1];
+
+    const prompt = `Respond using: ${w1.english}, ${w2.english}`;
+    const correctSentence = `${w1.spanish} y ${w2.spanish}`;
+    const correctTokens = correctSentence.split(" ");
+
+    const distractors = [...catWords]
+        .filter(x => !correctTokens.includes(x.spanish))
+        .slice(0, 3)
+        .map(x => x.spanish);
+
+    const gridTokens = [...correctTokens, ...distractors].sort(() => Math.random() - 0.5);
 
     container.innerHTML = `
-        <div class="glass-panel quiz-card">
-            <h2>Conversation — Level ${appState.currentLevel}</h2>
-            <p>Mix connectors and core phrases to practice speaking.</p>
-        </div>
-
-        <div class="glass-panel quiz-card">
-            <h3>Connectors</h3>
-            <ul>${connectors.map(c => `<li>${c.english} → <strong>${c.spanish}</strong></li>`).join("")}</ul>
-
-            <h3 style="margin-top:12px;">Core Phrases</h3>
-            <ul>${core.map(c => `<li>${c.english} → <strong>${c.spanish}</strong></li>`).join("")}</ul>
-
-            <p style="margin-top:12px;opacity:0.8;">Try building 3–5 sentences aloud.</p>
+        <div id="conversation-builder">
+            <div id="cb-meta">Category: ${chosenCat}</div>
+            <div id="cb-prompt">${prompt}</div>
+            <div id="cb-grid" class="sb-grid">
+                ${gridTokens.map(t => `<button class="secondary-btn cb-tok" data-tok="${t}">${t}</button>`).join("")}
+            </div>
+            <div id="cb-answer"></div>
+            <div id="cb-feedback"></div>
+            <div class="sb-controls">
+                <button id="cb-submit">Check</button>
+                <button id="cb-next">Next</button>
+                <button id="cb-harder">Harder</button>
+            </div>
         </div>
     `;
+
+    const selected = [];
+
+    document.querySelectorAll(".cb-tok").forEach(btn => {
+        btn.onclick = () => {
+            selected.push(btn.dataset.tok);
+            btn.disabled = true;
+            btn.style.opacity = "0.5";
+            document.getElementById("cb-answer").textContent = selected.join(" ");
+        };
+    });
+
+    document.getElementById("cb-submit").onclick = () => {
+        const user = selected.join(" ");
+        const fb = document.getElementById("cb-feedback");
+
+        if (user === correctSentence) {
+            fb.textContent = "Correct! 🎉";
+            appState.levelStats[appState.currentLevel].conversationCompleted =
+                (appState.levelStats[appState.currentLevel].conversationCompleted || 0) + 1;
+        } else {
+            fb.textContent = `Incorrect. Correct answer: ${correctSentence}`;
+        }
+
+        saveState();
+        updateProgressMeters();
+    };
+
+    document.getElementById("cb-next").onclick = renderConversationTab;
+    document.getElementById("cb-harder").onclick = () => {
+        appState.currentLevel = "B1";
+        renderConversationTab();
+    };
 }
+
+
 
 /* ============================================================
    GRAMMAR TAB
