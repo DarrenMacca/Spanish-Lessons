@@ -732,6 +732,15 @@ body {
     transform: rotateY(180deg);
 }
 
+.flash-category-content {
+    display: none;
+    margin-top: 10px;
+}
+
+.flash-category-content.open {
+    display: block;
+}
+
 
 /* ============================================================
    QUIZ & BUILD CARDS
