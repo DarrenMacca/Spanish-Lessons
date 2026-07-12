@@ -812,5 +812,98 @@ body {
     .listen-category-header {
         padding: 8px 10px;
     }
+
+    /* ============================================================
+       ULTRA‑SMALL PHONES — 320–360px (nested inside mobile)
+       ============================================================ */
+    @media (max-width: 360px) {
+
+        /* Stack dashboard panels vertically */
+        .dashboard-row {
+            flex-direction: column;
+            gap: 14px;
+            max-width: 100%;
+        }
+
+        /* Progress tiles: switch from 4 → 1 column */
+        .progress-section {
+            grid-template-columns: 1fr;
+            gap: 12px;
+        }
+
+        /* Progress tiles: tighter padding */
+        .progress-tile {
+            padding: 10px;
+        }
+
+        /* Icons: slightly smaller */
+        .progress-img {
+            width: 24px;
+            height: 24px;
+        }
+
+        /* Section titles: reduce font size */
+        .section-title {
+            font-size: 13px;
+        }
+
+        /* Progress numbers: reduce font size */
+        .progress-number {
+            font-size: 13px;
+        }
+
+        /* Flashcards: allow flexible height */
+        .flip-card {
+            height: auto;
+            min-height: 110px;
+        }
+
+        /* Tab bar: tighter spacing */
+        .tab-btn {
+            padding: 8px 12px;
+            font-size: 13px;
+        }
+    }
+}
+
+/* ============================================================
+   TABLETS — 600–900px
+   ============================================================ */
+@media (min-width: 600px) and (max-width: 900px) {
+
+    /* Dashboard panels: side-by-side but comfortable */
+    .dashboard-row {
+        flex-direction: row;
+        gap: 20px;
+        max-width: 100%;
+    }
+
+    /* Progress tiles: switch from 4 → 3 columns */
+    .progress-section {
+        grid-template-columns: repeat(3, 1fr);
+        gap: 18px;
+    }
+
+    /* Slightly larger icons */
+    .progress-img {
+        width: 32px;
+        height: 32px;
+    }
+
+    /* Section titles: slightly larger */
+    .section-title {
+        font-size: 15px;
+    }
+
+    /* Flashcards: increase height for readability */
+    .flip-card {
+        height: 160px;
+    }
+
+    /* Tab bar: more breathing room */
+    .tab-btn {
+        padding: 12px 18px;
+        font-size: 15px;
+    }
 }
 
