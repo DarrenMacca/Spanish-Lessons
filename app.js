@@ -1,6 +1,7 @@
 /* ============================================================
-   CEFR TRAINER — CLEAN APP.JS (PART 1)
+   CEFR TRAINER — CLEAN APP.JS (FINAL VERSION)
    ============================================================ */
+
 function groupByCategory(words) {
     const out = {};
     words.forEach(w => {
@@ -9,7 +10,6 @@ function groupByCategory(words) {
     });
     return out;
 }
-
 
 const CEFR_LEVELS = {
     A1: A1_WORDS,
@@ -26,69 +26,51 @@ let appState = {
     studentName: "",
     badges: [],
     levelStats: {
-        A1: { listens: 0, flashSeen: 0, quizScore: null, buildCompleted: 0 },
-        A2: { listens: 0, flashSeen: 0, quizScore: null, buildCompleted: 0 },
-        B1: { listens: 0, flashSeen: 0, quizScore: null, buildCompleted: 0 },
-        B2: { listens: 0, flashSeen: 0, quizScore: null, buildCompleted: 0 }
+        A1: { listens: 0, flashSeen: 0, quizScore: null, buildCompleted: 0, sentenceCompleted: 0, conversationCompleted: 0 },
+        A2: { listens: 0, flashSeen: 0, quizScore: null, buildCompleted: 0, sentenceCompleted: 0, conversationCompleted: 0 },
+        B1: { listens: 0, flashSeen: 0, quizScore: null, buildCompleted: 0, sentenceCompleted: 0, conversationCompleted: 0 },
+        B2: { listens: 0, flashSeen: 0, quizScore: null, buildCompleted: 0, sentenceCompleted: 0, conversationCompleted: 0 }
     }
 };
 
 /* ============================================================
-   CATEGORY AUTO‑ASSIGNER — PLACE HERE
+   CATEGORY AUTO‑ASSIGNER
    ============================================================ */
 
 function autoAssignCategory(word) {
     const w = word.spanish.toLowerCase();
 
-    // Verbs (infinitives)
-    if (w.endsWith("ar") || w.endsWith("er") || w.endsWith("ir"))
-        return "verbs";
+    if (w.endsWith("ar") || w.endsWith("er") || w.endsWith("ir")) return "verbs";
+    if (w.endsWith("o") || w.endsWith("a") || w.endsWith("os") || w.endsWith("as")) return "adjectives";
+    if (!isNaN(parseInt(w))) return "numbers";
 
-    // Adjectives
-    if (w.endsWith("o") || w.endsWith("a") || w.endsWith("os") || w.endsWith("as"))
-        return "adjectives";
-
-    // Numbers
-    if (!isNaN(parseInt(w)))
-        return "numbers";
-
-    // Food & drink
     if (["manzana","pan","agua","carne","café","té","huevo","cerveza","vino","arroz","pollo","pescado","ensalada","verdura","fruta"].includes(w))
         return "food-drink";
 
-    // Travel
     if (["aeropuerto","hotel","taxi","tren","avión","billete","mapa","ciudad","país","viaje","turista"].includes(w))
         return "travel";
 
-    // Daily life
     if (["mañana","tarde","noche","casa","trabajo","escuela","día","semana","mes"].includes(w))
         return "daily-life";
 
-    // Family
     if (["madre","padre","hermano","hermana","abuelo","abuela","tío","tía","primo","prima","familia"].includes(w))
         return "family";
 
-    // Shopping
     if (["dinero","precio","tienda","comprar","vender","mercado","producto"].includes(w))
         return "shopping";
 
-    // Emergency
     if (["ayuda","policía","hospital","ambulancia","fuego","emergencia"].includes(w))
         return "emergency";
 
-    // Work
     if (["trabajo","oficina","jefe","empleado","empresa","reunión"].includes(w))
         return "work";
 
-    // Places / objects
     if (["casa","escuela","parque","calle","puerta","mesa","silla","coche","habitacion","baño"].includes(w))
         return "places-objects";
 
-    // Connectors
     if (["y","pero","porque","aunque","cuando","si","o","entonces","luego","después","antes"].includes(w))
         return "connectors";
 
-    // Grammar words
     if (["el","la","los","las","un","una","unos","unas","yo","tú","él","ella","nosotros","vosotros","ellos"].includes(w))
         return "grammar";
 
@@ -96,7 +78,7 @@ function autoAssignCategory(word) {
 }
 
 /* ============================================================
-   APPLY CATEGORIES TO ALL CEFR LEVELS — PLACE HERE
+   APPLY CATEGORIES
    ============================================================ */
 
 Object.keys(CEFR_LEVELS).forEach(level => {
@@ -109,9 +91,10 @@ Object.keys(CEFR_LEVELS).forEach(level => {
 /* ============================================================
    STATE LOAD / SAVE
    ============================================================ */
+
 function loadState() {
     try {
-        raw = localStorage.getItem(STORAGE_KEY);
+        let raw = localStorage.getItem(STORAGE_KEY);
         if (raw) Object.assign(appState, JSON.parse(raw));
     } catch (e) {
         console.error("State load error:", e);
@@ -129,11 +112,12 @@ function saveState() {
 /* ============================================================
    SPEECH SYNTHESIS
    ============================================================ */
+
 function speakSpanish(text) {
     if (!("speechSynthesis" in window)) return;
     window.speechSynthesis.cancel();
 
-    u = new SpeechSynthesisUtterance(text);
+    let u = new SpeechSynthesisUtterance(text);
     u.lang = "es-ES";
     u.rate = appState.speechRate;
 
@@ -143,6 +127,7 @@ function speakSpanish(text) {
 /* ============================================================
    LEVEL SELECTOR
    ============================================================ */
+
 function setLevel(level) {
     if (!CEFR_LEVELS[level]) return;
 
@@ -157,18 +142,8 @@ function setLevel(level) {
 }
 
 /* ============================================================
-   TAB SYSTEM — UNIFIED VERSION (UPDATED FOR NEW UI)
+   TAB SYSTEM
    ============================================================ */
-
-function groupByCategory(words) {
-    const groups = {};
-    words.forEach(w => {
-        if (!groups[w.category]) groups[w.category] = [];
-        groups[w.category].push(w);
-    });
-    return groups;
-}
-
 
 const TABS = [
     "dashboard",
@@ -187,54 +162,27 @@ function activateTab(tabName) {
     if (!TABS.includes(tabName)) return;
     currentTab = tabName;
 
-    // Hide all tabs
     TABS.forEach(id => {
         const panel = document.getElementById(id);
         if (panel) panel.classList.add("hidden");
     });
 
-    // Show active tab
     const activePanel = document.getElementById(tabName);
     if (activePanel) activePanel.classList.remove("hidden");
 
-    // Update nav button highlight
     document.querySelectorAll(".tab-btn").forEach(btn => {
         btn.classList.toggle("active", btn.dataset.tab === tabName);
     });
 
-    // Load tab content
     switch (tabName) {
-        case "listen":
-            renderListenTab();
-            break;
-
-        case "flash":
-            renderFlashcardsTab();
-            break;
-
-        case "quiz":
-            renderQuizTab();
-            break;
-
-        case "build":
-            renderBuildTab();
-            break;
-
-        case "sentence":
-            renderSentenceTab();
-            break;
-
-        case "conversation":
-            renderConversationTab();
-            break;
-
-        case "grammar":
-            renderGrammarTab();
-            break;
-
-        case "dashboard":
-            // Dashboard has static content
-            break;
+        case "listen":        renderListenTab(); break;
+        case "flash":         renderFlashcardsTab(); break;
+        case "quiz":          renderQuizTab(); break;
+        case "build":         renderBuildTab(); break;
+        case "sentence":      renderSentenceTab(); break;
+        case "conversation":  renderConversationTab(); break;
+        case "grammar":       renderGrammarTab(); break;
+        case "dashboard":     break;
     }
 }
 
@@ -246,18 +194,8 @@ function initTabNavigation() {
     });
 }
 
-
-function groupByCategory(words) {
-    const groups = {};
-    words.forEach(w => {
-        if (!groups[w.category]) groups[w.category] = [];
-        groups[w.category].push(w);
-    });
-    return groups;
-}
-
 /* ============================================================
-   LISTEN TAB — CATEGORY + AUDIO PLAYER + CLEAN UI
+   LISTEN TAB
    ============================================================ */
 
 let listenAutoPlay = {
@@ -268,37 +206,30 @@ let listenAutoPlay = {
 };
 
 function renderListenTab() {
-    const container = document.getElementById("listen");
+    const container = document.getElementById("listen-content");
     const words = CEFR_LEVELS[appState.currentLevel];
     const grouped = groupByCategory(words);
 
-    /* ============================================================
-       PLAYER CONTROLS
-       ============================================================ */
     let html = `
         <div class="glass-panel quiz-card">
             <h2>Listen — Level ${appState.currentLevel}</h2>
             <p>Tap a category, then click a word pill to hear it.</p>
 
             <div class="listen-player-controls" style="
-    display:flex;
-    gap:6px;
-    flex-wrap:wrap;
-    margin-top:6px;
-    justify-content:flex-start;
-">
-    <button class="word-pill" id="listen-playall">Play All</button>
-    <button class="word-pill" id="listen-pause">Pause</button>
-    <button class="word-pill" id="listen-resume">Resume</button>
-    <button class="word-pill" id="listen-stop">Stop</button>
-</div>
-
+                display:flex;
+                gap:6px;
+                flex-wrap:wrap;
+                margin-top:6px;
+                justify-content:flex-start;
+            ">
+                <button class="word-pill" id="listen-playall">Play All</button>
+                <button class="word-pill" id="listen-pause">Pause</button>
+                <button class="word-pill" id="listen-resume">Resume</button>
+                <button class="word-pill" id="listen-stop">Stop</button>
+            </div>
         </div>
     `;
 
-    /* ============================================================
-       CATEGORY LIST
-       ============================================================ */
     Object.keys(grouped).forEach(cat => {
         html += `
         <div class="glass-panel">
@@ -327,9 +258,6 @@ function renderListenTab() {
 
     container.innerHTML = html;
 
-    /* ============================================================
-       CATEGORY COLLAPSE
-       ============================================================ */
     container.querySelectorAll(".listen-category-header").forEach(header => {
         header.addEventListener("click", () => {
             const cat = header.dataset.cat;
@@ -340,9 +268,6 @@ function renderListenTab() {
         });
     });
 
-    /* ============================================================
-       SINGLE WORD PLAYBACK
-       ============================================================ */
     container.querySelectorAll(".word-pill").forEach(btn => {
         btn.addEventListener("click", () => {
             speakSpanish(btn.dataset.spanish);
@@ -353,9 +278,6 @@ function renderListenTab() {
         });
     });
 
-    /* ============================================================
-       AUTO PLAY — PLAY ALL WORDS
-       ============================================================ */
     listenAutoPlay.list = words.map(w => w.spanish);
 
     document.getElementById("listen-playall").onclick = () => {
@@ -384,9 +306,6 @@ function renderListenTab() {
     };
 }
 
-/* ============================================================
-   AUTO PLAY ENGINE
-   ============================================================ */
 function playNextListenWord() {
     if (!listenAutoPlay.active || listenAutoPlay.paused) return;
 
@@ -412,61 +331,12 @@ function playNextListenWord() {
     speechSynthesis.speak(utter);
 }
 
-
 /* ============================================================
-   FLASHCARDS v2 — CEFR + Audio + Difficulty + SRS
-   ============================================================ */
-
-const FLASHCARD_STATE = {
-    level: appState.currentLevel,
-    cards: [],
-    known: new Set(),
-    difficultyMap: {}, // word → difficulty score
-};
-
-// ------------------------------------------------------------
-// 1. Build flashcard list from CEFR level
-// ------------------------------------------------------------
-function buildFlashcardsForLevel(level) {
-    const words = CEFR_LEVELS[level];
-    return words.map(w => ({
-        english: w.english,
-        spanish: w.spanish,
-        audio: w.audio || null,
-        difficulty: FLASHCARD_STATE.difficultyMap[w.spanish] || 0,
-    }));
-}
-
-// ------------------------------------------------------------
-// 2. Shuffle utility
-// ------------------------------------------------------------
-function fcShuffle(arr) {
-    return [...arr].sort(() => Math.random() - 0.5);
-}
-
-// ------------------------------------------------------------
-// 3. Play audio (if available)
-function playFlashcardAudio(url) {
-    if (!url) return;
-    const audio = new Audio(url);
-    audio.play();
-}
-
-// ------------------------------------------------------------
-// 4. Difficulty tracking
-// ------------------------------------------------------------
-function updateFlashcardDifficulty(spanishWord, correct) {
-    const current = FLASHCARD_STATE.difficultyMap[spanishWord] || 0;
-    const newScore = correct ? Math.max(0, current - 1) : current + 1;
-    FLASHCARD_STATE.difficultyMap[spanishWord] = newScore;
-}
-
-/* ============================================================
-   FLASHCARDS — CATEGORY GROUPED + FLIP + AUDIO (A1–B2)
+   FLASHCARDS TAB
    ============================================================ */
 
 function renderFlashcardsTab() {
-    const container = document.getElementById("flash");
+    const container = document.getElementById("flash-content");
     const words = CEFR_LEVELS[appState.currentLevel];
     const grouped = groupByCategory(words);
 
@@ -477,7 +347,6 @@ function renderFlashcardsTab() {
         </div>
     `;
 
-    // Build category sections
     Object.keys(grouped).forEach(cat => {
         html += `
         <div class="glass-panel">
@@ -507,9 +376,6 @@ function renderFlashcardsTab() {
 
     container.innerHTML = html;
 
-    /* ------------------------------------------------------------
-       CATEGORY COLLAPSE
-    ------------------------------------------------------------ */
     container.querySelectorAll(".listen-category-header").forEach(header => {
         header.addEventListener("click", () => {
             const cat = header.dataset.cat;
@@ -520,9 +386,6 @@ function renderFlashcardsTab() {
         });
     });
 
-    /* ------------------------------------------------------------
-       FLASHCARD FLIP + AUDIO
-    ------------------------------------------------------------ */
     container.querySelectorAll(".fc-card").forEach(card => {
         card.addEventListener("click", () => {
             const inner = card.querySelector(".fc-inner");
@@ -531,19 +394,16 @@ function renderFlashcardsTab() {
             const spanish = inner.querySelector(".fc-back").textContent.trim();
 
             if (flipped) {
-                speakSpanish(spanish);   // Spanish audio only on flip
+                speakSpanish(spanish);
             } else {
-                speechSynthesis.cancel(); // No audio on flip back
+                speechSynthesis.cancel();
             }
         });
     });
 }
 
-
-
-
 /* ============================================================
-   QUIZ TAB — MULTIPLE CHOICE (A1–B2)
+   QUIZ TAB
    ============================================================ */
 
 const QUIZ_STATE = {
@@ -556,18 +416,12 @@ const QUIZ_STATE = {
     total: 0,
 };
 
-/* ------------------------------------------------------------
-   Build a quiz question
------------------------------------------------------------- */
 function buildQuizQuestion(level, harder = false) {
     const words = CEFR_LEVELS[level];
-
-    // Harder mode → shuffle and pick from later part of list
     const pool = harder ? words.slice(Math.floor(words.length * 0.5)) : words;
 
     const correctItem = pool[Math.floor(Math.random() * pool.length)];
 
-    // Build 3 wrong options
     const wrong = [];
     while (wrong.length < 3) {
         const w = pool[Math.floor(Math.random() * pool.length)];
@@ -585,9 +439,6 @@ function buildQuizQuestion(level, harder = false) {
     };
 }
 
-/* ------------------------------------------------------------
-   Render Quiz Tab
------------------------------------------------------------- */
 function renderQuizTab() {
     QUIZ_STATE.level = appState.currentLevel;
 
@@ -597,14 +448,12 @@ function renderQuizTab() {
     const answerBox = document.getElementById("qb-answer");
     const feedback = document.getElementById("qb-feedback");
 
-    // Build question
     const q = buildQuizQuestion(QUIZ_STATE.level);
     QUIZ_STATE.question = q.english;
     QUIZ_STATE.options = q.options;
     QUIZ_STATE.correct = q.correct;
     QUIZ_STATE.selected = null;
 
-    // Render UI
     meta.innerHTML = `<h2>Quiz — Level ${QUIZ_STATE.level}</h2>`;
     questionBox.innerHTML = `<div class="glass-panel"><h3>Translate: <span>${q.english}</span></h3></div>`;
     answerBox.innerHTML = ``;
@@ -624,7 +473,6 @@ function renderQuizTab() {
         grid.appendChild(btn);
     });
 
-    // Submit
     document.getElementById("qb-submit").onclick = () => {
         if (!QUIZ_STATE.selected) {
             feedback.innerHTML = `<div class="glass-panel">Choose an answer first.</div>`;
@@ -646,12 +494,10 @@ function renderQuizTab() {
         updateQuizProgress();
     };
 
-    // Next
     document.getElementById("qb-next").onclick = () => {
         renderQuizTab();
     };
 
-    // Harder
     document.getElementById("qb-harder").onclick = () => {
         const q2 = buildQuizQuestion(QUIZ_STATE.level, true);
         QUIZ_STATE.question = q2.english;
@@ -679,20 +525,11 @@ function renderQuizTab() {
     };
 }
 
-/* ------------------------------------------------------------
-   Update Quiz Progress Tile
------------------------------------------------------------- */
 function updateQuizProgress() {
     const percent = Math.round((QUIZ_STATE.score / QUIZ_STATE.total) * 100);
 
     document.getElementById("quiz-number").textContent = `${percent}%`;
-    document.getElementById("quiz-progress").style.width = `${percent}%`;
-
-    appState.levelStats[appState.currentLevel].quiz = percent;
-    saveState();
-    updateBadges();
-}
-
+    document.getElementById
 
 
 /* ============================================================
