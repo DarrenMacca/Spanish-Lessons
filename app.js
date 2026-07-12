@@ -582,118 +582,47 @@ function renderQuizTab() {
 }
 
 /* ============================================================
-   BUILD OPTIONS
+   BUILD TAB — CLEAN + STABLE VERSION
    ============================================================ */
 
-function buildQuizOptions(words, correctWord) {
-    let opts = [correctWord.spanish];
-
-    // Harder mode = 5 options instead of 3
-    const count = quizState.harderMode ? 5 : 3;
-
-    while (opts.length < count) {
-        const w = words[Math.floor(Math.random() * words.length)];
-        if (!opts.includes(w.spanish)) opts.push(w.spanish);
-    }
-
-    // Shuffle
-    return opts.sort(() => Math.random() - 0.5);
-}
-
-/* ============================================================
-   QUIZ EVENTS
-   ============================================================ */
-
-function setupQuizEvents() {
-    const grid = document.getElementById("qb-grid");
-    const submitBtn = document.getElementById("qb-submit");
-    const nextBtn = document.getElementById("qb-next");
-    const harderBtn = document.getElementById("qb-harder");
-
-    let selected = null;
-
-    // Select option
-    grid.querySelectorAll(".qb-opt").forEach(btn => {
-        btn.addEventListener("click", () => {
-            grid.querySelectorAll(".qb-opt").forEach(b => b.classList.remove("active"));
-            btn.classList.add("active");
-            selected = btn.dataset.spanish;
-        });
-    });
-
-    // Check answer
-    submitBtn.addEventListener("click", () => {
-        if (!selected) {
-            document.getElementById("qb-feedback").textContent = "Choose an answer first.";
-            return;
-        }
-
-        const correct = quizState.currentWord.spanish;
-
-        if (selected === correct) {
-            document.getElementById("qb-feedback").textContent = "Correct!";
-            appState.levelStats[appState.currentLevel].quizScore++;
-            updateBadges();
-            updateProgressMeters();
-        } else {
-            document.getElementById("qb-feedback").textContent =
-                `Incorrect — correct answer: ${correct}`;
-        }
-
-        saveState();
-    });
-
-    // Next question
-    nextBtn.addEventListener("click", () => {
-        renderQuizTab();
-    });
-
-    // Harder mode toggle
-    harderBtn.addEventListener("click", () => {
-        quizState.harderMode = !quizState.harderMode;
-        harderBtn.classList.toggle("active", quizState.harderMode);
-        renderQuizTab();
-    });
-}
-
-
-
-/* ============================================================
-   BUILD TAB — FULL LOGIC
-   ============================================================ */
+let buildState = {
+    currentWord: null,
+    tokens: []
+};
 
 function renderBuildTab() {
-    const container = document.getElementById("build");
+    const container = document.getElementById("build-content");
     const words = CEFR_LEVELS[appState.currentLevel];
-    const categories = groupByCategory(words);
 
-    const catNames = Object.keys(categories);
-    const chosenCat = catNames[Math.floor(Math.random() * catNames.length)];
-    const catWords = categories[chosenCat];
+    // Pick a random word
+    buildState.currentWord = words[Math.floor(Math.random() * words.length)];
 
-    const shuffled = [...catWords].sort(() => Math.random() - 0.5);
-    const w1 = shuffled[0];
-    const w2 = shuffled[1];
+    // Split Spanish into tokens
+    buildState.tokens = buildState.currentWord.spanish.split(" ");
 
-    const correctSentence = `${w1.spanish} y ${w2.spanish}`;
-    const correctTokens = correctSentence.split(" ");
-
-    const distractors = [...catWords]
-        .filter(x => !correctTokens.includes(x.spanish))
-        .slice(0, 3)
-        .map(x => x.spanish);
-
-    const gridTokens = [...correctTokens, ...distractors].sort(() => Math.random() - 0.5);
+    // Shuffle tokens
+    const shuffled = [...buildState.tokens].sort(() => Math.random() - 0.5);
 
     container.innerHTML = `
-        <div id="build-builder">
-            <div id="bb-meta">Category: ${chosenCat}</div>
-            <div id="bb-english">${w1.english} and ${w2.english}</div>
-            <div id="bb-grid" class="sb-grid">
-                ${gridTokens.map(t => `<button class="secondary-btn bb-tok" data-tok="${t}">${t}</button>`).join("")}
+        <div class="glass-panel quiz-card">
+            <h2>Build — Level ${appState.currentLevel}</h2>
+            <p>Tap the words in the correct order to build the Spanish phrase.</p>
+
+            <div id="bb-meta">
+                <strong>English:</strong> ${buildState.currentWord.english}
             </div>
-            <div id="bb-answer"></div>
+
+            <div id="bb-grid" class="sb-grid">
+                ${shuffled.map(t => `
+                    <button class="word-pill bb-token" data-token="${t}">
+                        ${t}
+                    </button>
+                `).join("")}
+            </div>
+
+            <div id="bb-answer" class="glass-panel"></div>
             <div id="bb-feedback"></div>
+
             <div class="sb-controls">
                 <button id="bb-submit">Check</button>
                 <button id="bb-next">Next</button>
@@ -702,75 +631,94 @@ function renderBuildTab() {
         </div>
     `;
 
-    const selected = [];
-
-    document.querySelectorAll(".bb-tok").forEach(btn => {
-        btn.onclick = () => {
-            selected.push(btn.dataset.tok);
-            btn.disabled = true;
-            btn.style.opacity = "0.5";
-            document.getElementById("bb-answer").textContent = selected.join(" ");
-        };
-    });
-
-    document.getElementById("bb-submit").onclick = () => {
-        const user = selected.join(" ");
-        const fb = document.getElementById("bb-feedback");
-
-        if (user === correctSentence) {
-            fb.textContent = "Correct! 🎉";
-            appState.levelStats[appState.currentLevel].buildCompleted++;
-        } else {
-            fb.textContent = `Incorrect. Correct answer: ${correctSentence}`;
-        }
-
-        saveState();
-        updateProgressMeters();
-    };
-
-    document.getElementById("bb-next").onclick = renderBuildTab;
-    document.getElementById("bb-harder").onclick = () => {
-        appState.currentLevel = "B1";
-        renderBuildTab();
-    };
+    setupBuildEvents();
 }
 
+function setupBuildEvents() {
+    const answerBox = document.getElementById("bb-answer");
+    const submitBtn = document.getElementById("bb-submit");
+    const nextBtn = document.getElementById("bb-next");
+    const harderBtn = document.getElementById("bb-harder");
+
+    let answer = [];
+
+    // Token selection
+    document.querySelectorAll(".bb-token").forEach(btn => {
+        btn.addEventListener("click", () => {
+            answer.push(btn.dataset.token);
+            btn.style.opacity = "0.4";
+            btn.style.pointerEvents = "none";
+            answerBox.textContent = answer.join(" ");
+        });
+    });
+
+    // Check answer
+    submitBtn.addEventListener("click", () => {
+        const correct = buildState.tokens.join(" ");
+        if (answer.join(" ") === correct) {
+            document.getElementById("bb-feedback").textContent = "Correct!";
+            appState.levelStats[appState.currentLevel].buildCompleted++;
+            updateBadges();
+            updateProgressMeters();
+        } else {
+            document.getElementById("bb-feedback").textContent =
+                `Incorrect — correct answer: ${correct}`;
+        }
+        saveState();
+    });
+
+    // Next
+    nextBtn.addEventListener("click", () => renderBuildTab());
+
+    // Harder mode (reverse tokens)
+    harderBtn.addEventListener("click", () => {
+        buildState.tokens.reverse();
+        harderBtn.classList.toggle("active");
+        renderBuildTab();
+    });
+}
+
+
 /* ============================================================
-   SENTENCE TAB — FULL SMART BUILDER LOGIC
+   SENTENCE TAB — CLEAN + STABLE VERSION
    ============================================================ */
 
+let sentenceState = {
+    english: "",
+    spanishTokens: [],
+    shuffled: []
+};
+
 function renderSentenceTab() {
-    const container = document.getElementById("sentence");
+    const container = document.getElementById("sentence-content");
     const words = CEFR_LEVELS[appState.currentLevel];
-    const categories = groupByCategory(words);
 
-    const catNames = Object.keys(categories);
-    const chosenCat = catNames[Math.floor(Math.random() * catNames.length)];
-    const catWords = categories[chosenCat];
-
-    const shuffled = [...catWords].sort(() => Math.random() - 0.5);
-    const w1 = shuffled[0];
-    const w2 = shuffled[1];
-
-    const correctSentence = `${w1.spanish} y ${w2.spanish}`;
-    const correctTokens = correctSentence.split(" ");
-
-    const distractors = [...catWords]
-        .filter(x => !correctTokens.includes(x.spanish))
-        .slice(0, 3)
-        .map(x => x.spanish);
-
-    const gridTokens = [...correctTokens, ...distractors].sort(() => Math.random() - 0.5);
+    // Pick a random word and build a simple sentence
+    const w = words[Math.floor(Math.random() * words.length)];
+    sentenceState.english = `Use "${w.english}" in a sentence.`;
+    sentenceState.spanishTokens = w.spanish.split(" ");
+    sentenceState.shuffled = [...sentenceState.spanishTokens].sort(() => Math.random() - 0.5);
 
     container.innerHTML = `
-        <div id="sentence-builder">
-            <div id="sb-meta">Category: ${chosenCat}</div>
-            <div id="sb-english">${w1.english} and ${w2.english}</div>
-            <div id="sb-grid" class="sb-grid">
-                ${gridTokens.map(t => `<button class="secondary-btn sb-tok" data-tok="${t}">${t}</button>`).join("")}
+        <div class="glass-panel quiz-card">
+            <h2>Sentence — Level ${appState.currentLevel}</h2>
+            <p>Tap the words to build a correct Spanish sentence.</p>
+
+            <div id="sb-meta">
+                <strong>Prompt:</strong> ${sentenceState.english}
             </div>
-            <div id="sb-answer"></div>
+
+            <div id="sb-grid" class="sb-grid">
+                ${sentenceState.shuffled.map(t => `
+                    <button class="word-pill sb-token" data-token="${t}">
+                        ${t}
+                    </button>
+                `).join("")}
+            </div>
+
+            <div id="sb-answer" class="glass-panel"></div>
             <div id="sb-feedback"></div>
+
             <div class="sb-controls">
                 <button id="sb-submit">Check</button>
                 <button id="sb-next">Next</button>
@@ -779,79 +727,90 @@ function renderSentenceTab() {
         </div>
     `;
 
-    const selected = [];
+    setupSentenceEvents();
+}
 
-    document.querySelectorAll(".sb-tok").forEach(btn => {
-        btn.onclick = () => {
-            selected.push(btn.dataset.tok);
-            btn.disabled = true;
-            btn.style.opacity = "0.5";
-            document.getElementById("sb-answer").textContent = selected.join(" ");
-        };
+function setupSentenceEvents() {
+    const answerBox = document.getElementById("sb-answer");
+    const submitBtn = document.getElementById("sb-submit");
+    const nextBtn = document.getElementById("sb-next");
+    const harderBtn = document.getElementById("sb-harder");
+
+    let answer = [];
+
+    document.querySelectorAll(".sb-token").forEach(btn => {
+        btn.addEventListener("click", () => {
+            answer.push(btn.dataset.token);
+            btn.style.opacity = "0.4";
+            btn.style.pointerEvents = "none";
+            answerBox.textContent = answer.join(" ");
+        });
     });
 
-    document.getElementById("sb-submit").onclick = () => {
-        const user = selected.join(" ");
-        const fb = document.getElementById("sb-feedback");
-
-        if (user === correctSentence) {
-            fb.textContent = "Correct! 🎉";
-            appState.levelStats[appState.currentLevel].sentenceCompleted =
-                (appState.levelStats[appState.currentLevel].sentenceCompleted || 0) + 1;
+    submitBtn.addEventListener("click", () => {
+        const correct = sentenceState.spanishTokens.join(" ");
+        if (answer.join(" ") === correct) {
+            document.getElementById("sb-feedback").textContent = "Correct!";
+            appState.levelStats[appState.currentLevel].buildCompleted++;
+            updateBadges();
+            updateProgressMeters();
         } else {
-            fb.textContent = `Incorrect. Correct answer: ${correctSentence}`;
+            document.getElementById("sb-feedback").textContent =
+                `Incorrect — correct answer: ${correct}`;
         }
-
         saveState();
-        updateProgressMeters();
-    };
+    });
 
-    document.getElementById("sb-next").onclick = renderSentenceTab;
-    document.getElementById("sb-harder").onclick = () => {
-        appState.currentLevel = "B1";
+    nextBtn.addEventListener("click", () => renderSentenceTab());
+
+    harderBtn.addEventListener("click", () => {
+        sentenceState.spanishTokens.reverse();
+        harderBtn.classList.toggle("active");
         renderSentenceTab();
-    };
+    });
 }
 
 
 
 /* ============================================================
-   CONVERSATION TAB — FULL LOGIC
+   CONVERSATION TAB — CLEAN + STABLE VERSION
    ============================================================ */
 
+let convoState = {
+    prompt: "",
+    tokens: [],
+    shuffled: []
+};
+
 function renderConversationTab() {
-    const container = document.getElementById("conversation");
+    const container = document.getElementById("conversation-content");
     const words = CEFR_LEVELS[appState.currentLevel];
-    const categories = groupByCategory(words);
 
-    const catNames = Object.keys(categories);
-    const chosenCat = catNames[Math.floor(Math.random() * catNames.length)];
-    const catWords = categories[chosenCat];
-
-    const shuffled = [...catWords].sort(() => Math.random() - 0.5);
-    const w1 = shuffled[0];
-    const w2 = shuffled[1];
-
-    const prompt = `Respond using: ${w1.english}, ${w2.english}`;
-    const correctSentence = `${w1.spanish} y ${w2.spanish}`;
-    const correctTokens = correctSentence.split(" ");
-
-    const distractors = [...catWords]
-        .filter(x => !correctTokens.includes(x.spanish))
-        .slice(0, 3)
-        .map(x => x.spanish);
-
-    const gridTokens = [...correctTokens, ...distractors].sort(() => Math.random() - 0.5);
+    const w = words[Math.floor(Math.random() * words.length)];
+    convoState.prompt = `Respond using: "${w.english}"`;
+    convoState.tokens = w.spanish.split(" ");
+    convoState.shuffled = [...convoState.tokens].sort(() => Math.random() - 0.5);
 
     container.innerHTML = `
-        <div id="conversation-builder">
-            <div id="cb-meta">Category: ${chosenCat}</div>
-            <div id="cb-prompt">${prompt}</div>
-            <div id="cb-grid" class="sb-grid">
-                ${gridTokens.map(t => `<button class="secondary-btn cb-tok" data-tok="${t}">${t}</button>`).join("")}
+        <div class="glass-panel quiz-card">
+            <h2>Conversation — Level ${appState.currentLevel}</h2>
+            <p>Tap the words to build a natural Spanish reply.</p>
+
+            <div id="cb-meta">
+                <strong>Prompt:</strong> ${convoState.prompt}
             </div>
-            <div id="cb-answer"></div>
+
+            <div id="cb-grid" class="sb-grid">
+                ${convoState.shuffled.map(t => `
+                    <button class="word-pill cb-token" data-token="${t}">
+                        ${t}
+                    </button>
+                `).join("")}
+            </div>
+
+            <div id="cb-answer" class="glass-panel"></div>
             <div id="cb-feedback"></div>
+
             <div class="sb-controls">
                 <button id="cb-submit">Check</button>
                 <button id="cb-next">Next</button>
@@ -860,40 +819,48 @@ function renderConversationTab() {
         </div>
     `;
 
-    const selected = [];
-
-    document.querySelectorAll(".cb-tok").forEach(btn => {
-        btn.onclick = () => {
-            selected.push(btn.dataset.tok);
-            btn.disabled = true;
-            btn.style.opacity = "0.5";
-            document.getElementById("cb-answer").textContent = selected.join(" ");
-        };
-    });
-
-    document.getElementById("cb-submit").onclick = () => {
-        const user = selected.join(" ");
-        const fb = document.getElementById("cb-feedback");
-
-        if (user === correctSentence) {
-            fb.textContent = "Correct! 🎉";
-            appState.levelStats[appState.currentLevel].conversationCompleted =
-                (appState.levelStats[appState.currentLevel].conversationCompleted || 0) + 1;
-        } else {
-            fb.textContent = `Incorrect. Correct answer: ${correctSentence}`;
-        }
-
-        saveState();
-        updateProgressMeters();
-    };
-
-    document.getElementById("cb-next").onclick = renderConversationTab;
-    document.getElementById("cb-harder").onclick = () => {
-        appState.currentLevel = "B1";
-        renderConversationTab();
-    };
+    setupConversationEvents();
 }
 
+function setupConversationEvents() {
+    const answerBox = document.getElementById("cb-answer");
+    const submitBtn = document.getElementById("cb-submit");
+    const nextBtn = document.getElementById("cb-next");
+    const harderBtn = document.getElementById("cb-harder");
+
+    let answer = [];
+
+    document.querySelectorAll(".cb-token").forEach(btn => {
+        btn.addEventListener("click", () => {
+            answer.push(btn.dataset.token);
+            btn.style.opacity = "0.4";
+            btn.style.pointerEvents = "none";
+            answerBox.textContent = answer.join(" ");
+        });
+    });
+
+    submitBtn.addEventListener("click", () => {
+        const correct = convoState.tokens.join(" ");
+        if (answer.join(" ") === correct) {
+            document.getElementById("cb-feedback").textContent = "Correct!";
+            appState.levelStats[appState.currentLevel].buildCompleted++;
+            updateBadges();
+            updateProgressMeters();
+        } else {
+            document.getElementById("cb-feedback").textContent =
+                `Incorrect — correct answer: ${correct}`;
+        }
+        saveState();
+    });
+
+    nextBtn.addEventListener("click", () => renderConversationTab());
+
+    harderBtn.addEventListener("click", () => {
+        convoState.tokens.reverse();
+        harderBtn.classList.toggle("active");
+        renderConversationTab();
+    });
+}
 
 
 /* ============================================================
