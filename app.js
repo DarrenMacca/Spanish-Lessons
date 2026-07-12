@@ -238,7 +238,7 @@ function initTabNavigation() {
 
 
 /* ============================================================
-   LISTEN TAB
+   LISTEN TAB — CATEGORY + AUDIO
    ============================================================ */
 
 function groupByCategory(words) {
@@ -249,6 +249,7 @@ function groupByCategory(words) {
     });
     return groups;
 }
+
 
 function renderListenTab() {
     const container = document.getElementById("listen");
@@ -283,6 +284,7 @@ function renderListenTab() {
 
     container.innerHTML = html;
 
+    // Collapse / expand categories
     container.querySelectorAll(".listen-category-header").forEach(header => {
         header.addEventListener("click", () => {
             const cat = header.dataset.cat;
@@ -293,17 +295,18 @@ function renderListenTab() {
         });
     });
 
+    // Play audio + track listens
     container.querySelectorAll(".word-pill").forEach(btn => {
         btn.addEventListener("click", () => {
             speakSpanish(btn.dataset.spanish);
             appState.levelStats[appState.currentLevel].listens++;
             saveState();
             updateBadges();
-           
-
+            updateProgressMeters();
         });
     });
 }
+
 
 /* ============================================================
    FLASHCARDS v2 — CEFR + Audio + Difficulty + SRS
