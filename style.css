@@ -681,6 +681,57 @@ body {
         0 0 22px rgba(14,165,233,0.45);
 }
 
+/* ============================================================
+   FLASHCARDS — NEW UNIFIED SYSTEM (A1–B2)
+   ============================================================ */
+
+/* Grid layout for flashcards */
+.fc-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+    gap: 20px;
+    margin-top: 20px;
+}
+
+/* Card container */
+.fc-card {
+    perspective: 1000px;
+}
+
+/* Inner flip element */
+.fc-inner {
+    position: relative;
+    width: 100%;
+    height: 140px;
+    transform-style: preserve-3d;
+    transition: transform 0.6s ease;
+}
+
+/* Flip state */
+.fc-inner.fc-flipped {
+    transform: rotateY(180deg);
+}
+
+/* Front + Back faces */
+.fc-front,
+.fc-back {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    backface-visibility: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 20px;
+    padding: 20px;
+    border-radius: 18px;
+}
+
+/* Back face rotated */
+.fc-back {
+    transform: rotateY(180deg);
+}
+
 
 /* ============================================================
    QUIZ & BUILD CARDS
