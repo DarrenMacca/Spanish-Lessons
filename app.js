@@ -26,12 +26,13 @@ let appState = {
     studentName: "",
     badges: [],
     levelStats: {
-        A1: { listens: 0, flashSeen: 0, quizScore: null, buildCompleted: 0 },
-        A2: { listens: 0, flashSeen: 0, quizScore: null, buildCompleted: 0 },
-        B1: { listens: 0, flashSeen: 0, quizScore: null, buildCompleted: 0 },
-        B2: { listens: 0, flashSeen: 0, quizScore: null, buildCompleted: 0 }
+        A1: { listens: 0, flashSeen: 0, quizScore: null, buildCompleted: 0, conversationCompleted: 0 },
+        A2: { listens: 0, flashSeen: 0, quizScore: null, buildCompleted: 0, conversationCompleted: 0 },
+        B1: { listens: 0, flashSeen: 0, quizScore: null, buildCompleted: 0, conversationCompleted: 0 },
+        B2: { listens: 0, flashSeen: 0, quizScore: null, buildCompleted: 0, conversationCompleted: 0 }
     }
 };
+
 
 /* ============================================================
    CATEGORY AUTO‑ASSIGNER — PLACE HERE
