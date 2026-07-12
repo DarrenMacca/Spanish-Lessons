@@ -17,7 +17,7 @@
          class="dashboard-hero-img">
 </div>
 
-<!-- NAVIGATION (outside dashboard tab!) -->
+<!-- NAVIGATION -->
 <nav class="glass-panel nav-bar">
     <button class="tab-btn active" data-tab="dashboard">
         <img src="images/dashboard.png" class="tab-icon"> Dashboard
@@ -73,99 +73,94 @@
         <div id="name-status" class="name-status"></div>
     </div>
 
-   <!-- PROGRESS METERS -->
-<div class="progress-section">
+    <!-- PROGRESS METERS -->
+    <div class="progress-section">
 
-   <!-- PROGRESS METERS -->
-<div class="progress-section">
+        <!-- QUIZ -->
+        <div id="quiz-tile" class="progress-tile glass-panel">
+            <div class="progress-icon-row">
+                <span class="progress-icon gradient-a1">📘</span>
+                <label class="section-title">Quiz Progress</label>
+                <span class="progress-number" id="quiz-number">0%</span>
+            </div>
+            <div class="progress-bar">
+                <div class="progress-fill" id="quiz-progress"></div>
+            </div>
+        </div>
 
-    <!-- QUIZ -->
-    <div id="quiz-tile" class="progress-tile glass-panel">
-        <div class="progress-icon-row">
-            <span class="progress-icon gradient-a1">📘</span>
-            <label class="section-title">Quiz Progress</label>
-            <span class="progress-number" id="quiz-number">0%</span>
+        <!-- BUILD -->
+        <div id="build-tile" class="progress-tile glass-panel">
+            <div class="progress-icon-row">
+                <span class="progress-icon gradient-a2">🧩</span>
+                <label class="section-title">Build Progress</label>
+                <span class="progress-number" id="build-number">0%</span>
+            </div>
+            <div class="progress-bar">
+                <div class="progress-fill" id="build-progress"></div>
+            </div>
         </div>
-        <div class="progress-bar">
-            <div class="progress-fill" id="quiz-progress"></div>
+
+        <!-- SENTENCE -->
+        <div id="sentence-tile" class="progress-tile glass-panel">
+            <div class="progress-icon-row">
+                <span class="progress-icon gradient-b1">✏️</span>
+                <label class="section-title">Sentence Progress</label>
+                <span class="progress-number" id="sentence-number">0%</span>
+            </div>
+            <div class="progress-bar">
+                <div class="progress-fill" id="sentence-progress"></div>
+            </div>
         </div>
+
+        <!-- XP -->
+        <div id="xp-tile" class="progress-tile glass-panel">
+            <div class="progress-icon-row">
+                <span class="progress-icon gradient-a1">🔥</span>
+                <label class="section-title">XP Progress</label>
+                <span class="progress-number" id="xp-number">0%</span>
+            </div>
+            <div class="progress-bar">
+                <div class="progress-fill" id="xp-progress"></div>
+            </div>
+        </div>
+
+        <!-- STREAK -->
+        <div id="streak-tile" class="progress-tile glass-panel">
+            <div class="progress-icon-row">
+                <span class="progress-icon gradient-a2">⚡</span>
+                <label class="section-title">Streak</label>
+                <span class="progress-number" id="streak-number">0%</span>
+            </div>
+            <div class="progress-bar">
+                <div class="progress-fill" id="streak-progress"></div>
+            </div>
+        </div>
+
+        <!-- SCORE -->
+        <div id="score-tile" class="progress-tile glass-panel">
+            <div class="progress-icon-row">
+                <span class="progress-icon gradient-b1">⭐</span>
+                <label class="section-title">Score Rating</label>
+                <span class="progress-number" id="score-number">0%</span>
+            </div>
+            <div class="progress-bar">
+                <div class="progress-fill" id="score-progress"></div>
+            </div>
+        </div>
+
+        <!-- REVIEW -->
+        <div id="review-tile" class="progress-tile glass-panel">
+            <div class="progress-icon-row">
+                <span class="progress-icon gradient-b2">⏳</span>
+                <label class="section-title">Due for Review</label>
+                <span class="progress-number" id="review-number">0%</span>
+            </div>
+            <div class="progress-bar">
+                <div class="progress-fill" id="review-progress"></div>
+            </div>
+        </div>
+
     </div>
-
-    <!-- BUILD -->
-    <div id="build-tile" class="progress-tile glass-panel">
-        <div class="progress-icon-row">
-            <span class="progress-icon gradient-a2">🧩</span>
-            <label class="section-title">Build Progress</label>
-            <span class="progress-number" id="build-number">0%</span>
-        </div>
-        <div class="progress-bar">
-            <div class="progress-fill" id="build-progress"></div>
-        </div>
-    </div>
-
-    <!-- SENTENCE -->
-    <div id="sentence-tile" class="progress-tile glass-panel">
-        <div class="progress-icon-row">
-            <span class="progress-icon gradient-b1">✏️</span>
-            <label class="section-title">Sentence Progress</label>
-            <span class="progress-number" id="sentence-number">0%</span>
-        </div>
-        <div class="progress-bar">
-            <div class="progress-fill" id="sentence-progress"></div>
-        </div>
-    </div>
-
-    <!-- XP -->
-    <div id="xp-tile" class="progress-tile glass-panel">
-        <div class="progress-icon-row">
-            <span class="progress-icon gradient-a1">🔥</span>
-            <label class="section-title">XP Progress</label>
-            <span class="progress-number" id="xp-number">0%</span>
-        </div>
-        <div class="progress-bar">
-            <div class="progress-fill" id="xp-progress"></div>
-        </div>
-    </div>
-
-    <!-- STREAK -->
-    <div id="streak-tile" class="progress-tile glass-panel">
-        <div class="progress-icon-row">
-            <span class="progress-icon gradient-a2">⚡</span>
-            <label class="section-title">Streak</label>
-            <span class="progress-number" id="streak-number">0%</span>
-        </div>
-        <div class="progress-bar">
-            <div class="progress-fill" id="streak-progress"></div>
-        </div>
-    </div>
-
-    <!-- SCORE -->
-    <div id="score-tile" class="progress-tile glass-panel">
-        <div class="progress-icon-row">
-            <span class="progress-icon gradient-b1">⭐</span>
-            <label class="section-title">Score Rating</label>
-            <span class="progress-number" id="score-number">0%</span>
-        </div>
-        <div class="progress-bar">
-            <div class="progress-fill" id="score-progress"></div>
-        </div>
-    </div>
-
-    <!-- REVIEW -->
-    <div id="review-tile" class="progress-tile glass-panel">
-        <div class="progress-icon-row">
-            <span class="progress-icon gradient-b2">⏳</span>
-            <label class="section-title">Due for Review</label>
-            <span class="progress-number" id="review-number">0%</span>
-        </div>
-        <div class="progress-bar">
-            <div class="progress-fill" id="review-progress"></div>
-        </div>
-    </div>
-
-</div>
-
-
 
     <div class="badge-section glass-panel">
         <h3>Your Badges</h3>
@@ -175,12 +170,11 @@
 </div>
 
 <!-- OTHER TABS -->
-
 <div id="listen" class="hidden"></div>
 <div id="flash" class="hidden"></div>
 <div id="quiz" class="hidden"></div>
 <div id="build" class="hidden"></div>
-    <div id="sentence" class="hidden"></div>
+<div id="sentence" class="hidden"></div>
 <div id="conversation" class="hidden"></div>
 <div id="grammar" class="hidden"></div>
 
