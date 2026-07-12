@@ -928,49 +928,81 @@ function setupSentenceEvents() {
 
 
 /* ============================================================
-   CONVERSATION TAB — RENDER + EVENTS
+   CONVERSATION TAB — RENDER + EVENTS (EVERYDAY DIALOGUE)
    ============================================================ */
+
+const CONVO_PROMPTS = [
+    { english: "How are you today?", spanishTarget: "¿Cómo estás hoy?" },
+    { english: "Where do you live?", spanishTarget: "¿Dónde vives?" },
+    { english: "What do you like to do on weekends?", spanishTarget: "¿Qué te gusta hacer los fines de semana?" },
+    { english: "Do you work or study?", spanishTarget: "¿Trabajas o estudias?" },
+    { english: "What is your favorite food?", spanishTarget: "¿Cuál es tu comida favorita?" },
+    { english: "What time do you usually get up?", spanishTarget: "¿A qué hora sueles levantarte?" }
+];
 
 function renderConversationTab() {
     const container = document.getElementById("conversation-content");
     const words = CEFR_LEVELS[appState.currentLevel];
 
     if (!words || !words.length) {
-        container.innerHTML = `<div class="glass-panel quiz-card">
+        container.innerHTML = `<div class="glass-panel convo-card">
             <p>No words found for level ${appState.currentLevel}.</p>
         </div>`;
         return;
     }
 
-    // Simple prompt: reuse word as "prompt"
-    convoState.currentPrompt = words[Math.floor(Math.random() * words.length)];
-    convoState.tokens = convoState.currentPrompt.spanish.split(" ");
-    const shuffled = [...convoState.tokens].sort(() => Math.random() - 0.5);
+    // Pick random prompt
+    convoState.currentPrompt = CONVO_PROMPTS[Math.floor(Math.random() * CONVO_PROMPTS.length)];
+    const target = convoState.currentPrompt.spanishTarget;
+
+    // Build wordbank from level words + disruptors
+    const coreTokens = target.replace(/[¿?]/g, "").split(" ");
+    const levelTokens = words.map(w => w.spanish.split(" ")).flat();
+    const disruptors = ["rápido", "lento", "siempre", "nunca", "ayer", "mañana", "porque", "pero"];
+
+    let bank = [...coreTokens];
+
+    // Add some level words
+    while (bank.length < coreTokens.length + 4) {
+        const t = levelTokens[Math.floor(Math.random() * levelTokens.length)];
+        if (t && !bank.includes(t)) bank.push(t);
+    }
+
+    // Add disruptors
+    disruptors.forEach(d => {
+        if (!bank.includes(d)) bank.push(d);
+    });
+
+    // Shuffle bank
+    bank = bank.sort(() => Math.random() - 0.5);
+
+    convoState.tokens = bank;
+    convoState.answer = [];
 
     container.innerHTML = `
-        <div class="glass-panel quiz-card">
+        <div class="glass-panel convo-card">
             <h2>Conversation — Level ${appState.currentLevel}</h2>
-            <p>Build a natural Spanish phrase from the prompt.</p>
+            <p>Respond in Spanish by selecting the correct words from the wordbank.</p>
 
-            <div id="cb-meta">
-                <strong>Prompt (English):</strong> ${convoState.currentPrompt.english}
-            </div>
+            <div id="convo-prompt"><strong>Prompt (English):</strong> ${convoState.currentPrompt.english}</div>
 
-            <div id="cb-grid" class="sb-grid">
-                ${shuffled.map(t => `
-                    <button class="cb-token" data-token="${t}">
-                        ${t}
-                    </button>
+            <div id="convo-grid" class="sb-grid">
+                ${convoState.tokens.map(t => `
+                    <button class="word-pill convo-opt" data-token="${t}">${t}</button>
                 `).join("")}
             </div>
 
-            <div id="cb-answer"></div>
-            <div id="cb-feedback"></div>
+            <div id="convo-answer"></div>
+
+            <input id="convo-type" class="convo-type" placeholder="Or type your response in Spanish…" />
+
+            <div id="convo-feedback"></div>
 
             <div class="sb-controls">
-                <button id="cb-submit">Check</button>
-                <button id="cb-next">Next</button>
-                <button id="cb-harder">Harder</button>
+                <button id="convo-undo">Undo</button>
+                <button id="convo-reset">Reset</button>
+                <button id="convo-check">Check</button>
+                <button id="convo-next">Next</button>
             </div>
         </div>
     `;
@@ -979,44 +1011,87 @@ function renderConversationTab() {
 }
 
 function setupConversationEvents() {
-    const answerBox = document.getElementById("cb-answer");
-    const submitBtn = document.getElementById("cb-submit");
-    const nextBtn = document.getElementById("cb-next");
-    const harderBtn = document.getElementById("cb-harder");
-    const feedback = document.getElementById("cb-feedback");
+    const grid = document.getElementById("convo-grid");
+    const answerBox = document.getElementById("convo-answer");
+    const typeBox = document.getElementById("convo-type");
+    const feedback = document.getElementById("convo-feedback");
 
-    let answer = [];
+    const undoBtn = document.getElementById("convo-undo");
+    const resetBtn = document.getElementById("convo-reset");
+    const checkBtn = document.getElementById("convo-check");
+    const nextBtn = document.getElementById("convo-next");
 
-    document.querySelectorAll(".cb-token").forEach(btn => {
+    convoState.answer = [];
+
+    // Word-pill selection
+    grid.querySelectorAll(".convo-opt").forEach(btn => {
         btn.addEventListener("click", () => {
-            answer.push(btn.dataset.token);
-            btn.style.opacity = "0.4";
-            btn.style.pointerEvents = "none";
-            answerBox.textContent = answer.join(" ");
+            convoState.answer.push(btn.dataset.token);
+            btn.classList.add("used");
+            btn.disabled = true;
+            answerBox.textContent = convoState.answer.join(" ");
         });
     });
 
-    submitBtn.addEventListener("click", () => {
-        const correct = convoState.tokens.join(" ");
-        if (answer.join(" ") === correct) {
-            feedback.textContent = "Nice! 🎉";
-            appState.levelStats[appState.currentLevel].conversationCompleted++;
+    // Typing mode
+    typeBox.addEventListener("input", () => {
+        convoState.answer = typeBox.value.trim().split(" ");
+        answerBox.textContent = convoState.answer.join(" ");
+    });
+
+    // Undo
+    undoBtn.addEventListener("click", () => {
+        convoState.answer.pop();
+        answerBox.textContent = convoState.answer.join(" ");
+
+        grid.querySelectorAll(".convo-opt").forEach(btn => {
+            if (!convoState.answer.includes(btn.dataset.token)) {
+                btn.classList.remove("used");
+                btn.disabled = false;
+            }
+        });
+    });
+
+    // Reset
+    resetBtn.addEventListener("click", () => {
+        convoState.answer = [];
+        answerBox.textContent = "";
+        typeBox.value = "";
+        grid.querySelectorAll(".convo-opt").forEach(btn => {
+            btn.classList.remove("used");
+            btn.disabled = false;
+        });
+    });
+
+    // Check
+    checkBtn.addEventListener("click", () => {
+        const correct = convoState.currentPrompt.spanishTarget.replace(/[¿?]/g, "").trim();
+        const user = convoState.answer.join(" ").trim();
+
+        if (user === correct) {
+            feedback.textContent = "Nice! That’s a natural response. 🎉";
+            // Use quizScore as a general conversation score for now
+            if (appState.levelStats[appState.currentLevel].quizScore === null) {
+                appState.levelStats[appState.currentLevel].quizScore = 0;
+            }
+            appState.levelStats[appState.currentLevel].quizScore++;
             updateBadges();
             updateProgressMeters();
+            setTimeout(() => speakQuiz(correct), 300);
         } else {
-            feedback.textContent = `Not quite. One natural option: ${correct}`;
+            feedback.textContent = `Not quite. A natural response would be: ${convoState.currentPrompt.spanishTarget}`;
+            setTimeout(() => speakQuiz(correct), 300);
         }
+
         saveState();
     });
 
-    nextBtn.addEventListener("click", () => renderConversationTab());
-
-    harderBtn.addEventListener("click", () => {
-        convoState.tokens.reverse();
-        harderBtn.classList.toggle("active");
+    // Next
+    nextBtn.addEventListener("click", () => {
         renderConversationTab();
     });
 }
+
 
 /* ============================================================
    GRAMMAR TAB
