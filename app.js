@@ -527,40 +527,85 @@ function renderFlashcardsTab() {
 
 
 /* ============================================================
-   QUIZ TAB — CLEAN + STABLE VERSION
+   SHARED STATE
    ============================================================ */
+
+const CEFR_LEVELS = {
+    A1: A1_WORDS,
+    A2: A2_WORDS,
+    B1: B1_WORDS,
+    B2: B2_WORDS
+};
 
 let quizState = {
     currentWord: null,
     options: [],
-    harderMode: false
+    harderMode: false,
+    selected: null
 };
+
+let buildState = {
+    currentWord: null,
+    tokens: []
+};
+
+let sentenceState = {
+    currentSentence: null,
+    tokens: []
+};
+
+let convoState = {
+    currentPrompt: null,
+    tokens: []
+};
+
+/* ============================================================
+   QUIZ OPTION GENERATOR
+   ============================================================ */
+
+function generateQuizOptions(words, correctWord) {
+    let opts = [correctWord.spanish];
+    const count = quizState.harderMode ? 5 : 3;
+
+    while (opts.length < count) {
+        const w = words[Math.floor(Math.random() * words.length)];
+        if (!opts.includes(w.spanish)) opts.push(w.spanish);
+    }
+
+    return opts.sort(() => Math.random() - 0.5);
+}
+
+/* ============================================================
+   QUIZ TAB — RENDER + EVENTS
+   ============================================================ */
 
 function renderQuizTab() {
     const container = document.getElementById("quiz-content");
     const words = CEFR_LEVELS[appState.currentLevel];
 
-    // Pick a random word
+    if (!words || !words.length) {
+        container.innerHTML = `<div class="glass-panel quiz-card">
+            <p>No words found for level ${appState.currentLevel}.</p>
+        </div>`;
+        return;
+    }
+
     quizState.currentWord = words[Math.floor(Math.random() * words.length)];
+    quizState.options = generateQuizOptions(words, quizState.currentWord);
+    quizState.selected = null;
 
-    // Build options
-    quizState.options = buildQuizOptions(words, quizState.currentWord);
-
-    // Render UI
     container.innerHTML = `
         <div class="glass-panel quiz-card">
             <h2>Quiz — Level ${appState.currentLevel}</h2>
-            <p>Select the correct Spanish translation.</p>
+            <p>Select the correct Spanish for the English word.</p>
 
             <div id="qb-meta">
                 <strong>English:</strong> ${quizState.currentWord.english}
             </div>
 
-            <div id="qb-question"></div>
-
             <div id="qb-grid" class="sb-grid">
                 ${quizState.options.map(opt => `
-                    <button class="word-pill qb-opt" data-spanish="${opt}">
+                    <button class="qb-opt" data-spanish="${opt}">
                         ${opt}
                     </button>
                 `).join("")}
@@ -572,35 +617,83 @@ function renderQuizTab() {
             <div class="sb-controls">
                 <button id="qb-submit">Check</button>
                 <button id="qb-next">Next</button>
-                <button id="qb-harder">Harder</button>
+                <button id="qb-harder" class="${quizState.harderMode ? "active" : ""}">
+                    Harder
+                </button>
             </div>
         </div>
     `;
 
-    // Attach events
     setupQuizEvents();
 }
 
-/* ============================================================
-   BUILD TAB — CLEAN + STABLE VERSION
-   ============================================================ */
+function setupQuizEvents() {
+    const grid = document.getElementById("qb-grid");
+    const submitBtn = document.getElementById("qb-submit");
+    const nextBtn = document.getElementById("qb-next");
+    const harderBtn = document.getElementById("qb-harder");
+    const feedback = document.getElementById("qb-feedback");
+    const answerBox = document.getElementById("qb-answer");
 
-let buildState = {
-    currentWord: null,
-    tokens: []
-};
+    quizState.selected = null;
+
+    grid.querySelectorAll(".qb-opt").forEach(btn => {
+        btn.addEventListener("click", () => {
+            grid.querySelectorAll(".qb-opt").forEach(b => b.classList.remove("active"));
+            btn.classList.add("active");
+            quizState.selected = btn.dataset.spanish;
+            answerBox.textContent = quizState.selected;
+        });
+    });
+
+    submitBtn.addEventListener("click", () => {
+        if (!quizState.selected) {
+            feedback.textContent = "Choose an answer first.";
+            return;
+        }
+
+        const correct = quizState.currentWord.spanish;
+
+        if (quizState.selected === correct) {
+            feedback.textContent = "Correct! 🎉";
+            appState.levelStats[appState.currentLevel].quizScore++;
+            updateBadges();
+            updateProgressMeters();
+        } else {
+            feedback.textContent = `Incorrect — correct answer: ${correct}`;
+        }
+
+        saveState();
+    });
+
+    nextBtn.addEventListener("click", () => {
+        renderQuizTab();
+    });
+
+    harderBtn.addEventListener("click", () => {
+        quizState.harderMode = !quizState.harderMode;
+        harderBtn.classList.toggle("active", quizState.harderMode);
+        renderQuizTab();
+    });
+}
+
+/* ============================================================
+   BUILD TAB — RENDER + EVENTS
+   ============================================================ */
 
 function renderBuildTab() {
     const container = document.getElementById("build-content");
     const words = CEFR_LEVELS[appState.currentLevel];
 
-    // Pick a random word
+    if (!words || !words.length) {
+        container.innerHTML = `<div class="glass-panel quiz-card">
+            <p>No words found for level ${appState.currentLevel}.</p>
+        </div>`;
+        return;
+    }
+
     buildState.currentWord = words[Math.floor(Math.random() * words.length)];
-
-    // Split Spanish into tokens
     buildState.tokens = buildState.currentWord.spanish.split(" ");
-
-    // Shuffle tokens
     const shuffled = [...buildState.tokens].sort(() => Math.random() - 0.5);
 
     container.innerHTML = `
@@ -614,13 +707,13 @@ function renderBuildTab() {
 
             <div id="bb-grid" class="sb-grid">
                 ${shuffled.map(t => `
-                    <button class="word-pill bb-token" data-token="${t}">
+                    <button class="bb-token" data-token="${t}">
                         ${t}
                     </button>
                 `).join("")}
             </div>
 
-            <div id="bb-answer" class="glass-panel"></div>
+            <div id="bb-answer"></div>
             <div id="bb-feedback"></div>
 
             <div class="sb-controls">
@@ -639,10 +732,10 @@ function setupBuildEvents() {
     const submitBtn = document.getElementById("bb-submit");
     const nextBtn = document.getElementById("bb-next");
     const harderBtn = document.getElementById("bb-harder");
+    const feedback = document.getElementById("bb-feedback");
 
     let answer = [];
 
-    // Token selection
     document.querySelectorAll(".bb-token").forEach(btn => {
         btn.addEventListener("click", () => {
             answer.push(btn.dataset.token);
@@ -652,25 +745,22 @@ function setupBuildEvents() {
         });
     });
 
-    // Check answer
     submitBtn.addEventListener("click", () => {
         const correct = buildState.tokens.join(" ");
         if (answer.join(" ") === correct) {
-            document.getElementById("bb-feedback").textContent = "Correct!";
+            feedback.textContent = "Correct! 🎉";
             appState.levelStats[appState.currentLevel].buildCompleted++;
             updateBadges();
             updateProgressMeters();
         } else {
-            document.getElementById("bb-feedback").textContent =
-                `Incorrect — correct answer: ${correct}`;
+            feedback.textContent = `Incorrect — correct answer: ${correct}`;
         }
         saveState();
     });
 
-    // Next
     nextBtn.addEventListener("click", () => renderBuildTab());
 
-    // Harder mode (reverse tokens)
+    // Simple harder mode: reverse tokens
     harderBtn.addEventListener("click", () => {
         buildState.tokens.reverse();
         harderBtn.classList.toggle("active");
@@ -678,45 +768,44 @@ function setupBuildEvents() {
     });
 }
 
-
 /* ============================================================
-   SENTENCE TAB — CLEAN + STABLE VERSION
+   SENTENCE TAB — RENDER + EVENTS
    ============================================================ */
-
-let sentenceState = {
-    english: "",
-    spanishTokens: [],
-    shuffled: []
-};
 
 function renderSentenceTab() {
     const container = document.getElementById("sentence-content");
     const words = CEFR_LEVELS[appState.currentLevel];
 
-    // Pick a random word and build a simple sentence
-    const w = words[Math.floor(Math.random() * words.length)];
-    sentenceState.english = `Use "${w.english}" in a sentence.`;
-    sentenceState.spanishTokens = w.spanish.split(" ");
-    sentenceState.shuffled = [...sentenceState.spanishTokens].sort(() => Math.random() - 0.5);
+    if (!words || !words.length) {
+        container.innerHTML = `<div class="glass-panel quiz-card">
+            <p>No words found for level ${appState.currentLevel}.</p>
+        </div>`;
+        return;
+    }
+
+    // For now, reuse word entries as "sentences"
+    sentenceState.currentSentence = words[Math.floor(Math.random() * words.length)];
+    sentenceState.tokens = sentenceState.currentSentence.spanish.split(" ");
+    const shuffled = [...sentenceState.tokens].sort(() => Math.random() - 0.5);
 
     container.innerHTML = `
         <div class="glass-panel quiz-card">
             <h2>Sentence — Level ${appState.currentLevel}</h2>
-            <p>Tap the words to build a correct Spanish sentence.</p>
+            <p>Build the full Spanish sentence from the tokens.</p>
 
             <div id="sb-meta">
-                <strong>Prompt:</strong> ${sentenceState.english}
+                <strong>English:</strong> ${sentenceState.currentSentence.english}
             </div>
 
             <div id="sb-grid" class="sb-grid">
-                ${sentenceState.shuffled.map(t => `
-                    <button class="word-pill sb-token" data-token="${t}">
+                ${shuffled.map(t => `
+                    <button class="sb-token" data-token="${t}">
                         ${t}
                     </button>
                 `).join("")}
             </div>
 
-            <div id="sb-answer" class="glass-panel"></div>
+            <div id="sb-answer"></div>
             <div id="sb-feedback"></div>
 
             <div class="sb-controls">
@@ -735,6 +824,7 @@ function setupSentenceEvents() {
     const submitBtn = document.getElementById("sb-submit");
     const nextBtn = document.getElementById("sb-next");
     const harderBtn = document.getElementById("sb-harder");
+    const feedback = document.getElementById("sb-feedback");
 
     let answer = [];
 
@@ -748,15 +838,14 @@ function setupSentenceEvents() {
     });
 
     submitBtn.addEventListener("click", () => {
-        const correct = sentenceState.spanishTokens.join(" ");
+        const correct = sentenceState.tokens.join(" ");
         if (answer.join(" ") === correct) {
-            document.getElementById("sb-feedback").textContent = "Correct!";
-            appState.levelStats[appState.currentLevel].buildCompleted++;
+            feedback.textContent = "Correct! 🎉";
+            appState.levelStats[appState.currentLevel].sentenceCompleted++;
             updateBadges();
             updateProgressMeters();
         } else {
-            document.getElementById("sb-feedback").textContent =
-                `Incorrect — correct answer: ${correct}`;
+            feedback.textContent = `Incorrect — correct answer: ${correct}`;
         }
         saveState();
     });
@@ -764,51 +853,50 @@ function setupSentenceEvents() {
     nextBtn.addEventListener("click", () => renderSentenceTab());
 
     harderBtn.addEventListener("click", () => {
-        sentenceState.spanishTokens.reverse();
+        sentenceState.tokens.reverse();
         harderBtn.classList.toggle("active");
         renderSentenceTab();
     });
 }
 
-
-
 /* ============================================================
-   CONVERSATION TAB — CLEAN + STABLE VERSION
+   CONVERSATION TAB — RENDER + EVENTS
    ============================================================ */
-
-let convoState = {
-    prompt: "",
-    tokens: [],
-    shuffled: []
-};
 
 function renderConversationTab() {
     const container = document.getElementById("conversation-content");
     const words = CEFR_LEVELS[appState.currentLevel];
 
-    const w = words[Math.floor(Math.random() * words.length)];
-    convoState.prompt = `Respond using: "${w.english}"`;
-    convoState.tokens = w.spanish.split(" ");
-    convoState.shuffled = [...convoState.tokens].sort(() => Math.random() - 0.5);
+    if (!words || !words.length) {
+        container.innerHTML = `<div class="glass-panel quiz-card">
+            <p>No words found for level ${appState.currentLevel}.</p>
+        </div>`;
+        return;
+    }
+
+    // Simple prompt: reuse word as "prompt"
+    convoState.currentPrompt = words[Math.floor(Math.random() * words.length)];
+    convoState.tokens = convoState.currentPrompt.spanish.split(" ");
+    const shuffled = [...convoState.tokens].sort(() => Math.random() - 0.5);
 
     container.innerHTML = `
         <div class="glass-panel quiz-card">
             <h2>Conversation — Level ${appState.currentLevel}</h2>
-            <p>Tap the words to build a natural Spanish reply.</p>
+            <p>Build a natural Spanish phrase from the prompt.</p>
 
             <div id="cb-meta">
-                <strong>Prompt:</strong> ${convoState.prompt}
+                <strong>Prompt (English):</strong> ${convoState.currentPrompt.english}
             </div>
 
             <div id="cb-grid" class="sb-grid">
-                ${convoState.shuffled.map(t => `
-                    <button class="word-pill cb-token" data-token="${t}">
+                ${shuffled.map(t => `
+                    <button class="cb-token" data-token="${t}">
                         ${t}
                     </button>
                 `).join("")}
             </div>
 
-            <div id="cb-answer" class="glass-panel"></div>
+            <div id="cb-answer"></div>
             <div id="cb-feedback"></div>
 
             <div class="sb-controls">
@@ -827,6 +915,7 @@ function setupConversationEvents() {
     const submitBtn = document.getElementById("cb-submit");
     const nextBtn = document.getElementById("cb-next");
     const harderBtn = document.getElementById("cb-harder");
+    const feedback = document.getElementById("cb-feedback");
 
     let answer = [];
 
@@ -842,13 +931,12 @@ function setupConversationEvents() {
     submitBtn.addEventListener("click", () => {
         const correct = convoState.tokens.join(" ");
         if (answer.join(" ") === correct) {
-            document.getElementById("cb-feedback").textContent = "Correct!";
-            appState.levelStats[appState.currentLevel].buildCompleted++;
+            feedback.textContent = "Nice! 🎉";
+            appState.levelStats[appState.currentLevel].conversationCompleted++;
             updateBadges();
             updateProgressMeters();
         } else {
-            document.getElementById("cb-feedback").textContent =
-                `Incorrect — correct answer: ${correct}`;
+            feedback.textContent = `Not quite. One natural option: ${correct}`;
         }
         saveState();
     });
@@ -861,6 +949,7 @@ function setupConversationEvents() {
         renderConversationTab();
     });
 }
+
 
 
 /* ============================================================
