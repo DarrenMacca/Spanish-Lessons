@@ -743,34 +743,131 @@ body {
 
 
 /* ============================================================
-   QUIZ & BUILD CARDS
+   SHARED BUILDER CARD STYLING (Quiz / Build / Sentence / Convo)
    ============================================================ */
 
-.quiz-card,
-.build-card {
-    background: rgba(15, 23, 42, 0.7);
-    border-radius: 18px;
-    border: 1px solid rgba(148, 163, 184, 0.5);
-    box-shadow: 0 18px 40px rgba(0, 0, 0, 0.55);
-    backdrop-filter: blur(14px);
-    padding: 16px;
-    max-width: 700px;
-    margin: 16px auto;
+.quiz-card {
+    padding: 20px;
+    border-radius: 16px;
+    background: rgba(255, 255, 255, 0.12);
+    backdrop-filter: blur(12px);
+    margin-bottom: 20px;
 }
 
 /* ============================================================
-   CONVERSATION TAB
+   SHARED GRID (Perfect Pill Alignment)
    ============================================================ */
 
-#conversation ul {
-    list-style: none;
-    padding-left: 0;
+.sb-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+    gap: 10px;
+    margin-top: 15px;
 }
 
-#conversation li {
-    padding: 6px 0;
-    font-size: 15px;
+/* ============================================================
+   SHARED CONTROLS (Bottom Buttons)
+   ============================================================ */
+
+.sb-controls {
+    display: flex;
+    gap: 10px;
+    margin-top: 20px;
 }
+
+.sb-controls button {
+    padding: 10px 16px;
+    border-radius: 20px;
+    border: none;
+    cursor: pointer;
+    background: rgba(255, 255, 255, 0.18);
+    color: #fff;
+    transition: 0.2s;
+}
+
+.sb-controls button:hover {
+    background: rgba(255, 255, 255, 0.28);
+    transform: scale(1.05);
+}
+
+.sb-controls .active {
+    background: rgba(0, 200, 255, 0.35);
+}
+
+/* ============================================================
+   SHARED ANSWER + FEEDBACK PANELS
+   ============================================================ */
+
+#qb-answer,
+#bb-answer,
+#sb-answer,
+#cb-answer {
+    min-height: 40px;
+    padding: 10px;
+    margin-top: 15px;
+    border-radius: 12px;
+    background: rgba(255, 255, 255, 0.10);
+}
+
+#qb-feedback,
+#bb-feedback,
+#sb-feedback,
+#cb-feedback {
+    margin-top: 10px;
+    font-weight: 600;
+    min-height: 24px;
+}
+
+/* ============================================================
+   QUIZ OPTION BUTTONS
+   ============================================================ */
+
+.qb-opt {
+    background: rgba(255, 255, 255, 0.18);
+    border-radius: 20px;
+    padding: 10px;
+    cursor: pointer;
+    transition: 0.2s;
+}
+
+.qb-opt:hover {
+    background: rgba(255, 255, 255, 0.28);
+    transform: scale(1.05);
+}
+
+.qb-opt.active {
+    background: rgba(0, 200, 255, 0.35);
+}
+
+/* ============================================================
+   BUILD / SENTENCE / CONVERSATION TOKENS
+   ============================================================ */
+
+.bb-token,
+.sb-token,
+.cb-token {
+    background: rgba(255, 255, 255, 0.18);
+    border-radius: 20px;
+    padding: 10px;
+    cursor: pointer;
+    transition: 0.2s;
+}
+
+.bb-token:hover,
+.sb-token:hover,
+.cb-token:hover {
+    background: rgba(255, 255, 255, 0.28);
+    transform: scale(1.05);
+}
+
+/* When selected (disabled) */
+.bb-token[style*="opacity"],
+.sb-token[style*="opacity"],
+.cb-token[style*="opacity"] {
+    cursor: default;
+    transform: none;
+}
+
 
 /* ============================================================
    GRAMMAR TAB
