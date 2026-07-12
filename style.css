@@ -907,3 +907,88 @@ body {
     }
 }
 
+/* ============================================================
+   FOLDABLE PHONES — FOLDED MODE (320–500px)
+   ============================================================ */
+@media (max-width: 500px) {
+
+    /* Stack dashboard panels */
+    .dashboard-row {
+        flex-direction: column;
+        gap: 16px;
+        max-width: 100%;
+    }
+
+    /* Progress tiles: 1 column for clarity */
+    .progress-section {
+        grid-template-columns: 1fr;
+        gap: 14px;
+    }
+
+    /* Slightly tighter padding */
+    .progress-tile {
+        padding: 12px;
+    }
+
+    /* Icons slightly smaller */
+    .progress-img {
+        width: 26px;
+        height: 26px;
+    }
+
+    /* Flashcards flexible */
+    .flip-card {
+        height: auto;
+        min-height: 120px;
+    }
+
+    /* Tab bar tighter */
+    .tab-btn {
+        padding: 10px 14px;
+        font-size: 14px;
+    }
+}
+
+/* ============================================================
+   FOLDABLE PHONES — UNFOLDED MODE (700–900px)
+   ============================================================ */
+@media (min-width: 700px) and (max-width: 900px) {
+
+    /* Dashboard panels side-by-side */
+    .dashboard-row {
+        flex-direction: row;
+        gap: 24px;
+        max-width: 100%;
+    }
+
+    /* Progress tiles: 3 columns (perfect for foldables) */
+    .progress-section {
+        grid-template-columns: repeat(3, 1fr);
+        gap: 20px;
+    }
+
+    /* Larger icons */
+    .progress-img {
+        width: 34px;
+        height: 34px;
+    }
+
+    /* Section titles slightly larger */
+    .section-title {
+        font-size: 16px;
+    }
+
+    /* Flashcards taller */
+    .flip-card {
+        height: 170px;
+    }
+
+    /* Tab bar more spacious */
+    .tab-btn {
+        padding: 14px 20px;
+        font-size: 16px;
+    }
+}
+
+
+
