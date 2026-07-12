@@ -77,6 +77,19 @@ const A1_WORDS = [
 
     // NUMBERS (NEW A1)
     { english: "one", spanish: "uno", audio: "uno.mp3", category: "number" },
-    { english: "two", spanish: "dos", audio: "dos.mp3", category: "number" },
-    { english: "three", spanish: "tres", audio: "tres.mp3", category: "number" }
+{ english: "two", spanish: "dos", audio: "dos.mp3", category: "number" },
+{ english: "three", spanish: "tres", audio: "tres.mp3", category: "number" },
+{ english: "four", spanish: "cuatro", audio: "cuatro.mp3", category: "number" },
+{ english: "five", spanish: "cinco", audio: "cinco.mp3", category: "number" },
+{ english: "six", spanish: "seis", audio: "seis.mp3", category: "number" },
+{ english: "seven", spanish: "siete", audio: "siete.mp3", category: "number" },
+{ english: "eight", spanish: "ocho", audio: "ocho.mp3", category: "number" },
+{ english: "nine", spanish: "nueve", audio: "nueve.mp3", category: "number" },
+{ english: "ten", spanish: "diez", audio: "diez.mp3", category: "number" }
+
 ];
+
+
+
+
+
