@@ -268,31 +268,27 @@ let listenAutoPlay = {
 };
 
 function renderListenTab() {
-    const container = document.getElementById("listen");
+    const container = document.getElementById("listen-content");
     const words = CEFR_LEVELS[appState.currentLevel];
     const grouped = groupByCategory(words);
 
-    /* ============================================================
-       PLAYER CONTROLS
-       ============================================================ */
     let html = `
         <div class="glass-panel quiz-card">
             <h2>Listen — Level ${appState.currentLevel}</h2>
             <p>Tap a category, then click a word pill to hear it.</p>
 
             <div class="listen-player-controls" style="
-    display:flex;
-    gap:6px;
-    flex-wrap:wrap;
-    margin-top:6px;
-    justify-content:flex-start;
-">
-    <button class="word-pill" id="listen-playall">Play All</button>
-    <button class="word-pill" id="listen-pause">Pause</button>
-    <button class="word-pill" id="listen-resume">Resume</button>
-    <button class="word-pill" id="listen-stop">Stop</button>
-</div>
-
+                display:flex;
+                gap:6px;
+                flex-wrap:wrap;
+                margin-top:6px;
+                justify-content:flex-start;
+            ">
+                <button class="word-pill" id="listen-playall">Play All</button>
+                <button class="word-pill" id="listen-pause">Pause</button>
+                <button class="word-pill" id="listen-resume">Resume</button>
+                <button class="word-pill" id="listen-stop">Stop</button>
+            </div>
         </div>
     `;
 
@@ -413,60 +409,13 @@ function playNextListenWord() {
 }
 
 
-/* ============================================================
-   FLASHCARDS v2 — CEFR + Audio + Difficulty + SRS
-   ============================================================ */
-
-const FLASHCARD_STATE = {
-    level: appState.currentLevel,
-    cards: [],
-    known: new Set(),
-    difficultyMap: {}, // word → difficulty score
-};
-
-// ------------------------------------------------------------
-// 1. Build flashcard list from CEFR level
-// ------------------------------------------------------------
-function buildFlashcardsForLevel(level) {
-    const words = CEFR_LEVELS[level];
-    return words.map(w => ({
-        english: w.english,
-        spanish: w.spanish,
-        audio: w.audio || null,
-        difficulty: FLASHCARD_STATE.difficultyMap[w.spanish] || 0,
-    }));
-}
-
-// ------------------------------------------------------------
-// 2. Shuffle utility
-// ------------------------------------------------------------
-function fcShuffle(arr) {
-    return [...arr].sort(() => Math.random() - 0.5);
-}
-
-// ------------------------------------------------------------
-// 3. Play audio (if available)
-function playFlashcardAudio(url) {
-    if (!url) return;
-    const audio = new Audio(url);
-    audio.play();
-}
-
-// ------------------------------------------------------------
-// 4. Difficulty tracking
-// ------------------------------------------------------------
-function updateFlashcardDifficulty(spanishWord, correct) {
-    const current = FLASHCARD_STATE.difficultyMap[spanishWord] || 0;
-    const newScore = correct ? Math.max(0, current - 1) : current + 1;
-    FLASHCARD_STATE.difficultyMap[spanishWord] = newScore;
-}
 
 /* ============================================================
-   FLASHCARDS — CATEGORY GROUPED + FLIP + AUDIO (A1–B2)
+   FLASHCARDS — CATEGORY GROUPED + FLIP + AUDIO (STABLE VERSION)
    ============================================================ */
 
 function renderFlashcardsTab() {
-    const container = document.getElementById("flash");
+    const container = document.getElementById("flash-content");
     const words = CEFR_LEVELS[appState.currentLevel];
     const grouped = groupByCategory(words);
 
@@ -477,7 +426,9 @@ function renderFlashcardsTab() {
         </div>
     `;
 
-    // Build category sections
+    /* ============================================================
+       CATEGORY SECTIONS
+       ============================================================ */
     Object.keys(grouped).forEach(cat => {
         html += `
         <div class="glass-panel">
@@ -507,9 +458,9 @@ function renderFlashcardsTab() {
 
     container.innerHTML = html;
 
-    /* ------------------------------------------------------------
+    /* ============================================================
        CATEGORY COLLAPSE
-    ------------------------------------------------------------ */
+       ============================================================ */
     container.querySelectorAll(".listen-category-header").forEach(header => {
         header.addEventListener("click", () => {
             const cat = header.dataset.cat;
@@ -520,9 +471,9 @@ function renderFlashcardsTab() {
         });
     });
 
-    /* ------------------------------------------------------------
+    /* ============================================================
        FLASHCARD FLIP + AUDIO
-    ------------------------------------------------------------ */
+       ============================================================ */
     container.querySelectorAll(".fc-card").forEach(card => {
         card.addEventListener("click", () => {
             const inner = card.querySelector(".fc-inner");
@@ -531,9 +482,13 @@ function renderFlashcardsTab() {
             const spanish = inner.querySelector(".fc-back").textContent.trim();
 
             if (flipped) {
-                speakSpanish(spanish);   // Spanish audio only on flip
+                speakSpanish(spanish);
+                appState.levelStats[appState.currentLevel].flashSeen++;
+                saveState();
+                updateBadges();
+                updateProgressMeters();
             } else {
-                speechSynthesis.cancel(); // No audio on flip back
+                speechSynthesis.cancel();
             }
         });
     });
