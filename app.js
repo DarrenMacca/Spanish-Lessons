@@ -608,27 +608,33 @@ function setupQuizEvents() {
 
     // Check button
     submitBtn.addEventListener("click", () => {
-        if (!quizState.selected) {
-            feedback.textContent = "Choose an answer first.";
-            return;
-        }
+    if (!quizState.selected) {
+        feedback.textContent = "Choose an answer first.";
+        return;
+    }
 
-        const correct = quizState.currentWord.spanish;
+    const correct = quizState.currentWord.spanish;
 
-        if (quizState.selected === correct) {
-            feedback.textContent = "Correct! 🎉";
-            appState.levelStats[appState.currentLevel].quizScore++;
-            updateBadges();
-            updateProgressMeters();
-        } else {
-            feedback.textContent = `Incorrect — correct answer: ${correct}`;
-        }
+    // ⭐ Ensure quizScore is not null before incrementing
+    if (appState.levelStats[appState.currentLevel].quizScore === null) {
+        appState.levelStats[appState.currentLevel].quizScore = 0;
+    }
 
-        // ⭐ Sabina speaks correct Spanish answer (correct + incorrect)
-        setTimeout(() => speakQuiz(correct), 300);
+    if (quizState.selected === correct) {
+        feedback.textContent = "Correct! 🎉";
+        appState.levelStats[appState.currentLevel].quizScore++;
+        updateBadges();
+        updateProgressMeters();
+    } else {
+        feedback.textContent = `Incorrect — correct answer: ${correct}`;
+    }
 
-        saveState();
-    });
+    // Sabina audio
+    setTimeout(() => speakQuiz(correct), 300);
+
+    saveState();
+});
+
 
     // Next button
     nextBtn.addEventListener("click", () => {
