@@ -1,10 +1,6 @@
 /* ============================================================
-   CEFR TRAINER — CLEAN APP.JS (FINAL VERSION)
+   CEFR TRAINER — CLEAN APP.JS (PART 1)
    ============================================================ */
-
-/* ------------------------------------------------------------
-   CATEGORY GROUPING
------------------------------------------------------------- */
 function groupByCategory(words) {
     const out = {};
     words.forEach(w => {
@@ -14,9 +10,7 @@ function groupByCategory(words) {
     return out;
 }
 
-/* ------------------------------------------------------------
-   CEFR LEVEL BANKS
------------------------------------------------------------- */
+
 const CEFR_LEVELS = {
     A1: A1_WORDS,
     A2: A2_WORDS,
@@ -24,9 +18,6 @@ const CEFR_LEVELS = {
     B2: B2_WORDS
 };
 
-/* ------------------------------------------------------------
-   APP STATE
------------------------------------------------------------- */
 const STORAGE_KEY = "cefr_trainer_state_v2";
 
 let appState = {
@@ -35,59 +26,79 @@ let appState = {
     studentName: "",
     badges: [],
     levelStats: {
-        A1: { listens: 0, flashSeen: 0, quiz: 0, buildCompleted: 0, sentenceCompleted: 0, conversationCompleted: 0 },
-        A2: { listens: 0, flashSeen: 0, quiz: 0, buildCompleted: 0, sentenceCompleted: 0, conversationCompleted: 0 },
-        B1: { listens: 0, flashSeen: 0, quiz: 0, buildCompleted: 0, sentenceCompleted: 0, conversationCompleted: 0 },
-        B2: { listens: 0, flashSeen: 0, quiz: 0, buildCompleted: 0, sentenceCompleted: 0, conversationCompleted: 0 }
+        A1: { listens: 0, flashSeen: 0, quizScore: null, buildCompleted: 0 },
+        A2: { listens: 0, flashSeen: 0, quizScore: null, buildCompleted: 0 },
+        B1: { listens: 0, flashSeen: 0, quizScore: null, buildCompleted: 0 },
+        B2: { listens: 0, flashSeen: 0, quizScore: null, buildCompleted: 0 }
     }
 };
 
-/* ------------------------------------------------------------
-   CATEGORY AUTO‑ASSIGNER
------------------------------------------------------------- */
+/* ============================================================
+   CATEGORY AUTO‑ASSIGNER — PLACE HERE
+   ============================================================ */
+
 function autoAssignCategory(word) {
     const w = word.spanish.toLowerCase();
 
-    if (w.endsWith("ar") || w.endsWith("er") || w.endsWith("ir")) return "verbs";
-    if (w.endsWith("o") || w.endsWith("a") || w.endsWith("os") || w.endsWith("as")) return "adjectives";
-    if (!isNaN(parseInt(w))) return "numbers";
+    // Verbs (infinitives)
+    if (w.endsWith("ar") || w.endsWith("er") || w.endsWith("ir"))
+        return "verbs";
 
+    // Adjectives
+    if (w.endsWith("o") || w.endsWith("a") || w.endsWith("os") || w.endsWith("as"))
+        return "adjectives";
+
+    // Numbers
+    if (!isNaN(parseInt(w)))
+        return "numbers";
+
+    // Food & drink
     if (["manzana","pan","agua","carne","café","té","huevo","cerveza","vino","arroz","pollo","pescado","ensalada","verdura","fruta"].includes(w))
         return "food-drink";
 
+    // Travel
     if (["aeropuerto","hotel","taxi","tren","avión","billete","mapa","ciudad","país","viaje","turista"].includes(w))
         return "travel";
 
+    // Daily life
     if (["mañana","tarde","noche","casa","trabajo","escuela","día","semana","mes"].includes(w))
         return "daily-life";
 
+    // Family
     if (["madre","padre","hermano","hermana","abuelo","abuela","tío","tía","primo","prima","familia"].includes(w))
         return "family";
 
+    // Shopping
     if (["dinero","precio","tienda","comprar","vender","mercado","producto"].includes(w))
         return "shopping";
 
+    // Emergency
     if (["ayuda","policía","hospital","ambulancia","fuego","emergencia"].includes(w))
         return "emergency";
 
+    // Work
     if (["trabajo","oficina","jefe","empleado","empresa","reunión"].includes(w))
         return "work";
 
+    // Places / objects
     if (["casa","escuela","parque","calle","puerta","mesa","silla","coche","habitacion","baño"].includes(w))
         return "places-objects";
 
+    // Connectors
     if (["y","pero","porque","aunque","cuando","si","o","entonces","luego","después","antes"].includes(w))
         return "connectors";
 
+    // Grammar words
     if (["el","la","los","las","un","una","unos","unas","yo","tú","él","ella","nosotros","vosotros","ellos"].includes(w))
         return "grammar";
 
     return "daily-life";
 }
 
-/* ------------------------------------------------------------
-   APPLY CATEGORIES
------------------------------------------------------------- */
+/* ============================================================
+   APPLY CATEGORIES TO ALL CEFR LEVELS — PLACE HERE
+   ============================================================ */
+
 Object.keys(CEFR_LEVELS).forEach(level => {
     CEFR_LEVELS[level] = CEFR_LEVELS[level].map(w => ({
         ...w,
@@ -95,12 +106,12 @@ Object.keys(CEFR_LEVELS).forEach(level => {
     }));
 });
 
-/* ------------------------------------------------------------
+/* ============================================================
    STATE LOAD / SAVE
------------------------------------------------------------- */
+   ============================================================ */
 function loadState() {
     try {
-        const raw = localStorage.getItem(STORAGE_KEY);
+        raw = localStorage.getItem(STORAGE_KEY);
         if (raw) Object.assign(appState, JSON.parse(raw));
     } catch (e) {
         console.error("State load error:", e);
@@ -115,23 +126,23 @@ function saveState() {
     }
 }
 
-/* ------------------------------------------------------------
+/* ============================================================
    SPEECH SYNTHESIS
------------------------------------------------------------- */
+   ============================================================ */
 function speakSpanish(text) {
     if (!("speechSynthesis" in window)) return;
-    speechSynthesis.cancel();
+    window.speechSynthesis.cancel();
 
-    const u = new SpeechSynthesisUtterance(text);
+    u = new SpeechSynthesisUtterance(text);
     u.lang = "es-ES";
     u.rate = appState.speechRate;
 
-    speechSynthesis.speak(u);
+    window.speechSynthesis.speak(u);
 }
 
-/* ------------------------------------------------------------
+/* ============================================================
    LEVEL SELECTOR
------------------------------------------------------------- */
+   ============================================================ */
 function setLevel(level) {
     if (!CEFR_LEVELS[level]) return;
 
@@ -145,9 +156,20 @@ function setLevel(level) {
     activateTab(currentTab);
 }
 
-/* ------------------------------------------------------------
-   TAB SYSTEM
------------------------------------------------------------- */
+/* ============================================================
+   TAB SYSTEM — UNIFIED VERSION (UPDATED FOR NEW UI)
+   ============================================================ */
+
+function groupByCategory(words) {
+    const groups = {};
+    words.forEach(w => {
+        if (!groups[w.category]) groups[w.category] = [];
+        groups[w.category].push(w);
+    });
+    return groups;
+}
+
+
 const TABS = [
     "dashboard",
     "listen",
@@ -165,34 +187,73 @@ function activateTab(tabName) {
     if (!TABS.includes(tabName)) return;
     currentTab = tabName;
 
+    // Hide all tabs
     TABS.forEach(id => {
         const panel = document.getElementById(id);
         if (panel) panel.classList.add("hidden");
     });
 
+    // Show active tab
     const activePanel = document.getElementById(tabName);
     if (activePanel) activePanel.classList.remove("hidden");
 
+    // Update nav button highlight
     document.querySelectorAll(".tab-btn").forEach(btn => {
         btn.classList.toggle("active", btn.dataset.tab === tabName);
     });
 
+    // Load tab content
     switch (tabName) {
-        case "listen":        renderListenTab(); break;
-        case "flash":         renderFlashcardsTab(); break;
-        case "quiz":          renderQuizTab(); break;
-        case "build":         renderBuildTab(); break;
-        case "sentence":      renderSentenceTab(); break;
-        case "conversation":  renderConversationTab(); break;
-        case "grammar":       renderGrammarTab(); break;
-        case "dashboard":     break;
+        case "listen":
+            renderListenTab();
+            break;
+
+        case "flash":
+            renderFlashcardsTab();
+            break;
+
+        case "quiz":
+            renderQuizTab();
+            break;
+
+        case "build":
+            renderBuildTab();
+            break;
+
+        case "sentence":
+            renderSentenceTab();
+            break;
+
+        case "conversation":
+            renderConversationTab();
+            break;
+
+        case "grammar":
+            renderGrammarTab();
+            break;
+
+        case "dashboard":
+            // Dashboard has static content
+            break;
     }
 }
 
 function initTabNavigation() {
     document.querySelectorAll(".tab-btn").forEach(btn => {
-        btn.addEventListener("click", () => activateTab(btn.dataset.tab));
+        btn.addEventListener("click", () => {
+            activateTab(btn.dataset.tab);
+        });
     });
+}
+
+
+function groupByCategory(words) {
+    const groups = {};
+    words.forEach(w => {
+        if (!groups[w.category]) groups[w.category] = [];
+        groups[w.category].push(w);
+    });
+    return groups;
 }
 
 /* ============================================================
@@ -207,27 +268,31 @@ let listenAutoPlay = {
 };
 
 function renderListenTab() {
-    const container = document.getElementById("listen-content");
+    const container = document.getElementById("listen");
     const words = CEFR_LEVELS[appState.currentLevel];
     const grouped = groupByCategory(words);
 
+    /* ============================================================
+       PLAYER CONTROLS
+       ============================================================ */
     let html = `
         <div class="glass-panel quiz-card">
             <h2>Listen — Level ${appState.currentLevel}</h2>
             <p>Tap a category, then click a word pill to hear it.</p>
 
             <div class="listen-player-controls" style="
-                display:flex;
-                gap:6px;
-                flex-wrap:wrap;
-                margin-top:6px;
-                justify-content:flex-start;
-            ">
-                <button class="word-pill" id="listen-playall">Play All</button>
-                <button class="word-pill" id="listen-pause">Pause</button>
-                <button class="word-pill" id="listen-resume">Resume</button>
-                <button class="word-pill" id="listen-stop">Stop</button>
-            </div>
+    display:flex;
+    gap:6px;
+    flex-wrap:wrap;
+    margin-top:6px;
+    justify-content:flex-start;
+">
+    <button class="word-pill" id="listen-playall">Play All</button>
+    <button class="word-pill" id="listen-pause">Pause</button>
+    <button class="word-pill" id="listen-resume">Resume</button>
+    <button class="word-pill" id="listen-stop">Stop</button>
+</div>
+
         </div>
     `;
 
@@ -347,12 +412,61 @@ function playNextListenWord() {
     speechSynthesis.speak(utter);
 }
 
+
+/* ============================================================
+   FLASHCARDS v2 — CEFR + Audio + Difficulty + SRS
+   ============================================================ */
+
+const FLASHCARD_STATE = {
+    level: appState.currentLevel,
+    cards: [],
+    known: new Set(),
+    difficultyMap: {}, // word → difficulty score
+};
+
+// ------------------------------------------------------------
+// 1. Build flashcard list from CEFR level
+// ------------------------------------------------------------
+function buildFlashcardsForLevel(level) {
+    const words = CEFR_LEVELS[level];
+    return words.map(w => ({
+        english: w.english,
+        spanish: w.spanish,
+        audio: w.audio || null,
+        difficulty: FLASHCARD_STATE.difficultyMap[w.spanish] || 0,
+    }));
+}
+
+// ------------------------------------------------------------
+// 2. Shuffle utility
+// ------------------------------------------------------------
+function fcShuffle(arr) {
+    return [...arr].sort(() => Math.random() - 0.5);
+}
+
+// ------------------------------------------------------------
+// 3. Play audio (if available)
+function playFlashcardAudio(url) {
+    if (!url) return;
+    const audio = new Audio(url);
+    audio.play();
+}
+
+// ------------------------------------------------------------
+// 4. Difficulty tracking
+// ------------------------------------------------------------
+function updateFlashcardDifficulty(spanishWord, correct) {
+    const current = FLASHCARD_STATE.difficultyMap[spanishWord] || 0;
+    const newScore = correct ? Math.max(0, current - 1) : current + 1;
+    FLASHCARD_STATE.difficultyMap[spanishWord] = newScore;
+}
+
 /* ============================================================
    FLASHCARDS — CATEGORY GROUPED + FLIP + AUDIO (A1–B2)
    ============================================================ */
 
 function renderFlashcardsTab() {
-    const container = document.getElementById("flash-content");
+    const container = document.getElementById("flash");
     const words = CEFR_LEVELS[appState.currentLevel];
     const grouped = groupByCategory(words);
 
@@ -363,6 +477,7 @@ function renderFlashcardsTab() {
         </div>
     `;
 
+    // Build category sections
     Object.keys(grouped).forEach(cat => {
         html += `
         <div class="glass-panel">
@@ -392,7 +507,9 @@ function renderFlashcardsTab() {
 
     container.innerHTML = html;
 
-    /* CATEGORY COLLAPSE */
+    /* ------------------------------------------------------------
+       CATEGORY COLLAPSE
+    ------------------------------------------------------------ */
     container.querySelectorAll(".listen-category-header").forEach(header => {
         header.addEventListener("click", () => {
             const cat = header.dataset.cat;
@@ -403,7 +520,9 @@ function renderFlashcardsTab() {
         });
     });
 
-    /* FLASHCARD FLIP + AUDIO */
+    /* ------------------------------------------------------------
+       FLASHCARD FLIP + AUDIO
+    ------------------------------------------------------------ */
     container.querySelectorAll(".fc-card").forEach(card => {
         card.addEventListener("click", () => {
             const inner = card.querySelector(".fc-inner");
@@ -412,165 +531,102 @@ function renderFlashcardsTab() {
             const spanish = inner.querySelector(".fc-back").textContent.trim();
 
             if (flipped) {
-                speakSpanish(spanish);
-                appState.levelStats[appState.currentLevel].flashSeen++;
-                saveState();
-                updateBadges();
-                updateProgressMeters();
+                speakSpanish(spanish);   // Spanish audio only on flip
             } else {
-                speechSynthesis.cancel();
+                speechSynthesis.cancel(); // No audio on flip back
             }
         });
     });
 }
 
+
+
+
 /* ============================================================
-   QUIZ TAB — MULTIPLE CHOICE (A1–B2)
+   QUIZ TAB — FULL LOGIC
    ============================================================ */
 
-const QUIZ_STATE = {
-    level: appState.currentLevel,
-    question: null,
-    options: [],
-    correct: null,
-    selected: null,
-    score: 0,
-    total: 0,
-};
-
-/* BUILD QUIZ QUESTION */
-function buildQuizQuestion(level, harder = false) {
-    const words = CEFR_LEVELS[level];
-
-    const pool = harder ? words.slice(Math.floor(words.length * 0.5)) : words;
-
-    const correctItem = pool[Math.floor(Math.random() * pool.length)];
-
-    const wrong = [];
-    while (wrong.length < 3) {
-        const w = pool[Math.floor(Math.random() * pool.length)];
-        if (w.spanish !== correctItem.spanish && !wrong.includes(w)) {
-            wrong.push(w);
-        }
-    }
-
-    const options = [...wrong, correctItem].sort(() => Math.random() - 0.5);
-
-    return {
-        english: correctItem.english,
-        correct: correctItem.spanish,
-        options: options.map(o => o.spanish),
-    };
-}
-
-/* RENDER QUIZ TAB */
 function renderQuizTab() {
-    QUIZ_STATE.level = appState.currentLevel;
+    const container = document.getElementById("quiz");
+    const words = CEFR_LEVELS[appState.currentLevel];
+    const categories = groupByCategory(words);
 
-    const meta = document.getElementById("qb-meta");
-    const questionBox = document.getElementById("qb-question");
-    const grid = document.getElementById("qb-grid");
-    const answerBox = document.getElementById("qb-answer");
-    const feedback = document.getElementById("qb-feedback");
+    // Pick a random category
+    const catNames = Object.keys(categories);
+    const chosenCat = catNames[Math.floor(Math.random() * catNames.length)];
+    const catWords = categories[chosenCat];
 
-    const q = buildQuizQuestion(QUIZ_STATE.level);
-    QUIZ_STATE.question = q.english;
-    QUIZ_STATE.options = q.options;
-    QUIZ_STATE.correct = q.correct;
-    QUIZ_STATE.selected = null;
+    // Pick a random word
+    const w = catWords[Math.floor(Math.random() * catWords.length)];
 
-    meta.innerHTML = `<h2>Quiz — Level ${QUIZ_STATE.level}</h2>`;
-    questionBox.innerHTML = `<div class="glass-panel"><h3>Translate: <span>${q.english}</span></h3></div>`;
-    answerBox.innerHTML = ``;
-    feedback.innerHTML = ``;
+    // Build distractors
+    const distractors = [...catWords]
+        .filter(x => x.spanish !== w.spanish)
+        .sort(() => Math.random() - 0.5)
+        .slice(0, 3);
 
-    grid.innerHTML = "";
-    QUIZ_STATE.options.forEach(opt => {
-        const btn = document.createElement("button");
-        btn.className = "word-pill";
-        btn.textContent = opt;
+    const options = [...distractors.map(d => d.spanish), w.spanish]
+        .sort(() => Math.random() - 0.5);
 
-        btn.addEventListener("click", () => {
-            QUIZ_STATE.selected = opt;
-            answerBox.innerHTML = `<div class="glass-panel">Selected: <strong>${opt}</strong></div>`;
-        });
+    container.innerHTML = `
+        <div id="quiz-builder">
+            <div id="qb-meta">Category: ${chosenCat}</div>
+            <div id="qb-question">Translate: <strong>${w.english}</strong></div>
+            <div id="qb-grid" class="sb-grid">
+                ${options.map(o => `<button class="secondary-btn qb-opt" data-opt="${o}">${o}</button>`).join("")}
+            </div>
+            <div id="qb-answer"></div>
+            <div id="qb-feedback"></div>
+            <div class="sb-controls">
+                <button id="qb-submit">Check</button>
+                <button id="qb-next">Next</button>
+                <button id="qb-harder">Harder</button>
+            </div>
+        </div>
+    `;
 
-        grid.appendChild(btn);
+    let selected = null;
+
+    document.querySelectorAll(".qb-opt").forEach(btn => {
+        btn.onclick = () => {
+            selected = btn.dataset.opt;
+            document.getElementById("qb-answer").textContent = selected;
+        };
     });
 
-    /* SUBMIT */
     document.getElementById("qb-submit").onclick = () => {
-        if (!QUIZ_STATE.selected) {
-            feedback.innerHTML = `<div class="glass-panel">Choose an answer first.</div>`;
+        const fb = document.getElementById("qb-feedback");
+        if (!selected) {
+            fb.textContent = "Choose an answer first.";
             return;
         }
 
-        QUIZ_STATE.total++;
-
-        if (QUIZ_STATE.selected === QUIZ_STATE.correct) {
-            QUIZ_STATE.score++;
-            feedback.innerHTML = `<div class="glass-panel" style="color:#22c55e;">Correct!</div>`;
+        if (selected === w.spanish) {
+            fb.textContent = "Correct! 🎉";
+            appState.levelStats[appState.currentLevel].quizScore =
+                (appState.levelStats[appState.currentLevel].quizScore || 0) + 10;
         } else {
-            feedback.innerHTML = `
-                <div class="glass-panel" style="color:#ef4444;">
-                    Incorrect — correct answer: <strong>${QUIZ_STATE.correct}</strong>
-                </div>`;
+            fb.textContent = `Incorrect. Correct answer: ${w.spanish}`;
         }
 
-        updateQuizProgress();
+        saveState();
+        updateProgressMeters();
     };
 
-    /* NEXT QUESTION */
-    document.getElementById("qb-next").onclick = () => {
+    document.getElementById("qb-next").onclick = renderQuizTab;
+    document.getElementById("qb-harder").onclick = () => {
+        appState.currentLevel = "B1";
         renderQuizTab();
     };
-
-    /* HARDER MODE */
-    document.getElementById("qb-harder").onclick = () => {
-        const q2 = buildQuizQuestion(QUIZ_STATE.level, true);
-        QUIZ_STATE.question = q2.english;
-        QUIZ_STATE.options = q2.options;
-        QUIZ_STATE.correct = q2.correct;
-        QUIZ_STATE.selected = null;
-
-        questionBox.innerHTML = `<div class="glass-panel"><h3>Translate: <span>${q2.english}</span></h3></div>`;
-        answerBox.innerHTML = ``;
-        feedback.innerHTML = ``;
-
-        grid.innerHTML = "";
-        QUIZ_STATE.options.forEach(opt => {
-            const btn = document.createElement("button");
-            btn.className = "word-pill";
-            btn.textContent = opt;
-
-            btn.addEventListener("click", () => {
-                QUIZ_STATE.selected = opt;
-                answerBox.innerHTML = `<div class="glass-panel">Selected: <strong>${opt}</strong></div>`;
-            });
-
-            grid.appendChild(btn);
-        });
-    };
 }
 
-/* UPDATE QUIZ PROGRESS TILE */
-function updateQuizProgress() {
-    const percent = Math.round((QUIZ_STATE.score / QUIZ_STATE.total) * 100);
-
-    document.getElementById("quiz-number").textContent = `${percent}%`;
-    document.getElementById("quiz-progress").style.width = `${percent}%`;
-
-    appState.levelStats[appState.currentLevel].quiz = percent;
-    saveState();
-    updateBadges();
-}
 
 /* ============================================================
    BUILD TAB — FULL LOGIC
    ============================================================ */
 
 function renderBuildTab() {
-    const container = document.getElementById("build-content");
+    const container = document.getElementById("build");
     const words = CEFR_LEVELS[appState.currentLevel];
     const categories = groupByCategory(words);
 
@@ -643,11 +699,11 @@ function renderBuildTab() {
 }
 
 /* ============================================================
-   SENTENCE TAB — FULL SMART BUILDER LOGIC (OPTION A)
+   SENTENCE TAB — FULL SMART BUILDER LOGIC
    ============================================================ */
 
 function renderSentenceTab() {
-    const container = document.getElementById("sentence-content");
+    const container = document.getElementById("sentence");
     const words = CEFR_LEVELS[appState.currentLevel];
     const categories = groupByCategory(words);
 
@@ -720,12 +776,14 @@ function renderSentenceTab() {
     };
 }
 
+
+
 /* ============================================================
    CONVERSATION TAB — FULL LOGIC
    ============================================================ */
 
 function renderConversationTab() {
-    const container = document.getElementById("conversation-content");
+    const container = document.getElementById("conversation");
     const words = CEFR_LEVELS[appState.currentLevel];
     const categories = groupByCategory(words);
 
@@ -799,12 +857,14 @@ function renderConversationTab() {
     };
 }
 
+
+
 /* ============================================================
    GRAMMAR TAB
    ============================================================ */
 
 function renderGrammarTab() {
-    const container = document.getElementById("grammar-content");
+    const container = document.getElementById("grammar");
     const words = CEFR_LEVELS[appState.currentLevel];
     const grouped = groupByCategory(words);
 
@@ -837,10 +897,8 @@ function updateBadges() {
         const s = appState.levelStats[level];
         if (s.listens >= 20) badges.add(`${level} Listener`);
         if (s.flashSeen >= 30) badges.add(`${level} Flash Master`);
-        if (s.quiz >= 80) badges.add(`${level} Quiz Ace`);
+        if (s.quizScore !== null && s.quizScore >= 80) badges.add(`${level} Quiz Ace`);
         if (s.buildCompleted >= 10) badges.add(`${level} Builder`);
-        if (s.sentenceCompleted >= 10) badges.add(`${level} Sentence Pro`);
-        if (s.conversationCompleted >= 10) badges.add(`${level} Conversationalist`);
     });
 
     appState.badges = Array.from(badges);
@@ -890,10 +948,9 @@ function initRateControl() {
         saveState();
     };
 }
-
-/* ============================================================
+/* ------------------------------------------------------------
    PROGRESS METER CONTROLLER
-   ============================================================ */
+------------------------------------------------------------ */
 
 function animateNumber(id, target) {
     let current = 0;
@@ -933,7 +990,7 @@ function updateProgressMeters() {
     animateNumber("score-number", 85);
     animateNumber("review-number", 20);
 
-    // Pulse animations
+    // ⭐ Pulse animations (this is the missing part)
     pulseTile("quiz-tile");
     pulseTile("build-tile");
     pulseTile("sentence-tile");
@@ -943,14 +1000,120 @@ function updateProgressMeters() {
     pulseTile("review-tile");
 }
 
+
+// Run once when dashboard loads
+
+function renderSentenceTab() {
+    const panel = document.getElementById("sentence");
+    if (!panel) return;
+
+    const level = appState.currentLevel;
+    const bank = wordbanks[level]?.sentences;
+    if (!bank || bank.length === 0) {
+        panel.innerHTML = `
+            <div class="glass-panel quiz-card">
+                <h2>Sentence Practice — Level ${level}</h2>
+                <p>No sentences available for this level.</p>
+            </div>
+        `;
+        return;
+    }
+
+    // Pick a random sentence
+    const item = bank[Math.floor(Math.random() * bank.length)];
+    const english = item.en;
+    const spanish = item.es;
+
+    // Scramble Spanish words
+    const words = spanish.split(" ");
+    const scrambled = [...words].sort(() => Math.random() - 0.5);
+
+    // Build UI
+    panel.innerHTML = `
+        <div class="glass-panel quiz-card">
+
+            <h2>Sentence Practice — Level ${level}</h2>
+            <p class="sentence-english"><strong>${english}</strong></p>
+
+            <div id="sentence-output" class="sentence-output"></div>
+
+            <div id="sentence-options" class="sentence-options"></div>
+
+            <div class="sentence-controls">
+                <button id="undo-btn" class="primary-btn">Undo</button>
+                <button id="reset-btn" class="primary-btn">Reset</button>
+                <button id="check-btn" class="primary-btn">Check</button>
+            </div>
+
+            <div id="sentence-feedback" class="sentence-feedback"></div>
+
+        </div>
+    `;
+
+    const output = document.getElementById("sentence-output");
+    const options = document.getElementById("sentence-options");
+    const feedback = document.getElementById("sentence-feedback");
+
+    let built = [];
+
+    // Render scrambled word tiles
+    scrambled.forEach(word => {
+        const btn = document.createElement("button");
+        btn.className = "word-btn";
+        btn.textContent = word;
+
+        btn.addEventListener("click", () => {
+            built.push(word);
+            renderOutput();
+        });
+
+        options.appendChild(btn);
+    });
+
+    function renderOutput() {
+        output.textContent = built.join(" ");
+    }
+
+    // Undo last word
+    document.getElementById("undo-btn").addEventListener("click", () => {
+        built.pop();
+        renderOutput();
+    });
+
+    // Reset sentence
+    document.getElementById("reset-btn").addEventListener("click", () => {
+        built = [];
+        renderOutput();
+    });
+
+    // Check answer
+    document.getElementById("check-btn").addEventListener("click", () => {
+        const attempt = built.join(" ");
+        if (attempt === spanish) {
+            feedback.textContent = "Correct! 🎉";
+            feedback.style.color = "limegreen";
+
+            // Update progress
+            appState.levelStats[level].sentenceCompleted++;
+            updateProgressMeters();
+
+        } else {
+            feedback.textContent = "Not quite — try again.";
+            feedback.style.color = "orange";
+        }
+    });
+}
+
+
 function pulseTile(id) {
     const tile = document.getElementById(id);
     if (!tile) return;
 
-    tile.classList.remove("pulse");
-    void tile.offsetWidth;
-    tile.classList.add("pulse");
+    tile.classList.remove("pulse");   // reset animation
+    void tile.offsetWidth;            // force reflow
+    tile.classList.add("pulse");      // trigger animation
 }
+
 
 /* ============================================================
    STARTUP
@@ -960,12 +1123,14 @@ document.addEventListener("DOMContentLoaded", () => {
     loadState();
 
     initTabNavigation();
-    activateTab("dashboard");
 
-    initRateControl();
-    initNameBox();
+    activateTab("dashboard");   // Dashboard must be visible first
+
+    initRateControl();          // Now #rate exists
+    initNameBox();              // Now #student-name exists
 
     updateBadges();
-    updateProgressMeters();
+    updateProgressMeters();     // Now safe
 });
+
 
