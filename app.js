@@ -527,40 +527,48 @@ function renderFlashcardsTab() {
 
 
 /* ============================================================
-   QUIZ TAB — FULL LOGIC
+   QUIZ TAB — CLEAN + STABLE VERSION
    ============================================================ */
 
-function renderQuizTab() {
-    const container = document.getElementById("quiz");
-    const words = CEFR_LEVELS[appState.currentLevel];
-    const categories = groupByCategory(words);
+let quizState = {
+    currentWord: null,
+    options: [],
+    harderMode: false
+};
 
-    // Pick a random category
-    const catNames = Object.keys(categories);
-    const chosenCat = catNames[Math.floor(Math.random() * catNames.length)];
-    const catWords = categories[chosenCat];
+function renderQuizTab() {
+    const container = document.getElementById("quiz-content");
+    const words = CEFR_LEVELS[appState.currentLevel];
 
     // Pick a random word
-    const w = catWords[Math.floor(Math.random() * catWords.length)];
+    quizState.currentWord = words[Math.floor(Math.random() * words.length)];
 
-    // Build distractors
-    const distractors = [...catWords]
-        .filter(x => x.spanish !== w.spanish)
-        .sort(() => Math.random() - 0.5)
-        .slice(0, 3);
+    // Build options
+    quizState.options = buildQuizOptions(words, quizState.currentWord);
 
-    const options = [...distractors.map(d => d.spanish), w.spanish]
-        .sort(() => Math.random() - 0.5);
-
+    // Render UI
     container.innerHTML = `
-        <div id="quiz-builder">
-            <div id="qb-meta">Category: ${chosenCat}</div>
-            <div id="qb-question">Translate: <strong>${w.english}</strong></div>
-            <div id="qb-grid" class="sb-grid">
-                ${options.map(o => `<button class="secondary-btn qb-opt" data-opt="${o}">${o}</button>`).join("")}
+        <div class="glass-panel quiz-card">
+            <h2>Quiz — Level ${appState.currentLevel}</h2>
+            <p>Select the correct Spanish translation.</p>
+
+            <div id="qb-meta">
+                <strong>English:</strong> ${quizState.currentWord.english}
             </div>
+
+            <div id="qb-question"></div>
+
+            <div id="qb-grid" class="sb-grid">
+                ${quizState.options.map(opt => `
+                    <button class="word-pill qb-opt" data-spanish="${opt}">
+                        ${opt}
+                    </button>
+                `).join("")}
+            </div>
+
             <div id="qb-answer"></div>
             <div id="qb-feedback"></div>
+
             <div class="sb-controls">
                 <button id="qb-submit">Check</button>
                 <button id="qb-next">Next</button>
@@ -569,40 +577,85 @@ function renderQuizTab() {
         </div>
     `;
 
+    // Attach events
+    setupQuizEvents();
+}
+
+/* ============================================================
+   BUILD OPTIONS
+   ============================================================ */
+
+function buildQuizOptions(words, correctWord) {
+    let opts = [correctWord.spanish];
+
+    // Harder mode = 5 options instead of 3
+    const count = quizState.harderMode ? 5 : 3;
+
+    while (opts.length < count) {
+        const w = words[Math.floor(Math.random() * words.length)];
+        if (!opts.includes(w.spanish)) opts.push(w.spanish);
+    }
+
+    // Shuffle
+    return opts.sort(() => Math.random() - 0.5);
+}
+
+/* ============================================================
+   QUIZ EVENTS
+   ============================================================ */
+
+function setupQuizEvents() {
+    const grid = document.getElementById("qb-grid");
+    const submitBtn = document.getElementById("qb-submit");
+    const nextBtn = document.getElementById("qb-next");
+    const harderBtn = document.getElementById("qb-harder");
+
     let selected = null;
 
-    document.querySelectorAll(".qb-opt").forEach(btn => {
-        btn.onclick = () => {
-            selected = btn.dataset.opt;
-            document.getElementById("qb-answer").textContent = selected;
-        };
+    // Select option
+    grid.querySelectorAll(".qb-opt").forEach(btn => {
+        btn.addEventListener("click", () => {
+            grid.querySelectorAll(".qb-opt").forEach(b => b.classList.remove("active"));
+            btn.classList.add("active");
+            selected = btn.dataset.spanish;
+        });
     });
 
-    document.getElementById("qb-submit").onclick = () => {
-        const fb = document.getElementById("qb-feedback");
+    // Check answer
+    submitBtn.addEventListener("click", () => {
         if (!selected) {
-            fb.textContent = "Choose an answer first.";
+            document.getElementById("qb-feedback").textContent = "Choose an answer first.";
             return;
         }
 
-        if (selected === w.spanish) {
-            fb.textContent = "Correct! 🎉";
-            appState.levelStats[appState.currentLevel].quizScore =
-                (appState.levelStats[appState.currentLevel].quizScore || 0) + 10;
+        const correct = quizState.currentWord.spanish;
+
+        if (selected === correct) {
+            document.getElementById("qb-feedback").textContent = "Correct!";
+            appState.levelStats[appState.currentLevel].quizScore++;
+            updateBadges();
+            updateProgressMeters();
         } else {
-            fb.textContent = `Incorrect. Correct answer: ${w.spanish}`;
+            document.getElementById("qb-feedback").textContent =
+                `Incorrect — correct answer: ${correct}`;
         }
 
         saveState();
-        updateProgressMeters();
-    };
+    });
 
-    document.getElementById("qb-next").onclick = renderQuizTab;
-    document.getElementById("qb-harder").onclick = () => {
-        appState.currentLevel = "B1";
+    // Next question
+    nextBtn.addEventListener("click", () => {
         renderQuizTab();
-    };
+    });
+
+    // Harder mode toggle
+    harderBtn.addEventListener("click", () => {
+        quizState.harderMode = !quizState.harderMode;
+        harderBtn.classList.toggle("active", quizState.harderMode);
+        renderQuizTab();
+    });
 }
+
 
 
 /* ============================================================
