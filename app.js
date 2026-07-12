@@ -127,7 +127,22 @@ function saveState() {
 }
 
 /* ============================================================
-   SPEECH SYNTHESIS
+   SABINA VOICE (Spanish TTS for explanations)
+   ============================================================ */
+function speak(text) {
+    if (!("speechSynthesis" in window)) return;
+    window.speechSynthesis.cancel();
+
+    const u = new SpeechSynthesisUtterance(text);
+    u.lang = "es-ES";        // Sabina Spanish voice
+    u.rate = appState.speechRate;
+    u.pitch = 1.0;
+
+    window.speechSynthesis.speak(u);
+}
+
+/* ============================================================
+   SPEECH SYNTHESIS — Spanish word pronunciation
    ============================================================ */
 function speakSpanish(text) {
     if (!("speechSynthesis" in window)) return;
@@ -139,6 +154,16 @@ function speakSpanish(text) {
 
     window.speechSynthesis.speak(u);
 }
+
+/* ============================================================
+   QUIZ AUDIO — Sabina (correct + incorrect)
+   ============================================================ */
+function speakQuiz(correctAnswer) {
+    const message = `La respuesta correcta es: ${correctAnswer}`;
+    speak(message); // Sabina voice
+}
+
+
 
 /* ============================================================
    LEVEL SELECTOR
@@ -569,6 +594,7 @@ function setupQuizEvents() {
 
     quizState.selected = null;
 
+    // Pill selection
     grid.querySelectorAll(".qb-opt").forEach(btn => {
         btn.addEventListener("click", () => {
             grid.querySelectorAll(".qb-opt").forEach(b => b.classList.remove("active"));
@@ -578,6 +604,7 @@ function setupQuizEvents() {
         });
     });
 
+    // Check button
     submitBtn.addEventListener("click", () => {
         if (!quizState.selected) {
             feedback.textContent = "Choose an answer first.";
@@ -595,12 +622,25 @@ function setupQuizEvents() {
             feedback.textContent = `Incorrect — correct answer: ${correct}`;
         }
 
-        // ⭐ Sabina speaks the correct Spanish answer (with delay)
-        setTimeout(() => speakQuizIncorrect(correct), 300);
+        // ⭐ Sabina speaks correct Spanish answer (correct + incorrect)
+        setTimeout(() => speakQuiz(correct), 300);
 
         saveState();
     });
+
+    // Next button
+    nextBtn.addEventListener("click", () => {
+        renderQuizTab();
+    });
+
+    // Harder mode toggle
+    harderBtn.addEventListener("click", () => {
+        quizState.harderMode = !quizState.harderMode;
+        harderBtn.classList.toggle("active");
+        renderQuizTab();
+    });
 }
+
 
 
 
