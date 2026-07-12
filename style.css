@@ -615,7 +615,7 @@ body {
 }
 
 .listen-category-content.open {
-    max-height: 500px;
+    max-height: none !important;
     padding-top: 8px;
 }
 
@@ -784,24 +784,35 @@ body {
 @media (max-width: 600px) {
 
     /* iPhone Safari scroll fix */
-    html, body {
-        overflow-x: hidden !important;
-        overflow-y: auto !important;
-        height: auto !important;
-    }
+html, body {
+    overflow-x: hidden !important;
+    overflow-y: auto !important;
+    height: auto !important;
+}
 
-    /* Remove sticky nav on mobile */
-    .nav-bar {
-        position: relative !important;
-        top: auto !important;
-        z-index: 10 !important;
-    }
+/* Remove sticky nav on mobile */
+.nav-bar {
+    position: relative !important;
+    top: auto !important;
+    z-index: 10 !important;
+}
 
-    /* Stack dashboard panels */
-    .dashboard-row {
-        flex-direction: column;
-        max-width: 100%;
-        gap: 16px;
+/* Prevent nav-bar width overflow */
+.nav-bar {
+    max-width: 100% !important;
+    width: 100% !important;
+}
+
+/* Stack dashboard panels */
+.dashboard-row {
+    flex-direction: column;
+    max-width: 100%;
+    gap: 16px;
+}
+
+   /* FIX — Listen tab must expand fully */
+    .listen-category-content {
+        max-height: none !important;
     }
 
     /* Prevent dashboard overflow */
@@ -889,10 +900,12 @@ body {
         font-size: 13px;
     }
 
-    .glass-panel {
-        margin: 12px;
-        padding: 12px;
-    }
+   .glass-panel {
+    margin-left: 0 !important;
+    margin-right: 0 !important;
+    width: 100% !important;
+}
+
 }
 
 /* ============================================================
