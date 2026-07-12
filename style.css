@@ -795,6 +795,8 @@ body {
     .progress-section {
         grid-template-columns: repeat(2, 1fr);
         gap: 14px;
+        width: 100%;
+        max-width: 100%;
     }
 
     /* Make progress tiles breathe */
@@ -829,6 +831,8 @@ body {
         .progress-section {
             grid-template-columns: 1fr;
             gap: 12px;
+            width: 100%;
+            max-width: 100%;
         }
 
         /* Progress tiles: tighter padding */
@@ -862,6 +866,12 @@ body {
         .tab-btn {
             padding: 8px 12px;
             font-size: 13px;
+        }
+
+        /* Glass panels: prevent overflow */
+        .glass-panel {
+            margin: 12px;
+            padding: 12px;
         }
     }
 }
@@ -923,6 +933,8 @@ body {
     .progress-section {
         grid-template-columns: 1fr;
         gap: 14px;
+        width: 100%;
+        max-width: 100%;
     }
 
     /* Slightly tighter padding */
@@ -990,5 +1002,17 @@ body {
     }
 }
 
+/* ============================================================
+   GLOBAL OVERFLOW PROTECTION
+   ============================================================ */
+
+* {
+    box-sizing: border-box;
+}
+
+html, body {
+    overflow-x: hidden;
+    max-width: 100%;
+}
 
 
