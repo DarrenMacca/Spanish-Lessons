@@ -249,7 +249,6 @@ body {
     text-shadow: 0 0 6px rgba(14,165,233,0.45);
 }
 
-
 .input-field {
     width: 100%;
     padding: 10px 14px;
@@ -271,8 +270,8 @@ body {
 .primary-btn {
     background: rgba(14, 165, 233, 0.95);
     color: #0f172a;
-    padding: 10px 22px;            /* Wider padding = pill shape */
-    border-radius: 999px;          /* FULL PILL */
+    padding: 10px 22px;
+    border-radius: 999px;
     border: 1px solid rgba(148, 163, 184, 0.45);
     cursor: pointer;
     font-size: 14px;
@@ -291,7 +290,13 @@ body {
     transform: translateY(-1px);
 }
 
-
+/* ✔ Correct Listen Player Button Styling */
+.listen-player-controls button {
+    padding: 6px 14px;
+    font-size: 0.85rem;
+    border-radius: 20px;
+    min-width: 90px;
+}
 
 .name-status {
     font-size: 13px;
@@ -302,6 +307,7 @@ body {
 /* ------------------------------------------------------------
    PROGRESS METERS
 ------------------------------------------------------------ */
+
 
 .progress-section {
     max-width: 900px; /* wider to support 4 tiles */
