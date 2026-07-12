@@ -779,10 +779,22 @@ body {
 }
 
 /* ============================================================
-   MOBILE OPTIMIZATION — SAFE EXTENSION
+   MOBILE OPTIMIZATION — SAFE EXTENSION (FULLY MERGED)
    ============================================================ */
 
 @media (max-width: 600px) {
+
+    /* FIX — Restore scrolling and prevent sticky lock */
+    html, body {
+        overflow-x: hidden !important;
+        overflow-y: auto !important;
+    }
+
+    /* FIX — Prevent sticky nav from blocking scroll */
+    .nav-bar {
+        position: relative !important;
+        top: auto !important;
+    }
 
     /* Stack dashboard panels */
     .dashboard-row {
@@ -806,6 +818,7 @@ body {
         min-width: 0 !important;
         max-width: 100% !important;
         width: 100% !important;
+        padding: 14px;
     }
 
     /* Progress tiles: switch from 4 columns → 2 columns */
@@ -892,6 +905,7 @@ body {
         padding: 12px;
     }
 }
+
 
 }
 
