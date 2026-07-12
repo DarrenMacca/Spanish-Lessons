@@ -256,6 +256,159 @@ function groupByCategory(words) {
     return groups;
 }
 
+/* ============================================================
+   LISTEN TAB — CATEGORY + AUDIO PLAYER + CLEAN UI
+   ============================================================ */
+
+let listenAutoPlay = {
+    active: false,
+    paused: false,
+    index: 0,
+    list: []
+};
+
+function renderListenTab() {
+    const container = document.getElementById("listen");
+    const words = CEFR_LEVELS[appState.currentLevel];
+    const grouped = groupByCategory(words);
+
+    /* ============================================================
+       PLAYER CONTROLS
+       ============================================================ */
+    let html = `
+        <div class="glass-panel quiz-card">
+            <h2>Listen — Level ${appState.currentLevel}</h2>
+            <p>Tap a category, then click a word pill to hear it.</p>
+
+            <div class="listen-player-controls" style="
+                display:flex;
+                gap:10px;
+                flex-wrap:wrap;
+                margin-top:10px;
+            ">
+                <button class="primary-btn" id="listen-playall">▶️ Play All</button>
+                <button class="secondary-btn" id="listen-pause">⏸️ Pause</button>
+                <button class="primary-btn" id="listen-resume">▶️ Resume</button>
+                <button class="secondary-btn" id="listen-stop">⏹️ Stop</button>
+            </div>
+        </div>
+    `;
+
+    /* ============================================================
+       CATEGORY LIST
+       ============================================================ */
+    Object.keys(grouped).forEach(cat => {
+        html += `
+        <div class="glass-panel">
+            <div class="listen-category-header" data-cat="${cat}">
+                <span class="listen-category-title">${cat.toUpperCase()}</span>
+                <span class="listen-arrow">▶</span>
+            </div>
+
+            <div class="listen-category-content" data-cat="${cat}">
+                <div class="listen-grid" style="
+                    display:grid;
+                    grid-template-columns:repeat(auto-fill, minmax(120px, 1fr));
+                    gap:6px;
+                    margin-top:8px;
+                ">
+                    ${grouped[cat].map(w => `
+                        <button class="word-pill" data-spanish="${w.spanish}">
+                            ${w.english}
+                            <span style="opacity:0.7;">(${w.spanish})</span>
+                        </button>
+                    `).join("")}
+                </div>
+            </div>
+        </div>`;
+    });
+
+    container.innerHTML = html;
+
+    /* ============================================================
+       CATEGORY COLLAPSE
+       ============================================================ */
+    container.querySelectorAll(".listen-category-header").forEach(header => {
+        header.addEventListener("click", () => {
+            const cat = header.dataset.cat;
+            const content = container.querySelector(`.listen-category-content[data-cat="${cat}"]`);
+            const arrow = header.querySelector(".listen-arrow");
+            const open = content.classList.toggle("open");
+            arrow.classList.toggle("open", open);
+        });
+    });
+
+    /* ============================================================
+       SINGLE WORD PLAYBACK
+       ============================================================ */
+    container.querySelectorAll(".word-pill").forEach(btn => {
+        btn.addEventListener("click", () => {
+            speakSpanish(btn.dataset.spanish);
+            appState.levelStats[appState.currentLevel].listens++;
+            saveState();
+            updateBadges();
+            updateProgressMeters();
+        });
+    });
+
+    /* ============================================================
+       AUTO PLAY — PLAY ALL WORDS
+       ============================================================ */
+    listenAutoPlay.list = words.map(w => w.spanish);
+
+    document.getElementById("listen-playall").onclick = () => {
+        listenAutoPlay.active = true;
+        listenAutoPlay.paused = false;
+        listenAutoPlay.index = 0;
+        playNextListenWord();
+    };
+
+    document.getElementById("listen-pause").onclick = () => {
+        listenAutoPlay.paused = true;
+        if (speechSynthesis.pause) speechSynthesis.pause();
+    };
+
+    document.getElementById("listen-resume").onclick = () => {
+        listenAutoPlay.paused = false;
+        if (speechSynthesis.resume) speechSynthesis.resume();
+        playNextListenWord();
+    };
+
+    document.getElementById("listen-stop").onclick = () => {
+        listenAutoPlay.active = false;
+        listenAutoPlay.paused = false;
+        listenAutoPlay.index = 0;
+        if (speechSynthesis.cancel) speechSynthesis.cancel();
+    };
+}
+
+/* ============================================================
+   AUTO PLAY ENGINE
+   ============================================================ */
+function playNextListenWord() {
+    if (!listenAutoPlay.active || listenAutoPlay.paused) return;
+
+    const list = listenAutoPlay.list;
+    if (listenAutoPlay.index >= list.length) {
+        listenAutoPlay.active = false;
+        return;
+    }
+
+    const word = list[listenAutoPlay.index];
+    const utter = new SpeechSynthesisUtterance(word);
+    utter.lang = "es-ES";
+    utter.rate = appState.speechRate;
+
+    utter.onend = () => {
+        if (!listenAutoPlay.paused) {
+            listenAutoPlay.index++;
+            setTimeout(playNextListenWord, 500);
+        }
+    };
+
+    speechSynthesis.cancel();
+    speechSynthesis.speak(utter);
+}
 
 
 /* ============================================================
