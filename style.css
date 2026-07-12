@@ -779,21 +779,23 @@ body {
 }
 
 /* ============================================================
-   MOBILE OPTIMIZATION — SAFE EXTENSION (FULLY MERGED)
+   MOBILE OPTIMIZATION — FULLY MERGED + iOS FIXES
    ============================================================ */
 
 @media (max-width: 600px) {
 
-    /* FIX — Restore scrolling and prevent sticky lock */
+    /* FIX — Restore scrolling on iPhone Safari */
     html, body {
         overflow-x: hidden !important;
         overflow-y: auto !important;
+        height: auto !important;
     }
 
-    /* FIX — Prevent sticky nav from blocking scroll */
+    /* FIX — Remove sticky nav on mobile (iOS hates sticky + flex) */
     .nav-bar {
         position: relative !important;
         top: auto !important;
+        z-index: 10 !important;
     }
 
     /* Stack dashboard panels */
@@ -803,7 +805,7 @@ body {
         gap: 16px;
     }
 
-    /* HARD FIX — Prevent dashboard overflow on mobile */
+    /* FIX — Prevent dashboard overflow */
     .dashboard,
     .dashboard-row {
         max-width: 100% !important;
@@ -812,7 +814,7 @@ body {
         margin-right: 0 !important;
     }
 
-    /* Allow dashboard boxes to shrink instead of overflow */
+    /* FIX — Allow dashboard boxes to shrink */
     .dash-left,
     .dash-right {
         min-width: 0 !important;
@@ -905,7 +907,6 @@ body {
         padding: 12px;
     }
 }
-
 
 }
 
