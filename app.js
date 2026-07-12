@@ -611,7 +611,7 @@ function setupQuizEvents() {
         harderBtn.classList.toggle("active", quizState.harderMode);
         renderQuizTab();
     });
-}
+
 
 
 /* ============================================================
