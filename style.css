@@ -779,19 +779,18 @@ body {
 }
 
 /* ============================================================
-   MOBILE OPTIMIZATION — FULLY MERGED + iOS FIXES
+   MOBILE — ≤600px
    ============================================================ */
-
 @media (max-width: 600px) {
 
-    /* FIX — Restore scrolling on iPhone Safari */
+    /* iPhone Safari scroll fix */
     html, body {
         overflow-x: hidden !important;
         overflow-y: auto !important;
         height: auto !important;
     }
 
-    /* FIX — Remove sticky nav on mobile (iOS hates sticky + flex) */
+    /* Remove sticky nav on mobile */
     .nav-bar {
         position: relative !important;
         top: auto !important;
@@ -805,7 +804,7 @@ body {
         gap: 16px;
     }
 
-    /* FIX — Prevent dashboard overflow */
+    /* Prevent dashboard overflow */
     .dashboard,
     .dashboard-row {
         max-width: 100% !important;
@@ -814,7 +813,7 @@ body {
         margin-right: 0 !important;
     }
 
-    /* FIX — Allow dashboard boxes to shrink */
+    /* Allow dashboard boxes to shrink */
     .dash-left,
     .dash-right {
         min-width: 0 !important;
@@ -823,7 +822,7 @@ body {
         padding: 14px;
     }
 
-    /* Progress tiles: switch from 4 columns → 2 columns */
+    /* Progress tiles: 4 → 2 columns */
     .progress-section {
         grid-template-columns: repeat(2, 1fr);
         gap: 14px;
@@ -831,12 +830,11 @@ body {
         max-width: 100%;
     }
 
-    /* Make progress tiles breathe */
     .progress-tile {
         padding: 12px;
     }
 
-    /* Flashcards: allow flexible height */
+    /* Flashcards flexible */
     .flip-card {
         height: auto;
         min-height: 120px;
@@ -849,18 +847,17 @@ body {
 }
 
 /* ============================================================
-   ULTRA‑SMALL PHONES — 320–360px
+   ULTRA‑SMALL PHONES — ≤360px
    ============================================================ */
 @media (max-width: 360px) {
 
-    /* Stack dashboard panels vertically */
     .dashboard-row {
         flex-direction: column;
         gap: 14px;
         max-width: 100%;
     }
 
-    /* Progress tiles: switch from 4 → 1 column */
+    /* Progress tiles: 4 → 1 column */
     .progress-section {
         grid-template-columns: 1fr;
         gap: 12px;
@@ -868,128 +865,66 @@ body {
         max-width: 100%;
     }
 
-    /* Progress tiles: tighter padding */
     .progress-tile {
         padding: 10px;
     }
 
-    /* Icons: slightly smaller */
     .progress-img {
         width: 24px;
         height: 24px;
     }
 
-    /* Section titles: reduce font size */
-    .section-title {
-        font-size: 13px;
-    }
-
-    /* Progress numbers: reduce font size */
+    .section-title,
     .progress-number {
         font-size: 13px;
     }
 
-    /* Flashcards: allow flexible height */
     .flip-card {
         height: auto;
         min-height: 110px;
     }
 
-    /* Tab bar: tighter spacing */
     .tab-btn {
         padding: 8px 12px;
         font-size: 13px;
     }
 
-    /* Glass panels: prevent overflow */
     .glass-panel {
         margin: 12px;
         padding: 12px;
     }
 }
 
-}
-
-
 /* ============================================================
-   TABLETS — 600–900px
-   ============================================================ */
-@media (min-width: 600px) and (max-width: 900px) {
-
-    /* Dashboard panels: side-by-side but comfortable */
-    .dashboard-row {
-        flex-direction: row;
-        gap: 20px;
-        max-width: 100%;
-    }
-
-    /* Progress tiles: switch from 4 → 3 columns */
-    .progress-section {
-        grid-template-columns: repeat(3, 1fr);
-        gap: 18px;
-    }
-
-    /* Slightly larger icons */
-    .progress-img {
-        width: 32px;
-        height: 32px;
-    }
-
-    /* Section titles: slightly larger */
-    .section-title {
-        font-size: 15px;
-    }
-
-    /* Flashcards: increase height for readability */
-    .flip-card {
-        height: 160px;
-    }
-
-    /* Tab bar: more breathing room */
-    .tab-btn {
-        padding: 12px 18px;
-        font-size: 15px;
-    }
-}
-
-/* ============================================================
-   FOLDABLE PHONES — FOLDED MODE (320–500px)
+   FOLDABLE PHONES — FOLDED (≤500px)
    ============================================================ */
 @media (max-width: 500px) {
 
-    /* Stack dashboard panels */
     .dashboard-row {
         flex-direction: column;
         gap: 16px;
         max-width: 100%;
     }
 
-    /* Progress tiles: 1 column for clarity */
     .progress-section {
         grid-template-columns: 1fr;
         gap: 14px;
-        width: 100%;
-        max-width: 100%;
     }
 
-    /* Slightly tighter padding */
     .progress-tile {
         padding: 12px;
     }
 
-    /* Icons slightly smaller */
     .progress-img {
         width: 26px;
         height: 26px;
     }
 
-    /* Flashcards flexible */
     .flip-card {
         height: auto;
         min-height: 120px;
     }
 
-    /* Tab bar tighter */
     .tab-btn {
         padding: 10px 14px;
         font-size: 14px;
@@ -997,40 +932,69 @@ body {
 }
 
 /* ============================================================
-   FOLDABLE PHONES — UNFOLDED MODE (700–900px)
+   TABLETS — 600–900px
+   ============================================================ */
+@media (min-width: 600px) and (max-width: 900px) {
+
+    .dashboard-row {
+        flex-direction: row;
+        gap: 20px;
+        max-width: 100%;
+    }
+
+    .progress-section {
+        grid-template-columns: repeat(3, 1fr);
+        gap: 18px;
+    }
+
+    .progress-img {
+        width: 32px;
+        height: 32px;
+    }
+
+    .section-title {
+        font-size: 15px;
+    }
+
+    .flip-card {
+        height: 160px;
+    }
+
+    .tab-btn {
+        padding: 12px 18px;
+        font-size: 15px;
+    }
+}
+
+/* ============================================================
+   FOLDABLE PHONES — UNFOLDED (700–900px)
    ============================================================ */
 @media (min-width: 700px) and (max-width: 900px) {
 
-    /* Dashboard panels side-by-side */
     .dashboard-row {
         flex-direction: row;
         gap: 24px;
         max-width: 100%;
     }
 
-    /* Progress tiles: 3 columns (perfect for foldables) */
     .progress-section {
         grid-template-columns: repeat(3, 1fr);
         gap: 20px;
     }
 
-    /* Larger icons */
     .progress-img {
         width: 34px;
         height: 34px;
     }
 
-    /* Section titles slightly larger */
     .section-title {
         font-size: 16px;
     }
 
-    /* Flashcards taller */
     .flip-card {
         height: 170px;
     }
 
-    /* Tab bar more spacious */
     .tab-btn {
         padding: 14px 20px;
         font-size: 16px;
@@ -1040,7 +1004,6 @@ body {
 /* ============================================================
    GLOBAL OVERFLOW PROTECTION
    ============================================================ */
-
 * {
     box-sizing: border-box;
 }
@@ -1049,5 +1012,3 @@ html, body {
     overflow-x: hidden;
     max-width: 100%;
 }
-
-
