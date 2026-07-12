@@ -49,6 +49,7 @@
 <!-- DASHBOARD TAB CONTENT -->
 <div id="dashboard">
 
+    <!-- SETTINGS ROW -->
     <div class="dashboard-row">
         <div class="dash-left glass-panel">
             <label class="section-title">Audio Speed</label>
@@ -66,6 +67,7 @@
         </div>
     </div>
 
+    <!-- NAME BOX -->
     <div class="student-name-box glass-panel">
         <label class="section-title">Your name for certificates</label>
         <input id="student-name" class="input-field" type="text" placeholder="Enter your name">
@@ -73,24 +75,21 @@
         <div id="name-status" class="name-status"></div>
     </div>
 
-    <!-- PROGRESS METERS -->
+    <!-- PROGRESS GRID -->
     <div class="progress-section">
 
-        <!-- QUIZ -->
-        <div id="quiz-tile" class="progress-tile glass-panel">
+        <div id="quiz-tile" class="progress-tile">
             <div class="progress-icon-row">
                 <img src="images/badge-quiz.png" class="progress-img">
                 <label class="section-title">Quiz Progress</label>
                 <span class="progress-number" id="quiz-number">0%</span>
             </div>
-
             <div class="progress-bar">
                 <div class="progress-fill" id="quiz-progress"></div>
             </div>
         </div>
 
-        <!-- BUILD -->
-        <div id="build-tile" class="progress-tile glass-panel">
+        <div id="build-tile" class="progress-tile">
             <div class="progress-icon-row">
                 <img src="images/badge-build.png" class="progress-img">
                 <label class="section-title">Build Progress</label>
@@ -101,8 +100,7 @@
             </div>
         </div>
 
-        <!-- SENTENCE -->
-        <div id="sentence-tile" class="progress-tile glass-panel">
+        <div id="sentence-tile" class="progress-tile">
             <div class="progress-icon-row">
                 <img src="images/icon-sentence.png" class="progress-img">
                 <label class="section-title">Sentence Progress</label>
@@ -113,8 +111,7 @@
             </div>
         </div>
 
-        <!-- XP -->
-        <div id="xp-tile" class="progress-tile glass-panel">
+        <div id="xp-tile" class="progress-tile">
             <div class="progress-icon-row">
                 <img src="images/icon-xp.png" class="progress-img">
                 <label class="section-title">XP Progress</label>
@@ -125,8 +122,7 @@
             </div>
         </div>
 
-        <!-- STREAK -->
-        <div id="streak-tile" class="progress-tile glass-panel">
+        <div id="streak-tile" class="progress-tile">
             <div class="progress-icon-row">
                 <img src="images/icon-streak.png" class="progress-img">
                 <label class="section-title">Streak</label>
@@ -137,8 +133,7 @@
             </div>
         </div>
 
-        <!-- SCORE -->
-        <div id="score-tile" class="progress-tile glass-panel">
+        <div id="score-tile" class="progress-tile">
             <div class="progress-icon-row">
                 <img src="images/icon-level.png" class="progress-img">
                 <label class="section-title">Score Rating</label>
@@ -149,8 +144,7 @@
             </div>
         </div>
 
-        <!-- REVIEW -->
-        <div id="review-tile" class="progress-tile glass-panel">
+        <div id="review-tile" class="progress-tile">
             <div class="progress-icon-row">
                 <img src="images/icon-review.png" class="progress-img">
                 <label class="section-title">Due for Review</label>
@@ -163,12 +157,14 @@
 
     </div>
 
+    <!-- BADGES -->
     <div class="badge-section glass-panel">
         <h3>Your Badges</h3>
         <ul id="badge-list"></ul>
     </div>
 
 </div>
+
 
 <!-- OTHER TABS -->
 
