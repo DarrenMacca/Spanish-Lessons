@@ -642,18 +642,6 @@ function setupQuizEvents() {
 }
 
 
-
-
-    nextBtn.addEventListener("click", () => renderQuizTab());
-
-    harderBtn.addEventListener("click", () => {
-        quizState.harderMode = !quizState.harderMode;
-        harderBtn.classList.toggle("active", quizState.harderMode);
-        renderQuizTab();
-    });
-
-
-
 /* ============================================================
    BUILD TAB — RENDER + EVENTS
    ============================================================ */
