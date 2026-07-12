@@ -938,7 +938,7 @@ function renderConversationTab() {
    ============================================================ */
 
 function renderGrammarTab() {
-    const container = document.getElementById("grammar");
+    const container = document.getElementById("grammar-content");
     const words = CEFR_LEVELS[appState.currentLevel];
     const grouped = groupByCategory(words);
 
