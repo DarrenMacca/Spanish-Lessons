@@ -916,7 +916,7 @@ function setupSentenceEvents() {
 
         if (user === correct) {
             feedback.textContent = "Correct! 🎉";
-            appState.levelStats[appState.currentLevel].buildCompleted++;
+            appState.levelStats[appState.currentLevel].sentenceCompleted++;
             updateBadges();
             updateProgressMeters();
             setTimeout(() => speakQuiz(correct), 300);
@@ -933,7 +933,6 @@ function setupSentenceEvents() {
         renderSentenceTab();
     });
 }
-
 
 /* ============================================================
    CONVERSATION TAB — RENDER + EVENTS (EVERYDAY DIALOGUE)
@@ -1017,6 +1016,8 @@ function renderConversationTab() {
 
     setupConversationEvents();
 }
+
+
 
 function setupConversationEvents() {
     const grid = document.getElementById("convo-grid");
