@@ -461,19 +461,18 @@ function updateFlashcardDifficulty(spanishWord, correct) {
     FLASHCARD_STATE.difficultyMap[spanishWord] = newScore;
 }
 
-// ------------------------------------------------------------
-// 5. Render Flashcards Tab
-// ------------------------------------------------------------
-function renderFlashcardsTab() {
-    const container = document.getElementById("flashcards");
+/* ============================================================
+   FLASHCARDS — ENGLISH FRONT → SPANISH BACK + AUDIO
+   ============================================================ */
 
-    FLASHCARD_STATE.level = appState.currentLevel;
-    FLASHCARD_STATE.cards = fcShuffle(buildFlashcardsForLevel(FLASHCARD_STATE.level));
+function renderFlashcardsTab() {
+    const container = document.getElementById("flash");
+    const words = CEFR_LEVELS[appState.currentLevel];
 
     container.innerHTML = `
         <div class="glass-panel">
-            <h2>Flashcards — Level ${FLASHCARD_STATE.level}</h2>
-            <p>Tap a card to flip. Tap 🔊 to hear pronunciation.</p>
+            <h2>Flashcards — Level ${appState.currentLevel}</h2>
+            <p>Tap a card to flip. Spanish side plays audio.</p>
 
             <div id="fc-grid" class="fc-grid"></div>
         </div>
@@ -481,39 +480,42 @@ function renderFlashcardsTab() {
 
     const grid = document.getElementById("fc-grid");
 
-    FLASHCARD_STATE.cards.forEach(card => {
-        const cardEl = document.createElement("div");
-        cardEl.className = "fc-card";
+    // Shuffle words for variety
+    const shuffled = [...words].sort(() => Math.random() - 0.5);
 
-        cardEl.innerHTML = `
+    shuffled.forEach(item => {
+        const card = document.createElement("div");
+        card.className = "fc-card";
+
+        card.innerHTML = `
             <div class="fc-inner">
-                <div class="fc-front">
-                    <span>${card.english}</span>
+                <div class="fc-front word-pill">
+                    ${item.english}
                 </div>
-                <div class="fc-back">
-                    <span>${card.spanish}</span>
-                    ${card.audio ? `<button class="fc-audio">🔊</button>` : ""}
+
+                <div class="fc-back word-pill">
+                    ${item.spanish}
                 </div>
             </div>
         `;
 
-        // Flip on tap
-        cardEl.addEventListener("click", () => {
-            cardEl.classList.toggle("fc-flipped");
+        card.addEventListener("click", () => {
+            const inner = card.querySelector(".fc-inner");
+            const flipped = inner.classList.toggle("fc-flipped");
+
+            if (flipped) {
+                // Play Spanish audio ONLY when flipped to Spanish
+                speakSpanish(item.spanish);
+            } else {
+                // No audio when flipping back to English
+                speechSynthesis.cancel();
+            }
         });
 
-        // Audio button
-        const audioBtn = cardEl.querySelector(".fc-audio");
-        if (audioBtn) {
-            audioBtn.addEventListener("click", (e) => {
-                e.stopPropagation();
-                playFlashcardAudio(card.audio);
-            });
-        }
-
-        grid.appendChild(cardEl);
+        grid.appendChild(card);
     });
 }
+
 
 
 /* ============================================================
