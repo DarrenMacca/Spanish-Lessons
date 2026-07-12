@@ -404,8 +404,6 @@ function playNextListenWord() {
     speechSynthesis.speak(utter);
 }
 
-
-
 /* ============================================================
    FLASHCARDS — CATEGORY GROUPED + FLIP + AUDIO (STABLE VERSION)
    ============================================================ */
@@ -422,9 +420,6 @@ function renderFlashcardsTab() {
         </div>
     `;
 
-    /* ============================================================
-       CATEGORY SECTIONS
-       ============================================================ */
     Object.keys(grouped).forEach(cat => {
         html += `
         <div class="glass-panel">
@@ -438,12 +433,8 @@ function renderFlashcardsTab() {
                     ${grouped[cat].map(item => `
                         <div class="fc-card">
                             <div class="fc-inner">
-                                <div class="fc-front word-pill">
-                                    ${item.english}
-                                </div>
-                                <div class="fc-back word-pill">
-                                    ${item.spanish}
-                                </div>
+                                <div class="fc-front word-pill">${item.english}</div>
+                                <div class="fc-back word-pill">${item.spanish}</div>
                             </div>
                         </div>
                     `).join("")}
@@ -454,9 +445,6 @@ function renderFlashcardsTab() {
 
     container.innerHTML = html;
 
-    /* ============================================================
-       CATEGORY COLLAPSE
-       ============================================================ */
     container.querySelectorAll(".listen-category-header").forEach(header => {
         header.addEventListener("click", () => {
             const cat = header.dataset.cat;
@@ -467,14 +455,10 @@ function renderFlashcardsTab() {
         });
     });
 
-    /* ============================================================
-       FLASHCARD FLIP + AUDIO
-       ============================================================ */
     container.querySelectorAll(".fc-card").forEach(card => {
         card.addEventListener("click", () => {
             const inner = card.querySelector(".fc-inner");
             const flipped = inner.classList.toggle("fc-flipped");
-
             const spanish = inner.querySelector(".fc-back").textContent.trim();
 
             if (flipped) {
@@ -489,42 +473,6 @@ function renderFlashcardsTab() {
         });
     });
 }
-
-
-
-
-/* ============================================================
-   SHARED STATE
-   ============================================================ */
-
-const CEFR_LEVELS = {
-    A1: A1_WORDS,
-    A2: A2_WORDS,
-    B1: B1_WORDS,
-    B2: B2_WORDS
-};
-
-let quizState = {
-    currentWord: null,
-    options: [],
-    harderMode: false,
-    selected: null
-};
-
-let buildState = {
-    currentWord: null,
-    tokens: []
-};
-
-let sentenceState = {
-    currentSentence: null,
-    tokens: []
-};
-
-let convoState = {
-    currentPrompt: null,
-    tokens: []
-};
 
 /* ============================================================
    QUIZ OPTION GENERATOR
@@ -566,15 +514,11 @@ function renderQuizTab() {
             <h2>Quiz — Level ${appState.currentLevel}</h2>
             <p>Select the correct Spanish for the English word.</p>
 
-            <div id="qb-meta">
-                <strong>English:</strong> ${quizState.currentWord.english}
-            </div>
+            <div id="qb-meta"><strong>English:</strong> ${quizState.currentWord.english}</div>
 
             <div id="qb-grid" class="sb-grid">
                 ${quizState.options.map(opt => `
-                    <button class="qb-opt" data-spanish="${opt}">
-                        ${opt}
-                    </button>
+                    <button class="qb-opt" data-spanish="${opt}">${opt}</button>
                 `).join("")}
             </div>
 
@@ -584,9 +528,7 @@ function renderQuizTab() {
             <div class="sb-controls">
                 <button id="qb-submit">Check</button>
                 <button id="qb-next">Next</button>
-                <button id="qb-harder" class="${quizState.harderMode ? "active" : ""}">
-                    Harder
-                </button>
+                <button id="qb-harder" class="${quizState.harderMode ? "active" : ""}">Harder</button>
             </div>
         </div>
     `;
@@ -633,9 +575,7 @@ function setupQuizEvents() {
         saveState();
     });
 
-    nextBtn.addEventListener("click", () => {
-        renderQuizTab();
-    });
+    nextBtn.addEventListener("click", () => renderQuizTab());
 
     harderBtn.addEventListener("click", () => {
         quizState.harderMode = !quizState.harderMode;
@@ -643,6 +583,7 @@ function setupQuizEvents() {
         renderQuizTab();
     });
 }
+
 
 /* ============================================================
    BUILD TAB — RENDER + EVENTS
@@ -917,14 +858,12 @@ function setupConversationEvents() {
     });
 }
 
-
-
 /* ============================================================
    GRAMMAR TAB
    ============================================================ */
 
 function renderGrammarTab() {
-    const container = document.getElementById("grammar");
+    const container = document.getElementById("grammar-content");
     const words = CEFR_LEVELS[appState.currentLevel];
     const grouped = groupByCategory(words);
 
@@ -940,7 +879,9 @@ function renderGrammarTab() {
                     <li><strong>${cat}</strong>: ${grouped[cat].length} items</li>
                 `).join("")}
             </ul>
-            <p style="margin-top:10px;opacity:0.8;">Notice how connectors, verbs, adjectives and nouns combine.</p>
+            <p style="margin-top:10px;opacity:0.8;">
+                Notice how connectors, verbs, adjectives and nouns combine.
+            </p>
         </div>
     `;
 }
@@ -1008,9 +949,10 @@ function initRateControl() {
         saveState();
     };
 }
-/* ------------------------------------------------------------
+
+/* ============================================================
    PROGRESS METER CONTROLLER
------------------------------------------------------------- */
+   ============================================================ */
 
 function animateNumber(id, target) {
     let current = 0;
@@ -1028,29 +970,27 @@ function animateNumber(id, target) {
 
 function updateProgressMeters() {
 
-    // New bar widths
+    // Bar widths
     document.getElementById("quiz-progress").style.width = "60%";
     document.getElementById("build-progress").style.width = "45%";
     document.getElementById("sentence-progress").style.width = "30%";
 
-    // Existing bar widths
     document.getElementById("xp-progress").style.width = "70%";
     document.getElementById("streak-progress").style.width = "40%";
     document.getElementById("score-progress").style.width = "85%";
     document.getElementById("review-progress").style.width = "20%";
 
-    // New animated numbers
+    // Animated numbers
     animateNumber("quiz-number", 60);
     animateNumber("build-number", 45);
     animateNumber("sentence-number", 30);
 
-    // Existing animated numbers
     animateNumber("xp-number", 70);
     animateNumber("streak-number", 40);
     animateNumber("score-number", 85);
     animateNumber("review-number", 20);
 
-    // ⭐ Pulse animations (this is the missing part)
+    // Pulse animations
     pulseTile("quiz-tile");
     pulseTile("build-tile");
     pulseTile("sentence-tile");
@@ -1060,120 +1000,18 @@ function updateProgressMeters() {
     pulseTile("review-tile");
 }
 
-
-// Run once when dashboard loads
-
-function renderSentenceTab() {
-    const panel = document.getElementById("sentence");
-    if (!panel) return;
-
-    const level = appState.currentLevel;
-    const bank = wordbanks[level]?.sentences;
-    if (!bank || bank.length === 0) {
-        panel.innerHTML = `
-            <div class="glass-panel quiz-card">
-                <h2>Sentence Practice — Level ${level}</h2>
-                <p>No sentences available for this level.</p>
-            </div>
-        `;
-        return;
-    }
-
-    // Pick a random sentence
-    const item = bank[Math.floor(Math.random() * bank.length)];
-    const english = item.en;
-    const spanish = item.es;
-
-    // Scramble Spanish words
-    const words = spanish.split(" ");
-    const scrambled = [...words].sort(() => Math.random() - 0.5);
-
-    // Build UI
-    panel.innerHTML = `
-        <div class="glass-panel quiz-card">
-
-            <h2>Sentence Practice — Level ${level}</h2>
-            <p class="sentence-english"><strong>${english}</strong></p>
-
-            <div id="sentence-output" class="sentence-output"></div>
-
-            <div id="sentence-options" class="sentence-options"></div>
-
-            <div class="sentence-controls">
-                <button id="undo-btn" class="primary-btn">Undo</button>
-                <button id="reset-btn" class="primary-btn">Reset</button>
-                <button id="check-btn" class="primary-btn">Check</button>
-            </div>
-
-            <div id="sentence-feedback" class="sentence-feedback"></div>
-
-        </div>
-    `;
-
-    const output = document.getElementById("sentence-output");
-    const options = document.getElementById("sentence-options");
-    const feedback = document.getElementById("sentence-feedback");
-
-    let built = [];
-
-    // Render scrambled word tiles
-    scrambled.forEach(word => {
-        const btn = document.createElement("button");
-        btn.className = "word-btn";
-        btn.textContent = word;
-
-        btn.addEventListener("click", () => {
-            built.push(word);
-            renderOutput();
-        });
-
-        options.appendChild(btn);
-    });
-
-    function renderOutput() {
-        output.textContent = built.join(" ");
-    }
-
-    // Undo last word
-    document.getElementById("undo-btn").addEventListener("click", () => {
-        built.pop();
-        renderOutput();
-    });
-
-    // Reset sentence
-    document.getElementById("reset-btn").addEventListener("click", () => {
-        built = [];
-        renderOutput();
-    });
-
-    // Check answer
-    document.getElementById("check-btn").addEventListener("click", () => {
-        const attempt = built.join(" ");
-        if (attempt === spanish) {
-            feedback.textContent = "Correct! 🎉";
-            feedback.style.color = "limegreen";
-
-            // Update progress
-            appState.levelStats[level].sentenceCompleted++;
-            updateProgressMeters();
-
-        } else {
-            feedback.textContent = "Not quite — try again.";
-            feedback.style.color = "orange";
-        }
-    });
-}
-
+/* ============================================================
+   TILE PULSE ANIMATION
+   ============================================================ */
 
 function pulseTile(id) {
     const tile = document.getElementById(id);
     if (!tile) return;
 
-    tile.classList.remove("pulse");   // reset animation
-    void tile.offsetWidth;            // force reflow
-    tile.classList.add("pulse");      // trigger animation
+    tile.classList.remove("pulse");
+    void tile.offsetWidth;
+    tile.classList.add("pulse");
 }
-
 
 /* ============================================================
    STARTUP
@@ -1182,15 +1020,16 @@ function pulseTile(id) {
 document.addEventListener("DOMContentLoaded", () => {
     loadState();
 
-    initTabNavigation();
+    initTabNavigation();     // tab buttons now exist
+    activateTab("dashboard"); // show dashboard first
 
-    activateTab("dashboard");   // Dashboard must be visible first
-
-    initRateControl();          // Now #rate exists
-    initNameBox();              // Now #student-name exists
+    initRateControl();       // slider exists now
+    initNameBox();           // name box exists now
 
     updateBadges();
-    updateProgressMeters();     // Now safe
+    updateProgressMeters();
 });
+
+
 
 
