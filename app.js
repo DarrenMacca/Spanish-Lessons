@@ -9,7 +9,7 @@ function groupByCategory(words) {
     });
     return out;
 }
-
+ 
 
 const CEFR_LEVELS = {
     A1: A1_WORDS,
