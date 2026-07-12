@@ -462,59 +462,83 @@ function updateFlashcardDifficulty(spanishWord, correct) {
 }
 
 /* ============================================================
-   FLASHCARDS — ENGLISH FRONT → SPANISH BACK + AUDIO
+   FLASHCARDS — CATEGORY GROUPED + FLIP + AUDIO (A1–B2)
    ============================================================ */
 
 function renderFlashcardsTab() {
     const container = document.getElementById("flash");
     const words = CEFR_LEVELS[appState.currentLevel];
+    const grouped = groupByCategory(words);
 
-    container.innerHTML = `
+    let html = `
         <div class="glass-panel">
             <h2>Flashcards — Level ${appState.currentLevel}</h2>
             <p>Tap a card to flip. Spanish side plays audio.</p>
-
-            <div id="fc-grid" class="fc-grid"></div>
         </div>
     `;
 
-    const grid = document.getElementById("fc-grid");
+    // Build category sections
+    Object.keys(grouped).forEach(cat => {
+        html += `
+        <div class="glass-panel">
+            <div class="listen-category-header" data-cat="${cat}">
+                <span class="listen-category-title">${cat.toUpperCase()}</span>
+                <span class="listen-arrow">▶</span>
+            </div>
 
-    // Shuffle words for variety
-    const shuffled = [...words].sort(() => Math.random() - 0.5);
-
-    shuffled.forEach(item => {
-        const card = document.createElement("div");
-        card.className = "fc-card";
-
-        card.innerHTML = `
-            <div class="fc-inner">
-                <div class="fc-front word-pill">
-                    ${item.english}
-                </div>
-
-                <div class="fc-back word-pill">
-                    ${item.spanish}
+            <div class="flash-category-content" data-cat="${cat}">
+                <div class="fc-grid">
+                    ${grouped[cat].map(item => `
+                        <div class="fc-card">
+                            <div class="fc-inner">
+                                <div class="fc-front word-pill">
+                                    ${item.english}
+                                </div>
+                                <div class="fc-back word-pill">
+                                    ${item.spanish}
+                                </div>
+                            </div>
+                        </div>
+                    `).join("")}
                 </div>
             </div>
-        `;
+        </div>`;
+    });
 
+    container.innerHTML = html;
+
+    /* ------------------------------------------------------------
+       CATEGORY COLLAPSE
+    ------------------------------------------------------------ */
+    container.querySelectorAll(".listen-category-header").forEach(header => {
+        header.addEventListener("click", () => {
+            const cat = header.dataset.cat;
+            const content = container.querySelector(`.flash-category-content[data-cat="${cat}"]`);
+            const arrow = header.querySelector(".listen-arrow");
+            const open = content.classList.toggle("open");
+            arrow.classList.toggle("open", open);
+        });
+    });
+
+    /* ------------------------------------------------------------
+       FLASHCARD FLIP + AUDIO
+    ------------------------------------------------------------ */
+    container.querySelectorAll(".fc-card").forEach(card => {
         card.addEventListener("click", () => {
             const inner = card.querySelector(".fc-inner");
             const flipped = inner.classList.toggle("fc-flipped");
 
+            const spanish = inner.querySelector(".fc-back").textContent.trim();
+
             if (flipped) {
-                // Play Spanish audio ONLY when flipped to Spanish
-                speakSpanish(item.spanish);
+                speakSpanish(spanish);   // Spanish audio only on flip
             } else {
-                // No audio when flipping back to English
-                speechSynthesis.cancel();
+                speechSynthesis.cancel(); // No audio on flip back
             }
         });
-
-        grid.appendChild(card);
     });
 }
+
 
 
 
