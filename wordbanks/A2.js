@@ -73,7 +73,7 @@ const A2_WORDS = [
     { english: "many", spanish: "muchos", audio: "muchos.mp3", category: "number" },
     { english: "few", spanish: "pocos", audio: "pocos.mp3", category: "number" },
     { english: "more", spanish: "más", audio: "mas.mp3", category: "number" },
-    { english: "less", spanish: "menos", audio: "menos.mp3", category: "number" }
+    { english: "less", spanish: "menos", audio: "menos.mp3", category: "number" },
 
 // NUMBERS (NEW A1)
     { english: "eleven", spanish: "once", audio: "once.mp3", category: "number" },
