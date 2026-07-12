@@ -1138,13 +1138,18 @@ function updateBadges() {
     const list = document.getElementById("badge-list");
     const badges = new Set(appState.badges);
 
-    Object.keys(appState.levelStats).forEach(level => {
-        const s = appState.levelStats[level];
-        if (s.listens >= 20) badges.add(`${level} Listener`);
-        if (s.flashSeen >= 30) badges.add(`${level} Flash Master`);
-        if (s.quizScore !== null && s.quizScore >= 80) badges.add(`${level} Quiz Ace`);
-        if (s.buildCompleted >= 10) badges.add(`${level} Builder`);
-    });
+   Object.keys(appState.levelStats).forEach(level => {
+    const s = appState.levelStats[level];
+    if (s.listens >= 20) badges.add(`${level} Listener`);
+    if (s.flashSeen >= 30) badges.add(`${level} Flash Master`);
+    if (s.quizScore !== null && s.quizScore >= 80) badges.add(`${level} Quiz Ace`);
+    if (s.buildCompleted >= 10) badges.add(`${level} Builder`);
+
+    // ⭐ NEW BADGES — paste here
+    if (s.sentenceCompleted >= 10) badges.add(`${level} Sentence Pro`);
+    if (s.conversationCompleted >= 10) badges.add(`${level} Conversationalist`);
+});
+
 
     appState.badges = Array.from(badges);
     saveState();
