@@ -157,18 +157,8 @@ function setLevel(level) {
 }
 
 /* ============================================================
-   TAB SYSTEM — UNIFIED VERSION (UPDATED FOR NEW UI)
+   TAB SYSTEM — FINAL CLEAN VERSION
    ============================================================ */
-
-function groupByCategory(words) {
-    const groups = {};
-    words.forEach(w => {
-        if (!groups[w.category]) groups[w.category] = [];
-        groups[w.category].push(w);
-    });
-    return groups;
-}
-
 
 const TABS = [
     "dashboard",
@@ -183,6 +173,9 @@ const TABS = [
 
 let currentTab = "dashboard";
 
+/* ============================================================
+   ACTIVATE TAB
+   ============================================================ */
 function activateTab(tabName) {
     if (!TABS.includes(tabName)) return;
     currentTab = tabName;
@@ -202,7 +195,7 @@ function activateTab(tabName) {
         btn.classList.toggle("active", btn.dataset.tab === tabName);
     });
 
-    // Load tab content
+    // Load dynamic content
     switch (tabName) {
         case "listen":
             renderListenTab();
@@ -233,15 +226,14 @@ function activateTab(tabName) {
             break;
 
         case "dashboard":
-            // Dashboard has static content
+            // static
             break;
     }
 }
 
 /* ============================================================
-   TAB NAVIGATION (STABLE VERSION)
+   TAB NAVIGATION WIRING
    ============================================================ */
-
 function initTabNavigation() {
     const buttons = document.querySelectorAll(".tab-btn");
 
@@ -249,41 +241,16 @@ function initTabNavigation() {
         btn.addEventListener("click", () => {
             const tab = btn.dataset.tab;
             activateTab(tab);
-
-            buttons.forEach(b => b.classList.remove("active"));
-            btn.classList.add("active");
         });
     });
 }
 
-function activateTab(tabName) {
-    const tabs = document.querySelectorAll("#dashboard, #listen, #flash, #quiz, #build, #sentence, #conversation, #grammar");
-
-    tabs.forEach(tab => tab.classList.add("hidden"));
-
-    const activeTab = document.getElementById(tabName);
-    if (activeTab) activeTab.classList.remove("hidden");
-
-    // Render dynamic tabs
-    if (tabName === "listen") renderListenTab();
-    if (tabName === "flash") renderFlashcardsTab();
-    if (tabName === "quiz") renderQuizTab();
-    if (tabName === "build") renderBuildTab();
-    if (tabName === "sentence") renderSentenceTab();
-    if (tabName === "conversation") renderConversationTab();
-    if (tabName === "grammar") renderGrammarTab();
-}
+// Initialize navigation + default tab
+initTabNavigation();
+activateTab("dashboard");
 
 
 
-function groupByCategory(words) {
-    const groups = {};
-    words.forEach(w => {
-        if (!groups[w.category]) groups[w.category] = [];
-        groups[w.category].push(w);
-    });
-    return groups;
-}
 
 /* ============================================================
    LISTEN TAB — CATEGORY + AUDIO PLAYER + CLEAN UI
