@@ -25,6 +25,16 @@ body {
 }
 
 /* ------------------------------------------------------------
+   EXTENSION — Glass Panel Hover Lift (Safe)
+------------------------------------------------------------ */
+.glass-panel:hover {
+    transform: translateY(-2px);
+    transition: transform 0.25s ease;
+}
+
+
+
+/* ------------------------------------------------------------
    HEADER
 ------------------------------------------------------------ */
 .glass-header {
@@ -220,10 +230,25 @@ body {
     gap: 12px;
 }
 
+.section-title {
+    font-size: 14px;
+    margin-bottom: 8px;
+    display: block;
+}
+
+/* student-name-box override */
 .student-name-box .section-title {
     font-size: 14px;
     color: #a5f3fc;
 }
+
+/* ------------------------------------------------------------
+   EXTENSION — Section Title Glow
+------------------------------------------------------------ */
+.section-title {
+    text-shadow: 0 0 6px rgba(14,165,233,0.45);
+}
+
 
 .input-field {
     width: 100%;
@@ -296,7 +321,20 @@ body {
     position: relative;
     transition: transform 0.25s ease, box-shadow 0.25s ease;
     box-shadow: 0 0 10px rgba(0,255,255,0.15);
+   animation: fadeInTile 0.4s ease-out;
 }
+
+/* ------------------------------------------------------------
+   EXTENSION — Fade‑In Animation for Tiles
+------------------------------------------------------------ */
+@keyframes fadeInTile {
+    from { opacity: 0; }
+    to   { opacity: 1; }
+}
+
+
+
+
 
 /* Hover glow */
 .progress-tile:hover {
@@ -331,6 +369,34 @@ body {
     overflow: hidden;
     margin-top: 8px;
 }
+/* ------------------------------------------------------------
+   EXTENSION — Progress Bar Glow Ripple
+------------------------------------------------------------ */
+.progress-fill {
+    position: relative;
+}
+
+.progress-fill::after {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 100%;
+    width: 40%;
+    background: linear-gradient(
+        90deg,
+        rgba(255,255,255,0.0),
+        rgba(255,255,255,0.25),
+        rgba(255,255,255,0.0)
+    );
+    animation: rippleGlow 2.4s infinite ease-in-out;
+}
+
+@keyframes rippleGlow {
+    0%   { transform: translateX(-40%); }
+    100% { transform: translateX(140%); }
+}
+
 
 .progress-fill {
     height: 100%;
@@ -470,6 +536,14 @@ body {
     background: rgba(14, 165, 233, 0.95);
     color: #0f172a;
 }
+/* ------------------------------------------------------------
+   EXTENSION — Active Tab Neon Edge
+------------------------------------------------------------ */
+.tab-btn.active {
+    box-shadow:
+        0 0 10px rgba(14,165,233,0.55),
+        inset 0 0 6px rgba(14,165,233,0.45);
+}
 
 /* ------------------------------------------------------------
    TAB ICONS — NEON GLOW SYSTEM
@@ -591,6 +665,17 @@ body {
     color: #0f172a;
     transform: rotateY(180deg);
 }
+
+/* ------------------------------------------------------------
+   EXTENSION — Flashcard Flip Glow
+------------------------------------------------------------ */
+.flip-card.flipped .flip-back {
+    box-shadow:
+        0 0 12px rgba(14,165,233,0.65),
+        0 0 22px rgba(14,165,233,0.45);
+}
+
+
 /* ============================================================
    QUIZ & BUILD CARDS
    ============================================================ */
@@ -685,3 +770,11 @@ body {
 .word-pill:active {
     transform: scale(0.96);
 }
+
+/* ------------------------------------------------------------
+   EXTENSION — Word Pill Micro‑Bounce
+------------------------------------------------------------ */
+.word-pill:hover {
+    transform: translateY(-2px) scale(1.02);
+}
+
