@@ -1,20 +1,3 @@
-// ============================================================
-// PROGRESS REQUIREMENTS (EDIT THESE TO CONTROL LEVEL UNLOCK)
-// ============================================================
-
-const QUIZ_REQUIRED = 10;
-const BUILD_REQUIRED = 10;
-const SENTENCE_REQUIRED = 10;
-const CONVERSATION_REQUIRED = 10;
-
-const XP_REQUIRED = 100;
-const STREAK_GOAL = 7;
-const SCORE_MAX = 100;
-const REVIEW_TOTAL = 20;
-
-// Unlock threshold (EDIT THIS)
-const LEVEL_UNLOCK_PERCENT = 80;   // <— change this to 70, 90, etc.
-
 /* ============================================================
    CEFR SENTENCE BANKS (for Build tab)
    ============================================================ */
