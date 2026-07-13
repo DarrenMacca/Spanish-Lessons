@@ -43,7 +43,7 @@ A1: [
     { english: "The car is new.", spanish: "el coche es nuevo" },
     { english: "I want to rest.", spanish: "quiero descansar" },
     { english: "He likes sports.", spanish: "a él le gustan los deportes" }
-]
+],
 
 A2: [
     { english: "I prefer chicken for dinner.", spanish: "prefiero pollo para la cena" },
@@ -85,7 +85,7 @@ A2: [
     { english: "She is listening to music.", spanish: "ella está escuchando música" },
     { english: "We are eating breakfast.", spanish: "estamos desayunando" },
     { english: "I want to go outside.", spanish: "quiero salir afuera" }
-]
+],
 
 B1: [
     { english: "We need to organize the meeting.", spanish: "necesitamos organizar la reunión" },
@@ -127,7 +127,7 @@ B1: [
     { english: "We need to check the details.", spanish: "necesitamos revisar los detalles" },
     { english: "He hopes to get the job.", spanish: "él espera conseguir el trabajo" },
     { english: "I will call you later.", spanish: "te llamaré más tarde" }
-]
+],
 
 B2: [
     { english: "They want to analyze the situation.", spanish: "quieren analizar la situación" },
@@ -170,6 +170,7 @@ B2: [
     { english: "She believes the team is capable.", spanish: "ella cree que el equipo es capaz" },
     { english: "They want to optimize the process.", spanish: "ellos quieren optimizar el proceso" }
 ]
+};
 
 /* ============================================================
    CEFR TRAINER — CLEAN APP.JS (PART 1)
