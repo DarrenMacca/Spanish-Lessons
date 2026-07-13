@@ -1612,9 +1612,27 @@ function animateNumber(id, target) {
     }, 20);
 }
 
-// ============================================================
-// REAL PROGRESS METERS (FINAL VERSION)
-// ============================================================
+/* ============================================================
+   PROGRESS REQUIREMENTS (EDIT THESE TO CONTROL LEVEL UNLOCK)
+   ============================================================ */
+
+const QUIZ_REQUIRED = 10;
+const BUILD_REQUIRED = 10;
+const SENTENCE_REQUIRED = 10;
+const CONVERSATION_REQUIRED = 10;
+
+const XP_REQUIRED = 100;
+const STREAK_GOAL = 7;
+const SCORE_MAX = 100;
+const REVIEW_TOTAL = 20;
+
+// Unlock threshold (EDIT THIS)
+const LEVEL_UNLOCK_PERCENT = 80;   // <— change to 70, 90, 100 etc.
+
+
+/* ============================================================
+   REAL PROGRESS METERS (FINAL VERSION)
+   ============================================================ */
 
 function updateProgressMeters() {
     const stats = appState.levelStats[appState.currentLevel];
@@ -1645,11 +1663,74 @@ function updateProgressMeters() {
     checkLevelUnlock();
 }
 
+
+/* ============================================================
+   METER SETTER (ANIMATION + PULSE)
+   ============================================================ */
+
 function setMeter(name, pct) {
     document.getElementById(`${name}-progress`).style.width = pct + "%";
     animateNumber(`${name}-number`, Math.round(pct));
     pulseTile(`${name}-tile`);
 }
+
+
+/* ============================================================
+   LEVEL UNLOCK CHECKER
+   ============================================================ */
+
+function checkLevelUnlock() {
+    const stats = appState.levelStats[appState.currentLevel];
+
+    const quizPct = (stats.quizCompleted / QUIZ_REQUIRED) * 100;
+    const buildPct = (stats.buildCompleted / BUILD_REQUIRED) * 100;
+    const sentencePct = (stats.sentenceCompleted / SENTENCE_REQUIRED) * 100;
+    const convoPct = (stats.conversationCompleted / CONVERSATION_REQUIRED) * 100;
+
+    const avg = (quizPct + buildPct + sentencePct + convoPct) / 4;
+
+    if (avg >= LEVEL_UNLOCK_PERCENT) {
+        unlockNextLevel();
+    }
+}
+
+
+/* ============================================================
+   LEVEL UNLOCK EXECUTOR
+   ============================================================ */
+
+function unlockNextLevel() {
+    const levels = ["A1", "A2", "B1", "B2"];
+    const idx = levels.indexOf(appState.currentLevel);
+
+    if (idx < levels.length - 1) {
+        appState.currentLevel = levels[idx + 1];
+        saveAppState();
+        showLevelUpPopup(appState.currentLevel);
+    }
+}
+
+
+/* ============================================================
+   RESET PROGRESS SYSTEM
+   ============================================================ */
+
+function resetProgressForLevel(level) {
+    appState.levelStats[level] = {
+        quizCompleted: 0,
+        buildCompleted: 0,
+        sentenceCompleted: 0,
+        conversationCompleted: 0,
+        xp: 0,
+        streak: 0,
+        score: 0,
+        reviewDue: 0
+    };
+
+    saveAppState();
+    updateProgressMeters();
+}
+
 
 /* ============================================================
    TILE PULSE ANIMATION
