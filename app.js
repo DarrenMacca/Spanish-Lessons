@@ -976,154 +976,99 @@ function setupBuildEvents(sentence) {
 
 
 /* ============================================================
-   SENTENCE TAB — RENDER + EVENTS (FINAL MASTER VERSION)
+   SENTENCE TAB — CEFR MULTIPLE‑CHOICE (FINAL MASTER VERSION)
    ============================================================ */
+
+function generateSentenceForLevel(level) {
+    const pool = CEFR_SENTENCE_CHOICES[level];
+    const item = pool[Math.floor(Math.random() * pool.length)];
+
+    const shuffled = [...item.options].sort(() => Math.random() - 0.5);
+
+    return {
+        english: item.english,
+        correct: item.correct,
+        options: shuffled
+    };
+}
 
 function renderSentenceTab() {
     const container = document.getElementById("sentence-content");
-    const words = CEFR_LEVELS[appState.currentLevel];
+    const level = appState.currentLevel;
 
-    const grouped = groupByCategory(words);
-    const categories = Object.keys(grouped);
+    const q = generateSentenceForLevel(level);
 
     container.innerHTML = `
         <div class="glass-panel sentence-card">
-            <h2>Sentence Builder — Level ${appState.currentLevel}</h2>
-            <p>Select a category to build a Spanish sentence.</p>
+            <h2>Sentence — Level ${level}</h2>
+            <p>Select the correct Spanish translation.</p>
 
-            <div id="sent-cats">
-                ${categories.map(cat => `
-                    <button class="word-pill sent-cat" data-cat="${cat}">${cat}</button>
+            <div class="sentence-english">
+                <strong>English:</strong> ${q.english}
+            </div>
+
+            <div id="sentence-options" class="sentence-options">
+                ${q.options.map(opt => `
+                    <button class="sentence-choice" data-opt="${opt}">
+                        ${opt}
+                    </button>
                 `).join("")}
             </div>
 
-            <div id="sent-work"></div>
+            <div id="sentence-feedback"></div>
+
+            <div class="sentence-controls">
+                <button id="sentence-next">Next</button>
+            </div>
         </div>
     `;
 
-    setupSentenceCategoryEvents(grouped);
+    setupSentenceEvents(q);
 }
 
-function setupSentenceCategoryEvents(grouped) {
-    const work = document.getElementById("sent-work");
+function setupSentenceEvents(q) {
+    const buttons = document.querySelectorAll(".sentence-choice");
+    const feedback = document.getElementById("sentence-feedback");
+    const nextBtn = document.getElementById("sentence-next");
 
-    document.querySelectorAll(".sent-cat").forEach(btn => {
+    buttons.forEach(btn => {
         btn.addEventListener("click", () => {
-            const cat = btn.dataset.cat;
-            const list = grouped[cat];
+            const chosen = btn.dataset.opt;
 
-            // Pick random sentence
-            sentenceState.currentSentence = list[Math.floor(Math.random() * list.length)];
-            const spanish = sentenceState.currentSentence.spanish;
+            if (chosen === q.correct) {
+                feedback.innerHTML = `
+                    <span style="color:#4ade80;font-weight:600;">
+                        Correct! 🎉
+                    </span>
+                `;
 
-            sentenceState.tokens = spanish.split(" ").sort(() => Math.random() - 0.5);
-            sentenceState.answer = [];
+                appState.levelStats[appState.currentLevel].sentenceCompleted++;
+                updateBadges();
+                updateProgressMeters();
 
-            work.innerHTML = `
-                <div><strong>English:</strong> ${sentenceState.currentSentence.english}</div>
+                speakQuiz(q.correct);
 
-                <div id="sent-grid" class="sb-grid">
-                    ${sentenceState.tokens.map(t => `
-                        <button class="word-pill sent-opt" data-token="${t}">${t}</button>
-                    `).join("")}
-                </div>
+            } else {
+                feedback.innerHTML = `
+                    <span style="color:#f87171;font-weight:600;">
+                        Incorrect.</span><br>
+                    Correct answer: <strong>${q.correct}</strong>
+                `;
 
-                <div id="sent-answer"></div>
-
-                <input id="sent-type" class="sent-type" placeholder="Or type the sentence…" />
-
-                <div id="sent-feedback"></div>
-
-                <div class="sb-controls">
-                    <button id="sent-undo">Undo</button>
-                    <button id="sent-reset">Reset</button>
-                    <button id="sent-check">Check</button>
-                    <button id="sent-next">Next</button>
-                </div>
-            `;
-
-            setupSentenceEvents();
-        });
-    });
-}
-
-function setupSentenceEvents() {
-    const grid = document.getElementById("sent-grid");
-    const answerBox = document.getElementById("sent-answer");
-    const typeBox = document.getElementById("sent-type");
-    const feedback = document.getElementById("sent-feedback");
-
-    const undoBtn = document.getElementById("sent-undo");
-    const resetBtn = document.getElementById("sent-reset");
-    const checkBtn = document.getElementById("sent-check");
-    const nextBtn = document.getElementById("sent-next");
-
-    sentenceState.answer = [];
-
-    // Word-pill selection
-    grid.querySelectorAll(".sent-opt").forEach(btn => {
-        btn.addEventListener("click", () => {
-            sentenceState.answer.push(btn.dataset.token);
-            btn.classList.add("used");
-            btn.disabled = true;
-            answerBox.textContent = sentenceState.answer.join(" ");
-        });
-    });
-
-    // Typing mode
-    typeBox.addEventListener("input", () => {
-        sentenceState.answer = typeBox.value.trim().split(" ");
-        answerBox.textContent = sentenceState.answer.join(" ");
-    });
-
-    // Undo
-    undoBtn.addEventListener("click", () => {
-        sentenceState.answer.pop();
-        answerBox.textContent = sentenceState.answer.join(" ");
-
-        grid.querySelectorAll(".sent-opt").forEach(btn => {
-            if (!sentenceState.answer.includes(btn.dataset.token)) {
-                btn.classList.remove("used");
-                btn.disabled = false;
+                speakQuiz(q.correct);
             }
+
+            buttons.forEach(b => b.disabled = true);
         });
     });
 
-    // Reset
-    resetBtn.addEventListener("click", () => {
-        sentenceState.answer = [];
-        answerBox.textContent = "";
-        typeBox.value = "";
-        grid.querySelectorAll(".sent-opt").forEach(btn => {
-            btn.classList.remove("used");
-            btn.disabled = false;
-        });
-    });
-
-    // Check
-    checkBtn.addEventListener("click", () => {
-        const correct = sentenceState.currentSentence.spanish;
-        const user = sentenceState.answer.join(" ").trim();
-
-        if (user === correct) {
-            feedback.textContent = "Correct! 🎉";
-            appState.levelStats[appState.currentLevel].sentenceCompleted++;
-            updateBadges();
-            updateProgressMeters();
-            setTimeout(() => speakQuiz(correct), 300);
-        } else {
-            feedback.textContent = `Incorrect — correct answer: ${correct}`;
-            setTimeout(() => speakQuiz(correct), 300);
-        }
-
-        saveState();
-    });
-
-    // Next
     nextBtn.addEventListener("click", () => {
         renderSentenceTab();
     });
 }
+
+
+
 
 /* ============================================================
    CONVERSATION TAB — RENDER + EVENTS (EVERYDAY DIALOGUE)
