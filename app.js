@@ -1082,8 +1082,20 @@ function setupSentenceEvents(q) {
                     </span>
                 `;
 
+                // ⭐ REAL PROGRESS METER — increment Sentence completion
                 appState.levelStats[appState.currentLevel].sentenceCompleted++;
+
+                // ⭐ Optional XP reward
+                appState.levelStats[appState.currentLevel].xp += 5;
+
+                // ⭐ Optional streak system
+                appState.levelStats[appState.currentLevel].streak++;
+
+                // ⭐ Optional score rating
+                appState.levelStats[appState.currentLevel].score += 2;
+
                 updateBadges();
+                saveAppState();
                 updateProgressMeters();
 
                 speakQuiz(q.correct);
@@ -1095,6 +1107,10 @@ function setupSentenceEvents(q) {
                     Correct answer: <strong>${q.correct}</strong>
                 `;
 
+                // ⭐ Optional: reset streak on incorrect
+                appState.levelStats[appState.currentLevel].streak = 0;
+
+                saveAppState();
                 speakQuiz(q.correct);
             }
 
@@ -1106,6 +1122,7 @@ function setupSentenceEvents(q) {
         renderSentenceTab();
     });
 }
+
 
 /* ============================================================
    CEFR SENTENCE CHOICES — FULL PACK (A1 → B2)
