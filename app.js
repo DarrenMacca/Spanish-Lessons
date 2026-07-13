@@ -804,13 +804,21 @@ function setupQuizEvents() {
     }
 
     if (quizState.selected === correct) {
-        feedback.textContent = "Correct! 🎉";
-        appState.levelStats[appState.currentLevel].quizScore++;
-        updateBadges();
-        updateProgressMeters();
-    } else {
-        feedback.textContent = `Incorrect — correct answer: ${correct}`;
-    }
+    feedback.textContent = "Correct! 🎉";
+
+    // ⭐ Increment quizCompleted (REAL PROGRESS METER)
+    appState.levelStats[appState.currentLevel].quizCompleted++;
+
+    // Existing scoring
+    appState.levelStats[appState.currentLevel].quizScore++;
+
+    updateBadges();
+    saveAppState();
+    updateProgressMeters();
+} else {
+    feedback.textContent = `Incorrect — correct answer: ${correct}`;
+}
+
 
     // Sabina audio
     setTimeout(() => speakQuiz(correct), 300);
@@ -942,41 +950,56 @@ function setupBuildEvents(sentence) {
     });
 
     checkBtn.addEventListener("click", () => {
-        const correct = sentence.spanish.trim();
-        const user = buildState.answer.join(" ").trim();
+    const correct = sentence.spanish.trim();
+    const user = buildState.answer.join(" ").trim();
 
-        if (user === correct) {
-            feedback.innerHTML = `<span style="color:#4ade80;font-weight:600;">Correct! 🎉</span>`;
-            appState.levelStats[appState.currentLevel].buildCompleted++;
-            updateBadges();
-            updateProgressMeters();
-            setTimeout(() => speakQuiz(correct), 300);
-        } else {
-            const correctTokens = correct.split(" ");
-            const userTokens = buildState.answer;
+    if (user === correct) {
+        feedback.innerHTML = `<span style="color:#4ade80;font-weight:600;">Correct! 🎉</span>`;
 
-            let html = `<strong>Correct Answer:</strong><br>${correct}<br><br>`;
-            html += `<strong>Your Answer:</strong><br>${user}<br><br>`;
-            html += `<strong>Word-by-word feedback:</strong><br>`;
+        // ⭐ REAL PROGRESS METER — increment Build completion
+        appState.levelStats[appState.currentLevel].buildCompleted++;
 
-            userTokens.forEach((t, i) => {
-                if (correctTokens[i] === t) {
-                    html += `<span style="color:#4ade80;">${t} ✔</span> `;
-                } else {
-                    html += `<span style="color:#f87171;">${t} ✖</span> `;
-                }
-            });
+        // ⭐ Optional XP reward
+        appState.levelStats[appState.currentLevel].xp += 5;
 
-            feedback.innerHTML = html;
-            setTimeout(() => speakQuiz(correct), 300);
-        }
+        // ⭐ Optional streak system
+        appState.levelStats[appState.currentLevel].streak++;
 
-        saveState();
-    });
+        // ⭐ Optional score rating
+        appState.levelStats[appState.currentLevel].score += 2;
 
-    nextBtn.addEventListener("click", () => {
-        renderBuildTab();
-    });
+        updateBadges();
+        saveAppState();
+        updateProgressMeters();
+
+        setTimeout(() => speakQuiz(correct), 300);
+
+    } else {
+        const correctTokens = correct.split(" ");
+        const userTokens = buildState.answer;
+
+        let html = `<strong>Correct Answer:</strong><br>${correct}<br><br>`;
+        html += `<strong>Your Answer:</strong><br>${user}<br><br>`;
+        html += `<strong>Word-by-word feedback:</strong><br>`;
+
+        userTokens.forEach((t, i) => {
+            if (correctTokens[i] === t) {
+                html += `<span style="color:#4ade80;">${t} ✔</span> `;
+            } else {
+                html += `<span style="color:#f87171;">${t} ✖</span> `;
+            }
+        });
+
+        feedback.innerHTML = html;
+
+        // ⭐ Optional: reset streak on incorrect
+        appState.levelStats[appState.currentLevel].streak = 0;
+
+        saveAppState();
+        setTimeout(() => speakQuiz(correct), 300);
+    }
+});
+
 }
 
 
@@ -1727,6 +1750,7 @@ document.getElementById("reset-progress").addEventListener("click", () => {
 /* ============================================================
    TILE PULSE ANIMATION
    ============================================================ */
+
 
 
 function pulseTile(id) {
