@@ -267,7 +267,7 @@ body {
 }
 
 /* Base pill button style */
-.primary-btn {
+.pill {
     background: rgba(14, 165, 233, 0.95);
     color: #0f172a;
     padding: 10px 22px;
@@ -279,13 +279,13 @@ body {
 }
 
 /* FIXED — compact save button */
-.student-name-box .primary-btn {
+.student-name-box .pill {
     max-width: 140px;
     margin: 0 auto;
 }
 
 /* Hover lift */
-.primary-btn:hover {
+.pill:hover {
     background: rgba(14, 165, 233, 1);
     transform: translateY(-1px);
 }
@@ -818,55 +818,8 @@ body {
     min-height: 24px;
 }
 
-/* ============================================================
-   QUIZ OPTION BUTTONS
-   ============================================================ */
 
-.qb-opt {
-    background: rgba(255, 255, 255, 0.18);
-    border-radius: 20px;
-    padding: 10px;
-    cursor: pointer;
-    transition: 0.2s;
-}
 
-.qb-opt:hover {
-    background: rgba(255, 255, 255, 0.28);
-    transform: scale(1.05);
-}
-
-.qb-opt.active {
-    background: rgba(0, 200, 255, 0.35);
-}
-
-/* ============================================================
-   BUILD / SENTENCE / CONVERSATION TOKENS
-   ============================================================ */
-
-.bb-token,
-.sb-token,
-.cb-token {
-    background: rgba(255, 255, 255, 0.18);
-    border-radius: 20px;
-    padding: 10px;
-    cursor: pointer;
-    transition: 0.2s;
-}
-
-.bb-token:hover,
-.sb-token:hover,
-.cb-token:hover {
-    background: rgba(255, 255, 255, 0.28);
-    transform: scale(1.05);
-}
-
-/* When selected (disabled) */
-.bb-token[style*="opacity"],
-.sb-token[style*="opacity"],
-.cb-token[style*="opacity"] {
-    cursor: default;
-    transform: none;
-}
 
 
 /* ============================================================
@@ -907,56 +860,7 @@ body {
     font-size: 14px;
 }
 
-/* ============================================================
-   UNIVERSAL PILL STYLE — GLASS + NEON + GLOW + WHITE TEXT
-   ============================================================ */
 
-.word-pill,
-.qb-opt {
-    background: rgba(255,255,255,0.22);
-    border: 1px solid rgba(255,255,255,0.32);
-    color: #ffffff;
-    font-weight: 500;
-    letter-spacing: 0.3px;
-    border-radius: 999px;
-    padding: 10px 16px;
-    cursor: pointer;
-    transition: 0.25s ease;
-    backdrop-filter: blur(6px);
-
-    box-shadow:
-        0 0 4px rgba(0, 255, 255, 0.35),
-        inset 0 0 6px rgba(255, 255, 255, 0.15);
-}
-
-.pill:hover,
-.pill:hover {
-    background: rgba(255,255,255,0.32);
-    transform: translateY(-2px);
-
-    box-shadow:
-        0 0 6px rgba(0, 255, 255, 0.55),
-        0 0 12px rgba(0, 255, 255, 0.35),
-        inset 0 0 8px rgba(255, 255, 255, 0.25);
-}
-
-.pill.active,
-.qb-opt.active {
-    background: rgba(56, 189, 248, 0.75);
-    border-color: rgba(56, 189, 248, 1);
-    color: #ffffff;
-    transform: scale(1.05);
-
-    box-shadow:
-        0 0 10px rgba(56, 189, 248, 0.85),
-        0 0 18px rgba(56, 189, 248, 0.55),
-        inset 0 0 10px rgba(255, 255, 255, 0.35);
-}
-
-.pill:active,
-.qb-opt:active {
-    transform: scale(0.97);
-}
 
 
 /* ------------------------------------------------------------
