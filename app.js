@@ -2,6 +2,7 @@
    CEFR SENTENCE BANKS (for Build tab)
    ============================================================ */
 
+const CEFR_SENTENCES = {
 A1: [
     { english: "I would like water, please.", spanish: "me gustaría agua por favor" },
     { english: "Where is the bathroom?", spanish: "dónde está el baño" },
