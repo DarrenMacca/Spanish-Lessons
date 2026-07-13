@@ -873,7 +873,7 @@ function renderBuildTab() {
             <div id="build-selected" class="build-selected"></div>
 
             <div id="build-words" class="sb-grid">
-                ${bank.map(w => `<button class="word-pill build-opt" data-token="${w}">${w}</button>`).join("")}
+                ${bank.map(w => `<button class="pill build-opt" data-token="${w}">${w}</button>`).join("")}
             </div>
 
             <input id="build-input" class="input-field" placeholder="Or type the Spanish sentence…">
