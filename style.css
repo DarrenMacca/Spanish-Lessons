@@ -818,13 +818,26 @@ body {
     min-height: 24px;
 }
 
+/* ============================================================
+   BUILD TAB — SPACING FIX
+   ============================================================ */
 
+.build-selected {
+    margin-bottom: 12px;   /* space between answer field and pills */
+}
 
+#build-words {
+    margin-top: 10px;      /* space above the pill grid */
+}
 
+#build-words .pill {
+    margin: 4px;           /* optional: small spacing between pills */
+}
 
 /* ============================================================
    GRAMMAR TAB
    ============================================================ */
+
 
 #grammar ul {
     list-style: none;
