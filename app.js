@@ -289,12 +289,13 @@ Object.keys(CEFR_LEVELS).forEach(level => {
    ============================================================ */
 function loadState() {
     try {
-        raw = localStorage.getItem(STORAGE_KEY);
+        const raw = localStorage.getItem(STORAGE_KEY);
         if (raw) Object.assign(appState, JSON.parse(raw));
     } catch (e) {
         console.error("State load error:", e);
     }
 }
+
 
 function saveState() {
     try {
