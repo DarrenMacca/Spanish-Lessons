@@ -1035,7 +1035,7 @@ function renderSentenceTab() {
             <div id="sentence-feedback"></div>
 
             <div class="sentence-controls">
-                <button id="sentence-next">Next</button>
+                <button id="sentence-next" class="pill">Next</button>
             </div>
         </div>
     `;
