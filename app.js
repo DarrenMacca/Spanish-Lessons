@@ -1731,10 +1731,20 @@ function resetProgressForLevel(level) {
     updateProgressMeters();
 }
 
+/* ============================================================
+   RESET PROGRESS BUTTON LISTENER
+   ============================================================ */
+
+document.getElementById("reset-progress").addEventListener("click", () => {
+    if (confirm("Reset all progress for this level?")) {
+        resetProgressForLevel(appState.currentLevel);
+    }
+});
 
 /* ============================================================
    TILE PULSE ANIMATION
    ============================================================ */
+
 
 function pulseTile(id) {
     const tile = document.getElementById(id);
