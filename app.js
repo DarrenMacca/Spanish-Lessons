@@ -996,7 +996,14 @@ function renderSentenceTab() {
     const container = document.getElementById("sentence-content");
     const level = appState.currentLevel;
 
+    // SAFETY CHECK — prevents crashes if level has no sentences
+    if (!CEFR_SENTENCE_CHOICES[level]) {
+        container.innerHTML = "<p>No sentences available for this level.</p>";
+        return;
+    }
+
     const q = generateSentenceForLevel(level);
+
 
     container.innerHTML = `
         <div class="glass-panel sentence-card">
