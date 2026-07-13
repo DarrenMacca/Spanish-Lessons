@@ -1067,6 +1067,231 @@ function setupSentenceEvents(q) {
     });
 }
 
+/* ============================================================
+   CEFR SENTENCE CHOICES — FULL PACK (A1 → B2)
+   ============================================================ */
+
+const CEFR_SENTENCE_CHOICES = {
+
+    /* ============================
+       A1 — Beginner
+       ============================ */
+    A1: [
+        {
+            english: "I want a coffee.",
+            correct: "quiero un café",
+            options: ["quiero un café", "necesito agua", "tengo hambre"]
+        },
+        {
+            english: "Where is the bathroom?",
+            correct: "dónde está el baño",
+            options: ["dónde está el baño", "dónde está la mesa", "dónde está mi amigo"]
+        },
+        {
+            english: "I need help.",
+            correct: "necesito ayuda",
+            options: ["necesito ayuda", "necesito comida", "necesito descansar"]
+        },
+        {
+            english: "The room is clean.",
+            correct: "la habitación está limpia",
+            options: ["la habitación está limpia", "la habitación está sucia", "la habitación está lejos"]
+        },
+        {
+            english: "He likes cold water.",
+            correct: "a él le gusta el agua fría",
+            options: ["a él le gusta el agua fría", "a él le gusta el café caliente", "a él le gusta la comida"]
+        },
+        {
+            english: "We are at home.",
+            correct: "estamos en casa",
+            options: ["estamos en casa", "estamos en el hotel", "estamos en la tienda"]
+        },
+        {
+            english: "She is my sister.",
+            correct: "ella es mi hermana",
+            options: ["ella es mi hermana", "ella es mi madre", "ella es mi amiga"]
+        },
+        {
+            english: "The bus is late.",
+            correct: "el autobús está retrasado",
+            options: ["el autobús está retrasado", "el autobús está aquí", "el autobús está limpio"]
+        },
+        {
+            english: "I am tired today.",
+            correct: "estoy cansado hoy",
+            options: ["estoy cansado hoy", "estoy feliz hoy", "estoy en casa hoy"]
+        },
+        {
+            english: "The food is delicious.",
+            correct: "la comida es deliciosa",
+            options: ["la comida es deliciosa", "la comida es fría", "la comida es nueva"]
+        },
+        {
+            english: "I want to go home.",
+            correct: "quiero ir a casa",
+            options: ["quiero ir a casa", "quiero ir al hotel", "quiero ir a la tienda"]
+        },
+        {
+            english: "He has a big car.",
+            correct: "él tiene un coche grande",
+            options: ["él tiene un coche grande", "él tiene un coche pequeño", "él tiene una casa grande"]
+        },
+        {
+            english: "My friend is very nice.",
+            correct: "mi amigo es muy amable",
+            options: ["mi amigo es muy amable", "mi amigo es muy alto", "mi amigo es muy cansado"]
+        },
+        {
+            english: "The hotel is near.",
+            correct: "el hotel está cerca",
+            options: ["el hotel está cerca", "el hotel está lejos", "el hotel está limpio"]
+        },
+        {
+            english: "I have two brothers.",
+            correct: "tengo dos hermanos",
+            options: ["tengo dos hermanos", "tengo dos casas", "tengo dos cafés"]
+        }
+    ],
+
+    /* ============================
+       A2 — Elementary
+       ============================ */
+    A2: [
+        {
+            english: "We are going to visit my parents.",
+            correct: "vamos a visitar a mis padres",
+            options: ["vamos a visitar a mis padres", "vamos a comprar comida", "vamos a limpiar la casa"]
+        },
+        {
+            english: "She bought fruit at the market.",
+            correct: "ella compró fruta en el mercado",
+            options: ["ella compró fruta en el mercado", "ella compró ropa nueva", "ella compró un teléfono"]
+        },
+        {
+            english: "I cleaned the kitchen yesterday.",
+            correct: "limpié la cocina ayer",
+            options: ["limpié la cocina ayer", "cociné la cena ayer", "compré comida ayer"]
+        },
+        {
+            english: "He called me last night.",
+            correct: "él me llamó anoche",
+            options: ["él me llamó anoche", "él me visitó anoche", "él me vio anoche"]
+        },
+        {
+            english: "She is cooking dinner now.",
+            correct: "ella está cocinando la cena ahora",
+            options: ["ella está cocinando la cena ahora", "ella está limpiando ahora", "ella está leyendo ahora"]
+        },
+        {
+            english: "We arrived early.",
+            correct: "llegamos temprano",
+            options: ["llegamos temprano", "llegamos tarde", "llegamos mañana"]
+        },
+        {
+            english: "I want to try something new.",
+            correct: "quiero probar algo nuevo",
+            options: ["quiero probar algo nuevo", "quiero comprar algo nuevo", "quiero comer algo nuevo"]
+        },
+        {
+            english: "He forgot his keys.",
+            correct: "él olvidó sus llaves",
+            options: ["él olvidó sus llaves", "él perdió su teléfono", "él rompió su bolsa"]
+        },
+        {
+            english: "I usually wake up early.",
+            correct: "normalmente me despierto temprano",
+            options: ["normalmente me despierto temprano", "normalmente me duermo temprano", "normalmente como temprano"]
+        },
+        {
+            english: "She likes to read at night.",
+            correct: "a ella le gusta leer por la noche",
+            options: ["a ella le gusta leer por la noche", "a ella le gusta caminar por la noche", "a ella le gusta cocinar por la noche"]
+        }
+    ],
+
+    /* ============================
+       B1 — Intermediate
+       ============================ */
+    B1: [
+        {
+            english: "We need to organize the meeting.",
+            correct: "necesitamos organizar la reunión",
+            options: ["necesitamos organizar la reunión", "necesitamos limpiar la oficina", "necesitamos terminar el informe"]
+        },
+        {
+            english: "I think this restaurant is excellent.",
+            correct: "creo que este restaurante es excelente",
+            options: ["creo que este restaurante es excelente", "creo que este restaurante es nuevo", "creo que este restaurante es pequeño"]
+        },
+        {
+            english: "She asked me to help her.",
+            correct: "ella me pidió que la ayudara",
+            options: ["ella me pidió que la ayudara", "ella me pidió que la llamara", "ella me pidió que la visitara"]
+        },
+        {
+            english: "They plan to move next month.",
+            correct: "ellos planean mudarse el próximo mes",
+            options: ["ellos planean mudarse el próximo mes", "ellos planean viajar el próximo mes", "ellos planean trabajar el próximo mes"]
+        },
+        {
+            english: "We must follow the instructions.",
+            correct: "debemos seguir las instrucciones",
+            options: ["debemos seguir las instrucciones", "debemos cambiar las instrucciones", "debemos leer las instrucciones"]
+        },
+        {
+            english: "He wants to change his schedule.",
+            correct: "él quiere cambiar su horario",
+            options: ["él quiere cambiar su horario", "él quiere cambiar su casa", "él quiere cambiar su comida"]
+        },
+        {
+            english: "Although it was difficult, she completed the task.",
+            correct: "aunque fue difícil, ella completó la tarea",
+            options: ["aunque fue difícil, ella completó la tarea", "aunque fue fácil, ella completó la tarea", "aunque fue difícil, ella canceló la tarea"]
+        },
+        {
+            english: "We talked for an hour.",
+            correct: "hablamos durante una hora",
+            options: ["hablamos durante una hora", "hablamos durante un día", "hablamos durante un minuto"]
+        }
+    ],
+
+    /* ============================
+       B2 — Upper Intermediate
+       ============================ */
+    B2: [
+        {
+            english: "We must consider all possibilities.",
+            correct: "debemos considerar todas las posibilidades",
+            options: ["debemos considerar todas las posibilidades", "debemos cancelar todas las posibilidades", "debemos ignorar todas las posibilidades"]
+        },
+        {
+            english: "They want to analyze the situation.",
+            correct: "ellos quieren analizar la situación",
+            options: ["ellos quieren analizar la situación", "ellos quieren cambiar la situación", "ellos quieren evitar la situación"]
+        },
+        {
+            english: "We need to evaluate the risks carefully.",
+            correct: "necesitamos evaluar los riesgos cuidadosamente",
+            options: ["necesitamos evaluar los riesgos cuidadosamente", "necesitamos evitar los riesgos cuidadosamente", "necesitamos reducir los riesgos cuidadosamente"]
+        },
+        {
+            english: "She believes the idea is innovative.",
+            correct: "ella cree que la idea es innovadora",
+            options: ["ella cree que la idea es innovadora", "ella cree que la idea es complicada", "ella cree que la idea es pequeña"]
+        },
+        {
+            english: "Despite the problems, they finished the project.",
+            correct: "a pesar de los problemas, terminaron el proyecto",
+            options: ["a pesar de los problemas, terminaron el proyecto", "a pesar de los problemas, cancelaron el proyecto", "a pesar de los problemas, ignoraron el proyecto"]
+        },
+        {
+            english: "They want to optimize the process.",
+            correct: "ellos quieren optimizar el proceso",
+            options: ["ellos quieren optimizar el proceso", "ellos quieren cancelar el proceso", "ellos quieren dividir el proceso"]
+        }
+    ]
+};
 
 
 
