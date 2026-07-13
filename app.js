@@ -651,7 +651,7 @@ function setupQuizEvents() {
 
 
 /* ============================================================
-   BUILD TAB — English → Spanish Sentence Builder (CEFR Version)
+   BUILD TAB — English → Spanish Builder (with disruptors + feedback)
    ============================================================ */
 
 function renderBuildTab() {
@@ -665,26 +665,48 @@ function renderBuildTab() {
         return;
     }
 
-    // Pick a random sentence from CEFR words
-    // We assume each CEFR item has english + spanish fields
+    // Pick a random CEFR item (english + spanish)
     buildState.currentWord = words[Math.floor(Math.random() * words.length)];
 
     const english = buildState.currentWord.english;
     const spanish = buildState.currentWord.spanish;
 
-    // Tokenise Spanish sentence
-    buildState.tokens = spanish.split(" ").sort(() => Math.random() - 0.5);
+    // Core tokens
+    const coreTokens = spanish.split(" ");
+
+    // Disruptor words (global)
+    const disruptors = ["rápido","lento","siempre","nunca","ayer","mañana","porque","pero","muy","también","solo"];
+
+    // Build wordbank: core + random CEFR words + disruptors
+    let bank = [...coreTokens];
+
+    // Add random CEFR tokens
+    const levelTokens = words.map(w => w.spanish.split(" ")).flat();
+    while (bank.length < coreTokens.length + 5) {
+        const t = levelTokens[Math.floor(Math.random() * levelTokens.length)];
+        if (t && !bank.includes(t)) bank.push(t);
+    }
+
+    // Add disruptors
+    disruptors.forEach(d => {
+        if (!bank.includes(d)) bank.push(d);
+    });
+
+    // Shuffle
+    bank = bank.sort(() => Math.random() - 0.5);
+
+    buildState.tokens = bank;
     buildState.answer = [];
 
     container.innerHTML = `
         <div class="glass-panel build-card">
-            <h2>Build the Spanish translation</h2>
+            <h2>Duplicate this sentence in Spanish</h2>
             <p class="build-english"><strong>English:</strong> ${english}</p>
 
             <div id="build-selected" class="build-selected"></div>
 
             <div id="build-words" class="sb-grid">
-                ${buildState.tokens.map(w => `
+                ${bank.map(w => `
                     <button class="word-pill build-opt" data-token="${w}">${w}</button>
                 `).join("")}
             </div>
@@ -705,83 +727,6 @@ function renderBuildTab() {
     setupBuildEvents();
 }
 
-function setupBuildEvents() {
-    const selectedArea = document.getElementById("build-selected");
-    const grid = document.getElementById("build-words");
-    const input = document.getElementById("build-input");
-    const feedback = document.getElementById("build-feedback");
-
-    const undoBtn = document.getElementById("build-undo");
-    const resetBtn = document.getElementById("build-reset");
-    const checkBtn = document.getElementById("build-check");
-    const nextBtn = document.getElementById("build-next");
-
-    buildState.answer = [];
-
-    // Word-pill selection
-    grid.querySelectorAll(".build-opt").forEach(btn => {
-        btn.addEventListener("click", () => {
-            buildState.answer.push(btn.dataset.token);
-            btn.classList.add("used");
-            btn.disabled = true;
-            selectedArea.textContent = buildState.answer.join(" ");
-        });
-    });
-
-    // Typing mode
-    input.addEventListener("input", () => {
-        buildState.answer = input.value.trim().split(" ");
-        selectedArea.textContent = buildState.answer.join(" ");
-    });
-
-    // Undo last word
-    undoBtn.addEventListener("click", () => {
-        buildState.answer.pop();
-        selectedArea.textContent = buildState.answer.join(" ");
-
-        grid.querySelectorAll(".build-opt").forEach(btn => {
-            if (!buildState.answer.includes(btn.dataset.token)) {
-                btn.classList.remove("used");
-                btn.disabled = false;
-            }
-        });
-    });
-
-    // Reset
-    resetBtn.addEventListener("click", () => {
-        buildState.answer = [];
-        selectedArea.textContent = "";
-        input.value = "";
-        grid.querySelectorAll(".build-opt").forEach(btn => {
-            btn.classList.remove("used");
-            btn.disabled = false;
-        });
-    });
-
-    // Check
-    checkBtn.addEventListener("click", () => {
-        const correct = buildState.currentWord.spanish.trim();
-        const user = buildState.answer.join(" ").trim();
-
-        if (user === correct) {
-            feedback.textContent = "Correct! 🎉";
-            appState.levelStats[appState.currentLevel].buildCompleted++;
-            updateBadges();
-            updateProgressMeters();
-            setTimeout(() => speakQuiz(correct), 300);
-        } else {
-            feedback.textContent = `Incorrect — correct answer: ${correct}`;
-            setTimeout(() => speakQuiz(correct), 300);
-        }
-
-        saveState();
-    });
-
-    // Next
-    nextBtn.addEventListener("click", () => {
-        renderBuildTab();
-    });
-}
 
 
 
