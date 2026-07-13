@@ -1490,27 +1490,41 @@ function setupConversationEvents() {
         });
     });
 
-    // Check
+    // ⭐ CHECK ANSWER
     checkBtn.addEventListener("click", () => {
         const correct = convoState.currentPrompt.spanishTarget.replace(/[¿?]/g, "").trim();
         const user = convoState.answer.join(" ").trim();
 
         if (user === correct) {
             feedback.textContent = "Nice! That’s a natural response. 🎉";
-            // Use quizScore as a general conversation score for now
-            if (appState.levelStats[appState.currentLevel].quizScore === null) {
-                appState.levelStats[appState.currentLevel].quizScore = 0;
-            }
-            appState.levelStats[appState.currentLevel].quizScore++;
+
+            // ⭐ REAL PROGRESS METER — increment Conversation completion
+            appState.levelStats[appState.currentLevel].conversationCompleted++;
+
+            // ⭐ XP reward
+            appState.levelStats[appState.currentLevel].xp += 5;
+
+            // ⭐ Streak system
+            appState.levelStats[appState.currentLevel].streak++;
+
+            // ⭐ Score rating
+            appState.levelStats[appState.currentLevel].score += 2;
+
             updateBadges();
+            saveAppState();
             updateProgressMeters();
+
             setTimeout(() => speakQuiz(correct), 300);
+
         } else {
             feedback.textContent = `Not quite. A natural response would be: ${convoState.currentPrompt.spanishTarget}`;
+
+            // ⭐ Reset streak on incorrect
+            appState.levelStats[appState.currentLevel].streak = 0;
+
+            saveAppState();
             setTimeout(() => speakQuiz(correct), 300);
         }
-
-        saveState();
     });
 
     // Next
@@ -1518,6 +1532,7 @@ function setupConversationEvents() {
         renderConversationTab();
     });
 }
+
 
 
 /* ============================================================
