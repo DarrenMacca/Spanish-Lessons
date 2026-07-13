@@ -929,8 +929,8 @@ body {
         inset 0 0 6px rgba(255, 255, 255, 0.15);
 }
 
-.word-pill:hover,
-.qb-opt:hover {
+.pill:hover,
+.pill:hover {
     background: rgba(255,255,255,0.32);
     transform: translateY(-2px);
 
@@ -940,7 +940,7 @@ body {
         inset 0 0 8px rgba(255, 255, 255, 0.25);
 }
 
-.word-pill.active,
+.pill.active,
 .qb-opt.active {
     background: rgba(56, 189, 248, 0.75);
     border-color: rgba(56, 189, 248, 1);
@@ -953,7 +953,7 @@ body {
         inset 0 0 10px rgba(255, 255, 255, 0.35);
 }
 
-.word-pill:active,
+.pill:active,
 .qb-opt:active {
     transform: scale(0.97);
 }
@@ -962,9 +962,40 @@ body {
 /* ------------------------------------------------------------
    EXTENSION — Word Pill Micro‑Bounce
 ------------------------------------------------------------ */
-.word-pill:hover {
+.pill:hover {
     transform: translateY(-2px) scale(1.02);
 }
+
+/* ============================================================
+   GLOBAL PILL STYLE — MATCHES SAVE NAME BUTTON
+   ============================================================ */
+
+.pill {
+    background: rgba(14, 165, 233, 0.95);        /* same blue */
+    color: #0f172a;                              /* same dark text */
+    padding: 10px 22px;                          /* same spacing */
+    border-radius: 999px;                        /* full pill */
+    border: 1px solid rgba(148, 163, 184, 0.45); /* same border */
+    cursor: pointer;
+    font-size: 14px;
+    font-weight: 500;
+    letter-spacing: 0.3px;
+    transition: background 0.25s ease, transform 0.15s ease;
+    backdrop-filter: blur(6px);                  /* glass effect */
+}
+
+.pill:hover:not(:disabled) {
+    background: rgba(14, 165, 233, 1);           /* brighter blue */
+    transform: translateY(-1px);                 /* subtle lift */
+}
+
+.pill:disabled {
+    opacity: 0.55;
+    cursor: default;
+    transform: none;
+}
+
+
 
 /* ============================================================
    MOBILE — ≤600px
