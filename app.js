@@ -744,7 +744,7 @@ function renderQuizTab() {
 
             <div id="qb-grid" class="sb-grid">
                 ${quizState.options.map(opt => `
-                    <button class="word-pill qb-opt" data-spanish="${opt}">${opt}</button>
+                    <button class="pill" data-spanish="${opt}">${opt}</button>
                 `).join("")}
             </div>
 
@@ -1019,7 +1019,7 @@ function renderSentenceTab() {
 
             <div id="sentence-options" class="sentence-options">
                 ${q.options.map(opt => `
-                    <button class="sentence-choice" data-opt="${opt}">
+                    <button class="pill" data-opt="${opt}">
                         ${opt}
                     </button>
                 `).join("")}
@@ -1366,7 +1366,7 @@ function renderConversationTab() {
 
             <div id="convo-grid" class="sb-grid">
                 ${convoState.tokens.map(t => `
-                    <button class="word-pill convo-opt" data-token="${t}">${t}</button>
+                    <button class="pill convo-opt" data-token="${t}">${t}</button>
                 `).join("")}
             </div>
 
