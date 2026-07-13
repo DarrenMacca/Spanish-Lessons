@@ -1811,5 +1811,16 @@ document.addEventListener("DOMContentLoaded", () => {
     updateProgressMeters();
 });
 
+function saveAppState() {
+    localStorage.setItem("appState", JSON.stringify(appState));
+}
+function loadAppState() {
+    const saved = localStorage.getItem("appState");
+    if (saved) {
+        appState = JSON.parse(saved);
+    }
+}
+
+
 
 
