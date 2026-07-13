@@ -819,6 +819,22 @@ body {
 }
 
 /* ============================================================
+   SENTENCE TAB — SPACING FIX
+   ============================================================ */
+
+.sentence-english {
+    margin-bottom: 12px;   /* space between question and pills */
+}
+
+.sentence-options {
+    margin-top: 8px;       /* optional: small top spacing */
+}
+
+#sentence-next {
+    margin-top: 12px;      /* spacing below pills */
+}
+
+/* ============================================================
    BUILD TAB — SPACING FIX
    ============================================================ */
 
