@@ -327,12 +327,13 @@ function speakSpanish(text) {
     if (!("speechSynthesis" in window)) return;
     window.speechSynthesis.cancel();
 
-    u = new SpeechSynthesisUtterance(text);
+    const u = new SpeechSynthesisUtterance(text);
     u.lang = "es-ES";
     u.rate = appState.speechRate;
 
     window.speechSynthesis.speak(u);
 }
+
 
 /* ============================================================
    QUIZ AUDIO — Sabina (correct + incorrect)
@@ -484,10 +485,10 @@ function renderListenTab() {
                 margin-top:6px;
                 justify-content:flex-start;
             ">
-                <button class="word-pill" id="listen-playall">Play All</button>
-                <button class="word-pill" id="listen-pause">Pause</button>
-                <button class="word-pill" id="listen-resume">Resume</button>
-                <button class="word-pill" id="listen-stop">Stop</button>
+                <button class="pill" id="listen-playall">Play All</button>
+                <button class="pill" id="listen-pause">Pause</button>
+                <button class="pill" id="listen-resume">Resume</button>
+                <button class="pill" id="listen-stop">Stop</button>
             </div>
         </div>
     `;
@@ -511,7 +512,7 @@ function renderListenTab() {
                     margin-top:8px;
                 ">
                     ${grouped[cat].map(w => `
-                        <button class="word-pill" data-spanish="${w.spanish}">
+                        <button class="pill" data-spanish="${w.spanish}">
                             ${w.english}
                             <span style="opacity:0.7;">(${w.spanish})</span>
                         </button>
@@ -539,7 +540,7 @@ function renderListenTab() {
     /* ============================================================
        SINGLE WORD PLAYBACK
        ============================================================ */
-    container.querySelectorAll(".word-pill").forEach(btn => {
+    container.querySelectorAll(".pill").forEach(btn => {
         btn.addEventListener("click", () => {
             speakSpanish(btn.dataset.spanish);
             appState.levelStats[appState.currentLevel].listens++;
@@ -637,8 +638,8 @@ function renderFlashcardsTab() {
                     ${grouped[cat].map(item => `
                         <div class="fc-card">
                             <div class="fc-inner">
-                                <div class="fc-front word-pill">${item.english}</div>
-                                <div class="fc-back word-pill">${item.spanish}</div>
+                                <div class="fc-front pill">${item.english}</div>
+                                <div class="fc-back pill">${item.spanish}</div>
                             </div>
                         </div>
                     `).join("")}
@@ -774,9 +775,9 @@ function setupQuizEvents() {
     quizState.selected = null;
 
     // Pill selection
-    grid.querySelectorAll(".qb-opt").forEach(btn => {
+    grid.querySelectorAll(".pill").forEach(btn => {
         btn.addEventListener("click", () => {
-            grid.querySelectorAll(".qb-opt").forEach(b => b.classList.remove("active"));
+            grid.querySelectorAll(".pill").forEach(b => b.classList.remove("active"));
             btn.classList.add("active");
             quizState.selected = btn.dataset.spanish;
             answerBox.textContent = quizState.selected;
@@ -1038,7 +1039,7 @@ function renderSentenceTab() {
 }
 
 function setupSentenceEvents(q) {
-    const buttons = document.querySelectorAll(".sentence-choice");
+    const buttons = document.querySelectorAll(".pill");
     const feedback = document.getElementById("sentence-feedback");
     const nextBtn = document.getElementById("sentence-next");
 
