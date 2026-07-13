@@ -1,5 +1,5 @@
 /* ============================================================
-   CEFR TRAINER — CLEAN APP.JS (PART 1)
+   CEFR SENTENCE BANKS (for Build tab)
    ============================================================ */
 
 A1: [
@@ -170,7 +170,9 @@ B2: [
     { english: "They want to optimize the process.", spanish: "ellos quieren optimizar el proceso" }
 ]
 
-
+/* ============================================================
+   CEFR TRAINER — CLEAN APP.JS (PART 1)
+   ============================================================ */
 
 function groupByCategory(words) {
     const out = {};
