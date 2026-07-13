@@ -156,6 +156,36 @@ body {
     color: #0f172a;
 }
 
+/* ============================================================
+   RESET PROGRESS BUTTON
+   ============================================================ */
+
+.reset-card {
+    padding: 20px;
+    border-radius: 16px;
+    background: rgba(255, 80, 80, 0.12);
+    backdrop-filter: blur(12px);
+    margin-top: 20px;
+    text-align: center;
+}
+
+#reset-progress {
+    padding: 12px 20px;
+    border-radius: 20px;
+    background: rgba(255, 80, 80, 0.35);
+    color: #fff;
+    border: none;
+    cursor: pointer;
+    transition: 0.2s;
+    font-weight: 600;
+}
+
+#reset-progress:hover {
+    background: rgba(255, 80, 80, 0.55);
+    transform: scale(1.05);
+}
+
+
 /* ------------------------------------------------------------
    LEVEL SELECTOR
 ------------------------------------------------------------ */
