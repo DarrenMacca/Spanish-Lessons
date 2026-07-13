@@ -737,29 +737,34 @@ function renderQuizTab() {
     quizState.options = generateQuizOptions(words, quizState.currentWord);
     quizState.selected = null;
 
-    container.innerHTML = `
-        <div class="glass-panel quiz-card">
-            <h2>Quiz — Level ${appState.currentLevel}</h2>
-            <p>Select the correct Spanish for the English word.</p>
+container.innerHTML = `
+<div class="glass-panel quiz-card">
+    <h2>Quiz — Level ${appState.currentLevel}</h2>
+    <p>Select the correct Spanish for the English word.</p>
 
-            <div id="qb-meta"><strong>English:</strong> ${quizState.currentWord.english}</div>
+    <div id="qb-meta"><strong>English:</strong> ${quizState.currentWord.english}</div>
 
-            <div id="qb-grid" class="sb-grid">
-                ${quizState.options.map(opt => `
-                    <button class="pill" data-spanish="${opt}">${opt}</button>
-                `).join("")}
-            </div>
+    <div id="qb-grid" class="sb-grid">
+        ${quizState.options.map(opt => `
+            <button class="pill" data-spanish="${opt}">${opt}</button>
+        `).join("")}
+    </div>
 
-            <div id="qb-answer"></div>
-            <div id="qb-feedback"></div>
+    <!-- ⭐ ANSWER FIELD MOVED UP -->
+    <div id="qb-answer" class="qb-answer"></div>
 
-            <div class="sb-controls">
-                <button id="qb-submit">Check</button>
-                <button id="qb-next">Next</button>
-                <button id="qb-harder" class="${quizState.harderMode ? "active" : ""}">Harder</button>
-            </div>
-        </div>
-    `;
+    <!-- ⭐ BUTTONS MOVED CLOSER TO ANSWER -->
+    <div class="sb-controls quiz-controls-tight">
+        <button id="qb-submit">Check</button>
+        <button id="qb-next">Next</button>
+        <button id="qb-harder" class="${quizState.harderMode ? "active" : ""}">Harder</button>
+    </div>
+
+    <!-- ⭐ FEEDBACK MOVED BELOW BUTTONS -->
+    <div id="qb-feedback" class="qb-feedback"></div>
+</div>
+`;
+
 
     setupQuizEvents();
 }
