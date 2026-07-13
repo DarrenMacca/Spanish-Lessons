@@ -1,3 +1,20 @@
+// ============================================================
+// PROGRESS REQUIREMENTS (EDIT THESE TO CONTROL LEVEL UNLOCK)
+// ============================================================
+
+const QUIZ_REQUIRED = 10;
+const BUILD_REQUIRED = 10;
+const SENTENCE_REQUIRED = 10;
+const CONVERSATION_REQUIRED = 10;
+
+const XP_REQUIRED = 100;
+const STREAK_GOAL = 7;
+const SCORE_MAX = 100;
+const REVIEW_TOTAL = 20;
+
+// Unlock threshold (EDIT THIS)
+const LEVEL_UNLOCK_PERCENT = 80;   // <— change this to 70, 90, etc.
+
 /* ============================================================
    CEFR SENTENCE BANKS (for Build tab)
    ============================================================ */
@@ -1595,36 +1612,43 @@ function animateNumber(id, target) {
     }, 20);
 }
 
+// ============================================================
+// REAL PROGRESS METERS (FINAL VERSION)
+// ============================================================
+
 function updateProgressMeters() {
+    const stats = appState.levelStats[appState.currentLevel];
 
-    // Bar widths
-    document.getElementById("quiz-progress").style.width = "60%";
-    document.getElementById("build-progress").style.width = "45%";
-    document.getElementById("sentence-progress").style.width = "30%";
+    // REAL VALUES
+    const quizPct = Math.min(100, (stats.quizCompleted / QUIZ_REQUIRED) * 100);
+    const buildPct = Math.min(100, (stats.buildCompleted / BUILD_REQUIRED) * 100);
+    const sentencePct = Math.min(100, (stats.sentenceCompleted / SENTENCE_REQUIRED) * 100);
+    const convoPct = Math.min(100, (stats.conversationCompleted / CONVERSATION_REQUIRED) * 100);
 
-    document.getElementById("xp-progress").style.width = "70%";
-    document.getElementById("streak-progress").style.width = "40%";
-    document.getElementById("score-progress").style.width = "85%";
-    document.getElementById("review-progress").style.width = "20%";
+    const xpPct = Math.min(100, (stats.xp / XP_REQUIRED) * 100);
+    const streakPct = Math.min(100, (stats.streak / STREAK_GOAL) * 100);
+    const scorePct = Math.min(100, (stats.score / SCORE_MAX) * 100);
+    const reviewPct = Math.min(100, (stats.reviewDue / REVIEW_TOTAL) * 100);
 
-    // Animated numbers
-    animateNumber("quiz-number", 60);
-    animateNumber("build-number", 45);
-    animateNumber("sentence-number", 30);
+    // UPDATE DOM
+    setMeter("quiz", quizPct);
+    setMeter("build", buildPct);
+    setMeter("sentence", sentencePct);
+    setMeter("convo", convoPct);
 
-    animateNumber("xp-number", 70);
-    animateNumber("streak-number", 40);
-    animateNumber("score-number", 85);
-    animateNumber("review-number", 20);
+    setMeter("xp", xpPct);
+    setMeter("streak", streakPct);
+    setMeter("score", scorePct);
+    setMeter("review", reviewPct);
 
-    // Pulse animations
-    pulseTile("quiz-tile");
-    pulseTile("build-tile");
-    pulseTile("sentence-tile");
-    pulseTile("xp-tile");
-    pulseTile("streak-tile");
-    pulseTile("score-tile");
-    pulseTile("review-tile");
+    // CHECK LEVEL UNLOCK
+    checkLevelUnlock();
+}
+
+function setMeter(name, pct) {
+    document.getElementById(`${name}-progress`).style.width = pct + "%";
+    animateNumber(`${name}-number`, Math.round(pct));
+    pulseTile(`${name}-tile`);
 }
 
 /* ============================================================
