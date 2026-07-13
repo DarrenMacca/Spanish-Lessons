@@ -58,11 +58,15 @@
         <div class="dash-right glass-panel">
             <label class="section-title">Skill Level</label>
             <div class="level-buttons">
-                <button class="pill" data-level="A1">A1</button>
-                <button class="pill" data-level="A2">A2</button>
-                <button class="pill" data-level="B1">B1</button>
-                <button class="pill" data-level="B2">B2</button>
-            </div>
+    <button class="pill">A1</button>
+    <button class="pill">A2</button>
+    <button class="pill">B1</button>
+    <button class="pill">B2</button>
+
+    <!-- RESET PROGRESS MOVED HERE -->
+    <button id="reset-progress" class="pill danger">Reset Progress</button>
+</div>
+
         </div>
     </div>
 
@@ -113,17 +117,19 @@
             </div>
         </div>
 
-        <!-- XP -->
-        <div id="xp-tile" class="progress-tile glass-panel">
-            <div class="progress-icon-row">
-                <img src="images/icon-xp.png" class="progress-img">
-                <label class="section-title">XP Progress</label>
-                <span class="progress-number" id="xp-number">0%</span>
-            </div>
-            <div class="progress-bar">
-                <div class="progress-fill" id="xp-progress"></div>
-            </div>
-        </div>
+        <!-- CONVERSATION -->
+<div id="convo-tile" class="progress-tile glass-panel">
+    <div class="progress-icon-row">
+        <img src="images/icon-conversation.png" class="progress-img">
+        <label class="section-title">Conversation Progress</label>
+        <span class="progress-number" id="convo-number">0%</span>
+    </div>
+
+    <div class="progress-bar">
+        <div class="progress-fill" id="convo-progress"></div>
+    </div>
+</div>
+
 
         <!-- STREAK -->
         <div id="streak-tile" class="progress-tile glass-panel">
