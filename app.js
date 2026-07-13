@@ -1688,14 +1688,17 @@ function updateProgressMeters() {
 
     // UPDATE DOM
     setMeter("quiz", quizPct);
-    setMeter("build", buildPct);
-    setMeter("sentence", sentencePct);
-    setMeter("convo", convoPct);
+setMeter("build", buildPct);
+setMeter("sentence", sentencePct);
+setMeter("convo", convoPct);
 
-    setMeter("xp", xpPct);
-    setMeter("streak", streakPct);
-    setMeter("score", scorePct);
-    setMeter("review", reviewPct);
+// REMOVE THIS:
+// setMeter("xp", xpPct);
+
+setMeter("streak", streakPct);
+setMeter("score", scorePct);
+setMeter("review", reviewPct);
+
 
     // CHECK LEVEL UNLOCK
     checkLevelUnlock();
