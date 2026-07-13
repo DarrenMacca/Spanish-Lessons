@@ -728,6 +728,107 @@ function renderBuildTab() {
 }
 
 
+function setupBuildEvents() {
+    const selectedArea = document.getElementById("build-selected");
+    const grid = document.getElementById("build-words");
+    const input = document.getElementById("build-input");
+    const feedback = document.getElementById("build-feedback");
+
+    const undoBtn = document.getElementById("build-undo");
+    const resetBtn = document.getElementById("build-reset");
+    const checkBtn = document.getElementById("build-check");
+    const nextBtn = document.getElementById("build-next");
+
+    buildState.answer = [];
+
+    // Word-pill selection
+    grid.querySelectorAll(".build-opt").forEach(btn => {
+        btn.addEventListener("click", () => {
+            buildState.answer.push(btn.dataset.token);
+            btn.classList.add("used");
+            btn.disabled = true;
+            selectedArea.textContent = buildState.answer.join(" ");
+        });
+    });
+
+    // Typing mode
+    input.addEventListener("input", () => {
+        buildState.answer = input.value.trim().split(" ");
+        selectedArea.textContent = buildState.answer.join(" ");
+    });
+
+    // Undo last word
+    undoBtn.addEventListener("click", () => {
+        buildState.answer.pop();
+        selectedArea.textContent = buildState.answer.join(" ");
+
+        grid.querySelectorAll(".build-opt").forEach(btn => {
+            if (!buildState.answer.includes(btn.dataset.token)) {
+                btn.classList.remove("used");
+                btn.disabled = false;
+            }
+        });
+    });
+
+    // Reset
+    resetBtn.addEventListener("click", () => {
+        buildState.answer = [];
+        selectedArea.textContent = "";
+        input.value = "";
+        grid.querySelectorAll(".build-opt").forEach(btn => {
+            btn.classList.remove("used");
+            btn.disabled = false;
+        });
+    });
+
+    // Check answer
+    checkBtn.addEventListener("click", () => {
+        const correct = buildState.currentWord.spanish.trim();
+        const user = buildState.answer.join(" ").trim();
+
+        if (user === correct) {
+            feedback.innerHTML = `<span style="color:#4ade80;font-weight:600;">Correct! 🎉</span>`;
+            appState.levelStats[appState.currentLevel].buildCompleted++;
+            updateBadges();
+            updateProgressMeters();
+            setTimeout(() => speakQuiz(correct), 300);
+        } else {
+            // Detailed feedback
+            const correctTokens = correct.split(" ");
+            const userTokens = buildState.answer;
+
+            let resultHTML = `<div style="margin-top:10px;">`;
+
+            resultHTML += `<strong>Correct Answer:</strong><br>${correct}<br><br>`;
+
+            resultHTML += `<strong>Your Answer:</strong><br>${user}<br><br>`;
+
+            resultHTML += `<strong>Word-by-word feedback:</strong><br>`;
+
+            userTokens.forEach((t, i) => {
+                if (correctTokens[i] === t) {
+                    resultHTML += `<span style="color:#4ade80;">${t} ✔</span> `;
+                } else {
+                    resultHTML += `<span style="color:#f87171;">${t} ✖</span> `;
+                }
+            });
+
+            resultHTML += `</div>`;
+
+            feedback.innerHTML = resultHTML;
+
+            setTimeout(() => speakQuiz(correct), 300);
+        }
+
+        saveState();
+    });
+
+    // Next
+    nextBtn.addEventListener("click", () => {
+        renderBuildTab();
+    });
+}
+
 
 
 /* ============================================================
