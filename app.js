@@ -651,7 +651,7 @@ function setupQuizEvents() {
 
 
 /* ============================================================
-   BUILD TAB — RENDER + EVENTS (FINAL MASTER VERSION)
+   BUILD TAB — English → Spanish Sentence Builder (CEFR Version)
    ============================================================ */
 
 function renderBuildTab() {
@@ -665,8 +665,11 @@ function renderBuildTab() {
         return;
     }
 
-    // Pick random word
+    // Pick a random sentence from CEFR words
+    // We assume each CEFR item has english + spanish fields
     buildState.currentWord = words[Math.floor(Math.random() * words.length)];
+
+    const english = buildState.currentWord.english;
     const spanish = buildState.currentWord.spanish;
 
     // Tokenise Spanish sentence
@@ -675,20 +678,18 @@ function renderBuildTab() {
 
     container.innerHTML = `
         <div class="glass-panel build-card">
-            <h2>Build — Level ${appState.currentLevel}</h2>
-            <p>Rebuild the Spanish sentence from the scrambled words.</p>
+            <h2>Build the Spanish translation</h2>
+            <p class="build-english"><strong>English:</strong> ${english}</p>
 
-            <div id="build-meta"><strong>English:</strong> ${buildState.currentWord.english}</div>
+            <div id="build-selected" class="build-selected"></div>
 
-            <div id="build-grid" class="sb-grid">
-                ${buildState.tokens.map(t => `
-                    <button class="word-pill build-opt" data-token="${t}">${t}</button>
+            <div id="build-words" class="sb-grid">
+                ${buildState.tokens.map(w => `
+                    <button class="word-pill build-opt" data-token="${w}">${w}</button>
                 `).join("")}
             </div>
 
-            <div id="build-answer" class="build-answer"></div>
-
-            <input id="build-type" class="build-type" placeholder="Or type the sentence…" />
+            <input id="build-input" class="input-field" placeholder="Or type the Spanish sentence…">
 
             <div id="build-feedback"></div>
 
@@ -705,9 +706,9 @@ function renderBuildTab() {
 }
 
 function setupBuildEvents() {
-    const grid = document.getElementById("build-grid");
-    const answerBox = document.getElementById("build-answer");
-    const typeBox = document.getElementById("build-type");
+    const selectedArea = document.getElementById("build-selected");
+    const grid = document.getElementById("build-words");
+    const input = document.getElementById("build-input");
     const feedback = document.getElementById("build-feedback");
 
     const undoBtn = document.getElementById("build-undo");
@@ -723,22 +724,21 @@ function setupBuildEvents() {
             buildState.answer.push(btn.dataset.token);
             btn.classList.add("used");
             btn.disabled = true;
-            answerBox.textContent = buildState.answer.join(" ");
+            selectedArea.textContent = buildState.answer.join(" ");
         });
     });
 
     // Typing mode
-    typeBox.addEventListener("input", () => {
-        buildState.answer = typeBox.value.trim().split(" ");
-        answerBox.textContent = buildState.answer.join(" ");
+    input.addEventListener("input", () => {
+        buildState.answer = input.value.trim().split(" ");
+        selectedArea.textContent = buildState.answer.join(" ");
     });
 
     // Undo last word
     undoBtn.addEventListener("click", () => {
         buildState.answer.pop();
-        answerBox.textContent = buildState.answer.join(" ");
+        selectedArea.textContent = buildState.answer.join(" ");
 
-        // Re-enable last used pill
         grid.querySelectorAll(".build-opt").forEach(btn => {
             if (!buildState.answer.includes(btn.dataset.token)) {
                 btn.classList.remove("used");
@@ -750,8 +750,8 @@ function setupBuildEvents() {
     // Reset
     resetBtn.addEventListener("click", () => {
         buildState.answer = [];
-        answerBox.textContent = "";
-        typeBox.value = "";
+        selectedArea.textContent = "";
+        input.value = "";
         grid.querySelectorAll(".build-opt").forEach(btn => {
             btn.classList.remove("used");
             btn.disabled = false;
@@ -760,7 +760,7 @@ function setupBuildEvents() {
 
     // Check
     checkBtn.addEventListener("click", () => {
-        const correct = buildState.currentWord.spanish;
+        const correct = buildState.currentWord.spanish.trim();
         const user = buildState.answer.join(" ").trim();
 
         if (user === correct) {
@@ -782,6 +782,7 @@ function setupBuildEvents() {
         renderBuildTab();
     });
 }
+
 
 
 /* ============================================================
