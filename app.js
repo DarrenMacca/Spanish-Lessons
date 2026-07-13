@@ -983,7 +983,10 @@ function generateSentenceForLevel(level) {
     const pool = CEFR_SENTENCE_CHOICES[level];
     const item = pool[Math.floor(Math.random() * pool.length)];
 
-    const shuffled = [...item.options].sort(() => Math.random() - 0.5);
+    const shuffled = [...item.options]
+    .filter(Boolean)
+    .sort(() => Math.random() - 0.5);
+
 
     return {
         english: item.english,
