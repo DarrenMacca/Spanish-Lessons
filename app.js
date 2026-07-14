@@ -346,24 +346,50 @@ function speakQuiz(correctAnswer) {
 
 
 /* ============================================================
-   LEVEL SELECTOR
+   LEVEL SELECTOR — BULLETPROOF VERSION
    ============================================================ */
+
 function setLevel(level) {
+    // Validate level
     if (!CEFR_LEVELS[level]) return;
 
+    // Update app state
     appState.currentLevel = level;
     saveState();
 
-    // ⭐ Reset Sentence tab state so level switching works
+    // Reset tab-specific states
     sentenceState.answer = [];
     sentenceState.currentSentence = null;
 
+    buildState.answer = [];
+    quizState.current = null;
+    conversationState.answer = [];
+
+    // Update button highlight
     document.querySelectorAll(".level-btn").forEach(btn => {
         btn.classList.toggle("active", btn.dataset.level === level);
     });
 
+    // Re-render whichever tab is currently active
     activateTab(currentTab);
 }
+
+
+/* ============================================================
+   LEVEL BUTTON WIRING — REQUIRED FOR LEVEL SWITCHING
+   ============================================================ */
+
+function initLevelButtons() {
+    document.querySelectorAll(".level-btn").forEach(btn => {
+        btn.addEventListener("click", () => {
+            const level = btn.dataset.level;
+            setLevel(level);   // ⭐ Actually changes the level
+        });
+    });
+}
+
+// Call once during app startup
+initLevelButtons();
 
 
 
