@@ -358,14 +358,13 @@ function setLevel(level) {
     sentenceState.answer = [];
     sentenceState.currentSentence = null;
 
-    // Update active button highlight
     document.querySelectorAll(".level-btn").forEach(btn => {
         btn.classList.toggle("active", btn.dataset.level === level);
     });
 
-    // Re-render current tab cleanly
     activateTab(currentTab);
 }
+
 
 
 /* ============================================================
