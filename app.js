@@ -878,6 +878,13 @@ function setupQuizEvents() {
    ============================================================ */
 
 function renderBuildTab() {
+    const level = appState.currentLevel;
+    document.getElementById("build-level-header").textContent =
+        `Build — Level ${level}`;
+
+    // existing build rendering logic...
+
+ {
     const container = document.getElementById("build-content");
 
     const pool = CEFR_SENTENCES[appState.currentLevel];
@@ -1052,8 +1059,15 @@ function generateSentenceForLevel(level) {
     };
 }
 
-function renderSentenceTab() {
-   
+
+   function renderSentenceTab() {
+    const level = appState.currentLevel;
+    document.getElementById("sentence-level-header").textContent =
+        `Sentence — Level ${level}`;
+
+    // existing sentence rendering logic...
+
+
    const container = document.getElementById("sentence-content");
     const level = appState.currentLevel;
 
