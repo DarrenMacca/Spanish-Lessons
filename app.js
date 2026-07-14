@@ -950,58 +950,53 @@ function setupBuildEvents(sentence) {
     });
 
     checkBtn.addEventListener("click", () => {
-    const correct = sentence.spanish.trim();
-    const user = buildState.answer.join(" ").trim();
+        const correct = sentence.spanish.trim();
+        const user = buildState.answer.join(" ").trim();
 
-    if (user === correct) {
-        feedback.innerHTML = `<span style="color:#4ade80;font-weight:600;">Correct! 🎉</span>`;
+        if (user === correct) {
+            feedback.innerHTML = `<span style="color:#4ade80;font-weight:600;">Correct! 🎉</span>`;
 
-        // ⭐ REAL PROGRESS METER — increment Build completion
-        appState.levelStats[appState.currentLevel].buildCompleted++;
+            appState.levelStats[appState.currentLevel].buildCompleted++;
+            appState.levelStats[appState.currentLevel].xp += 5;
+            appState.levelStats[appState.currentLevel].streak++;
+            appState.levelStats[appState.currentLevel].score += 2;
 
-        // ⭐ Optional XP reward
-        appState.levelStats[appState.currentLevel].xp += 5;
+            updateBadges();
+            saveAppState();
+            updateProgressMeters();
 
-        // ⭐ Optional streak system
-        appState.levelStats[appState.currentLevel].streak++;
+            setTimeout(() => speakQuiz(correct), 300);
 
-        // ⭐ Optional score rating
-        appState.levelStats[appState.currentLevel].score += 2;
+        } else {
+            const correctTokens = correct.split(" ");
+            const userTokens = buildState.answer;
 
-        updateBadges();
-        saveAppState();
-        updateProgressMeters();
+            let html = `<strong>Correct Answer:</strong><br>${correct}<br><br>`;
+            html += `<strong>Your Answer:</strong><br>${user}<br><br>`;
+            html += `<strong>Word-by-word feedback:</strong><br>`;
 
-        setTimeout(() => speakQuiz(correct), 300);
+            userTokens.forEach((t, i) => {
+                if (correctTokens[i] === t) {
+                    html += `<span style="color:#4ade80;">${t} ✔</span> `;
+                } else {
+                    html += `<span style="color:#f87171;">${t} ✖</span> `;
+                }
+            });
 
-    } else {
-        const correctTokens = correct.split(" ");
-        const userTokens = buildState.answer;
+            feedback.innerHTML = html;
 
-        let html = `<strong>Correct Answer:</strong><br>${correct}<br><br>`;
-        html += `<strong>Your Answer:</strong><br>${user}<br><br>`;
-        html += `<strong>Word-by-word feedback:</strong><br>`;
+            appState.levelStats[appState.currentLevel].streak = 0;
 
-        userTokens.forEach((t, i) => {
-            if (correctTokens[i] === t) {
-                html += `<span style="color:#4ade80;">${t} ✔</span> `;
-            } else {
-                html += `<span style="color:#f87171;">${t} ✖</span> `;
-            }
-        });
+            saveAppState();
+            setTimeout(() => speakQuiz(correct), 300);
+        }
+    });
 
-        feedback.innerHTML = html;
-
-        // ⭐ Optional: reset streak on incorrect
-        appState.levelStats[appState.currentLevel].streak = 0;
-
-        saveAppState();
-        setTimeout(() => speakQuiz(correct), 300);
-    }
-});
-
+    // ⭐ FIXED NEXT BUTTON
+    nextBtn.onclick = () => {
+        renderBuildTab();
+    };
 }
-
 
 
 
