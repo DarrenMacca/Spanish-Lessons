@@ -1048,11 +1048,12 @@ function renderSentenceTab() {
             <div id="sent-feedback"></div>
 
             <div class="sentence-controls">
-                <button id="sent-undo">Undo</button>
-                <button id="sent-reset">Reset</button>
-                <button id="sent-check">Check</button>
-                <button id="sent-next">Next</button>
-            </div>
+    <button id="sent-undo" class="pill">Undo</button>
+    <button id="sent-reset" class="pill">Reset</button>
+    <button id="sent-check" class="pill">Check</button>
+    <button id="sent-next" class="pill">Next</button>
+</div>
+
         </div>
     `;
 
