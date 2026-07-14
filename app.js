@@ -501,13 +501,15 @@ let listenAutoPlay = {
 };
 
 function renderListenTab() {
+    updateTabHeader("listen");
+
     const container = document.getElementById("listen-content");
     const words = CEFR_LEVELS[appState.currentLevel];
     const grouped = groupByCategory(words);
 
     let html = `
         <div class="glass-panel quiz-card">
-            <h2>Listen — Level ${appState.currentLevel}</h2>
+            <h2>Listen</h2>
             <p>Tap a category, then click a word pill to hear it.</p>
 
             <div class="listen-player-controls" style="
@@ -528,6 +530,7 @@ function renderListenTab() {
     /* ============================================================
        CATEGORY LIST
        ============================================================ */
+
     Object.keys(grouped).forEach(cat => {
         html += `
         <div class="glass-panel">
@@ -646,13 +649,15 @@ function playNextListenWord() {
    ============================================================ */
 
 function renderFlashcardsTab() {
+    updateTabHeader("flash");
+
     const container = document.getElementById("flash-content");
     const words = CEFR_LEVELS[appState.currentLevel];
     const grouped = groupByCategory(words);
 
     let html = `
         <div class="glass-panel">
-            <h2>Flashcards — Level ${appState.currentLevel}</h2>
+            <h2>Flashcards</h2>
             <p>Tap a card to flip. Spanish side plays audio.</p>
         </div>
     `;
@@ -1470,13 +1475,17 @@ const CONVO_PROMPTS = [
 ];
 
 function renderConversationTab() {
+    updateTabHeader("conversation");
+
     const container = document.getElementById("conversation-content");
     const words = CEFR_LEVELS[appState.currentLevel];
 
     if (!words || !words.length) {
-        container.innerHTML = `<div class="glass-panel convo-card">
-            <p>No words found for level ${appState.currentLevel}.</p>
-        </div>`;
+        container.innerHTML = `
+            <div class="glass-panel convo-card">
+                <p>No words found for level ${appState.currentLevel}.</p>
+            </div>
+        `;
         return;
     }
 
@@ -1510,10 +1519,12 @@ function renderConversationTab() {
 
     container.innerHTML = `
         <div class="glass-panel convo-card">
-            <h2>Conversation — Level ${appState.currentLevel}</h2>
+            <h2>Conversation</h2>
             <p>Respond in Spanish by selecting the correct words from the wordbank.</p>
 
-            <div id="convo-prompt"><strong>Prompt (English):</strong> ${convoState.currentPrompt.english}</div>
+            <div id="convo-prompt">
+                <strong>Prompt (English):</strong> ${convoState.currentPrompt.english}
+            </div>
 
             <div id="convo-grid" class="sb-grid">
                 ${convoState.tokens.map(t => `
@@ -1538,6 +1549,7 @@ function renderConversationTab() {
 
     setupConversationEvents();
 }
+
 
 
 
@@ -1644,13 +1656,15 @@ function setupConversationEvents() {
    ============================================================ */
 
 function renderGrammarTab() {
+    updateTabHeader("grammar");
+
     const container = document.getElementById("grammar-content");
     const words = CEFR_LEVELS[appState.currentLevel];
     const grouped = groupByCategory(words);
 
     container.innerHTML = `
         <div class="glass-panel quiz-card">
-            <h2>Grammar — Level ${appState.currentLevel}</h2>
+            <h2>Grammar</h2>
             <p>Breakdown of word types you're training.</p>
         </div>
 
@@ -1666,6 +1680,7 @@ function renderGrammarTab() {
         </div>
     `;
 }
+
 
 /* ============================================================
    BADGES
