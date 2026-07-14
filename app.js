@@ -1032,34 +1032,35 @@ function renderSentenceTab() {
 
     const q = generateSentenceForLevel(level);
 
-
     container.innerHTML = `
         <div class="glass-panel sentence-card">
-            <h2>Sentence — Level ${level}</h2>
-            <p>Select the correct Spanish translation.</p>
+            <h2>Select the correct Spanish translation</h2>
+            <p class="sentence-english"><strong>English:</strong> ${q.english}</p>
 
-            <div class="sentence-english">
-                <strong>English:</strong> ${q.english}
-            </div>
-
-            <div id="sentence-options" class="sentence-options">
+            <div id="sent-options" class="sentence-options">
                 ${q.options.map(opt => `
-                    <button class="pill" data-opt="${opt}">
+                    <button class="sent-opt pill" data-token="${opt}">
                         ${opt}
                     </button>
                 `).join("")}
             </div>
 
-            <div id="sentence-feedback"></div>
+            <div id="sent-answer" class="sentence-answer"></div>
+
+            <div id="sent-feedback"></div>
 
             <div class="sentence-controls">
-                <button id="sentence-next" class="pill">Next</button>
+                <button id="sent-undo">Undo</button>
+                <button id="sent-reset">Reset</button>
+                <button id="sent-check">Check</button>
+                <button id="sent-next">Next</button>
             </div>
         </div>
     `;
 
     setupSentenceEvents(q);
 }
+
 
 function setupSentenceEvents() {
     const work = document.getElementById("sent-work");
