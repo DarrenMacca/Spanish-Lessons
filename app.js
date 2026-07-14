@@ -882,12 +882,9 @@ function renderBuildTab() {
     document.getElementById("build-level-header").textContent =
         `Build — Level ${level}`;
 
-    // existing build rendering logic...
-
- {
     const container = document.getElementById("build-content");
 
-    const pool = CEFR_SENTENCES[appState.currentLevel];
+    const pool = CEFR_SENTENCES[level];
     const sentence = pool[Math.floor(Math.random() * pool.length)];
 
     const english = sentence.english;
@@ -938,6 +935,7 @@ function renderBuildTab() {
 
     setupBuildEvents(sentence);
 }
+
 
 function setupBuildEvents(sentence) {
     const selectedArea = document.getElementById("build-selected");
@@ -1060,17 +1058,16 @@ function generateSentenceForLevel(level) {
 }
 
 
-   function renderSentenceTab() {
+ function renderSentenceTab() {
     const level = appState.currentLevel;
+
+    // ⭐ Update level header
     document.getElementById("sentence-level-header").textContent =
         `Sentence — Level ${level}`;
 
-    // existing sentence rendering logic...
+    const container = document.getElementById("sentence-content");
 
-
-   const container = document.getElementById("sentence-content");
-    const level = appState.currentLevel;
-
+    // ⭐ Safety check
     if (!CEFR_SENTENCE_CHOICES[level]) {
         container.innerHTML = "<p>No sentences available for this level.</p>";
         return;
@@ -1078,6 +1075,7 @@ function generateSentenceForLevel(level) {
 
     const q = generateSentenceForLevel(level);
 
+    // ⭐ Render UI
     container.innerHTML = `
         <div class="glass-panel sentence-card">
             <h2>Select the correct Spanish translation</h2>
@@ -1095,17 +1093,17 @@ function generateSentenceForLevel(level) {
             <div id="sent-feedback"></div>
 
             <div class="sentence-controls">
-    <button id="sent-undo" class="pill">Undo</button>
-    <button id="sent-reset" class="pill">Reset</button>
-    <button id="sent-check" class="pill">Check</button>
-    <button id="sent-next" class="pill">Next</button>
-</div>
-
+                <button id="sent-undo" class="pill">Undo</button>
+                <button id="sent-reset" class="pill">Reset</button>
+                <button id="sent-check" class="pill">Check</button>
+                <button id="sent-next" class="pill">Next</button>
+            </div>
         </div>
     `;
 
     setupSentenceEvents(q);
 }
+
 
 function setupSentenceEvents(q) {
 
