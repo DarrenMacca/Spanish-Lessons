@@ -354,12 +354,19 @@ function setLevel(level) {
     appState.currentLevel = level;
     saveState();
 
+    // ⭐ Reset Sentence tab state so level switching works
+    sentenceState.answer = [];
+    sentenceState.currentSentence = null;
+
+    // Update active button highlight
     document.querySelectorAll(".level-btn").forEach(btn => {
         btn.classList.toggle("active", btn.dataset.level === level);
     });
 
+    // Re-render current tab cleanly
     activateTab(currentTab);
 }
+
 
 /* ============================================================
    TAB SYSTEM — FINAL CLEAN VERSION
@@ -1021,7 +1028,7 @@ function generateSentenceForLevel(level) {
 }
 
 function renderSentenceTab() {
-   sentenceState.answer = [];
+   
    const container = document.getElementById("sentence-content");
     const level = appState.currentLevel;
 
