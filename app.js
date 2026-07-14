@@ -1061,62 +1061,89 @@ function renderSentenceTab() {
     setupSentenceEvents(q);
 }
 
-function setupSentenceEvents(q) {
-    const buttons = document.querySelectorAll(".pill");
-    const feedback = document.getElementById("sentence-feedback");
-    const nextBtn = document.getElementById("sentence-next");
+function setupSentenceEvents() {
+    const work = document.getElementById("sent-work");
 
-    buttons.forEach(btn => {
+    document.querySelectorAll(".sent-opt").forEach(btn => {
         btn.addEventListener("click", () => {
-            const chosen = btn.dataset.opt;
+            const token = btn.dataset.token;
 
-            if (chosen === q.correct) {
-                feedback.innerHTML = `
-                    <span style="color:#4ade80;font-weight:600;">
-                        Correct! 🎉
-                    </span>
-                `;
+            sentenceState.answer.push(token);
+            btn.classList.add("used");
+            btn.disabled = true;
 
-                // ⭐ REAL PROGRESS METER — increment Sentence completion
-                appState.levelStats[appState.currentLevel].sentenceCompleted++;
-
-                // ⭐ Optional XP reward
-                appState.levelStats[appState.currentLevel].xp += 5;
-
-                // ⭐ Optional streak system
-                appState.levelStats[appState.currentLevel].streak++;
-
-                // ⭐ Optional score rating
-                appState.levelStats[appState.currentLevel].score += 2;
-
-                updateBadges();
-                saveAppState();
-                updateProgressMeters();
-
-                speakQuiz(q.correct);
-
-            } else {
-                feedback.innerHTML = `
-                    <span style="color:#f87171;font-weight:600;">
-                        Incorrect.</span><br>
-                    Correct answer: <strong>${q.correct}</strong>
-                `;
-
-                // ⭐ Optional: reset streak on incorrect
-                appState.levelStats[appState.currentLevel].streak = 0;
-
-                saveAppState();
-                speakQuiz(q.correct);
-            }
-
-            buttons.forEach(b => b.disabled = true);
+            document.getElementById("sent-answer").textContent =
+                sentenceState.answer.join(" ");
         });
     });
 
-    nextBtn.addEventListener("click", () => {
-        renderSentenceTab();
+    document.getElementById("sent-type").addEventListener("input", () => {
+        const typed = document.getElementById("sent-type").value.trim();
+        sentenceState.answer = typed.split(" ");
+        document.getElementById("sent-answer").textContent = typed;
     });
+
+    document.getElementById("sent-undo").addEventListener("click", () => {
+        sentenceState.answer.pop();
+        document.getElementById("sent-answer").textContent =
+            sentenceState.answer.join(" ");
+
+        document.querySelectorAll(".sent-opt").forEach(btn => {
+            if (!sentenceState.answer.includes(btn.dataset.token)) {
+                btn.classList.remove("used");
+                btn.disabled = false;
+            }
+        });
+    });
+
+    document.getElementById("sent-reset").addEventListener("click", () => {
+        sentenceState.answer = [];
+        document.getElementById("sent-answer").textContent = "";
+        document.getElementById("sent-type").value = "";
+
+        document.querySelectorAll(".sent-opt").forEach(btn => {
+            btn.classList.remove("used");
+            btn.disabled = false;
+        });
+    });
+
+    document.getElementById("sent-check").addEventListener("click", () => {
+        const correct = sentenceState.currentSentence.spanish.trim();
+        const user = sentenceState.answer.join(" ").trim();
+
+        if (user === correct) {
+            document.getElementById("sent-feedback").innerHTML =
+                `<span style="color:#4ade80;font-weight:600;">Correct! 🎉</span>`;
+
+            appState.levelStats[appState.currentLevel].sentenceCompleted++;
+            appState.levelStats[appState.currentLevel].xp += 5;
+            appState.levelStats[appState.currentLevel].streak++;
+            appState.levelStats[appState.currentLevel].score += 2;
+
+            updateBadges();
+            saveAppState();
+            updateProgressMeters();
+
+            speakQuiz(correct);
+
+        } else {
+            document.getElementById("sent-feedback").innerHTML =
+                `Not quite. Correct answer: <strong>${correct}</strong>`;
+
+            appState.levelStats[appState.currentLevel].streak = 0;
+
+            saveAppState();
+            speakQuiz(correct);
+        }
+    });
+
+    // ⭐ FIXED NEXT BUTTON — MUST BE HERE
+    const nextBtn = document.getElementById("sent-next");
+    nextBtn.onclick = () => {
+        renderSentenceTab();
+    };
 }
+
 
 
 /* ============================================================
