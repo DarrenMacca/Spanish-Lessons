@@ -172,7 +172,6 @@ const CEFR_SENTENCES = {
     ]
 };
 
-
 /* ============================================================
    CEFR TRAINER — CLEAN APP.JS (PART 1)
    ============================================================ */
@@ -185,7 +184,6 @@ function groupByCategory(words) {
     });
     return out;
 }
- 
 
 const CEFR_LEVELS = {
     A1: A1_WORDS,
@@ -198,75 +196,99 @@ const STORAGE_KEY = "cefr_trainer_state_v2";
 
 let appState = {
     currentLevel: "A1",
+    currentTab: "dashboard",
     speechRate: 1.0,
     studentName: "",
     badges: [],
     levelStats: {
-    A1: { listens: 0, flashSeen: 0, quizScore: null, buildCompleted: 0, conversationCompleted: 0 },
-    A2: { listens: 0, flashSeen: 0, quizScore: null, buildCompleted: 0, conversationCompleted: 0 },
-    B1: { listens: 0, flashSeen: 0, quizScore: null, buildCompleted: 0, conversationCompleted: 0 },
-    B2: { listens: 0, flashSeen: 0, quizScore: null, buildCompleted: 0, conversationCompleted: 0 }
-}
-
+        A1: { listens: 0, flashSeen: 0, quizScore: null, buildCompleted: 0, conversationCompleted: 0 },
+        A2: { listens: 0, flashSeen: 0, quizScore: null, buildCompleted: 0, conversationCompleted: 0 },
+        B1: { listens: 0, flashSeen: 0, quizScore: null, buildCompleted: 0, conversationCompleted: 0 },
+        B2: { listens: 0, flashSeen: 0, quizScore: null, buildCompleted: 0, conversationCompleted: 0 }
+    }
 };
 
+/* ============================================================
+   TAB HEADER UPDATER
+   ============================================================ */
+
+function updateTabHeader(tabName) {
+    const level = appState.currentLevel;
+    const header = document.getElementById(`${tabName}-level-header`);
+    if (header) header.textContent = `Level ${level}`;
+}
 
 /* ============================================================
-   CATEGORY AUTO‑ASSIGNER — PLACE HERE
+   SPA TAB REGISTRY
+   ============================================================ */
+
+const TAB_RENDERERS = {
+    listen: renderListen,
+    flash: renderFlashcards,
+    quiz: renderQuiz,
+    build: renderBuild,
+    sentence: renderSentence,
+    conversation: renderConversation,
+    grammar: renderGrammar
+};
+
+/* ============================================================
+   SPA TAB CONTROLLER
+   ============================================================ */
+
+function activateTab(tabName) {
+    appState.currentTab = tabName;
+
+    document.querySelectorAll("#dashboard, #listen, #flash, #quiz, #build, #sentence, #conversation, #grammar")
+        .forEach(el => el.style.display = "none");
+
+    const tabEl = document.getElementById(tabName);
+    tabEl.style.display = "block";
+
+    updateTabHeader(tabName);
+
+    const renderer = TAB_RENDERERS[tabName];
+    if (renderer) renderer();
+}
+
+/* ============================================================
+   CATEGORY AUTO‑ASSIGNER
    ============================================================ */
 
 function autoAssignCategory(word) {
     const w = word.spanish.toLowerCase();
 
-    // Verbs (infinitives)
-    if (w.endsWith("ar") || w.endsWith("er") || w.endsWith("ir"))
-        return "verbs";
+    if (w.endsWith("ar") || w.endsWith("er") || w.endsWith("ir")) return "verbs";
+    if (w.endsWith("o") || w.endsWith("a") || w.endsWith("os") || w.endsWith("as")) return "adjectives";
+    if (!isNaN(parseInt(w))) return "numbers";
 
-    // Adjectives
-    if (w.endsWith("o") || w.endsWith("a") || w.endsWith("os") || w.endsWith("as"))
-        return "adjectives";
-
-    // Numbers
-    if (!isNaN(parseInt(w)))
-        return "numbers";
-
-    // Food & drink
     if (["manzana","pan","agua","carne","café","té","huevo","cerveza","vino","arroz","pollo","pescado","ensalada","verdura","fruta"].includes(w))
         return "food-drink";
 
-    // Travel
     if (["aeropuerto","hotel","taxi","tren","avión","billete","mapa","ciudad","país","viaje","turista"].includes(w))
         return "travel";
 
-    // Daily life
     if (["mañana","tarde","noche","casa","trabajo","escuela","día","semana","mes"].includes(w))
         return "daily-life";
 
-    // Family
     if (["madre","padre","hermano","hermana","abuelo","abuela","tío","tía","primo","prima","familia"].includes(w))
         return "family";
 
-    // Shopping
     if (["dinero","precio","tienda","comprar","vender","mercado","producto"].includes(w))
         return "shopping";
 
-    // Emergency
     if (["ayuda","policía","hospital","ambulancia","fuego","emergencia"].includes(w))
         return "emergency";
 
-    // Work
     if (["trabajo","oficina","jefe","empleado","empresa","reunión"].includes(w))
         return "work";
 
-    // Places / objects
     if (["casa","escuela","parque","calle","puerta","mesa","silla","coche","habitacion","baño"].includes(w))
         return "places-objects";
 
-    // Connectors
     if (["y","pero","porque","aunque","cuando","si","o","entonces","luego","después","antes"].includes(w))
         return "connectors";
 
-    // Grammar words
     if (["el","la","los","las","un","una","unos","unas","yo","tú","él","ella","nosotros","vosotros","ellos"].includes(w))
         return "grammar";
 
@@ -274,7 +296,7 @@ function autoAssignCategory(word) {
 }
 
 /* ============================================================
-   APPLY CATEGORIES TO ALL CEFR LEVELS — PLACE HERE
+   APPLY CATEGORIES TO ALL CEFR LEVELS
    ============================================================ */
 
 Object.keys(CEFR_LEVELS).forEach(level => {
@@ -296,7 +318,6 @@ function loadState() {
     }
 }
 
-
 function saveState() {
     try {
         localStorage.setItem(STORAGE_KEY, JSON.stringify(appState));
@@ -313,7 +334,7 @@ function speak(text) {
     window.speechSynthesis.cancel();
 
     const u = new SpeechSynthesisUtterance(text);
-    u.lang = "es-ES";        // Sabina Spanish voice
+    u.lang = "es-ES";        
     u.rate = appState.speechRate;
     u.pitch = 1.0;
 
@@ -334,26 +355,20 @@ function speakSpanish(text) {
     window.speechSynthesis.speak(u);
 }
 
-
 /* ============================================================
    QUIZ AUDIO — Sabina (correct + incorrect)
    ============================================================ */
 function speakQuiz(correctAnswer) {
     const message = `La respuesta correcta es: ${correctAnswer}`;
-    speak(message); // Sabina voice
+    speak(message);
 }
-
-
 
 /* ============================================================
    LEVEL SELECTOR — BULLETPROOF VERSION
    ============================================================ */
-
 function setLevel(level) {
-    // Validate level
     if (!CEFR_LEVELS[level]) return;
 
-    // Update app state
     appState.currentLevel = level;
     saveState();
 
@@ -362,28 +377,33 @@ function setLevel(level) {
     sentenceState.currentSentence = null;
 
     buildState.answer = [];
-    quizState.current = null;
-    conversationState.answer = [];
+    buildState.tokens = [];
+
+    quizState.currentWord = null;
+    quizState.options = [];
+    quizState.selected = null;
+
+    convoState.answer = [];
+    convoState.tokens = [];
+    convoState.currentPrompt = null;
 
     // Update button highlight
     document.querySelectorAll(".level-btn").forEach(btn => {
         btn.classList.toggle("active", btn.dataset.level === level);
     });
 
-    // Re-render whichever tab is currently active
-    activateTab(currentTab);
+    // Re-render the currently active tab
+    activateTab(appState.currentTab);
 }
-
 
 /* ============================================================
    LEVEL BUTTON WIRING — REQUIRED FOR LEVEL SWITCHING
    ============================================================ */
-
 function initLevelButtons() {
     document.querySelectorAll(".level-btn").forEach(btn => {
         btn.addEventListener("click", () => {
             const level = btn.dataset.level;
-            setLevel(level);   // ⭐ Actually changes the level
+            setLevel(level);
         });
     });
 }
@@ -391,93 +411,15 @@ function initLevelButtons() {
 // Call once during app startup
 initLevelButtons();
 
-
-
 /* ============================================================
-   TAB SYSTEM — FINAL CLEAN VERSION
+   TAB NAVIGATION — SPA VERSION
    ============================================================ */
 
-const TABS = [
-    "dashboard",
-    "listen",
-    "flash",
-    "quiz",
-    "build",
-    "sentence",
-    "conversation",
-    "grammar"
-];
-
-let currentTab = "dashboard";
-
-/* ============================================================
-   ACTIVATE TAB
-   ============================================================ */
-function activateTab(tabName) {
-    if (!TABS.includes(tabName)) return;
-    currentTab = tabName;
-
-    // Hide all tabs
-    TABS.forEach(id => {
-        const panel = document.getElementById(id);
-        if (panel) panel.classList.add("hidden");
-    });
-
-    // Show active tab
-    const activePanel = document.getElementById(tabName);
-    if (activePanel) activePanel.classList.remove("hidden");
-
-    // Update nav button highlight
-    document.querySelectorAll(".tab-btn").forEach(btn => {
-        btn.classList.toggle("active", btn.dataset.tab === tabName);
-    });
-
-    // Load dynamic content
-    switch (tabName) {
-        case "listen":
-            renderListenTab();
-            break;
-
-        case "flash":
-            renderFlashcardsTab();
-            break;
-
-        case "quiz":
-            renderQuizTab();
-            break;
-
-        case "build":
-            renderBuildTab();
-            break;
-
-        case "sentence":
-            renderSentenceTab();
-            break;
-
-        case "conversation":
-            renderConversationTab();
-            break;
-
-        case "grammar":
-            renderGrammarTab();
-            break;
-
-        case "dashboard":
-            // static
-            break;
-    }
-}
-
-/* ============================================================
-   TAB NAVIGATION WIRING
-   ============================================================ */
 function initTabNavigation() {
-    const buttons = document.querySelectorAll(".tab-btn");
-
-    buttons.forEach(btn => {
+    document.querySelectorAll(".tab-btn").forEach(btn => {
         btn.addEventListener("click", () => {
             const tab = btn.dataset.tab;
-            activateTab(tab);
+            activateTab(tab);   // SPA controller from Part 1
         });
     });
 }
@@ -487,10 +429,8 @@ initTabNavigation();
 activateTab("dashboard");
 
 
-
-
 /* ============================================================
-   LISTEN TAB — CATEGORY + AUDIO PLAYER + CLEAN UI
+   LISTEN TAB — SPA RENDERER
    ============================================================ */
 
 let listenAutoPlay = {
@@ -500,7 +440,7 @@ let listenAutoPlay = {
     list: []
 };
 
-function renderListenTab() {
+function renderListen() {
     updateTabHeader("listen");
 
     const container = document.getElementById("listen-content");
@@ -547,7 +487,7 @@ function renderListenTab() {
                     margin-top:8px;
                 ">
                     ${grouped[cat].map(w => `
-                        <button class="pill" data-spanish="${w.spanish}">
+                        <button class="pill listen-opt" data-spanish="${w.spanish}">
                             ${w.english}
                             <span style="opacity:0.7;">(${w.spanish})</span>
                         </button>
@@ -575,7 +515,7 @@ function renderListenTab() {
     /* ============================================================
        SINGLE WORD PLAYBACK
        ============================================================ */
-    container.querySelectorAll(".pill").forEach(btn => {
+    container.querySelectorAll(".listen-opt").forEach(btn => {
         btn.addEventListener("click", () => {
             speakSpanish(btn.dataset.spanish);
             appState.levelStats[appState.currentLevel].listens++;
@@ -616,6 +556,7 @@ function renderListenTab() {
     };
 }
 
+
 /* ============================================================
    AUTO PLAY ENGINE
    ============================================================ */
@@ -645,10 +586,10 @@ function playNextListenWord() {
 }
 
 /* ============================================================
-   FLASHCARDS — CATEGORY GROUPED + FLIP + AUDIO (STABLE VERSION)
+   FLASHCARDS — SPA RENDERER (CATEGORY GROUPED + FLIP + AUDIO)
    ============================================================ */
 
-function renderFlashcardsTab() {
+function renderFlashcards() {
     updateTabHeader("flash");
 
     const container = document.getElementById("flash-content");
@@ -687,6 +628,9 @@ function renderFlashcardsTab() {
 
     container.innerHTML = html;
 
+    /* ============================================================
+       CATEGORY COLLAPSE
+       ============================================================ */
     container.querySelectorAll(".listen-category-header").forEach(header => {
         header.addEventListener("click", () => {
             const cat = header.dataset.cat;
@@ -697,6 +641,9 @@ function renderFlashcardsTab() {
         });
     });
 
+    /* ============================================================
+       FLASHCARD FLIP + AUDIO
+       ============================================================ */
     container.querySelectorAll(".fc-card").forEach(card => {
         card.addEventListener("click", () => {
             const inner = card.querySelector(".fc-inner");
@@ -716,7 +663,6 @@ function renderFlashcardsTab() {
     });
 }
 
-
 /* ============================================================
    SHARED QUIZ / BUILD / SENTENCE / CONVERSATION STATE
    ============================================================ */
@@ -730,17 +676,20 @@ let quizState = {
 
 let buildState = {
     currentWord: null,
-    tokens: []
+    tokens: [],
+    answer: []
 };
 
 let sentenceState = {
     currentSentence: null,
-    tokens: []
+    tokens: [],
+    answer: []
 };
 
 let convoState = {
     currentPrompt: null,
-    tokens: []
+    tokens: [],
+    answer: []
 };
 
 function generateQuizOptions(words, correctWord) {
@@ -756,10 +705,10 @@ function generateQuizOptions(words, correctWord) {
 }
 
 /* ============================================================
-   QUIZ TAB — RENDER + EVENTS
+   QUIZ TAB — SPA RENDERER
    ============================================================ */
 
-function renderQuizTab() {
+function renderQuiz() {
     updateTabHeader("quiz");
 
     const container = document.getElementById("quiz-content");
@@ -796,7 +745,9 @@ function renderQuizTab() {
             <div class="sb-controls quiz-controls-tight">
                 <button id="qb-submit">Check</button>
                 <button id="qb-next">Next</button>
-                <button id="qb-harder" class="${quizState.harderMode ? "active" : ""}">Harder</button>
+                <button id="qb-harder" class="${quizState.harderMode ? "active" : ""}">
+                    Harder
+                </button>
             </div>
 
             <div id="qb-feedback" class="qb-feedback"></div>
@@ -806,6 +757,9 @@ function renderQuizTab() {
     setupQuizEvents();
 }
 
+/* ============================================================
+   QUIZ TAB — EVENTS
+   ============================================================ */
 
 function setupQuizEvents() {
     const grid = document.getElementById("qb-grid");
@@ -817,7 +771,9 @@ function setupQuizEvents() {
 
     quizState.selected = null;
 
-    // Pill selection
+    /* ============================================================
+       OPTION SELECTION
+       ============================================================ */
     grid.querySelectorAll(".pill").forEach(btn => {
         btn.addEventListener("click", () => {
             grid.querySelectorAll(".pill").forEach(b => b.classList.remove("active"));
@@ -827,63 +783,67 @@ function setupQuizEvents() {
         });
     });
 
-    // Check button
+    /* ============================================================
+       CHECK ANSWER
+       ============================================================ */
     submitBtn.addEventListener("click", () => {
-    if (!quizState.selected) {
-        feedback.textContent = "Choose an answer first.";
-        return;
-    }
+        if (!quizState.selected) {
+            feedback.textContent = "Choose an answer first.";
+            return;
+        }
 
-    const correct = quizState.currentWord.spanish;
+        const correct = quizState.currentWord.spanish;
 
-    // ⭐ Ensure quizScore is not null before incrementing
-    if (appState.levelStats[appState.currentLevel].quizScore === null) {
-        appState.levelStats[appState.currentLevel].quizScore = 0;
-    }
+        // Ensure quizScore exists
+        if (appState.levelStats[appState.currentLevel].quizScore === null) {
+            appState.levelStats[appState.currentLevel].quizScore = 0;
+        }
 
-    if (quizState.selected === correct) {
-    feedback.textContent = "Correct! 🎉";
+        // Ensure quizCompleted exists
+        if (appState.levelStats[appState.currentLevel].quizCompleted === undefined) {
+            appState.levelStats[appState.currentLevel].quizCompleted = 0;
+        }
 
-    // ⭐ Increment quizCompleted (REAL PROGRESS METER)
-    appState.levelStats[appState.currentLevel].quizCompleted++;
+        if (quizState.selected === correct) {
+            feedback.textContent = "Correct! 🎉";
 
-    // Existing scoring
-    appState.levelStats[appState.currentLevel].quizScore++;
+            appState.levelStats[appState.currentLevel].quizCompleted++;
+            appState.levelStats[appState.currentLevel].quizScore++;
 
-    updateBadges();
-    saveAppState();
-    updateProgressMeters();
-} else {
-    feedback.textContent = `Incorrect — correct answer: ${correct}`;
-}
+            updateBadges();
+            updateProgressMeters();
+        } else {
+            feedback.textContent = `Incorrect — correct answer: ${correct}`;
+        }
 
+        // Sabina audio
+        setTimeout(() => speakQuiz(correct), 300);
 
-    // Sabina audio
-    setTimeout(() => speakQuiz(correct), 300);
-
-    saveState();
-});
-
-
-    // Next button
-    nextBtn.addEventListener("click", () => {
-        renderQuizTab();
+        saveState();
     });
 
-    // Harder mode toggle
+    /* ============================================================
+       NEXT QUESTION
+       ============================================================ */
+    nextBtn.addEventListener("click", () => {
+        renderQuiz();
+    });
+
+    /* ============================================================
+       HARDER MODE
+       ============================================================ */
     harderBtn.addEventListener("click", () => {
         quizState.harderMode = !quizState.harderMode;
-        harderBtn.classList.toggle("active");
-        renderQuizTab();
+        harderBtn.classList.toggle("active", quizState.harderMode);
+        renderQuiz();
     });
 }
 
-
 /* ============================================================
-   BUILD TAB — English → Spanish Builder (with disruptors + feedback)
+   BUILD TAB — SPA RENDERER (English → Spanish Builder)
    ============================================================ */
 
-function renderBuildTab() {
+function renderBuild() {
     updateTabHeader("build");
 
     const level = appState.currentLevel;
@@ -916,7 +876,7 @@ function renderBuildTab() {
 
     container.innerHTML = `
         <div class="glass-panel build-card">
-            <h2>Duplicate this sentence in Spanish</h2>
+            <h2>Build</h2>
             <p class="build-english"><strong>English:</strong> ${english}</p>
 
             <div id="build-selected" class="build-selected"></div>
@@ -941,7 +901,9 @@ function renderBuildTab() {
     setupBuildEvents(sentence);
 }
 
-
+/* ============================================================
+   BUILD TAB — EVENTS
+   ============================================================ */
 
 function setupBuildEvents(sentence) {
     const selectedArea = document.getElementById("build-selected");
@@ -956,6 +918,9 @@ function setupBuildEvents(sentence) {
 
     buildState.answer = [];
 
+    /* ============================================================
+       WORD PILL SELECTION
+       ============================================================ */
     grid.querySelectorAll(".build-opt").forEach(btn => {
         btn.addEventListener("click", () => {
             buildState.answer.push(btn.dataset.token);
@@ -965,11 +930,17 @@ function setupBuildEvents(sentence) {
         });
     });
 
+    /* ============================================================
+       TYPING MODE
+       ============================================================ */
     input.addEventListener("input", () => {
         buildState.answer = input.value.trim().split(" ");
         selectedArea.textContent = buildState.answer.join(" ");
     });
 
+    /* ============================================================
+       UNDO
+       ============================================================ */
     undoBtn.addEventListener("click", () => {
         buildState.answer.pop();
         selectedArea.textContent = buildState.answer.join(" ");
@@ -982,6 +953,9 @@ function setupBuildEvents(sentence) {
         });
     });
 
+    /* ============================================================
+       RESET
+       ============================================================ */
     resetBtn.addEventListener("click", () => {
         buildState.answer = [];
         selectedArea.textContent = "";
@@ -992,6 +966,9 @@ function setupBuildEvents(sentence) {
         });
     });
 
+    /* ============================================================
+       CHECK ANSWER
+       ============================================================ */
     checkBtn.addEventListener("click", () => {
         const correct = sentence.spanish.trim();
         const user = buildState.answer.join(" ").trim();
@@ -999,14 +976,24 @@ function setupBuildEvents(sentence) {
         if (user === correct) {
             feedback.innerHTML = `<span style="color:#4ade80;font-weight:600;">Correct! 🎉</span>`;
 
+            // Ensure fields exist
+            if (appState.levelStats[appState.currentLevel].xp === undefined)
+                appState.levelStats[appState.currentLevel].xp = 0;
+
+            if (appState.levelStats[appState.currentLevel].streak === undefined)
+                appState.levelStats[appState.currentLevel].streak = 0;
+
+            if (appState.levelStats[appState.currentLevel].score === undefined)
+                appState.levelStats[appState.currentLevel].score = 0;
+
             appState.levelStats[appState.currentLevel].buildCompleted++;
             appState.levelStats[appState.currentLevel].xp += 5;
             appState.levelStats[appState.currentLevel].streak++;
             appState.levelStats[appState.currentLevel].score += 2;
 
             updateBadges();
-            saveAppState();
             updateProgressMeters();
+            saveState();
 
             setTimeout(() => speakQuiz(correct), 300);
 
@@ -1028,19 +1015,24 @@ function setupBuildEvents(sentence) {
 
             feedback.innerHTML = html;
 
+            // Reset streak on incorrect
+            if (appState.levelStats[appState.currentLevel].streak === undefined)
+                appState.levelStats[appState.currentLevel].streak = 0;
+
             appState.levelStats[appState.currentLevel].streak = 0;
 
-            saveAppState();
+            saveState();
             setTimeout(() => speakQuiz(correct), 300);
         }
     });
 
-    // ⭐ FIXED NEXT BUTTON
+    /* ============================================================
+       NEXT SENTENCE
+       ============================================================ */
     nextBtn.onclick = () => {
-        renderBuildTab();
+        renderBuild();
     };
 }
-
 
 
 /* ============================================================
@@ -1052,9 +1044,8 @@ function generateSentenceForLevel(level) {
     const item = pool[Math.floor(Math.random() * pool.length)];
 
     const shuffled = [...item.options]
-    .filter(Boolean)
-    .sort(() => Math.random() - 0.5);
-
+        .filter(Boolean)
+        .sort(() => Math.random() - 0.5);
 
     return {
         english: item.english,
@@ -1063,70 +1054,61 @@ function generateSentenceForLevel(level) {
     };
 }
 
+/* ============================================================
+   SENTENCE TAB — SPA RENDERER
+   ============================================================ */
 
- function renderBuildTab() {
-    updateTabHeader("build");
+function renderSentence() {
+    updateTabHeader("sentence");
 
+    const container = document.getElementById("sentence-content");
     const level = appState.currentLevel;
-    const container = document.getElementById("build-content");
 
-    const pool = CEFR_SENTENCES[level];
-    const sentence = pool[Math.floor(Math.random() * pool.length)];
-
-    const english = sentence.english;
-    const spanish = sentence.spanish;
-
-    const coreTokens = spanish.split(" ");
-
-    const disruptors = [
-        "rápido","lento","siempre","nunca","ayer","mañana",
-        "porque","pero","muy","también","solo","entonces"
-    ];
-
-    let bank = [...coreTokens];
-
-    while (bank.length < coreTokens.length + 5) {
-        const d = disruptors[Math.floor(Math.random() * disruptors.length)];
-        if (!bank.includes(d)) bank.push(d);
+    if (!CEFR_SENTENCE_CHOICES[level]) {
+        container.innerHTML = "<p>No sentences available for this level.</p>";
+        return;
     }
 
-    bank = bank.sort(() => Math.random() - 0.5);
-
-    buildState.tokens = bank;
-    buildState.answer = [];
+    const q = generateSentenceForLevel(level);
+    sentenceState.answer = [];
 
     container.innerHTML = `
-        <div class="glass-panel build-card">
-            <h2>Duplicate this sentence in Spanish</h2>
-            <p class="build-english"><strong>English:</strong> ${english}</p>
+        <div class="glass-panel sentence-card">
+            <h2>Sentence</h2>
+            <p><strong>English:</strong> ${q.english}</p>
 
-            <div id="build-selected" class="build-selected"></div>
-
-            <div id="build-words" class="sb-grid">
-                ${bank.map(w => `<button class="pill build-opt" data-token="${w}">${w}</button>`).join("")}
+            <div id="sent-options" class="sentence-options">
+                ${q.options.map(opt => `
+                    <button class="sent-opt pill" data-token="${opt}">
+                        ${opt}
+                    </button>
+                `).join("")}
             </div>
 
-            <input id="build-input" class="input-field" placeholder="Or type the Spanish sentence…">
+            <div id="sent-answer" class="sentence-answer"></div>
+            <div id="sent-feedback"></div>
 
-            <div id="build-feedback"></div>
+            <input id="sent-type" class="input-field" placeholder="Or type the Spanish sentence…">
 
-            <div class="sb-controls">
-                <button id="build-undo" class="pill">Undo</button>
-                <button id="build-reset" class="pill">Reset</button>
-                <button id="build-check" class="pill">Check</button>
-                <button id="build-next" class="pill">Next</button>
+            <div class="sentence-controls">
+                <button id="sent-undo" class="pill">Undo</button>
+                <button id="sent-reset" class="pill">Reset</button>
+                <button id="sent-check" class="pill">Check</button>
+                <button id="sent-next" class="pill">Next</button>
             </div>
         </div>
     `;
 
-    setupBuildEvents(sentence);
+    setupSentenceEvents(q);
 }
 
-
+/* ============================================================
+   SENTENCE TAB — EVENTS
+   ============================================================ */
 
 function setupSentenceEvents(q) {
 
-    // --- SELECT OPTIONS ---
+    /* OPTION SELECTION */
     document.querySelectorAll(".sent-opt").forEach(btn => {
         btn.addEventListener("click", () => {
             const token = btn.dataset.token;
@@ -1141,19 +1123,15 @@ function setupSentenceEvents(q) {
         });
     });
 
-
-    // --- TYPING MODE ---
+    /* TYPING MODE */
     const typeBox = document.getElementById("sent-type");
-    if (typeBox) {
-        typeBox.addEventListener("input", () => {
-            const typed = typeBox.value.trim();
-            sentenceState.answer = typed.split(" ");
-            document.getElementById("sent-answer").textContent = typed;
-        });
-    }
+    typeBox.addEventListener("input", () => {
+        const typed = typeBox.value.trim();
+        sentenceState.answer = typed.split(" ");
+        document.getElementById("sent-answer").textContent = typed;
+    });
 
-
-    // --- UNDO ---
+    /* UNDO */
     document.getElementById("sent-undo").addEventListener("click", () => {
         sentenceState.answer.pop();
 
@@ -1168,16 +1146,13 @@ function setupSentenceEvents(q) {
         });
     });
 
-
-    // --- RESET ---
+    /* RESET */
     document.getElementById("sent-reset").addEventListener("click", () => {
         sentenceState.answer = [];
 
         document.getElementById("sent-answer").textContent = "";
         document.getElementById("sent-feedback").textContent = "";
-
-        const typeBox = document.getElementById("sent-type");
-        if (typeBox) typeBox.value = "";
+        typeBox.value = "";
 
         document.querySelectorAll(".sent-opt").forEach(btn => {
             btn.classList.remove("used");
@@ -1185,24 +1160,30 @@ function setupSentenceEvents(q) {
         });
     });
 
-
-    // --- CHECK ---
+    /* CHECK */
     document.getElementById("sent-check").addEventListener("click", () => {
         const correct = q.correct.trim();
         const user = sentenceState.answer.join(" ").trim();
+
+        // Ensure fields exist
+        const stats = appState.levelStats[appState.currentLevel];
+        if (stats.xp === undefined) stats.xp = 0;
+        if (stats.streak === undefined) stats.streak = 0;
+        if (stats.score === undefined) stats.score = 0;
+        if (stats.sentenceCompleted === undefined) stats.sentenceCompleted = 0;
 
         if (user === correct) {
             document.getElementById("sent-feedback").innerHTML =
                 `<span style="color:#4ade80;font-weight:600;">Correct! 🎉</span>`;
 
-            appState.levelStats[appState.currentLevel].sentenceCompleted++;
-            appState.levelStats[appState.currentLevel].xp += 5;
-            appState.levelStats[appState.currentLevel].streak++;
-            appState.levelStats[appState.currentLevel].score += 2;
+            stats.sentenceCompleted++;
+            stats.xp += 5;
+            stats.streak++;
+            stats.score += 2;
 
             updateBadges();
-            saveAppState();
             updateProgressMeters();
+            saveState();
 
             speakQuiz(correct);
 
@@ -1210,27 +1191,20 @@ function setupSentenceEvents(q) {
             document.getElementById("sent-feedback").innerHTML =
                 `Incorrect — correct answer: <strong>${correct}</strong>`;
 
-            appState.levelStats[appState.currentLevel].streak = 0;
-
-            saveAppState();
+            stats.streak = 0;
+            saveState();
             speakQuiz(correct);
         }
     });
 
-
-    // --- NEXT ---
-    const nextBtn = document.getElementById("sent-next");
-    nextBtn.onclick = () => {
-
-        // FULL RESET
+    /* NEXT */
+    document.getElementById("sent-next").onclick = () => {
         sentenceState.answer = [];
         document.getElementById("sent-answer").textContent = "";
         document.getElementById("sent-feedback").textContent = "";
-
-        renderSentenceTab();
+        renderSentence();
     };
 }
-
 
 
 /* ============================================================
@@ -1460,9 +1434,8 @@ const CEFR_SENTENCE_CHOICES = {
 };
 
 
-
 /* ============================================================
-   CONVERSATION TAB — RENDER + EVENTS (EVERYDAY DIALOGUE)
+   CONVERSATION TAB — SPA RENDERER (EVERYDAY DIALOGUE)
    ============================================================ */
 
 const CONVO_PROMPTS = [
@@ -1474,7 +1447,7 @@ const CONVO_PROMPTS = [
     { english: "What time do you usually get up?", spanishTarget: "¿A qué hora sueles levantarte?" }
 ];
 
-function renderConversationTab() {
+function renderConversation() {
     updateTabHeader("conversation");
 
     const container = document.getElementById("conversation-content");
@@ -1550,8 +1523,9 @@ function renderConversationTab() {
     setupConversationEvents();
 }
 
-
-
+/* ============================================================
+   CONVERSATION TAB — EVENTS
+   ============================================================ */
 
 function setupConversationEvents() {
     const grid = document.getElementById("convo-grid");
@@ -1566,7 +1540,9 @@ function setupConversationEvents() {
 
     convoState.answer = [];
 
-    // Word-pill selection
+    /* ============================================================
+       WORD-PILL SELECTION
+       ============================================================ */
     grid.querySelectorAll(".convo-opt").forEach(btn => {
         btn.addEventListener("click", () => {
             convoState.answer.push(btn.dataset.token);
@@ -1576,13 +1552,17 @@ function setupConversationEvents() {
         });
     });
 
-    // Typing mode
+    /* ============================================================
+       TYPING MODE
+       ============================================================ */
     typeBox.addEventListener("input", () => {
         convoState.answer = typeBox.value.trim().split(" ");
         answerBox.textContent = convoState.answer.join(" ");
     });
 
-    // Undo
+    /* ============================================================
+       UNDO
+       ============================================================ */
     undoBtn.addEventListener("click", () => {
         convoState.answer.pop();
         answerBox.textContent = convoState.answer.join(" ");
@@ -1595,7 +1575,9 @@ function setupConversationEvents() {
         });
     });
 
-    // Reset
+    /* ============================================================
+       RESET
+       ============================================================ */
     resetBtn.addEventListener("click", () => {
         convoState.answer = [];
         answerBox.textContent = "";
@@ -1606,56 +1588,60 @@ function setupConversationEvents() {
         });
     });
 
-    // ⭐ CHECK ANSWER
+    /* ============================================================
+       CHECK ANSWER
+       ============================================================ */
     checkBtn.addEventListener("click", () => {
         const correct = convoState.currentPrompt.spanishTarget.replace(/[¿?]/g, "").trim();
         const user = convoState.answer.join(" ").trim();
 
+        const stats = appState.levelStats[appState.currentLevel];
+
+        // Ensure fields exist
+        if (stats.xp === undefined) stats.xp = 0;
+        if (stats.streak === undefined) stats.streak = 0;
+        if (stats.score === undefined) stats.score = 0;
+        if (stats.conversationCompleted === undefined) stats.conversationCompleted = 0;
+
         if (user === correct) {
             feedback.textContent = "Nice! That’s a natural response. 🎉";
 
-            // ⭐ REAL PROGRESS METER — increment Conversation completion
-            appState.levelStats[appState.currentLevel].conversationCompleted++;
-
-            // ⭐ XP reward
-            appState.levelStats[appState.currentLevel].xp += 5;
-
-            // ⭐ Streak system
-            appState.levelStats[appState.currentLevel].streak++;
-
-            // ⭐ Score rating
-            appState.levelStats[appState.currentLevel].score += 2;
+            stats.conversationCompleted++;
+            stats.xp += 5;
+            stats.streak++;
+            stats.score += 2;
 
             updateBadges();
-            saveAppState();
             updateProgressMeters();
+            saveState();
 
             setTimeout(() => speakQuiz(correct), 300);
 
         } else {
-            feedback.textContent = `Not quite. A natural response would be: ${convoState.currentPrompt.spanishTarget}`;
+            feedback.textContent =
+                `Not quite. A natural response would be: ${convoState.currentPrompt.spanishTarget}`;
 
-            // ⭐ Reset streak on incorrect
-            appState.levelStats[appState.currentLevel].streak = 0;
+            stats.streak = 0;
+            saveState();
 
-            saveAppState();
             setTimeout(() => speakQuiz(correct), 300);
         }
     });
 
-    // Next
+    /* ============================================================
+       NEXT
+       ============================================================ */
     nextBtn.addEventListener("click", () => {
-        renderConversationTab();
+        renderConversation();
     });
 }
-
 
 
 /* ============================================================
    GRAMMAR TAB
    ============================================================ */
 
-function renderGrammarTab() {
+function renderGrammar() {
     updateTabHeader("grammar");
 
     const container = document.getElementById("grammar-content");
@@ -1690,18 +1676,17 @@ function updateBadges() {
     const list = document.getElementById("badge-list");
     const badges = new Set(appState.badges);
 
-   Object.keys(appState.levelStats).forEach(level => {
-    const s = appState.levelStats[level];
-    if (s.listens >= 20) badges.add(`${level} Listener`);
-    if (s.flashSeen >= 30) badges.add(`${level} Flash Master`);
-    if (s.quizScore !== null && s.quizScore >= 80) badges.add(`${level} Quiz Ace`);
-    if (s.buildCompleted >= 10) badges.add(`${level} Builder`);
+    Object.keys(appState.levelStats).forEach(level => {
+        const s = appState.levelStats[level];
 
-    // ⭐ NEW BADGES — paste here
-    if (s.sentenceCompleted >= 10) badges.add(`${level} Sentence Pro`);
-    if (s.conversationCompleted >= 10) badges.add(`${level} Conversationalist`);
-});
+        if (s.listens >= 20) badges.add(`${level} Listener`);
+        if (s.flashSeen >= 30) badges.add(`${level} Flash Master`);
+        if (s.quizScore !== null && s.quizScore >= 80) badges.add(`${level} Quiz Ace`);
+        if (s.buildCompleted >= 10) badges.add(`${level} Builder`);
 
+        if (s.sentenceCompleted >= 10) badges.add(`${level} Sentence Pro`);
+        if (s.conversationCompleted >= 10) badges.add(`${level} Conversationalist`);
+    });
 
     appState.badges = Array.from(badges);
     saveState();
@@ -1770,7 +1755,7 @@ function animateNumber(id, target) {
 }
 
 /* ============================================================
-   PROGRESS REQUIREMENTS (EDIT THESE TO CONTROL LEVEL UNLOCK)
+   PROGRESS REQUIREMENTS
    ============================================================ */
 
 const QUIZ_REQUIRED = 10;
@@ -1783,18 +1768,25 @@ const STREAK_GOAL = 7;
 const SCORE_MAX = 100;
 const REVIEW_TOTAL = 20;
 
-// Unlock threshold (EDIT THIS)
-const LEVEL_UNLOCK_PERCENT = 80;   // <— change to 70, 90, 100 etc.
+const LEVEL_UNLOCK_PERCENT = 80;
 
 
 /* ============================================================
-   REAL PROGRESS METERS (FINAL VERSION)
+   REAL PROGRESS METERS
    ============================================================ */
 
 function updateProgressMeters() {
     const stats = appState.levelStats[appState.currentLevel];
 
-    // REAL VALUES
+    if (stats.xp === undefined) stats.xp = 0;
+    if (stats.streak === undefined) stats.streak = 0;
+    if (stats.score === undefined) stats.score = 0;
+    if (stats.reviewDue === undefined) stats.reviewDue = 0;
+    if (stats.quizCompleted === undefined) stats.quizCompleted = 0;
+    if (stats.buildCompleted === undefined) stats.buildCompleted = 0;
+    if (stats.sentenceCompleted === undefined) stats.sentenceCompleted = 0;
+    if (stats.conversationCompleted === undefined) stats.conversationCompleted = 0;
+
     const quizPct = Math.min(100, (stats.quizCompleted / QUIZ_REQUIRED) * 100);
     const buildPct = Math.min(100, (stats.buildCompleted / BUILD_REQUIRED) * 100);
     const sentencePct = Math.min(100, (stats.sentenceCompleted / SENTENCE_REQUIRED) * 100);
@@ -1805,27 +1797,21 @@ function updateProgressMeters() {
     const scorePct = Math.min(100, (stats.score / SCORE_MAX) * 100);
     const reviewPct = Math.min(100, (stats.reviewDue / REVIEW_TOTAL) * 100);
 
-    // UPDATE DOM
     setMeter("quiz", quizPct);
-setMeter("build", buildPct);
-setMeter("sentence", sentencePct);
-setMeter("convo", convoPct);
+    setMeter("build", buildPct);
+    setMeter("sentence", sentencePct);
+    setMeter("convo", convoPct);
 
-// REMOVE THIS:
-// setMeter("xp", xpPct);
+    setMeter("streak", streakPct);
+    setMeter("score", scorePct);
+    setMeter("review", reviewPct);
 
-setMeter("streak", streakPct);
-setMeter("score", scorePct);
-setMeter("review", reviewPct);
-
-
-    // CHECK LEVEL UNLOCK
     checkLevelUnlock();
 }
 
 
 /* ============================================================
-   METER SETTER (ANIMATION + PULSE)
+   METER SETTER
    ============================================================ */
 
 function setMeter(name, pct) {
@@ -1865,8 +1851,10 @@ function unlockNextLevel() {
 
     if (idx < levels.length - 1) {
         appState.currentLevel = levels[idx + 1];
-        saveAppState();
-        showLevelUpPopup(appState.currentLevel);
+        saveState();
+        if (typeof showLevelUpPopup === "function") {
+            showLevelUpPopup(appState.currentLevel);
+        }
     }
 }
 
@@ -1887,7 +1875,7 @@ function resetProgressForLevel(level) {
         reviewDue: 0
     };
 
-    saveAppState();
+    saveState();
     updateProgressMeters();
 }
 
@@ -1905,8 +1893,6 @@ document.getElementById("reset-progress").addEventListener("click", () => {
    TILE PULSE ANIMATION
    ============================================================ */
 
-
-
 function pulseTile(id) {
     const tile = document.getElementById(id);
     if (!tile) return;
@@ -1923,26 +1909,15 @@ function pulseTile(id) {
 document.addEventListener("DOMContentLoaded", () => {
     loadState();
 
-    initTabNavigation();     // tab buttons now exist
-    activateTab("dashboard"); // show dashboard first
+    initTabNavigation();
+    activateTab("dashboard");
 
-    initRateControl();       // slider exists now
-    initNameBox();           // name box exists now
+    initRateControl();
+    initNameBox();
 
     updateBadges();
     updateProgressMeters();
 });
-
-function saveAppState() {
-    localStorage.setItem("appState", JSON.stringify(appState));
-}
-function loadAppState() {
-    const saved = localStorage.getItem("appState");
-    if (saved) {
-        appState = JSON.parse(saved);
-    }
-}
-
 
 
 
