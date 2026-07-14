@@ -755,13 +755,17 @@ function generateQuizOptions(words, correctWord) {
    ============================================================ */
 
 function renderQuizTab() {
+    updateTabHeader("quiz");
+
     const container = document.getElementById("quiz-content");
     const words = CEFR_LEVELS[appState.currentLevel];
 
     if (!words || !words.length) {
-        container.innerHTML = `<div class="glass-panel quiz-card">
-            <p>No words found for level ${appState.currentLevel}.</p>
-        </div>`;
+        container.innerHTML = `
+            <div class="glass-panel quiz-card">
+                <p>No words found for level ${appState.currentLevel}.</p>
+            </div>
+        `;
         return;
     }
 
@@ -769,37 +773,34 @@ function renderQuizTab() {
     quizState.options = generateQuizOptions(words, quizState.currentWord);
     quizState.selected = null;
 
-container.innerHTML = `
-<div class="glass-panel quiz-card">
-    <h2>Quiz — Level ${appState.currentLevel}</h2>
-    <p>Select the correct Spanish for the English word.</p>
+    container.innerHTML = `
+        <div class="glass-panel quiz-card">
+            <h2>Quiz</h2>
+            <p>Select the correct Spanish for the English word.</p>
 
-    <div id="qb-meta"><strong>English:</strong> ${quizState.currentWord.english}</div>
+            <div id="qb-meta"><strong>English:</strong> ${quizState.currentWord.english}</div>
 
-    <div id="qb-grid" class="sb-grid">
-        ${quizState.options.map(opt => `
-            <button class="pill" data-spanish="${opt}">${opt}</button>
-        `).join("")}
-    </div>
+            <div id="qb-grid" class="sb-grid">
+                ${quizState.options.map(opt => `
+                    <button class="pill" data-spanish="${opt}">${opt}</button>
+                `).join("")}
+            </div>
 
-    <!-- ⭐ ANSWER FIELD MOVED UP -->
-    <div id="qb-answer" class="qb-answer"></div>
+            <div id="qb-answer" class="qb-answer"></div>
 
-    <!-- ⭐ BUTTONS MOVED CLOSER TO ANSWER -->
-    <div class="sb-controls quiz-controls-tight">
-        <button id="qb-submit">Check</button>
-        <button id="qb-next">Next</button>
-        <button id="qb-harder" class="${quizState.harderMode ? "active" : ""}">Harder</button>
-    </div>
+            <div class="sb-controls quiz-controls-tight">
+                <button id="qb-submit">Check</button>
+                <button id="qb-next">Next</button>
+                <button id="qb-harder" class="${quizState.harderMode ? "active" : ""}">Harder</button>
+            </div>
 
-    <!-- ⭐ FEEDBACK MOVED BELOW BUTTONS -->
-    <div id="qb-feedback" class="qb-feedback"></div>
-</div>
-`;
-
+            <div id="qb-feedback" class="qb-feedback"></div>
+        </div>
+    `;
 
     setupQuizEvents();
 }
+
 
 function setupQuizEvents() {
     const grid = document.getElementById("qb-grid");
@@ -878,10 +879,9 @@ function setupQuizEvents() {
    ============================================================ */
 
 function renderBuildTab() {
-    const level = appState.currentLevel;
-    document.getElementById("build-level-header").textContent =
-        `Build — Level ${level}`;
+    updateTabHeader("build");
 
+    const level = appState.currentLevel;
     const container = document.getElementById("build-content");
 
     const pool = CEFR_SENTENCES[level];
@@ -935,6 +935,7 @@ function renderBuildTab() {
 
     setupBuildEvents(sentence);
 }
+
 
 
 function setupBuildEvents(sentence) {
@@ -1058,51 +1059,64 @@ function generateSentenceForLevel(level) {
 }
 
 
- function renderSentenceTab() {
+ function renderBuildTab() {
+    updateTabHeader("build");
+
     const level = appState.currentLevel;
+    const container = document.getElementById("build-content");
 
-    // ⭐ Update level header
-    document.getElementById("sentence-level-header").textContent =
-        `Sentence — Level ${level}`;
+    const pool = CEFR_SENTENCES[level];
+    const sentence = pool[Math.floor(Math.random() * pool.length)];
 
-    const container = document.getElementById("sentence-content");
+    const english = sentence.english;
+    const spanish = sentence.spanish;
 
-    // ⭐ Safety check
-    if (!CEFR_SENTENCE_CHOICES[level]) {
-        container.innerHTML = "<p>No sentences available for this level.</p>";
-        return;
+    const coreTokens = spanish.split(" ");
+
+    const disruptors = [
+        "rápido","lento","siempre","nunca","ayer","mañana",
+        "porque","pero","muy","también","solo","entonces"
+    ];
+
+    let bank = [...coreTokens];
+
+    while (bank.length < coreTokens.length + 5) {
+        const d = disruptors[Math.floor(Math.random() * disruptors.length)];
+        if (!bank.includes(d)) bank.push(d);
     }
 
-    const q = generateSentenceForLevel(level);
+    bank = bank.sort(() => Math.random() - 0.5);
 
-    // ⭐ Render UI
+    buildState.tokens = bank;
+    buildState.answer = [];
+
     container.innerHTML = `
-        <div class="glass-panel sentence-card">
-            <h2>Select the correct Spanish translation</h2>
-            <p class="sentence-english"><strong>English:</strong> ${q.english}</p>
+        <div class="glass-panel build-card">
+            <h2>Duplicate this sentence in Spanish</h2>
+            <p class="build-english"><strong>English:</strong> ${english}</p>
 
-            <div id="sent-options" class="sentence-options">
-                ${q.options.map(opt => `
-                    <button class="sent-opt pill" data-token="${opt}">
-                        ${opt}
-                    </button>
-                `).join("")}
+            <div id="build-selected" class="build-selected"></div>
+
+            <div id="build-words" class="sb-grid">
+                ${bank.map(w => `<button class="pill build-opt" data-token="${w}">${w}</button>`).join("")}
             </div>
 
-            <div id="sent-answer" class="sentence-answer"></div>
-            <div id="sent-feedback"></div>
+            <input id="build-input" class="input-field" placeholder="Or type the Spanish sentence…">
 
-            <div class="sentence-controls">
-                <button id="sent-undo" class="pill">Undo</button>
-                <button id="sent-reset" class="pill">Reset</button>
-                <button id="sent-check" class="pill">Check</button>
-                <button id="sent-next" class="pill">Next</button>
+            <div id="build-feedback"></div>
+
+            <div class="sb-controls">
+                <button id="build-undo" class="pill">Undo</button>
+                <button id="build-reset" class="pill">Reset</button>
+                <button id="build-check" class="pill">Check</button>
+                <button id="build-next" class="pill">Next</button>
             </div>
         </div>
     `;
 
-    setupSentenceEvents(q);
+    setupBuildEvents(sentence);
 }
+
 
 
 function setupSentenceEvents(q) {
