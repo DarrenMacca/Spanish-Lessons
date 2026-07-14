@@ -1024,7 +1024,6 @@ function renderSentenceTab() {
     const container = document.getElementById("sentence-content");
     const level = appState.currentLevel;
 
-    // SAFETY CHECK — prevents crashes if level has no sentences
     if (!CEFR_SENTENCE_CHOICES[level]) {
         container.innerHTML = "<p>No sentences available for this level.</p>";
         return;
@@ -1046,7 +1045,6 @@ function renderSentenceTab() {
             </div>
 
             <div id="sent-answer" class="sentence-answer"></div>
-
             <div id="sent-feedback"></div>
 
             <div class="sentence-controls">
@@ -1060,7 +1058,6 @@ function renderSentenceTab() {
 
     setupSentenceEvents(q);
 }
-
 
 function setupSentenceEvents(q) {
 
@@ -1162,12 +1159,12 @@ function setupSentenceEvents(q) {
 
     // --- NEXT ---
     const nextBtn = document.getElementById("sent-next");
-    nextBtn.onclick = () => {
-        renderSentenceTab();
-    };
+nextBtn.onclick = () => {
+    sentenceState.answer = [];        // ⭐ Clears previous answer
+    renderSentenceTab();              // ⭐ Loads new question
+};
+
 }
-
-
 
 
 /* ============================================================
