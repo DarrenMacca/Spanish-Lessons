@@ -1021,7 +1021,8 @@ function generateSentenceForLevel(level) {
 }
 
 function renderSentenceTab() {
-    const container = document.getElementById("sentence-content");
+   sentenceState.answer = [];
+   const container = document.getElementById("sentence-content");
     const level = appState.currentLevel;
 
     if (!CEFR_SENTENCE_CHOICES[level]) {
@@ -1067,14 +1068,11 @@ function setupSentenceEvents(q) {
         btn.addEventListener("click", () => {
             const token = btn.dataset.token;
 
-            // Add selected token
             sentenceState.answer.push(token);
 
-            // Mark button as used
             btn.classList.add("used");
             btn.disabled = true;
 
-            // Update answer display
             document.getElementById("sent-answer").textContent =
                 sentenceState.answer.join(" ");
         });
@@ -1099,7 +1097,6 @@ function setupSentenceEvents(q) {
         document.getElementById("sent-answer").textContent =
             sentenceState.answer.join(" ");
 
-        // Re-enable unused buttons
         document.querySelectorAll(".sent-opt").forEach(btn => {
             if (!sentenceState.answer.includes(btn.dataset.token)) {
                 btn.classList.remove("used");
@@ -1114,6 +1111,7 @@ function setupSentenceEvents(q) {
         sentenceState.answer = [];
 
         document.getElementById("sent-answer").textContent = "";
+        document.getElementById("sent-feedback").textContent = "";
 
         const typeBox = document.getElementById("sent-type");
         if (typeBox) typeBox.value = "";
@@ -1134,7 +1132,6 @@ function setupSentenceEvents(q) {
             document.getElementById("sent-feedback").innerHTML =
                 `<span style="color:#4ade80;font-weight:600;">Correct! 🎉</span>`;
 
-            // Progress tracking
             appState.levelStats[appState.currentLevel].sentenceCompleted++;
             appState.levelStats[appState.currentLevel].xp += 5;
             appState.levelStats[appState.currentLevel].streak++;
@@ -1160,12 +1157,17 @@ function setupSentenceEvents(q) {
 
     // --- NEXT ---
     const nextBtn = document.getElementById("sent-next");
-nextBtn.onclick = () => {
-    sentenceState.answer = [];        // ⭐ Clears previous answer
-    renderSentenceTab();              // ⭐ Loads new question
-};
+    nextBtn.onclick = () => {
 
+        // FULL RESET
+        sentenceState.answer = [];
+        document.getElementById("sent-answer").textContent = "";
+        document.getElementById("sent-feedback").textContent = "";
+
+        renderSentenceTab();
+    };
 }
+
 
 
 /* ============================================================
