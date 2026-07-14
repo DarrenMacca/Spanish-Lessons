@@ -1062,33 +1062,46 @@ function renderSentenceTab() {
 }
 
 
-function setupSentenceEvents() {
-    const work = document.getElementById("sent-work");
+function setupSentenceEvents(q) {
 
+    // --- SELECT OPTIONS ---
     document.querySelectorAll(".sent-opt").forEach(btn => {
         btn.addEventListener("click", () => {
             const token = btn.dataset.token;
 
+            // Add selected token
             sentenceState.answer.push(token);
+
+            // Mark button as used
             btn.classList.add("used");
             btn.disabled = true;
 
+            // Update answer display
             document.getElementById("sent-answer").textContent =
                 sentenceState.answer.join(" ");
         });
     });
 
-    document.getElementById("sent-type").addEventListener("input", () => {
-        const typed = document.getElementById("sent-type").value.trim();
-        sentenceState.answer = typed.split(" ");
-        document.getElementById("sent-answer").textContent = typed;
-    });
 
+    // --- TYPING MODE ---
+    const typeBox = document.getElementById("sent-type");
+    if (typeBox) {
+        typeBox.addEventListener("input", () => {
+            const typed = typeBox.value.trim();
+            sentenceState.answer = typed.split(" ");
+            document.getElementById("sent-answer").textContent = typed;
+        });
+    }
+
+
+    // --- UNDO ---
     document.getElementById("sent-undo").addEventListener("click", () => {
         sentenceState.answer.pop();
+
         document.getElementById("sent-answer").textContent =
             sentenceState.answer.join(" ");
 
+        // Re-enable unused buttons
         document.querySelectorAll(".sent-opt").forEach(btn => {
             if (!sentenceState.answer.includes(btn.dataset.token)) {
                 btn.classList.remove("used");
@@ -1097,10 +1110,15 @@ function setupSentenceEvents() {
         });
     });
 
+
+    // --- RESET ---
     document.getElementById("sent-reset").addEventListener("click", () => {
         sentenceState.answer = [];
+
         document.getElementById("sent-answer").textContent = "";
-        document.getElementById("sent-type").value = "";
+
+        const typeBox = document.getElementById("sent-type");
+        if (typeBox) typeBox.value = "";
 
         document.querySelectorAll(".sent-opt").forEach(btn => {
             btn.classList.remove("used");
@@ -1108,14 +1126,17 @@ function setupSentenceEvents() {
         });
     });
 
+
+    // --- CHECK ---
     document.getElementById("sent-check").addEventListener("click", () => {
-        const correct = sentenceState.currentSentence.spanish.trim();
+        const correct = q.correct.trim();
         const user = sentenceState.answer.join(" ").trim();
 
         if (user === correct) {
             document.getElementById("sent-feedback").innerHTML =
                 `<span style="color:#4ade80;font-weight:600;">Correct! 🎉</span>`;
 
+            // Progress tracking
             appState.levelStats[appState.currentLevel].sentenceCompleted++;
             appState.levelStats[appState.currentLevel].xp += 5;
             appState.levelStats[appState.currentLevel].streak++;
@@ -1129,7 +1150,7 @@ function setupSentenceEvents() {
 
         } else {
             document.getElementById("sent-feedback").innerHTML =
-                `Not quite. Correct answer: <strong>${correct}</strong>`;
+                `Incorrect — correct answer: <strong>${correct}</strong>`;
 
             appState.levelStats[appState.currentLevel].streak = 0;
 
@@ -1138,12 +1159,14 @@ function setupSentenceEvents() {
         }
     });
 
-    // ⭐ FIXED NEXT BUTTON — MUST BE HERE
+
+    // --- NEXT ---
     const nextBtn = document.getElementById("sent-next");
     nextBtn.onclick = () => {
         renderSentenceTab();
     };
 }
+
 
 
 
