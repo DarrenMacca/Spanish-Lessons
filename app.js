@@ -1852,7 +1852,7 @@ function renderConversation() {
     const coreTokens = target.split(" ");
 
     const levelTokens = words.map(w => w.spanish.split(" ")).flat();
-    const disruptors = ["rápido","lento","siempre","nunca","ayer","mañana","porque","pero","también","solo","entonces"];
+    const disruptors = ["rápido","ayer","mañana","porque","pero","también"];
 
     let bank = [...coreTokens];
 
@@ -1961,8 +1961,10 @@ function setupConversationEvents() {
     });
 
     // Check answer with word-by-word feedback + streak rewards
-    checkBtn.addEventListener("click", () => {
-    const correct = convoState.currentPrompt.spanish.replace(/[¿?]/g, "").trim();
+checkBtn.addEventListener("click", () => {
+
+    // FIXED: correct property name
+    const correct = convoState.currentPrompt.spanishTarget.replace(/[¿?]/g, "").trim();
     const user = convoState.answer.join(" ").trim();
 
     const correctTokens = correct.split(" ");
@@ -1977,46 +1979,34 @@ function setupConversationEvents() {
     if (user === correct) {
         html += `<span style="color:#4ade80;font-weight:600;">Correct! 🎉</span><br><br>`;
 
-        // ⭐ Conversation completion
         stats.conversationCompleted++;
-
-        // ⭐ Daily challenge integration
         registerDailyConversationCompletion();
 
-        // ⭐ XP + streak + score
         stats.xp += 5;
         stats.streak++;
         stats.score += 2;
 
-        // ⭐ Streak reward messages
-        if (stats.streak === 3) {
-            html += `<div class="streak-reward">🔥 Great streak! 3 correct answers in a row!</div><br>`;
-        }
-        if (stats.streak === 5) {
-            html += `<div class="streak-reward">⚡ Amazing! 5 correct answers in a row!</div><br>`;
-        }
-        if (stats.streak === 10) {
-            html += `<div class="streak-reward">🌟 Incredible! 10 correct answers in a row!</div><br>`;
-        }
+        if (stats.streak === 3) html += `<div class="streak-reward">🔥 Great streak! 3 correct answers in a row!</div><br>`;
+        if (stats.streak === 5) html += `<div class="streak-reward">⚡ Amazing! 5 correct answers in a row!</div><br>`;
+        if (stats.streak === 10) html += `<div class="streak-reward">🌟 Incredible! 10 correct answers in a row!</div><br>`;
 
     } else {
+
         /* ============================================================
-           INCORRECT ANSWER
+           INCORRECT ANSWER — CEFR FEEDBACK
            ============================================================ */
-          const translated = translateToEnglish(user);
+        const translated = translateToEnglish(user);
         const grammarNote = explainGrammarError(user, correct);
         const cefrHint = getCEFRGrammarHint(appState.currentLevel, user, correct);
 
+        html += `<span style="color:#f87171;font-weight:600;">Incorrect</span><br>`;
+        html += `<strong>Correct:</strong> ${correct}<br>`;
         html += `<strong>Your Answer:</strong> ${user}<br><br>`;
         html += `<strong>Your Translated Response is:</strong> ${translated}<br>`;
         html += `<strong>Your sentence means (CEFR-friendly):</strong> ${translated}<br><br>`;
         html += `<em>${grammarNote}</em><br>`;
         html += `<em>${cefrHint}</em><br><br>`;
 
-
-
-
-        // Reset streak
         stats.streak = 0;
     }
 
@@ -2041,6 +2031,7 @@ function setupConversationEvents() {
 
     setTimeout(() => speakQuiz(correct), 300);
 });
+
 
 
     /* ============================================================
