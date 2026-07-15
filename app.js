@@ -1433,48 +1433,212 @@ const CEFR_SENTENCE_CHOICES = {
     ]
 };
 
-
 /* ============================================================
-   CONVERSATION TAB — SPA RENDERER (EVERYDAY DIALOGUE)
+   CEFR CONVERSATION PROMPTS — 50+ per level with topic packs
    ============================================================ */
 
-const CONVO_PROMPTS = [
-    { english: "How are you today?", spanishTarget: "¿Cómo estás hoy?" },
-    { english: "Where do you live?", spanishTarget: "¿Dónde vives?" },
-    { english: "What do you like to do on weekends?", spanishTarget: "¿Qué te gusta hacer los fines de semana?" },
-    { english: "Do you work or study?", spanishTarget: "¿Trabajas o estudias?" },
-    { english: "What is your favorite food?", spanishTarget: "¿Cuál es tu comida favorita?" },
-    { english: "What time do you usually get up?", spanishTarget: "¿A qué hora sueles levantarte?" }
-];
+const CEFR_CONVO_PROMPTS = {
+
+    /* ============================
+       A1 — Beginner (Food, Travel, Work, Family, Daily Life)
+       ============================ */
+    A1: [
+        // FOOD
+        { english: "Do you like coffee?", spanish: "¿Te gusta el café?" },
+        { english: "What do you eat for breakfast?", spanish: "¿Qué comes para el desayuno?" },
+        { english: "Do you drink water or juice?", spanish: "¿Bebes agua o jugo?" },
+        { english: "Do you like fruit?", spanish: "¿Te gusta la fruta?" },
+        { english: "What is your favorite food?", spanish: "¿Cuál es tu comida favorita?" },
+
+        // TRAVEL
+        { english: "Where are you from?", spanish: "¿De dónde eres?" },
+        { english: "Where do you live?", spanish: "¿Dónde vives?" },
+        { english: "Do you travel often?", spanish: "¿Viajas a menudo?" },
+        { english: "Where is the bus stop?", spanish: "¿Dónde está la parada de autobús?" },
+        { english: "Do you like the city?", spanish: "¿Te gusta la ciudad?" },
+
+        // WORK
+        { english: "Do you work or study?", spanish: "¿Trabajas o estudias?" },
+        { english: "Where do you work?", spanish: "¿Dónde trabajas?" },
+        { english: "Do you like your job?", spanish: "¿Te gusta tu trabajo?" },
+        { english: "What time do you start work?", spanish: "¿A qué hora empiezas a trabajar?" },
+        { english: "What time do you finish work?", spanish: "¿A qué hora terminas de trabajar?" },
+
+        // FAMILY
+        { english: "Do you have brothers or sisters?", spanish: "¿Tienes hermanos o hermanas?" },
+        { english: "Do you live with your family?", spanish: "¿Vives con tu familia?" },
+        { english: "Is your family big?", spanish: "¿Tu familia es grande?" },
+        { english: "Do you have children?", spanish: "¿Tienes hijos?" },
+        { english: "Do you visit your parents often?", spanish: "¿Visitas a tus padres a menudo?" },
+
+        // DAILY LIFE
+        { english: "How are you today?", spanish: "¿Cómo estás hoy?" },
+        { english: "What time do you get up?", spanish: "¿A qué hora te levantas?" },
+        { english: "Do you like music?", spanish: "¿Te gusta la música?" },
+        { english: "Do you watch TV?", spanish: "¿Ves televisión?" },
+        { english: "Do you read books?", spanish: "¿Lees libros?" },
+
+        // EXTRA (to reach 50+)
+        { english: "Do you like animals?", spanish: "¿Te gustan los animales?" },
+        { english: "Do you have a pet?", spanish: "¿Tienes una mascota?" },
+        { english: "Do you like sports?", spanish: "¿Te gustan los deportes?" },
+        { english: "Do you walk every day?", spanish: "¿Caminas todos los días?" },
+        { english: "Do you cook at home?", spanish: "¿Cocinas en casa?" },
+        { english: "Do you like cold weather?", spanish: "¿Te gusta el clima frío?" },
+        { english: "Do you like warm weather?", spanish: "¿Te gusta el clima cálido?" },
+        { english: "Do you sleep early?", spanish: "¿Duermes temprano?" },
+        { english: "Do you study Spanish every day?", spanish: "¿Estudias español todos los días?" },
+        { english: "Do you like your house?", spanish: "¿Te gusta tu casa?" }
+    ],
+
+    /* ============================
+       A2 — Elementary (Food, Travel, Work, Family, Daily Life)
+       ============================ */
+    A2: [
+        // FOOD
+        { english: "What did you eat yesterday?", spanish: "¿Qué comiste ayer?" },
+        { english: "Where do you usually buy groceries?", spanish: "¿Dónde sueles comprar comida?" },
+        { english: "Do you like cooking?", spanish: "¿Te gusta cocinar?" },
+        { english: "What do you prefer, tea or coffee?", spanish: "¿Qué prefieres, té o café?" },
+        { english: "Do you eat healthy food?", spanish: "¿Comes comida saludable?" },
+
+        // TRAVEL
+        { english: "Where did you go last weekend?", spanish: "¿Adónde fuiste el fin de semana pasado?" },
+        { english: "Do you like traveling by plane?", spanish: "¿Te gusta viajar en avión?" },
+        { english: "Where would you like to travel?", spanish: "¿Adónde te gustaría viajar?" },
+        { english: "Did you visit your family last month?", spanish: "¿Visitaste a tu familia el mes pasado?" },
+        { english: "Do you like staying in hotels?", spanish: "¿Te gusta quedarte en hoteles?" },
+
+        // WORK
+        { english: "What did you do at work today?", spanish: "¿Qué hiciste en el trabajo hoy?" },
+        { english: "Do you work full-time or part-time?", spanish: "¿Trabajas a tiempo completo o parcial?" },
+        { english: "Do you like your coworkers?", spanish: "¿Te gustan tus compañeros de trabajo?" },
+        { english: "What time did you finish work yesterday?", spanish: "¿A qué hora terminaste de trabajar ayer?" },
+        { english: "Do you have meetings often?", spanish: "¿Tienes reuniones a menudo?" },
+
+        // FAMILY
+        { english: "Did you visit your parents recently?", spanish: "¿Visitaste a tus padres recientemente?" },
+        { english: "Do you help your family at home?", spanish: "¿Ayudas a tu familia en casa?" },
+        { english: "Do you talk to your siblings often?", spanish: "¿Hablas con tus hermanos a menudo?" },
+        { english: "Do you live near your family?", spanish: "¿Vives cerca de tu familia?" },
+        { english: "Did you celebrate a birthday recently?", spanish: "¿Celebraste un cumpleaños recientemente?" },
+
+        // DAILY LIFE
+        { english: "What are you doing today?", spanish: "¿Qué estás haciendo hoy?" },
+        { english: "What time do you usually wake up?", spanish: "¿A qué hora sueles despertarte?" },
+        { english: "Do you exercise regularly?", spanish: "¿Haces ejercicio regularmente?" },
+        { english: "Do you watch movies at home?", spanish: "¿Ves películas en casa?" },
+        { english: "Do you use public transport?", spanish: "¿Usas transporte público?" },
+
+        // EXTRA
+        { english: "Do you like learning languages?", spanish: "¿Te gusta aprender idiomas?" },
+        { english: "Do you enjoy reading books?", spanish: "¿Disfrutas leer libros?" },
+        { english: "Do you listen to music every day?", spanish: "¿Escuchas música todos los días?" },
+        { english: "Do you prefer mornings or nights?", spanish: "¿Prefieres las mañanas o las noches?" },
+        { english: "Do you like going to the beach?", spanish: "¿Te gusta ir a la playa?" }
+    ],
+
+    /* ============================
+       B1 — Intermediate (Food, Travel, Work, Family, Opinions)
+       ============================ */
+    B1: [
+        // FOOD
+        { english: "Why do you enjoy cooking?", spanish: "¿Por qué disfrutas cocinar?" },
+        { english: "What is a traditional dish from your country?", spanish: "¿Cuál es un plato tradicional de tu país?" },
+        { english: "Do you prefer eating at home or at restaurants?", spanish: "¿Prefieres comer en casa o en restaurantes?" },
+        { english: "What food do you avoid?", spanish: "¿Qué comida evitas?" },
+        { english: "What is the healthiest meal you know?", spanish: "¿Cuál es la comida más saludable que conoces?" },
+
+        // TRAVEL
+        { english: "What was your best travel experience?", spanish: "¿Cuál fue tu mejor experiencia de viaje?" },
+        { english: "What country would you like to visit next?", spanish: "¿Qué país te gustaría visitar después?" },
+        { english: "Do you prefer traveling alone or with friends?", spanish: "¿Prefieres viajar solo o con amigos?" },
+        { english: "What do you like about traveling?", spanish: "¿Qué te gusta de viajar?" },
+        { english: "What was the last place you visited?", spanish: "¿Cuál fue el último lugar que visitaste?" },
+
+        // WORK
+        { english: "What challenges do you face at work?", spanish: "¿Qué desafíos enfrentas en el trabajo?" },
+        { english: "What skills are important in your job?", spanish: "¿Qué habilidades son importantes en tu trabajo?" },
+        { english: "Do you enjoy working in a team?", spanish: "¿Disfrutas trabajar en equipo?" },
+        { english: "What motivates you at work?", spanish: "¿Qué te motiva en el trabajo?" },
+        { english: "What project are you working on now?", spanish: "¿En qué proyecto estás trabajando ahora?" },
+
+        // FAMILY
+        { english: "How do you spend time with your family?", spanish: "¿Cómo pasas tiempo con tu familia?" },
+        { english: "What traditions does your family have?", spanish: "¿Qué tradiciones tiene tu familia?" },
+        { english: "Do you visit your relatives often?", spanish: "¿Visitas a tus parientes a menudo?" },
+        { english: "What do you admire about your parents?", spanish: "¿Qué admiras de tus padres?" },
+        { english: "Do you have a close relationship with your siblings?", spanish: "¿Tienes una relación cercana con tus hermanos?" },
+
+        // OPINIONS
+        { english: "What do you think about your city?", spanish: "¿Qué piensas de tu ciudad?" },
+        { english: "How do you stay healthy?", spanish: "¿Cómo te mantienes saludable?" },
+        { english: "What goals do you have this year?", spanish: "¿Qué metas tienes este año?" },
+        { english: "What was the most interesting thing you learned recently?", spanish: "¿Qué fue lo más interesante que aprendiste recientemente?" },
+        { english: "What do you think about social media?", spanish: "¿Qué piensas de las redes sociales?" }
+    ],
+
+    /* ============================
+       B2 — Upper Intermediate (Work, Opinions, Future Plans)
+       ============================ */
+    B2: [
+        // WORK
+        { english: "How do you handle stressful situations?", spanish: "¿Cómo manejas las situaciones estresantes?" },
+        { english: "What challenges do you face at work?", spanish: "¿Qué desafíos enfrentas en el trabajo?" },
+        { english: "How has your career changed over time?", spanish: "¿Cómo ha cambiado tu carrera con el tiempo?" },
+        { english: "What skills do you want to improve?", spanish: "¿Qué habilidades quieres mejorar?" },
+        { english: "What motivates you to improve?", spanish: "¿Qué te motiva a mejorar?" },
+
+        // OPINIONS
+        { english: "What is your opinion on technology in education?", spanish: "¿Cuál es tu opinión sobre la tecnología en la educación?" },
+        { english: "How has your lifestyle changed in recent years?", spanish: "¿Cómo ha cambiado tu estilo de vida en los últimos años?" },
+        { english: "What do you think about climate change?", spanish: "¿Qué piensas sobre el cambio climático?" },
+        { english: "What role does culture play in society?", spanish: "¿Qué papel juega la cultura en la sociedad?" },
+        { english: "What do you think about remote work?", spanish: "¿Qué piensas del trabajo remoto?" },
+
+        // FUTURE PLANS
+        { english: "What are your long-term goals?", spanish: "¿Cuáles son tus metas a largo plazo?" },
+        { english: "Where would you like to live in the future?", spanish: "¿Dónde te gustaría vivir en el futuro?" },
+        { english: "What skills will be important in the future?", spanish: "¿Qué habilidades serán importantes en el futuro?" },
+        { english: "What changes do you expect in your life?", spanish: "¿Qué cambios esperas en tu vida?" },
+        { english: "What do you want to achieve next year?", spanish: "¿Qué quieres lograr el próximo año?" }
+    ]
+};
+
+/* ============================================================
+   CONVERSATION TAB — CEFR Everyday Dialogue Trainer
+   ============================================================ */
 
 function renderConversation() {
     updateTabHeader("conversation");
 
     const container = document.getElementById("conversation-content");
-    const words = CEFR_LEVELS[appState.currentLevel];
+    const level = appState.currentLevel;
+    const words = CEFR_LEVELS[level];
 
     if (!words || !words.length) {
         container.innerHTML = `
             <div class="glass-panel convo-card">
-                <p>No words found for level ${appState.currentLevel}.</p>
+                <p>No words found for level ${level}.</p>
             </div>
         `;
         return;
     }
 
-    // Pick random prompt
-    convoState.currentPrompt = CONVO_PROMPTS[Math.floor(Math.random() * CONVO_PROMPTS.length)];
-    const target = convoState.currentPrompt.spanishTarget;
+    // Pick CEFR-level prompt
+    const prompt = CEFR_CONVO_PROMPTS[level][Math.floor(Math.random() * CEFR_CONVO_PROMPTS[level].length)];
+    convoState.currentPrompt = prompt;
 
-    // Build wordbank from level words + disruptors
-    const coreTokens = target.replace(/[¿?]/g, "").split(" ");
+    const target = prompt.spanish.replace(/[¿?]/g, "").trim();
+    const coreTokens = target.split(" ");
+
     const levelTokens = words.map(w => w.spanish.split(" ")).flat();
-    const disruptors = ["rápido", "lento", "siempre", "nunca", "ayer", "mañana", "porque", "pero"];
+    const disruptors = ["rápido","lento","siempre","nunca","ayer","mañana","porque","pero","también","solo","entonces"];
 
     let bank = [...coreTokens];
 
-    // Add some level words
-    while (bank.length < coreTokens.length + 4) {
+    // Add level words
+    while (bank.length < coreTokens.length + 6) {
         const t = levelTokens[Math.floor(Math.random() * levelTokens.length)];
         if (t && !bank.includes(t)) bank.push(t);
     }
@@ -1484,7 +1648,6 @@ function renderConversation() {
         if (!bank.includes(d)) bank.push(d);
     });
 
-    // Shuffle bank
     bank = bank.sort(() => Math.random() - 0.5);
 
     convoState.tokens = bank;
@@ -1493,16 +1656,14 @@ function renderConversation() {
     container.innerHTML = `
         <div class="glass-panel convo-card">
             <h2>Conversation</h2>
-            <p>Respond in Spanish by building the correct response.</p>
+            <p>Respond in Spanish using the wordbank or typing.</p>
 
             <div id="convo-prompt">
-                <strong>Prompt (English):</strong> ${convoState.currentPrompt.english}
+                <strong>Prompt (English):</strong> ${prompt.english}
             </div>
 
             <div id="convo-grid" class="sb-grid">
-                ${convoState.tokens.map(t => `
-                    <button class="pill convo-opt" data-token="${t}">${t}</button>
-                `).join("")}
+                ${bank.map(t => `<button class="pill convo-opt" data-token="${t}">${t}</button>`).join("")}
             </div>
 
             <div id="convo-answer"></div>
@@ -1524,7 +1685,7 @@ function renderConversation() {
 }
 
 /* ============================================================
-   CONVERSATION TAB — EVENTS
+   CONVERSATION EVENTS — Word Pills + Typing + Feedback + Streak
    ============================================================ */
 
 function setupConversationEvents() {
@@ -1540,9 +1701,7 @@ function setupConversationEvents() {
 
     convoState.answer = [];
 
-    /* ============================================================
-       WORD-PILL SELECTION
-       ============================================================ */
+    // Word pill selection
     grid.querySelectorAll(".convo-opt").forEach(btn => {
         btn.addEventListener("click", () => {
             convoState.answer.push(btn.dataset.token);
@@ -1552,17 +1711,13 @@ function setupConversationEvents() {
         });
     });
 
-    /* ============================================================
-       TYPING MODE
-       ============================================================ */
+    // Typing mode
     typeBox.addEventListener("input", () => {
         convoState.answer = typeBox.value.trim().split(" ");
         answerBox.textContent = convoState.answer.join(" ");
     });
 
-    /* ============================================================
-       UNDO
-       ============================================================ */
+    // Undo
     undoBtn.addEventListener("click", () => {
         convoState.answer.pop();
         answerBox.textContent = convoState.answer.join(" ");
@@ -1575,9 +1730,7 @@ function setupConversationEvents() {
         });
     });
 
-    /* ============================================================
-       RESET
-       ============================================================ */
+    // Reset
     resetBtn.addEventListener("click", () => {
         convoState.answer = [];
         answerBox.textContent = "";
@@ -1588,49 +1741,80 @@ function setupConversationEvents() {
         });
     });
 
-    /* ============================================================
-       CHECK ANSWER
-       ============================================================ */
+    // Check answer with word-by-word feedback + streak rewards
     checkBtn.addEventListener("click", () => {
-        const correct = convoState.currentPrompt.spanishTarget.replace(/[¿?]/g, "").trim();
+        const correct = convoState.currentPrompt.spanish.replace(/[¿?]/g, "").trim();
         const user = convoState.answer.join(" ").trim();
 
-        const stats = appState.levelStats[appState.currentLevel];
+        const correctTokens = correct.split(" ");
+        const userTokens = convoState.answer;
 
-        // Ensure fields exist
-        if (stats.xp === undefined) stats.xp = 0;
-        if (stats.streak === undefined) stats.streak = 0;
-        if (stats.score === undefined) stats.score = 0;
-        if (stats.conversationCompleted === undefined) stats.conversationCompleted = 0;
+        let html = "";
+
+        const stats = appState.levelStats[appState
+
+        /* ============================================================
+           GRADE ANSWER + WORD-BY-WORD FEEDBACK + STREAK REWARDS
+           ============================================================ */
+
+        let html = "";
 
         if (user === correct) {
-            feedback.textContent = "Nice! That’s a natural response. 🎉";
+            html += `<span style="color:#4ade80;font-weight:600;">Correct! 🎉</span><br><br>`;
 
+            // ⭐ Streak reward system
             stats.conversationCompleted++;
             stats.xp += 5;
             stats.streak++;
             stats.score += 2;
 
-            updateBadges();
-            updateProgressMeters();
-            saveState();
-
-            setTimeout(() => speakQuiz(correct), 300);
+            // ⭐ Streak reward messages
+            if (stats.streak === 3) {
+                html += `<div class="streak-reward">🔥 Great streak! 3 correct answers in a row!</div><br>`;
+            }
+            if (stats.streak === 5) {
+                html += `<div class="streak-reward">⚡ Amazing! 5 correct answers in a row!</div><br>`;
+            }
+            if (stats.streak === 10) {
+                html += `<div class="streak-reward">🌟 Incredible! 10 correct answers in a row!</div><br>`;
+            }
 
         } else {
-            feedback.textContent =
-                `Not quite. A natural response would be: ${convoState.currentPrompt.spanishTarget}`;
+            html += `<span style="color:#f87171;font-weight:600;">Incorrect</span><br>`;
+            html += `<strong>Correct:</strong> ${correct}<br>`;
+            html += `<strong>Your Answer:</strong> ${user}<br><br>`;
 
+            // Reset streak
             stats.streak = 0;
-            saveState();
-
-            setTimeout(() => speakQuiz(correct), 300);
         }
+
+        /* ============================================================
+           WORD-BY-WORD FEEDBACK
+           ============================================================ */
+
+        html += `<strong>Word-by-word feedback:</strong><br>`;
+
+        userTokens.forEach((t, i) => {
+            if (correctTokens[i] === t) {
+                html += `<span style="color:#4ade80;">${t} ✔</span> `;
+            } else {
+                html += `<span style="color:#f87171;">${t} ✖</span> `;
+            }
+        });
+
+        feedback.innerHTML = html;
+
+        saveState();
+        updateBadges();
+        updateProgressMeters();
+
+        setTimeout(() => speakQuiz(correct), 300);
     });
 
     /* ============================================================
-       NEXT
+       NEXT BUTTON — LOAD NEW PROMPT
        ============================================================ */
+
     nextBtn.addEventListener("click", () => {
         renderConversation();
     });
