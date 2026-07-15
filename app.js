@@ -1743,73 +1743,77 @@ function setupConversationEvents() {
 
     // Check answer with word-by-word feedback + streak rewards
     checkBtn.addEventListener("click", () => {
-        const correct = convoState.currentPrompt.spanish.replace(/[¿?]/g, "").trim();
-        const user = convoState.answer.join(" ").trim();
+    const correct = convoState.currentPrompt.spanish.replace(/[¿?]/g, "").trim();
+    const user = convoState.answer.join(" ").trim();
 
-        const correctTokens = correct.split(" ");
-        const userTokens = convoState.answer;
+    const correctTokens = correct.split(" ");
+    const userTokens = convoState.answer;
 
-        let html = "";
+    const stats = appState.levelStats[appState.currentLevel];
+    let html = "";
 
-        const stats = appState.levelStats[appState
+    /* ============================================================
+       CORRECT ANSWER
+       ============================================================ */
+    if (user === correct) {
+        html += `<span style="color:#4ade80;font-weight:600;">Correct! 🎉</span><br><br>`;
 
-        /* ============================================================
-           GRADE ANSWER + WORD-BY-WORD FEEDBACK + STREAK REWARDS
-           ============================================================ */
+        // ⭐ Conversation completion
+        stats.conversationCompleted++;
 
-        let html = "";
+        // ⭐ Daily challenge integration
+        registerDailyConversationCompletion();
 
-        if (user === correct) {
-            html += `<span style="color:#4ade80;font-weight:600;">Correct! 🎉</span><br><br>`;
+        // ⭐ XP + streak + score
+        stats.xp += 5;
+        stats.streak++;
+        stats.score += 2;
 
-            // ⭐ Streak reward system
-            stats.conversationCompleted++;
-            stats.xp += 5;
-            stats.streak++;
-            stats.score += 2;
-
-            // ⭐ Streak reward messages
-            if (stats.streak === 3) {
-                html += `<div class="streak-reward">🔥 Great streak! 3 correct answers in a row!</div><br>`;
-            }
-            if (stats.streak === 5) {
-                html += `<div class="streak-reward">⚡ Amazing! 5 correct answers in a row!</div><br>`;
-            }
-            if (stats.streak === 10) {
-                html += `<div class="streak-reward">🌟 Incredible! 10 correct answers in a row!</div><br>`;
-            }
-
-        } else {
-            html += `<span style="color:#f87171;font-weight:600;">Incorrect</span><br>`;
-            html += `<strong>Correct:</strong> ${correct}<br>`;
-            html += `<strong>Your Answer:</strong> ${user}<br><br>`;
-
-            // Reset streak
-            stats.streak = 0;
+        // ⭐ Streak reward messages
+        if (stats.streak === 3) {
+            html += `<div class="streak-reward">🔥 Great streak! 3 correct answers in a row!</div><br>`;
+        }
+        if (stats.streak === 5) {
+            html += `<div class="streak-reward">⚡ Amazing! 5 correct answers in a row!</div><br>`;
+        }
+        if (stats.streak === 10) {
+            html += `<div class="streak-reward">🌟 Incredible! 10 correct answers in a row!</div><br>`;
         }
 
+    } else {
         /* ============================================================
-           WORD-BY-WORD FEEDBACK
+           INCORRECT ANSWER
            ============================================================ */
+        html += `<span style="color:#f87171;font-weight:600;">Incorrect</span><br>`;
+        html += `<strong>Correct:</strong> ${correct}<br>`;
+        html += `<strong>Your Answer:</strong> ${user}<br><br>`;
 
-        html += `<strong>Word-by-word feedback:</strong><br>`;
+        // Reset streak
+        stats.streak = 0;
+    }
 
-        userTokens.forEach((t, i) => {
-            if (correctTokens[i] === t) {
-                html += `<span style="color:#4ade80;">${t} ✔</span> `;
-            } else {
-                html += `<span style="color:#f87171;">${t} ✖</span> `;
-            }
-        });
+    /* ============================================================
+       WORD-BY-WORD FEEDBACK
+       ============================================================ */
+    html += `<strong>Word-by-word feedback:</strong><br>`;
 
-        feedback.innerHTML = html;
-
-        saveState();
-        updateBadges();
-        updateProgressMeters();
-
-        setTimeout(() => speakQuiz(correct), 300);
+    userTokens.forEach((t, i) => {
+        if (correctTokens[i] === t) {
+            html += `<span style="color:#4ade80;">${t} ✔</span> `;
+        } else {
+            html += `<span style="color:#f87171;">${t} ✖</span> `;
+        }
     });
+
+    feedback.innerHTML = html;
+
+    saveState();
+    updateBadges();
+    updateProgressMeters();
+
+    setTimeout(() => speakQuiz(correct), 300);
+});
+
 
     /* ============================================================
        NEXT BUTTON — LOAD NEW PROMPT
