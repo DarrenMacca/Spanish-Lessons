@@ -1853,7 +1853,7 @@ function renderGrammar() {
 
 
 /* ============================================================
-   BADGES — Updated with Conversation Mastery System
+   BADGES — Updated with Conversation Mastery + Daily Challenge
    ============================================================ */
 
 function updateBadges() {
@@ -1916,10 +1916,30 @@ function updateBadges() {
         if (s.conversationCompleted >= 50 && s.streak >= 10) {
             badges.add(`${level} Conversational Mastery`);
 
-            // Optional popup celebration
             if (typeof showConversationMasteryPopup === "function") {
                 showConversationMasteryPopup(level);
             }
+        }
+
+        /* ============================
+           DAILY CHALLENGE BADGES
+           ============================ */
+
+        const dc = appState.dailyChallenge;
+
+        // Daily goal badge (e.g., 5 conversations completed today)
+        if (dc.completedToday >= dc.goal) {
+            badges.add(`${level} Daily Conversationalist`);
+        }
+
+        // Weekly streak badge (7 days in a row)
+        if (dc.streak >= 7) {
+            badges.add(`${level} Weekly Conversationalist`);
+        }
+
+        // Monthly streak badge (30 days in a row)
+        if (dc.streak >= 30) {
+            badges.add(`${level} Monthly Conversationalist`);
         }
     });
 
@@ -1937,6 +1957,7 @@ function updateBadges() {
 
     list.innerHTML = appState.badges.map(b => `<li>${b}</li>`).join("");
 }
+
 
 /* ============================================================
    STUDENT NAME BOX
