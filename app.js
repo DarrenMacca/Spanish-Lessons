@@ -680,6 +680,195 @@ const CEFR_SENTENCES = {
     ]
 };
 
+/* ============================================================
+   CEFR CONVERSATION BANKS — A1 → B2 (Expanded)
+   ============================================================ */
+
+const CEFR_CONVERSATIONS = {
+
+    /* ============================================================
+       A1 — Beginner (40 Prompts)
+       ============================================================ */
+    A1: [
+        "¿Cómo estás?",
+        "¿Dónde vives?",
+        "¿Qué te gusta comer?",
+        "¿Trabajas o estudias?",
+        "¿Qué hora es?",
+        "¿Dónde está el baño?",
+        "¿Quieres agua o café?",
+        "¿Te gusta la sopa?",
+        "¿Lees libros?",
+        "¿Miras televisión?",
+        "¿Dónde está la parada de autobús?",
+        "¿Está abierto el supermercado?",
+        "¿Cuánto cuesta el menú?",
+        "¿Quieres pan o arroz?",
+        "¿Te gusta la fruta?",
+        "¿Dónde está tu habitación?",
+        "¿Tienes hermanos?",
+        "¿Te gusta la música?",
+        "¿Quieres una mesa?",
+        "¿Dónde está el camarero?",
+        "¿Quieres pollo o pescado?",
+        "¿Estás perdido?",
+        "¿Necesitas ayuda?",
+        "¿Dónde está la policía?",
+        "¿Quieres ir al hotel?",
+        "¿Te gusta la ciudad?",
+        "¿Comes rápido o lento?",
+        "¿Quieres una llave?",
+        "¿Dónde está la silla?",
+        "¿Quieres ensalada?",
+        "¿Te gusta el té?",
+        "¿Quieres leche?",
+        "¿Dónde está el aeropuerto?",
+        "¿Quieres un boleto?",
+        "¿Está cerrado el restaurante?",
+        "¿Quieres hablar mañana?",
+        "¿Te levantas temprano?",
+        "¿Quieres caminar?",
+        "¿Dónde está tu familia?"
+    ],
+
+    /* ============================================================
+       A2 — Elementary (40 Prompts)
+       ============================================================ */
+    A2: [
+        "¿Qué hiciste ayer?",
+        "¿Fuiste al supermercado?",
+        "¿Viajas a menudo?",
+        "¿Qué compraste la semana pasada?",
+        "¿Qué estás haciendo hoy?",
+        "¿Sueles comer temprano?",
+        "¿Necesitas una reserva?",
+        "¿Dónde está la farmacia?",
+        "¿Compraste fruta?",
+        "¿Te gusta el desayuno?",
+        "¿Vas al centro?",
+        "¿Usas el transporte?",
+        "¿Celebraste el fin de semana?",
+        "¿Visitas a tu familia?",
+        "¿Comes arroz o pollo?",
+        "¿Ves películas a menudo?",
+        "¿Terminaste el trabajo?",
+        "¿Compraste pan y queso?",
+        "¿Fuiste al aeropuerto?",
+        "¿El avión llega temprano?",
+        "¿Qué hiciste recientemente?",
+        "¿Comes cena con tu familia?",
+        "¿A menudo visitas el centro?",
+        "¿Compraste algo barato?",
+        "¿Está abierta la tienda?",
+        "¿Qué vas a hacer mañana?",
+        "¿Viajaste la semana pasada?",
+        "¿Comes en casa o fuera?",
+        "¿Usas redes sociales?",
+        "¿Qué celebraste?",
+        "¿Compraste almuerzo?",
+        "¿Qué vas a visitar mañana?",
+        "¿Te gusta el almuerzo?",
+        "¿Comes sopa a menudo?",
+        "¿Qué compraste hoy?",
+        "¿Vives cerca de la estación?",
+        "¿Qué haces por la mañana?",
+        "¿Qué haces por la tarde?",
+        "¿Qué haces por la noche?",
+        "¿Qué haces los fines de semana?"
+    ],
+
+    /* ============================================================
+       B1 — Intermediate (40 Prompts)
+       ============================================================ */
+    B1: [
+        "¿Qué piensas de tu ciudad?",
+        "¿Qué aprendiste recientemente?",
+        "¿Cómo mantienes una vida saludable?",
+        "¿Qué experiencias pasadas recuerdas?",
+        "¿Cuáles son tus metas?",
+        "¿Disfrutas viajar?",
+        "¿Qué planes futuros tienes?",
+        "¿Qué habilidades quieres mejorar?",
+        "¿Qué comunicación es importante para ti?",
+        "¿Qué haces en tu tiempo libre?",
+        "¿Qué proyectos futuros tienes?",
+        "¿Qué problemas diarios tienes?",
+        "¿Qué libros lees?",
+        "¿Qué conversaciones tienes cada día?",
+        "¿Qué redes sociales usas?",
+        "¿Qué te parece interesante?",
+        "¿Qué aprendiste el último mes?",
+        "¿Qué haces mientras trabajas?",
+        "¿Qué haces mientras estudias?",
+        "¿Qué te gusta aprender?",
+        "¿Qué lugares visitas a menudo?",
+        "¿Qué recuerdas de tu pasado?",
+        "¿Qué te gusta de tu trabajo?",
+        "¿Qué te gusta de tu familia?",
+        "¿Qué te gusta de tu vida diaria?",
+        "¿Qué haces los fines de semana?",
+        "¿Qué haces por la mañana?",
+        "¿Qué haces por la tarde?",
+        "¿Qué haces por la noche?",
+        "¿Qué te gusta ver?",
+        "¿Qué te gusta comer?",
+        "¿Qué te gusta estudiar?",
+        "¿Qué te gusta comprar?",
+        "¿Qué te gusta visitar?",
+        "¿Qué te gusta hacer con amigos?",
+        "¿Qué te gusta hacer solo?",
+        "¿Qué te gusta hacer en vacaciones?",
+        "¿Qué te gusta hacer en casa?",
+        "¿Qué te gusta hacer fuera de casa?",
+        "¿Qué te gusta hacer en la ciudad?"
+    ],
+
+    /* ============================================================
+       B2 — Upper Intermediate (40 Prompts)
+       ============================================================ */
+    B2: [
+        "¿Cómo manejas situaciones estresantes?",
+        "¿Cuál es tu opinión sobre la tecnología?",
+        "¿Cómo ha cambiado tu vida en los últimos años?",
+        "¿Qué desafíos enfrentas actualmente?",
+        "¿Qué piensas del futuro?",
+        "¿Qué cambios culturales ves?",
+        "¿Qué estilo de vida quieres?",
+        "¿Qué motivación tienes para estudiar?",
+        "¿Qué metas a largo plazo tienes?",
+        "¿Qué ideas importantes tienes?",
+        "¿Qué piensas de la educación?",
+        "¿Qué piensas de la sociedad?",
+        "¿Qué piensas de la cultura?",
+        "¿Qué piensas de la tecnología?",
+        "¿Qué piensas del trabajo remoto?",
+        "¿Qué piensas de los cambios recientes?",
+        "¿Qué piensas de la vida saludable?",
+        "¿Qué piensas de los proyectos largos?",
+        "¿Qué piensas de los desafíos personales?",
+        "¿Qué piensas de los desafíos profesionales?",
+        "¿Qué piensas de los desafíos sociales?",
+        "¿Qué piensas de los desafíos culturales?",
+        "¿Qué piensas de los desafíos tecnológicos?",
+        "¿Qué piensas de los desafíos educativos?",
+        "¿Qué piensas de los desafíos familiares?",
+        "¿Qué piensas de los desafíos económicos?",
+        "¿Qué piensas de los desafíos globales?",
+        "¿Qué piensas de los desafíos futuros?",
+        "¿Qué piensas de los cambios futuros?",
+        "¿Qué piensas de los cambios personales?",
+        "¿Qué piensas de los cambios profesionales?",
+        "¿Qué piensas de los cambios sociales?",
+        "¿Qué piensas de los cambios culturales?",
+        "¿Qué piensas de los cambios tecnológicos?",
+        "¿Qué piensas de los cambios educativos?",
+        "¿Qué piensas de los cambios familiares?",
+        "¿Qué piensas de los cambios económicos?",
+        "¿Qué piensas de los cambios globales?",
+        "¿Qué piensas de los cambios a largo plazo?"
+    ]
+};
+
 
 /* ============================================================
    CEFR TRAINER — CLEAN APP.JS (PART 1)
