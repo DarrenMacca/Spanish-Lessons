@@ -1268,6 +1268,10 @@ const CEFR_LISTENING_TOPICS = {
     }
 };
 
+function loadListening(topic, level) {
+    const bank = CEFR_LISTENING_TOPICS[topic][level];
+    return bank[Math.floor(Math.random() * bank.length)];
+}
 
 
 /* ============================================================
