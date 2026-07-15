@@ -997,6 +997,53 @@ const CEFR_LISTENING = {
         { spanish: "disfruto tiempo libre los fines de semana", english: "I enjoy free time on weekends", audio: "disfruto-tiempo-libre-los-fines-de-semana.mp3", question: "When does the speaker enjoy free time?" },
         { spanish: "ellos trabajan mientras estudian", english: "they work while they study", audio: "ellos-trabajan-mientras-estudian.mp3", question: "What do they do while studying?" },
 
+/* ============================================================
+   B2 — Upper Intermediate (40 Listening Items)
+   ============================================================ */
+
+B2: [
+    { spanish: "cuál es tu opinión sobre la tecnología", english: "what is your opinion about technology", audio: "cual-es-tu-opinion-sobre-la-tecnologia.mp3", question: "What topic is the speaker asking about?" },
+    { spanish: "la sociedad está cambiando rápido", english: "society is changing quickly", audio: "la-sociedad-esta-cambiando-rapido.mp3", question: "What is changing quickly?" },
+    { spanish: "la educación es importante para el futuro", english: "education is important for the future", audio: "la-educacion-es-importante-para-el-futuro.mp3", question: "What is important for the future?" },
+    { spanish: "la cultura cambia con el tiempo", english: "culture changes over time", audio: "la-cultura-cambia-con-el-tiempo.mp3", question: "What changes over time?" },
+    { spanish: "la tecnología afecta la vida diaria", english: "technology affects daily life", audio: "la-tecnologia-afecta-la-vida-diaria.mp3", question: "What does technology affect?" },
+
+    { spanish: "qué desafíos enfrentas", english: "what challenges do you face", audio: "que-desafios-enfrentas.mp3", question: "What is the speaker asking about?" },
+    { spanish: "ella espera lograr sus metas", english: "she hopes to achieve her goals", audio: "ella-espera-lograr-sus-metas.mp3", question: "What does she hope to achieve?" },
+    { spanish: "él trabaja duro para lograr éxito", english: "he works hard to achieve success", audio: "el-trabaja-duro-para-lograr-exito.mp3", question: "Why does he work hard?" },
+    { spanish: "nosotros enfrentamos desafíos importantes", english: "we face important challenges", audio: "nosotros-enfrentamos-desafios-importantes.mp3", question: "What do they face?" },
+    { spanish: "ellos esperan resultados positivos", english: "they expect positive results", audio: "ellos-esperan-resultados-positivos.mp3", question: "What kind of results do they expect?" },
+
+    { spanish: "mi vida ha cambiado en los últimos años", english: "my life has changed in recent years", audio: "mi-vida-ha-cambiado-en-los-ultimos-anos.mp3", question: "What has changed?" },
+    { spanish: "él quiere un estilo de vida saludable", english: "he wants a healthy lifestyle", audio: "el-quiere-un-estilo-de-vida-saludable.mp3", question: "What kind of lifestyle does he want?" },
+    { spanish: "nosotros analizamos cambios culturales", english: "we analyze cultural changes", audio: "nosotros-analizamos-cambios-culturales.mp3", question: "What do they analyze?" },
+    { spanish: "ella estudia para un objetivo a largo plazo", english: "she studies for a long-term goal", audio: "ella-estudia-para-un-objetivo-a-largo-plazo.mp3", question: "What kind of goal does she have?" },
+    { spanish: "ellos ven el futuro como positivo", english: "they see the future as positive", audio: "ellos-ven-el-futuro-como-positivo.mp3", question: "How do they see the future?" },
+
+    { spanish: "nosotros continuamos a pesar de los problemas", english: "we continue despite the problems", audio: "nosotros-continuamos-a-pesar-de-los-problemas.mp3", question: "What do they continue despite?" },
+    { spanish: "él explicó el concepto claramente", english: "he explained the concept clearly", audio: "el-explico-el-concepto-claramente.mp3", question: "What did he explain?" },
+    { spanish: "ella trabaja mucho por lo tanto está cansada", english: "she works a lot therefore she is tired", audio: "ella-trabaja-mucho-por-lo-tanto-esta-cansada.mp3", question: "Why is she tired?" },
+    { spanish: "me gusta la idea sin embargo es difícil", english: "I like the idea however it is difficult", audio: "me-gusta-la-idea-sin-embargo-es-dificil.mp3", question: "What does the speaker think about the idea?" },
+    { spanish: "ellos estudian porque es importante", english: "they study because it is important", audio: "ellos-estudian-porque-es-importante.mp3", question: "Why do they study?" },
+
+    { spanish: "él trabaja duro sin embargo necesita descanso", english: "he works hard however he needs rest", audio: "el-trabaja-duro-sin-embargo-necesita-descanso.mp3", question: "What does he need?" },
+    { spanish: "nosotros continuamos por lo tanto mejoramos", english: "we continue therefore we improve", audio: "nosotros-continuamos-por-lo-tanto-mejoramos.mp3", question: "What happens because they continue?" },
+    { spanish: "ella estudia mucho además trabaja", english: "she studies a lot in addition she works", audio: "ella-estudia-mucho-ademas-trabaja.mp3", question: "What does she do besides studying?" },
+    { spanish: "él aprende a pesar de la dificultad", english: "he learns despite the difficulty", audio: "el-aprende-a-pesar-de-la-dificultad.mp3", question: "What does he learn despite?" },
+    { spanish: "ellos continúan a pesar de los problemas", english: "they continue despite the problems", audio: "ellos-continuan-a-pesar-de-los-problemas.mp3", question: "What do they continue despite?" },
+
+    { spanish: "yo manejo situaciones estresantes bien", english: "I handle stressful situations well", audio: "yo-manejo-situaciones-estresantes-bien.mp3", question: "What kind of situations does the speaker handle well?" },
+    { spanish: "ella analiza información importante", english: "she analyzes important information", audio: "ella-analiza-informacion-importante.mp3", question: "What does she analyze?" },
+    { spanish: "nosotros discutimos ideas culturales", english: "we discuss cultural ideas", audio: "nosotros-discutimos-ideas-culturales.mp3", question: "What kind of ideas do they discuss?" },
+    { spanish: "él estudia para oportunidades futuras", english: "he studies for future opportunities", audio: "el-estudia-para-oportunidades-futuras.mp3", question: "What kind of opportunities does he study for?" },
+    { spanish: "ellos trabajan en proyectos a largo plazo", english: "they work on long-term projects", audio: "ellos-trabajan-en-proyectos-a-largo-plazo.mp3", question: "What kind of projects do they work on?" },
+
+    { spanish: "la cultura es importante para la sociedad", english: "culture is important for society", audio: "la-cultura-es-importante-para-la-sociedad.mp3", question: "What is important for society?" },
+    { spanish: "la tecnología cambia cada año", english: "technology changes every year", audio: "la-tecnologia-cambia-cada-ano.mp3", question: "How often does technology change?" },
+    { spanish: "la educación crea oportunidades", english: "education creates opportunities", audio: "la-educacion-crea-oportunidades.mp3", question: "What does education create?" },
+    { spanish: "la motivación ayuda a lograr metas", english: "motivation helps achieve goals", audio: "la-motivacion-ayuda-a-lograr-metas.mp3", question: "What does motivation help with?" },
+    { spanish: "la sociedad enfrenta desafíos nuevos", english: "society faces new challenges", audio: "la-sociedad-enfrenta-desafios-nuevos.mp3", question: "What does society face?" }
+];
 
 
 /* ============================================================
