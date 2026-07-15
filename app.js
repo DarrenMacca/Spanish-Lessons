@@ -137,31 +137,6 @@ function translateToEnglish(spanishText) {
         .join(" ");
 }
 
-
-
-
-
-    /* ============================================================
-       PROCESS INPUT
-       ============================================================ */
- function translateToEnglish(spanishText) {
-
-    if (!spanishText || typeof spanishText !== "string") {
-        return "";
-    }
-
-    const normalized = spanishText.toLowerCase().trim();
-
-    if (phraseDict[normalized]) {
-        return phraseDict[normalized];
-    }
-
-    return normalized
-        .split(/\s+/)
-        .map(w => wordDict[w] || `[${w}]`)
-        .join(" ");
-}
-
 /* ============================================================
    GRAMMAR ERROR EXPLAINER
    ============================================================ */
