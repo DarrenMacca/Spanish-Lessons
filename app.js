@@ -1873,8 +1873,8 @@ function renderConversation() {
     const prompt = CEFR_CONVO_PROMPTS[level][Math.floor(Math.random() * CEFR_CONVO_PROMPTS[level].length)];
     convoState.currentPrompt = prompt;
 
-    // FIXED: use spanishTarget
-    const target = prompt.spanishTarget.replace(/[¿?]/g, "").trim();
+    // FIXED: use spanish
+    const target = prompt.spanish.replace(/[¿?]/g, "").trim();
     const coreTokens = target.split(" ");
 
     const levelTokens = words.map(w => w.spanish.split(" ")).flat();
@@ -1990,7 +1990,7 @@ function setupConversationEvents() {
 checkBtn.addEventListener("click", () => {
 
     // FIXED: correct property name
-    const correct = convoState.currentPrompt.spanishTarget.replace(/[¿?]/g, "").trim();
+    const correct = convoState.currentPrompt.spanish.replace(/[¿?]/g, "").trim();
     const user = convoState.answer.join(" ").trim();
 
     const correctTokens = correct.split(" ");
