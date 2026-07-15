@@ -112,14 +112,18 @@ function translateToEnglish(spanishText) {
     /* ============================================================
        PROCESS INPUT
        ============================================================ */
+ function translateToEnglish(spanishText) {
+
+    if (!spanishText || typeof spanishText !== "string") {
+        return "";
+    }
+
     const normalized = spanishText.toLowerCase().trim();
 
-    // 1) Full phrase match
     if (phraseDict[normalized]) {
         return phraseDict[normalized];
     }
 
-    // 2) Word-by-word fallback
     return normalized
         .split(/\s+/)
         .map(w => wordDict[w] || `[${w}]`)
