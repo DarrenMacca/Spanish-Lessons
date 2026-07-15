@@ -1359,7 +1359,7 @@ function renderFlashcards() {
     let html = `
         <div class="glass-panel">
             <h2>Flashcards</h2>
-            <p>Tap a card to flip. Spanish side plays audio.</p>
+            <p>Guess the correct translation then tap the card to flip it and see if your correct. Spanish side plays audio.</p>
         </div>
     `;
 
