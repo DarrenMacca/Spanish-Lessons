@@ -1853,7 +1853,7 @@ function renderGrammar() {
 
 
 /* ============================================================
-   BADGES
+   BADGES — Updated with Conversation Mastery System
    ============================================================ */
 
 function updateBadges() {
@@ -1863,14 +1863,69 @@ function updateBadges() {
     Object.keys(appState.levelStats).forEach(level => {
         const s = appState.levelStats[level];
 
-        if (s.listens >= 20) badges.add(`${level} Listener`);
-        if (s.flashSeen >= 30) badges.add(`${level} Flash Master`);
-        if (s.quizScore !== null && s.quizScore >= 80) badges.add(`${level} Quiz Ace`);
-        if (s.buildCompleted >= 10) badges.add(`${level} Builder`);
+        /* ============================
+           LISTENING BADGES
+           ============================ */
+        if (s.listens >= 20) {
+            badges.add(`${level} Listener`);
+        }
 
-        if (s.sentenceCompleted >= 10) badges.add(`${level} Sentence Pro`);
-        if (s.conversationCompleted >= 10) badges.add(`${level} Conversationalist`);
+        /* ============================
+           FLASHCARDS BADGES
+           ============================ */
+        if (s.flashSeen >= 30) {
+            badges.add(`${level} Flash Master`);
+        }
+
+        /* ============================
+           QUIZ BADGES
+           ============================ */
+        if (s.quizScore !== null && s.quizScore >= 80) {
+            badges.add(`${level} Quiz Ace`);
+        }
+
+        /* ============================
+           BUILD TAB BADGES
+           ============================ */
+        if (s.buildCompleted >= 10) {
+            badges.add(`${level} Builder`);
+        }
+
+        /* ============================
+           SENTENCE TAB BADGES
+           ============================ */
+        if (s.sentenceCompleted >= 10) {
+            badges.add(`${level} Sentence Pro`);
+        }
+
+        /* ============================
+           CONVERSATION MASTERY BADGES
+           ============================ */
+
+        // Tier 1 — Beginner
+        if (s.conversationCompleted >= 10) {
+            badges.add(`${level} Conversational Beginner`);
+        }
+
+        // Tier 2 — Speaker
+        if (s.conversationCompleted >= 25) {
+            badges.add(`${level} Conversational Speaker`);
+        }
+
+        // Tier 3 — Mastery (requires streak)
+        if (s.conversationCompleted >= 50 && s.streak >= 10) {
+            badges.add(`${level} Conversational Mastery`);
+
+            // Optional popup celebration
+            if (typeof showConversationMasteryPopup === "function") {
+                showConversationMasteryPopup(level);
+            }
+        }
     });
+
+    /* ============================
+       SAVE + RENDER BADGE LIST
+       ============================ */
 
     appState.badges = Array.from(badges);
     saveState();
