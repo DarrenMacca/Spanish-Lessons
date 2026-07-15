@@ -631,6 +631,29 @@ function initLevelButtons() {
 initLevelButtons();
 
 /* ============================================================
+   TAB SWITCHING — PLACE showTab HERE
+============================================================ */
+function showTab(tabId) {
+
+    // Hide all tab content
+    document.querySelectorAll(".tab-content").forEach(tab => {
+        tab.classList.add("hidden");
+    });
+
+    // Show selected tab
+    document.getElementById(tabId).classList.remove("hidden");
+
+    // Remove highlight from ALL tab buttons
+    document.querySelectorAll(".tab-btn, .dash-link").forEach(btn => {
+        btn.classList.remove("active");
+    });
+
+    // Highlight the active tab button
+    const activeBtn = document.querySelector(`[data-tab="${tabId}"]`);
+    if (activeBtn) activeBtn.classList.add("active");
+}
+
+/* ============================================================
    TAB NAVIGATION — SPA VERSION
    ============================================================ */
 
