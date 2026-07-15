@@ -869,6 +869,135 @@ const CEFR_CONVERSATIONS = {
     ]
 };
 
+/* ============================================================
+   CEFR LISTENING BANKS — A1 → B2 (Expanded)
+   ============================================================ */
+
+const CEFR_LISTENING = {
+
+    /* ============================================================
+       A1 — Beginner (40 Listening Items)
+       ============================================================ */
+    A1: [
+        { spanish: "hola cómo estás", english: "hello, how are you", audio: "hola-como-estas.mp3", question: "How is the speaker greeting?" },
+        { spanish: "adiós hasta mañana", english: "goodbye, see you tomorrow", audio: "adios-hasta-manana.mp3", question: "When will they see each other?" },
+        { spanish: "dónde está el baño", english: "where is the bathroom", audio: "donde-esta-el-bano.mp3", question: "What place is the speaker looking for?" },
+        { spanish: "lo siento estoy perdido", english: "sorry, I am lost", audio: "lo-siento-estoy-perdido.mp3", question: "What problem does the speaker have?" },
+        { spanish: "sí estoy bien", english: "yes, I am okay", audio: "si-estoy-bien.mp3", question: "How does the speaker feel?" },
+
+        { spanish: "vivo en la ciudad", english: "I live in the city", audio: "vivo-en-la-ciudad.mp3", question: "Where does the speaker live?" },
+        { spanish: "ella vive en un hotel", english: "she lives in a hotel", audio: "ella-vive-en-un-hotel.mp3", question: "Where does she live?" },
+        { spanish: "nosotros somos hermanos", english: "we are brothers", audio: "nosotros-somos-hermanos.mp3", question: "What is their relationship?" },
+        { spanish: "él es mi amigo", english: "he is my friend", audio: "el-es-mi-amigo.mp3", question: "Who is he?" },
+        { spanish: "tú eres mi hermana", english: "you are my sister", audio: "tu-eres-mi-hermana.mp3", question: "Who is the listener?" },
+
+        { spanish: "quiero agua", english: "I want water", audio: "quiero-agua.mp3", question: "What does the speaker want?" },
+        { spanish: "me gusta la sopa", english: "I like soup", audio: "me-gusta-la-sopa.mp3", question: "What food does the speaker like?" },
+        { spanish: "él come pan", english: "he eats bread", audio: "el-come-pan.mp3", question: "What does he eat?" },
+        { spanish: "nosotros bebemos café", english: "we drink coffee", audio: "nosotros-bebemos-cafe.mp3", question: "What do they drink?" },
+        { spanish: "ella gusta fruta", english: "she likes fruit", audio: "ella-gusta-fruta.mp3", question: "What does she like?" },
+
+        { spanish: "tú trabajas en una tienda", english: "you work in a store", audio: "tu-trabajas-en-una-tienda.mp3", question: "Where does the listener work?" },
+        { spanish: "yo leo libros", english: "I read books", audio: "yo-leo-libros.mp3", question: "What does the speaker read?" },
+        { spanish: "nosotros vemos televisión", english: "we watch television", audio: "nosotros-vemos-television.mp3", question: "What do they watch?" },
+        { spanish: "él estudia cada día", english: "he studies every day", audio: "el-estudia-cada-dia.mp3", question: "How often does he study?" },
+        { spanish: "ella se levanta temprano", english: "she gets up early", audio: "ella-se-levanta-temprano.mp3", question: "When does she get up?" },
+
+        { spanish: "dónde está la parada de autobús", english: "where is the bus stop", audio: "donde-esta-la-parada-de-autobus.mp3", question: "What place is the speaker looking for?" },
+        { spanish: "el aeropuerto está abierto", english: "the airport is open", audio: "el-aeropuerto-esta-abierto.mp3", question: "Is the airport open or closed?" },
+        { spanish: "el hotel está cerrado", english: "the hotel is closed", audio: "el-hotel-esta-cerrado.mp3", question: "Is the hotel open?" },
+        { spanish: "la habitación tiene una mesa", english: "the room has a table", audio: "la-habitacion-tiene-una-mesa.mp3", question: "What does the room have?" },
+        { spanish: "la llave está en la silla", english: "the key is on the chair", audio: "la-llave-esta-en-la-silla.mp3", question: "Where is the key?" },
+
+        { spanish: "cuánto cuesta el menú", english: "how much does the menu cost", audio: "cuanto-cuesta-el-menu.mp3", question: "What is the speaker asking about?" },
+        { spanish: "la tienda está cerrada", english: "the store is closed", audio: "la-tienda-esta-cerrada.mp3", question: "Is the store open?" },
+        { spanish: "el supermercado está abierto", english: "the supermarket is open", audio: "el-supermercado-esta-abierto.mp3", question: "Is the supermarket open?" },
+        { spanish: "quiero fruta barata", english: "I want cheap fruit", audio: "quiero-fruta-barata.mp3", question: "What does the speaker want?" },
+        { spanish: "la cuenta es cara", english: "the bill is expensive", audio: "la-cuenta-es-cara.mp3", question: "Is the bill cheap or expensive?" },
+
+        { spanish: "me gustaría pollo", english: "I would like chicken", audio: "me-gustaria-pollo.mp3", question: "What food does the speaker want?" },
+        { spanish: "el camarero tiene la cuenta", english: "the waiter has the bill", audio: "el-camarero-tiene-la-cuenta.mp3", question: "Who has the bill?" },
+        { spanish: "quiero una mesa", english: "I want a table", audio: "quiero-una-mesa.mp3", question: "What does the speaker want?" },
+        { spanish: "ella quiere sopa", english: "she wants soup", audio: "ella-quiere-sopa.mp3", question: "What does she want?" },
+        { spanish: "nosotros queremos pan", english: "we want bread", audio: "nosotros-queremos-pan.mp3", question: "What do they want?" },
+
+        { spanish: "necesito ayuda", english: "I need help", audio: "necesito-ayuda.mp3", question: "What does the speaker need?" },
+        { spanish: "llama a la policía", english: "call the police", audio: "llama-a-la-policia.mp3", question: "Who should be called?" },
+        { spanish: "estoy perdido", english: "I am lost", audio: "estoy-perdido.mp3", question: "What is the speaker’s problem?" },
+        { spanish: "necesito un doctor", english: "I need a doctor", audio: "necesito-un-doctor.mp3", question: "Who does the speaker need?" },
+        { spanish: "él no está bien", english: "he is not okay", audio: "el-no-esta-bien.mp3", question: "How does he feel?" }
+    ],
+
+    /* ============================================================
+       A2 — Elementary (40 Listening Items)
+       ============================================================ */
+    A2: [
+        { spanish: "qué hiciste ayer", english: "what did you do yesterday", audio: "que-hiciste-ayer.mp3", question: "When did the action happen?" },
+        { spanish: "fuiste al supermercado", english: "did you go to the supermarket", audio: "fuiste-al-supermercado.mp3", question: "Where might the listener have gone?" },
+        { spanish: "viajamos a menudo", english: "we travel often", audio: "viajamos-a-menudo.mp3", question: "How often do they travel?" },
+        { spanish: "qué compraste la semana pasada", english: "what did you buy last week", audio: "que-compraste-la-semana-pasada.mp3", question: "When did the listener buy something?" },
+        { spanish: "qué estás haciendo hoy", english: "what are you doing today", audio: "que-estas-haciendo-hoy.mp3", question: "When is the action happening?" },
+
+        { spanish: "suelo comer temprano", english: "I usually eat early", audio: "suelo-comer-temprano.mp3", question: "When does the speaker usually eat?" },
+        { spanish: "necesito una reserva", english: "I need a reservation", audio: "necesito-una-reserva.mp3", question: "What does the speaker need?" },
+        { spanish: "la farmacia está en el centro", english: "the pharmacy is in the center", audio: "la-farmacia-esta-en-el-centro.mp3", question: "Where is the pharmacy?" },
+        { spanish: "compré fruta en el supermercado", english: "I bought fruit at the supermarket", audio: "compre-fruta-en-el-supermercado.mp3", question: "What did the speaker buy?" },
+        { spanish: "te gusta el desayuno", english: "you like breakfast", audio: "te-gusta-el-desayuno.mp3", question: "What meal is being discussed?" },
+
+        { spanish: "usas el transporte", english: "you use transport", audio: "usas-el-transporte.mp3", question: "What does the listener use?" },
+        { spanish: "celebramos el fin de semana", english: "we celebrated the weekend", audio: "celebramos-el-fin-de-semana.mp3", question: "When did they celebrate?" },
+        { spanish: "visitas a tu familia", english: "you visit your family", audio: "visitas-a-tu-familia.mp3", question: "Who does the listener visit?" },
+        { spanish: "comes arroz con pollo", english: "you eat rice with chicken", audio: "comes-arroz-con-pollo.mp3", question: "What does the listener eat?" },
+        { spanish: "ves películas a menudo", english: "you watch movies often", audio: "ves-peliculas-a-menudo.mp3", question: "How often does the listener watch movies?" },
+
+        { spanish: "terminaste el trabajo", english: "you finished the work", audio: "terminaste-el-trabajo.mp3", question: "What did the listener finish?" },
+        { spanish: "compraste pan y queso", english: "you bought bread and cheese", audio: "compraste-pan-y-queso.mp3", question: "What did the listener buy?" },
+        { spanish: "fuiste al aeropuerto", english: "you went to the airport", audio: "fuiste-al-aeropuerto.mp3", question: "Where did the listener go?" },
+        { spanish: "el avión llega temprano", english: "the plane arrives early", audio: "el-avion-llega-temprano.mp3", question: "When does the plane arrive?" },
+        { spanish: "qué hiciste recientemente", english: "what did you do recently", audio: "que-hiciste-recientemente.mp3", question: "When did the action happen?" },
+
+        { spanish: "comes cena con tu familia", english: "you eat dinner with your family", audio: "comes-cena-con-tu-familia.mp3", question: "Who does the listener eat with?" },
+        { spanish: "visitas el centro a menudo", english: "you visit the center often", audio: "visitas-el-centro-a-menudo.mp3", question: "How often does the listener visit the center?" },
+        { spanish: "compraste algo barato", english: "you bought something cheap", audio: "compraste-algo-barato.mp3", question: "What kind of item did the listener buy?" },
+        { spanish: "la tienda abre mañana", english: "the store opens tomorrow", audio: "la-tienda-abre-manana.mp3", question: "When does the store open?" },
+        { spanish: "qué vas a hacer mañana", english: "what are you going to do tomorrow", audio: "que-vas-a-hacer-manana.mp3", question: "When will the action happen?" },
+
+        { spanish: "viajaste la semana pasada", english: "you traveled last week", audio: "viajaste-la-semana-pasada.mp3", question: "When did the listener travel?" },
+        { spanish: "comes en casa o fuera", english: "do you eat at home or outside", audio: "comes-en-casa-o-fuera.mp3", question: "Where might the listener eat?" },
+        { spanish: "usas redes sociales", english: "you use social networks", audio: "usas-redes-sociales.mp3", question: "What does the listener use?" },
+        { spanish: "celebraste con tu familia", english: "you celebrated with your family", audio: "celebraste-con-tu-familia.mp3", question: "Who did the listener celebrate with?" },
+        { spanish: "compraste almuerzo", english: "you bought lunch", audio: "compraste-almuerzo.mp3", question: "What meal did the listener buy?" },
+
+        { spanish: "vas a visitar mañana", english: "you will visit tomorrow", audio: "vas-a-visitar-manana.mp3", question: "When will the visit happen?" },
+        { spanish: "te gusta el almuerzo", english: "you like lunch", audio: "te-gusta-el-almuerzo.mp3", question: "What meal is being discussed?" },
+        { spanish: "comes sopa a menudo", english: "you eat soup often", audio: "comes-sopa-a-menudo.mp3", question: "How often does the listener eat soup?" },
+        { spanish: "qué compraste hoy", english: "what did you buy today", audio: "que-compraste-hoy.mp3", question: "When did the listener buy something?" },
+        { spanish: "vives cerca de la estación", english: "you live near the station", audio: "vives-cerca-de-la-estacion.mp3", question: "Where does the listener live?" }
+    ],
+
+    /* ============================================================
+       B1 — Intermediate (40 Listening Items)
+       ============================================================ */
+    B1: [
+        { spanish: "creo que la ciudad es interesante", english: "I think the city is interesting", audio: "creo-que-la-ciudad-es-interesante.mp3", question: "What does the speaker think about the city?" },
+        { spanish: "ella disfruta viajar con amigos", english: "she enjoys traveling with friends", audio: "ella-disfruta-viajar-con-amigos.mp3", question: "Who does she travel with?" },
+        { spanish: "él cree que la idea es buena", english: "he believes the idea is good", audio: "el-cree-que-la-idea-es-buena.mp3", question: "What does he think about the idea?" },
+        { spanish: "nosotros creemos que el plan es importante", english: "we think the plan is important", audio: "nosotros-creemos-que-el-plan-es-importante.mp3", question: "What do they think about the plan?" },
+        { spanish: "me gusta la comunicación aquí", english: "I like the communication here", audio: "me-gusta-la-comunicacion-aqui.mp3", question: "What does the speaker like?" },
+
+        { spanish: "he estado aprendiendo español", english: "I have been learning Spanish", audio: "he-estado-aprendiendo-espanol.mp3", question: "What language is the speaker learning?" },
+        { spanish: "qué aprendiste recientemente", english: "what did you learn recently", audio: "que-aprendiste-recientemente.mp3", question: "When did the listener learn something?" },
+        { spanish: "ella recuerda experiencias pasadas", english: "she remembers past experiences", audio: "ella-recuerda-experiencias-pasadas.mp3", question: "What does she remember?" },
+        { spanish: "nosotros hablamos sobre nuestro pasado", english: "we talked about our past", audio: "nosotros-hablamos-sobre-nuestro-pasado.mp3", question: "What did they talk about?" },
+        { spanish: "él aprendió algo nuevo", english: "he learned something new", audio: "el-aprendio-algo-nuevo.mp3", question: "What did he learn?" },
+
+        { spanish: "tenemos conversaciones diarias", english: "we have daily conversations", audio: "tenemos-conversaciones-diarias.mp3", question: "How often do they have conversations?" },
+        { spanish: "él quiere mejorar sus habilidades", english: "he wants to improve his skills", audio: "el-quiere-mejorar-sus-habilidades.mp3", question: "What does he want to improve?" },
+        { spanish: "ella estudia cada tarde", english: "she studies every afternoon", audio: "ella-estudia-cada-tarde.mp3", question: "When does she study?" },
+        { spanish: "disfruto tiempo libre los fines de semana", english: "I enjoy free time on weekends", audio: "disfruto-tiempo-libre-los-fines-de-semana.mp3", question: "When does the speaker enjoy free time?" },
+        { spanish: "ellos trabajan mientras estudian", english: "they work while they study", audio: "ellos-trabajan-mientras-estudian.mp3", question: "What do they do while studying?" },
+
+
 
 /* ============================================================
    CEFR TRAINER — CLEAN APP.JS (PART 1)
