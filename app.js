@@ -2031,22 +2031,34 @@ checkBtn.addEventListener("click", () => {
     } else {
 
         /* ============================================================
-           INCORRECT ANSWER — CEFR FEEDBACK
-           ============================================================ */
-        const translated = translateToEnglish(user);
-        const grammarNote = explainGrammarError(user, correct);
-        const cefrHint = getCEFRGrammarHint(appState.currentLevel, user, correct);
+   INCORRECT ANSWER — CEFR FEEDBACK (Improved)
+   ============================================================ */
+const translated = translateToEnglish(user);
+const grammarNote = explainGrammarError(user, correct);
+const cefrHint = getCEFRGrammarHint(appState.currentLevel, user, correct);
 
-        html += `<span style="color:#f87171;font-weight:600;">Incorrect</span><br>`;
-        html += `<strong>Correct:</strong> ${correct}<br>`;
-        html += `<strong>Your Answer:</strong> ${user}<br><br>`;
-        html += `<strong>Your Translated Response is:</strong> ${translated}<br>`;
-        html += `<strong>Your sentence means (CEFR-friendly):</strong> ${translated}<br><br>`;
-        html += `<em>${grammarNote}</em><br>`;
-        html += `<em>${cefrHint}</em><br><br>`;
+html += `<span style="color:#f87171;font-weight:600;">Incorrect</span><br>`;
+html += `<strong>Correct Answer:</strong> ${correct}<br>`;
+html += `<strong>Your Answer:</strong> ${user || "(empty)"}<br><br>`;
 
-        stats.streak = 0;
-    }
+/* --- Translation --- */
+html += `<strong>Meaning of Your Sentence:</strong><br>`;
+html += `${translated}<br><br>`;
+
+/* --- Grammar Note --- */
+if (grammarNote) {
+    html += `<strong>Grammar Note:</strong><br>`;
+    html += `<em>${grammarNote}</em><br><br>`;
+}
+
+/* --- CEFR Hint --- */
+if (cefrHint) {
+    html += `<strong>CEFR Hint (${appState.currentLevel}):</strong><br>`;
+    html += `<em>${cefrHint}</em><br><br>`;
+}
+
+stats.streak = 0;
+
 
     /* ============================================================
        WORD-BY-WORD FEEDBACK
