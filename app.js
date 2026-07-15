@@ -1493,7 +1493,7 @@ function renderConversation() {
     container.innerHTML = `
         <div class="glass-panel convo-card">
             <h2>Conversation</h2>
-            <p>Respond in Spanish by selecting the correct words from the wordbank.</p>
+            <p>Respond in Spanish by building the correct response.</p>
 
             <div id="convo-prompt">
                 <strong>Prompt (English):</strong> ${convoState.currentPrompt.english}
