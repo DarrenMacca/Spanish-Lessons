@@ -1852,7 +1852,8 @@ function renderConversation() {
     const coreTokens = target.split(" ");
 
     const levelTokens = words.map(w => w.spanish.split(" ")).flat();
-    const disruptors = ["rápido","ayer","mañana","porque","pero","también"];
+    const disruptors = ["rápido", "lento", "siempre", "nunca", "porque"];
+
 
     let bank = [...coreTokens];
 
@@ -1960,7 +1961,7 @@ function setupConversationEvents() {
         });
     });
 
-    // Check answer with word-by-word feedback + streak rewards
+   // Check answer with word-by-word feedback + streak rewards
 checkBtn.addEventListener("click", () => {
 
     // FIXED: correct property name
@@ -2031,6 +2032,7 @@ checkBtn.addEventListener("click", () => {
 
     setTimeout(() => speakQuiz(correct), 300);
 });
+
 
 
 
