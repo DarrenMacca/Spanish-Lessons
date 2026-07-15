@@ -3,38 +3,89 @@
    ============================================================ */
 
 function translateToEnglish(spanishText) {
-    const dictionary = {
-        "sí": "yes",
-        "te": "you",
-        "gusta": "like",
-        "el": "the",
-        "la": "the",
-        "los": "the",
-        "las": "the",
-        "café": "coffee",
-        "yo": "I",
-        "soy": "am",
-        "estoy": "am",
-        "nunca": "never",
-        "siempre": "always",
-        "porque": "because",
-        "solo": "only",
-        "rápido": "fast",
-        "mañana": "tomorrow",
-        "hoy": "today",
-        "comer": "to eat",
-        "beber": "to drink",
-        "quiero": "I want",
-        "tengo": "I have",
-        "eres": "you are",
-        "estás": "you are"
+
+    /* ============================================================
+       MULTI-WORD PHRASES (smarter translation)
+       ============================================================ */
+    const phraseDict = {
+        "te gusta el café": "you like coffee",
+        "viajas a menudo": "you travel often",
+        "me gusta la música": "I like music",
+        "trabajo todos los días": "I work every day",
+        "vivo en la ciudad": "I live in the city"
+        // add more full phrases as needed
     };
 
-    return spanishText
-        .split(" ")
-        .map(word => dictionary[word.toLowerCase()] || `[${word}]`)
+    /* ============================================================
+       FULL CEFR DICTIONARY (A1 → B2)
+       ============================================================ */
+    const wordDict = {
+        "hola": "hello", "adiós": "goodbye", "por": "for", "favor": "favor",
+        "por favor": "please", "gracias": "thank you", "sí": "yes", "no": "no",
+        "agua": "water", "comida": "food", "baño": "bathroom", "hotel": "hotel",
+
+        "cómo": "how", "estás": "are you", "hoy": "today", "dónde": "where",
+        "vives": "you live", "trabajas": "you work", "estudias": "you study",
+        "llamas": "you are called", "de": "from", "eres": "you are",
+        "tienes": "you have", "hermanos": "brothers", "hermanas": "sisters",
+        "hora": "time", "levantas": "you get up", "te": "you", "gusta": "like",
+        "música": "music", "televisión": "television", "lees": "you read",
+        "libros": "books",
+
+        "me gustaría": "I would like", "reserva": "reservation",
+        "desayuno": "breakfast", "almuerzo": "lunch", "cena": "dinner",
+        "estación": "station", "tren": "train", "centro": "center",
+        "ciudad": "city", "farmacia": "pharmacy", "supermercado": "supermarket",
+        "necesito": "I need", "ayuda": "help",
+
+        "qué": "what", "hiciste": "you did", "ayer": "yesterday",
+        "fuiste": "you went", "fin": "end", "semana": "week", "pasado": "last",
+        "haciendo": "doing", "sueles": "you usually", "comer": "to eat",
+        "trabajo": "work", "terminaste": "you finished", "compraste": "you bought",
+        "tienda": "store", "viajas": "you travel", "menudo": "often",
+        "avión": "plane", "visitar": "to visit", "familia": "family",
+
+        "he": "I have", "estado": "been", "aprendiendo": "learning",
+        "español": "Spanish", "tiempo": "time", "libre": "free",
+        "disfruto": "I enjoy", "viajar": "to travel", "desarrollador": "developer",
+        "mejorar": "to improve", "habilidades": "skills",
+        "comunicación": "communication", "situaciones": "situations",
+        "reales": "real", "conversaciones": "conversations",
+        "diarias": "daily", "planes": "plans", "futuros": "future",
+        "experiencias": "experiences", "pasadas": "past",
+
+        "manejas": "you handle", "situaciones": "situations",
+        "estresantes": "stressful", "opinión": "opinion",
+        "tecnología": "technology", "educación": "education",
+        "estilo": "style", "vida": "life", "cambiado": "changed",
+        "años": "years", "desafíos": "challenges", "enfrentas": "you face",
+        "motivación": "motivation", "lograr": "to achieve", "esperas": "you expect",
+        "remoto": "remote", "cultura": "culture", "sociedad": "society",
+        "importantes": "important", "futuro": "future", "vivir": "to live",
+        "largo": "long", "plazo": "term",
+
+        "rápido": "fast", "lento": "slow", "siempre": "always", "nunca": "never",
+        "mañana": "tomorrow", "porque": "because", "pero": "but",
+        "también": "also", "solo": "only", "entonces": "then"
+    };
+
+    /* ============================================================
+       PROCESS INPUT
+       ============================================================ */
+    const normalized = spanishText.toLowerCase().trim();
+
+    // 1) Full phrase match
+    if (phraseDict[normalized]) {
+        return phraseDict[normalized];
+    }
+
+    // 2) Word-by-word fallback
+    return normalized
+        .split(/\s+/)
+        .map(w => wordDict[w] || `[${w}]`)
         .join(" ");
 }
+
 
 /* ============================================================
    CEFR SENTENCE BANKS (for Build tab)
