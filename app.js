@@ -1,72 +1,71 @@
-/* ============================================================
-   UTILITIES
-   ============================================================ */
-
 function translateToEnglish(spanishText) {
 
     /* ============================================================
-       MULTI-WORD PHRASES (smarter translation)
+       MULTI-WORD PHRASES (CEFR-aligned)
        ============================================================ */
     const phraseDict = {
         "te gusta el café": "you like coffee",
         "viajas a menudo": "you travel often",
         "me gusta la música": "I like music",
         "trabajo todos los días": "I work every day",
-        "vivo en la ciudad": "I live in the city"
-        // add more full phrases as needed
+        "vivo en la ciudad": "I live in the city",
+        "qué haces mañana": "what are you doing tomorrow",
+        "dónde vives ahora": "where do you live now",
+        "por qué estudias español": "why do you study Spanish",
+        "cómo estás hoy": "how are you today",
+        "qué quieres comer": "what do you want to eat",
+        "qué quieres beber": "what do you want to drink"
     };
 
     /* ============================================================
        FULL CEFR DICTIONARY (A1 → B2)
        ============================================================ */
     const wordDict = {
+
+        // A1
         "hola": "hello", "adiós": "goodbye", "por": "for", "favor": "favor",
-        "por favor": "please", "gracias": "thank you", "sí": "yes", "no": "no",
-        "agua": "water", "comida": "food", "baño": "bathroom", "hotel": "hotel",
+        "gracias": "thank you", "sí": "yes", "no": "no", "agua": "water",
+        "comida": "food", "baño": "bathroom", "hotel": "hotel", "cómo": "how",
+        "estás": "are you", "hoy": "today", "dónde": "where", "vives": "you live",
+        "trabajas": "you work", "estudias": "you study", "llamas": "you are called",
+        "de": "from", "eres": "you are", "tienes": "you have", "hermanos": "brothers",
+        "hermanas": "sisters", "hora": "time", "levantas": "you get up", "te": "you",
+        "gusta": "like", "música": "music", "televisión": "television", "lees": "you read",
+        "libros": "books", "solo": "only", "nunca": "never", "porque": "because",
+        "mañana": "tomorrow", "rápido": "fast",
 
-        "cómo": "how", "estás": "are you", "hoy": "today", "dónde": "where",
-        "vives": "you live", "trabajas": "you work", "estudias": "you study",
-        "llamas": "you are called", "de": "from", "eres": "you are",
-        "tienes": "you have", "hermanos": "brothers", "hermanas": "sisters",
-        "hora": "time", "levantas": "you get up", "te": "you", "gusta": "like",
-        "música": "music", "televisión": "television", "lees": "you read",
-        "libros": "books",
-
-        "me gustaría": "I would like", "reserva": "reservation",
-        "desayuno": "breakfast", "almuerzo": "lunch", "cena": "dinner",
-        "estación": "station", "tren": "train", "centro": "center",
-        "ciudad": "city", "farmacia": "pharmacy", "supermercado": "supermarket",
-        "necesito": "I need", "ayuda": "help",
-
-        "qué": "what", "hiciste": "you did", "ayer": "yesterday",
-        "fuiste": "you went", "fin": "end", "semana": "week", "pasado": "last",
-        "haciendo": "doing", "sueles": "you usually", "comer": "to eat",
+        // A2
+        "me gustaría": "I would like", "reserva": "reservation", "desayuno": "breakfast",
+        "almuerzo": "lunch", "cena": "dinner", "estación": "station", "tren": "train",
+        "centro": "center", "ciudad": "city", "farmacia": "pharmacy", "supermercado": "supermarket",
+        "necesito": "I need", "ayuda": "help", "qué": "what", "hiciste": "you did",
+        "ayer": "yesterday", "fuiste": "you went", "fin": "end", "semana": "week",
+        "pasado": "last", "haciendo": "doing", "sueles": "you usually", "comer": "to eat",
         "trabajo": "work", "terminaste": "you finished", "compraste": "you bought",
-        "tienda": "store", "viajas": "you travel", "menudo": "often",
-        "avión": "plane", "visitar": "to visit", "familia": "family",
+        "tienda": "store", "viajas": "you travel", "menudo": "often", "avión": "plane",
+        "visitar": "to visit", "familia": "family", "lento": "slow",
 
-        "he": "I have", "estado": "been", "aprendiendo": "learning",
-        "español": "Spanish", "tiempo": "time", "libre": "free",
-        "disfruto": "I enjoy", "viajar": "to travel", "desarrollador": "developer",
-        "mejorar": "to improve", "habilidades": "skills",
-        "comunicación": "communication", "situaciones": "situations",
-        "reales": "real", "conversaciones": "conversations",
-        "diarias": "daily", "planes": "plans", "futuros": "future",
-        "experiencias": "experiences", "pasadas": "past",
+        // B1
+        "he": "I have", "estado": "been", "aprendiendo": "learning", "español": "Spanish",
+        "tiempo": "time", "libre": "free", "disfruto": "I enjoy", "viajar": "to travel",
+        "desarrollador": "developer", "mejorar": "to improve", "habilidades": "skills",
+        "comunicación": "communication", "situaciones": "situations", "reales": "real",
+        "conversaciones": "conversations", "diarias": "daily", "planes": "plans",
+        "futuros": "future", "experiencias": "experiences", "pasadas": "past",
+        "interesante": "interesting", "recientemente": "recently", "redes": "networks",
+        "sociales": "social",
 
-        "manejas": "you handle", "situaciones": "situations",
-        "estresantes": "stressful", "opinión": "opinion",
-        "tecnología": "technology", "educación": "education",
-        "estilo": "style", "vida": "life", "cambiado": "changed",
-        "años": "years", "desafíos": "challenges", "enfrentas": "you face",
-        "motivación": "motivation", "lograr": "to achieve", "esperas": "you expect",
-        "remoto": "remote", "cultura": "culture", "sociedad": "society",
-        "importantes": "important", "futuro": "future", "vivir": "to live",
-        "largo": "long", "plazo": "term",
+        // B2
+        "manejas": "you handle", "estresantes": "stressful", "opinión": "opinion",
+        "tecnología": "technology", "educación": "education", "estilo": "style",
+        "vida": "life", "cambiado": "changed", "años": "years", "desafíos": "challenges",
+        "enfrentas": "you face", "motivación": "motivation", "lograr": "to achieve",
+        "esperas": "you expect", "remoto": "remote", "cultura": "culture",
+        "sociedad": "society", "importantes": "important", "futuro": "future",
+        "vivir": "to live", "largo": "long", "plazo": "term",
 
-        "rápido": "fast", "lento": "slow", "siempre": "always", "nunca": "never",
-        "mañana": "tomorrow", "porque": "because", "pero": "but",
-        "también": "also", "solo": "only", "entonces": "then"
+        // Disruptors
+        "siempre": "always", "pero": "but", "también": "also", "entonces": "then"
     };
 
     /* ============================================================
@@ -86,6 +85,36 @@ function translateToEnglish(spanishText) {
         .join(" ");
 }
 
+/* ============================================================
+   GRAMMAR ERROR EXPLAINER
+   ============================================================ */
+function explainGrammarError(user, correct) {
+    const u = user.toLowerCase().trim();
+    const c = correct.toLowerCase().trim();
+
+    // Missing pronoun "te"
+    if (c.includes("te gusta") && !u.includes("te") && u.includes("gusta")) {
+        return "You forgot the pronoun “te”. Spanish requires “Te gusta…” to mean “You like…”.";
+    }
+
+    // Missing article
+    if ((c.includes("el ") || c.includes("la ")) &&
+        !u.includes("el ") && !u.includes("la ")) {
+        return "You missed the article (el/la). Spanish usually needs an article before nouns.";
+    }
+
+    // Wrong adverb vs frequency
+    if (c.includes("a menudo") && u.includes("lento")) {
+        return "You used “lento” (slow) instead of a frequency word like “a menudo” (often).";
+    }
+
+    // Wrong verb form
+    if (c.split(" ")[0] !== u.split(" ")[0]) {
+        return "Your verb form doesn’t match the target sentence. Check the conjugation.";
+    }
+
+    return "Your sentence is understandable, but the grammar or word choice doesn’t match the target answer.";
+}
 
 /* ============================================================
    CEFR SENTENCE BANKS (for Build tab)
@@ -1872,10 +1901,14 @@ function setupConversationEvents() {
         /* ============================================================
            INCORRECT ANSWER
            ============================================================ */
-       html += `<span style="color:#f87171;font-weight:600;">Incorrect</span><br>`;
-      html += `<strong>Correct:</strong> ${correct}<br>`;
+      const translated = translateToEnglish(user);
+      const grammarNote = explainGrammarError(user, correct);
+
       html += `<strong>Your Answer:</strong> ${user}<br><br>`;
-      html += `<strong>Your Translated Response is:</strong> ${translateToEnglish(user)}<br><br>`;
+      html += `<strong>Your Translated Response is:</strong> ${translated}<br>`;
+      html += `<strong>Your sentence means (CEFR-friendly):</strong> ${translated}<br><br>`;
+      html += `<em>${grammarNote}</em><br><br>`;
+
 
 
         // Reset streak
