@@ -1850,6 +1850,8 @@ const CEFR_CONVO_PROMPTS = {
 /* ============================================================
    CONVERSATION TAB — CEFR Everyday Dialogue Trainer
    ============================================================ */
+// GLOBAL — Disruptors (max 5)
+const disruptors = ["rápido", "lento", "siempre", "nunca", "porque"];
 
 function renderConversation() {
     updateTabHeader("conversation");
@@ -1871,22 +1873,21 @@ function renderConversation() {
     const prompt = CEFR_CONVO_PROMPTS[level][Math.floor(Math.random() * CEFR_CONVO_PROMPTS[level].length)];
     convoState.currentPrompt = prompt;
 
-    const target = prompt.spanish.replace(/[¿?]/g, "").trim();
+    // FIXED: use spanishTarget
+    const target = prompt.spanishTarget.replace(/[¿?]/g, "").trim();
     const coreTokens = target.split(" ");
 
     const levelTokens = words.map(w => w.spanish.split(" ")).flat();
-    
-
 
     let bank = [...coreTokens];
 
-    // Add level words
-    while (bank.length < coreTokens.length + 6) {
+    // FIXED: reduce level words from +6 to +4
+    while (bank.length < coreTokens.length + 4) {
         const t = levelTokens[Math.floor(Math.random() * levelTokens.length)];
         if (t && !bank.includes(t)) bank.push(t);
     }
 
-    // Add disruptors
+    // FIXED: use global disruptors
     disruptors.forEach(d => {
         if (!bank.includes(d)) bank.push(d);
     });
@@ -1926,6 +1927,7 @@ function renderConversation() {
 
     setupConversationEvents();
 }
+
 
 /* ============================================================
    CONVERSATION EVENTS — Word Pills + Typing + Feedback + Streak
@@ -1990,12 +1992,13 @@ checkBtn.addEventListener("click", () => {
     // FIXED: correct property name
     const correct = convoState.currentPrompt.spanishTarget.replace(/[¿?]/g, "").trim();
     const user = convoState.answer.join(" ").trim();
-    const disruptors = ["rápido", "lento", "siempre", "nunca", "porque"];
+
     const correctTokens = correct.split(" ");
     const userTokens = convoState.answer;
 
     const stats = appState.levelStats[appState.currentLevel];
     let html = "";
+
 
     /* ============================================================
        CORRECT ANSWER
