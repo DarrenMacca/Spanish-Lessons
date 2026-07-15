@@ -3,19 +3,60 @@ function translateToEnglish(spanishText) {
     /* ============================================================
        MULTI-WORD PHRASES (CEFR-aligned)
        ============================================================ */
-    const phraseDict = {
-        "te gusta el café": "you like coffee",
-        "viajas a menudo": "you travel often",
-        "me gusta la música": "I like music",
-        "trabajo todos los días": "I work every day",
-        "vivo en la ciudad": "I live in the city",
-        "qué haces mañana": "what are you doing tomorrow",
-        "dónde vives ahora": "where do you live now",
-        "por qué estudias español": "why do you study Spanish",
-        "cómo estás hoy": "how are you today",
-        "qué quieres comer": "what do you want to eat",
-        "qué quieres beber": "what do you want to drink"
-    };
+   const CEFR_PHRASES = {
+
+    /* ============================
+       A1 PHRASES
+       ============================ */
+    "cómo estás": "how are you",
+    "dónde vives": "where do you live",
+    "qué hora es": "what time is it",
+    "te gusta el café": "you like coffee",
+    "me gusta la música": "I like music",
+    "vivo en la ciudad": "I live in the city",
+    "trabajo en un hotel": "I work in a hotel",
+    "quiero comer": "I want to eat",
+    "quiero beber": "I want to drink",
+    "dónde está el baño": "where is the bathroom",
+
+    /* ============================
+       A2 PHRASES
+       ============================ */
+    "qué hiciste ayer": "what did you do yesterday",
+    "fuiste al supermercado": "did you go to the supermarket",
+    "viajas a menudo": "you travel often",
+    "qué compraste": "what did you buy",
+    "qué estás haciendo": "what are you doing",
+    "sueles comer temprano": "you usually eat early",
+    "necesito ayuda": "I need help",
+    "quiero hacer una reserva": "I want to make a reservation",
+    "dónde está la estación": "where is the station",
+
+    /* ============================
+       B1 PHRASES
+       ============================ */
+    "he estado aprendiendo español": "I have been learning Spanish",
+    "disfruto viajar": "I enjoy traveling",
+    "quiero mejorar mis habilidades": "I want to improve my skills",
+    "qué piensas de la ciudad": "what do you think of the city",
+    "cómo mantienes una vida saludable": "how do you maintain a healthy life",
+    "qué aprendiste recientemente": "what did you learn recently",
+    "cuáles son tus metas": "what are your goals",
+    "qué experiencias pasadas tienes": "what past experiences do you have",
+
+    /* ============================
+       B2 PHRASES
+       ============================ */
+    "cómo manejas situaciones estresantes": "how do you handle stressful situations",
+    "cuál es tu opinión sobre la tecnología": "what is your opinion on technology",
+    "cómo ha cambiado tu vida": "how has your life changed",
+    "qué desafíos enfrentas": "what challenges do you face",
+    "qué esperas lograr": "what do you hope to achieve",
+    "qué piensas del futuro": "what do you think about the future",
+    "cómo ves la sociedad actual": "how do you see modern society",
+    "cuál es tu perspectiva": "what is your perspective"
+};
+
 
     /* ============================================================
        FULL CEFR DICTIONARY (A1 → B2)
@@ -115,6 +156,67 @@ function explainGrammarError(user, correct) {
 
     return "Your sentence is understandable, but the grammar or word choice doesn’t match the target answer.";
 }
+
+function getCEFRGrammarHint(level, user, correct) {
+    const u = user.toLowerCase().trim();
+    const c = correct.toLowerCase().trim();
+
+    /* ============================
+       A1 HINTS
+       ============================ */
+    if (level === "A1") {
+        if (!u.includes("el") && !u.includes("la") && (c.includes("el") || c.includes("la"))) {
+            return "A1 hint: Remember to include articles (el/la) before nouns.";
+        }
+        if (!u.includes("te") && c.includes("te gusta")) {
+            return "A1 hint: Use “te gusta” to say “you like”.";
+        }
+        return "A1 hint: Focus on simple present tense and basic sentence structure.";
+    }
+
+    /* ============================
+       A2 HINTS
+       ============================ */
+    if (level === "A2") {
+        if (u.includes("lento") && c.includes("a menudo")) {
+            return "A2 hint: Use frequency words like “a menudo” instead of speed words like “lento”.";
+        }
+        if (!u.includes("ayer") && c.includes("ayer")) {
+            return "A2 hint: Practice past-time markers like “ayer”.";
+        }
+        return "A2 hint: Practice common past tense verbs and daily routine vocabulary.";
+    }
+
+    /* ============================
+       B1 HINTS
+       ============================ */
+    if (level === "B1") {
+        if (!u.includes("porque") && c.includes("porque")) {
+            return "B1 hint: Use connectors like “porque” to explain reasons.";
+        }
+        if (!u.includes("que") && c.includes("que")) {
+            return "B1 hint: Multi‑clause sentences often require “que”.";
+        }
+        return "B1 hint: Try adding connectors (porque, aunque, cuando) to build longer sentences.";
+    }
+
+    /* ============================
+       B2 HINTS
+       ============================ */
+    if (level === "B2") {
+        if (!u.includes("aunque") && c.includes("aunque")) {
+            return "B2 hint: Use contrast connectors like “aunque” for complex ideas.";
+        }
+        if (!u.includes("para") && c.includes("para")) {
+            return "B2 hint: Use “para” to express purpose or intention.";
+        }
+        return "B2 hint: Aim for abstract vocabulary and multi‑clause structures.";
+    }
+
+    return "";
+}
+
+
 
 /* ============================================================
    CEFR SENTENCE BANKS (for Build tab)
@@ -1901,13 +2003,16 @@ function setupConversationEvents() {
         /* ============================================================
            INCORRECT ANSWER
            ============================================================ */
-      const translated = translateToEnglish(user);
-      const grammarNote = explainGrammarError(user, correct);
+          const translated = translateToEnglish(user);
+        const grammarNote = explainGrammarError(user, correct);
+        const cefrHint = getCEFRGrammarHint(appState.currentLevel, user, correct);
 
-      html += `<strong>Your Answer:</strong> ${user}<br><br>`;
-      html += `<strong>Your Translated Response is:</strong> ${translated}<br>`;
-      html += `<strong>Your sentence means (CEFR-friendly):</strong> ${translated}<br><br>`;
-      html += `<em>${grammarNote}</em><br><br>`;
+        html += `<strong>Your Answer:</strong> ${user}<br><br>`;
+        html += `<strong>Your Translated Response is:</strong> ${translated}<br>`;
+        html += `<strong>Your sentence means (CEFR-friendly):</strong> ${translated}<br><br>`;
+        html += `<em>${grammarNote}</em><br>`;
+        html += `<em>${cefrHint}</em><br><br>`;
+
 
 
 
