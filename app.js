@@ -1594,27 +1594,23 @@ activateTab("dashboard");
 
 
 /* ============================================================
-   LISTEN TAB — SPA RENDERER
+   LISTEN TAB — TOPIC-BASED SPA RENDERER
    ============================================================ */
-
-let listenAutoPlay = {
-    active: false,
-    paused: false,
-    index: 0,
-    list: []
-};
 
 function renderListen() {
     updateTabHeader("listen");
 
     const container = document.getElementById("listen-content");
-    const words = CEFR_LEVELS[appState.currentLevel];
-    const grouped = groupByCategory(words);
+
+    const topic = appState.listenTopic;      // "food", "travel", "work", "family"
+    const level = appState.currentLevel;     // "A1", "A2", "B1", "B2"
+
+    const item = loadListening(topic, level);
 
     let html = `
         <div class="glass-panel quiz-card">
-            <h2>Listen</h2>
-            <p>Tap a category, then click a word pill to hear it.</p>
+            <h2>Listen — ${topic.toUpperCase()} (${level})</h2>
+            <p>Tap play to hear the sentence. Use autoplay to cycle through all items.</p>
 
             <div class="listen-player-controls" style="
                 display:flex;
@@ -1623,82 +1619,65 @@ function renderListen() {
                 margin-top:6px;
                 justify-content:flex-start;
             ">
+                <button class="pill" id="listen-play">Play</button>
                 <button class="pill" id="listen-playall">Play All</button>
                 <button class="pill" id="listen-pause">Pause</button>
                 <button class="pill" id="listen-resume">Resume</button>
                 <button class="pill" id="listen-stop">Stop</button>
             </div>
         </div>
+
+        <div class="glass-panel" style="margin-top:12px;">
+            <h3>Sentence</h3>
+            <p style="font-size:1.2rem;">${item.spanish}</p>
+            <p style="opacity:0.7;">${item.english}</p>
+        </div>
+
+        <div class="glass-panel" style="margin-top:12px;">
+            <h3>Question</h3>
+            <p>${item.question}</p>
+        </div>
+
+        <div class="glass-panel" style="margin-top:12px;">
+            <h3>Topic</h3>
+            <div style="display:flex; gap:6px; flex-wrap:wrap;">
+                <button class="pill listen-topic" data-topic="food">Food</button>
+                <button class="pill listen-topic" data-topic="travel">Travel</button>
+                <button class="pill listen-topic" data-topic="work">Work</button>
+                <button class="pill listen-topic" data-topic="family">Family</button>
+            </div>
+        </div>
     `;
-
-    /* ============================================================
-       CATEGORY LIST
-       ============================================================ */
-
-    Object.keys(grouped).forEach(cat => {
-        html += `
-        <div class="glass-panel">
-            <div class="listen-category-header" data-cat="${cat}">
-                <span class="listen-category-title">${cat.toUpperCase()}</span>
-                <span class="listen-arrow">▶</span>
-            </div>
-
-            <div class="listen-category-content" data-cat="${cat}">
-                <div class="listen-grid" style="
-                    display:grid;
-                    grid-template-columns:repeat(auto-fill, minmax(120px, 1fr));
-                    gap:6px;
-                    margin-top:8px;
-                ">
-                    ${grouped[cat].map(w => `
-                        <button class="pill listen-opt" data-spanish="${w.spanish}">
-                            ${w.english}
-                            <span style="opacity:0.7;">(${w.spanish})</span>
-                        </button>
-                    `).join("")}
-                </div>
-            </div>
-        </div>`;
-    });
 
     container.innerHTML = html;
 
     /* ============================================================
-       CATEGORY COLLAPSE
+       TOPIC SWITCHER
        ============================================================ */
-    container.querySelectorAll(".listen-category-header").forEach(header => {
-        header.addEventListener("click", () => {
-            const cat = header.dataset.cat;
-            const content = container.querySelector(`.listen-category-content[data-cat="${cat}"]`);
-            const arrow = header.querySelector(".listen-arrow");
-            const open = content.classList.toggle("open");
-            arrow.classList.toggle("open", open);
-        });
-    });
-
-    /* ============================================================
-       SINGLE WORD PLAYBACK
-       ============================================================ */
-    container.querySelectorAll(".listen-opt").forEach(btn => {
+    container.querySelectorAll(".listen-topic").forEach(btn => {
         btn.addEventListener("click", () => {
-            speakSpanish(btn.dataset.spanish);
-            appState.levelStats[appState.currentLevel].listens++;
-            saveState();
-            updateBadges();
-            updateProgressMeters();
+            appState.listenTopic = btn.dataset.topic;
+            renderListen();
         });
     });
 
     /* ============================================================
-       AUTO PLAY — PLAY ALL WORDS
+       SINGLE PLAYBACK
        ============================================================ */
-    listenAutoPlay.list = words.map(w => w.spanish);
+    document.getElementById("listen-play").onclick = () => {
+        playAudio(item.audio);
+    };
+
+    /* ============================================================
+       AUTO PLAY — PLAY ALL ITEMS IN TOPIC + LEVEL
+       ============================================================ */
+    listenAutoPlay.list = CEFR_LISTENING_TOPICS[topic][level].map(i => i.audio);
 
     document.getElementById("listen-playall").onclick = () => {
         listenAutoPlay.active = true;
         listenAutoPlay.paused = false;
         listenAutoPlay.index = 0;
-        playNextListenWord();
+        playNextListenAudio();
     };
 
     document.getElementById("listen-pause").onclick = () => {
@@ -1709,7 +1688,7 @@ function renderListen() {
     document.getElementById("listen-resume").onclick = () => {
         listenAutoPlay.paused = false;
         if (speechSynthesis.resume) speechSynthesis.resume();
-        playNextListenWord();
+        playNextListenAudio();
     };
 
     document.getElementById("listen-stop").onclick = () => {
@@ -1721,10 +1700,11 @@ function renderListen() {
 }
 
 
+
 /* ============================================================
    AUTO PLAY ENGINE
    ============================================================ */
-function playNextListenWord() {
+function playNextListenAudio() {
     if (!listenAutoPlay.active || listenAutoPlay.paused) return;
 
     const list = listenAutoPlay.list;
@@ -1733,15 +1713,15 @@ function playNextListenWord() {
         return;
     }
 
-    const word = list[listenAutoPlay.index];
-    const utter = new SpeechSynthesisUtterance(word);
+    const audioFile = list[listenAutoPlay.index];
+    const utter = new SpeechSynthesisUtterance(audioFile.replace(".mp3", ""));
     utter.lang = "es-ES";
     utter.rate = appState.speechRate;
 
     utter.onend = () => {
         if (!listenAutoPlay.paused) {
             listenAutoPlay.index++;
-            setTimeout(playNextListenWord, 500);
+            setTimeout(playNextListenAudio, 500);
         }
     };
 
