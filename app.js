@@ -1875,7 +1875,7 @@ function renderConversation() {
     const coreTokens = target.split(" ");
 
     const levelTokens = words.map(w => w.spanish.split(" ")).flat();
-    const disruptors = ["rápido", "lento", "siempre", "nunca", "porque"];
+    
 
 
     let bank = [...coreTokens];
@@ -1990,7 +1990,7 @@ checkBtn.addEventListener("click", () => {
     // FIXED: correct property name
     const correct = convoState.currentPrompt.spanishTarget.replace(/[¿?]/g, "").trim();
     const user = convoState.answer.join(" ").trim();
-
+    const disruptors = ["rápido", "lento", "siempre", "nunca", "porque"];
     const correctTokens = correct.split(" ");
     const userTokens = convoState.answer;
 
@@ -2055,6 +2055,7 @@ checkBtn.addEventListener("click", () => {
 
     setTimeout(() => speakQuiz(correct), 300);
 });
+
 
 
 
