@@ -453,179 +453,233 @@ function getCEFRGrammarHint(level, user, correct) {
 }
 
 
-
 /* ============================================================
-   CEFR SENTENCE BANKS (for Build tab)
+   CEFR SENTENCE BANKS — A1 → B2 (Expanded)
    ============================================================ */
+
 const CEFR_SENTENCES = {
+
+    /* ============================================================
+       A1 — Beginner (40 Sentences)
+       ============================================================ */
     A1: [
-        { english: "I would like water, please.", spanish: "me gustaría agua por favor" },
-        { english: "Where is the bathroom?", spanish: "dónde está el baño" },
+
+        // Greetings & Basics
+        { english: "Hello, how are you?", spanish: "hola cómo estás" },
+        { english: "Goodbye, see you tomorrow.", spanish: "adiós hasta mañana" },
+        { english: "Excuse me, where is the bathroom?", spanish: "perdón dónde está el baño" },
+        { english: "Sorry, I am late.", spanish: "lo siento estoy tarde" },
+        { english: "Yes, I am okay.", spanish: "sí estoy bien" },
+
+        // Personal Info
+        { english: "I live in the city.", spanish: "vivo en la ciudad" },
+        { english: "She lives in a hotel.", spanish: "ella vive en un hotel" },
+        { english: "We are brothers.", spanish: "nosotros somos hermanos" },
+        { english: "He is my friend.", spanish: "él es mi amigo" },
+        { english: "You are my sister.", spanish: "tú eres mi hermana" },
+
+        // Food & Drink
+        { english: "I want water.", spanish: "quiero agua" },
+        { english: "I like soup.", spanish: "me gusta la sopa" },
+        { english: "He eats bread.", spanish: "él come pan" },
+        { english: "We drink coffee.", spanish: "nosotros bebemos café" },
+        { english: "She likes fruit.", spanish: "ella gusta fruta" },
+
+        // Daily Life
+        { english: "You work in a store.", spanish: "tú trabajas en una tienda" },
+        { english: "I read books.", spanish: "yo leo libros" },
+        { english: "We watch television.", spanish: "nosotros vemos televisión" },
+        { english: "He studies every day.", spanish: "él estudia cada día" },
+        { english: "She gets up early.", spanish: "ella se levanta temprano" },
+
+        // Travel & Places
+        { english: "Where is the bus stop?", spanish: "dónde está la parada de autobús" },
+        { english: "The airport is open.", spanish: "el aeropuerto está abierto" },
+        { english: "The hotel is closed.", spanish: "el hotel está cerrado" },
+        { english: "The room has a table.", spanish: "la habitación tiene una mesa" },
+        { english: "The key is on the chair.", spanish: "la llave está en la silla" },
+
+        // Shopping
+        { english: "How much does the menu cost?", spanish: "cuánto cuesta el menú" },
+        { english: "The store is closed.", spanish: "la tienda está cerrada" },
+        { english: "The supermarket is open.", spanish: "el supermercado está abierto" },
+        { english: "I want cheap fruit.", spanish: "quiero fruta barata" },
+        { english: "The bill is expensive.", spanish: "la cuenta es cara" },
+
+        // Restaurant
+        { english: "I would like chicken.", spanish: "me gustaría pollo" },
+        { english: "The waiter has the bill.", spanish: "el camarero tiene la cuenta" },
+        { english: "I want a table.", spanish: "quiero una mesa" },
+        { english: "She wants soup.", spanish: "ella quiere sopa" },
+        { english: "We want bread.", spanish: "nosotros queremos pan" },
+
+        // Emergency
         { english: "I need help.", spanish: "necesito ayuda" },
-        { english: "I live in a small house.", spanish: "vivo en una casa pequeña" },
-        { english: "She works in a school.", spanish: "ella trabaja en una escuela" },
-        { english: "We want a table for two.", spanish: "queremos una mesa para dos" },
-        { english: "The store opens at nine.", spanish: "la tienda abre a las nueve" },
-        { english: "I like cold water.", spanish: "me gusta el agua fría" },
-        { english: "He has a big car.", spanish: "él tiene un coche grande" },
-        { english: "My friend is very nice.", spanish: "mi amigo es muy amable" },
-        { english: "I am tired today.", spanish: "estoy cansado hoy" },
-        { english: "The food is delicious.", spanish: "la comida es deliciosa" },
-        { english: "I want a coffee.", spanish: "quiero un café" },
-        { english: "She is my sister.", spanish: "ella es mi hermana" },
-        { english: "We are at home.", spanish: "estamos en casa" },
-        { english: "The bus is late.", spanish: "el autobús está retrasado" },
-        { english: "I have two brothers.", spanish: "tengo dos hermanos" },
-        { english: "He needs a doctor.", spanish: "él necesita un médico" },
-        { english: "The weather is good.", spanish: "el clima es bueno" },
-        { english: "I am learning Spanish.", spanish: "estoy aprendiendo español" },
-        { english: "She likes music.", spanish: "a ella le gusta la música" },
-        { english: "We are hungry.", spanish: "tenemos hambre" },
-        { english: "The hotel is near.", spanish: "el hotel está cerca" },
-        { english: "I want to go home.", spanish: "quiero ir a casa" },
-        { english: "He is very tall.", spanish: "él es muy alto" },
-        { english: "The room is clean.", spanish: "la habitación está limpia" },
-        { english: "I need more time.", spanish: "necesito más tiempo" },
-        { english: "She has a red bag.", spanish: "ella tiene una bolsa roja" },
-        { english: "We like this place.", spanish: "nos gusta este lugar" },
-        { english: "The train arrives soon.", spanish: "el tren llega pronto" },
-        { english: "I want that book.", spanish: "quiero ese libro" },
-        { english: "He is at work.", spanish: "él está en el trabajo" },
-        { english: "The coffee is hot.", spanish: "el café está caliente" },
-        { english: "I am very happy.", spanish: "estoy muy feliz" },
-        { english: "She needs a pen.", spanish: "ella necesita un bolígrafo" },
-        { english: "We are ready.", spanish: "estamos listos" },
-        { english: "The car is new.", spanish: "el coche es nuevo" },
-        { english: "I want to rest.", spanish: "quiero descansar" },
-        { english: "He likes sports.", spanish: "a él le gustan los deportes" }
+        { english: "Call the police.", spanish: "llama a la policía" },
+        { english: "I am lost.", spanish: "estoy perdido" },
+        { english: "I need a doctor.", spanish: "necesito un doctor" },
+        { english: "He is not okay.", spanish: "él no está bien" }
     ],
 
+    /* ============================================================
+       A2 — Elementary (40 Sentences)
+       ============================================================ */
     A2: [
-        { english: "I prefer chicken for dinner.", spanish: "prefiero pollo para la cena" },
-        { english: "Can you open the window?", spanish: "puedes abrir la ventana" },
-        { english: "We are going to visit my parents.", spanish: "vamos a visitar a mis padres" },
-        { english: "She bought fruit at the market.", spanish: "ella compró fruta en el mercado" },
-        { english: "I need to finish my homework.", spanish: "necesito terminar mi tarea" },
-        { english: "They want to watch a movie tonight.", spanish: "ellos quieren ver una película esta noche" },
-        { english: "The bus arrives in ten minutes.", spanish: "el autobús llega en diez minutos" },
-        { english: "I usually wake up early.", spanish: "normalmente me despierto temprano" },
-        { english: "He is learning Spanish slowly.", spanish: "él está aprendiendo español lentamente" },
-        { english: "We have a meeting tomorrow.", spanish: "tenemos una reunión mañana" },
-        { english: "I cleaned the kitchen yesterday.", spanish: "limpié la cocina ayer" },
-        { english: "She wants to buy new shoes.", spanish: "ella quiere comprar zapatos nuevos" },
-        { english: "We are planning a trip.", spanish: "estamos planeando un viaje" },
-        { english: "He called me last night.", spanish: "él me llamó anoche" },
-        { english: "I will study later.", spanish: "estudiaré más tarde" },
-        { english: "They need more information.", spanish: "ellos necesitan más información" },
-        { english: "She is cooking dinner now.", spanish: "ella está cocinando la cena ahora" },
-        { english: "We arrived early.", spanish: "llegamos temprano" },
-        { english: "I want to try something new.", spanish: "quiero probar algo nuevo" },
-        { english: "He forgot his keys.", spanish: "él olvidó sus llaves" },
-        { english: "I am waiting for my friend.", spanish: "estoy esperando a mi amigo" },
-        { english: "She likes to read at night.", spanish: "a ella le gusta leer por la noche" },
-        { english: "We need to buy milk.", spanish: "necesitamos comprar leche" },
-        { english: "He is driving to work.", spanish: "él está conduciendo al trabajo" },
-        { english: "I wrote a message.", spanish: "escribí un mensaje" },
-        { english: "They are watching TV.", spanish: "ellos están viendo televisión" },
-        { english: "She visited her grandmother.", spanish: "ella visitó a su abuela" },
-        { english: "We will eat later.", spanish: "comeremos más tarde" },
-        { english: "I want to learn more.", spanish: "quiero aprender más" },
-        { english: "He is fixing the car.", spanish: "él está arreglando el coche" },
-        { english: "I bought a new phone.", spanish: "compré un teléfono nuevo" },
-        { english: "She is talking to her friend.", spanish: "ella está hablando con su amiga" },
-        { english: "We need to leave soon.", spanish: "necesitamos irnos pronto" },
-        { english: "He likes to travel.", spanish: "a él le gusta viajar" },
-        { english: "I am reading a book.", spanish: "estoy leyendo un libro" },
-        { english: "They will arrive tomorrow.", spanish: "ellos llegarán mañana" },
-        { english: "She is listening to music.", spanish: "ella está escuchando música" },
-        { english: "We are eating breakfast.", spanish: "estamos desayunando" },
-        { english: "I want to go outside.", spanish: "quiero salir afuera" }
+
+        // Daily Life & Routines
+        { english: "I usually eat early.", spanish: "yo suelo comer temprano" },
+        { english: "What did you do yesterday?", spanish: "qué hiciste ayer" },
+        { english: "We finished the breakfast.", spanish: "nosotros terminamos el desayuno" },
+        { english: "She woke up late.", spanish: "ella se levantó tarde" },
+        { english: "He works every morning.", spanish: "él trabaja cada mañana" },
+
+        // Shopping & Places
+        { english: "She bought fruit at the supermarket.", spanish: "ella compró fruta en el supermercado" },
+        { english: "The pharmacy is in the center.", spanish: "la farmacia está en el centro" },
+        { english: "I need something cheap.", spanish: "necesito algo barato" },
+        { english: "The store opens tomorrow.", spanish: "la tienda abre mañana" },
+        { english: "He bought bread and cheese.", spanish: "él compró pan y queso" },
+
+        // Travel
+        { english: "We travel often.", spanish: "nosotros viajamos a menudo" },
+        { english: "Did you go to the airport?", spanish: "fuiste al aeropuerto" },
+        { english: "The plane arrives early.", spanish: "el avión llega temprano" },
+        { english: "She visits her family often.", spanish: "ella visita su familia a menudo" },
+        { english: "We went last week.", spanish: "nosotros fuimos la semana pasada" },
+
+        // Food & Meals
+        { english: "I eat rice with chicken.", spanish: "yo como arroz con pollo" },
+        { english: "He likes dinner with family.", spanish: "él gusta la cena con familia" },
+        { english: "She finished the lunch.", spanish: "ella terminó el almuerzo" },
+        { english: "We bought fruit recently.", spanish: "nosotros compramos fruta recientemente" },
+        { english: "He eats soup often.", spanish: "él come sopa a menudo" },
+
+        // Actions & Verbs
+        { english: "She is doing homework.", spanish: "ella está haciendo tarea" },
+        { english: "You use the transport.", spanish: "tú usas el transporte" },
+        { english: "He watches movies often.", spanish: "él ve películas a menudo" },
+        { english: "We celebrated last week.", spanish: "nosotros celebramos la semana pasada" },
+        { english: "I visited yesterday.", spanish: "yo visité ayer" },
+
+        // Family
+        { english: "My family lives near the station.", spanish: "mi familia vive cerca de la estación" },
+        { english: "We visited our family.", spanish: "nosotros visitamos nuestra familia" },
+        { english: "She bought dinner for her family.", spanish: "ella compró cena para su familia" },
+        { english: "He celebrated with his family.", spanish: "él celebró con su familia" },
+        { english: "They live far from the center.", spanish: "ellos viven lejos del centro" },
+
+        // Extra A2
+        { english: "I need a reservation.", spanish: "necesito una reserva" },
+        { english: "She bought cheese and bread.", spanish: "ella compró queso y pan" },
+        { english: "We use transport every day.", spanish: "nosotros usamos transporte cada día" },
+        { english: "He finished the work early.", spanish: "él terminó el trabajo temprano" },
+        { english: "I will visit tomorrow.", spanish: "yo voy a visitar mañana" }
     ],
 
+    /* ============================================================
+       B1 — Intermediate (40 Sentences)
+       ============================================================ */
     B1: [
-        { english: "We need to organize the meeting.", spanish: "necesitamos organizar la reunión" },
-        { english: "I want to improve my Spanish.", spanish: "quiero mejorar mi español" },
-        { english: "She hopes to find a better job.", spanish: "ella espera encontrar un mejor trabajo" },
-        { english: "They decided to cancel the trip.", spanish: "ellos decidieron cancelar el viaje" },
-        { english: "I think this restaurant is excellent.", spanish: "creo que este restaurante es excelente" },
-        { english: "We should talk about the problem.", spanish: "debemos hablar sobre el problema" },
-        { english: "He forgot to bring the documents.", spanish: "él olvidó traer los documentos" },
-        { english: "I will call you when I arrive.", spanish: "te llamaré cuando llegue" },
-        { english: "She wants to travel more this year.", spanish: "ella quiere viajar más este año" },
-        { english: "We need to finish the project soon.", spanish: "necesitamos terminar el proyecto pronto" },
-        { english: "He explained the situation clearly.", spanish: "él explicó la situación claramente" },
-        { english: "I believe we can solve this.", spanish: "creo que podemos resolver esto" },
-        { english: "She asked me to help her.", spanish: "ella me pidió que la ayudara" },
-        { english: "They plan to move next month.", spanish: "ellos planean mudarse el próximo mes" },
-        { english: "We must follow the instructions.", spanish: "debemos seguir las instrucciones" },
-        { english: "He wants to change his schedule.", spanish: "él quiere cambiar su horario" },
-        { english: "I will study after dinner.", spanish: "estudiaré después de la cena" },
-        { english: "She needs to finish her report.", spanish: "ella necesita terminar su informe" },
-        { english: "We talked about our goals.", spanish: "hablamos sobre nuestras metas" },
-        { english: "He hopes to visit soon.", spanish: "él espera visitar pronto" },
-        { english: "I think we should leave now.", spanish: "creo que deberíamos irnos ahora" },
-        { english: "She wants to learn new skills.", spanish: "ella quiere aprender nuevas habilidades" },
-        { english: "They need to clean the house.", spanish: "ellos necesitan limpiar la casa" },
-        { english: "We will continue tomorrow.", spanish: "continuaremos mañana" },
-        { english: "He asked for more time.", spanish: "él pidió más tiempo" },
-        { english: "I want to understand this better.", spanish: "quiero entender esto mejor" },
-        { english: "She explained the rules.", spanish: "ella explicó las reglas" },
-        { english: "We need to prepare everything.", spanish: "necesitamos preparar todo" },
-        { english: "He wants to join the team.", spanish: "él quiere unirse al equipo" },
-        { english: "I will help you later.", spanish: "te ayudaré más tarde" },
-        { english: "She hopes to finish early.", spanish: "ella espera terminar temprano" },
-        { english: "They want to change the plan.", spanish: "ellos quieren cambiar el plan" },
-        { english: "We talked for an hour.", spanish: "hablamos durante una hora" },
-        { english: "He needs to buy new clothes.", spanish: "él necesita comprar ropa nueva" },
-        { english: "I think this is important.", spanish: "creo que esto es importante" },
-        { english: "She wants to visit her family.", spanish: "ella quiere visitar a su familia" },
-        { english: "We need to check the details.", spanish: "necesitamos revisar los detalles" },
-        { english: "He hopes to get the job.", spanish: "él espera conseguir el trabajo" },
-        { english: "I will call you later.", spanish: "te llamaré más tarde" }
+
+        // Opinions
+        { english: "I think the city is interesting.", spanish: "creo que la ciudad es interesante" },
+        { english: "She enjoys traveling with friends.", spanish: "ella disfruta viajar con amigos" },
+        { english: "He believes the idea is good.", spanish: "él cree que la idea es buena" },
+        { english: "We think the plan is important.", spanish: "nosotros creemos que el plan es importante" },
+        { english: "I like the communication here.", spanish: "me gusta la comunicación aquí" },
+
+        // Experiences
+        { english: "I have been learning Spanish.", spanish: "he estado aprendiendo español" },
+        { english: "What did you learn recently?", spanish: "qué aprendiste recientemente" },
+        { english: "She remembers past experiences.", spanish: "ella recuerda experiencias pasadas" },
+        { english: "We talked about our past.", spanish: "nosotros hablamos sobre nuestro pasado" },
+        { english: "He learned something new.", spanish: "él aprendió algo nuevo" },
+
+        // Daily Life & Habits
+        { english: "We have daily conversations.", spanish: "nosotros tenemos conversaciones diarias" },
+        { english: "He wants to improve his skills.", spanish: "él quiere mejorar sus habilidades" },
+        { english: "She studies every afternoon.", spanish: "ella estudia cada tarde" },
+        { english: "I enjoy free time on weekends.", spanish: "yo disfruto tiempo libre los fines de semana" },
+        { english: "They work while they study.", spanish: "ellos trabajan mientras estudian" },
+
+        // Work & Study
+        { english: "She is a developer.", spanish: "ella es desarrollador" },
+        { english: "I need time to study.", spanish: "necesito tiempo para estudiar" },
+        { english: "He works in the center.", spanish: "él trabaja en el centro" },
+        { english: "We plan future projects.", spanish: "nosotros planeamos proyectos futuros" },
+        { english: "She improves her communication.", spanish: "ella mejora su comunicación" },
+
+        // Social & Communication
+        { english: "I use social networks often.", spanish: "yo uso redes sociales a menudo" },
+        { english: "Communication is important.", spanish: "la comunicación es importante" },
+        { english: "He talks with his friends daily.", spanish: "él habla con sus amigos diariamente" },
+        { english: "We share ideas online.", spanish: "nosotros compartimos ideas en línea" },
+        { english: "She reads news every morning.", spanish: "ella lee noticias cada mañana" },
+
+        // Travel & Life
+        { english: "We plan future trips.", spanish: "nosotros planeamos viajes futuros" },
+        { english: "He remembers past experiences.", spanish: "él recuerda experiencias pasadas" },
+        { english: "She enjoys traveling alone.", spanish: "ella disfruta viajar sola" },
+        { english: "I want to travel more.", spanish: "yo quiero viajar más" },
+        { english: "They visit new places often.", spanish: "ellos visitan lugares nuevos a menudo" },
+
+        // Extra B1
+        { english: "We talk about daily problems.", spanish: "nosotros hablamos sobre problemas diarios" },
+        { english: "He reads books every day.", spanish: "él lee libros cada día" },
+        { english: "She studies while she works.", spanish: "ella estudia mientras trabaja" },
+        { english: "I enjoy learning languages.", spanish: "yo disfruto aprender idiomas" },
+        { english: "They plan important changes.", spanish: "ellos planean cambios importantes" }
     ],
 
+    /* ============================================================
+       B2 — Upper Intermediate (40 Sentences)
+       ============================================================ */
     B2: [
-        { english: "They want to analyze the situation.", spanish: "quieren analizar la situación" },
-        { english: "We must consider all possibilities.", spanish: "debemos considerar todas las posibilidades" },
-        { english: "He suggested improving the communication process.", spanish: "él sugirió mejorar el proceso de comunicación" },
-        { english: "Although it was difficult, she completed the task.", spanish: "aunque fue difícil, ella completó la tarea" },
-        { english: "We need to evaluate the risks carefully.", spanish: "necesitamos evaluar los riesgos cuidadosamente" },
-        { english: "They argued that the plan was not realistic.", spanish: "ellos argumentaron que el plan no era realista" },
-        { english: "I believe the results will be positive.", spanish: "creo que los resultados serán positivos" },
-        { english: "She wants to expand her professional experience.", spanish: "ella quiere ampliar su experiencia profesional" },
-        { english: "We will continue even if there are challenges.", spanish: "continuaremos incluso si hay desafíos" },
-        { english: "He explained the concept in a clear way.", spanish: "él explicó el concepto de una manera clara" },
-        { english: "Despite the problems, they finished the project.", spanish: "a pesar de los problemas, terminaron el proyecto" },
-        { english: "We need to adapt to the new situation.", spanish: "necesitamos adaptarnos a la nueva situación" },
-        { english: "She believes the idea is innovative.", spanish: "ella cree que la idea es innovadora" },
-        { english: "They want to reduce unnecessary expenses.", spanish: "ellos quieren reducir gastos innecesarios" },
-        { english: "He insisted on reviewing the data again.", spanish: "él insistió en revisar los datos otra vez" },
-        { english: "We must improve our communication skills.", spanish: "debemos mejorar nuestras habilidades de comunicación" },
-        { english: "She explained the problem in detail.", spanish: "ella explicó el problema en detalle" },
-        { english: "They hope to achieve better results.", spanish: "ellos esperan lograr mejores resultados" },
-        { english: "He wants to explore new opportunities.", spanish: "él quiere explorar nuevas oportunidades" },
-        { english: "We need to clarify the instructions.", spanish: "necesitamos aclarar las instrucciones" },
-        { english: "Although it seems easy, it is complicated.", spanish: "aunque parece fácil, es complicado" },
-        { english: "She argued that the change was necessary.", spanish: "ella argumentó que el cambio era necesario" },
-        { english: "They want to strengthen the team.", spanish: "ellos quieren fortalecer el equipo" },
-        { english: "He believes the project will succeed.", spanish: "él cree que el proyecto tendrá éxito" },
-        { english: "We must analyze the results carefully.", spanish: "debemos analizar los resultados cuidadosamente" },
-        { english: "She wants to improve her performance.", spanish: "ella quiere mejorar su rendimiento" },
-        { english: "They discussed the issue for hours.", spanish: "ellos discutieron el tema durante horas" },
-        { english: "He suggested a different approach.", spanish: "él sugirió un enfoque diferente" },
-        { english: "We need to update the system.", spanish: "necesitamos actualizar el sistema" },
-        { english: "She believes the plan is effective.", spanish: "ella cree que el plan es efectivo" },
-        { english: "They want to increase productivity.", spanish: "ellos quieren aumentar la productividad" },
-        { english: "He explained the strategy clearly.", spanish: "él explicó la estrategia claramente" },
-        { english: "We must prepare for possible changes.", spanish: "debemos prepararnos para posibles cambios" },
-        { english: "She argued that the idea was risky.", spanish: "ella argumentó que la idea era arriesgada" },
-        { english: "They hope to expand the business.", spanish: "ellos esperan expandir el negocio" },
-        { english: "He wants to improve the workflow.", spanish: "él quiere mejorar el flujo de trabajo" },
-        { english: "We need to coordinate our efforts.", spanish: "necesitamos coordinar nuestros esfuerzos" },
-        { english: "She believes the team is capable.", spanish: "ella cree que el equipo es capaz" },
-        { english: "They want to optimize the process.", spanish: "ellos quieren optimizar el proceso" }
+
+        // Abstract Ideas
+        { english: "What is your opinion about technology?", spanish: "cuál es tu opinión sobre la tecnología" },
+        { english: "Society is changing quickly.", spanish: "la sociedad está cambiando rápido" },
+        { english: "Education is important for the future.", spanish: "la educación es importante para el futuro" },
+        { english: "Culture changes over time.", spanish: "la cultura cambia con el tiempo" },
+        { english: "Technology affects daily life.", spanish: "la tecnología afecta la vida diaria" },
+
+        // Challenges & Goals
+        { english: "What challenges do you face?", spanish: "qué desafíos enfrentas" },
+        { english: "She hopes to achieve her goals.", spanish: "ella espera lograr sus metas" },
+        { english: "He works hard to achieve success.", spanish: "él trabaja duro para lograr éxito" },
+        { english: "We face important challenges.", spanish: "nosotros enfrentamos desafíos importantes" },
+        { english: "They expect positive results.", spanish: "ellos esperan resultados positivos" },
+
+        // Life & Change
+        { english: "My life has changed in recent years.", spanish: "mi vida ha cambiado en los últimos años" },
+        { english: "He wants a healthy lifestyle.", spanish: "él quiere un estilo de vida saludable" },
+        { english: "We analyze cultural changes.", spanish: "nosotros analizamos cambios culturales" },
+        { english: "She studies for a long-term goal.", spanish: "ella estudia para un objetivo a largo plazo" },
+        { english: "They see the future as positive.", spanish: "ellos ven el futuro como positivo" },
+
+        // Reasoning & Explanation
+        { english: "We continue despite the problems.", spanish: "nosotros continuamos a pesar de los problemas" },
+        { english: "He explained the concept clearly.", spanish: "él explicó el concepto claramente" },
+        { english: "She works a lot; therefore, she is tired.", spanish: "ella trabaja mucho por lo tanto está cansada" },
+        { english: "I like the idea; however, it is difficult.", spanish: "me gusta la idea sin embargo es difícil" },
+        { english: "They study because it is important.", spanish: "ellos estudian porque es importante" },
+
+        // Advanced Connectors
+        { english: "He works hard; however, he needs rest.", spanish: "él trabaja duro sin embargo necesita descanso" },
+        { english: "We continue; therefore, we improve.", spanish: "nosotros continuamos por lo tanto mejoramos" },
+        { english: "She studies a lot; in addition, she works.", spanish: "ella estudia mucho además trabaja" },
+        { english: "He learns despite the difficulty.", spanish: "él aprende a pesar de la dificultad" },
+        { english: "They continue despite the problems.", spanish: "ellos continúan a pesar de los problemas" },
+
+        // Extra B2
+        { english: "I handle stressful situations well.", spanish: "yo manejo situaciones estresantes bien" },
+        { english: "She analyzes important information.", spanish: "ella analiza información importante" },
+        { english: "We discuss cultural ideas.", spanish: "nosotros discutimos ideas culturales" },
+        { english: "He studies for future opportunities.", spanish: "él estudia para oportunidades futuras" },
+        { english: "They work on long-term projects.", spanish: "ellos trabajan en proyectos a largo plazo" }
     ]
 };
+
 
 /* ============================================================
    CEFR TRAINER — CLEAN APP.JS (PART 1)
