@@ -61,72 +61,131 @@ function translateToEnglish(spanishText) {
        WORD-BY-WORD DICTIONARY (A1 → B2)
        ============================================================ */
     const WORD_DICT = {
-        // A1
-        "hola": "hello", "adiós": "goodbye", "por": "for", "favor": "favor",
-        "gracias": "thank you", "sí": "yes", "no": "no", "agua": "water",
-        "comida": "food", "baño": "bathroom", "hotel": "hotel", "cómo": "how",
-        "estás": "are you", "hoy": "today", "dónde": "where",
-        "vives": "you live", "vivo": "I live", "vive": "he/she lives",
-        "vivimos": "we live", "viven": "they live",
-        "trabajas": "you work", "trabajo": "I work", "trabaja": "he/she works",
-        "estudias": "you study", "llamas": "you are called",
-        "de": "from", "eres": "you are", "tienes": "you have",
-        "hermanos": "brothers", "hermanas": "sisters",
-        "hora": "time", "levantas": "you get up", "te": "you",
-        "gusta": "like", "gustan": "like (plural)", "música": "music",
-        "televisión": "television", "lees": "you read", "leo": "I read",
-        "libros": "books", "solo": "only", "nunca": "never",
-        "porque": "because", "mañana": "tomorrow",
-        "rápido": "fast", "lento": "slow",
-        "ciudad": "city", "parada": "stop", "autobús": "bus",
 
-        // A2
-        "me gustaría": "I would like", "reserva": "reservation",
-        "desayuno": "breakfast", "almuerzo": "lunch", "cena": "dinner",
-        "estación": "station", "tren": "train", "centro": "center",
-        "farmacia": "pharmacy", "supermercado": "supermarket",
-        "necesito": "I need", "ayuda": "help", "qué": "what",
-        "hiciste": "you did", "ayer": "yesterday", "fuiste": "you went",
-        "fin": "end", "semana": "week", "pasado": "last",
-        "haciendo": "doing", "sueles": "you usually",
-        "comer": "to eat", "como": "I eat", "comes": "you eat",
-        "terminaste": "you finished", "compraste": "you bought",
-        "tienda": "store", "viajas": "you travel", "menudo": "often",
-        "avión": "plane", "visitar": "to visit", "familia": "family",
-        "celebraste": "you celebrated", "recientemente": "recently",
-        "películas": "movies", "ves": "you watch", "ver": "to watch",
-        "usas": "you use", "transporte": "transport",
+    /* ============================================================
+       A1 — Beginner Vocabulary
+       ============================================================ */
 
-        // B1
-        "he": "I have", "estado": "been", "aprendiendo": "learning",
-        "español": "Spanish", "tiempo": "time", "libre": "free",
-        "disfruto": "I enjoy", "viajar": "to travel",
-        "desarrollador": "developer", "mejorar": "to improve",
-        "habilidades": "skills", "comunicación": "communication",
-        "situaciones": "situations", "reales": "real",
-        "conversaciones": "conversations", "diarias": "daily",
-        "planes": "plans", "futuros": "future",
-        "experiencias": "experiences", "pasadas": "past",
-        "interesante": "interesting", "redes": "networks",
-        "sociales": "social", "último": "last",
+    // Core greetings & basics
+    "hola": "hello", "adiós": "goodbye", "por": "for", "favor": "favor",
+    "gracias": "thank you", "sí": "yes", "no": "no",
+    "lo": "it", "siento": "sorry", "perdón": "excuse me",
 
-        // B2
-        "manejas": "you handle", "estresantes": "stressful",
-        "opinión": "opinion", "tecnología": "technology",
-        "educación": "education", "estilo": "style", "vida": "life",
-        "cambiado": "changed", "años": "years", "desafíos": "challenges",
-        "enfrentas": "you face", "motivación": "motivation",
-        "lograr": "to achieve", "esperas": "you expect",
-        "remoto": "remote", "cultura": "culture", "sociedad": "society",
-        "importantes": "important", "futuro": "future",
-        "vivir": "to live", "largo": "long", "plazo": "term",
-        "cambios": "changes", "saludable": "healthy",
+    // Pronouns
+    "yo": "I", "tú": "you", "él": "he", "ella": "she",
+    "nosotros": "we", "ellos": "they",
 
-        // Connectors + Disruptors
-        "siempre": "always", "pero": "but", "también": "also",
-        "entonces": "then", "aunque": "although", "cuando": "when",
-        "donde": "where"
-    };
+    // Connectors
+    "y": "and", "o": "or", "pero": "but", "porque": "because",
+    "con": "with", "sin": "without", "también": "also",
+    "muy": "very", "más": "more", "poco": "little",
+    "entonces": "then",
+
+    // Food & drink
+    "agua": "water", "comida": "food", "café": "coffee", "té": "tea",
+    "leche": "milk", "pan": "bread", "cerveza": "beer",
+    "bistec": "steak", "papas": "potatoes", "fritas": "fried",
+    "huevo": "egg", "fruta": "fruit", "manzana": "apple",
+    "naranja": "orange", "plátano": "banana", "pollo": "chicken",
+    "pescado": "fish", "sopa": "soup", "ensalada": "salad",
+    "arroz": "rice", "frijoles": "beans", "queso": "cheese",
+    "mantequilla": "butter", "azúcar": "sugar", "sal": "salt",
+
+    // Places & objects
+    "baño": "bathroom", "hotel": "hotel", "habitación": "room",
+    "llave": "key", "mesa": "table", "silla": "chair",
+
+    // Restaurant
+    "menú": "menu", "cuenta": "bill", "camarero": "waiter",
+    "quiero": "I want", "gustaría": "would like",
+
+    // Transport
+    "autobús": "bus", "tren": "train", "boleto": "ticket",
+    "estación": "station", "aeropuerto": "airport",
+
+    // Shopping
+    "cuánto": "how much", "cuesta": "costs",
+    "barato": "cheap", "caro": "expensive",
+    "abierto": "open", "cerrado": "closed",
+
+    // Emergency
+    "ayuda": "help", "doctor": "doctor", "policía": "police",
+    "estoy": "I am", "perdido": "lost",
+
+    // Verbs (A1)
+    "cómo": "how", "estás": "are you", "hoy": "today",
+    "dónde": "where", "vives": "you live", "vivo": "I live",
+    "vive": "he/she lives", "vivimos": "we live", "viven": "they live",
+    "trabajas": "you work", "trabajo": "I work", "trabaja": "he/she works",
+    "estudias": "you study", "llamas": "you are called",
+    "de": "from", "eres": "you are", "tienes": "you have",
+    "hermanos": "brothers", "hermanas": "sisters",
+    "hora": "time", "levantas": "you get up", "te": "you",
+    "gusta": "like", "gustan": "like (plural)",
+    "música": "music", "televisión": "television",
+    "lees": "you read", "leo": "I read", "libros": "books",
+    "solo": "only", "nunca": "never",
+    "mañana": "tomorrow", "rápido": "fast", "lento": "slow",
+    "ciudad": "city", "parada": "stop",
+
+    /* ============================================================
+       A2 — Elementary Vocabulary
+       ============================================================ */
+
+    "me": "me", "gustaría": "would like", "reserva": "reservation",
+    "desayuno": "breakfast", "almuerzo": "lunch", "cena": "dinner",
+    "centro": "center", "farmacia": "pharmacy",
+    "supermercado": "supermarket", "necesito": "I need",
+    "qué": "what", "hiciste": "you did", "ayer": "yesterday",
+    "fuiste": "you went", "fin": "end", "semana": "week",
+    "pasado": "last", "haciendo": "doing", "sueles": "you usually",
+    "comer": "to eat", "como": "I eat", "comes": "you eat",
+    "terminaste": "you finished", "compraste": "you bought",
+    "tienda": "store", "viajas": "you travel", "menudo": "often",
+    "avión": "plane", "visitar": "to visit", "familia": "family",
+    "celebraste": "you celebrated", "recientemente": "recently",
+    "películas": "movies", "ves": "you watch", "ver": "to watch",
+    "usas": "you use", "transporte": "transport",
+
+    /* ============================================================
+       B1 — Intermediate Vocabulary
+       ============================================================ */
+
+    "he": "I have", "estado": "been", "aprendiendo": "learning",
+    "español": "Spanish", "tiempo": "time", "libre": "free",
+    "disfruto": "I enjoy", "viajar": "to travel",
+    "desarrollador": "developer", "mejorar": "to improve",
+    "habilidades": "skills", "comunicación": "communication",
+    "situaciones": "situations", "reales": "real",
+    "conversaciones": "conversations", "diarias": "daily",
+    "planes": "plans", "futuros": "future",
+    "experiencias": "experiences", "pasadas": "past",
+    "interesante": "interesting", "redes": "networks",
+    "sociales": "social", "último": "last",
+
+    /* ============================================================
+       B2 — Upper‑Intermediate Vocabulary
+       ============================================================ */
+
+    "manejas": "you handle", "estresantes": "stressful",
+    "opinión": "opinion", "tecnología": "technology",
+    "educación": "education", "estilo": "style", "vida": "life",
+    "cambiado": "changed", "años": "years", "desafíos": "challenges",
+    "enfrentas": "you face", "motivación": "motivation",
+    "lograr": "to achieve", "esperas": "you expect",
+    "remoto": "remote", "cultura": "culture", "sociedad": "society",
+    "importantes": "important", "futuro": "future",
+    "vivir": "to live", "largo": "long", "plazo": "term",
+    "cambios": "changes", "saludable": "healthy",
+
+    /* ============================================================
+       Disruptors / Connectors (All Levels)
+       ============================================================ */
+
+    "siempre": "always", "aunque": "although", "cuando": "when",
+    "donde": "where"
+};
+
 
     /* ============================================================
        FALLBACK — Word-by-word translation
