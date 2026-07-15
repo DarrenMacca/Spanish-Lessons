@@ -1,7 +1,44 @@
 /* ============================================================
-   CEFR SENTENCE BANKS (for Build tab)
+   UTILITIES
    ============================================================ */
 
+function translateToEnglish(spanishText) {
+    const dictionary = {
+        "sí": "yes",
+        "te": "you",
+        "gusta": "like",
+        "el": "the",
+        "la": "the",
+        "los": "the",
+        "las": "the",
+        "café": "coffee",
+        "yo": "I",
+        "soy": "am",
+        "estoy": "am",
+        "nunca": "never",
+        "siempre": "always",
+        "porque": "because",
+        "solo": "only",
+        "rápido": "fast",
+        "mañana": "tomorrow",
+        "hoy": "today",
+        "comer": "to eat",
+        "beber": "to drink",
+        "quiero": "I want",
+        "tengo": "I have",
+        "eres": "you are",
+        "estás": "you are"
+    };
+
+    return spanishText
+        .split(" ")
+        .map(word => dictionary[word.toLowerCase()] || `[${word}]`)
+        .join(" ");
+}
+
+/* ============================================================
+   CEFR SENTENCE BANKS (for Build tab)
+   ============================================================ */
 const CEFR_SENTENCES = {
     A1: [
         { english: "I would like water, please.", spanish: "me gustaría agua por favor" },
@@ -1784,9 +1821,11 @@ function setupConversationEvents() {
         /* ============================================================
            INCORRECT ANSWER
            ============================================================ */
-        html += `<span style="color:#f87171;font-weight:600;">Incorrect</span><br>`;
-        html += `<strong>Correct:</strong> ${correct}<br>`;
-        html += `<strong>Your Answer:</strong> ${user}<br><br>`;
+       html += `<span style="color:#f87171;font-weight:600;">Incorrect</span><br>`;
+      html += `<strong>Correct:</strong> ${correct}<br>`;
+      html += `<strong>Your Answer:</strong> ${user}<br><br>`;
+      html += `<strong>Your Translated Response is:</strong> ${translateToEnglish(user)}<br><br>`;
+
 
         // Reset streak
         stats.streak = 0;
