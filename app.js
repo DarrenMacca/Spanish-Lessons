@@ -2012,66 +2012,87 @@ checkBtn.addEventListener("click", () => {
 
 
     /* ============================================================
-       CORRECT ANSWER
-       ============================================================ */
-    if (user === correct) {
-        html += `<span style="color:#4ade80;font-weight:600;">Correct! 🎉</span><br><br>`;
-
-        stats.conversationCompleted++;
-        registerDailyConversationCompletion();
-
-        stats.xp += 5;
-        stats.streak++;
-        stats.score += 2;
-
-        if (stats.streak === 3) html += `<div class="streak-reward">🔥 Great streak! 3 correct answers in a row!</div><br>`;
-        if (stats.streak === 5) html += `<div class="streak-reward">⚡ Amazing! 5 correct answers in a row!</div><br>`;
-        if (stats.streak === 10) html += `<div class="streak-reward">🌟 Incredible! 10 correct answers in a row!</div><br>`;
-
-    } else {
-
-        /* ============================================================
-   INCORRECT ANSWER — CEFR FEEDBACK (Improved)
+   CORRECT ANSWER — CEFR FEEDBACK (Improved)
    ============================================================ */
-const translated = translateToEnglish(user);
-const grammarNote = explainGrammarError(user, correct);
-const cefrHint = getCEFRGrammarHint(appState.currentLevel, user, correct);
+if (user === correct) {
 
-html += `<span style="color:#f87171;font-weight:600;">Incorrect</span><br>`;
-html += `<strong>Correct Answer:</strong> ${correct}<br>`;
-html += `<strong>Your Answer:</strong> ${user || "(empty)"}<br><br>`;
+    const translated = translateToEnglish(user);
+    const cefrHint = getCEFRGrammarHint(appState.currentLevel, user, correct);
 
-/* --- Translation --- */
-html += `<strong>Meaning of Your Sentence:</strong><br>`;
-html += `${translated}<br><br>`;
+    /* --- Correct Message --- */
+    html += `<span style="color:#4ade80;font-weight:600;">Correct! 🎉</span><br>`;
+    html += `<strong>Your Answer:</strong> ${user}<br>`;
+    html += `<strong>Meaning:</strong> ${translated}<br><br>`;
 
-/* --- Grammar Note --- */
-if (grammarNote) {
-    html += `<strong>Grammar Note:</strong><br>`;
-    html += `<em>${grammarNote}</em><br><br>`;
-}
+    /* --- Positive Reinforcement --- */
+    html += `<div style="color:#22c55e;font-weight:500;">Great job! Your Spanish sentence matches the target structure and meaning.</div><br>`;
 
-/* --- CEFR Hint --- */
-if (cefrHint) {
-    html += `<strong>CEFR Hint (${appState.currentLevel}):</strong><br>`;
-    html += `<em>${cefrHint}</em><br><br>`;
-}
+    /* --- CEFR Insight (Optional) --- */
+    if (cefrHint) {
+        html += `<strong>CEFR Insight (${appState.currentLevel}):</strong><br>`;
+        html += `<em>${cefrHint}</em><br><br>`;
+    }
 
-stats.streak = 0;
+    /* --- XP + Streak + Score --- */
+    stats.conversationCompleted++;
+    registerDailyConversationCompletion();
 
+    stats.xp += 5;
+    stats.streak++;
+    stats.score += 2;
+
+    /* --- Streak Rewards --- */
+    if (stats.streak === 3) html += `<div class="streak-reward">🔥 Great streak! 3 correct answers in a row!</div><br>`;
+    if (stats.streak === 5) html += `<div class="streak-reward">⚡ Amazing! 5 correct answers in a row!</div><br>`;
+    if (stats.streak === 10) html += `<div class="streak-reward">🌟 Incredible! 10 correct answers in a row!</div><br>`;
+
+} else {
 
     /* ============================================================
-       WORD-BY-WORD FEEDBACK
+       INCORRECT ANSWER — CEFR FEEDBACK (Improved)
        ============================================================ */
-    html += `<strong>Word-by-word feedback:</strong><br>`;
+    const translated = translateToEnglish(user);
+    const grammarNote = explainGrammarError(user, correct);
+    const cefrHint = getCEFRGrammarHint(appState.currentLevel, user, correct);
 
-    userTokens.forEach((t, i) => {
-        if (correctTokens[i] === t) {
-            html += `<span style="color:#4ade80;">${t} ✔</span> `;
-        } else {
-            html += `<span style="color:#f87171;">${t} ✖</span> `;
-        }
-    });
+    html += `<span style="color:#f87171;font-weight:600;">Incorrect</span><br>`;
+    html += `<strong>Correct Answer:</strong> ${correct}<br>`;
+    html += `<strong>Your Answer:</strong> ${user || "(empty)"}<br><br>`;
+
+    /* --- Translation --- */
+    html += `<strong>Meaning of Your Sentence:</strong><br>`;
+    html += `${translated}<br><br>`;
+
+    /* --- Grammar Note --- */
+    if (grammarNote) {
+        html += `<strong>Grammar Note:</strong><br>`;
+        html += `<em>${grammarNote}</em><br><br>`;
+    }
+
+    /* --- CEFR Hint --- */
+    if (cefrHint) {
+        html += `<strong>CEFR Hint (${appState.currentLevel}):</strong><br>`;
+        html += `<em>${cefrHint}</em><br><br>`;
+    }
+
+    stats.streak = 0;
+}
+
+/* ============================================================
+   WORD-BY-WORD FEEDBACK — Improved
+   ============================================================ */
+html += `<strong>Word-by-word feedback:</strong><br>`;
+
+userTokens.forEach((t, i) => {
+    const isCorrect = correctTokens[i] === t;
+
+    html += isCorrect
+        ? `<span style="background:#4ade80;color:#fff;padding:3px 6px;border-radius:6px;margin-right:4px;">${t} ✔</span>`
+        : `<span style="background:#f87171;color:#fff;padding:3px 6px;border-radius:6px;margin-right:4px;">${t} ✖</span>`;
+});
+
+html += `<br><br>`;
+
 
     feedback.innerHTML = html;
 
