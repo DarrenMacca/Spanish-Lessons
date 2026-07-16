@@ -1665,16 +1665,23 @@ const STORAGE_KEY = "cefr_trainer_state_v2";
 let appState = {
     currentLevel: "A1",
     currentTab: "dashboard",
+    listenTopic: "food",          // ✅ default topic
     speechRate: 1.0,
     studentName: "",
     badges: [],
+    dailyChallenge: {             // ✅ needed by updateBadges
+        completedToday: 0,
+        goal: 5,
+        streak: 0
+    },
     levelStats: {
-        A1: { listens: 0, flashSeen: 0, quizScore: null, buildCompleted: 0, conversationCompleted: 0 },
-        A2: { listens: 0, flashSeen: 0, quizScore: null, buildCompleted: 0, conversationCompleted: 0 },
-        B1: { listens: 0, flashSeen: 0, quizScore: null, buildCompleted: 0, conversationCompleted: 0 },
-        B2: { listens: 0, flashSeen: 0, quizScore: null, buildCompleted: 0, conversationCompleted: 0 }
+        A1: { listens: 0, flashSeen: 0, quizScore: null, quizCompleted: 0, buildCompleted: 0, sentenceCompleted: 0, conversationCompleted: 0, xp: 0, streak: 0, score: 0, reviewDue: 0 },
+        A2: { listens: 0, flashSeen: 0, quizScore: null, quizCompleted: 0, buildCompleted: 0, sentenceCompleted: 0, conversationCompleted: 0, xp: 0, streak: 0, score: 0, reviewDue: 0 },
+        B1: { listens: 0, flashSeen: 0, quizScore: null, quizCompleted: 0, buildCompleted: 0, sentenceCompleted: 0, conversationCompleted: 0, xp: 0, streak: 0, score: 0, reviewDue: 0 },
+        B2: { listens: 0, flashSeen: 0, quizScore: null, quizCompleted: 0, buildCompleted: 0, sentenceCompleted: 0, conversationCompleted: 0, xp: 0, streak: 0, score: 0, reviewDue: 0 }
     }
 };
+
 
 /* ============================================================
    TAB HEADER UPDATER
@@ -1762,17 +1769,6 @@ function autoAssignCategory(word) {
 
     return "daily-life";
 }
-
-/* ============================================================
-   APPLY CATEGORIES TO ALL CEFR LEVELS
-   ============================================================ */
-
-Object.keys(CEFR_LEVELS).forEach(level => {
-    CEFR_LEVELS[level] = CEFR_LEVELS[level].map(w => ({
-        ...w,
-        category: w.category || autoAssignCategory(w)
-    }));
-});
 
 /* ============================================================
    STATE LOAD / SAVE
