@@ -1032,16 +1032,7 @@ function autoAssignCategory(word) {
     return "daily-life";
 }
 
-/* ============================================================
-   APPLY CATEGORIES TO ALL CEFR LEVELS
-   ============================================================ */
 
-Object.keys(CEFR_LEVELS).forEach(level => {
-    CEFR_LEVELS[level] = CEFR_LEVELS[level].map(w => ({
-        ...w,
-        category: w.category || autoAssignCategory(w)
-    }));
-});
 
 /* ============================================================
    STATE LOAD / SAVE
