@@ -708,12 +708,14 @@ let appState = {
     speechRate: 1.0,
     studentName: "",
     badges: [],
-    levelStats: {
-    A1: { listens: 0, flashSeen: 0, quizScore: null, buildCompleted: 0, conversationCompleted: 0 },
-    A2: { listens: 0, flashSeen: 0, quizScore: null, buildCompleted: 0, conversationCompleted: 0 },
-    B1: { listens: 0, flashSeen: 0, quizScore: null, buildCompleted: 0, conversationCompleted: 0 },
-    B2: { listens: 0, flashSeen: 0, quizScore: null, buildCompleted: 0, conversationCompleted: 0 }
+   levelStats: {
+  A1: { listens: 0, flashSeen: 0, quizScore: null, quizCompleted: 0, buildCompleted: 0, sentenceCompleted: 0, conversationCompleted: 0 },
+  A2: { listens: 0, flashSeen: 0, quizScore: null, quizCompleted: 0, buildCompleted: 0, sentenceCompleted: 0, conversationCompleted: 0 },
+  B1: { listens: 0, flashSeen: 0, quizScore: null, quizCompleted: 0, buildCompleted: 0, sentenceCompleted: 0, conversationCompleted: 0 },
+  B2: { listens: 0, flashSeen: 0, quizScore: null, quizCompleted: 0, buildCompleted: 0, sentenceCompleted: 0, conversationCompleted: 0 }
 }
+
+
 
 };
 
@@ -1135,8 +1137,8 @@ function renderFlashcardsTab() {
     Object.keys(grouped).forEach(cat => {
         html += `
         <div class="glass-panel">
-            <div class="listen-category-header" data-cat="${cat}">
-                <span class="listen-category-title">${cat.toUpperCase()}</span>
+        <div class="flash-category-header" data-cat="${cat}">
+        <span class="listen-category-title">${cat.toUpperCase()}</span>
                 <span class="listen-arrow">▶</span>
             </div>
 
@@ -1157,7 +1159,7 @@ function renderFlashcardsTab() {
 
     container.innerHTML = html;
 
-    container.querySelectorAll(".listen-category-header").forEach(header => {
+    container.querySelectorAll(".flash-category-header").forEach(header => {
         header.addEventListener("click", () => {
             const cat = header.dataset.cat;
             const content = container.querySelector(`.flash-category-content[data-cat="${cat}"]`);
@@ -1310,12 +1312,20 @@ function setupQuizEvents() {
         appState.levelStats[appState.currentLevel].quizScore = 0;
     }
 
-    if (quizState.selected === correct) {
-        feedback.textContent = "Correct! 🎉";
-        appState.levelStats[appState.currentLevel].quizScore++;
-        updateBadges();
-        updateProgressMeters();
-    } else {
+   if (quizState.selected === correct) {
+    feedback.textContent = "Correct! 🎉";
+
+    if (appState.levelStats[appState.currentLevel].quizScore === null) {
+        appState.levelStats[appState.currentLevel].quizScore = 0;
+    }
+
+    appState.levelStats[appState.currentLevel].quizScore++;
+    appState.levelStats[appState.currentLevel].quizCompleted++;   // ⭐ ADD THIS LINE
+
+    updateBadges();
+    updateProgressMeters();
+}
+ else {
         feedback.textContent = `Incorrect — correct answer: ${correct}`;
     }
 
@@ -1995,17 +2005,21 @@ function setupConversationEvents() {
         const correct = convoState.currentPrompt.spanishTarget.replace(/[¿?]/g, "").trim();
         const user = convoState.answer.join(" ").trim();
 
-        if (user === correct) {
-            feedback.textContent = "Nice! That’s a natural response. 🎉";
-            // Use quizScore as a general conversation score for now
-            if (appState.levelStats[appState.currentLevel].quizScore === null) {
-                appState.levelStats[appState.currentLevel].quizScore = 0;
-            }
-            appState.levelStats[appState.currentLevel].quizScore++;
-            updateBadges();
-            updateProgressMeters();
-            setTimeout(() => speakQuiz(correct), 300);
-        } else {
+       if (user === correct) {
+    feedback.textContent = "Nice! That’s a natural response. 🎉";
+
+    if (appState.levelStats[appState.currentLevel].conversationCompleted == null) {
+        appState.levelStats[appState.currentLevel].conversationCompleted = 0;
+    }
+    appState.levelStats[appState.currentLevel].conversationCompleted++;   // ← use this
+
+    updateBadges();
+    updateProgressMeters();
+    setTimeout(() => speakQuiz(correct), 300);
+} else {
+    ...
+}
+ else {
             feedback.textContent = `Not quite. A natural response would be: ${convoState.currentPrompt.spanishTarget}`;
             setTimeout(() => speakQuiz(correct), 300);
         }
