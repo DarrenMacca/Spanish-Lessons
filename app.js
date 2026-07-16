@@ -1595,9 +1595,25 @@ const CEFR_LISTENING_TOPICS = {
 }
 
        
+const listenAutoPlay = {
+    list: [],
+    active: false,
+    paused: false,
+    index: 0
+};
+
 function loadListening(topic, level) {
-    const bank = CEFR_LISTENING_TOPICS[topic][level];
-    return bank[Math.floor(Math.random() * bank.length)];
+    const list = CEFR_LISTENING_TOPICS[topic]?.[level] || [];
+    return list[0] || { spanish: "", english: "", question: "", audio: "" };
+}
+
+function playAudio(file) {
+    if (!file) return;
+    const utter = new SpeechSynthesisUtterance(file.replace(".mp3", ""));
+    utter.lang = "es-ES";
+    utter.rate = appState.speechRate;
+    window.speechSynthesis.cancel();
+    window.speechSynthesis.speak(utter);
 }
 
 
@@ -1994,7 +2010,7 @@ function renderListen() {
     /* ============================================================
        AUTO PLAY — PLAY ALL ITEMS IN TOPIC + LEVEL
        ============================================================ */
-    listenAutoPlay.list = CEFR_LISTENING_TOPICS[topic][level].map(i => i.audio);
+    listenAutoPlay.list = (CEFR_LISTENING_TOPICS[topic]?.[level] || []).map(i => i.audio);
 
     document.getElementById("listen-playall").onclick = () => {
         listenAutoPlay.active = true;
