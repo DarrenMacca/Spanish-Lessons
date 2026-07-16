@@ -843,7 +843,7 @@ const CEFR_LISTENING_TOPICS = {
     { spanish: "yo como sopa", english: "I eat soup", audio: "yo-como-sopa.mp3", question: "What does the speaker eat?" },
     { spanish: "ella come ensalada", english: "she eats salad", audio: "ella-come-ensalada.mp3", question: "What does she eat?" },
     { spanish: "el come pan con mantequilla", english: "he eats bread with butter", audio: "el-come-pan-con-mantequilla.mp3", question: "What does he eat?" },
-    { spanish: "yo bebo jugo", english: "I drink juice", audio: "yo-bebo-jugo.mp3", question: "What does the speaker drink?" }
+    { spanish: "yo bebo jugo", english: "I drink juice", audio: "yo-bebo-jugo.mp3", question: "What does the speaker drink?" },
     { spanish: "ella come comida", english: "she eats food", audio: "ella-come-comida.mp3", question: "What does she eat?" },
     { spanish: "el come desayuno", english: "he eats breakfast", audio: "el-come-desayuno.mp3", question: "What does he eat?" },
     { spanish: "yo como almuerzo", english: "I eat lunch", audio: "yo-como-almuerzo.mp3", question: "What does the speaker eat?" },
@@ -870,7 +870,7 @@ const CEFR_LISTENING_TOPICS = {
     { spanish: "yo comi ensalada para el almuerzo", english: "I ate salad for lunch", audio: "yo-comi-ensalada-para-el-almuerzo.mp3", question: "What did the speaker eat for lunch?" },
     { spanish: "ella bebio agua fria ayer", english: "she drank cold water yesterday", audio: "ella-bebio-agua-fria-ayer.mp3", question: "When did she drink cold water?" },
     { spanish: "el comio pan con mantequilla por la tarde", english: "he ate bread with butter in the afternoon", audio: "el-comio-pan-con-mantequilla-por-la-tarde.mp3", question: "When did he eat bread with butter?" },
-    { spanish: "yo bebi te sin azucar", english: "I drank tea without sugar", audio: "yo-bebi-te-sin-azucar.mp3", question: "How did the speaker drink the tea?" }
+    { spanish: "yo bebi te sin azucar", english: "I drank tea without sugar", audio: "yo-bebi-te-sin-azucar.mp3", question: "How did the speaker drink the tea?" },
     { spanish: "ella comio arroz con pollo en casa", english: "she ate rice with chicken at home", audio: "ella-comio-arroz-con-pollo-en-casa.mp3", question: "Where did she eat rice with chicken?" },
     { spanish: "el bebio cafe en el trabajo", english: "he drank coffee at work", audio: "el-bebio-cafe-en-el-trabajo.mp3", question: "Where did he drink coffee?" },
     { spanish: "yo comi comida simple ayer", english: "I ate simple food yesterday", audio: "yo-comi-comida-simple-ayer.mp3", question: "What did the speaker eat?" },
@@ -897,7 +897,7 @@ const CEFR_LISTENING_TOPICS = {
     { spanish: "yo disfruto comer comida simple en restaurantes nuevos", english: "I enjoy eating simple food in new restaurants", audio: "yo-disfruto-comer-comida-simple-en-restaurantes-nuevos.mp3", question: "Where does the speaker enjoy simple food?" },
     { spanish: "ella prefiere beber jugo porque esta cansada", english: "she prefers to drink juice because she is tired", audio: "ella-prefiere-beber-jugo-porque-esta-cansada.mp3", question: "Why does she prefer juice?" },
     { spanish: "el disfruta comer pan con mantequilla en casa", english: "he enjoys eating bread with butter at home", audio: "el-disfruta-comer-pan-con-mantequilla-en-casa.mp3", question: "Where does he enjoy bread with butter?" },
-    { spanish: "yo prefiero beber agua fria para sentirme mejor", english: "I prefer to drink cold water to feel better", audio: "yo-prefiero-beber-agua-fria-para-sentirme-mejor.mp3", question: "Why does the speaker prefer cold water?" }
+    { spanish: "yo prefiero beber agua fria para sentirme mejor", english: "I prefer to drink cold water to feel better", audio: "yo-prefiero-beber-agua-fria-para-sentirme-mejor.mp3", question: "Why does the speaker prefer cold water?" },
     { spanish: "ella disfruta comer arroz porque es su comida favorita", english: "she enjoys eating rice because it is her favorite food", audio: "ella-disfruta-comer-arroz-porque-es-su-comida-favorita.mp3", question: "Why does she enjoy rice?" },
     { spanish: "el prefiere beber cafe sin embargo quiere algo simple", english: "he prefers to drink coffee however he wants something simple", audio: "el-prefiere-beber-cafe-sin-embargo-quiere-algo-simple.mp3", question: "What does he want?" },
     { spanish: "yo disfruto comer sopa cuando hace frio", english: "I enjoy eating soup when it is cold", audio: "yo-disfruto-comer-sopa-cuando-hace-frio.mp3", question: "When does the speaker enjoy soup?" },
@@ -924,7 +924,7 @@ const CEFR_LISTENING_TOPICS = {
     { spanish: "yo como arroz con pollo para tener energia en el viaje", english: "I eat rice with chicken to have energy on the trip", audio: "yo-como-arroz-con-pollo-para-tener-energia-en-el-viaje.mp3", question: "Why does the speaker eat rice with chicken?" },
     { spanish: "ella bebe te para sentirme mejor despues del trabajo", english: "she drinks tea to feel better after work", audio: "ella-bebe-te-para-sentirme-mejor-despues-del-trabajo.mp3", question: "Why does she drink tea?" },
     { spanish: "el come comida simple sin embargo quiere buen sabor", english: "he eats simple food however he wants good flavor", audio: "el-come-comida-simple-sin-embargo-quiere-buen-sabor.mp3", question: "What does he want?" },
-    { spanish: "yo bebo agua para estar bien en el dia", english: "I drink water to feel well during the day", audio: "yo-bebo-agua-para-estar-bien-en-el-dia.mp3", question: "Why does the speaker drink water?" }
+    { spanish: "yo bebo agua para estar bien en el dia", english: "I drink water to feel well during the day", audio: "yo-bebo-agua-para-estar-bien-en-el-dia.mp3", question: "Why does the speaker drink water?" },
        { spanish: "ella come comida saludable para tener energia", 
       english: "she eats healthy food to have energy", 
       audio: "ella-come-comida-saludable-para-tener-energia.mp3", 
@@ -994,7 +994,7 @@ const CEFR_LISTENING_TOPICS = {
     { spanish: "yo viajo con mi familia", english: "I travel with my family", audio: "yo-viajo-con-mi-familia.mp3", question: "Who does the speaker travel with?" },
     { spanish: "ella viaja con amigos", english: "she travels with friends", audio: "ella-viaja-con-amigos.mp3", question: "Who does she travel with?" },
     { spanish: "el viaja solo", english: "he travels alone", audio: "el-viaja-solo.mp3", question: "How does he travel?" },
-    { spanish: "yo camino al hotel", english: "I walk to the hotel", audio: "yo-camino-al-hotel.mp3", question: "Where does the speaker walk?" }
+    { spanish: "yo camino al hotel", english: "I walk to the hotel", audio: "yo-camino-al-hotel.mp3", question: "Where does the speaker walk?" },
     { spanish: "ella visita el hotel", english: "she visits the hotel", audio: "ella-visita-el-hotel.mp3", question: "What does she visit?" },
     { spanish: "el visita la playa", english: "he visits the beach", audio: "el-visita-la-playa.mp3", question: "What does he visit?" },
     { spanish: "yo viajo en taxi", english: "I travel by taxi", audio: "yo-viajo-en-taxi.mp3", question: "How does the speaker travel?" },
@@ -1021,7 +1021,7 @@ const CEFR_LISTENING_TOPICS = {
     { spanish: "yo viaje con mi familia la semana pasada", english: "I traveled with my family last week", audio: "yo-viaje-con-mi-familia-la-semana-pasada.mp3", question: "Who did the speaker travel with?" },
     { spanish: "ella viajo con amigos ayer", english: "she traveled with friends yesterday", audio: "ella-viajo-con-amigos-ayer.mp3", question: "Who did she travel with?" },
     { spanish: "el viajo solo porque queria descansar", english: "he traveled alone because he wanted to rest", audio: "el-viajo-solo-porque-queria-descansar.mp3", question: "Why did he travel alone?" },
-    { spanish: "yo visite la playa por la tarde", english: "I visited the beach in the afternoon", audio: "yo-visite-la-playa-por-la-tarde.mp3", question: "When did the speaker visit the beach?" }
+    { spanish: "yo visite la playa por la tarde", english: "I visited the beach in the afternoon", audio: "yo-visite-la-playa-por-la-tarde.mp3", question: "When did the speaker visit the beach?" },
     { spanish: "ella viajo al aeropuerto ayer", english: "she traveled to the airport yesterday", audio: "ella-viajo-al-aeropuerto-ayer.mp3", question: "Where did she travel?" },
     { spanish: "el camino a la estacion porque estaba lejos", english: "he walked to the station because it was far", audio: "el-camino-a-la-estacion-porque-estaba-lejos.mp3", question: "Why did he walk to the station?" },
     { spanish: "yo viaje en taxi la semana pasada", english: "I traveled by taxi last week", audio: "yo-viaje-en-taxi-la-semana-pasada.mp3", question: "How did the speaker travel?" },
@@ -1048,7 +1048,7 @@ const CEFR_LISTENING_TOPICS = {
     { spanish: "yo camino en la ciudad para ver lugares nuevos", english: "I walk in the city to see new places", audio: "yo-camino-en-la-ciudad-para-ver-lugares-nuevos.mp3", question: "Why does the speaker walk in the city?" },
     { spanish: "ella visita la playa para descansar", english: "she visits the beach to rest", audio: "ella-visita-la-playa-para-descansar.mp3", question: "Why does she visit the beach?" },
     { spanish: "el visita el centro para ver amigos", english: "he visits the center to see friends", audio: "el-visita-el-centro-para-ver-amigos.mp3", question: "Why does he visit the center?" },
-    { spanish: "yo viajo con mi familia para estar juntos", english: "I travel with my family to be together", audio: "yo-viajo-con-mi-familia-para-estar-juntos.mp3", question: "Why does the speaker travel with family?" }
+    { spanish: "yo viajo con mi familia para estar juntos", english: "I travel with my family to be together", audio: "yo-viajo-con-mi-familia-para-estar-juntos.mp3", question: "Why does the speaker travel with family?" },
     { spanish: "ella viaja con amigos para divertirse", english: "she travels with friends to have fun", audio: "ella-viaja-con-amigos-para-divertirse.mp3", question: "Why does she travel with friends?" },
     { spanish: "el viaja solo para descansar", english: "he travels alone to rest", audio: "el-viaja-solo-para-descansar.mp3", question: "Why does he travel alone?" },
     { spanish: "yo visito la ciudad para conocer lugares nuevos", english: "I visit the city to know new places", audio: "yo-visito-la-ciudad-para-conocer-lugares-nuevos.mp3", question: "Why does the speaker visit the city?" },
@@ -1075,7 +1075,7 @@ const CEFR_LISTENING_TOPICS = {
     { spanish: "yo viajo con mi familia para estar juntos en el viaje", english: "I travel with my family to be together on the trip", audio: "yo-viajo-con-mi-familia-para-estar-juntos-en-el-viaje.mp3", question: "Why does the speaker travel with family?" },
     { spanish: "ella viaja con amigos para tener buena experiencia", english: "she travels with friends to have a good experience", audio: "ella-viaja-con-amigos-para-tener-buena-experiencia.mp3", question: "Why does she travel with friends?" },
     { spanish: "el viaja solo sin embargo quiere conocer personas", english: "he travels alone however he wants to meet people", audio: "el-viaja-solo-sin-embargo-quiere-conocer-personas.mp3", question: "What does he want?" },
-    { spanish: "yo camino en la ciudad para ver lugares nuevos", english: "I walk in the city to see new places", audio: "yo-camino-en-la-ciudad-para-ver-lugares-nuevos.mp3", question: "Why does the speaker walk in the city?" }
+    { spanish: "yo camino en la ciudad para ver lugares nuevos", english: "I walk in the city to see new places", audio: "yo-camino-en-la-ciudad-para-ver-lugares-nuevos.mp3", question: "Why does the speaker walk in the city?" },
     { spanish: "ella visita el hotel para descansar despues del viaje",
       english: "she visits the hotel to rest after the trip",
       audio: "ella-visita-el-hotel-para-descansar-despues-del-viaje.mp3",
@@ -1148,7 +1148,7 @@ const CEFR_LISTENING_TOPICS = {
     { spanish: "yo trabajo con mi equipo", english: "I work with my team", audio: "yo-trabajo-con-mi-equipo.mp3", question: "Who does the speaker work with?" },
     { spanish: "ella trabaja con clientes", english: "she works with clients", audio: "ella-trabaja-con-clientes.mp3", question: "Who does she work with?" },
     { spanish: "el trabaja con su jefe", english: "he works with his boss", audio: "el-trabaja-con-su-jefe.mp3", question: "Who does he work with?" },
-    { spanish: "yo estudio para mi trabajo", english: "I study for my job", audio: "yo-estudio-para-mi-trabajo.mp3", question: "Why does the speaker study?" }
+    { spanish: "yo estudio para mi trabajo", english: "I study for my job", audio: "yo-estudio-para-mi-trabajo.mp3", question: "Why does the speaker study?" },
     { spanish: "ella estudia para su trabajo", english: "she studies for her job", audio: "ella-estudia-para-su-trabajo.mp3", question: "Why does she study?" },
     { spanish: "el estudia nuevas ideas", english: "he studies new ideas", audio: "el-estudia-nuevas-ideas.mp3", question: "What does he study?" },
     { spanish: "yo tengo trabajo hoy", english: "I have work today", audio: "yo-tengo-trabajo-hoy.mp3", question: "What does the speaker have today?" },
@@ -1175,7 +1175,7 @@ const CEFR_LISTENING_TOPICS = {
     { spanish: "yo trabaje con mi equipo ayer", english: "I worked with my team yesterday", audio: "yo-trabaje-con-mi-equipo-ayer.mp3", question: "Who did the speaker work with?" },
     { spanish: "ella trabajo con clientes ayer", english: "she worked with clients yesterday", audio: "ella-trabajo-con-clientes-ayer.mp3", question: "Who did she work with?" },
     { spanish: "el trabajo con su jefe la semana pasada", english: "he worked with his boss last week", audio: "el-trabajo-con-su-jefe-la-semana-pasada.mp3", question: "Who did he work with?" },
-    { spanish: "yo estudie para mi trabajo ayer", english: "I studied for my job yesterday", audio: "yo-estudie-para-mi-trabajo-ayer.mp3", question: "Why did the speaker study?" }
+    { spanish: "yo estudie para mi trabajo ayer", english: "I studied for my job yesterday", audio: "yo-estudie-para-mi-trabajo-ayer.mp3", question: "Why did the speaker study?" },
     { spanish: "ella estudio para su trabajo la semana pasada", english: "she studied for her job last week", audio: "ella-estudio-para-su-trabajo-la-semana-pasada.mp3", question: "Why did she study?" },
     { spanish: "el estudio nuevas ideas ayer", english: "he studied new ideas yesterday", audio: "el-estudio-nuevas-ideas-ayer.mp3", question: "What did he study?" },
     { spanish: "yo tuve trabajo ayer", english: "I had work yesterday", audio: "yo-tuve-trabajo-ayer.mp3", question: "What did the speaker have?" },
@@ -1202,7 +1202,7 @@ const CEFR_LISTENING_TOPICS = {
     { spanish: "yo estudio nuevas ideas para mejorar mi trabajo", english: "I study new ideas to improve my work", audio: "yo-estudio-nuevas-ideas-para-mejorar-mi-trabajo.mp3", question: "Why does the speaker study new ideas?" },
     { spanish: "ella estudia comunicacion para trabajar mejor", english: "she studies communication to work better", audio: "ella-estudia-comunicacion-para-trabajar-mejor.mp3", question: "Why does she study communication?" },
     { spanish: "el estudia habilidades nuevas para proyectos largos", english: "he studies new skills for long projects", audio: "el-estudia-habilidades-nuevas-para-proyectos-largos.mp3", question: "Why does he study new skills?" },
-    { spanish: "yo trabajo con mi equipo para terminar proyectos", english: "I work with my team to finish projects", audio: "yo-trabajo-con-mi-equipo-para-terminar-proyectos.mp3", question: "Why does the speaker work with their team?" }
+    { spanish: "yo trabajo con mi equipo para terminar proyectos", english: "I work with my team to finish projects", audio: "yo-trabajo-con-mi-equipo-para-terminar-proyectos.mp3", question: "Why does the speaker work with their team?" },
     { spanish: "ella trabaja con clientes para resolver problemas", english: "she works with clients to solve problems", audio: "ella-trabaja-con-clientes-para-resolver-problemas.mp3", question: "Why does she work with clients?" },
     { spanish: "el trabaja con su jefe para organizar tareas", english: "he works with his boss to organize tasks", audio: "el-trabaja-con-su-jefe-para-organizar-tareas.mp3", question: "Why does he work with his boss?" },
     { spanish: "yo tengo reuniones para mejorar la comunicacion", english: "I have meetings to improve communication", audio: "yo-tengo-reuniones-para-mejorar-la-comunicacion.mp3", question: "Why does the speaker have meetings?" },
@@ -1229,7 +1229,7 @@ const CEFR_LISTENING_TOPICS = {
     { spanish: "yo trabajo con mi equipo para mejorar la comunicacion", english: "I work with my team to improve communication", audio: "yo-trabajo-con-mi-equipo-para-mejorar-la-comunicacion.mp3", question: "Why does the speaker work with their team?" },
     { spanish: "ella trabaja con clientes sin embargo quiere menos reuniones", english: "she works with clients however she wants fewer meetings", audio: "ella-trabaja-con-clientes-sin-embargo-quiere-menos-reuniones.mp3", question: "What does she want?" },
     { spanish: "el trabaja con su jefe para organizar proyectos largos", english: "he works with his boss to organize long projects", audio: "el-trabaja-con-su-jefe-para-organizar-proyectos-largos.mp3", question: "Why does he work with his boss?" },
-    { spanish: "yo tengo reuniones para mejorar decisiones importantes", english: "I have meetings to improve important decisions", audio: "yo-tengo-reuniones-para-mejorar-decisiones-importantes.mp3", question: "Why does the speaker have meetings?" }
+    { spanish: "yo tengo reuniones para mejorar decisiones importantes", english: "I have meetings to improve important decisions", audio: "yo-tengo-reuniones-para-mejorar-decisiones-importantes.mp3", question: "Why does the speaker have meetings?" },
     { spanish: "ella tiene proyectos largos sin embargo quiere mas tiempo",
       english: "she has long projects however she wants more time",
       audio: "ella-tiene-proyectos-largos-sin-embargo-quiere-mas-tiempo.mp3",
@@ -1303,7 +1303,7 @@ const CEFR_LISTENING_TOPICS = {
     { spanish: "yo hablo con mi familia", english: "I talk with my family", audio: "yo-hablo-con-mi-familia.mp3", question: "Who does the speaker talk with?" },
     { spanish: "ella habla con su hermana", english: "she talks with her sister", audio: "ella-habla-con-su-hermana.mp3", question: "Who does she talk with?" },
     { spanish: "el habla con su abuelo", english: "he talks with his grandfather", audio: "el-habla-con-su-abuelo.mp3", question: "Who does he talk with?" },
-    { spanish: "yo paso tiempo con mi familia", english: "I spend time with my family", audio: "yo-paso-tiempo-con-mi-familia.mp3", question: "Who does the speaker spend time with?" }
+    { spanish: "yo paso tiempo con mi familia", english: "I spend time with my family", audio: "yo-paso-tiempo-con-mi-familia.mp3", question: "Who does the speaker spend time with?" },
     { spanish: "ella pasa tiempo con su madre", english: "she spends time with her mother", audio: "ella-pasa-tiempo-con-su-madre.mp3", question: "Who does she spend time with?" },
     { spanish: "el pasa tiempo con su padre", english: "he spends time with his father", audio: "el-pasa-tiempo-con-su-padre.mp3", question: "Who does he spend time with?" },
     { spanish: "yo vivo con mi hermano", english: "I live with my brother", audio: "yo-vivo-con-mi-hermano.mp3", question: "Who does the speaker live with?" },
@@ -1330,7 +1330,7 @@ const CEFR_LISTENING_TOPICS = {
     { spanish: "yo pase tiempo con mi familia ayer", english: "I spent time with my family yesterday", audio: "yo-pase-tiempo-con-mi-familia-ayer.mp3", question: "When did the speaker spend time with their family?" },
     { spanish: "ella paso tiempo con su hermana la semana pasada", english: "she spent time with her sister last week", audio: "ella-paso-tiempo-con-su-hermana-la-semana-pasada.mp3", question: "When did she spend time with her sister?" },
     { spanish: "el paso tiempo con su abuelo ayer", english: "he spent time with his grandfather yesterday", audio: "el-paso-tiempo-con-su-abuelo-ayer.mp3", question: "When did he spend time with his grandfather?" },
-    { spanish: "yo vivi con mi familia el ano pasado", english: "I lived with my family last year", audio: "yo-vivi-con-mi-familia-el-ano-pasado.mp3", question: "When did the speaker live with their family?" }
+    { spanish: "yo vivi con mi familia el ano pasado", english: "I lived with my family last year", audio: "yo-vivi-con-mi-familia-el-ano-pasado.mp3", question: "When did the speaker live with their family?" },
     { spanish: "ella vivio con sus padres el ano pasado", english: "she lived with her parents last year", audio: "ella-vivio-con-sus-padres-el-ano-pasado.mp3", question: "When did she live with her parents?" },
     { spanish: "el vivio con su hermano la semana pasada", english: "he lived with his brother last week", audio: "el-vivio-con-su-hermano-la-semana-pasada.mp3", question: "When did he live with his brother?" },
     { spanish: "yo visite a mis padres por la tarde", english: "I visited my parents in the afternoon", audio: "yo-visite-a-mis-padres-por-la-tarde.mp3", question: "When did the speaker visit their parents?" },
@@ -1357,7 +1357,7 @@ const CEFR_LISTENING_TOPICS = {
     { spanish: "yo hablo con mi familia para comunicar mejor", english: "I talk with my family to communicate better", audio: "yo-hablo-con-mi-familia-para-comunicar-mejor.mp3", question: "Why does the speaker talk with their family?" },
     { spanish: "ella habla con su hermana para resolver problemas", english: "she talks with her sister to solve problems", audio: "ella-habla-con-su-hermana-para-resolver-problemas.mp3", question: "Why does she talk with her sister?" },
     { spanish: "el habla con su abuelo para aprender historias", english: "he talks with his grandfather to learn stories", audio: "el-habla-con-su-abuelo-para-aprender-historias.mp3", question: "Why does he talk with his grandfather?" },
-    { spanish: "yo paso tiempo con mi familia para descansar", english: "I spend time with my family to rest", audio: "yo-paso-tiempo-con-mi-familia-para-descansar.mp3", question: "Why does the speaker spend time with their family?" }
+    { spanish: "yo paso tiempo con mi familia para descansar", english: "I spend time with my family to rest", audio: "yo-paso-tiempo-con-mi-familia-para-descansar.mp3", question: "Why does the speaker spend time with their family?" },
     { spanish: "ella pasa tiempo con su madre para estar tranquila", english: "she spends time with her mother to be calm", audio: "ella-pasa-tiempo-con-su-madre-para-estar-tranquila.mp3", question: "Why does she spend time with her mother?" },
     { spanish: "el pasa tiempo con su padre para aprender mas", english: "he spends time with his father to learn more", audio: "el-pasa-tiempo-con-su-padre-para-aprender-mas.mp3", question: "Why does he spend time with his father?" },
     { spanish: "yo vivo con mi familia para estar cerca de ellos", english: "I live with my family to be close to them", audio: "yo-vivo-con-mi-familia-para-estar-cerca-de-ellos.mp3", question: "Why does the speaker live with their family?" },
@@ -1460,7 +1460,7 @@ const CEFR_LISTENING_TOPICS = {
     { spanish: "quiero arroz con pollo", english: "I want rice with chicken", audio: "quiero-arroz-con-pollo.mp3", question: "What does the speaker want?" },
     { spanish: "quiero ensalada", english: "I want salad", audio: "quiero-ensalada.mp3", question: "What does the speaker want?" },
     { spanish: "quiero comida", english: "I want food", audio: "quiero-comida.mp3", question: "What does the speaker want?" },
-    { spanish: "quiero cafe pequeno", english: "I want a small coffee", audio: "quiero-cafe-pequeno.mp3", question: "What size coffee does the speaker want?" }
+    { spanish: "quiero cafe pequeno", english: "I want a small coffee", audio: "quiero-cafe-pequeno.mp3", question: "What size coffee does the speaker want?" },
     { spanish: "quiero agua fria", english: "I want cold water", audio: "quiero-agua-fria.mp3", question: "What does the speaker want?" },
     { spanish: "quiero te caliente", english: "I want hot tea", audio: "quiero-te-caliente.mp3", question: "What does the speaker want?" },
     { spanish: "quiero pan con mantequilla", english: "I want bread with butter", audio: "quiero-pan-con-mantequilla.mp3", question: "What does the speaker want?" },
@@ -1487,7 +1487,7 @@ const CEFR_LISTENING_TOPICS = {
     { spanish: "quiero un jugo porque tengo sed", english: "I want juice because I am thirsty", audio: "quiero-un-jugo-porque-tengo-sed.mp3", question: "Why does the speaker want juice?" },
     { spanish: "quiero un cafe para llevar", english: "I want a coffee to go", audio: "quiero-un-cafe-para-llevar.mp3", question: "What does the speaker want?" },
     { spanish: "quiero pan con queso para la manana", english: "I want bread with cheese for the morning", audio: "quiero-pan-con-queso-para-la-manana.mp3", question: "When does the speaker want bread with cheese?" },
-    { spanish: "quiero una comida simple hoy", english: "I want simple food today", audio: "quiero-una-comida-simple-hoy.mp3", question: "What does the speaker want today?" }
+    { spanish: "quiero una comida simple hoy", english: "I want simple food today", audio: "quiero-una-comida-simple-hoy.mp3", question: "What does the speaker want today?" },
     { spanish: "quiero un cafe porque estoy cansado", english: "I want coffee because I am tired", audio: "quiero-un-cafe-porque-estoy-cansado.mp3", question: "Why does the speaker want coffee?" },
     { spanish: "quiero una sopa simple para la tarde", english: "I want simple soup for the afternoon", audio: "quiero-una-sopa-simple-para-la-tarde.mp3", question: "When does the speaker want soup?" },
     { spanish: "quiero un te caliente porque hace frio", english: "I want hot tea because it is cold", audio: "quiero-un-te-caliente-porque-hace-frio.mp3", question: "Why does the speaker want hot tea?" },
@@ -1514,7 +1514,7 @@ const CEFR_LISTENING_TOPICS = {
     { spanish: "me gusta pedir comida simple en restaurantes nuevos", english: "I like to order simple food in new restaurants", audio: "me-gusta-pedir-comida-simple-en-restaurantes-nuevos.mp3", question: "Where does the speaker like to order simple food?" },
     { spanish: "quiero un cafe sin embargo no quiero algo muy dulce", english: "I want coffee however I do not want something very sweet", audio: "quiero-un-cafe-sin-embargo-no-quiero-algo-muy-dulce.mp3", question: "What does the speaker not want?" },
     { spanish: "quiero un jugo porque estoy cansado", english: "I want juice because I am tired", audio: "quiero-un-jugo-porque-estoy-cansado.mp3", question: "Why does the speaker want juice?" },
-    { spanish: "prefiero comida caliente para sentirme mejor", english: "I prefer hot food to feel better", audio: "prefiero-comida-caliente-para-sentirme-mejor.mp3", question: "Why does the speaker prefer hot food?" }
+    { spanish: "prefiero comida caliente para sentirme mejor", english: "I prefer hot food to feel better", audio: "prefiero-comida-caliente-para-sentirme-mejor.mp3", question: "Why does the speaker prefer hot food?" },
     { spanish: "quiero un cafe para trabajar mejor en la tarde", english: "I want coffee to work better in the afternoon", audio: "quiero-un-cafe-para-trabajar-mejor-en-la-tarde.mp3", question: "Why does the speaker want coffee?" },
     { spanish: "prefiero comida ligera a pesar de tener hambre", english: "I prefer light food despite being hungry", audio: "prefiero-comida-ligera-a-pesar-de-tener-hambre.mp3", question: "What does the speaker prefer?" },
     { spanish: "quiero un jugo para estar bien durante el dia", english: "I want juice to feel well during the day", audio: "quiero-un-jugo-para-estar-bien-durante-el-dia.mp3", question: "Why does the speaker want juice?" },
@@ -1540,17 +1540,30 @@ const CEFR_LISTENING_TOPICS = {
     { spanish: "quiero arroz con pollo para tener energia en el viaje", english: "I want rice with chicken to have energy on the trip", audio: "quiero-arroz-con-pollo-para-tener-energia-en-el-viaje.mp3", question: "Why does the speaker want rice with chicken?" },
     { spanish: "quiero una ensalada sin embargo tambien quiero pan", english: "I want a salad however I also want bread", audio: "quiero-una-ensalada-sin-embargo-tambien-quiero-pan.mp3", question: "What else does the speaker want?" },
     { spanish: "quiero un cafe para trabajar mejor en la tarde", english: "I want coffee to work better in the afternoon", audio: "quiero-un-cafe-para-trabajar-mejor-en-la-tarde.mp3", question: "Why does the speaker want coffee?" },
-    { spanish: "prefiero comida ligera a pesar de tener hambre", english: "I prefer light food despite being hungry", audio: "prefiero-comida-ligera-a-pesar-de-tener-hambre.mp3", question: "What does the speaker prefer?" },
-    { spanish: "quiero un jugo para estar bien durante el dia", english: "I want juice to feel well during the day", audio: "quiero-un-jugo-para-estar-bien-durante-el-dia.mp3", question
-    { spanish: "quiero comida ligera para trabajar mejor en la tarde",
-      english: "I want light food to work better in the afternoon",
-      audio: "quiero-comida-ligera-para-trabajar-mejor-en-la-tarde.mp3",
-      question: "Why does the speaker want light food?" },
+    { spanish: "prefiero comida ligera a pesar de tener hambre",
+  english: "I prefer light food despite being hungry",
+  audio: "prefiero-comida-ligera-a-pesar-de-tener-hambre.mp3",
+  question: "What does the speaker prefer?"
+},
 
-    { spanish: "prefiero agua sin embargo quiero buen sabor",
-      english: "I prefer water however I want good flavor",
-      audio: "prefiero-agua-sin-embargo-quiero-buen-sabor.mp3",
-      question: "What does the speaker want?" },
+{ spanish: "quiero un jugo para estar bien durante el dia",
+  english: "I want juice to feel well during the day",
+  audio: "quiero-un-jugo-para-estar-bien-durante-el-dia.mp3",
+  question: "Why does the speaker want juice?"
+},
+
+{ spanish: "quiero comida ligera para trabajar mejor en la tarde",
+  english: "I want light food to work better in the afternoon",
+  audio: "quiero-comida-ligera-para-trabajar-mejor-en-la-tarde.mp3",
+  question: "Why does the speaker want light food?"
+},
+
+{ spanish: "prefiero agua sin embargo quiero buen sabor",
+  english: "I prefer water however I want good flavor",
+  audio: "prefiero-agua-sin-embargo-quiero-buen-sabor.mp3",
+  question: "What does the speaker want?"
+},
+
 
     { spanish: "quiero comida simple para estar bien durante el dia",
       english: "I want simple food to feel well during the day",
