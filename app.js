@@ -984,130 +984,150 @@ const CEFR_LISTENING_TOPICS = {
 const CEFR_LISTENING_TOPICS = {
 
   travel: {
+  A1: [
+    { spanish: "yo viajo en autobus", english: "I travel by bus", audio: "yo-viajo-en-autobus.mp3", question: "How does the speaker travel?" },
+    { spanish: "ella viaja en tren", english: "she travels by train", audio: "ella-viaja-en-tren.mp3", question: "How does she travel?" },
+    { spanish: "el viaja en avion", english: "he travels by plane", audio: "el-viaja-en-avion.mp3", question: "How does he travel?" },
+    { spanish: "yo camino en la ciudad", english: "I walk in the city", audio: "yo-camino-en-la-ciudad.mp3", question: "Where does the speaker walk?" },
+    { spanish: "ella visita la ciudad", english: "she visits the city", audio: "ella-visita-la-ciudad.mp3", question: "What does she visit?" },
+    { spanish: "el visita el centro", english: "he visits the center", audio: "el-visita-el-centro.mp3", question: "What does he visit?" },
+    { spanish: "yo viajo con mi familia", english: "I travel with my family", audio: "yo-viajo-con-mi-familia.mp3", question: "Who does the speaker travel with?" },
+    { spanish: "ella viaja con amigos", english: "she travels with friends", audio: "ella-viaja-con-amigos.mp3", question: "Who does she travel with?" },
+    { spanish: "el viaja solo", english: "he travels alone", audio: "el-viaja-solo.mp3", question: "How does he travel?" },
+    { spanish: "yo camino al hotel", english: "I walk to the hotel", audio: "yo-camino-al-hotel.mp3", question: "Where does the speaker walk?" }
+    { spanish: "ella visita el hotel", english: "she visits the hotel", audio: "ella-visita-el-hotel.mp3", question: "What does she visit?" },
+    { spanish: "el visita la playa", english: "he visits the beach", audio: "el-visita-la-playa.mp3", question: "What does he visit?" },
+    { spanish: "yo viajo en taxi", english: "I travel by taxi", audio: "yo-viajo-en-taxi.mp3", question: "How does the speaker travel?" },
+    { spanish: "ella camina al centro", english: "she walks to the center", audio: "ella-camina-al-centro.mp3", question: "Where does she walk?" },
+    { spanish: "el viaja en coche", english: "he travels by car", audio: "el-viaja-en-coche.mp3", question: "How does he travel?" },
+    { spanish: "yo visito la ciudad", english: "I visit the city", audio: "yo-visito-la-ciudad.mp3", question: "What does the speaker visit?" },
+    { spanish: "ella viaja al aeropuerto", english: "she travels to the airport", audio: "ella-viaja-al-aeropuerto.mp3", question: "Where does she travel?" },
+    { spanish: "el camina a la estacion", english: "he walks to the station", audio: "el-camina-a-la-estacion.mp3", question: "Where does he walk?" },
+    { spanish: "yo viajo al centro", english: "I travel to the center", audio: "yo-viajo-al-centro.mp3", question: "Where does the speaker travel?" },
+    { spanish: "ella visita la estacion", english: "she visits the station", audio: "ella-visita-la-estacion.mp3", question: "What does she visit?" }
+  ],
 
-    /* ============================================================
-       A1 — Beginner (20 items)
-       ============================================================ */
-    A1: [
-      { spanish: "donde esta la parada de autobus", english: "where is the bus stop", audio: "donde-esta-la-parada-de-autobus.mp3", question: "What place is the speaker looking for?" },
-      { spanish: "el aeropuerto esta abierto", english: "the airport is open", audio: "el-aeropuerto-esta-abierto.mp3", question: "Is the airport open?" },
-      { spanish: "quiero un boleto", english: "I want a ticket", audio: "quiero-un-boleto.mp3", question: "What does the speaker want?" },
-      { spanish: "donde esta el hotel", english: "where is the hotel", audio: "donde-esta-el-hotel.mp3", question: "What place is the speaker looking for?" },
-      { spanish: "ella vive cerca de la estacion", english: "she lives near the station", audio: "ella-vive-cerca-de-la-estacion.mp3", question: "Where does she live?" },
-      { spanish: "quiero ir al aeropuerto", english: "I want to go to the airport", audio: "quiero-ir-al-aeropuerto.mp3", question: "Where does the speaker want to go?" },
-      { spanish: "el autobus llega temprano", english: "the bus arrives early", audio: "el-autobus-llega-temprano.mp3", question: "When does the bus arrive?" },
-      { spanish: "la estacion esta cerrada", english: "the station is closed", audio: "la-estacion-esta-cerrada.mp3", question: "Is the station open?" },
-      { spanish: "quiero viajar hoy", english: "I want to travel today", audio: "quiero-viajar-hoy.mp3", question: "When does the speaker want to travel?" },
-      { spanish: "ella quiere ir al centro", english: "she wants to go to the center", audio: "ella-quiere-ir-al-centro.mp3", question: "Where does she want to go?" },
-      { spanish: "donde esta la parada de tren", english: "where is the train stop", audio: "donde-esta-la-parada-de-tren.mp3", question: "What place is the speaker looking for?" },
-      { spanish: "el hotel esta cerca del aeropuerto", english: "the hotel is near the airport", audio: "el-hotel-esta-cerca-del-aeropuerto.mp3", question: "Where is the hotel?" },
-      { spanish: "quiero un boleto barato", english: "I want a cheap ticket", audio: "quiero-un-boleto-barato.mp3", question: "What kind of ticket does the speaker want?" },
-      { spanish: "ella vive lejos del centro", english: "she lives far from the center", audio: "ella-vive-lejos-del-centro.mp3", question: "Where does she live?" },
-      { spanish: "el tren llega tarde", english: "the train arrives late", audio: "el-tren-llega-tarde.mp3", question: "When does the train arrive?" },
-      { spanish: "la estacion esta abierta", english: "the station is open", audio: "la-estacion-esta-abierta.mp3", question: "Is the station open?" },
-      { spanish: "quiero ir a la ciudad", english: "I want to go to the city", audio: "quiero-ir-a-la-ciudad.mp3", question: "Where does the speaker want to go?" },
-      { spanish: "ella quiere viajar manana", english: "she wants to travel tomorrow", audio: "ella-quiere-viajar-manana.mp3", question: "When does she want to travel?" },
-      { spanish: "nosotros viajamos en autobus", english: "we travel by bus", audio: "nosotros-viajamos-en-autobus.mp3", question: "How do they travel?" },
-      { spanish: "yo quiero ir a la estacion", english: "I want to go to the station", audio: "yo-quiero-ir-a-la-estacion.mp3", question: "Where does the speaker want to go?" }
-    ],
 
     /* ============================================================
        A2 — Elementary (20 items)
        ============================================================ */
-    A2: [
-      { spanish: "fuiste al aeropuerto", english: "did you go to the airport", audio: "fuiste-al-aeropuerto.mp3", question: "Where might the listener have gone?" },
-      { spanish: "viajamos a menudo", english: "we travel often", audio: "viajamos-a-menudo.mp3", question: "How often do they travel?" },
-      { spanish: "el avion llega temprano", english: "the plane arrives early", audio: "el-avion-llega-temprano.mp3", question: "When does the plane arrive?" },
-      { spanish: "visitas el centro a menudo", english: "you visit the center often", audio: "visitas-el-centro-a-menudo.mp3", question: "How often does the listener visit the center?" },
-      { spanish: "viajaste la semana pasada", english: "you traveled last week", audio: "viajaste-la-semana-pasada.mp3", question: "When did the listener travel?" },
-      { spanish: "vas a visitar manana", english: "you will visit tomorrow", audio: "vas-a-visitar-manana.mp3", question: "When will the visit happen?" },
-      { spanish: "ella visita a su familia", english: "she visits her family", audio: "ella-visita-a-su-familia.mp3", question: "Who does she visit?" },
-      { spanish: "yo visite ayer", english: "I visited yesterday", audio: "yo-visite-ayer.mp3", question: "When did the speaker visit?" },
-      { spanish: "el usa transporte cada dia", english: "he uses transport every day", audio: "el-usa-transporte-cada-dia.mp3", question: "What does he use?" },
-      { spanish: "ella compro un boleto barato", english: "she bought a cheap ticket", audio: "ella-compro-un-boleto-barato.mp3", question: "What did she buy?" },
-      { spanish: "nosotros viajamos en tren", english: "we travel by train", audio: "nosotros-viajamos-en-tren.mp3", question: "How do they travel?" },
-      { spanish: "fuiste al centro ayer", english: "you went to the center yesterday", audio: "fuiste-al-centro-ayer.mp3", question: "When did the listener go to the center?" },
-      { spanish: "viajamos juntos la semana pasada", english: "we traveled together last week", audio: "viajamos-juntos-la-semana-pasada.mp3", question: "When did they travel together?" },
-      { spanish: "ella usa transporte publico", english: "she uses public transport", audio: "ella-usa-transporte-publico.mp3", question: "What does she use?" },
-      { spanish: "yo compre un boleto ayer", english: "I bought a ticket yesterday", audio: "yo-compre-un-boleto-ayer.mp3", question: "What did the speaker buy?" },
-      { spanish: "el viaja a menudo por trabajo", english: "he travels often for work", audio: "el-viaja-a-menudo-por-trabajo.mp3", question: "Why does he travel often?" },
-      { spanish: "ella visito la ciudad el fin de semana", english: "she visited the city on the weekend", audio: "ella-visito-la-ciudad-el-fin-de-semana.mp3", question: "When did she visit the city?" },
-      { spanish: "nosotros usamos transporte para ir al centro", english: "we use transport to go to the center", audio: "nosotros-usamos-transporte-para-ir-al-centro.mp3", question: "Why do they use transport?" },
-      { spanish: "yo viaje en avion ayer", english: "I traveled by plane yesterday", audio: "yo-viaje-en-avion-ayer.mp3", question: "How did the speaker travel?" },
-      { spanish: "el compro boletos para su familia", english: "he bought tickets for his family", audio: "el-compro-boletos-para-su-familia.mp3", question: "Who did he buy tickets for?" }
-    ],
+     A2: [
+    { spanish: "yo viaje en autobus ayer", english: "I traveled by bus yesterday", audio: "yo-viaje-en-autobus-ayer.mp3", question: "How did the speaker travel?" },
+    { spanish: "ella viajo en tren la semana pasada", english: "she traveled by train last week", audio: "ella-viajo-en-tren-la-semana-pasada.mp3", question: "When did she travel by train?" },
+    { spanish: "el viajo en avion por la manana", english: "he traveled by plane in the morning", audio: "el-viajo-en-avion-por-la-manana.mp3", question: "When did he travel by plane?" },
+    { spanish: "yo visite la ciudad ayer", english: "I visited the city yesterday", audio: "yo-visite-la-ciudad-ayer.mp3", question: "When did the speaker visit the city?" },
+    { spanish: "ella camino al hotel porque estaba cerca", english: "she walked to the hotel because it was close", audio: "ella-camino-al-hotel-porque-estaba-cerca.mp3", question: "Why did she walk to the hotel?" },
+    { spanish: "el viajo al centro porque tenia tiempo", english: "he traveled to the center because he had time", audio: "el-viajo-al-centro-porque-tenia-tiempo.mp3", question: "Why did he travel to the center?" },
+    { spanish: "yo viaje con mi familia la semana pasada", english: "I traveled with my family last week", audio: "yo-viaje-con-mi-familia-la-semana-pasada.mp3", question: "Who did the speaker travel with?" },
+    { spanish: "ella viajo con amigos ayer", english: "she traveled with friends yesterday", audio: "ella-viajo-con-amigos-ayer.mp3", question: "Who did she travel with?" },
+    { spanish: "el viajo solo porque queria descansar", english: "he traveled alone because he wanted to rest", audio: "el-viajo-solo-porque-queria-descansar.mp3", question: "Why did he travel alone?" },
+    { spanish: "yo visite la playa por la tarde", english: "I visited the beach in the afternoon", audio: "yo-visite-la-playa-por-la-tarde.mp3", question: "When did the speaker visit the beach?" }
+    { spanish: "ella viajo al aeropuerto ayer", english: "she traveled to the airport yesterday", audio: "ella-viajo-al-aeropuerto-ayer.mp3", question: "Where did she travel?" },
+    { spanish: "el camino a la estacion porque estaba lejos", english: "he walked to the station because it was far", audio: "el-camino-a-la-estacion-porque-estaba-lejos.mp3", question: "Why did he walk to the station?" },
+    { spanish: "yo viaje en taxi la semana pasada", english: "I traveled by taxi last week", audio: "yo-viaje-en-taxi-la-semana-pasada.mp3", question: "How did the speaker travel?" },
+    { spanish: "ella visito el centro ayer", english: "she visited the center yesterday", audio: "ella-visito-el-centro-ayer.mp3", question: "What did she visit?" },
+    { spanish: "el viajo en coche por la tarde", english: "he traveled by car in the afternoon", audio: "el-viajo-en-coche-por-la-tarde.mp3", question: "When did he travel by car?" },
+    { spanish: "yo visite la estacion porque tenia tiempo", english: "I visited the station because I had time", audio: "yo-visite-la-estacion-porque-tenia-tiempo.mp3", question: "Why did the speaker visit the station?" },
+    { spanish: "ella viajo al hotel la semana pasada", english: "she traveled to the hotel last week", audio: "ella-viajo-al-hotel-la-semana-pasada.mp3", question: "Where did she travel?" },
+    { spanish: "el camino al centro ayer", english: "he walked to the center yesterday", audio: "el-camino-al-centro-ayer.mp3", question: "Where did he walk?" },
+    { spanish: "yo viaje a la ciudad por la manana", english: "I traveled to the city in the morning", audio: "yo-viaje-a-la-ciudad-por-la-manana.mp3", question: "When did the speaker travel?" },
+    { spanish: "ella visito la playa la semana pasada", english: "she visited the beach last week", audio: "ella-visito-la-playa-la-semana-pasada.mp3", question: "What did she visit?" }
+  ],
+
 
     /* ============================================================
        B1 — Intermediate (20 items)
        ============================================================ */
-    B1: [
-      { spanish: "disfruto viajar con amigos", english: "I enjoy traveling with friends", audio: "disfruto-viajar-con-amigos.mp3", question: "Who does the speaker travel with?" },
-      { spanish: "planeamos viajes futuros", english: "we plan future trips", audio: "planeamos-viajes-futuros.mp3", question: "What do they plan?" },
-      { spanish: "ella viaja sola a menudo", english: "she travels alone often", audio: "ella-viaja-sola-a-menudo.mp3", question: "How does she travel?" },
-      { spanish: "el recuerda viajes pasados", english: "he remembers past trips", audio: "el-recuerda-viajes-pasados.mp3", question: "What does he remember?" },
-      { spanish: "yo quiero viajar mas", english: "I want to travel more", audio: "yo-quiero-viajar-mas.mp3", question: "What does the speaker want?" },
-      { spanish: "ella visita lugares nuevos", english: "she visits new places", audio: "ella-visita-lugares-nuevos.mp3", question: "What does she visit?" },
-      { spanish: "ellos viajan juntos los fines de semana", english: "they travel together on weekends", audio: "ellos-viajan-juntos-los-fines-de-semana.mp3", question: "When do they travel together?" },
-      { spanish: "yo uso transporte para viajar", english: "I use transport to travel", audio: "yo-uso-transporte-para-viajar.mp3", question: "What does the speaker use to travel?" },
-      { spanish: "ella disfruta viajar por la ciudad", english: "she enjoys traveling through the city", audio: "ella-disfruta-viajar-por-la-ciudad.mp3", question: "Where does she enjoy traveling?" },
-      { spanish: "nosotros hablamos sobre viajes futuros", english: "we talk about future trips", audio: "nosotros-hablamos-sobre-viajes-futuros.mp3", question: "What do they talk about?" },
-      { spanish: "el viaja por trabajo cada mes", english: "he travels for work every month", audio: "el-viaja-por-trabajo-cada-mes.mp3", question: "Why does he travel?" },
-      { spanish: "ella planea un viaje con su familia", english: "she plans a trip with her family", audio: "ella-planea-un-viaje-con-su-familia.mp3", question: "Who does she plan a trip with?" },
-      { spanish: "yo recuerdo un viaje interesante", english: "I remember an interesting trip", audio: "yo-recuerdo-un-viaje-interesante.mp3", question: "What does the speaker remember?" },
-      { spanish: "ellos visitan ciudades nuevas cada ano", english: "they visit new cities every year", audio: "ellos-visitan-ciudades-nuevas-cada-ano.mp3", question: "What do they visit?" },
-      { spanish: "nosotros usamos transporte publico en la ciudad", english: "we use public transport in the city", audio: "nosotros-usamos-transporte-publico-en-la-ciudad.mp3", question: "What do they use?" },
-      { spanish: "ella disfruta viajar en tren", english: "she enjoys traveling by train", audio: "ella-disfruta-viajar-en-tren.mp3", question: "How does she enjoy traveling?" },
-      { spanish: "yo hablo sobre viajes con mis amigos", english: "I talk about trips with my friends", audio: "yo-hablo-sobre-viajes-con-mis-amigos.mp3", question: "Who does the speaker talk with?" },
-      { spanish: "el planea visitar el centro manana", english: "he plans to visit the center tomorrow", audio: "el-planea-visitar-el-centro-manana.mp3", question: "When will he visit the center?" },
-      { spanish: "ella viaja a menudo para ver a su familia", english: "she travels often to see her family", audio: "ella-viaja-a-menudo-para-ver-a-su-familia.mp3", question: "Why does she travel often?" },
-      { spanish: "nosotros organizamos viajes largos cada ano", english: "we organize long trips every year", audio: "nosotros-organizamos-viajes-largos-cada-ano.mp3", question: "What do they organize?" }
-    ],
+      B1: [
+    { spanish: "yo disfruto viajar en avion porque es rapido", english: "I enjoy traveling by plane because it is fast", audio: "yo-disfruto-viajar-en-avion-porque-es-rapido.mp3", question: "Why does the speaker enjoy traveling by plane?" },
+    { spanish: "ella prefiere viajar en tren porque es comodo", english: "she prefers traveling by train because it is comfortable", audio: "ella-prefiere-viajar-en-tren-porque-es-comodo.mp3", question: "Why does she prefer traveling by train?" },
+    { spanish: "el disfruta viajar en coche porque tiene libertad", english: "he enjoys traveling by car because he has freedom", audio: "el-disfruta-viajar-en-coche-porque-tiene-libertad.mp3", question: "Why does he enjoy traveling by car?" },
+    { spanish: "yo viajo a la ciudad para visitar amigos", english: "I travel to the city to visit friends", audio: "yo-viajo-a-la-ciudad-para-visitar-amigos.mp3", question: "Why does the speaker travel to the city?" },
+    { spanish: "ella viaja al centro para comprar comida", english: "she travels to the center to buy food", audio: "ella-viaja-al-centro-para-comprar-comida.mp3", question: "Why does she travel to the center?" },
+    { spanish: "el viaja al aeropuerto para trabajar", english: "he travels to the airport to work", audio: "el-viaja-al-aeropuerto-para-trabajar.mp3", question: "Why does he travel to the airport?" },
+    { spanish: "yo camino en la ciudad para ver lugares nuevos", english: "I walk in the city to see new places", audio: "yo-camino-en-la-ciudad-para-ver-lugares-nuevos.mp3", question: "Why does the speaker walk in the city?" },
+    { spanish: "ella visita la playa para descansar", english: "she visits the beach to rest", audio: "ella-visita-la-playa-para-descansar.mp3", question: "Why does she visit the beach?" },
+    { spanish: "el visita el centro para ver amigos", english: "he visits the center to see friends", audio: "el-visita-el-centro-para-ver-amigos.mp3", question: "Why does he visit the center?" },
+    { spanish: "yo viajo con mi familia para estar juntos", english: "I travel with my family to be together", audio: "yo-viajo-con-mi-familia-para-estar-juntos.mp3", question: "Why does the speaker travel with family?" }
+    { spanish: "ella viaja con amigos para divertirse", english: "she travels with friends to have fun", audio: "ella-viaja-con-amigos-para-divertirse.mp3", question: "Why does she travel with friends?" },
+    { spanish: "el viaja solo para descansar", english: "he travels alone to rest", audio: "el-viaja-solo-para-descansar.mp3", question: "Why does he travel alone?" },
+    { spanish: "yo visito la ciudad para conocer lugares nuevos", english: "I visit the city to know new places", audio: "yo-visito-la-ciudad-para-conocer-lugares-nuevos.mp3", question: "Why does the speaker visit the city?" },
+    { spanish: "ella visita el hotel para ver a su familia", english: "she visits the hotel to see her family", audio: "ella-visita-el-hotel-para-ver-a-su-familia.mp3", question: "Why does she visit the hotel?" },
+    { spanish: "el visita la estacion para viajar", english: "he visits the station to travel", audio: "el-visita-la-estacion-para-viajar.mp3", question: "Why does he visit the station?" },
+    { spanish: "yo camino al centro para comprar comida", english: "I walk to the center to buy food", audio: "yo-camino-al-centro-para-comprar-comida.mp3", question: "Why does the speaker walk to the center?" },
+    { spanish: "ella viaja al aeropuerto para ver amigos", english: "she travels to the airport to see friends", audio: "ella-viaja-al-aeropuerto-para-ver-amigos.mp3", question: "Why does she travel to the airport?" },
+    { spanish: "el viaja en taxi para llegar rapido", english: "he travels by taxi to arrive fast", audio: "el-viaja-en-taxi-para-llegar-rapido.mp3", question: "Why does he travel by taxi?" },
+    { spanish: "yo viajo en autobus para ahorrar dinero", english: "I travel by bus to save money", audio: "yo-viajo-en-autobus-para-ahorrar-dinero.mp3", question: "Why does the speaker travel by bus?" },
+    { spanish: "ella viaja en tren para estar comoda", english: "she travels by train to be comfortable", audio: "ella-viaja-en-tren-para-estar-comoda.mp3", question: "Why does she travel by train?" }
+  ],
+
 
     /* ============================================================
        B2 — Upper Intermediate (20 items)
        ============================================================ */
-   B2: [
-  { spanish: "la tecnologia cambia como viajamos", english: "technology changes how we travel", audio: "la-tecnologia-cambia-como-viajamos.mp3", question: "What does technology change?" },
+    B2: [
+    { spanish: "yo viajo en avion para tener mas tiempo en el destino", english: "I travel by plane to have more time at the destination", audio: "yo-viajo-en-avion-para-tener-mas-tiempo-en-el-destino.mp3", question: "Why does the speaker travel by plane?" },
+    { spanish: "ella viaja en tren sin embargo quiere llegar rapido", english: "she travels by train however she wants to arrive fast", audio: "ella-viaja-en-tren-sin-embargo-quiere-llegar-rapido.mp3", question: "What does she want?" },
+    { spanish: "el viaja en coche a pesar de que es lento", english: "he travels by car even though it is slow", audio: "el-viaja-en-coche-a-pesar-de-que-es-lento.mp3", question: "How does he travel?" },
+    { spanish: "yo visito la ciudad para conocer cultura nueva", english: "I visit the city to know new culture", audio: "yo-visito-la-ciudad-para-conocer-cultura-nueva.mp3", question: "Why does the speaker visit the city?" },
+    { spanish: "ella visita la playa sin embargo quiere tranquilidad", english: "she visits the beach however she wants calm", audio: "ella-visita-la-playa-sin-embargo-quiere-tranquilidad.mp3", question: "What does she want?" },
+    { spanish: "el visita el centro para ver lugares importantes", english: "he visits the center to see important places", audio: "el-visita-el-centro-para-ver-lugares-importantes.mp3", question: "Why does he visit the center?" },
+    { spanish: "yo viajo con mi familia para estar juntos en el viaje", english: "I travel with my family to be together on the trip", audio: "yo-viajo-con-mi-familia-para-estar-juntos-en-el-viaje.mp3", question: "Why does the speaker travel with family?" },
+    { spanish: "ella viaja con amigos para tener buena experiencia", english: "she travels with friends to have a good experience", audio: "ella-viaja-con-amigos-para-tener-buena-experiencia.mp3", question: "Why does she travel with friends?" },
+    { spanish: "el viaja solo sin embargo quiere conocer personas", english: "he travels alone however he wants to meet people", audio: "el-viaja-solo-sin-embargo-quiere-conocer-personas.mp3", question: "What does he want?" },
+    { spanish: "yo camino en la ciudad para ver lugares nuevos", english: "I walk in the city to see new places", audio: "yo-camino-en-la-ciudad-para-ver-lugares-nuevos.mp3", question: "Why does the speaker walk in the city?" }
+    { spanish: "ella visita el hotel para descansar despues del viaje",
+      english: "she visits the hotel to rest after the trip",
+      audio: "ella-visita-el-hotel-para-descansar-despues-del-viaje.mp3",
+      question: "Why does she visit the hotel?" },
 
-  { spanish: "la cultura afecta nuestras decisiones de viaje", english: "culture affects our travel decisions", audio: "la-cultura-afecta-nuestras-decisiones-de-viaje.mp3", question: "What affects travel decisions?" },
+    { spanish: "el visita la estacion para viajar a otra ciudad",
+      english: "he visits the station to travel to another city",
+      audio: "el-visita-la-estacion-para-viajar-a-otra-ciudad.mp3",
+      question: "Why does he visit the station?" },
 
-  { spanish: "viajar crea oportunidades importantes", english: "travel creates important opportunities", audio: "viajar-crea-oportunidades-importantes.mp3", question: "What does travel create?" },
+    { spanish: "yo viajo al aeropuerto sin embargo quiero llegar temprano",
+      english: "I travel to the airport however I want to arrive early",
+      audio: "yo-viajo-al-aeropuerto-sin-embargo-quiero-llegar-temprano.mp3",
+      question: "What does the speaker want?" },
 
-  { spanish: "analizamos cambios en la forma de viajar", english: "we analyze changes in the way we travel", audio: "analizamos-cambios-en-la-forma-de-viajar.mp3", question: "What do they analyze?" },
+    { spanish: "ella viaja al centro para conocer lugares importantes",
+      english: "she travels to the center to know important places",
+      audio: "ella-viaja-al-centro-para-conocer-lugares-importantes.mp3",
+      question: "Why does she travel to the center?" },
 
-  { spanish: "ella viaja a pesar de los desafios", english: "she travels despite the challenges", audio: "ella-viaja-a-pesar-de-los-desafios.mp3", question: "What does she travel despite?" },
+    { spanish: "el viaja en taxi a pesar de que es caro",
+      english: "he travels by taxi even though it is expensive",
+      audio: "el-viaja-en-taxi-a-pesar-de-que-es-caro.mp3",
+      question: "How does he travel?" },
 
-  { spanish: "el trabaja remoto por lo tanto viaja mas", english: "he works remotely therefore he travels more", audio: "el-trabaja-remoto-por-lo-tanto-viaja-mas.mp3", question: "Why does he travel more?" },
+    { spanish: "yo camino en la ciudad sin embargo quiero descansar",
+      english: "I walk in the city however I want to rest",
+      audio: "yo-camino-en-la-ciudad-sin-embargo-quiero-descansar.mp3",
+      question: "What does the speaker want?" },
 
-  { spanish: "ellos viajan juntos sin embargo tienen horarios diferentes", english: "they travel together however they have different schedules", audio: "ellos-viajan-juntos-sin-embargo-tienen-horarios-diferentes.mp3", question: "What do they do together?" },
+    { spanish: "ella visita la playa para estar tranquila",
+      english: "she visits the beach to be calm",
+      audio: "ella-visita-la-playa-para-estar-tranquila.mp3",
+      question: "Why does she visit the beach?" },
 
-  { spanish: "ella estudia viajes culturales para oportunidades futuras", english: "she studies cultural travel for future opportunities", audio: "ella-estudia-viajes-culturales-para-oportunidades-futuras.mp3", question: "Why does she study cultural travel?" },
+    { spanish: "el visita el centro para ver amigos despues del trabajo",
+      english: "he visits the center to see friends after work",
+      audio: "el-visita-el-centro-para-ver-amigos-despues-del-trabajo.mp3",
+      question: "Why does he visit the center?" },
 
-  { spanish: "yo analizo destinos para proyectos largos", english: "I analyze destinations for long-term projects", audio: "yo-analizo-destinos-para-proyectos-largos.mp3", question: "What does the speaker analyze?" },
+    { spanish: "yo viajo con mi familia para estar juntos en el viaje",
+      english: "I travel with my family to be together on the trip",
+      audio: "yo-viajo-con-mi-familia-para-estar-juntos-en-el-viaje.mp3",
+      question: "Why does the speaker travel with family?" },
 
-  { spanish: "la sociedad enfrenta nuevos desafios de viaje", english: "society faces new travel challenges", audio: "la-sociedad-enfrenta-nuevos-desafios-de-viaje.mp3", question: "What does society face?" },
+    { spanish: "ella viaja con amigos sin embargo quiere tranquilidad",
+      english: "she travels with friends however she wants calm",
+      audio: "ella-viaja-con-amigos-sin-embargo-quiere-tranquilidad.mp3",
+      question: "What does she want?" }
+  ]
+}
 
-  { spanish: "la tecnologia cambia la experiencia de viaje", english: "technology changes the travel experience", audio: "la-tecnologia-cambia-la-experiencia-de-viaje.mp3", question: "What does technology change?" },
-
-  { spanish: "la educacion influye en como viajamos", english: "education influences how we travel", audio: "la-educacion-influye-en-como-viajamos.mp3", question: "What influences how we travel?" },
-
-  { spanish: "analizamos el impacto cultural del turismo", english: "we analyze the cultural impact of tourism", audio: "analizamos-el-impacto-cultural-del-turismo.mp3", question: "What do they analyze?" },
-
-  { spanish: "ella viaja para proyectos a largo plazo", english: "she travels for long-term projects", audio: "ella-viaja-para-proyectos-a-largo-plazo.mp3", question: "Why does she travel?" },
-
-  { spanish: "el estudia rutas de viaje eficientes", english: "he studies efficient travel routes", audio: "el-estudia-rutas-de-viaje-eficientes.mp3", question: "What does he study?" },
-
-  { spanish: "nosotros discutimos desafios de transporte", english: "we discuss transport challenges", audio: "nosotros-discutimos-desafios-de-transporte.mp3", question: "What do they discuss?" },
-
-  { spanish: "ella analiza como la cultura afecta el viaje", english: "she analyzes how culture affects travel", audio: "ella-analiza-como-la-cultura-afecta-el-viaje.mp3", question: "What does she analyze?" },
-
-  { spanish: "yo manejo decisiones de viaje en proyectos largos", english: "I handle travel decisions in long-term projects", audio: "yo-manejo-decisiones-de-viaje-en-proyectos-largos.mp3", question: "What kind of decisions does the speaker handle?" },
-
-  { spanish: "ellos cambian sus planes de viaje por nuevos desafios", english: "they change their travel plans because of new challenges", audio: "ellos-cambian-sus-planes-de-viaje-por-nuevos-desafios.mp3", question: "Why do they change their travel plans?" },
-
-  { spanish: "la sociedad analiza el futuro del transporte", english: "society analyzes the future of transport", audio: "la-sociedad-analiza-el-futuro-del-transporte.mp3", question: "What does society analyze?" }
-    ]
-    },
 
    /* ============================================================
    WORK — CEFR Listening Packs (A1 → B2)
