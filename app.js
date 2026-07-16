@@ -1140,127 +1140,151 @@ const CEFR_LISTENING_TOPICS = {
     /* ============================================================
        A1 — Beginner (20 items)
        ============================================================ */
-    A1: [
-      { spanish: "tu trabajas en una tienda", english: "you work in a store", audio: "tu-trabajas-en-una-tienda.mp3", question: "Where does the listener work?" },
-      { spanish: "yo trabajo en la ciudad", english: "I work in the city", audio: "yo-trabajo-en-la-ciudad.mp3", question: "Where does the speaker work?" },
-      { spanish: "el trabaja en un hotel", english: "he works in a hotel", audio: "el-trabaja-en-un-hotel.mp3", question: "Where does he work?" },
-      { spanish: "ella trabaja en una farmacia", english: "she works in a pharmacy", audio: "ella-trabaja-en-una-farmacia.mp3", question: "Where does she work?" },
-      { spanish: "nosotros trabajamos juntos", english: "we work together", audio: "nosotros-trabajamos-juntos.mp3", question: "How do they work?" },
-      { spanish: "yo estudio y trabajo", english: "I study and work", audio: "yo-estudio-y-trabajo.mp3", question: "What does the speaker do?" },
-      { spanish: "el trabaja en el centro", english: "he works in the center", audio: "el-trabaja-en-el-centro.mp3", question: "Where does he work?" },
-      { spanish: "ella trabaja en una tienda de comida", english: "she works in a food store", audio: "ella-trabaja-en-una-tienda-de-comida.mp3", question: "Where does she work?" },
-      { spanish: "yo trabajo por la manana", english: "I work in the morning", audio: "yo-trabajo-por-la-manana.mp3", question: "When does the speaker work?" },
-      { spanish: "nosotros trabajamos en un supermercado", english: "we work in a supermarket", audio: "nosotros-trabajamos-en-un-supermercado.mp3", question: "Where do they work?" },
-      { spanish: "el trabaja en una estacion", english: "he works in a station", audio: "el-trabaja-en-una-estacion.mp3", question: "Where does he work?" },
-      { spanish: "ella trabaja cerca del centro", english: "she works near the center", audio: "ella-trabaja-cerca-del-centro.mp3", question: "Where does she work?" },
-      { spanish: "yo trabajo en un hotel pequeno", english: "I work in a small hotel", audio: "yo-trabajo-en-un-hotel-pequeno.mp3", question: "Where does the speaker work?" },
-      { spanish: "nosotros trabajamos en la ciudad", english: "we work in the city", audio: "nosotros-trabajamos-en-la-ciudad.mp3", question: "Where do they work?" },
-      { spanish: "el trabaja en una tienda barata", english: "he works in a cheap store", audio: "el-trabaja-en-una-tienda-barata.mp3", question: "Where does he work?" },
-      { spanish: "ella trabaja en un restaurante", english: "she works in a restaurant", audio: "ella-trabaja-en-un-restaurante.mp3", question: "Where does she work?" },
-      { spanish: "yo trabajo con mi amigo", english: "I work with my friend", audio: "yo-trabajo-con-mi-amigo.mp3", question: "Who does the speaker work with?" },
-      { spanish: "nosotros trabajamos en una farmacia", english: "we work in a pharmacy", audio: "nosotros-trabajamos-en-una-farmacia.mp3", question: "Where do they work?" },
-      { spanish: "el trabaja en una tienda de ropa", english: "he works in a clothing store", audio: "el-trabaja-en-una-tienda-de-ropa.mp3", question: "Where does he work?" },
-      { spanish: "ella trabaja en una oficina", english: "she works in an office", audio: "ella-trabaja-en-una-oficina.mp3", question: "Where does she work?" }
-    ],
+    work: {
+  A1: [
+    { spanish: "yo trabajo en una oficina", english: "I work in an office", audio: "yo-trabajo-en-una-oficina.mp3", question: "Where does the speaker work?" },
+    { spanish: "ella trabaja en una tienda", english: "she works in a store", audio: "ella-trabaja-en-una-tienda.mp3", question: "Where does she work?" },
+    { spanish: "el trabaja en una escuela", english: "he works in a school", audio: "el-trabaja-en-una-escuela.mp3", question: "Where does he work?" },
+    { spanish: "yo tengo una reunion", english: "I have a meeting", audio: "yo-tengo-una-reunion.mp3", question: "What does the speaker have?" },
+    { spanish: "ella tiene un proyecto", english: "she has a project", audio: "ella-tiene-un-proyecto.mp3", question: "What does she have?" },
+    { spanish: "el tiene una tarea", english: "he has a task", audio: "el-tiene-una-tarea.mp3", question: "What does he have?" },
+    { spanish: "yo trabajo con mi equipo", english: "I work with my team", audio: "yo-trabajo-con-mi-equipo.mp3", question: "Who does the speaker work with?" },
+    { spanish: "ella trabaja con clientes", english: "she works with clients", audio: "ella-trabaja-con-clientes.mp3", question: "Who does she work with?" },
+    { spanish: "el trabaja con su jefe", english: "he works with his boss", audio: "el-trabaja-con-su-jefe.mp3", question: "Who does he work with?" },
+    { spanish: "yo estudio para mi trabajo", english: "I study for my job", audio: "yo-estudio-para-mi-trabajo.mp3", question: "Why does the speaker study?" }
+    { spanish: "ella estudia para su trabajo", english: "she studies for her job", audio: "ella-estudia-para-su-trabajo.mp3", question: "Why does she study?" },
+    { spanish: "el estudia nuevas ideas", english: "he studies new ideas", audio: "el-estudia-nuevas-ideas.mp3", question: "What does he study?" },
+    { spanish: "yo tengo trabajo hoy", english: "I have work today", audio: "yo-tengo-trabajo-hoy.mp3", question: "What does the speaker have today?" },
+    { spanish: "ella tiene trabajo en la tarde", english: "she has work in the afternoon", audio: "ella-tiene-trabajo-en-la-tarde.mp3", question: "When does she have work?" },
+    { spanish: "el tiene trabajo en la manana", english: "he has work in the morning", audio: "el-tiene-trabajo-en-la-manana.mp3", question: "When does he have work?" },
+    { spanish: "yo trabajo en un proyecto", english: "I work on a project", audio: "yo-trabajo-en-un-proyecto.mp3", question: "What does the speaker work on?" },
+    { spanish: "ella trabaja en una tarea", english: "she works on a task", audio: "ella-trabaja-en-una-tarea.mp3", question: "What does she work on?" },
+    { spanish: "el trabaja en una reunion", english: "he works in a meeting", audio: "el-trabaja-en-una-reunion.mp3", question: "What does he work in?" },
+    { spanish: "yo trabajo todos los dias", english: "I work every day", audio: "yo-trabajo-todos-los-dias.mp3", question: "How often does the speaker work?" },
+    { spanish: "ella trabaja cada semana", english: "she works every week", audio: "ella-trabaja-cada-semana.mp3", question: "How often does she work?" }
+  ],
+
 
     /* ============================================================
        A2 — Elementary (20 items)
        ============================================================ */
-    A2: [
-      { spanish: "el trabaja cada manana", english: "he works every morning", audio: "el-trabaja-cada-manana.mp3", question: "When does he work?" },
-      { spanish: "yo termine el trabajo temprano", english: "I finished work early", audio: "yo-termine-el-trabajo-temprano.mp3", question: "When did the speaker finish work?" },
-      { spanish: "ella trabaja en el centro de la ciudad", english: "she works in the city center", audio: "ella-trabaja-en-el-centro-de-la-ciudad.mp3", question: "Where does she work?" },
-      { spanish: "nosotros usamos transporte para ir al trabajo", english: "we use transport to go to work", audio: "nosotros-usamos-transporte-para-ir-al-trabajo.mp3", question: "Why do they use transport?" },
-      { spanish: "yo compre almuerzo para el trabajo", english: "I bought lunch for work", audio: "yo-compre-almuerzo-para-el-trabajo.mp3", question: "What did the speaker buy?" },
-      { spanish: "el trabaja en un supermercado grande", english: "he works in a big supermarket", audio: "el-trabaja-en-un-supermercado-grande.mp3", question: "Where does he work?" },
-      { spanish: "ella termino el trabajo ayer", english: "she finished work yesterday", audio: "ella-termino-el-trabajo-ayer.mp3", question: "When did she finish work?" },
-      { spanish: "yo trabajo a menudo por la tarde", english: "I often work in the afternoon", audio: "yo-trabajo-a-menudo-por-la-tarde.mp3", question: "When does the speaker often work?" },
-      { spanish: "nosotros trabajamos juntos la semana pasada", english: "we worked together last week", audio: "nosotros-trabajamos-juntos-la-semana-pasada.mp3", question: "When did they work together?" },
-      { spanish: "el usa transporte para ir al trabajo", english: "he uses transport to go to work", audio: "el-usa-transporte-para-ir-al-trabajo.mp3", question: "Why does he use transport?" },
-      { spanish: "ella compro comida para el trabajo", english: "she bought food for work", audio: "ella-compro-comida-para-el-trabajo.mp3", question: "What did she buy?" },
-      { spanish: "yo trabaje en la ciudad ayer", english: "I worked in the city yesterday", audio: "yo-trabaje-en-la-ciudad-ayer.mp3", question: "Where did the speaker work?" },
-      { spanish: "nosotros terminamos el trabajo tarde", english: "we finished work late", audio: "nosotros-terminamos-el-trabajo-tarde.mp3", question: "When did they finish work?" },
-      { spanish: "el trabaja en una oficina pequena", english: "he works in a small office", audio: "el-trabaja-en-una-oficina-pequena.mp3", question: "Where does he work?" },
-      { spanish: "ella trabaja con su familia", english: "she works with her family", audio: "ella-trabaja-con-su-familia.mp3", question: "Who does she work with?" },
-      { spanish: "yo uso transporte para ir al centro de trabajo", english: "I use transport to go to the work center", audio: "yo-uso-transporte-para-ir-al-centro-de-trabajo.mp3", question: "Why does the speaker use transport?" },
-      { spanish: "nosotros trabajamos en proyectos pequenos", english: "we work on small projects", audio: "nosotros-trabajamos-en-proyectos-pequenos.mp3", question: "What do they work on?" },
-      { spanish: "el termino el trabajo la semana pasada", english: "he finished work last week", audio: "el-termino-el-trabajo-la-semana-pasada.mp3", question: "When did he finish work?" },
-      { spanish: "ella trabaja en el centro cada dia", english: "she works in the center every day", audio: "ella-trabaja-en-el-centro-cada-dia.mp3", question: "How often does she work in the center?" },
-      { spanish: "yo compre boletos para ir al trabajo", english: "I bought tickets to go to work", audio: "yo-compre-boletos-para-ir-al-trabajo.mp3", question: "What did the speaker buy?" }
-    ],
+      A2: [
+    { spanish: "yo trabaje en una oficina ayer", english: "I worked in an office yesterday", audio: "yo-trabaje-en-una-oficina-ayer.mp3", question: "Where did the speaker work?" },
+    { spanish: "ella trabajo en una tienda la semana pasada", english: "she worked in a store last week", audio: "ella-trabajo-en-una-tienda-la-semana-pasada.mp3", question: "Where did she work?" },
+    { spanish: "el trabajo en una escuela por la manana", english: "he worked in a school in the morning", audio: "el-trabajo-en-una-escuela-por-la-manana.mp3", question: "When did he work?" },
+    { spanish: "yo tuve una reunion ayer", english: "I had a meeting yesterday", audio: "yo-tuve-una-reunion-ayer.mp3", question: "What did the speaker have?" },
+    { spanish: "ella tuvo un proyecto la semana pasada", english: "she had a project last week", audio: "ella-tuvo-un-proyecto-la-semana-pasada.mp3", question: "What did she have?" },
+    { spanish: "el tuvo una tarea ayer", english: "he had a task yesterday", audio: "el-tuvo-una-tarea-ayer.mp3", question: "What did he have?" },
+    { spanish: "yo trabaje con mi equipo ayer", english: "I worked with my team yesterday", audio: "yo-trabaje-con-mi-equipo-ayer.mp3", question: "Who did the speaker work with?" },
+    { spanish: "ella trabajo con clientes ayer", english: "she worked with clients yesterday", audio: "ella-trabajo-con-clientes-ayer.mp3", question: "Who did she work with?" },
+    { spanish: "el trabajo con su jefe la semana pasada", english: "he worked with his boss last week", audio: "el-trabajo-con-su-jefe-la-semana-pasada.mp3", question: "Who did he work with?" },
+    { spanish: "yo estudie para mi trabajo ayer", english: "I studied for my job yesterday", audio: "yo-estudie-para-mi-trabajo-ayer.mp3", question: "Why did the speaker study?" }
+    { spanish: "ella estudio para su trabajo la semana pasada", english: "she studied for her job last week", audio: "ella-estudio-para-su-trabajo-la-semana-pasada.mp3", question: "Why did she study?" },
+    { spanish: "el estudio nuevas ideas ayer", english: "he studied new ideas yesterday", audio: "el-estudio-nuevas-ideas-ayer.mp3", question: "What did he study?" },
+    { spanish: "yo tuve trabajo ayer", english: "I had work yesterday", audio: "yo-tuve-trabajo-ayer.mp3", question: "What did the speaker have?" },
+    { spanish: "ella tuvo trabajo en la tarde", english: "she had work in the afternoon", audio: "ella-tuvo-trabajo-en-la-tarde.mp3", question: "When did she have work?" },
+    { spanish: "el tuvo trabajo en la manana", english: "he had work in the morning", audio: "el-tuvo-trabajo-en-la-manana.mp3", question: "When did he have work?" },
+    { spanish: "yo trabaje en un proyecto ayer", english: "I worked on a project yesterday", audio: "yo-trabaje-en-un-proyecto-ayer.mp3", question: "What did the speaker work on?" },
+    { spanish: "ella trabajo en una tarea ayer", english: "she worked on a task yesterday", audio: "ella-trabajo-en-una-tarea-ayer.mp3", question: "What did she work on?" },
+    { spanish: "el trabajo en una reunion ayer", english: "he worked in a meeting yesterday", audio: "el-trabajo-en-una-reunion-ayer.mp3", question: "Where did he work?" },
+    { spanish: "yo trabaje todos los dias la semana pasada", english: "I worked every day last week", audio: "yo-trabaje-todos-los-dias-la-semana-pasada.mp3", question: "How often did the speaker work?" },
+    { spanish: "ella trabajo cada semana el mes pasado", english: "she worked every week last month", audio: "ella-trabajo-cada-semana-el-mes-pasado.mp3", question: "How often did she work?" }
+  ],
+
 
     /* ============================================================
        B1 — Intermediate (20 items)
        ============================================================ */
-    B1: [
-      { spanish: "ella es desarrollador y trabaja en proyectos largos", english: "she is a developer and works on long projects", audio: "ella-es-desarrollador-y-trabaja-en-proyectos-largos.mp3", question: "What is her job?" },
-      { spanish: "el quiere mejorar sus habilidades en el trabajo", english: "he wants to improve his skills at work", audio: "el-quiere-mejorar-sus-habilidades-en-el-trabajo.mp3", question: "What does he want to improve?" },
-      { spanish: "nosotros hablamos sobre problemas diarios en el trabajo", english: "we talk about daily problems at work", audio: "nosotros-hablamos-sobre-problemas-diarios-en-el-trabajo.mp3", question: "What do they talk about?" },
-      { spanish: "yo disfruto trabajar con mi equipo", english: "I enjoy working with my team", audio: "yo-disfruto-trabajar-con-mi-equipo.mp3", question: "Who does the speaker enjoy working with?" },
-      { spanish: "ella estudia para mejorar su comunicacion en el trabajo", english: "she studies to improve her communication at work", audio: "ella-estudia-para-mejorar-su-comunicacion-en-el-trabajo.mp3", question: "Why does she study?" },
-      { spanish: "el usa redes sociales para su trabajo", english: "he uses social networks for his work", audio: "el-usa-redes-sociales-para-su-trabajo.mp3", question: "What does he use for work?" },
-      { spanish: "nosotros tenemos reuniones diarias", english: "we have daily meetings", audio: "nosotros-tenemos-reuniones-diarias.mp3", question: "How often do they have meetings?" },
-      { spanish: "yo leo correos cada manana", english: "I read emails every morning", audio: "yo-leo-correos-cada-manana.mp3", question: "What does the speaker read?" },
-      { spanish: "ella trabaja mientras estudia", english: "she works while she studies", audio: "ella-trabaja-mientras-estudia.mp3", question: "What does she do while studying?" },
-      { spanish: "el disfruta su tiempo libre despues del trabajo", english: "he enjoys his free time after work", audio: "el-disfruta-su-tiempo-libre-despues-del-trabajo.mp3", question: "When does he enjoy free time?" },
-      { spanish: "nosotros planeamos proyectos futuros en el trabajo", english: "we plan future projects at work", audio: "nosotros-planeamos-proyectos-futuros-en-el-trabajo.mp3", question: "What do they plan?" },
-      { spanish: "yo hablo con mi jefe sobre nuevas ideas", english: "I talk with my boss about new ideas", audio: "yo-hablo-con-mi-jefe-sobre-nuevas-ideas.mp3", question: "Who does the speaker talk with?" },
-      { spanish: "ella usa tecnologia para mejorar su trabajo", english: "she uses technology to improve her work", audio: "ella-usa-tecnologia-para-mejorar-su-trabajo.mp3", question: "What does she use to improve her work?" },
-      { spanish: "el estudia para tener mejores oportunidades de trabajo", english: "he studies to have better work opportunities", audio: "el-estudia-para-tener-mejores-oportunidades-de-trabajo.mp3", question: "Why does he study?" },
-      { spanish: "nosotros analizamos problemas en el equipo", english: "we analyze problems in the team", audio: "nosotros-analizamos-problemas-en-el-equipo.mp3", question: "What do they analyze?" },
-      { spanish: "yo escribo informes cada semana", english: "I write reports every week", audio: "yo-escribo-informes-cada-semana.mp3", question: "What does the speaker write?" },
-      { spanish: "ella organiza reuniones importantes", english: "she organizes important meetings", audio: "ella-organiza-reuniones-importantes.mp3", question: "What does she organize?" },
-      { spanish: "el trabaja en proyectos internacionales", english: "he works on international projects", audio: "el-trabaja-en-proyectos-internacionales.mp3", question: "What kind of projects does he work on?" },
-      { spanish: "nosotros hablamos sobre cambios en el trabajo", english: "we talk about changes at work", audio: "nosotros-hablamos-sobre-cambios-en-el-trabajo.mp3", question: "What do they talk about?" },
-      { spanish: "yo disfruto aprender cosas nuevas en el trabajo", english: "I enjoy learning new things at work", audio: "yo-disfruto-aprender-cosas-nuevas-en-el-trabajo.mp3", question: "What does the speaker enjoy learning?" }
-    ],
+      B1: [
+    { spanish: "yo disfruto trabajar en proyectos nuevos", english: "I enjoy working on new projects", audio: "yo-disfruto-trabajar-en-proyectos-nuevos.mp3", question: "What does the speaker enjoy?" },
+    { spanish: "ella prefiere trabajar en equipo porque es mas facil", english: "she prefers working in a team because it is easier", audio: "ella-prefiere-trabajar-en-equipo-porque-es-mas-facil.mp3", question: "Why does she prefer working in a team?" },
+    { spanish: "el disfruta trabajar con clientes porque aprende mucho", english: "he enjoys working with clients because he learns a lot", audio: "el-disfruta-trabajar-con-clientes-porque-aprende-mucho.mp3", question: "Why does he enjoy working with clients?" },
+    { spanish: "yo trabajo en la oficina para terminar tareas", english: "I work in the office to finish tasks", audio: "yo-trabajo-en-la-oficina-para-terminar-tareas.mp3", question: "Why does the speaker work in the office?" },
+    { spanish: "ella trabaja en la tienda para ayudar a clientes", english: "she works in the store to help customers", audio: "ella-trabaja-en-la-tienda-para-ayudar-a-clientes.mp3", question: "Why does she work in the store?" },
+    { spanish: "el trabaja en la escuela para apoyar a estudiantes", english: "he works in the school to support students", audio: "el-trabaja-en-la-escuela-para-apoyar-a-estudiantes.mp3", question: "Why does he work in the school?" },
+    { spanish: "yo estudio nuevas ideas para mejorar mi trabajo", english: "I study new ideas to improve my work", audio: "yo-estudio-nuevas-ideas-para-mejorar-mi-trabajo.mp3", question: "Why does the speaker study new ideas?" },
+    { spanish: "ella estudia comunicacion para trabajar mejor", english: "she studies communication to work better", audio: "ella-estudia-comunicacion-para-trabajar-mejor.mp3", question: "Why does she study communication?" },
+    { spanish: "el estudia habilidades nuevas para proyectos largos", english: "he studies new skills for long projects", audio: "el-estudia-habilidades-nuevas-para-proyectos-largos.mp3", question: "Why does he study new skills?" },
+    { spanish: "yo trabajo con mi equipo para terminar proyectos", english: "I work with my team to finish projects", audio: "yo-trabajo-con-mi-equipo-para-terminar-proyectos.mp3", question: "Why does the speaker work with their team?" }
+    { spanish: "ella trabaja con clientes para resolver problemas", english: "she works with clients to solve problems", audio: "ella-trabaja-con-clientes-para-resolver-problemas.mp3", question: "Why does she work with clients?" },
+    { spanish: "el trabaja con su jefe para organizar tareas", english: "he works with his boss to organize tasks", audio: "el-trabaja-con-su-jefe-para-organizar-tareas.mp3", question: "Why does he work with his boss?" },
+    { spanish: "yo tengo reuniones para mejorar la comunicacion", english: "I have meetings to improve communication", audio: "yo-tengo-reuniones-para-mejorar-la-comunicacion.mp3", question: "Why does the speaker have meetings?" },
+    { spanish: "ella tiene proyectos para aprender mas", english: "she has projects to learn more", audio: "ella-tiene-proyectos-para-aprender-mas.mp3", question: "Why does she have projects?" },
+    { spanish: "el tiene tareas para apoyar a su equipo", english: "he has tasks to support his team", audio: "el-tiene-tareas-para-apoyar-a-su-equipo.mp3", question: "Why does he have tasks?" },
+    { spanish: "yo trabajo en proyectos largos porque me gustan", english: "I work on long projects because I like them", audio: "yo-trabajo-en-proyectos-largos-porque-me-gustan.mp3", question: "Why does the speaker work on long projects?" },
+    { spanish: "ella trabaja en tareas simples porque son rapidas", english: "she works on simple tasks because they are fast", audio: "ella-trabaja-en-tareas-simples-porque-son-rapidas.mp3", question: "Why does she work on simple tasks?" },
+    { spanish: "el trabaja en reuniones porque quiere comunicar mejor", english: "he works in meetings because he wants to communicate better", audio: "el-trabaja-en-reuniones-porque-quiere-comunicar-mejor.mp3", question: "Why does he work in meetings?" },
+    { spanish: "yo estudio para proyectos nuevos porque son importantes", english: "I study for new projects because they are important", audio: "yo-estudio-para-proyectos-nuevos-porque-son-importantes.mp3", question: "Why does the speaker study?" },
+    { spanish: "ella estudia para su trabajo porque quiere mejorar", english: "she studies for her job because she wants to improve", audio: "ella-estudia-para-su-trabajo-porque-quiere-mejorar.mp3", question: "Why does she study?" }
+  ],
+
 
     /* ============================================================
        B2 — Upper Intermediate (20 items)
        ============================================================ */
-   B2: [
-  { spanish: "la tecnologia cambia la forma de trabajar", english: "technology changes the way we work", audio: "la-tecnologia-cambia-la-forma-de-trabajar.mp3", question: "What does technology change?" },
+  B2: [
+    { spanish: "yo trabajo en proyectos largos para mejorar mi experiencia", english: "I work on long projects to improve my experience", audio: "yo-trabajo-en-proyectos-largos-para-mejorar-mi-experiencia.mp3", question: "Why does the speaker work on long projects?" },
+    { spanish: "ella trabaja en equipo sin embargo quiere mas autonomia", english: "she works in a team however she wants more autonomy", audio: "ella-trabaja-en-equipo-sin-embargo-quiere-mas-autonomia.mp3", question: "What does she want?" },
+    { spanish: "el trabaja en la oficina a pesar de que prefiere trabajar en casa", english: "he works in the office even though he prefers working at home", audio: "el-trabaja-en-la-oficina-a-pesar-de-que-prefiere-trabajar-en-casa.mp3", question: "Where does he work?" },
+    { spanish: "yo estudio nuevas habilidades para proyectos internacionales", english: "I study new skills for international projects", audio: "yo-estudio-nuevas-habilidades-para-proyectos-internacionales.mp3", question: "Why does the speaker study new skills?" },
+    { spanish: "ella estudia comunicacion sin embargo quiere aprender mas", english: "she studies communication however she wants to learn more", audio: "ella-estudia-comunicacion-sin-embargo-quiere-aprender-mas.mp3", question: "What does she want?" },
+    { spanish: "el estudia tecnologia para mejorar su trabajo", english: "he studies technology to improve his work", audio: "el-estudia-tecnologia-para-mejorar-su-trabajo.mp3", question: "Why does he study technology?" },
+    { spanish: "yo trabajo con mi equipo para mejorar la comunicacion", english: "I work with my team to improve communication", audio: "yo-trabajo-con-mi-equipo-para-mejorar-la-comunicacion.mp3", question: "Why does the speaker work with their team?" },
+    { spanish: "ella trabaja con clientes sin embargo quiere menos reuniones", english: "she works with clients however she wants fewer meetings", audio: "ella-trabaja-con-clientes-sin-embargo-quiere-menos-reuniones.mp3", question: "What does she want?" },
+    { spanish: "el trabaja con su jefe para organizar proyectos largos", english: "he works with his boss to organize long projects", audio: "el-trabaja-con-su-jefe-para-organizar-proyectos-largos.mp3", question: "Why does he work with his boss?" },
+    { spanish: "yo tengo reuniones para mejorar decisiones importantes", english: "I have meetings to improve important decisions", audio: "yo-tengo-reuniones-para-mejorar-decisiones-importantes.mp3", question: "Why does the speaker have meetings?" }
+    { spanish: "ella tiene proyectos largos sin embargo quiere mas tiempo",
+      english: "she has long projects however she wants more time",
+      audio: "ella-tiene-proyectos-largos-sin-embargo-quiere-mas-tiempo.mp3",
+      question: "What does she want?" },
 
-  { spanish: "la educacion es importante para el desarrollo profesional", english: "education is important for professional development", audio: "la-educacion-es-importante-para-el-desarrollo-profesional.mp3", question: "What is education important for?" },
+    { spanish: "el tiene tareas importantes para apoyar a su equipo",
+      english: "he has important tasks to support his team",
+      audio: "el-tiene-tareas-importantes-para-apoyar-a-su-equipo.mp3",
+      question: "Why does he have important tasks?" },
 
-  { spanish: "analizamos desafios en el lugar de trabajo", english: "we analyze challenges in the workplace", audio: "analizamos-desafios-en-el-lugar-de-trabajo.mp3", question: "What do they analyze?" },
+    { spanish: "yo trabajo en la oficina sin embargo quiero trabajar en casa",
+      english: "I work in the office however I want to work at home",
+      audio: "yo-trabajo-en-la-oficina-sin-embargo-quiero-trabajar-en-casa.mp3",
+      question: "What does the speaker want?" },
 
-  { spanish: "ella maneja proyectos a largo plazo", english: "she handles long-term projects", audio: "ella-maneja-proyectos-a-largo-plazo.mp3", question: "What kind of projects does she handle?" },
+    { spanish: "ella trabaja en equipo para terminar proyectos grandes",
+      english: "she works in a team to finish big projects",
+      audio: "ella-trabaja-en-equipo-para-terminar-proyectos-grandes.mp3",
+      question: "Why does she work in a team?" },
 
-  { spanish: "yo estudio nuevas habilidades para mejorar mi trabajo", english: "I study new skills to improve my work", audio: "yo-estudio-nuevas-habilidades-para-mejorar-mi-trabajo.mp3", question: "Why does the speaker study new skills?" },
+    { spanish: "el trabaja con clientes sin embargo quiere menos tareas",
+      english: "he works with clients however he wants fewer tasks",
+      audio: "el-trabaja-con-clientes-sin-embargo-quiere-menos-tareas.mp3",
+      question: "What does he want?" },
 
-  { spanish: "ellos enfrentan desafios importantes en su empresa", english: "they face important challenges in their company", audio: "ellos-enfrentan-desafios-importantes-en-su-empresa.mp3", question: "What do they face?" },
+    { spanish: "yo estudio nuevas ideas para mejorar decisiones importantes",
+      english: "I study new ideas to improve important decisions",
+      audio: "yo-estudio-nuevas-ideas-para-mejorar-decisiones-importantes.mp3",
+      question: "Why does the speaker study new ideas?" },
 
-  { spanish: "ella trabaja remoto sin embargo colabora con su equipo", english: "she works remotely however she collaborates with her team", audio: "ella-trabaja-remoto-sin-embargo-colabora-con-su-equipo.mp3", question: "How does she work?" },
+    { spanish: "ella estudia tecnologia sin embargo quiere aprender mas",
+      english: "she studies technology however she wants to learn more",
+      audio: "ella-estudia-tecnologia-sin-embargo-quiere-aprender-mas.mp3",
+      question: "What does she want?" },
 
-  { spanish: "el organiza reuniones por lo tanto mejora la comunicacion", english: "he organizes meetings therefore he improves communication", audio: "el-organiza-reuniones-por-lo-tanto-mejora-la-comunicacion.mp3", question: "What does he improve?" },
+    { spanish: "el estudia habilidades nuevas para proyectos internacionales",
+      english: "he studies new skills for international projects",
+      audio: "el-estudia-habilidades-nuevas-para-proyectos-internacionales.mp3",
+      question: "Why does he study new skills?" },
 
-  { spanish: "nosotros discutimos cambios culturales en el trabajo", english: "we discuss cultural changes at work", audio: "nosotros-discutimos-cambios-culturales-en-el-trabajo.mp3", question: "What do they discuss?" },
+    { spanish: "yo trabajo con mi jefe para organizar tareas importantes",
+      english: "I work with my boss to organize important tasks",
+      audio: "yo-trabajo-con-mi-jefe-para-organizar-tareas-importantes.mp3",
+      question: "Why does the speaker work with their boss?" },
 
-  { spanish: "ella analiza como la sociedad afecta el trabajo", english: "she analyzes how society affects work", audio: "ella-analiza-como-la-sociedad-afecta-el-trabajo.mp3", question: "What does she analyze?" },
+    { spanish: "ella tiene reuniones para mejorar comunicacion en el equipo",
+      english: "she has meetings to improve communication in the team",
+      audio: "ella-tiene-reuniones-para-mejorar-comunicacion-en-el-equipo.mp3",
+      question: "Why does she have meetings?" }
+  ]
+}
 
-  { spanish: "la motivacion ayuda a lograr metas profesionales", english: "motivation helps achieve professional goals", audio: "la-motivacion-ayuda-a-lograr-metas-profesionales.mp3", question: "What does motivation help achieve?" },
-
-  { spanish: "la cultura de la empresa cambia con el tiempo", english: "company culture changes over time", audio: "la-cultura-de-la-empresa-cambia-con-el-tiempo.mp3", question: "What changes over time?" },
-
-  { spanish: "analizamos el impacto de la tecnologia en el trabajo", english: "we analyze the impact of technology at work", audio: "analizamos-el-impacto-de-la-tecnologia-en-el-trabajo.mp3", question: "What do they analyze?" },
-
-  { spanish: "ella estudia comunicacion para proyectos internacionales", english: "she studies communication for international projects", audio: "ella-estudia-comunicacion-para-proyectos-internacionales.mp3", question: "Why does she study communication?" },
-
-  { spanish: "el maneja decisiones importantes en la empresa", english: "he handles important decisions in the company", audio: "el-maneja-decisiones-importantes-en-la-empresa.mp3", question: "What does he handle?" },
-
-  { spanish: "nosotros discutimos el futuro del trabajo remoto", english: "we discuss the future of remote work", audio: "nosotros-discutimos-el-futuro-del-trabajo-remoto.mp3", question: "What do they discuss?" },
-
-  { spanish: "ella analiza como la educacion afecta el trabajo", english: "she analyzes how education affects work", audio: "ella-analiza-como-la-educacion-afecta-el-trabajo.mp3", question: "What does she analyze?" },
-
-  { spanish: "yo manejo proyectos largos a pesar de los desafios", english: "I handle long projects despite the challenges", audio: "yo-manejo-proyectos-largos-a-pesar-de-los-desafios.mp3", question: "What does the speaker handle?" },
-
-  { spanish: "ellos cambian su forma de trabajar por nuevos desafios", english: "they change their way of working because of new challenges", audio: "ellos-cambian-su-forma-de-trabajar-por-nuevos-desafios.mp3", question: "Why do they change their way of working?" },
-
-  { spanish: "la sociedad analiza el futuro del trabajo", english: "society analyzes the future of work", audio: "la-sociedad-analiza-el-futuro-del-trabajo.mp3", question: "What does society analyze?" }
-]
-
-    },
 
     /* ============================================================
    FAMILY — CEFR Listening Packs (A1 → B2)
