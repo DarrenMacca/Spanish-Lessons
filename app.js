@@ -977,13 +977,12 @@ const CEFR_LISTENING_TOPICS = {
   ]   // end of the previous topic's B2 array
 },    // end of the previous topic object
 
-const CEFR_LISTENING_TOPICS = {
-  travel: {
-
+ 
+travel: {
    /* ============================================================
       TRAVEL — CEFR Listening Packs (A1 → B2)
       ============================================================ */
-
+ 
 
   A1: [
     { spanish: "yo viajo en autobus", english: "I travel by bus", audio: "yo-viajo-en-autobus.mp3", question: "How does the speaker travel?" },
@@ -1127,9 +1126,9 @@ const CEFR_LISTENING_TOPICS = {
       audio: "ella-viaja-con-amigos-sin-embargo-quiere-tranquilidad.mp3",
       question: "What does she want?" }
   ]
-}
+},
 
-const CEFR_LISTENING_TOPICS = {
+
   work: {
 
     /* ============================================================
@@ -1281,10 +1280,9 @@ const CEFR_LISTENING_TOPICS = {
       audio: "ella-tiene-reuniones-para-mejorar-comunicacion-en-el-equipo.mp3",
       question: "Why does she have meetings?" }
   ]
-}
+},
 
 
-const CEFR_LISTENING_TOPICS = {
   family: {
 
     /* ============================================================
@@ -1443,8 +1441,8 @@ const CEFR_LISTENING_TOPICS = {
       audio: "yo-manejo-situaciones-familiares-para-estar-mejor-con-mi-familia.mp3",
       question: "Why does the speaker handle family situations?" }
   ]
-}
-const CEFR_LISTENING_TOPICS = {
+},
+
 
   ordering: {
 
@@ -1606,7 +1604,7 @@ const CEFR_LISTENING_TOPICS = {
       audio: "ella-pide-comida-simple-sin-embargo-quiere-buen-sabor.mp3",
       question: "What does she want?" }
   ]
-}
+};
 
        
 const listenAutoPlay = {
