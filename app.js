@@ -1604,7 +1604,7 @@ travel: {
       audio: "ella-pide-comida-simple-sin-embargo-quiere-buen-sabor.mp3",
       question: "What does she want?" }
   ]
-};
+},
 
        
 const listenAutoPlay = {
