@@ -826,14 +826,14 @@ const CEFR_CONVERSATIONS = {
     ]
 };
 
-
-/* ============================================================
-   CEFR TOPIC-BASED LISTENING PACKS — FOOD ONLY (A1 → B2)
-   ============================================================ */
-
 const CEFR_LISTENING_TOPICS = {
- food: {
-  A1: [
+  food: {
+
+    /* ============================================================
+       CEFR TOPIC-BASED LISTENING PACKS — FOOD ONLY (A1 → B2)
+       ============================================================ */
+
+    A1: [
     { spanish: "yo como pan", english: "I eat bread", audio: "yo-como-pan.mp3", question: "What does the speaker eat?" },
     { spanish: "ella come arroz", english: "she eats rice", audio: "ella-come-arroz.mp3", question: "What does she eat?" },
     { spanish: "el come pollo", english: "he eats chicken", audio: "el-come-pollo.mp3", question: "What does he eat?" },
@@ -977,13 +977,13 @@ const CEFR_LISTENING_TOPICS = {
   ]
 }
 
-   /* ============================================================
-   TRAVEL — CEFR Listening Packs (A1 → B2)
-   ============================================================ */
-
 const CEFR_LISTENING_TOPICS = {
-
   travel: {
+   /* ============================================================
+      TRAVEL — CEFR Listening Packs (A1 → B2)
+      ============================================================ */
+
+
   A1: [
     { spanish: "yo viajo en autobus", english: "I travel by bus", audio: "yo-viajo-en-autobus.mp3", question: "How does the speaker travel?" },
     { spanish: "ella viaja en tren", english: "she travels by train", audio: "ella-viaja-en-tren.mp3", question: "How does she travel?" },
@@ -1128,20 +1128,17 @@ const CEFR_LISTENING_TOPICS = {
   ]
 }
 
-
-   /* ============================================================
-   WORK — CEFR Listening Packs (A1 → B2)
-   ============================================================ */
-
 const CEFR_LISTENING_TOPICS = {
-
   work: {
+
+    /* ============================================================
+       CEFR TOPIC-BASED LISTENING PACKS — WORK ONLY (A1 → B2)
+       ============================================================ */
 
     /* ============================================================
        A1 — Beginner (20 items)
        ============================================================ */
-    work: {
-  A1: [
+    A1: [
     { spanish: "yo trabajo en una oficina", english: "I work in an office", audio: "yo-trabajo-en-una-oficina.mp3", question: "Where does the speaker work?" },
     { spanish: "ella trabaja en una tienda", english: "she works in a store", audio: "ella-trabaja-en-una-tienda.mp3", question: "Where does she work?" },
     { spanish: "el trabaja en una escuela", english: "he works in a school", audio: "el-trabaja-en-una-escuela.mp3", question: "Where does he work?" },
@@ -1286,14 +1283,17 @@ const CEFR_LISTENING_TOPICS = {
 }
 
 
-    /* ============================================================
-   FAMILY — CEFR Listening Packs (A1 → B2)
-   ============================================================ */
-
 const CEFR_LISTENING_TOPICS = {
-
   family: {
-  A1: [
+
+    /* ============================================================
+       CEFR TOPIC-BASED LISTENING PACKS — family ONLY (A1 → B2)
+       ============================================================ */
+
+    /* ============================================================
+       A1 — Beginner (20 items)
+       ============================================================ */
+    A1: [
     { spanish: "yo vivo con mi familia", english: "I live with my family", audio: "yo-vivo-con-mi-familia.mp3", question: "Who does the speaker live with?" },
     { spanish: "ella vive con sus padres", english: "she lives with her parents", audio: "ella-vive-con-sus-padres.mp3", question: "Who does she live with?" },
     { spanish: "el vive con su hermano", english: "he lives with his brother", audio: "el-vive-con-su-hermano.mp3", question: "Who does he live with?" },
@@ -1443,13 +1443,14 @@ const CEFR_LISTENING_TOPICS = {
       question: "Why does the speaker handle family situations?" }
   ]
 }
+const CEFR_LISTENING_TOPICS = {
 
+  ordering: {
 
-   /* ============================================================
+    /* ============================================================
        A1 — Beginner (20 items)
        ============================================================ */
-ordering: {
-  A1: [
+    A1: [
     { spanish: "quiero agua por favor", english: "I want water please", audio: "quiero-agua-por-favor.mp3", question: "What does the speaker want?" },
     { spanish: "quiero cafe", english: "I want coffee", audio: "quiero-cafe.mp3", question: "What does the speaker want?" },
     { spanish: "quiero te", english: "I want tea", audio: "quiero-te.mp3", question: "What does the speaker want?" },
