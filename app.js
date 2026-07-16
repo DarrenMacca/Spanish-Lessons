@@ -1,111 +1,102 @@
 /* ============================================================
-   TRANSLATION ENGINE — CEFR Phrases + Word Dictionary
+   NORMALIZATION UTIL — lowercase + trim + remove accents
    ============================================================ */
+function normalize(text) {
+    return text
+        .toLowerCase()
+        .trim()
+        .normalize("NFD")
+        .replace(/[\u0300-\u036f]/g, ""); // strip accents
+}
 
-function translateToEnglish(spanishText) {
-    const normalized = spanishText.toLowerCase().trim();
-
-    /* ============================================================
-       MULTI-WORD PHRASES (CEFR-aligned)
-       ============================================================ */
-    const CEFR_PHRASES = {
-        // A1
-        "cómo estás": "how are you",
-        "dónde vives": "where do you live",
-        "qué hora es": "what time is it",
-        "te gusta el café": "you like coffee",
-        "me gusta la música": "I like music",
-        "vivo en la ciudad": "I live in the city",
-        "trabajo en un hotel": "I work in a hotel",
-        "quiero comer": "I want to eat",
-        "quiero beber": "I want to drink",
-        "dónde está el baño": "where is the bathroom",
-
-        // A2
-        "qué hiciste ayer": "what did you do yesterday",
-        "fuiste al supermercado": "did you go to the supermarket",
-        "viajas a menudo": "you travel often",
-        "qué compraste": "what did you buy",
-        "qué estás haciendo": "what are you doing",
-        "sueles comer temprano": "you usually eat early",
-        "necesito ayuda": "I need help",
-        "quiero hacer una reserva": "I want to make a reservation",
-        "dónde está la estación": "where is the station",
-
-        // B1
-        "he estado aprendiendo español": "I have been learning Spanish",
-        "disfruto viajar": "I enjoy traveling",
-        "quiero mejorar mis habilidades": "I want to improve my skills",
-        "qué piensas de la ciudad": "what do you think of the city",
-        "cómo mantienes una vida saludable": "how do you maintain a healthy life",
-        "qué aprendiste recientemente": "what did you learn recently",
-        "cuáles son tus metas": "what are your goals",
-        "qué experiencias pasadas tienes": "what past experiences do you have",
-
-        // B2
-        "cómo manejas situaciones estresantes": "how do you handle stressful situations",
-        "cuál es tu opinión sobre la tecnología": "what is your opinion on technology",
-        "cómo ha cambiado tu vida": "how has your life changed",
-        "qué desafíos enfrentas": "what challenges do you face",
-        "qué esperas lograr": "what do you hope to achieve",
-        "qué piensas del futuro": "what do you think about the future",
-        "cómo ves la sociedad actual": "how do you see modern society",
-        "cuál es tu perspectiva": "what is your perspective"
-    };
-
-    if (CEFR_PHRASES[normalized]) {
-        return CEFR_PHRASES[normalized];
-    }
-
-    /* ============================================================
-   WORD-BY-WORD DICTIONARY — CEFR A1 → B2 (Categorized)
+/* ============================================================
+   CEFR PHRASES — Global (A1 → B2)
    ============================================================ */
+const CEFR_PHRASES = {
+    // A1
+    "como estas": "how are you",
+    "donde vives": "where do you live",
+    "que hora es": "what time is it",
+    "te gusta el cafe": "you like coffee",
+    "me gusta la musica": "I like music",
+    "vivo en la ciudad": "I live in the city",
+    "trabajo en un hotel": "I work in a hotel",
+    "quiero comer": "I want to eat",
+    "quiero beber": "I want to drink",
+    "donde esta el bano": "where is the bathroom",
 
+    // A2
+    "que hiciste ayer": "what did you do yesterday",
+    "fuiste al supermercado": "did you go to the supermarket",
+    "viajas a menudo": "you travel often",
+    "que compraste": "what did you buy",
+    "que estas haciendo": "what are you doing",
+    "sueles comer temprano": "you usually eat early",
+    "necesito ayuda": "I need help",
+    "quiero hacer una reserva": "I want to make a reservation",
+    "donde esta la estacion": "where is the station",
+
+    // B1
+    "he estado aprendiendo espanol": "I have been learning Spanish",
+    "disfruto viajar": "I enjoy traveling",
+    "quiero mejorar mis habilidades": "I want to improve my skills",
+    "que piensas de la ciudad": "what do you think of the city",
+    "como mantienes una vida saludable": "how do you maintain a healthy life",
+    "que aprendiste recientemente": "what did you learn recently",
+    "cuales son tus metas": "what are your goals",
+    "que experiencias pasadas tienes": "what past experiences do you have",
+
+    // B2
+    "como manejas situaciones estresantes": "how do you handle stressful situations",
+    "cual es tu opinion sobre la tecnologia": "what is your opinion on technology",
+    "como ha cambiado tu vida": "how has your life changed",
+    "que desafios enfrentas": "what challenges do you face",
+    "que esperas lograr": "what do you hope to achieve",
+    "que piensas del futuro": "what do you think about the future",
+    "como ves la sociedad actual": "how do you see modern society",
+    "cual es tu perspectiva": "what is your perspective"
+};
+
+/* ============================================================
+   WORD DICTIONARY — Global (A1 → B2)
+   ============================================================ */
 const WORD_DICT = {
-
-    /* ============================================================
-       A1 — Beginner Vocabulary
-       ============================================================ */
-
-    // Core greetings & basics
+    /* A1 */
     "hola": "hello",
-    "adiós": "goodbye",
+    "adios": "goodbye",
     "por": "for",
     "favor": "favor",
     "gracias": "thank you",
-    "sí": "yes",
+    "si": "yes",
     "no": "no",
     "lo": "it",
     "siento": "sorry",
-    "perdón": "excuse me",
+    "perdon": "excuse me",
 
-    // Pronouns
     "yo": "I",
-    "tú": "you",
-    "él": "he",
+    "tu": "you",
+    "el": "he",
     "ella": "she",
     "nosotros": "we",
     "ellos": "they",
 
-    // Connectors
     "y": "and",
     "o": "or",
     "pero": "but",
     "porque": "because",
     "con": "with",
     "sin": "without",
-    "también": "also",
+    "tambien": "also",
     "muy": "very",
-    "más": "more",
+    "mas": "more",
     "poco": "little",
     "entonces": "then",
     "un": "a",
 
-    // Food & drink
     "agua": "water",
     "comida": "food",
-    "café": "coffee",
-    "té": "tea",
+    "cafe": "coffee",
+    "te": "tea",
     "leche": "milk",
     "pan": "bread",
     "cerveza": "beer",
@@ -116,7 +107,7 @@ const WORD_DICT = {
     "fruta": "fruit",
     "manzana": "apple",
     "naranja": "orange",
-    "plátano": "banana",
+    "platano": "banana",
     "pollo": "chicken",
     "pescado": "fish",
     "sopa": "soup",
@@ -125,51 +116,45 @@ const WORD_DICT = {
     "frijoles": "beans",
     "queso": "cheese",
     "mantequilla": "butter",
-    "azúcar": "sugar",
+    "azucar": "sugar",
     "sal": "salt",
 
-    // Places & objects
-    "baño": "bathroom",
+    "bano": "bathroom",
     "hotel": "hotel",
-    "habitación": "room",
+    "habitacion": "room",
     "llave": "key",
     "mesa": "table",
     "silla": "chair",
 
-    // Restaurant
-    "menú": "menu",
+    "menu": "menu",
     "cuenta": "bill",
     "camarero": "waiter",
     "quiero": "I want",
-    "gustaría": "would like",
+    "gustaria": "would like",
 
-    // Transport
-    "autobús": "bus",
+    "autobus": "bus",
     "tren": "train",
     "boleto": "ticket",
-    "estación": "station",
+    "estacion": "station",
     "aeropuerto": "airport",
 
-    // Shopping
-    "cuánto": "how much",
+    "cuanto": "how much",
     "cuesta": "costs",
     "barato": "cheap",
     "caro": "expensive",
     "abierto": "open",
     "cerrado": "closed",
 
-    // Emergency
     "ayuda": "help",
     "doctor": "doctor",
-    "policía": "police",
+    "policia": "police",
     "estoy": "I am",
     "perdido": "lost",
 
-    // A1 Verbs & actions
-    "cómo": "how",
-    "estás": "are you",
+    "como": "how",
+    "estas": "are you",
     "hoy": "today",
-    "dónde": "where",
+    "donde": "where",
     "vives": "you live",
     "vivo": "I live",
     "vive": "he/she lives",
@@ -187,56 +172,46 @@ const WORD_DICT = {
     "hermanas": "sisters",
     "hora": "time",
     "levantas": "you get up",
-    "te": "you",
     "gusta": "like",
     "gustan": "like (plural)",
-    "música": "music",
-    "televisión": "television",
+    "musica": "music",
+    "television": "television",
     "lees": "you read",
     "leo": "I read",
     "libros": "books",
     "solo": "only",
     "nunca": "never",
-    "mañana": "tomorrow",
-    "rápido": "fast",
+    "manana": "tomorrow",
+    "rapido": "fast",
     "lento": "slow",
     "ciudad": "city",
     "parada": "stop",
 
-
-    /* ============================================================
-       A2 — Elementary Vocabulary
-       ============================================================ */
-
-    // Daily life & routines
+    /* A2 */
     "me": "me",
     "necesito": "I need",
-    "qué": "what",
+    "que": "what",
     "ayer": "yesterday",
     "pasado": "last",
     "semana": "week",
     "fin": "end",
-    "próximo": "next",
-    "todavía": "still",
+    "proximo": "next",
+    "todavia": "still",
     "ya": "already",
     "antes": "before",
 
-    // Meals
     "desayuno": "breakfast",
     "almuerzo": "lunch",
     "cena": "dinner",
 
-    // Shopping & places
     "centro": "center",
     "farmacia": "pharmacy",
     "supermercado": "supermarket",
     "tienda": "store",
 
-    // Travel
-    "avión": "plane",
+    "avion": "plane",
     "visitar": "to visit",
 
-    // Actions & verbs
     "hiciste": "you did",
     "fuiste": "you went",
     "haciendo": "doing",
@@ -255,112 +230,95 @@ const WORD_DICT = {
     "usas": "you use",
     "transporte": "transport",
 
-    // Family
     "familia": "family",
-
-    // Missing A2 phrases
     "a menudo": "often",
-    "pasado mañana": "day after tomorrow",
+    "pasado manana": "day after tomorrow",
 
-
-    /* ============================================================
-       B1 — Intermediate Vocabulary
-       ============================================================ */
-
-    // Experiences & learning
+    /* B1 */
     "he": "I have",
     "estado": "been",
     "aprendiendo": "learning",
-    "español": "Spanish",
+    "espanol": "Spanish",
     "experiencias": "experiences",
     "pasadas": "past",
 
-    // Opinions & descriptions
     "interesante": "interesting",
-    "último": "last",
+    "ultimo": "last",
 
-    // Life & routines
     "tiempo": "time",
     "libre": "free",
     "diarias": "daily",
 
-    // Communication
-    "comunicación": "communication",
+    "comunicacion": "communication",
     "conversaciones": "conversations",
 
-    // Work & skills
     "desarrollador": "developer",
     "mejorar": "to improve",
     "habilidades": "skills",
 
-    // Social
     "redes": "networks",
     "sociales": "social",
 
-    // Missing B1 connectors
     "mientras": "while",
     "sin embargo": "however",
 
-
-    /* ============================================================
-       B2 — Upper‑Intermediate Vocabulary
-       ============================================================ */
-
-    // Abstract concepts
-    "opinión": "opinion",
-    "tecnología": "technology",
-    "educación": "education",
+    /* B2 */
+    "opinion": "opinion",
+    "tecnologia": "technology",
+    "educacion": "education",
     "cultura": "culture",
     "sociedad": "society",
     "importantes": "important",
 
-    // Life & change
     "vida": "life",
     "cambiado": "changed",
-    "años": "years",
+    "anos": "years",
     "cambios": "changes",
     "saludable": "healthy",
 
-    // Challenges & goals
-    "desafíos": "challenges",
+    "desafios": "challenges",
     "enfrentas": "you face",
-    "motivación": "motivation",
+    "motivacion": "motivation",
     "lograr": "to achieve",
     "esperas": "you expect",
 
-    // Advanced connectors
-    "además": "in addition",
+    "ademas": "in addition",
     "por lo tanto": "therefore",
     "a pesar de": "despite",
 
-    // Other
     "remoto": "remote",
     "futuro": "future",
     "vivir": "to live",
     "largo": "long",
     "plazo": "term",
 
-
-    /* ============================================================
-       Disruptors / Connectors (All Levels)
-       ============================================================ */
-
+    /* Disruptors */
     "siempre": "always",
     "aunque": "although",
     "cuando": "when",
     "donde": "where"
 };
 
+/* ============================================================
+   TRANSLATION ENGINE — CEFR Phrases + Word Dictionary
+   ============================================================ */
+function translateToEnglish(spanishText) {
+    const normalized = normalize(
+        spanishText.replace(/[.,!?]/g, "") // strip punctuation
+    );
 
+    // Phrase match
+    if (CEFR_PHRASES[normalized]) {
+        return CEFR_PHRASES[normalized];
+    }
 
-    /* ============================================================
-       FALLBACK — Word-by-word translation
-       ============================================================ */
+    // Word-by-word fallback
     return normalized
         .split(/\s+/)
         .map(w => WORD_DICT[w] || `[${w}]`)
         .join(" ");
 }
+
 
 /* ============================================================
    GRAMMAR ERROR EXPLAINER
@@ -454,7 +412,7 @@ function getCEFRGrammarHint(level, user, correct) {
 
 
 /* ============================================================
-   CEFR SENTENCE BANKS — A1 → B2 (Expanded)
+   CEFR SENTENCE BANKS — A1 → B2 (Corrected + Normalized)
    ============================================================ */
 
 const CEFR_SENTENCES = {
@@ -465,49 +423,49 @@ const CEFR_SENTENCES = {
     A1: [
 
         // Greetings & Basics
-        { english: "Hello, how are you?", spanish: "hola cómo estás" },
-        { english: "Goodbye, see you tomorrow.", spanish: "adiós hasta mañana" },
-        { english: "Excuse me, where is the bathroom?", spanish: "perdón dónde está el baño" },
+        { english: "Hello, how are you?", spanish: "hola como estas" },
+        { english: "Goodbye, see you tomorrow.", spanish: "adios hasta manana" },
+        { english: "Excuse me, where is the bathroom?", spanish: "perdon donde esta el bano" },
         { english: "Sorry, I am late.", spanish: "lo siento estoy tarde" },
-        { english: "Yes, I am okay.", spanish: "sí estoy bien" },
+        { english: "Yes, I am okay.", spanish: "si estoy bien" },
 
         // Personal Info
         { english: "I live in the city.", spanish: "vivo en la ciudad" },
         { english: "She lives in a hotel.", spanish: "ella vive en un hotel" },
         { english: "We are brothers.", spanish: "nosotros somos hermanos" },
-        { english: "He is my friend.", spanish: "él es mi amigo" },
-        { english: "You are my sister.", spanish: "tú eres mi hermana" },
+        { english: "He is my friend.", spanish: "el es mi amigo" },
+        { english: "You are my sister.", spanish: "tu eres mi hermana" },
 
         // Food & Drink
         { english: "I want water.", spanish: "quiero agua" },
         { english: "I like soup.", spanish: "me gusta la sopa" },
-        { english: "He eats bread.", spanish: "él come pan" },
-        { english: "We drink coffee.", spanish: "nosotros bebemos café" },
-        { english: "She likes fruit.", spanish: "ella gusta fruta" },
+        { english: "He eats bread.", spanish: "el come pan" },
+        { english: "We drink coffee.", spanish: "nosotros bebemos cafe" },
+        { english: "She likes fruit.", spanish: "a ella le gusta la fruta" },
 
         // Daily Life
-        { english: "You work in a store.", spanish: "tú trabajas en una tienda" },
+        { english: "You work in a store.", spanish: "tu trabajas en una tienda" },
         { english: "I read books.", spanish: "yo leo libros" },
-        { english: "We watch television.", spanish: "nosotros vemos televisión" },
-        { english: "He studies every day.", spanish: "él estudia cada día" },
+        { english: "We watch television.", spanish: "nosotros vemos television" },
+        { english: "He studies every day.", spanish: "el estudia cada dia" },
         { english: "She gets up early.", spanish: "ella se levanta temprano" },
 
         // Travel & Places
-        { english: "Where is the bus stop?", spanish: "dónde está la parada de autobús" },
-        { english: "The airport is open.", spanish: "el aeropuerto está abierto" },
-        { english: "The hotel is closed.", spanish: "el hotel está cerrado" },
-        { english: "The room has a table.", spanish: "la habitación tiene una mesa" },
-        { english: "The key is on the chair.", spanish: "la llave está en la silla" },
+        { english: "Where is the bus stop?", spanish: "donde esta la parada de autobus" },
+        { english: "The airport is open.", spanish: "el aeropuerto esta abierto" },
+        { english: "The hotel is closed.", spanish: "el hotel esta cerrado" },
+        { english: "The room has a table.", spanish: "la habitacion tiene una mesa" },
+        { english: "The key is on the chair.", spanish: "la llave esta en la silla" },
 
         // Shopping
-        { english: "How much does the menu cost?", spanish: "cuánto cuesta el menú" },
-        { english: "The store is closed.", spanish: "la tienda está cerrada" },
-        { english: "The supermarket is open.", spanish: "el supermercado está abierto" },
+        { english: "How much does the menu cost?", spanish: "cuanto cuesta el menu" },
+        { english: "The store is closed.", spanish: "la tienda esta cerrada" },
+        { english: "The supermarket is open.", spanish: "el supermercado esta abierto" },
         { english: "I want cheap fruit.", spanish: "quiero fruta barata" },
         { english: "The bill is expensive.", spanish: "la cuenta es cara" },
 
         // Restaurant
-        { english: "I would like chicken.", spanish: "me gustaría pollo" },
+        { english: "I would like chicken.", spanish: "me gustaria pollo" },
         { english: "The waiter has the bill.", spanish: "el camarero tiene la cuenta" },
         { english: "I want a table.", spanish: "quiero una mesa" },
         { english: "She wants soup.", spanish: "ella quiere sopa" },
@@ -515,10 +473,10 @@ const CEFR_SENTENCES = {
 
         // Emergency
         { english: "I need help.", spanish: "necesito ayuda" },
-        { english: "Call the police.", spanish: "llama a la policía" },
+        { english: "Call the police.", spanish: "llama a la policia" },
         { english: "I am lost.", spanish: "estoy perdido" },
         { english: "I need a doctor.", spanish: "necesito un doctor" },
-        { english: "He is not okay.", spanish: "él no está bien" }
+        { english: "He is not okay.", spanish: "el no esta bien" }
     ],
 
     /* ============================================================
@@ -528,52 +486,52 @@ const CEFR_SENTENCES = {
 
         // Daily Life & Routines
         { english: "I usually eat early.", spanish: "yo suelo comer temprano" },
-        { english: "What did you do yesterday?", spanish: "qué hiciste ayer" },
+        { english: "What did you do yesterday?", spanish: "que hiciste ayer" },
         { english: "We finished the breakfast.", spanish: "nosotros terminamos el desayuno" },
-        { english: "She woke up late.", spanish: "ella se levantó tarde" },
-        { english: "He works every morning.", spanish: "él trabaja cada mañana" },
+        { english: "She woke up late.", spanish: "ella se levanto tarde" },
+        { english: "He works every morning.", spanish: "el trabaja cada manana" },
 
         // Shopping & Places
-        { english: "She bought fruit at the supermarket.", spanish: "ella compró fruta en el supermercado" },
-        { english: "The pharmacy is in the center.", spanish: "la farmacia está en el centro" },
+        { english: "She bought fruit at the supermarket.", spanish: "ella compro fruta en el supermercado" },
+        { english: "The pharmacy is in the center.", spanish: "la farmacia esta en el centro" },
         { english: "I need something cheap.", spanish: "necesito algo barato" },
-        { english: "The store opens tomorrow.", spanish: "la tienda abre mañana" },
-        { english: "He bought bread and cheese.", spanish: "él compró pan y queso" },
+        { english: "The store opens tomorrow.", spanish: "la tienda abre manana" },
+        { english: "He bought bread and cheese.", spanish: "el compro pan y queso" },
 
         // Travel
         { english: "We travel often.", spanish: "nosotros viajamos a menudo" },
         { english: "Did you go to the airport?", spanish: "fuiste al aeropuerto" },
-        { english: "The plane arrives early.", spanish: "el avión llega temprano" },
-        { english: "She visits her family often.", spanish: "ella visita su familia a menudo" },
+        { english: "The plane arrives early.", spanish: "el avion llega temprano" },
+        { english: "She visits her family often.", spanish: "ella visita a su familia a menudo" },
         { english: "We went last week.", spanish: "nosotros fuimos la semana pasada" },
 
         // Food & Meals
         { english: "I eat rice with chicken.", spanish: "yo como arroz con pollo" },
-        { english: "He likes dinner with family.", spanish: "él gusta la cena con familia" },
-        { english: "She finished the lunch.", spanish: "ella terminó el almuerzo" },
+        { english: "He likes dinner with family.", spanish: "a el le gusta la cena con familia" },
+        { english: "She finished the lunch.", spanish: "ella termino el almuerzo" },
         { english: "We bought fruit recently.", spanish: "nosotros compramos fruta recientemente" },
-        { english: "He eats soup often.", spanish: "él come sopa a menudo" },
+        { english: "He eats soup often.", spanish: "el come sopa a menudo" },
 
         // Actions & Verbs
-        { english: "She is doing homework.", spanish: "ella está haciendo tarea" },
-        { english: "You use the transport.", spanish: "tú usas el transporte" },
-        { english: "He watches movies often.", spanish: "él ve películas a menudo" },
+        { english: "She is doing homework.", spanish: "ella hace tarea" },
+        { english: "You use the transport.", spanish: "tu usas el transporte" },
+        { english: "He watches movies often.", spanish: "el ve peliculas a menudo" },
         { english: "We celebrated last week.", spanish: "nosotros celebramos la semana pasada" },
-        { english: "I visited yesterday.", spanish: "yo visité ayer" },
+        { english: "I visited yesterday.", spanish: "yo visite ayer" },
 
         // Family
-        { english: "My family lives near the station.", spanish: "mi familia vive cerca de la estación" },
+        { english: "My family lives near the station.", spanish: "mi familia vive cerca de la estacion" },
         { english: "We visited our family.", spanish: "nosotros visitamos nuestra familia" },
-        { english: "She bought dinner for her family.", spanish: "ella compró cena para su familia" },
-        { english: "He celebrated with his family.", spanish: "él celebró con su familia" },
+        { english: "She bought dinner for her family.", spanish: "ella compro cena para su familia" },
+        { english: "He celebrated with his family.", spanish: "el celebro con su familia" },
         { english: "They live far from the center.", spanish: "ellos viven lejos del centro" },
 
         // Extra A2
         { english: "I need a reservation.", spanish: "necesito una reserva" },
-        { english: "She bought cheese and bread.", spanish: "ella compró queso y pan" },
-        { english: "We use transport every day.", spanish: "nosotros usamos transporte cada día" },
-        { english: "He finished the work early.", spanish: "él terminó el trabajo temprano" },
-        { english: "I will visit tomorrow.", spanish: "yo voy a visitar mañana" }
+        { english: "She bought cheese and bread.", spanish: "ella compro queso y pan" },
+        { english: "We use transport every day.", spanish: "nosotros usamos transporte cada dia" },
+        { english: "He finished the work early.", spanish: "el termino el trabajo temprano" },
+        { english: "I will visit tomorrow.", spanish: "yo voy a visitar manana" }
     ],
 
     /* ============================================================
@@ -584,20 +542,20 @@ const CEFR_SENTENCES = {
         // Opinions
         { english: "I think the city is interesting.", spanish: "creo que la ciudad es interesante" },
         { english: "She enjoys traveling with friends.", spanish: "ella disfruta viajar con amigos" },
-        { english: "He believes the idea is good.", spanish: "él cree que la idea es buena" },
+        { english: "He believes the idea is good.", spanish: "el cree que la idea es buena" },
         { english: "We think the plan is important.", spanish: "nosotros creemos que el plan es importante" },
-        { english: "I like the communication here.", spanish: "me gusta la comunicación aquí" },
+        { english: "I like the communication here.", spanish: "me gusta la comunicacion aqui" },
 
         // Experiences
-        { english: "I have been learning Spanish.", spanish: "he estado aprendiendo español" },
-        { english: "What did you learn recently?", spanish: "qué aprendiste recientemente" },
+        { english: "I have been learning Spanish.", spanish: "he estado aprendiendo espanol" },
+        { english: "What did you learn recently?", spanish: "que aprendiste recientemente" },
         { english: "She remembers past experiences.", spanish: "ella recuerda experiencias pasadas" },
         { english: "We talked about our past.", spanish: "nosotros hablamos sobre nuestro pasado" },
-        { english: "He learned something new.", spanish: "él aprendió algo nuevo" },
+        { english: "He learned something new.", spanish: "el aprendio algo nuevo" },
 
         // Daily Life & Habits
         { english: "We have daily conversations.", spanish: "nosotros tenemos conversaciones diarias" },
-        { english: "He wants to improve his skills.", spanish: "él quiere mejorar sus habilidades" },
+        { english: "He wants to improve his skills.", spanish: "el quiere mejorar sus habilidades" },
         { english: "She studies every afternoon.", spanish: "ella estudia cada tarde" },
         { english: "I enjoy free time on weekends.", spanish: "yo disfruto tiempo libre los fines de semana" },
         { english: "They work while they study.", spanish: "ellos trabajan mientras estudian" },
@@ -605,27 +563,27 @@ const CEFR_SENTENCES = {
         // Work & Study
         { english: "She is a developer.", spanish: "ella es desarrollador" },
         { english: "I need time to study.", spanish: "necesito tiempo para estudiar" },
-        { english: "He works in the center.", spanish: "él trabaja en el centro" },
+        { english: "He works in the center.", spanish: "el trabaja en el centro" },
         { english: "We plan future projects.", spanish: "nosotros planeamos proyectos futuros" },
-        { english: "She improves her communication.", spanish: "ella mejora su comunicación" },
+        { english: "She improves her communication.", spanish: "ella mejora su comunicacion" },
 
         // Social & Communication
         { english: "I use social networks often.", spanish: "yo uso redes sociales a menudo" },
-        { english: "Communication is important.", spanish: "la comunicación es importante" },
-        { english: "He talks with his friends daily.", spanish: "él habla con sus amigos diariamente" },
-        { english: "We share ideas online.", spanish: "nosotros compartimos ideas en línea" },
-        { english: "She reads news every morning.", spanish: "ella lee noticias cada mañana" },
+        { english: "Communication is important.", spanish: "la comunicacion es importante" },
+        { english: "He talks with his friends daily.", spanish: "el habla con sus amigos diariamente" },
+        { english: "We share ideas online.", spanish: "nosotros compartimos ideas en linea" },
+        { english: "She reads news every morning.", spanish: "ella lee noticias cada manana" },
 
         // Travel & Life
         { english: "We plan future trips.", spanish: "nosotros planeamos viajes futuros" },
-        { english: "He remembers past experiences.", spanish: "él recuerda experiencias pasadas" },
+        { english: "He remembers past experiences.", spanish: "el recuerda experiencias pasadas" },
         { english: "She enjoys traveling alone.", spanish: "ella disfruta viajar sola" },
-        { english: "I want to travel more.", spanish: "yo quiero viajar más" },
+        { english: "I want to travel more.", spanish: "yo quiero viajar mas" },
         { english: "They visit new places often.", spanish: "ellos visitan lugares nuevos a menudo" },
 
         // Extra B1
         { english: "We talk about daily problems.", spanish: "nosotros hablamos sobre problemas diarios" },
-        { english: "He reads books every day.", spanish: "él lee libros cada día" },
+        { english: "He reads books every day.", spanish: "el lee libros cada dia" },
         { english: "She studies while she works.", spanish: "ella estudia mientras trabaja" },
         { english: "I enjoy learning languages.", spanish: "yo disfruto aprender idiomas" },
         { english: "They plan important changes.", spanish: "ellos planean cambios importantes" }
@@ -637,51 +595,50 @@ const CEFR_SENTENCES = {
     B2: [
 
         // Abstract Ideas
-        { english: "What is your opinion about technology?", spanish: "cuál es tu opinión sobre la tecnología" },
-        { english: "Society is changing quickly.", spanish: "la sociedad está cambiando rápido" },
-        { english: "Education is important for the future.", spanish: "la educación es importante para el futuro" },
+        { english: "What is your opinion about technology?", spanish: "cual es tu opinion sobre la tecnologia" },
+        { english: "Society is changing quickly.", spanish: "la sociedad esta cambiando rapido" },
+        { english: "Education is important for the future.", spanish: "la educacion es importante para el futuro" },
         { english: "Culture changes over time.", spanish: "la cultura cambia con el tiempo" },
-        { english: "Technology affects daily life.", spanish: "la tecnología afecta la vida diaria" },
+        { english: "Technology affects daily life.", spanish: "la tecnologia afecta la vida diaria" },
 
         // Challenges & Goals
-        { english: "What challenges do you face?", spanish: "qué desafíos enfrentas" },
+        { english: "What challenges do you face?", spanish: "que desafios enfrentas" },
         { english: "She hopes to achieve her goals.", spanish: "ella espera lograr sus metas" },
-        { english: "He works hard to achieve success.", spanish: "él trabaja duro para lograr éxito" },
-        { english: "We face important challenges.", spanish: "nosotros enfrentamos desafíos importantes" },
+        { english: "He works hard to achieve success.", spanish: "el trabaja duro para lograr exito" },
+        { english: "We face important challenges.", spanish: "nosotros enfrentamos desafios importantes" },
         { english: "They expect positive results.", spanish: "ellos esperan resultados positivos" },
 
         // Life & Change
-        { english: "My life has changed in recent years.", spanish: "mi vida ha cambiado en los últimos años" },
-        { english: "He wants a healthy lifestyle.", spanish: "él quiere un estilo de vida saludable" },
+        { english: "My life has changed in recent years.", spanish: "mi vida ha cambiado en los ultimos anos" },
+        { english: "He wants a healthy lifestyle.", spanish: "el quiere un estilo de vida saludable" },
         { english: "We analyze cultural changes.", spanish: "nosotros analizamos cambios culturales" },
         { english: "She studies for a long-term goal.", spanish: "ella estudia para un objetivo a largo plazo" },
         { english: "They see the future as positive.", spanish: "ellos ven el futuro como positivo" },
 
         // Reasoning & Explanation
         { english: "We continue despite the problems.", spanish: "nosotros continuamos a pesar de los problemas" },
-        { english: "He explained the concept clearly.", spanish: "él explicó el concepto claramente" },
-        { english: "She works a lot; therefore, she is tired.", spanish: "ella trabaja mucho por lo tanto está cansada" },
-        { english: "I like the idea; however, it is difficult.", spanish: "me gusta la idea sin embargo es difícil" },
+        { english: "He explained the concept clearly.", spanish: "el explico el concepto claramente" },
+        { english: "She works a lot; therefore, she is tired.", spanish: "ella trabaja mucho por lo tanto esta cansada" },
+        { english: "I like the idea; however, it is difficult.", spanish: "me gusta la idea sin embargo es dificil" },
         { english: "They study because it is important.", spanish: "ellos estudian porque es importante" },
 
         // Advanced Connectors
-        { english: "He works hard; however, he needs rest.", spanish: "él trabaja duro sin embargo necesita descanso" },
+        { english: "He works hard; however, he needs rest.", spanish: "el trabaja duro sin embargo necesita descanso" },
         { english: "We continue; therefore, we improve.", spanish: "nosotros continuamos por lo tanto mejoramos" },
-        { english: "She studies a lot; in addition, she works.", spanish: "ella estudia mucho además trabaja" },
-        { english: "He learns despite the difficulty.", spanish: "él aprende a pesar de la dificultad" },
-        { english: "They continue despite the problems.", spanish: "ellos continúan a pesar de los problemas" },
+        { english: "She studies a lot; in addition, she works.", spanish: "ella estudia mucho ademas trabaja" },
+        { english: "He learns despite the difficulty.", spanish: "el aprende a pesar de la dificultad" },
+        { english: "They continue despite the problems.", spanish: "ellos continuan a pesar de los problemas" },
 
         // Extra B2
         { english: "I handle stressful situations well.", spanish: "yo manejo situaciones estresantes bien" },
-        { english: "She analyzes important information.", spanish: "ella analiza información importante" },
+        { english: "She analyzes important information.", spanish: "ella analiza informacion importante" },
         { english: "We discuss cultural ideas.", spanish: "nosotros discutimos ideas culturales" },
-        { english: "He studies for future opportunities.", spanish: "él estudia para oportunidades futuras" },
+        { english: "He studies for future opportunities.", spanish: "el estudia para oportunidades futuras" },
         { english: "They work on long-term projects.", spanish: "ellos trabajan en proyectos a largo plazo" }
     ]
 };
-
 /* ============================================================
-   CEFR CONVERSATION BANKS — A1 → B2 (Expanded)
+   CEFR CONVERSATION BANKS — A1 → B2 (Professional Rewrite)
    ============================================================ */
 
 const CEFR_CONVERSATIONS = {
@@ -690,288 +647,299 @@ const CEFR_CONVERSATIONS = {
        A1 — Beginner (40 Prompts)
        ============================================================ */
     A1: [
-        "¿Cómo estás?",
-        "¿Dónde vives?",
-        "¿Qué te gusta comer?",
-        "¿Trabajas o estudias?",
-        "¿Qué hora es?",
-        "¿Dónde está el baño?",
-        "¿Quieres agua o café?",
-        "¿Te gusta la sopa?",
-        "¿Lees libros?",
-        "¿Miras televisión?",
-        "¿Dónde está la parada de autobús?",
-        "¿Está abierto el supermercado?",
-        "¿Cuánto cuesta el menú?",
-        "¿Quieres pan o arroz?",
-        "¿Te gusta la fruta?",
-        "¿Dónde está tu habitación?",
-        "¿Tienes hermanos?",
-        "¿Te gusta la música?",
-        "¿Quieres una mesa?",
-        "¿Dónde está el camarero?",
-        "¿Quieres pollo o pescado?",
-        "¿Estás perdido?",
-        "¿Necesitas ayuda?",
-        "¿Dónde está la policía?",
-        "¿Quieres ir al hotel?",
-        "¿Te gusta la ciudad?",
-        "¿Comes rápido o lento?",
-        "¿Quieres una llave?",
-        "¿Dónde está la silla?",
-        "¿Quieres ensalada?",
-        "¿Te gusta el té?",
-        "¿Quieres leche?",
-        "¿Dónde está el aeropuerto?",
-        "¿Quieres un boleto?",
-        "¿Está cerrado el restaurante?",
-        "¿Quieres hablar mañana?",
-        "¿Te levantas temprano?",
-        "¿Quieres caminar?",
-        "¿Dónde está tu familia?"
+        "Como estas",
+        "Donde vives",
+        "Que te gusta comer",
+        "Trabajas o estudias",
+        "Que hora es",
+        "Donde esta el bano",
+        "Quieres agua o cafe",
+        "Te gusta la sopa",
+        "Lees libros",
+        "Miras television",
+        "Donde esta la parada de autobus",
+        "Esta abierto el supermercado",
+        "Cuanto cuesta el menu",
+        "Quieres pan o arroz",
+        "Te gusta la fruta",
+        "Donde esta tu habitacion",
+        "Tienes hermanos",
+        "Te gusta la musica",
+        "Quieres una mesa",
+        "Donde esta el camarero",
+        "Quieres pollo o pescado",
+        "Estas perdido",
+        "Necesitas ayuda",
+        "Donde esta la policia",
+        "Quieres ir al hotel",
+        "Te gusta la ciudad",
+        "Comes rapido o lento",
+        "Quieres una llave",
+        "Donde esta la silla",
+        "Quieres ensalada",
+        "Te gusta el te",
+        "Quieres leche",
+        "Donde esta el aeropuerto",
+        "Quieres un boleto",
+        "Esta cerrado el restaurante",
+        "Quieres hablar manana",
+        "Te levantas temprano",
+        "Quieres caminar",
+        "Donde esta tu familia"
     ],
 
     /* ============================================================
        A2 — Elementary (40 Prompts)
        ============================================================ */
     A2: [
-        "¿Qué hiciste ayer?",
-        "¿Fuiste al supermercado?",
-        "¿Viajas a menudo?",
-        "¿Qué compraste la semana pasada?",
-        "¿Qué estás haciendo hoy?",
-        "¿Sueles comer temprano?",
-        "¿Necesitas una reserva?",
-        "¿Dónde está la farmacia?",
-        "¿Compraste fruta?",
-        "¿Te gusta el desayuno?",
-        "¿Vas al centro?",
-        "¿Usas el transporte?",
-        "¿Celebraste el fin de semana?",
-        "¿Visitas a tu familia?",
-        "¿Comes arroz o pollo?",
-        "¿Ves películas a menudo?",
-        "¿Terminaste el trabajo?",
-        "¿Compraste pan y queso?",
-        "¿Fuiste al aeropuerto?",
-        "¿El avión llega temprano?",
-        "¿Qué hiciste recientemente?",
-        "¿Comes cena con tu familia?",
-        "¿A menudo visitas el centro?",
-        "¿Compraste algo barato?",
-        "¿Está abierta la tienda?",
-        "¿Qué vas a hacer mañana?",
-        "¿Viajaste la semana pasada?",
-        "¿Comes en casa o fuera?",
-        "¿Usas redes sociales?",
-        "¿Qué celebraste?",
-        "¿Compraste almuerzo?",
-        "¿Qué vas a visitar mañana?",
-        "¿Te gusta el almuerzo?",
-        "¿Comes sopa a menudo?",
-        "¿Qué compraste hoy?",
-        "¿Vives cerca de la estación?",
-        "¿Qué haces por la mañana?",
-        "¿Qué haces por la tarde?",
-        "¿Qué haces por la noche?",
-        "¿Qué haces los fines de semana?"
+        "Que hiciste ayer",
+        "Fuiste al supermercado",
+        "Viajas a menudo",
+        "Que compraste la semana pasada",
+        "Que haces hoy",
+        "Sueles comer temprano",
+        "Necesitas una reserva",
+        "Donde esta la farmacia",
+        "Compraste fruta",
+        "Te gusta el desayuno",
+        "Vas al centro",
+        "Usas el transporte",
+        "Celebraste el fin de semana",
+        "Visitas a tu familia",
+        "Comes arroz o pollo",
+        "Ves peliculas a menudo",
+        "Terminaste el trabajo",
+        "Compraste pan y queso",
+        "Fuiste al aeropuerto",
+        "El avion llega temprano",
+        "Que hiciste recientemente",
+        "Comes cena con tu familia",
+        "Visitas el centro a menudo",
+        "Compraste algo barato",
+        "Esta abierta la tienda",
+        "Que vas a hacer manana",
+        "Viajaste la semana pasada",
+        "Comes en casa o fuera",
+        "Usas redes sociales",
+        "Que celebraste",
+        "Compraste almuerzo",
+        "Que vas a visitar manana",
+        "Te gusta el almuerzo",
+        "Comes sopa a menudo",
+        "Que compraste hoy",
+        "Vives cerca de la estacion",
+        "Que haces por la manana",
+        "Que haces por la tarde",
+        "Que haces por la noche",
+        "Que haces los fines de semana"
     ],
 
     /* ============================================================
        B1 — Intermediate (40 Prompts)
        ============================================================ */
     B1: [
-        "¿Qué piensas de tu ciudad?",
-        "¿Qué aprendiste recientemente?",
-        "¿Cómo mantienes una vida saludable?",
-        "¿Qué experiencias pasadas recuerdas?",
-        "¿Cuáles son tus metas?",
-        "¿Disfrutas viajar?",
-        "¿Qué planes futuros tienes?",
-        "¿Qué habilidades quieres mejorar?",
-        "¿Qué comunicación es importante para ti?",
-        "¿Qué haces en tu tiempo libre?",
-        "¿Qué proyectos futuros tienes?",
-        "¿Qué problemas diarios tienes?",
-        "¿Qué libros lees?",
-        "¿Qué conversaciones tienes cada día?",
-        "¿Qué redes sociales usas?",
-        "¿Qué te parece interesante?",
-        "¿Qué aprendiste el último mes?",
-        "¿Qué haces mientras trabajas?",
-        "¿Qué haces mientras estudias?",
-        "¿Qué te gusta aprender?",
-        "¿Qué lugares visitas a menudo?",
-        "¿Qué recuerdas de tu pasado?",
-        "¿Qué te gusta de tu trabajo?",
-        "¿Qué te gusta de tu familia?",
-        "¿Qué te gusta de tu vida diaria?",
-        "¿Qué haces los fines de semana?",
-        "¿Qué haces por la mañana?",
-        "¿Qué haces por la tarde?",
-        "¿Qué haces por la noche?",
-        "¿Qué te gusta ver?",
-        "¿Qué te gusta comer?",
-        "¿Qué te gusta estudiar?",
-        "¿Qué te gusta comprar?",
-        "¿Qué te gusta visitar?",
-        "¿Qué te gusta hacer con amigos?",
-        "¿Qué te gusta hacer solo?",
-        "¿Qué te gusta hacer en vacaciones?",
-        "¿Qué te gusta hacer en casa?",
-        "¿Qué te gusta hacer fuera de casa?",
-        "¿Qué te gusta hacer en la ciudad?"
+        "Que piensas de tu ciudad",
+        "Que aprendiste recientemente",
+        "Como mantienes una vida saludable",
+        "Que experiencias pasadas recuerdas",
+        "Cuales son tus metas",
+        "Disfrutas viajar",
+        "Que planes futuros tienes",
+        "Que habilidades quieres mejorar",
+        "Que comunicacion es importante para ti",
+        "Que haces en tu tiempo libre",
+        "Que proyectos futuros tienes",
+        "Que problemas diarios tienes",
+        "Que libros lees",
+        "Que conversaciones tienes cada dia",
+        "Que redes sociales usas",
+        "Que te parece interesante",
+        "Que aprendiste el ultimo mes",
+        "Que haces mientras trabajas",
+        "Que haces mientras estudias",
+        "Que te gusta aprender",
+        "Que lugares visitas a menudo",
+        "Que recuerdas de tu pasado",
+        "Que te gusta de tu trabajo",
+        "Que te gusta de tu familia",
+        "Que te gusta de tu vida diaria",
+        "Que haces los fines de semana",
+        "Que haces por la manana",
+        "Que haces por la tarde",
+        "Que haces por la noche",
+        "Que te gusta ver",
+        "Que te gusta comer",
+        "Que te gusta estudiar",
+        "Que te gusta comprar",
+        "Que te gusta visitar",
+        "Que te gusta hacer con amigos",
+        "Que te gusta hacer solo",
+        "Que te gusta hacer en vacaciones",
+        "Que te gusta hacer en casa",
+        "Que te gusta hacer fuera de casa",
+        "Que te gusta hacer en la ciudad"
     ],
 
     /* ============================================================
        B2 — Upper Intermediate (40 Prompts)
        ============================================================ */
     B2: [
-        "¿Cómo manejas situaciones estresantes?",
-        "¿Cuál es tu opinión sobre la tecnología?",
-        "¿Cómo ha cambiado tu vida en los últimos años?",
-        "¿Qué desafíos enfrentas actualmente?",
-        "¿Qué piensas del futuro?",
-        "¿Qué cambios culturales ves?",
-        "¿Qué estilo de vida quieres?",
-        "¿Qué motivación tienes para estudiar?",
-        "¿Qué metas a largo plazo tienes?",
-        "¿Qué ideas importantes tienes?",
-        "¿Qué piensas de la educación?",
-        "¿Qué piensas de la sociedad?",
-        "¿Qué piensas de la cultura?",
-        "¿Qué piensas de la tecnología?",
-        "¿Qué piensas del trabajo remoto?",
-        "¿Qué piensas de los cambios recientes?",
-        "¿Qué piensas de la vida saludable?",
-        "¿Qué piensas de los proyectos largos?",
-        "¿Qué piensas de los desafíos personales?",
-        "¿Qué piensas de los desafíos profesionales?",
-        "¿Qué piensas de los desafíos sociales?",
-        "¿Qué piensas de los desafíos culturales?",
-        "¿Qué piensas de los desafíos tecnológicos?",
-        "¿Qué piensas de los desafíos educativos?",
-        "¿Qué piensas de los desafíos familiares?",
-        "¿Qué piensas de los desafíos económicos?",
-        "¿Qué piensas de los desafíos globales?",
-        "¿Qué piensas de los desafíos futuros?",
-        "¿Qué piensas de los cambios futuros?",
-        "¿Qué piensas de los cambios personales?",
-        "¿Qué piensas de los cambios profesionales?",
-        "¿Qué piensas de los cambios sociales?",
-        "¿Qué piensas de los cambios culturales?",
-        "¿Qué piensas de los cambios tecnológicos?",
-        "¿Qué piensas de los cambios educativos?",
-        "¿Qué piensas de los cambios familiares?",
-        "¿Qué piensas de los cambios económicos?",
-        "¿Qué piensas de los cambios globales?",
-        "¿Qué piensas de los cambios a largo plazo?"
+        "Como manejas situaciones estresantes",
+        "Cual es tu opinion sobre la tecnologia",
+        "Como ha cambiado tu vida en los ultimos anos",
+        "Que desafios enfrentas actualmente",
+        "Que piensas del futuro",
+        "Que cambios culturales ves",
+        "Que estilo de vida quieres",
+        "Que motivacion tienes para estudiar",
+        "Que metas a largo plazo tienes",
+        "Que ideas importantes tienes",
+        "Que piensas de la educacion",
+        "Que piensas de la sociedad",
+        "Que piensas de la cultura",
+        "Que piensas de la tecnologia",
+        "Que piensas del trabajo remoto",
+        "Que piensas de los cambios recientes",
+        "Que piensas de la vida saludable",
+        "Que piensas de los proyectos largos",
+        "Que piensas de los desafios personales",
+        "Que piensas de los desafios profesionales",
+        "Que piensas de los desafios sociales",
+        "Que piensas de los desafios culturales",
+        "Que piensas de los desafios tecnologicos",
+        "Que piensas de los desafios educativos",
+        "Que piensas de los desafios familiares",
+        "Que piensas de los desafios economicos",
+        "Que piensas de los desafios globales",
+        "Que piensas de los desafios futuros",
+        "Que piensas de los cambios futuros",
+        "Que piensas de los cambios personales",
+        "Que piensas de los cambios profesionales",
+        "Que piensas de los cambios sociales",
+        "Que piensas de los cambios culturales",
+        "Que piensas de los cambios tecnologicos",
+        "Que piensas de los cambios educativos",
+        "Que piensas de los cambios familiares",
+        "Que piensas de los cambios economicos",
+        "Que piensas de los cambios globales",
+        "Que piensas de los cambios a largo plazo"
     ]
 };
 
+
 /* ============================================================
-   CEFR TOPIC-BASED LISTENING PACKS — A1 → B2
+   CEFR TOPIC-BASED LISTENING PACKS — FOOD ONLY (A1 → B2)
    ============================================================ */
 
 const CEFR_LISTENING_TOPICS = {
+  food: {
+    /* ============================================================
+       A1 — Beginner
+       ============================================================ */
+    A1: [
+      { spanish: "quiero agua", english: "I want water", audio: "quiero-agua.mp3", question: "What does the speaker want?" },
+      { spanish: "me gusta la sopa", english: "I like soup", audio: "me-gusta-la-sopa.mp3", question: "What food does the speaker like?" },
+      { spanish: "ella come pan", english: "she eats bread", audio: "ella-come-pan.mp3", question: "What does she eat?" },
+      { spanish: "nosotros bebemos café", english: "we drink coffee", audio: "nosotros-bebemos-cafe.mp3", question: "What do they drink?" },
+      { spanish: "quiero fruta barata", english: "I want cheap fruit", audio: "quiero-fruta-barata.mp3", question: "What does the speaker want?" },
+      { spanish: "ella quiere sopa", english: "she wants soup", audio: "ella-quiere-sopa.mp3", question: "What does she want?" },
+      { spanish: "yo como arroz", english: "I eat rice", audio: "yo-como-arroz.mp3", question: "What does the speaker eat?" },
+      { spanish: "me gusta la ensalada", english: "I like salad", audio: "me-gusta-la-ensalada.mp3", question: "What does the speaker like?" },
+      { spanish: "quiero pollo", english: "I want chicken", audio: "quiero-pollo.mp3", question: "What food does the speaker want?" },
+      { spanish: "ella bebe leche", english: "she drinks milk", audio: "ella-bebe-leche.mp3", question: "What does she drink?" },
+      { spanish: "él come queso", english: "he eats cheese", audio: "el-come-queso.mp3", question: "What does he eat?" },
+      { spanish: "yo bebo té", english: "I drink tea", audio: "yo-bebo-te.mp3", question: "What does the speaker drink?" },
+      { spanish: "nosotros comemos pan y mantequilla", english: "we eat bread and butter", audio: "nosotros-comemos-pan-y-mantequilla.mp3", question: "What do they eat?" },
+      { spanish: "ella come fruta", english: "she eats fruit", audio: "ella-come-fruta.mp3", question: "What does she eat?" },
+      { spanish: "quiero sopa y pan", english: "I want soup and bread", audio: "quiero-sopa-y-pan.mp3", question: "What does the speaker want?" },
+      { spanish: "él bebe café con leche", english: "he drinks coffee with milk", audio: "el-bebe-cafe-con-leche.mp3", question: "What does he drink?" },
+      { spanish: "me gusta el arroz", english: "I like rice", audio: "me-gusta-el-arroz.mp3", question: "What does the speaker like?" },
+      { spanish: "ella quiere ensalada", english: "she wants salad", audio: "ella-quiere-ensalada.mp3", question: "What does she want?" },
+      { spanish: "nosotros bebemos agua", english: "we drink water", audio: "nosotros-bebemos-agua.mp3", question: "What do they drink?" },
+      { spanish: "yo como pollo y arroz", english: "I eat chicken and rice", audio: "yo-como-pollo-y-arroz.mp3", question: "What does the speaker eat?" }
+    ],
 
     /* ============================================================
-       FOOD
+       A2 — Elementary
        ============================================================ */
-    food: {
+    A2: [
+      { spanish: "compré fruta en el supermercado", english: "I bought fruit at the supermarket", audio: "compre-fruta-en-el-supermercado.mp3", question: "What did the speaker buy?" },
+      { spanish: "él come sopa a menudo", english: "he eats soup often", audio: "el-come-sopa-a-menudo.mp3", question: "How often does he eat soup?" },
+      { spanish: "ella terminó el almuerzo", english: "she finished the lunch", audio: "ella-termino-el-almuerzo.mp3", question: "What meal did she finish?" },
+      { spanish: "yo como arroz con pollo", english: "I eat rice with chicken", audio: "yo-como-arroz-con-pollo.mp3", question: "What does the speaker eat?" },
+      { spanish: "compraste pan y queso", english: "you bought bread and cheese", audio: "compraste-pan-y-queso.mp3", question: "What did the listener buy?" },
+      { spanish: "te gusta el desayuno", english: "you like breakfast", audio: "te-gusta-el-desayuno.mp3", question: "What meal is being discussed?" },
+      { spanish: "ella compró cena para su familia", english: "she bought dinner for her family", audio: "ella-compro-cena-para-su-familia.mp3", question: "What did she buy?" },
+      { spanish: "yo compré arroz hoy", english: "I bought rice today", audio: "yo-compre-arroz-hoy.mp3", question: "What did the speaker buy?" },
+      { spanish: "él come fruta cada día", english: "he eats fruit every day", audio: "el-come-fruta-cada-dia.mp3", question: "What does he eat?" },
+      { spanish: "ella bebe té por la mañana", english: "she drinks tea in the morning", audio: "ella-bebe-te-por-la-manana.mp3", question: "What does she drink?" },
+      { spanish: "nosotros comimos sopa ayer", english: "we ate soup yesterday", audio: "nosotros-comimos-sopa-ayer.mp3", question: "What did they eat?" },
+      { spanish: "compré azúcar y sal", english: "I bought sugar and salt", audio: "compre-azucar-y-sal.mp3", question: "What did the speaker buy?" },
+      { spanish: "ella come arroz en la cena", english: "she eats rice at dinner", audio: "ella-come-arroz-en-la-cena.mp3", question: "When does she eat rice?" },
+      { spanish: "él bebe leche cada noche", english: "he drinks milk every night", audio: "el-bebe-leche-cada-noche.mp3", question: "When does he drink milk?" },
+      { spanish: "yo compré mantequilla y queso", english: "I bought butter and cheese", audio: "yo-compre-mantequilla-y-queso.mp3", question: "What did the speaker buy?" },
+      { spanish: "ella terminó la cena tarde", english: "she finished dinner late", audio: "ella-termino-la-cena-tarde.mp3", question: "When did she finish dinner?" },
+      { spanish: "él come pan con mantequilla", english: "he eats bread with butter", audio: "el-come-pan-con-mantequilla.mp3", question: "What does he eat?" },
+      { spanish: "yo como fruta por la tarde", english: "I eat fruit in the afternoon", audio: "yo-como-fruta-por-la-tarde.mp3", question: "When does the speaker eat fruit?" },
+      { spanish: "ella compró sopa y pan", english: "she bought soup and bread", audio: "ella-compro-sopa-y-pan.mp3", question: "What did she buy?" },
+      { spanish: "nosotros comemos juntos en el almuerzo", english: "we eat together at lunch", audio: "nosotros-comemos-juntos-en-el-almuerzo.mp3", question: "When do they eat together?" }
+    ],
 
-        A1: [
-            { spanish: "quiero agua", english: "I want water", audio: "quiero-agua.mp3", question: "What does the speaker want?" },
-            { spanish: "me gusta la sopa", english: "I like soup", audio: "me-gusta-la-sopa.mp3", question: "What food does the speaker like?" },
-            { spanish: "ella come pan", english: "she eats bread", audio: "ella-come-pan.mp3", question: "What does she eat?" },
-            { spanish: "nosotros bebemos café", english: "we drink coffee", audio: "nosotros-bebemos-cafe.mp3", question: "What do they drink?" },
-            { spanish: "quiero fruta barata", english: "I want cheap fruit", audio: "quiero-fruta-barata.mp3", question: "What does the speaker want?" },
-            { spanish: "ella quiere sopa", english: "she wants soup", audio: "ella-quiere-sopa.mp3", question: "What does she want?" },
-            { spanish: "yo como arroz", english: "I eat rice", audio: "yo-como-arroz.mp3", question: "What does the speaker eat?" },
-            { spanish: "me gusta la ensalada", english: "I like salad", audio: "me-gusta-la-ensalada.mp3", question: "What does the speaker like?" },
-            { spanish: "quiero pollo", english: "I want chicken", audio: "quiero-pollo.mp3", question: "What food does the speaker want?" },
-            { spanish: "ella bebe leche", english: "she drinks milk", audio: "ella-bebe-leche.mp3", question: "What does she drink?" },
-            { spanish: "él come queso", english: "he eats cheese", audio: "el-come-queso.mp3", question: "What does he eat?" },
-            { spanish: "yo bebo té", english: "I drink tea", audio: "yo-bebo-te.mp3", question: "What does the speaker drink?" },
-            { spanish: "nosotros comemos pan y mantequilla", english: "we eat bread and butter", audio: "nosotros-comemos-pan-y-mantequilla.mp3", question: "What do they eat?" },
-            { spanish: "ella come fruta", english: "she eats fruit", audio: "ella-come-fruta.mp3", question: "What does she eat?" },
-            { spanish: "quiero sopa y pan", english: "I want soup and bread", audio: "quiero-sopa-y-pan.mp3", question: "What does the speaker want?" },
-            { spanish: "él bebe café con leche", english: "he drinks coffee with milk", audio: "el-bebe-cafe-con-leche.mp3", question: "What does he drink?" },
-            { spanish: "me gusta el arroz", english: "I like rice", audio: "me-gusta-el-arroz.mp3", question: "What does the speaker like?" },
-            { spanish: "ella quiere ensalada", english: "she wants salad", audio: "ella-quiere-ensalada.mp3", question: "What does she want?" },
-            { spanish: "nosotros bebemos agua", english: "we drink water", audio: "nosotros-bebemos-agua.mp3", question: "What do they drink?" },
-            { spanish: "yo como pollo y arroz", english: "I eat chicken and rice", audio: "yo-como-pollo-y-arroz.mp3", question: "What does the speaker eat?" }
-        ],
+    /* ============================================================
+       B1 — Intermediate
+       ============================================================ */
+    B1: [
+      { spanish: "disfruto comer con mi familia", english: "I enjoy eating with my family", audio: "disfruto-comer-con-mi-familia.mp3", question: "Who does the speaker eat with?" },
+      { spanish: "él quiere mejorar su dieta", english: "he wants to improve his diet", audio: "el-quiere-mejorar-su-dieta.mp3", question: "What does he want to improve?" },
+      { spanish: "ella cocina arroz cada tarde", english: "she cooks rice every afternoon", audio: "ella-cocina-arroz-cada-tarde.mp3", question: "What does she cook?" },
+      { spanish: "nosotros hablamos sobre comida saludable", english: "we talk about healthy food", audio: "nosotros-hablamos-sobre-comida-saludable.mp3", question: "What do they talk about?" },
+      { spanish: "él disfruta beber café por la mañana", english: "he enjoys drinking coffee in the morning", audio: "el-disfruta-beber-cafe-por-la-manana.mp3", question: "What does he enjoy drinking?" },
+      { spanish: "ella compra fruta fresca", english: "she buys fresh fruit", audio: "ella-compra-fruta-fresca.mp3", question: "What does she buy?" },
+      { spanish: "yo preparo sopa cada noche", english: "I prepare soup every night", audio: "yo-preparo-sopa-cada-noche.mp3", question: "What does the speaker prepare?" },
+      { spanish: "ellos comen juntos los fines de semana", english: "they eat together on weekends", audio: "ellos-comen-juntos-los-fines-de-semana.mp3", question: "When do they eat together?" },
+      { spanish: "ella disfruta cocinar para amigos", english: "she enjoys cooking for friends", audio: "ella-disfruta-cocinar-para-amigos.mp3", question: "Who does she cook for?" },
+      { spanish: "yo como saludable para mejorar mi vida", english: "I eat healthy to improve my life", audio: "yo-como-saludable-para-mejorar-mi-vida.mp3", question: "Why does the speaker eat healthy?" },
+      { spanish: "nosotros probamos recetas nuevas", english: "we try new recipes", audio: "nosotros-probamos-recetas-nuevas.mp3", question: "What do they try?" },
+      { spanish: "él cocina para su familia cada día", english: "he cooks for his family every day", audio: "el-cocina-para-su-familia-cada-dia.mp3", question: "Who does he cook for?" },
+      { spanish: "ella compra comida saludable en el supermercado", english: "she buys healthy food at the supermarket", audio: "ella-compra-comida-saludable-en-el-supermercado.mp3", question: "Where does she buy food?" },
+      { spanish: "yo hablo sobre comida con mis amigos", english: "I talk about food with my friends", audio: "yo-hablo-sobre-comida-con-mis-amigos.mp3", question: "Who does the speaker talk with?" },
+      { spanish: "ellos comen en casa para ahorrar dinero", english: "they eat at home to save money", audio: "ellos-comen-en-casa-para-ahorrar-dinero.mp3", question: "Why do they eat at home?" },
+      { spanish: "ella prepara almuerzo para el trabajo", english: "she prepares lunch for work", audio: "ella-prepara-almuerzo-para-el-trabajo.mp3", question: "What does she prepare?" },
+      { spanish: "yo disfruto cocinar los fines de semana", english: "I enjoy cooking on weekends", audio: "yo-disfruto-cocinar-los-fines-de-semana.mp3", question: "When does the speaker enjoy cooking?" },
+      { spanish: "él compra ingredientes frescos cada mañana", english: "he buys fresh ingredients every morning", audio: "el-compra-ingredientes-frescos-cada-manana.mp3", question: "What does he buy?" },
+      { spanish: "nosotros hablamos sobre recetas culturales", english: "we talk about cultural recipes", audio: "nosotros-hablamos-sobre-recetas-culturales.mp3", question: "What do they talk about?" },
+      { spanish: "ella come saludable para tener energía", english: "she eats healthy to have energy", audio: "ella-come-saludable-para-tener-energia.mp3", question: "Why does she eat healthy?" }
+    ],
 
-        A2: [
-            { spanish: "compré fruta en el supermercado", english: "I bought fruit at the supermarket", audio: "compre-fruta-en-el-supermercado.mp3", question: "What did the speaker buy?" },
-            { spanish: "él come sopa a menudo", english: "he eats soup often", audio: "el-come-sopa-a-menudo.mp3", question: "How often does he eat soup?" },
-            { spanish: "ella terminó el almuerzo", english: "she finished the lunch", audio: "ella-termino-el-almuerzo.mp3", question: "What meal did she finish?" },
-            { spanish: "yo como arroz con pollo", english: "I eat rice with chicken", audio: "yo-como-arroz-con-pollo.mp3", question: "What does the speaker eat?" },
-            { spanish: "compraste pan y queso", english: "you bought bread and cheese", audio: "compraste-pan-y-queso.mp3", question: "What did the listener buy?" },
-            { spanish: "te gusta el desayuno", english: "you like breakfast", audio: "te-gusta-el-desayuno.mp3", question: "What meal is being discussed?" },
-            { spanish: "ella compró cena para su familia", english: "she bought dinner for her family", audio: "ella-compro-cena-para-su-familia.mp3", question: "What did she buy?" },
-            { spanish: "yo compré arroz hoy", english: "I bought rice today", audio: "yo-compre-arroz-hoy.mp3", question: "What did the speaker buy?" },
-            { spanish: "él come fruta cada día", english: "he eats fruit every day", audio: "el-come-fruta-cada-dia.mp3", question: "What does he eat?" },
-            { spanish: "ella bebe té por la mañana", english: "she drinks tea in the morning", audio: "ella-bebe-te-por-la-manana.mp3", question: "What does she drink?" },
-            { spanish: "nosotros comimos sopa ayer", english: "we ate soup yesterday", audio: "nosotros-comimos-sopa-ayer.mp3", question: "What did they eat?" },
-            { spanish: "compré azúcar y sal", english: "I bought sugar and salt", audio: "compre-azucar-y-sal.mp3", question: "What did the speaker buy?" },
-            { spanish: "ella come arroz en la cena", english: "she eats rice at dinner", audio: "ella-come-arroz-en-la-cena.mp3", question: "When does she eat rice?" },
-            { spanish: "él bebe leche cada noche", english: "he drinks milk every night", audio: "el-bebe-leche-cada-noche.mp3", question: "When does he drink milk?" },
-            { spanish: "yo compré mantequilla y queso", english: "I bought butter and cheese", audio: "yo-compre-mantequilla-y-queso.mp3", question: "What did the speaker buy?" },
-            { spanish: "ella terminó la cena tarde", english: "she finished dinner late", audio: "ella-termino-la-cena-tarde.mp3", question: "When did she finish dinner?" },
-            { spanish: "él come pan con mantequilla", english: "he eats bread with butter", audio: "el-come-pan-con-mantequilla.mp3", question: "What does he eat?" },
-            { spanish: "yo como fruta por la tarde", english: "I eat fruit in the afternoon", audio: "yo-como-fruta-por-la-tarde.mp3", question: "When does the speaker eat fruit?" },
-            { spanish: "ella compró sopa y pan", english: "she bought soup and bread", audio: "ella-compro-sopa-y-pan.mp3", question: "What did she buy?" },
-            { spanish: "nosotros comemos juntos en el almuerzo", english: "we eat together at lunch", audio: "nosotros-comemos-juntos-en-el-almuerzo.mp3", question: "When do they eat together?" }
-        ],
+    /* ============================================================
+       B2 — Upper Intermediate
+       ============================================================ */
+    B2: [
+      { spanish: "la comida saludable es importante para la vida", english: "healthy food is important for life", audio: "la-comida-saludable-es-importante-para-la-vida.mp3", question: "What is important for life?" },
+      { spanish: "él analiza su dieta para mejorar su salud", english: "he analyzes his diet to improve his health", audio: "el-analiza-su-dieta-para-mejorar-su-salud.mp3", question: "Why does he analyze his diet?" },
+      { spanish: "nosotros discutimos cambios en nuestra alimentación", english: "we discuss changes in our eating habits", audio: "nosotros-discutimos-cambios-en-nuestra-alimentacion.mp3", question: "What do they discuss?" },
+      { spanish: "ella cocina comida saludable a pesar de la dificultad", english: "she cooks healthy food despite the difficulty", audio: "ella-cocina-comida-saludable-a-pesar-de-la-dificultad.mp3", question: "What does she cook?" },
+      { spanish: "yo estudio nutrición porque es importante", english: "I study nutrition because it is important", audio: "yo-estudio-nutricion-porque-es-importante.mp3", question: "Why does the speaker study nutrition?" },
+      { spanish: "ellos comen juntos sin embargo tienen horarios diferentes", english: "they eat together however they have different schedules", audio: "ellos-comen-juntos-sin-embargo-tienen-horarios-diferentes.mp3", question: "What do they do together?" },
+      { spanish: "ella prepara comida para proyectos largos", english: "she prepares food for long-term projects", audio: "ella-prepara-comida-para-proyectos-largos.mp3", question: "What does she prepare?" },
+      { spanish: "él cocina mucho por lo tanto está cansado", english: "he cooks a lot therefore he is tired", audio: "el-cocina-mucho-por-lo-tanto-esta-cansado.mp3", question: "Why is he tired?" },
+      { spanish: "nosotros analizamos recetas culturales", english: "we analyze cultural recipes", audio: "nosotros-analizamos-recetas-culturales.mp3", question: "What do they analyze?" },
+      { spanish: "ella estudia comida internacional para oportunidades futuras", english: "she studies international food for future opportunities", audio: "ella-estudia-comida-internacional-para-oportunidades-futuras.mp3", question: "Why does she study international food?" },
+      { spanish: "la cultura alimentaria cambia con el tiempo", english: "food culture changes over time", audio: "la-cultura-alimentaria-cambia-con-el-tiempo.mp3", question: "What changes over time?" },
+      { spanish: "la sociedad enfrenta desafíos de salud", english: "society faces health challenges", audio: "la-sociedad-enfrenta-desafios-de-salud.mp3", question: "What kind of challenges does society face?" },
+      { spanish: "la motivación ayuda a mantener una dieta saludable", english: "motivation helps maintain a healthy diet", audio: "la-motivacion-ayuda-a-mantener-una-dieta-saludable.mp3", question: "What does motivation help maintain?" },
+      { spanish: "analizamos el impacto de la comida rápida", english: "we analyze the impact of fast food", audio: "analizamos-el-impacto-de-la-comida-rapida.mp3", question: "What do they analyze?" },
+      { spanish: "ella cocina para su familia a pesar del cansancio", english: "she cooks for her family despite being tired", audio: "ella-cocina-para-su-familia-a-pesar-del-cansancio.mp3", question: "Who does she cook for?" },
+      { spanish: "él estudia recetas saludables para proyectos futuros", english: "he studies healthy recipes for future projects", audio: "el-estudia-recetas-saludables-para-proyectos-futuros.mp3", question: "Why does he study healthy recipes?" },
+      { spanish: "nosotros discutimos la importancia de la alimentación", english: "we discuss the importance of nutrition", audio: "nosotros-discutimos-la-importancia-de-la-alimentacion.mp3", question: "What do they discuss?" },
+      { spanish: "ella analiza cómo la comida afecta la vida diaria", english: "she analyzes how food affects daily life", audio: "ella-analiza-como-la-comida-afecta-la-vida-diaria.mp3", question: "What does she analyze?" },
+      { spanish: "yo manejo decisiones de comida en proyectos largos", english: "I handle food decisions in long-term projects", audio: "yo-manejo-decisiones-de-comida-en-proyectos-largos.mp3", question: "What kind of decisions does the speaker handle?" },
+      { spanish: "ellos cambian su dieta para mejorar su futuro", english: "they change their diet to improve their future", audio: "ellos-cambian-su-dieta-para-mejorar-su-futuro.mp3", question: "Why do they change their diet?" }
+    ]
+  }
+};
 
-        B1: [
-            { spanish: "disfruto comer con mi familia", english: "I enjoy eating with my family", audio: "disfruto-comer-con-mi-familia.mp3", question: "Who does the speaker eat with?" },
-            { spanish: "él quiere mejorar su dieta", english: "he wants to improve his diet", audio: "el-quiere-mejorar-su-dieta.mp3", question: "What does he want to improve?" },
-            { spanish: "ella cocina arroz cada tarde", english: "she cooks rice every afternoon", audio: "ella-cocina-arroz-cada-tarde.mp3", question: "What does she cook?" },
-            { spanish: "nosotros hablamos sobre comida saludable", english: "we talk about healthy food", audio: "nosotros-hablamos-sobre-comida-saludable.mp3", question: "What do they talk about?" },
-            { spanish: "él disfruta beber café por la mañana", english: "he enjoys drinking coffee in the morning", audio: "el-disfruta-beber-cafe-por-la-manana.mp3", question: "What does he enjoy drinking?" },
-            { spanish: "ella compra fruta fresca", english: "she buys fresh fruit", audio: "ella-compra-fruta-fresca.mp3", question: "What does she buy?" },
-            { spanish: "yo preparo sopa cada noche", english: "I prepare soup every night", audio: "yo-preparo-sopa-cada-noche.mp3", question: "What does the speaker prepare?" },
-            { spanish: "ellos comen juntos los fines de semana", english: "they eat together on weekends", audio: "ellos-comen-juntos-los-fines-de-semana.mp3", question: "When do they eat together?" },
-            { spanish: "ella disfruta cocinar para amigos", english: "she enjoys cooking for friends", audio: "ella-disfruta-cocinar-para-amigos.mp3", question: "Who does she cook for?" },
-            { spanish: "yo como saludable para mejorar mi vida", english: "I eat healthy to improve my life", audio: "yo-como-saludable-para-mejorar-mi-vida.mp3", question: "Why does the speaker eat healthy?" },
-            { spanish: "nosotros probamos recetas nuevas", english: "we try new recipes", audio: "nosotros-probamos-recetas-nuevas.mp3", question: "What do they try?" },
-            { spanish: "él cocina para su familia cada día", english: "he cooks for his family every day", audio: "el-cocina-para-su-familia-cada-dia.mp3", question: "Who does he cook for?" },
-            { spanish: "ella compra comida saludable en el supermercado", english: "she buys healthy food at the supermarket", audio: "ella-compra-comida-saludable-en-el-supermercado.mp3", question: "Where does she buy food?" },
-            { spanish: "yo hablo sobre comida con mis amigos", english: "I talk about food with my friends", audio: "yo-hablo-sobre-comida-con-mis-amigos.mp3", question: "Who does the speaker talk with?" },
-            { spanish: "ellos comen en casa para ahorrar dinero", english: "they eat at home to save money", audio: "ellos-comen-en-casa-para-ahorrar-dinero.mp3", question: "Why do they eat at home?" },
-            { spanish: "ella prepara almuerzo para el trabajo", english: "she prepares lunch for work", audio: "ella-prepara-almuerzo-para-el-trabajo.mp3", question: "What does she prepare?" },
-            { spanish: "yo disfruto cocinar los fines de semana", english: "I enjoy cooking on weekends", audio: "yo-disfruto-cocinar-los-fines-de-semana.mp3", question: "When does the speaker enjoy cooking?" },
-            { spanish: "él compra ingredientes frescos cada mañana", english: "he buys fresh ingredients every morning", audio: "el-compra-ingredientes-frescos-cada-manana.mp3", question: "What does he buy?" },
-            { spanish: "nosotros hablamos sobre recetas culturales", english: "we talk about cultural recipes", audio: "nosotros-hablamos-sobre-recetas-culturales.mp3", question: "What do they talk about?" },
-            { spanish: "ella come saludable para tener energía", english: "she eats healthy to have energy", audio: "ella-come-saludable-para-tener-energia.mp3", question: "Why does she eat healthy?" }
-        ],
-
-        B2: [
-            { spanish: "la comida saludable es importante para la vida", english: "healthy food is important for life", audio: "la-comida-saludable-es-importante-para-la-vida.mp3", question: "What is important for life?" },
-            { spanish: "él analiza su dieta para mejorar su salud", english: "he analyzes his diet to improve his health", audio: "el-analiza-su-dieta-para-mejorar-su-salud.mp3", question: "Why does he analyze his diet?" },
-            { spanish: "nosotros discutimos cambios en nuestra alimentación", english: "we discuss changes in our eating habits", audio: "nosotros-discutimos-cambios-en-nuestra-alimentacion.mp3", question: "What do they discuss?" },
-            { spanish: "ella cocina comida saludable a pesar de la dificultad", english: "she cooks healthy food despite the difficulty", audio: "ella-cocina-comida-saludable-a-pesar-de-la-dificultad.mp3", question: "What does she cook?" },
-            { spanish: "yo estudio nutrición porque es importante", english: "I study nutrition because it is important", audio: "yo-estudio-nutricion-porque-es-importante.mp3", question: "Why does the speaker study nutrition?" },
-            { spanish: "ellos comen juntos sin embargo tienen horarios diferentes", english: "they eat together however they have different schedules", audio: "ellos-comen-juntos-sin-embargo-tienen-horarios-diferentes.mp3", question: "What do they do together?" },
-            { spanish: "ella prepara comida para proyectos largos", english: "she prepares food for long-term projects", audio: "ella-prepara-comida-para-proyectos-largos.mp3", question: "What does she prepare?" },
-            { spanish: "él cocina mucho por lo tanto está cansado", english: "he cooks a lot therefore he is tired", audio: "el-cocina-mucho-por-lo-tanto-esta-cansado.mp3", question: "Why is he tired?" },
-            { spanish: "nosotros analizamos recetas culturales", english: "we analyze cultural recipes", audio: "nosotros-analizamos-recetas-culturales.mp3", question: "What do they analyze?" },
-            { spanish: "ella estudia comida internacional para oportunidades futuras", english: "she studies international food for future opportunities", audio: "ella-estudia-comida-internacional-para-oportunidades-futuras.mp3", question: "Why does she study international food?" },
-            { spanish: "la cultura alimentaria cambia con el tiempo", english: "food culture changes over time", audio: "la-cultura-alimentaria-cambia-con-el-tiempo.mp3", question: "What changes over time?" },
-            { spanish: "la sociedad enfrenta desafíos de salud", english: "society faces health challenges", audio: "la-sociedad-enfrenta-desafios-de-salud.mp3", question: "What kind of challenges does society face?" },
-            { spanish: "la motivación ayuda a mantener una dieta saludable", english: "motivation helps maintain a healthy diet", audio: "la-motivacion-ayuda-a-mantener-una-dieta-saludable.mp3", question: "What does motivation help maintain?" },
-            { spanish: "analizamos el impacto de la comida rápida", english: "we analyze the impact of fast food", audio: "analizamos-el-impacto-de-la-comida-rapida.mp3", question: "What do they analyze?" },
-            { spanish: "ella cocina para su familia a pesar del cansancio", english: "she cooks for her family despite being tired", audio: "ella-cocina-para-su-familia-a-pesar-del-cansancio.mp3", question: "Who does she cook for?" },
-            { spanish: "él estudia recetas saludables para proyectos futuros", english: "he studies healthy recipes for future projects", audio: "el-estudia-recetas-saludables-para-proyectos-futuros.mp3", question: "Why does he study healthy recipes?" },
-            { spanish: "nosotros discutimos la importancia de la alimentación", english: "we discuss the importance of nutrition", audio: "nosotros-discutimos-la-importancia-de-la-alimentacion.mp3", question: "What do they discuss?" },
-            { spanish: "ella analiza cómo la comida afecta la vida diaria", english: "she analyzes how food affects daily life", audio: "ella-analiza-como-la-comida-afecta-la-vida-diaria.mp3", question: "What does she analyze?" },
-            { spanish: "yo manejo decisiones de comida en proyectos largos", english: "I handle food decisions in long-term projects", audio: "yo-manejo-decisiones-de-comida-en-proyectos-largos.mp3", question: "What kind of decisions does the speaker handle?" },
-            { spanish: "ellos cambian su dieta para mejorar su futuro", english: "they change their diet to improve their future", audio: "ellos-cambian-su-dieta-para-mejorar-su-futuro.mp3", question: "Why do they change their diet?" }
-        ]
-    },
+   
 
     /* ============================================================
        TRAVEL
