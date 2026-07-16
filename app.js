@@ -1603,8 +1603,9 @@ travel: {
   english: "she orders simple food however she wants good flavor",
   audio: "ella-pide-comida-simple-sin-embargo-quiere-buen-sabor.mp3",
   question: "What does she want?" }
-]
+] 
 }   // end of ordering topic
+};  // end of CEFR_LISTENING_TOPICS
 
 const listenAutoPlay = {
     list: [],
