@@ -3509,8 +3509,6 @@ function updateBadges() {
            DAILY CHALLENGE BADGES
            ============================ */
 
-        const dc = appState.dailyChallenge;
-
         // Daily goal badge (e.g., 5 conversations completed today)
         if (dc.completedToday >= dc.goal) {
             badges.add(`${level} Daily Conversationalist`);
