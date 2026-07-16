@@ -3121,36 +3121,37 @@ function renderConversation() {
 
     const container = document.getElementById("conversation-content");
     const level = appState.currentLevel;
-    const words = CEFR_LEVELS[level];
+    const topic = appState.listenTopic;
 
-    if (!words || !words.length) {
+    const words = CEFR_LISTENING_TOPICS[topic]?.[level] || [];
+    const prompts = CEFR_CONVO_PROMPTS[level];
+
+    if (!words.length || !prompts || !prompts.length) {
         container.innerHTML = `
             <div class="glass-panel convo-card">
-                <p>No words found for level ${level}.</p>
+                <p>No conversation data for this level/topic.</p>
             </div>
         `;
         return;
     }
 
-    // Pick CEFR-level prompt
-    const prompt = CEFR_CONVO_PROMPTS[level][Math.floor(Math.random() * CEFR_CONVO_PROMPTS[level].length)];
+    const prompt = prompts[Math.floor(Math.random() * prompts.length)];
     convoState.currentPrompt = prompt;
 
-    // FIXED: use spanish
     const target = prompt.spanish.replace(/[¿?]/g, "").trim();
     const coreTokens = target.split(" ");
 
-    const levelTokens = words.map(w => w.spanish.split(" ")).flat();
+    const levelTokens = words
+        .map(item => item.spanish.split(" "))
+        .flat();
 
     let bank = [...coreTokens];
 
-    // FIXED: reduce level words from +6 to +4
     while (bank.length < coreTokens.length + 4) {
         const t = levelTokens[Math.floor(Math.random() * levelTokens.length)];
         if (t && !bank.includes(t)) bank.push(t);
     }
 
-    // FIXED: use global disruptors
     disruptors.forEach(d => {
         if (!bank.includes(d)) bank.push(d);
     });
@@ -3159,6 +3160,7 @@ function renderConversation() {
 
     convoState.tokens = bank;
     convoState.answer = [];
+
 
     container.innerHTML = `
         <div class="glass-panel convo-card">
@@ -3356,9 +3358,6 @@ html += `<br><br>`;
 });
 
 
-
-
-
     /* ============================================================
        NEXT BUTTON — LOAD NEW PROMPT
        ============================================================ */
@@ -3377,7 +3376,16 @@ function renderGrammar() {
     updateTabHeader("grammar");
 
     const container = document.getElementById("grammar-content");
-    const words = CEFR_LEVELS[appState.currentLevel];
+    const topic = appState.listenTopic;
+    const level = appState.currentLevel;
+
+    let words = CEFR_LISTENING_TOPICS[topic]?.[level] || [];
+
+    words = words.map(w => ({
+        ...w,
+        category: w.category || autoAssignCategory({ spanish: w.spanish })
+    }));
+
     const grouped = groupByCategory(words);
 
     container.innerHTML = `
@@ -3400,16 +3408,32 @@ function renderGrammar() {
 }
 
 
+
 /* ============================================================
    BADGES — Updated with Conversation Mastery + Daily Challenge
    ============================================================ */
 
 function updateBadges() {
     const list = document.getElementById("badge-list");
+    if (!list) return;
+
     const badges = new Set(appState.badges);
 
     Object.keys(appState.levelStats).forEach(level => {
         const s = appState.levelStats[level];
+
+        s.listens = s.listens || 0;
+        s.flashSeen = s.flashSeen || 0;
+        s.streak = s.streak || 0;
+        s.sentenceCompleted = s.sentenceCompleted || 0;
+        s.quizScore = s.quizScore || 0;
+        s.buildCompleted = s.buildCompleted || 0;
+        s.conversationCompleted = s.conversationCompleted || 0;
+
+
+        const dc = appState.dailyChallenge || { completedToday: 0, goal: 5, streak: 0 };
+        // ... rest unchanged
+
 
         /* ============================
            LISTENING BADGES
@@ -3623,10 +3647,15 @@ function updateProgressMeters() {
    ============================================================ */
 
 function setMeter(name, pct) {
-    document.getElementById(`${name}-progress`).style.width = pct + "%";
+    const bar = document.getElementById(`${name}-progress`);
+    const num = document.getElementById(`${name}-number`);
+    if (!bar || !num) return;
+
+    bar.style.width = pct + "%";
     animateNumber(`${name}-number`, Math.round(pct));
     pulseTile(`${name}-tile`);
 }
+
 
 
 /* ============================================================
@@ -3673,6 +3702,9 @@ function unlockNextLevel() {
 
 function resetProgressForLevel(level) {
     appState.levelStats[level] = {
+        listens: 0,
+        flashSeen: 0,
+        quizScore: 0,            // keep this so Quiz badges don't break
         quizCompleted: 0,
         buildCompleted: 0,
         sentenceCompleted: 0,
@@ -3686,6 +3718,7 @@ function resetProgressForLevel(level) {
     saveState();
     updateProgressMeters();
 }
+
 
 /* ============================================================
    RESET PROGRESS BUTTON LISTENER
