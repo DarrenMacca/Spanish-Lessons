@@ -1293,129 +1293,158 @@ const CEFR_LISTENING_TOPICS = {
 const CEFR_LISTENING_TOPICS = {
 
   family: {
+  A1: [
+    { spanish: "yo vivo con mi familia", english: "I live with my family", audio: "yo-vivo-con-mi-familia.mp3", question: "Who does the speaker live with?" },
+    { spanish: "ella vive con sus padres", english: "she lives with her parents", audio: "ella-vive-con-sus-padres.mp3", question: "Who does she live with?" },
+    { spanish: "el vive con su hermano", english: "he lives with his brother", audio: "el-vive-con-su-hermano.mp3", question: "Who does he live with?" },
+    { spanish: "yo visito a mi familia", english: "I visit my family", audio: "yo-visito-a-mi-familia.mp3", question: "Who does the speaker visit?" },
+    { spanish: "ella visita a su madre", english: "she visits her mother", audio: "ella-visita-a-su-madre.mp3", question: "Who does she visit?" },
+    { spanish: "el visita a su padre", english: "he visits his father", audio: "el-visita-a-su-padre.mp3", question: "Who does he visit?" },
+    { spanish: "yo hablo con mi familia", english: "I talk with my family", audio: "yo-hablo-con-mi-familia.mp3", question: "Who does the speaker talk with?" },
+    { spanish: "ella habla con su hermana", english: "she talks with her sister", audio: "ella-habla-con-su-hermana.mp3", question: "Who does she talk with?" },
+    { spanish: "el habla con su abuelo", english: "he talks with his grandfather", audio: "el-habla-con-su-abuelo.mp3", question: "Who does he talk with?" },
+    { spanish: "yo paso tiempo con mi familia", english: "I spend time with my family", audio: "yo-paso-tiempo-con-mi-familia.mp3", question: "Who does the speaker spend time with?" }
+    { spanish: "ella pasa tiempo con su madre", english: "she spends time with her mother", audio: "ella-pasa-tiempo-con-su-madre.mp3", question: "Who does she spend time with?" },
+    { spanish: "el pasa tiempo con su padre", english: "he spends time with his father", audio: "el-pasa-tiempo-con-su-padre.mp3", question: "Who does he spend time with?" },
+    { spanish: "yo vivo con mi hermano", english: "I live with my brother", audio: "yo-vivo-con-mi-hermano.mp3", question: "Who does the speaker live with?" },
+    { spanish: "ella vive con su hermana", english: "she lives with her sister", audio: "ella-vive-con-su-hermana.mp3", question: "Who does she live with?" },
+    { spanish: "el vive con su familia", english: "he lives with his family", audio: "el-vive-con-su-familia.mp3", question: "Who does he live with?" },
+    { spanish: "yo visito a mis padres", english: "I visit my parents", audio: "yo-visito-a-mis-padres.mp3", question: "Who does the speaker visit?" },
+    { spanish: "ella visita a su abuelo", english: "she visits her grandfather", audio: "ella-visita-a-su-abuelo.mp3", question: "Who does she visit?" },
+    { spanish: "el visita a su abuela", english: "he visits his grandmother", audio: "el-visita-a-su-abuela.mp3", question: "Who does he visit?" },
+    { spanish: "yo hablo con mi madre", english: "I talk with my mother", audio: "yo-hablo-con-mi-madre.mp3", question: "Who does the speaker talk with?" },
+    { spanish: "ella habla con su padre", english: "she talks with her father", audio: "ella-habla-con-su-padre.mp3", question: "Who does she talk with?" }
+  ],
 
-    /* ============================================================
-       A1 — Beginner (20 items)
-       ============================================================ */
-    A1: [
-      { spanish: "tengo hermanos y hermanas", english: "I have brothers and sisters", audio: "tengo-hermanos-y-hermanas.mp3", question: "Who does the speaker have?" },
-      { spanish: "ella es mi hermana", english: "she is my sister", audio: "ella-es-mi-hermana.mp3", question: "Who is she?" },
-      { spanish: "el es mi hermano", english: "he is my brother", audio: "el-es-mi-hermano.mp3", question: "Who is he?" },
-      { spanish: "nosotros somos familia", english: "we are family", audio: "nosotros-somos-familia.mp3", question: "What is their relationship?" },
-      { spanish: "yo vivo con mi familia", english: "I live with my family", audio: "yo-vivo-con-mi-familia.mp3", question: "Who does the speaker live with?" },
-      { spanish: "ella vive con sus padres", english: "she lives with her parents", audio: "ella-vive-con-sus-padres.mp3", question: "Who does she live with?" },
-      { spanish: "el vive con su hermano", english: "he lives with his brother", audio: "el-vive-con-su-hermano.mp3", question: "Who does he live with?" },
-      { spanish: "nosotros comemos juntos en familia", english: "we eat together as a family", audio: "nosotros-comemos-juntos-en-familia.mp3", question: "When do they eat together?" },
-      { spanish: "yo hablo con mi familia cada dia", english: "I talk with my family every day", audio: "yo-hablo-con-mi-familia-cada-dia.mp3", question: "Who does the speaker talk with?" },
-      { spanish: "ella visita a su familia", english: "she visits her family", audio: "ella-visita-a-su-familia.mp3", question: "Who does she visit?" },
-      { spanish: "el tiene una familia grande", english: "he has a big family", audio: "el-tiene-una-familia-grande.mp3", question: "What kind of family does he have?" },
-      { spanish: "yo tengo una familia pequena", english: "I have a small family", audio: "yo-tengo-una-familia-pequena.mp3", question: "What kind of family does the speaker have?" },
-      { spanish: "nosotros vivimos juntos", english: "we live together", audio: "nosotros-vivimos-juntos.mp3", question: "How do they live?" },
-      { spanish: "ella come con su familia", english: "she eats with her family", audio: "ella-come-con-su-familia.mp3", question: "Who does she eat with?" },
-      { spanish: "el habla con su hermana", english: "he talks with his sister", audio: "el-habla-con-su-hermana.mp3", question: "Who does he talk with?" },
-      { spanish: "yo juego con mi hermano", english: "I play with my brother", audio: "yo-juego-con-mi-hermano.mp3", question: "Who does the speaker play with?" },
-      { spanish: "nosotros visitamos a nuestros padres", english: "we visit our parents", audio: "nosotros-visitamos-a-nuestros-padres.mp3", question: "Who do they visit?" },
-      { spanish: "ella vive cerca de su familia", english: "she lives near her family", audio: "ella-vive-cerca-de-su-familia.mp3", question: "Where does she live?" },
-      { spanish: "el come con su familia cada noche", english: "he eats with his family every night", audio: "el-come-con-su-familia-cada-noche.mp3", question: "When does he eat with his family?" },
-      { spanish: "yo hablo con mi madre", english: "I talk with my mother", audio: "yo-hablo-con-mi-madre.mp3", question: "Who does the speaker talk with?" }
-    ],
 
     /* ============================================================
        A2 — Elementary (20 items)
        ============================================================ */
-    A2: [
-      { spanish: "celebramos con nuestra familia el fin de semana", english: "we celebrated with our family on the weekend", audio: "celebramos-con-nuestra-familia-el-fin-de-semana.mp3", question: "Who did they celebrate with?" },
-      { spanish: "ella visito a su familia ayer", english: "she visited her family yesterday", audio: "ella-visito-a-su-familia-ayer.mp3", question: "When did she visit her family?" },
-      { spanish: "yo comi con mi familia la semana pasada", english: "I ate with my family last week", audio: "yo-comi-con-mi-familia-la-semana-pasada.mp3", question: "When did the speaker eat with family?" },
-      { spanish: "el viajo para ver a su familia", english: "he traveled to see his family", audio: "el-viajo-para-ver-a-su-familia.mp3", question: "Why did he travel?" },
-      { spanish: "nosotros visitamos a nuestra familia a menudo", english: "we visit our family often", audio: "nosotros-visitamos-a-nuestra-familia-a-menudo.mp3", question: "How often do they visit family?" },
-      { spanish: "ella compro comida para su familia", english: "she bought food for her family", audio: "ella-compro-comida-para-su-familia.mp3", question: "What did she buy?" },
-      { spanish: "yo hable con mi padre ayer", english: "I talked with my father yesterday", audio: "yo-hable-con-mi-padre-ayer.mp3", question: "Who did the speaker talk with?" },
-      { spanish: "el comio con su familia en el centro", english: "he ate with his family in the center", audio: "el-comio-con-su-familia-en-el-centro.mp3", question: "Where did he eat with his family?" },
-      { spanish: "nosotros celebramos el cumpleanos en familia", english: "we celebrated the birthday with family", audio: "nosotros-celebramos-el-cumpleanos-en-familia.mp3", question: "What did they celebrate?" },
-      { spanish: "ella visito a sus padres la semana pasada", english: "she visited her parents last week", audio: "ella-visito-a-sus-padres-la-semana-pasada.mp3", question: "When did she visit her parents?" },
-      { spanish: "yo comi cena con mi familia ayer", english: "I ate dinner with my family yesterday", audio: "yo-comi-cena-con-mi-familia-ayer.mp3", question: "When did the speaker eat dinner with family?" },
-      { spanish: "el hablo con su madre por la tarde", english: "he talked with his mother in the afternoon", audio: "el-hablo-con-su-madre-por-la-tarde.mp3", question: "When did he talk with his mother?" },
-      { spanish: "nosotros visitamos a nuestra familia en la ciudad", english: "we visited our family in the city", audio: "nosotros-visitamos-a-nuestra-familia-en-la-ciudad.mp3", question: "Where did they visit family?" },
-      { spanish: "ella compro regalos para su familia", english: "she bought gifts for her family", audio: "ella-compro-regalos-para-su-familia.mp3", question: "What did she buy?" },
-      { spanish: "yo hable con mi hermano la semana pasada", english: "I talked with my brother last week", audio: "yo-hable-con-mi-hermano-la-semana-pasada.mp3", question: "Who did the speaker talk with?" },
-      { spanish: "el comio almuerzo con su familia", english: "he ate lunch with his family", audio: "el-comio-almuerzo-con-su-familia.mp3", question: "What meal did he eat with family?" },
-      { spanish: "nosotros celebramos juntos en familia", english: "we celebrated together as a family", audio: "nosotros-celebramos-juntos-en-familia.mp3", question: "How did they celebrate?" },
-      { spanish: "ella visito a su familia en el centro", english: "she visited her family in the center", audio: "ella-visito-a-su-familia-en-el-centro.mp3", question: "Where did she visit her family?" },
-      { spanish: "yo comi con mi familia en casa", english: "I ate with my family at home", audio: "yo-comi-con-mi-familia-en-casa.mp3", question: "Where did the speaker eat with family?" },
-      { spanish: "el hablo con su padre por la noche", english: "he talked with his father at night", audio: "el-hablo-con-su-padre-por-la-noche.mp3", question: "When did he talk with his father?" }
-    ],
+      A2: [
+    { spanish: "yo visite a mi familia ayer", english: "I visited my family yesterday", audio: "yo-visite-a-mi-familia-ayer.mp3", question: "When did the speaker visit their family?" },
+    { spanish: "ella visito a sus padres la semana pasada", english: "she visited her parents last week", audio: "ella-visito-a-sus-padres-la-semana-pasada.mp3", question: "When did she visit her parents?" },
+    { spanish: "el visito a su hermano por la tarde", english: "he visited his brother in the afternoon", audio: "el-visito-a-su-hermano-por-la-tarde.mp3", question: "When did he visit his brother?" },
+    { spanish: "yo hable con mi familia ayer", english: "I talked with my family yesterday", audio: "yo-hable-con-mi-familia-ayer.mp3", question: "When did the speaker talk with their family?" },
+    { spanish: "ella hablo con su madre por la manana", english: "she talked with her mother in the morning", audio: "ella-hablo-con-su-madre-por-la-manana.mp3", question: "When did she talk with her mother?" },
+    { spanish: "el hablo con su padre ayer", english: "he talked with his father yesterday", audio: "el-hablo-con-su-padre-ayer.mp3", question: "When did he talk with his father?" },
+    { spanish: "yo pase tiempo con mi familia ayer", english: "I spent time with my family yesterday", audio: "yo-pase-tiempo-con-mi-familia-ayer.mp3", question: "When did the speaker spend time with their family?" },
+    { spanish: "ella paso tiempo con su hermana la semana pasada", english: "she spent time with her sister last week", audio: "ella-paso-tiempo-con-su-hermana-la-semana-pasada.mp3", question: "When did she spend time with her sister?" },
+    { spanish: "el paso tiempo con su abuelo ayer", english: "he spent time with his grandfather yesterday", audio: "el-paso-tiempo-con-su-abuelo-ayer.mp3", question: "When did he spend time with his grandfather?" },
+    { spanish: "yo vivi con mi familia el ano pasado", english: "I lived with my family last year", audio: "yo-vivi-con-mi-familia-el-ano-pasado.mp3", question: "When did the speaker live with their family?" }
+    { spanish: "ella vivio con sus padres el ano pasado", english: "she lived with her parents last year", audio: "ella-vivio-con-sus-padres-el-ano-pasado.mp3", question: "When did she live with her parents?" },
+    { spanish: "el vivio con su hermano la semana pasada", english: "he lived with his brother last week", audio: "el-vivio-con-su-hermano-la-semana-pasada.mp3", question: "When did he live with his brother?" },
+    { spanish: "yo visite a mis padres por la tarde", english: "I visited my parents in the afternoon", audio: "yo-visite-a-mis-padres-por-la-tarde.mp3", question: "When did the speaker visit their parents?" },
+    { spanish: "ella visito a su abuelo ayer", english: "she visited her grandfather yesterday", audio: "ella-visito-a-su-abuelo-ayer.mp3", question: "Who did she visit?" },
+    { spanish: "el visito a su abuela la semana pasada", english: "he visited his grandmother last week", audio: "el-visito-a-su-abuela-la-semana-pasada.mp3", question: "Who did he visit?" },
+    { spanish: "yo hable con mi madre ayer", english: "I talked with my mother yesterday", audio: "yo-hable-con-mi-madre-ayer.mp3", question: "Who did the speaker talk with?" },
+    { spanish: "ella hablo con su padre por la tarde", english: "she talked with her father in the afternoon", audio: "ella-hablo-con-su-padre-por-la-tarde.mp3", question: "When did she talk with her father?" },
+    { spanish: "el hablo con su hermana ayer", english: "he talked with his sister yesterday", audio: "el-hablo-con-su-hermana-ayer.mp3", question: "Who did he talk with?" },
+    { spanish: "yo pase tiempo con mi familia la semana pasada", english: "I spent time with my family last week", audio: "yo-pase-tiempo-con-mi-familia-la-semana-pasada.mp3", question: "When did the speaker spend time with their family?" },
+    { spanish: "ella paso tiempo con su madre ayer", english: "she spent time with her mother yesterday", audio: "ella-paso-tiempo-con-su-madre-ayer.mp3", question: "Who did she spend time with?" }
+  ],
+
 
     /* ============================================================
        B1 — Intermediate (20 items)
        ============================================================ */
-    B1: [
-      { spanish: "disfruto pasar tiempo con mi familia", english: "I enjoy spending time with my family", audio: "disfruto-pasar-tiempo-con-mi-familia.mp3", question: "Who does the speaker enjoy spending time with?" },
-      { spanish: "ella habla con su familia sobre problemas diarios", english: "she talks with her family about daily problems", audio: "ella-habla-con-su-familia-sobre-problemas-diarios.mp3", question: "What does she talk about?" },
-      { spanish: "el recuerda experiencias pasadas con su familia", english: "he remembers past experiences with his family", audio: "el-recuerda-experiencias-pasadas-con-su-familia.mp3", question: "What does he remember?" },
-      { spanish: "nosotros tenemos conversaciones diarias en familia", english: "we have daily conversations as a family", audio: "nosotros-tenemos-conversaciones-diarias-en-familia.mp3", question: "How often do they have conversations?" },
-      { spanish: "yo hablo con mis padres sobre el futuro", english: "I talk with my parents about the future", audio: "yo-hablo-con-mis-padres-sobre-el-futuro.mp3", question: "Who does the speaker talk with?" },
-      { spanish: "ella disfruta viajar con su familia", english: "she enjoys traveling with her family", audio: "ella-disfruta-viajar-con-su-familia.mp3", question: "Who does she enjoy traveling with?" },
-      { spanish: "el come con su familia los fines de semana", english: "he eats with his family on weekends", audio: "el-come-con-su-familia-los-fines-de-semana.mp3", question: "When does he eat with his family?" },
-      { spanish: "nosotros hablamos sobre planes futuros en familia", english: "we talk about future plans as a family", audio: "nosotros-hablamos-sobre-planes-futuros-en-familia.mp3", question: "What do they talk about?" },
-      { spanish: "yo recuerdo viajes con mi familia", english: "I remember trips with my family", audio: "yo-recuerdo-viajes-con-mi-familia.mp3", question: "What does the speaker remember?" },
-      { spanish: "ella estudia para ayudar a su familia", english: "she studies to help her family", audio: "ella-estudia-para-ayudar-a-su-familia.mp3", question: "Why does she study?" },
-      { spanish: "el habla con su hermano sobre problemas", english: "he talks with his brother about problems", audio: "el-habla-con-su-hermano-sobre-problemas.mp3", question: "Who does he talk with?" },
-      { spanish: "nosotros visitamos a nuestra familia cada ano", english: "we visit our family every year", audio: "nosotros-visitamos-a-nuestra-familia-cada-ano.mp3", question: "How often do they visit family?" },
-      { spanish: "yo disfruto comer con mi familia en casa", english: "I enjoy eating with my family at home", audio: "yo-disfruto-comer-con-mi-familia-en-casa.mp3", question: "Where does the speaker enjoy eating with family?" },
-      { spanish: "ella habla con su madre sobre su trabajo", english: "she talks with her mother about her work", audio: "ella-habla-con-su-madre-sobre-su-trabajo.mp3", question: "What does she talk about?" },
-      { spanish: "el recuerda celebraciones en familia", english: "he remembers family celebrations", audio: "el-recuerda-celebraciones-en-familia.mp3", question: "What does he remember?" },
-      { spanish: "nosotros hablamos sobre cambios en la familia", english: "we talk about changes in the family", audio: "nosotros-hablamos-sobre-cambios-en-la-familia.mp3", question: "What do they talk about?" },
-      { spanish: "yo estudio para tener un futuro mejor para mi familia", english: "I study to have a better future for my family", audio: "yo-estudio-para-tener-un-futuro-mejor-para-mi-familia.mp3", question: "Why does the speaker study?" },
-      { spanish: "ella disfruta pasar tiempo libre con su familia", english: "she enjoys spending free time with her family", audio: "ella-disfruta-pasar-tiempo-libre-con-su-familia.mp3", question: "What does she enjoy doing?" },
-      { spanish: "el habla con su familia sobre decisiones importantes", english: "he talks with his family about important decisions", audio: "el-habla-con-su-familia-sobre-decisiones-importantes.mp3", question: "What does he talk about?" },
-      { spanish: "nosotros organizamos reuniones familiares cada mes", english: "we organize family meetings every month", audio: "nosotros-organizamos-reuniones-familiares-cada-mes.mp3", question: "What do they organize?" }
-    ],
+     B1: [
+    { spanish: "yo disfruto pasar tiempo con mi familia", english: "I enjoy spending time with my family", audio: "yo-disfruto-pasar-tiempo-con-mi-familia.mp3", question: "What does the speaker enjoy?" },
+    { spanish: "ella prefiere visitar a sus padres porque son importantes", english: "she prefers visiting her parents because they are important", audio: "ella-prefiere-visitar-a-sus-padres-porque-son-importantes.mp3", question: "Why does she prefer visiting her parents?" },
+    { spanish: "el disfruta hablar con su hermano porque aprende mucho", english: "he enjoys talking with his brother because he learns a lot", audio: "el-disfruta-hablar-con-su-hermano-porque-aprende-mucho.mp3", question: "Why does he enjoy talking with his brother?" },
+    { spanish: "yo visito a mi familia para estar juntos", english: "I visit my family to be together", audio: "yo-visito-a-mi-familia-para-estar-juntos.mp3", question: "Why does the speaker visit their family?" },
+    { spanish: "ella visita a su madre para ayudarla", english: "she visits her mother to help her", audio: "ella-visita-a-su-madre-para-ayudarla.mp3", question: "Why does she visit her mother?" },
+    { spanish: "el visita a su padre para hablar de su dia", english: "he visits his father to talk about his day", audio: "el-visita-a-su-padre-para-hablar-de-su-dia.mp3", question: "Why does he visit his father?" },
+    { spanish: "yo hablo con mi familia para comunicar mejor", english: "I talk with my family to communicate better", audio: "yo-hablo-con-mi-familia-para-comunicar-mejor.mp3", question: "Why does the speaker talk with their family?" },
+    { spanish: "ella habla con su hermana para resolver problemas", english: "she talks with her sister to solve problems", audio: "ella-habla-con-su-hermana-para-resolver-problemas.mp3", question: "Why does she talk with her sister?" },
+    { spanish: "el habla con su abuelo para aprender historias", english: "he talks with his grandfather to learn stories", audio: "el-habla-con-su-abuelo-para-aprender-historias.mp3", question: "Why does he talk with his grandfather?" },
+    { spanish: "yo paso tiempo con mi familia para descansar", english: "I spend time with my family to rest", audio: "yo-paso-tiempo-con-mi-familia-para-descansar.mp3", question: "Why does the speaker spend time with their family?" }
+    { spanish: "ella pasa tiempo con su madre para estar tranquila", english: "she spends time with her mother to be calm", audio: "ella-pasa-tiempo-con-su-madre-para-estar-tranquila.mp3", question: "Why does she spend time with her mother?" },
+    { spanish: "el pasa tiempo con su padre para aprender mas", english: "he spends time with his father to learn more", audio: "el-pasa-tiempo-con-su-padre-para-aprender-mas.mp3", question: "Why does he spend time with his father?" },
+    { spanish: "yo vivo con mi familia para estar cerca de ellos", english: "I live with my family to be close to them", audio: "yo-vivo-con-mi-familia-para-estar-cerca-de-ellos.mp3", question: "Why does the speaker live with their family?" },
+    { spanish: "ella vive con sus padres para ayudarlos", english: "she lives with her parents to help them", audio: "ella-vive-con-sus-padres-para-ayudarlos.mp3", question: "Why does she live with her parents?" },
+    { spanish: "el vive con su hermano para compartir gastos", english: "he lives with his brother to share expenses", audio: "el-vive-con-su-hermano-para-compartir-gastos.mp3", question: "Why does he live with his brother?" },
+    { spanish: "yo visito a mis padres para hablar de mi semana", english: "I visit my parents to talk about my week", audio: "yo-visito-a-mis-padres-para-hablar-de-mi-semana.mp3", question: "Why does the speaker visit their parents?" },
+    { spanish: "ella visita a su abuelo para escucharlo", english: "she visits her grandfather to listen to him", audio: "ella-visita-a-su-abuelo-para-escucharlo.mp3", question: "Why does she visit her grandfather?" },
+    { spanish: "el visita a su abuela para ayudarla con tareas", english: "he visits his grandmother to help her with tasks", audio: "el-visita-a-su-abuela-para-ayudarla-con-tareas.mp3", question: "Why does he visit his grandmother?" },
+    { spanish: "yo hablo con mi madre para sentirme mejor", english: "I talk with my mother to feel better", audio: "yo-hablo-con-mi-madre-para-sentirme-mejor.mp3", question: "Why does the speaker talk with their mother?" },
+    { spanish: "ella habla con su padre para recibir consejos", english: "she talks with her father to receive advice", audio: "ella-habla-con-su-padre-para-recibir-consejos.mp3", question: "Why does she talk with her father?" }
+  ],
+
 
     /* ============================================================
    B2 — Upper Intermediate (20 items)
    ============================================================ */
-B2: [
-  { spanish: "la familia es importante para la sociedad", english: "family is important for society", audio: "la-familia-es-importante-para-la-sociedad.mp3", question: "What is important for society?" },
+  B2: [
+    { spanish: "yo manejo decisiones familiares para apoyar a mi familia", english: "I handle family decisions to support my family", audio: "yo-manejo-decisiones-familiares-para-apoyar-a-mi-familia.mp3", question: "Why does the speaker handle family decisions?" },
 
-  { spanish: "analizamos cambios en la estructura familiar", english: "we analyze changes in the family structure", audio: "analizamos-cambios-en-la-estructura-familiar.mp3", question: "What do they analyze?" },
+    { spanish: "ella maneja conflictos familiares sin embargo quiere tranquilidad", english: "she handles family conflicts however she wants calm", audio: "ella-maneja-conflictos-familiares-sin-embargo-quiere-tranquilidad.mp3", question: "What does she want?" },
 
-  { spanish: "ella maneja decisiones familiares importantes", english: "she handles important family decisions", audio: "ella-maneja-decisiones-familiares-importantes.mp3", question: "What does she handle?" },
+    { spanish: "el maneja tareas familiares a pesar de estar cansado", english: "he handles family tasks despite being tired", audio: "el-maneja-tareas-familiares-a-pesar-de-estar-cansado.mp3", question: "Why is it notable he handles tasks?" },
 
-  { spanish: "yo estudio como la cultura afecta la familia", english: "I study how culture affects the family", audio: "yo-estudio-como-la-cultura-afecta-la-familia.mp3", question: "What does the speaker study?" },
+    { spanish: "yo estudio como la cultura afecta la familia", english: "I study how culture affects the family", audio: "yo-estudio-como-la-cultura-afecta-la-familia.mp3", question: "What does the speaker study?" },
 
-  { spanish: "ellos enfrentan desafios familiares a pesar de los problemas", english: "they face family challenges despite the problems", audio: "ellos-enfrentan-desafios-familiares-a-pesar-de-los-problemas.mp3", question: "What do they face?" },
+    { spanish: "ella analiza decisiones familiares importantes", english: "she analyzes important family decisions", audio: "ella-analiza-decisiones-familiares-importantes.mp3", question: "What does she analyze?" },
 
-  { spanish: "ella analiza el impacto de la educacion en la familia", english: "she analyzes the impact of education on the family", audio: "ella-analiza-el-impacto-de-la-educacion-en-la-familia.mp3", question: "What does she analyze?" },
+    { spanish: "el analiza como la sociedad cambia la familia", english: "he analyzes how society changes the family", audio: "el-analiza-como-la-sociedad-cambia-la-familia.mp3", question: "What does he analyze?" },
 
-  { spanish: "el trabaja mucho por lo tanto ayuda a su familia", english: "he works a lot therefore he helps his family", audio: "el-trabaja-mucho-por-lo-tanto-ayuda-a-su-familia.mp3", question: "Why does he help his family?" },
+    { spanish: "yo discuto temas familiares para mejorar la comunicacion", english: "I discuss family topics to improve communication", audio: "yo-discuto-temas-familiares-para-mejorar-la-comunicacion.mp3", question: "Why does the speaker discuss family topics?" },
 
-  { spanish: "nosotros discutimos decisiones familiares importantes", english: "we discuss important family decisions", audio: "nosotros-discutimos-decisiones-familiares-importantes.mp3", question: "What do they discuss?" },
+    { spanish: "ella discute el futuro de su familia sin embargo quiere estabilidad", english: "she discusses the future of her family however she wants stability", audio: "ella-discute-el-futuro-de-su-familia-sin-embargo-quiere-estabilidad.mp3", question: "What does she want?" },
 
-  { spanish: "ella estudia cambios culturales en la familia", english: "she studies cultural changes in the family", audio: "ella-estudia-cambios-culturales-en-la-familia.mp3", question: "What does she study?" },
+    { spanish: "el discute decisiones familiares para apoyar a su familia", english: "he discusses family decisions to support his family", audio: "el-discute-decisiones-familiares-para-apoyar-a-su-familia.mp3", question: "Why does he discuss family decisions?" },
+    { spanish: "yo apoyo a mi familia para tener buena comunicacion",
+      english: "I support my family to have good communication",
+      audio: "yo-apoyo-a-mi-familia-para-tener-buena-comunicacion.mp3",
+      question: "Why does the speaker support their family?" },
 
-  { spanish: "yo manejo proyectos largos para apoyar a mi familia", english: "I handle long projects to support my family", audio: "yo-manejo-proyectos-largos-para-apoyar-a-mi-familia.mp3", question: "Why does the speaker handle long projects?" },
+    { spanish: "ella apoya a sus padres sin embargo quiere mas tiempo",
+      english: "she supports her parents however she wants more time",
+      audio: "ella-apoya-a-sus-padres-sin-embargo-quiere-mas-tiempo.mp3",
+      question: "What does she want?" },
 
-  { spanish: "la sociedad analiza el papel de la familia en el futuro", english: "society analyzes the role of the family in the future", audio: "la-sociedad-analiza-el-papel-de-la-familia-en-el-futuro.mp3", question: "What does society analyze?" },
+    { spanish: "el apoya a su hermano para resolver problemas familiares",
+      english: "he supports his brother to solve family problems",
+      audio: "el-apoya-a-su-hermano-para-resolver-problemas-familiares.mp3",
+      question: "Why does he support his brother?" },
 
-  { spanish: "la cultura familiar cambia con el tiempo", english: "family culture changes over time", audio: "la-cultura-familiar-cambia-con-el-tiempo.mp3", question: "What changes over time?" },
+    { spanish: "yo organizo actividades familiares para estar juntos",
+      english: "I organize family activities to be together",
+      audio: "yo-organizo-actividades-familiares-para-estar-juntos.mp3",
+      question: "Why does the speaker organize family activities?" },
 
-  { spanish: "analizamos como la tecnologia afecta la familia", english: "we analyze how technology affects the family", audio: "analizamos-como-la-tecnologia-afecta-la-familia.mp3", question: "What do they analyze?" },
+    { spanish: "ella organiza reuniones familiares sin embargo quiere menos trabajo",
+      english: "she organizes family meetings however she wants less work",
+      audio: "ella-organiza-reuniones-familiares-sin-embargo-quiere-menos-trabajo.mp3",
+      question: "What does she want?" },
 
-  { spanish: "ella maneja conflictos familiares a pesar de los desafios", english: "she handles family conflicts despite the challenges", audio: "ella-maneja-conflictos-familiares-a-pesar-de-los-desafios.mp3", question: "What does she handle?" },
+    { spanish: "el organiza tareas familiares para ayudar a su familia",
+      english: "he organizes family tasks to help his family",
+      audio: "el-organiza-tareas-familiares-para-ayudar-a-su-familia.mp3",
+      question: "Why does he organize family tasks?" },
 
-  { spanish: "el estudia educacion para apoyar a su familia", english: "he studies education to support his family", audio: "el-estudia-educacion-para-apoyar-a-su-familia.mp3", question: "Why does he study education?" },
+    { spanish: "yo discuto decisiones familiares para mejorar el futuro",
+      english: "I discuss family decisions to improve the future",
+      audio: "yo-discuto-decisiones-familiares-para-mejorar-el-futuro.mp3",
+      question: "Why does the speaker discuss family decisions?" },
 
-  { spanish: "nosotros discutimos el futuro de nuestra familia", english: "we discuss the future of our family", audio: "nosotros-discutimos-el-futuro-de-nuestra-familia.mp3", question: "What do they discuss?" },
+    { spanish: "ella discute temas familiares sin embargo quiere tranquilidad",
+      english: "she discusses family topics however she wants calm",
+      audio: "ella-discute-temas-familiares-sin-embargo-quiere-tranquilidad.mp3",
+      question: "What does she want?" },
 
-  { spanish: "ella analiza decisiones familiares a largo plazo", english: "she analyzes long-term family decisions", audio: "ella-analiza-decisiones-familiares-a-largo-plazo.mp3", question: "What does she analyze?" },
+    { spanish: "el discute problemas familiares para apoyar a su familia",
+      english: "he discusses family problems to support his family",
+      audio: "el-discute-problemas-familiares-para-apoyar-a-su-familia.mp3",
+      question: "Why does he discuss family problems?" },
 
-  { spanish: "yo estudio como la sociedad afecta la familia", english: "I study how society affects the family", audio: "yo-estudio-como-la-sociedad-afecta-la-familia.mp3", question: "What does the speaker study?" },
+    { spanish: "yo manejo situaciones familiares para estar mejor con mi familia",
+      english: "I handle family situations to be better with my family",
+      audio: "yo-manejo-situaciones-familiares-para-estar-mejor-con-mi-familia.mp3",
+      question: "Why does the speaker handle family situations?" }
+  ]
+}
 
-  { spanish: "ellos cambian su vida para apoyar a la familia", english: "they change their life to support the family", audio: "ellos-cambian-su-vida-para-apoyar-a-la-familia.mp3", question: "Why do they change their life?" },
 
-  { spanish: "la familia enfrenta desafios importantes en la sociedad moderna", english: "the family faces important challenges in modern society", audio: "la-familia-enfrenta-desafios-importantes-en-la-sociedad-moderna.mp3", question: "What does the family face?" }
-]
 
 ordering: {
 
