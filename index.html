@@ -57,14 +57,12 @@
 
         <div class="dash-right glass-panel">
             <label class="section-title">Skill Level</label>
-           <div class="level-buttons">
-    <button class="pill level-btn" data-level="A1">A1</button>
-    <button class="pill level-btn" data-level="A2">A2</button>
-    <button class="pill level-btn" data-level="B1">B1</button>
-    <button class="pill level-btn" data-level="B2">B2</button>
-</div>
-
-
+            <div class="level-buttons">
+                <button class="pill" data-level="A1">A1</button>
+                <button class="pill" data-level="A2">A2</button>
+                <button class="pill" data-level="B1">B1</button>
+                <button class="pill" data-level="B2">B2</button>
+            </div>
         </div>
     </div>
 
@@ -115,27 +113,17 @@
             </div>
         </div>
 
-        <!-- CONVERSATION PROGRESS TILE -->
-<div id="convo-tile" class="progress-tile glass-panel">
-    <div class="progress-icon-row">
-        <img src="images/badge-conversation.png" class="progress-img">
-        <label class="section-title">Conversation Progress</label>
-        <span class="progress-number" id="convo-number">0%</span>
-    </div>
-
-    <div class="progress-bar">
-        <div class="progress-fill" id="convo-progress"></div>
-    </div>
-</div>
-
-<!-- DAILY CONVERSATION CHALLENGE TILE -->
-<div id="daily-challenge-tile" class="progress-tile glass-panel">
-    <h3>Daily Conversation Challenge</h3>
-    <p id="daily-challenge-status">Loading...</p>
-</div>
-
-
-
+        <!-- XP -->
+        <div id="xp-tile" class="progress-tile glass-panel">
+            <div class="progress-icon-row">
+                <img src="images/icon-xp.png" class="progress-img">
+                <label class="section-title">XP Progress</label>
+                <span class="progress-number" id="xp-number">0%</span>
+            </div>
+            <div class="progress-bar">
+                <div class="progress-fill" id="xp-progress"></div>
+            </div>
+        </div>
 
         <!-- STREAK -->
         <div id="streak-tile" class="progress-tile glass-panel">
@@ -173,10 +161,6 @@
             </div>
         </div>
 
-        <div id="reset-area" class="glass-panel reset-card">
-    <button id="reset-progress" class="pill danger">Reset Progress</button>
-</div>
-
     </div>
 
     <div class="badge-section glass-panel">
@@ -190,67 +174,38 @@
 
 <!-- LISTEN TAB -->
 <div id="listen" class="hidden">
-    <div class="tab-header">
-        <span class="tab-title">Listen</span>
-        <span id="listen-level-header" class="tab-level"></span>
-    </div>
     <div id="listen-content"></div>
 </div>
 
 <!-- FLASHCARDS TAB -->
 <div id="flash" class="hidden">
-    <div class="tab-header">
-        <span class="tab-title">Flashcards</span>
-        <span id="flash-level-header" class="tab-level"></span>
-    </div>
     <div id="flash-content"></div>
 </div>
 
 <!-- QUIZ TAB -->
 <div id="quiz" class="hidden">
-    <div class="tab-header">
-        <span class="tab-title">Quiz</span>
-        <span id="quiz-level-header" class="tab-level"></span>
-    </div>
     <div id="quiz-content"></div>
 </div>
 
 <!-- BUILD TAB -->
 <div id="build" class="hidden">
-    <div class="tab-header">
-        <span class="tab-title">Build</span>
-        <span id="build-level-header" class="tab-level"></span>
-    </div>
     <div id="build-content"></div>
 </div>
 
 <!-- SENTENCE TAB -->
 <div id="sentence" class="hidden">
-    <div class="tab-header">
-        <span class="tab-title">Sentence</span>
-        <span id="sentence-level-header" class="tab-level"></span>
-    </div>
     <div id="sentence-content"></div>
 </div>
 
 <!-- CONVERSATION TAB -->
 <div id="conversation" class="hidden">
-    <div class="tab-header">
-        <span class="tab-title">Conversation</span>
-        <span id="conversation-level-header" class="tab-level"></span>
-    </div>
     <div id="conversation-content"></div>
 </div>
 
 <!-- GRAMMAR TAB -->
 <div id="grammar" class="hidden">
-    <div class="tab-header">
-        <span class="tab-title">Grammar</span>
-        <span id="grammar-level-header" class="tab-level"></span>
-    </div>
     <div id="grammar-content"></div>
 </div>
-
 
 <script src="wordbanks/A1.js"></script>
 <script src="wordbanks/A2.js"></script>
