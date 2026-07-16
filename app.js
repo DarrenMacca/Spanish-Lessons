@@ -970,15 +970,16 @@ const CEFR_LISTENING_TOPICS = {
       audio: "yo-como-comida-ligera-para-estar-bien-durante-el-dia.mp3", 
       question: "Why does the speaker eat light food?" },
 
-    { spanish: "ella bebe te sin embargo quiere buen sabor", 
-      english: "she drinks tea however she wants good flavor", 
-      audio: "ella-bebe-te-sin-embargo-quiere-buen-sabor.mp3", 
-      question: "What does she want?" }
-  ]
-}
+   { spanish: "ella bebe te sin embargo quiere buen sabor", 
+  english: "she drinks tea however she wants good flavor", 
+  audio: "ella-bebe-te-sin-embargo-quiere-buen-sabor.mp3", 
+  question: "What does she want?" }
+  ]   // end of the previous topic's B2 array
+},    // end of the previous topic object
 
 const CEFR_LISTENING_TOPICS = {
   travel: {
+
    /* ============================================================
       TRAVEL — CEFR Listening Packs (A1 → B2)
       ============================================================ */
