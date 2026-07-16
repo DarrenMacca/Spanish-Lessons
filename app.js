@@ -832,111 +832,150 @@ const CEFR_CONVERSATIONS = {
    ============================================================ */
 
 const CEFR_LISTENING_TOPICS = {
-  food: {
-    /* ============================================================
-       A1 — Beginner
-       ============================================================ */
-    A1: [
-      { spanish: "quiero agua", english: "I want water", audio: "quiero-agua.mp3", question: "What does the speaker want?" },
-      { spanish: "me gusta la sopa", english: "I like soup", audio: "me-gusta-la-sopa.mp3", question: "What food does the speaker like?" },
-      { spanish: "ella come pan", english: "she eats bread", audio: "ella-come-pan.mp3", question: "What does she eat?" },
-      { spanish: "nosotros bebemos café", english: "we drink coffee", audio: "nosotros-bebemos-cafe.mp3", question: "What do they drink?" },
-      { spanish: "quiero fruta barata", english: "I want cheap fruit", audio: "quiero-fruta-barata.mp3", question: "What does the speaker want?" },
-      { spanish: "ella quiere sopa", english: "she wants soup", audio: "ella-quiere-sopa.mp3", question: "What does she want?" },
-      { spanish: "yo como arroz", english: "I eat rice", audio: "yo-como-arroz.mp3", question: "What does the speaker eat?" },
-      { spanish: "me gusta la ensalada", english: "I like salad", audio: "me-gusta-la-ensalada.mp3", question: "What does the speaker like?" },
-      { spanish: "quiero pollo", english: "I want chicken", audio: "quiero-pollo.mp3", question: "What food does the speaker want?" },
-      { spanish: "ella bebe leche", english: "she drinks milk", audio: "ella-bebe-leche.mp3", question: "What does she drink?" },
-      { spanish: "él come queso", english: "he eats cheese", audio: "el-come-queso.mp3", question: "What does he eat?" },
-      { spanish: "yo bebo té", english: "I drink tea", audio: "yo-bebo-te.mp3", question: "What does the speaker drink?" },
-      { spanish: "nosotros comemos pan y mantequilla", english: "we eat bread and butter", audio: "nosotros-comemos-pan-y-mantequilla.mp3", question: "What do they eat?" },
-      { spanish: "ella come fruta", english: "she eats fruit", audio: "ella-come-fruta.mp3", question: "What does she eat?" },
-      { spanish: "quiero sopa y pan", english: "I want soup and bread", audio: "quiero-sopa-y-pan.mp3", question: "What does the speaker want?" },
-      { spanish: "él bebe café con leche", english: "he drinks coffee with milk", audio: "el-bebe-cafe-con-leche.mp3", question: "What does he drink?" },
-      { spanish: "me gusta el arroz", english: "I like rice", audio: "me-gusta-el-arroz.mp3", question: "What does the speaker like?" },
-      { spanish: "ella quiere ensalada", english: "she wants salad", audio: "ella-quiere-ensalada.mp3", question: "What does she want?" },
-      { spanish: "nosotros bebemos agua", english: "we drink water", audio: "nosotros-bebemos-agua.mp3", question: "What do they drink?" },
-      { spanish: "yo como pollo y arroz", english: "I eat chicken and rice", audio: "yo-como-pollo-y-arroz.mp3", question: "What does the speaker eat?" }
-    ],
+ food: {
+  A1: [
+    { spanish: "yo como pan", english: "I eat bread", audio: "yo-como-pan.mp3", question: "What does the speaker eat?" },
+    { spanish: "ella come arroz", english: "she eats rice", audio: "ella-come-arroz.mp3", question: "What does she eat?" },
+    { spanish: "el come pollo", english: "he eats chicken", audio: "el-come-pollo.mp3", question: "What does he eat?" },
+    { spanish: "yo bebo agua", english: "I drink water", audio: "yo-bebo-agua.mp3", question: "What does the speaker drink?" },
+    { spanish: "ella bebe cafe", english: "she drinks coffee", audio: "ella-bebe-cafe.mp3", question: "What does she drink?" },
+    { spanish: "el bebe te", english: "he drinks tea", audio: "el-bebe-te.mp3", question: "What does he drink?" },
+    { spanish: "yo como sopa", english: "I eat soup", audio: "yo-como-sopa.mp3", question: "What does the speaker eat?" },
+    { spanish: "ella come ensalada", english: "she eats salad", audio: "ella-come-ensalada.mp3", question: "What does she eat?" },
+    { spanish: "el come pan con mantequilla", english: "he eats bread with butter", audio: "el-come-pan-con-mantequilla.mp3", question: "What does he eat?" },
+    { spanish: "yo bebo jugo", english: "I drink juice", audio: "yo-bebo-jugo.mp3", question: "What does the speaker drink?" }
+    { spanish: "ella come comida", english: "she eats food", audio: "ella-come-comida.mp3", question: "What does she eat?" },
+    { spanish: "el come desayuno", english: "he eats breakfast", audio: "el-come-desayuno.mp3", question: "What does he eat?" },
+    { spanish: "yo como almuerzo", english: "I eat lunch", audio: "yo-como-almuerzo.mp3", question: "What does the speaker eat?" },
+    { spanish: "ella come cena", english: "she eats dinner", audio: "ella-come-cena.mp3", question: "What does she eat?" },
+    { spanish: "el bebe agua fria", english: "he drinks cold water", audio: "el-bebe-agua-fria.mp3", question: "What does he drink?" },
+    { spanish: "yo como arroz con pollo", english: "I eat rice with chicken", audio: "yo-como-arroz-con-pollo.mp3", question: "What does the speaker eat?" },
+    { spanish: "ella bebe te caliente", english: "she drinks hot tea", audio: "ella-bebe-te-caliente.mp3", question: "What does she drink?" },
+    { spanish: "el come pan con queso", english: "he eats bread with cheese", audio: "el-come-pan-con-queso.mp3", question: "What does he eat?" },
+    { spanish: "yo como comida simple", english: "I eat simple food", audio: "yo-como-comida-simple.mp3", question: "What does the speaker eat?" },
+    { spanish: "ella bebe cafe cada dia", english: "she drinks coffee every day", audio: "ella-bebe-cafe-cada-dia.mp3", question: "What does she drink?" }
+  ],
+
 
     /* ============================================================
        A2 — Elementary
        ============================================================ */
-    A2: [
-      { spanish: "compré fruta en el supermercado", english: "I bought fruit at the supermarket", audio: "compre-fruta-en-el-supermercado.mp3", question: "What did the speaker buy?" },
-      { spanish: "él come sopa a menudo", english: "he eats soup often", audio: "el-come-sopa-a-menudo.mp3", question: "How often does he eat soup?" },
-      { spanish: "ella terminó el almuerzo", english: "she finished the lunch", audio: "ella-termino-el-almuerzo.mp3", question: "What meal did she finish?" },
-      { spanish: "yo como arroz con pollo", english: "I eat rice with chicken", audio: "yo-como-arroz-con-pollo.mp3", question: "What does the speaker eat?" },
-      { spanish: "compraste pan y queso", english: "you bought bread and cheese", audio: "compraste-pan-y-queso.mp3", question: "What did the listener buy?" },
-      { spanish: "te gusta el desayuno", english: "you like breakfast", audio: "te-gusta-el-desayuno.mp3", question: "What meal is being discussed?" },
-      { spanish: "ella compró cena para su familia", english: "she bought dinner for her family", audio: "ella-compro-cena-para-su-familia.mp3", question: "What did she buy?" },
-      { spanish: "yo compré arroz hoy", english: "I bought rice today", audio: "yo-compre-arroz-hoy.mp3", question: "What did the speaker buy?" },
-      { spanish: "él come fruta cada día", english: "he eats fruit every day", audio: "el-come-fruta-cada-dia.mp3", question: "What does he eat?" },
-      { spanish: "ella bebe té por la mañana", english: "she drinks tea in the morning", audio: "ella-bebe-te-por-la-manana.mp3", question: "What does she drink?" },
-      { spanish: "nosotros comimos sopa ayer", english: "we ate soup yesterday", audio: "nosotros-comimos-sopa-ayer.mp3", question: "What did they eat?" },
-      { spanish: "compré azúcar y sal", english: "I bought sugar and salt", audio: "compre-azucar-y-sal.mp3", question: "What did the speaker buy?" },
-      { spanish: "ella come arroz en la cena", english: "she eats rice at dinner", audio: "ella-come-arroz-en-la-cena.mp3", question: "When does she eat rice?" },
-      { spanish: "él bebe leche cada noche", english: "he drinks milk every night", audio: "el-bebe-leche-cada-noche.mp3", question: "When does he drink milk?" },
-      { spanish: "yo compré mantequilla y queso", english: "I bought butter and cheese", audio: "yo-compre-mantequilla-y-queso.mp3", question: "What did the speaker buy?" },
-      { spanish: "ella terminó la cena tarde", english: "she finished dinner late", audio: "ella-termino-la-cena-tarde.mp3", question: "When did she finish dinner?" },
-      { spanish: "él come pan con mantequilla", english: "he eats bread with butter", audio: "el-come-pan-con-mantequilla.mp3", question: "What does he eat?" },
-      { spanish: "yo como fruta por la tarde", english: "I eat fruit in the afternoon", audio: "yo-como-fruta-por-la-tarde.mp3", question: "When does the speaker eat fruit?" },
-      { spanish: "ella compró sopa y pan", english: "she bought soup and bread", audio: "ella-compro-sopa-y-pan.mp3", question: "What did she buy?" },
-      { spanish: "nosotros comemos juntos en el almuerzo", english: "we eat together at lunch", audio: "nosotros-comemos-juntos-en-el-almuerzo.mp3", question: "When do they eat together?" }
-    ],
+     A2: [
+    { spanish: "yo comi arroz ayer", english: "I ate rice yesterday", audio: "yo-comi-arroz-ayer.mp3", question: "What did the speaker eat?" },
+    { spanish: "ella bebio cafe por la manana", english: "she drank coffee in the morning", audio: "ella-bebio-cafe-por-la-manana.mp3", question: "When did she drink coffee?" },
+    { spanish: "el comio pollo la semana pasada", english: "he ate chicken last week", audio: "el-comio-pollo-la-semana-pasada.mp3", question: "When did he eat chicken?" },
+    { spanish: "yo bebi agua porque tenia sed", english: "I drank water because I was thirsty", audio: "yo-bebi-agua-porque-tenia-sed.mp3", question: "Why did the speaker drink water?" },
+    { spanish: "ella comio sopa porque tenia hambre", english: "she ate soup because she was hungry", audio: "ella-comio-sopa-porque-tenia-hambre.mp3", question: "Why did she eat soup?" },
+    { spanish: "el bebio jugo en el centro", english: "he drank juice in the center", audio: "el-bebio-jugo-en-el-centro.mp3", question: "Where did he drink juice?" },
+    { spanish: "yo comi ensalada para el almuerzo", english: "I ate salad for lunch", audio: "yo-comi-ensalada-para-el-almuerzo.mp3", question: "What did the speaker eat for lunch?" },
+    { spanish: "ella bebio agua fria ayer", english: "she drank cold water yesterday", audio: "ella-bebio-agua-fria-ayer.mp3", question: "When did she drink cold water?" },
+    { spanish: "el comio pan con mantequilla por la tarde", english: "he ate bread with butter in the afternoon", audio: "el-comio-pan-con-mantequilla-por-la-tarde.mp3", question: "When did he eat bread with butter?" },
+    { spanish: "yo bebi te sin azucar", english: "I drank tea without sugar", audio: "yo-bebi-te-sin-azucar.mp3", question: "How did the speaker drink the tea?" }
+    { spanish: "ella comio arroz con pollo en casa", english: "she ate rice with chicken at home", audio: "ella-comio-arroz-con-pollo-en-casa.mp3", question: "Where did she eat rice with chicken?" },
+    { spanish: "el bebio cafe en el trabajo", english: "he drank coffee at work", audio: "el-bebio-cafe-en-el-trabajo.mp3", question: "Where did he drink coffee?" },
+    { spanish: "yo comi comida simple ayer", english: "I ate simple food yesterday", audio: "yo-comi-comida-simple-ayer.mp3", question: "What did the speaker eat?" },
+    { spanish: "ella bebio jugo porque tenia calor", english: "she drank juice because she was hot", audio: "ella-bebio-jugo-porque-tenia-calor.mp3", question: "Why did she drink juice?" },
+    { spanish: "el comio desayuno en el hotel", english: "he ate breakfast in the hotel", audio: "el-comio-desayuno-en-el-hotel.mp3", question: "Where did he eat breakfast?" },
+    { spanish: "yo bebi agua en la tienda", english: "I drank water in the store", audio: "yo-bebi-agua-en-la-tienda.mp3", question: "Where did the speaker drink water?" },
+    { spanish: "ella comio cena con su familia", english: "she ate dinner with her family", audio: "ella-comio-cena-con-su-familia.mp3", question: "Who did she eat dinner with?" },
+    { spanish: "el bebio te caliente en la ciudad", english: "he drank hot tea in the city", audio: "el-bebio-te-caliente-en-la-ciudad.mp3", question: "Where did he drink hot tea?" },
+    { spanish: "yo comi pan con queso ayer", english: "I ate bread with cheese yesterday", audio: "yo-comi-pan-con-queso-ayer.mp3", question: "What did the speaker eat?" },
+    { spanish: "ella bebio agua cada dia", english: "she drank water every day", audio: "ella-bebio-agua-cada-dia.mp3", question: "How often did she drink water?" }
+  ],
+
 
     /* ============================================================
        B1 — Intermediate
        ============================================================ */
-    B1: [
-      { spanish: "disfruto comer con mi familia", english: "I enjoy eating with my family", audio: "disfruto-comer-con-mi-familia.mp3", question: "Who does the speaker eat with?" },
-      { spanish: "él quiere mejorar su dieta", english: "he wants to improve his diet", audio: "el-quiere-mejorar-su-dieta.mp3", question: "What does he want to improve?" },
-      { spanish: "ella cocina arroz cada tarde", english: "she cooks rice every afternoon", audio: "ella-cocina-arroz-cada-tarde.mp3", question: "What does she cook?" },
-      { spanish: "nosotros hablamos sobre comida saludable", english: "we talk about healthy food", audio: "nosotros-hablamos-sobre-comida-saludable.mp3", question: "What do they talk about?" },
-      { spanish: "él disfruta beber café por la mañana", english: "he enjoys drinking coffee in the morning", audio: "el-disfruta-beber-cafe-por-la-manana.mp3", question: "What does he enjoy drinking?" },
-      { spanish: "ella compra fruta fresca", english: "she buys fresh fruit", audio: "ella-compra-fruta-fresca.mp3", question: "What does she buy?" },
-      { spanish: "yo preparo sopa cada noche", english: "I prepare soup every night", audio: "yo-preparo-sopa-cada-noche.mp3", question: "What does the speaker prepare?" },
-      { spanish: "ellos comen juntos los fines de semana", english: "they eat together on weekends", audio: "ellos-comen-juntos-los-fines-de-semana.mp3", question: "When do they eat together?" },
-      { spanish: "ella disfruta cocinar para amigos", english: "she enjoys cooking for friends", audio: "ella-disfruta-cocinar-para-amigos.mp3", question: "Who does she cook for?" },
-      { spanish: "yo como saludable para mejorar mi vida", english: "I eat healthy to improve my life", audio: "yo-como-saludable-para-mejorar-mi-vida.mp3", question: "Why does the speaker eat healthy?" },
-      { spanish: "nosotros probamos recetas nuevas", english: "we try new recipes", audio: "nosotros-probamos-recetas-nuevas.mp3", question: "What do they try?" },
-      { spanish: "él cocina para su familia cada día", english: "he cooks for his family every day", audio: "el-cocina-para-su-familia-cada-dia.mp3", question: "Who does he cook for?" },
-      { spanish: "ella compra comida saludable en el supermercado", english: "she buys healthy food at the supermarket", audio: "ella-compra-comida-saludable-en-el-supermercado.mp3", question: "Where does she buy food?" },
-      { spanish: "yo hablo sobre comida con mis amigos", english: "I talk about food with my friends", audio: "yo-hablo-sobre-comida-con-mis-amigos.mp3", question: "Who does the speaker talk with?" },
-      { spanish: "ellos comen en casa para ahorrar dinero", english: "they eat at home to save money", audio: "ellos-comen-en-casa-para-ahorrar-dinero.mp3", question: "Why do they eat at home?" },
-      { spanish: "ella prepara almuerzo para el trabajo", english: "she prepares lunch for work", audio: "ella-prepara-almuerzo-para-el-trabajo.mp3", question: "What does she prepare?" },
-      { spanish: "yo disfruto cocinar los fines de semana", english: "I enjoy cooking on weekends", audio: "yo-disfruto-cocinar-los-fines-de-semana.mp3", question: "When does the speaker enjoy cooking?" },
-      { spanish: "él compra ingredientes frescos cada mañana", english: "he buys fresh ingredients every morning", audio: "el-compra-ingredientes-frescos-cada-manana.mp3", question: "What does he buy?" },
-      { spanish: "nosotros hablamos sobre recetas culturales", english: "we talk about cultural recipes", audio: "nosotros-hablamos-sobre-recetas-culturales.mp3", question: "What do they talk about?" },
-      { spanish: "ella come saludable para tener energía", english: "she eats healthy to have energy", audio: "ella-come-saludable-para-tener-energia.mp3", question: "Why does she eat healthy?" }
-    ],
+      B1: [
+    { spanish: "yo disfruto comer arroz con pollo", english: "I enjoy eating rice with chicken", audio: "yo-disfruto-comer-arroz-con-pollo.mp3", question: "What does the speaker enjoy eating?" },
+    { spanish: "ella prefiere beber agua porque no quiere azucar", english: "she prefers to drink water because she does not want sugar", audio: "ella-prefiere-beber-agua-porque-no-quiere-azucar.mp3", question: "Why does she prefer water?" },
+    { spanish: "el disfruta comer comida caliente", english: "he enjoys eating hot food", audio: "el-disfruta-comer-comida-caliente.mp3", question: "What does he enjoy eating?" },
+    { spanish: "yo prefiero beber cafe por la manana", english: "I prefer to drink coffee in the morning", audio: "yo-prefiero-beber-cafe-por-la-manana.mp3", question: "When does the speaker prefer coffee?" },
+    { spanish: "ella disfruta comer ensalada porque es saludable", english: "she enjoys eating salad because it is healthy", audio: "ella-disfruta-comer-ensalada-porque-es-saludable.mp3", question: "Why does she enjoy salad?" },
+    { spanish: "el prefiere beber te cuando hace frio", english: "he prefers to drink tea when it is cold", audio: "el-prefiere-beber-te-cuando-hace-frio.mp3", question: "When does he prefer tea?" },
+    { spanish: "yo disfruto comer comida simple en restaurantes nuevos", english: "I enjoy eating simple food in new restaurants", audio: "yo-disfruto-comer-comida-simple-en-restaurantes-nuevos.mp3", question: "Where does the speaker enjoy simple food?" },
+    { spanish: "ella prefiere beber jugo porque esta cansada", english: "she prefers to drink juice because she is tired", audio: "ella-prefiere-beber-jugo-porque-esta-cansada.mp3", question: "Why does she prefer juice?" },
+    { spanish: "el disfruta comer pan con mantequilla en casa", english: "he enjoys eating bread with butter at home", audio: "el-disfruta-comer-pan-con-mantequilla-en-casa.mp3", question: "Where does he enjoy bread with butter?" },
+    { spanish: "yo prefiero beber agua fria para sentirme mejor", english: "I prefer to drink cold water to feel better", audio: "yo-prefiero-beber-agua-fria-para-sentirme-mejor.mp3", question: "Why does the speaker prefer cold water?" }
+    { spanish: "ella disfruta comer arroz porque es su comida favorita", english: "she enjoys eating rice because it is her favorite food", audio: "ella-disfruta-comer-arroz-porque-es-su-comida-favorita.mp3", question: "Why does she enjoy rice?" },
+    { spanish: "el prefiere beber cafe sin embargo quiere algo simple", english: "he prefers to drink coffee however he wants something simple", audio: "el-prefiere-beber-cafe-sin-embargo-quiere-algo-simple.mp3", question: "What does he want?" },
+    { spanish: "yo disfruto comer sopa cuando hace frio", english: "I enjoy eating soup when it is cold", audio: "yo-disfruto-comer-sopa-cuando-hace-frio.mp3", question: "When does the speaker enjoy soup?" },
+    { spanish: "ella prefiere beber agua para estar bien", english: "she prefers to drink water to feel well", audio: "ella-prefiere-beber-agua-para-estar-bien.mp3", question: "Why does she prefer water?" },
+    { spanish: "el disfruta comer comida ligera para trabajar mejor", english: "he enjoys eating light food to work better", audio: "el-disfruta-comer-comida-ligera-para-trabajar-mejor.mp3", question: "Why does he enjoy light food?" },
+    { spanish: "yo prefiero beber te sin embargo quiero buen sabor", english: "I prefer to drink tea however I want good flavor", audio: "yo-prefiero-beber-te-sin-embargo-quiero-buen-sabor.mp3", question: "What does the speaker want?" },
+    { spanish: "ella disfruta comer comida simple para estar bien", english: "she enjoys eating simple food to feel well", audio: "ella-disfruta-comer-comida-simple-para-estar-bien.mp3", question: "Why does she enjoy simple food?" },
+    { spanish: "el prefiere beber jugo para tener energia", english: "he prefers to drink juice to have energy", audio: "el-prefiere-beber-jugo-para-tener-energia.mp3", question: "Why does he prefer juice?" },
+    { spanish: "yo disfruto comer pan con queso porque es facil", english: "I enjoy eating bread with cheese because it is easy", audio: "yo-disfruto-comer-pan-con-queso-porque-es-facil.mp3", question: "Why does the speaker enjoy bread with cheese?" },
+    { spanish: "ella prefiere beber cafe para empezar el dia", english: "she prefers to drink coffee to start the day", audio: "ella-prefiere-beber-cafe-para-empezar-el-dia.mp3", question: "Why does she prefer coffee?" }
+  ],
+
 
     /* ============================================================
        B2 — Upper Intermediate
        ============================================================ */
-    B2: [
-      { spanish: "la comida saludable es importante para la vida", english: "healthy food is important for life", audio: "la-comida-saludable-es-importante-para-la-vida.mp3", question: "What is important for life?" },
-      { spanish: "él analiza su dieta para mejorar su salud", english: "he analyzes his diet to improve his health", audio: "el-analiza-su-dieta-para-mejorar-su-salud.mp3", question: "Why does he analyze his diet?" },
-      { spanish: "nosotros discutimos cambios en nuestra alimentación", english: "we discuss changes in our eating habits", audio: "nosotros-discutimos-cambios-en-nuestra-alimentacion.mp3", question: "What do they discuss?" },
-      { spanish: "ella cocina comida saludable a pesar de la dificultad", english: "she cooks healthy food despite the difficulty", audio: "ella-cocina-comida-saludable-a-pesar-de-la-dificultad.mp3", question: "What does she cook?" },
-      { spanish: "yo estudio nutrición porque es importante", english: "I study nutrition because it is important", audio: "yo-estudio-nutricion-porque-es-importante.mp3", question: "Why does the speaker study nutrition?" },
-      { spanish: "ellos comen juntos sin embargo tienen horarios diferentes", english: "they eat together however they have different schedules", audio: "ellos-comen-juntos-sin-embargo-tienen-horarios-diferentes.mp3", question: "What do they do together?" },
-      { spanish: "ella prepara comida para proyectos largos", english: "she prepares food for long-term projects", audio: "ella-prepara-comida-para-proyectos-largos.mp3", question: "What does she prepare?" },
-      { spanish: "él cocina mucho por lo tanto está cansado", english: "he cooks a lot therefore he is tired", audio: "el-cocina-mucho-por-lo-tanto-esta-cansado.mp3", question: "Why is he tired?" },
-      { spanish: "nosotros analizamos recetas culturales", english: "we analyze cultural recipes", audio: "nosotros-analizamos-recetas-culturales.mp3", question: "What do they analyze?" },
-      { spanish: "ella estudia comida internacional para oportunidades futuras", english: "she studies international food for future opportunities", audio: "ella-estudia-comida-internacional-para-oportunidades-futuras.mp3", question: "Why does she study international food?" },
-      { spanish: "la cultura alimentaria cambia con el tiempo", english: "food culture changes over time", audio: "la-cultura-alimentaria-cambia-con-el-tiempo.mp3", question: "What changes over time?" },
-      { spanish: "la sociedad enfrenta desafíos de salud", english: "society faces health challenges", audio: "la-sociedad-enfrenta-desafios-de-salud.mp3", question: "What kind of challenges does society face?" },
-      { spanish: "la motivación ayuda a mantener una dieta saludable", english: "motivation helps maintain a healthy diet", audio: "la-motivacion-ayuda-a-mantener-una-dieta-saludable.mp3", question: "What does motivation help maintain?" },
-      { spanish: "analizamos el impacto de la comida rápida", english: "we analyze the impact of fast food", audio: "analizamos-el-impacto-de-la-comida-rapida.mp3", question: "What do they analyze?" },
-      { spanish: "ella cocina para su familia a pesar del cansancio", english: "she cooks for her family despite being tired", audio: "ella-cocina-para-su-familia-a-pesar-del-cansancio.mp3", question: "Who does she cook for?" },
-      { spanish: "él estudia recetas saludables para proyectos futuros", english: "he studies healthy recipes for future projects", audio: "el-estudia-recetas-saludables-para-proyectos-futuros.mp3", question: "Why does he study healthy recipes?" },
-      { spanish: "nosotros discutimos la importancia de la alimentación", english: "we discuss the importance of nutrition", audio: "nosotros-discutimos-la-importancia-de-la-alimentacion.mp3", question: "What do they discuss?" },
-      { spanish: "ella analiza cómo la comida afecta la vida diaria", english: "she analyzes how food affects daily life", audio: "ella-analiza-como-la-comida-afecta-la-vida-diaria.mp3", question: "What does she analyze?" },
-      { spanish: "yo manejo decisiones de comida en proyectos largos", english: "I handle food decisions in long-term projects", audio: "yo-manejo-decisiones-de-comida-en-proyectos-largos.mp3", question: "What kind of decisions does the speaker handle?" },
-      { spanish: "ellos cambian su dieta para mejorar su futuro", english: "they change their diet to improve their future", audio: "ellos-cambian-su-dieta-para-mejorar-su-futuro.mp3", question: "Why do they change their diet?" }
-       ]
-    },
+      B2: [
+    { spanish: "yo como comida ligera para trabajar mejor en la tarde", english: "I eat light food to work better in the afternoon", audio: "yo-como-comida-ligera-para-trabajar-mejor-en-la-tarde.mp3", question: "Why does the speaker eat light food?" },
+    { spanish: "ella prefiere beber agua por lo tanto no quiere bebidas dulces", english: "she prefers to drink water therefore she does not want sweet drinks", audio: "ella-prefiere-beber-agua-por-lo-tanto-no-quiere-bebidas-dulces.mp3", question: "What does she not want?" },
+    { spanish: "el come sopa caliente a pesar de que hace calor", english: "he eats hot soup even though it is hot", audio: "el-come-sopa-caliente-a-pesar-de-que-hace-calor.mp3", question: "What does he eat?" },
+    { spanish: "yo bebo cafe para tener energia en el trabajo", english: "I drink coffee to have energy at work", audio: "yo-bebo-cafe-para-tener-energia-en-el-trabajo.mp3", question: "Why does the speaker drink coffee?" },
+    { spanish: "ella come ensalada sin embargo tambien quiere pan", english: "she eats salad however she also wants bread", audio: "ella-come-ensalada-sin-embargo-tambien-quiere-pan.mp3", question: "What else does she want?" },
+    { spanish: "el bebe jugo para estar bien durante el dia", english: "he drinks juice to feel well during the day", audio: "el-bebe-jugo-para-estar-bien-durante-el-dia.mp3", question: "Why does he drink juice?" },
+    { spanish: "yo como arroz con pollo para tener energia en el viaje", english: "I eat rice with chicken to have energy on the trip", audio: "yo-como-arroz-con-pollo-para-tener-energia-en-el-viaje.mp3", question: "Why does the speaker eat rice with chicken?" },
+    { spanish: "ella bebe te para sentirme mejor despues del trabajo", english: "she drinks tea to feel better after work", audio: "ella-bebe-te-para-sentirme-mejor-despues-del-trabajo.mp3", question: "Why does she drink tea?" },
+    { spanish: "el come comida simple sin embargo quiere buen sabor", english: "he eats simple food however he wants good flavor", audio: "el-come-comida-simple-sin-embargo-quiere-buen-sabor.mp3", question: "What does he want?" },
+    { spanish: "yo bebo agua para estar bien en el dia", english: "I drink water to feel well during the day", audio: "yo-bebo-agua-para-estar-bien-en-el-dia.mp3", question: "Why does the speaker drink water?" }
+       { spanish: "ella come comida saludable para tener energia", 
+      english: "she eats healthy food to have energy", 
+      audio: "ella-come-comida-saludable-para-tener-energia.mp3", 
+      question: "Why does she eat healthy food?" },
+
+    { spanish: "el bebe cafe sin embargo quiere algo simple", 
+      english: "he drinks coffee however he wants something simple", 
+      audio: "el-bebe-cafe-sin-embargo-quiere-algo-simple.mp3", 
+      question: "What does he want?" },
+
+    { spanish: "yo como comida simple para estar bien en el trabajo", 
+      english: "I eat simple food to feel well at work", 
+      audio: "yo-como-comida-simple-para-estar-bien-en-el-trabajo.mp3", 
+      question: "Why does the speaker eat simple food?" },
+
+    { spanish: "ella bebe agua para estar mejor despues del trabajo", 
+      english: "she drinks water to feel better after work", 
+      audio: "ella-bebe-agua-para-estar-mejor-despues-del-trabajo.mp3", 
+      question: "Why does she drink water?" },
+
+    { spanish: "el come comida ligera a pesar de estar cansado", 
+      english: "he eats light food despite being tired", 
+      audio: "el-come-comida-ligera-a-pesar-de-estar-cansado.mp3", 
+      question: "Why does he eat light food?" },
+
+    { spanish: "yo bebo jugo para tener energia en el dia", 
+      english: "I drink juice to have energy during the day", 
+      audio: "yo-bebo-jugo-para-tener-energia-en-el-dia.mp3", 
+      question: "Why does the speaker drink juice?" },
+
+    { spanish: "ella come comida simple sin embargo quiere buen servicio", 
+      english: "she eats simple food however she wants good service", 
+      audio: "ella-come-comida-simple-sin-embargo-quiere-buen-servicio.mp3", 
+      question: "What does she want?" },
+
+    { spanish: "el bebe agua por lo tanto no quiere otras bebidas", 
+      english: "he drinks water therefore he does not want other drinks", 
+      audio: "el-bebe-agua-por-lo-tanto-no-quiere-otras-bebidas.mp3", 
+      question: "What does he not want?" },
+
+    { spanish: "yo como comida ligera para estar bien durante el dia", 
+      english: "I eat light food to feel well during the day", 
+      audio: "yo-como-comida-ligera-para-estar-bien-durante-el-dia.mp3", 
+      question: "Why does the speaker eat light food?" },
+
+    { spanish: "ella bebe te sin embargo quiere buen sabor", 
+      english: "she drinks tea however she wants good flavor", 
+      audio: "ella-bebe-te-sin-embargo-quiere-buen-sabor.mp3", 
+      question: "What does she want?" }
+  ]
+}
 
    /* ============================================================
    TRAVEL — CEFR Listening Packs (A1 → B2)
