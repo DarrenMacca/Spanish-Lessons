@@ -1600,13 +1600,13 @@ travel: {
       question: "Why does the speaker order juice?" },
 
     { spanish: "ella pide comida simple sin embargo quiere buen sabor",
-      english: "she orders simple food however she wants good flavor",
-      audio: "ella-pide-comida-simple-sin-embargo-quiere-buen-sabor.mp3",
-      question: "What does she want?" }
+  english: "she orders simple food however she wants good flavor",
+  audio: "ella-pide-comida-simple-sin-embargo-quiere-buen-sabor.mp3",
+  question: "What does she want?" }
   ]
 },
+};   // ⭐ THIS closes CEFR_LISTENING_TOPICS — REQUIRED
 
-       
 const listenAutoPlay = {
     list: [],
     active: false,
