@@ -935,307 +935,518 @@ const CEFR_LISTENING_TOPICS = {
       { spanish: "ella analiza cómo la comida afecta la vida diaria", english: "she analyzes how food affects daily life", audio: "ella-analiza-como-la-comida-afecta-la-vida-diaria.mp3", question: "What does she analyze?" },
       { spanish: "yo manejo decisiones de comida en proyectos largos", english: "I handle food decisions in long-term projects", audio: "yo-manejo-decisiones-de-comida-en-proyectos-largos.mp3", question: "What kind of decisions does the speaker handle?" },
       { spanish: "ellos cambian su dieta para mejorar su futuro", english: "they change their diet to improve their future", audio: "ellos-cambian-su-dieta-para-mejorar-su-futuro.mp3", question: "Why do they change their diet?" }
+       ]
+    },
+
+   /* ============================================================
+   TRAVEL — CEFR Listening Packs (A1 → B2)
+   ============================================================ */
+
+const CEFR_LISTENING_TOPICS = {
+
+  travel: {
+
+    /* ============================================================
+       A1 — Beginner (20 items)
+       ============================================================ */
+    A1: [
+      { spanish: "donde esta la parada de autobus", english: "where is the bus stop", audio: "donde-esta-la-parada-de-autobus.mp3", question: "What place is the speaker looking for?" },
+      { spanish: "el aeropuerto esta abierto", english: "the airport is open", audio: "el-aeropuerto-esta-abierto.mp3", question: "Is the airport open?" },
+      { spanish: "quiero un boleto", english: "I want a ticket", audio: "quiero-un-boleto.mp3", question: "What does the speaker want?" },
+      { spanish: "donde esta el hotel", english: "where is the hotel", audio: "donde-esta-el-hotel.mp3", question: "What place is the speaker looking for?" },
+      { spanish: "ella vive cerca de la estacion", english: "she lives near the station", audio: "ella-vive-cerca-de-la-estacion.mp3", question: "Where does she live?" },
+      { spanish: "quiero ir al aeropuerto", english: "I want to go to the airport", audio: "quiero-ir-al-aeropuerto.mp3", question: "Where does the speaker want to go?" },
+      { spanish: "el autobus llega temprano", english: "the bus arrives early", audio: "el-autobus-llega-temprano.mp3", question: "When does the bus arrive?" },
+      { spanish: "la estacion esta cerrada", english: "the station is closed", audio: "la-estacion-esta-cerrada.mp3", question: "Is the station open?" },
+      { spanish: "quiero viajar hoy", english: "I want to travel today", audio: "quiero-viajar-hoy.mp3", question: "When does the speaker want to travel?" },
+      { spanish: "ella quiere ir al centro", english: "she wants to go to the center", audio: "ella-quiere-ir-al-centro.mp3", question: "Where does she want to go?" },
+      { spanish: "donde esta la parada de tren", english: "where is the train stop", audio: "donde-esta-la-parada-de-tren.mp3", question: "What place is the speaker looking for?" },
+      { spanish: "el hotel esta cerca del aeropuerto", english: "the hotel is near the airport", audio: "el-hotel-esta-cerca-del-aeropuerto.mp3", question: "Where is the hotel?" },
+      { spanish: "quiero un boleto barato", english: "I want a cheap ticket", audio: "quiero-un-boleto-barato.mp3", question: "What kind of ticket does the speaker want?" },
+      { spanish: "ella vive lejos del centro", english: "she lives far from the center", audio: "ella-vive-lejos-del-centro.mp3", question: "Where does she live?" },
+      { spanish: "el tren llega tarde", english: "the train arrives late", audio: "el-tren-llega-tarde.mp3", question: "When does the train arrive?" },
+      { spanish: "la estacion esta abierta", english: "the station is open", audio: "la-estacion-esta-abierta.mp3", question: "Is the station open?" },
+      { spanish: "quiero ir a la ciudad", english: "I want to go to the city", audio: "quiero-ir-a-la-ciudad.mp3", question: "Where does the speaker want to go?" },
+      { spanish: "ella quiere viajar manana", english: "she wants to travel tomorrow", audio: "ella-quiere-viajar-manana.mp3", question: "When does she want to travel?" },
+      { spanish: "nosotros viajamos en autobus", english: "we travel by bus", audio: "nosotros-viajamos-en-autobus.mp3", question: "How do they travel?" },
+      { spanish: "yo quiero ir a la estacion", english: "I want to go to the station", audio: "yo-quiero-ir-a-la-estacion.mp3", question: "Where does the speaker want to go?" }
+    ],
+
+    /* ============================================================
+       A2 — Elementary (20 items)
+       ============================================================ */
+    A2: [
+      { spanish: "fuiste al aeropuerto", english: "did you go to the airport", audio: "fuiste-al-aeropuerto.mp3", question: "Where might the listener have gone?" },
+      { spanish: "viajamos a menudo", english: "we travel often", audio: "viajamos-a-menudo.mp3", question: "How often do they travel?" },
+      { spanish: "el avion llega temprano", english: "the plane arrives early", audio: "el-avion-llega-temprano.mp3", question: "When does the plane arrive?" },
+      { spanish: "visitas el centro a menudo", english: "you visit the center often", audio: "visitas-el-centro-a-menudo.mp3", question: "How often does the listener visit the center?" },
+      { spanish: "viajaste la semana pasada", english: "you traveled last week", audio: "viajaste-la-semana-pasada.mp3", question: "When did the listener travel?" },
+      { spanish: "vas a visitar manana", english: "you will visit tomorrow", audio: "vas-a-visitar-manana.mp3", question: "When will the visit happen?" },
+      { spanish: "ella visita a su familia", english: "she visits her family", audio: "ella-visita-a-su-familia.mp3", question: "Who does she visit?" },
+      { spanish: "yo visite ayer", english: "I visited yesterday", audio: "yo-visite-ayer.mp3", question: "When did the speaker visit?" },
+      { spanish: "el usa transporte cada dia", english: "he uses transport every day", audio: "el-usa-transporte-cada-dia.mp3", question: "What does he use?" },
+      { spanish: "ella compro un boleto barato", english: "she bought a cheap ticket", audio: "ella-compro-un-boleto-barato.mp3", question: "What did she buy?" },
+      { spanish: "nosotros viajamos en tren", english: "we travel by train", audio: "nosotros-viajamos-en-tren.mp3", question: "How do they travel?" },
+      { spanish: "fuiste al centro ayer", english: "you went to the center yesterday", audio: "fuiste-al-centro-ayer.mp3", question: "When did the listener go to the center?" },
+      { spanish: "viajamos juntos la semana pasada", english: "we traveled together last week", audio: "viajamos-juntos-la-semana-pasada.mp3", question: "When did they travel together?" },
+      { spanish: "ella usa transporte publico", english: "she uses public transport", audio: "ella-usa-transporte-publico.mp3", question: "What does she use?" },
+      { spanish: "yo compre un boleto ayer", english: "I bought a ticket yesterday", audio: "yo-compre-un-boleto-ayer.mp3", question: "What did the speaker buy?" },
+      { spanish: "el viaja a menudo por trabajo", english: "he travels often for work", audio: "el-viaja-a-menudo-por-trabajo.mp3", question: "Why does he travel often?" },
+      { spanish: "ella visito la ciudad el fin de semana", english: "she visited the city on the weekend", audio: "ella-visito-la-ciudad-el-fin-de-semana.mp3", question: "When did she visit the city?" },
+      { spanish: "nosotros usamos transporte para ir al centro", english: "we use transport to go to the center", audio: "nosotros-usamos-transporte-para-ir-al-centro.mp3", question: "Why do they use transport?" },
+      { spanish: "yo viaje en avion ayer", english: "I traveled by plane yesterday", audio: "yo-viaje-en-avion-ayer.mp3", question: "How did the speaker travel?" },
+      { spanish: "el compro boletos para su familia", english: "he bought tickets for his family", audio: "el-compro-boletos-para-su-familia.mp3", question: "Who did he buy tickets for?" }
+    ],
+
+    /* ============================================================
+       B1 — Intermediate (20 items)
+       ============================================================ */
+    B1: [
+      { spanish: "disfruto viajar con amigos", english: "I enjoy traveling with friends", audio: "disfruto-viajar-con-amigos.mp3", question: "Who does the speaker travel with?" },
+      { spanish: "planeamos viajes futuros", english: "we plan future trips", audio: "planeamos-viajes-futuros.mp3", question: "What do they plan?" },
+      { spanish: "ella viaja sola a menudo", english: "she travels alone often", audio: "ella-viaja-sola-a-menudo.mp3", question: "How does she travel?" },
+      { spanish: "el recuerda viajes pasados", english: "he remembers past trips", audio: "el-recuerda-viajes-pasados.mp3", question: "What does he remember?" },
+      { spanish: "yo quiero viajar mas", english: "I want to travel more", audio: "yo-quiero-viajar-mas.mp3", question: "What does the speaker want?" },
+      { spanish: "ella visita lugares nuevos", english: "she visits new places", audio: "ella-visita-lugares-nuevos.mp3", question: "What does she visit?" },
+      { spanish: "ellos viajan juntos los fines de semana", english: "they travel together on weekends", audio: "ellos-viajan-juntos-los-fines-de-semana.mp3", question: "When do they travel together?" },
+      { spanish: "yo uso transporte para viajar", english: "I use transport to travel", audio: "yo-uso-transporte-para-viajar.mp3", question: "What does the speaker use to travel?" },
+      { spanish: "ella disfruta viajar por la ciudad", english: "she enjoys traveling through the city", audio: "ella-disfruta-viajar-por-la-ciudad.mp3", question: "Where does she enjoy traveling?" },
+      { spanish: "nosotros hablamos sobre viajes futuros", english: "we talk about future trips", audio: "nosotros-hablamos-sobre-viajes-futuros.mp3", question: "What do they talk about?" },
+      { spanish: "el viaja por trabajo cada mes", english: "he travels for work every month", audio: "el-viaja-por-trabajo-cada-mes.mp3", question: "Why does he travel?" },
+      { spanish: "ella planea un viaje con su familia", english: "she plans a trip with her family", audio: "ella-planea-un-viaje-con-su-familia.mp3", question: "Who does she plan a trip with?" },
+      { spanish: "yo recuerdo un viaje interesante", english: "I remember an interesting trip", audio: "yo-recuerdo-un-viaje-interesante.mp3", question: "What does the speaker remember?" },
+      { spanish: "ellos visitan ciudades nuevas cada ano", english: "they visit new cities every year", audio: "ellos-visitan-ciudades-nuevas-cada-ano.mp3", question: "What do they visit?" },
+      { spanish: "nosotros usamos transporte publico en la ciudad", english: "we use public transport in the city", audio: "nosotros-usamos-transporte-publico-en-la-ciudad.mp3", question: "What do they use?" },
+      { spanish: "ella disfruta viajar en tren", english: "she enjoys traveling by train", audio: "ella-disfruta-viajar-en-tren.mp3", question: "How does she enjoy traveling?" },
+      { spanish: "yo hablo sobre viajes con mis amigos", english: "I talk about trips with my friends", audio: "yo-hablo-sobre-viajes-con-mis-amigos.mp3", question: "Who does the speaker talk with?" },
+      { spanish: "el planea visitar el centro manana", english: "he plans to visit the center tomorrow", audio: "el-planea-visitar-el-centro-manana.mp3", question: "When will he visit the center?" },
+      { spanish: "ella viaja a menudo para ver a su familia", english: "she travels often to see her family", audio: "ella-viaja-a-menudo-para-ver-a-su-familia.mp3", question: "Why does she travel often?" },
+      { spanish: "nosotros organizamos viajes largos cada ano", english: "we organize long trips every year", audio: "nosotros-organizamos-viajes-largos-cada-ano.mp3", question: "What do they organize?" }
+    ],
+
+    /* ============================================================
+       B2 — Upper Intermediate (20 items)
+       ============================================================ */
+   B2: [
+  { spanish: "la tecnologia cambia como viajamos", english: "technology changes how we travel", audio: "la-tecnologia-cambia-como-viajamos.mp3", question: "What does technology change?" },
+
+  { spanish: "la cultura afecta nuestras decisiones de viaje", english: "culture affects our travel decisions", audio: "la-cultura-afecta-nuestras-decisiones-de-viaje.mp3", question: "What affects travel decisions?" },
+
+  { spanish: "viajar crea oportunidades importantes", english: "travel creates important opportunities", audio: "viajar-crea-oportunidades-importantes.mp3", question: "What does travel create?" },
+
+  { spanish: "analizamos cambios en la forma de viajar", english: "we analyze changes in the way we travel", audio: "analizamos-cambios-en-la-forma-de-viajar.mp3", question: "What do they analyze?" },
+
+  { spanish: "ella viaja a pesar de los desafios", english: "she travels despite the challenges", audio: "ella-viaja-a-pesar-de-los-desafios.mp3", question: "What does she travel despite?" },
+
+  { spanish: "el trabaja remoto por lo tanto viaja mas", english: "he works remotely therefore he travels more", audio: "el-trabaja-remoto-por-lo-tanto-viaja-mas.mp3", question: "Why does he travel more?" },
+
+  { spanish: "ellos viajan juntos sin embargo tienen horarios diferentes", english: "they travel together however they have different schedules", audio: "ellos-viajan-juntos-sin-embargo-tienen-horarios-diferentes.mp3", question: "What do they do together?" },
+
+  { spanish: "ella estudia viajes culturales para oportunidades futuras", english: "she studies cultural travel for future opportunities", audio: "ella-estudia-viajes-culturales-para-oportunidades-futuras.mp3", question: "Why does she study cultural travel?" },
+
+  { spanish: "yo analizo destinos para proyectos largos", english: "I analyze destinations for long-term projects", audio: "yo-analizo-destinos-para-proyectos-largos.mp3", question: "What does the speaker analyze?" },
+
+  { spanish: "la sociedad enfrenta nuevos desafios de viaje", english: "society faces new travel challenges", audio: "la-sociedad-enfrenta-nuevos-desafios-de-viaje.mp3", question: "What does society face?" },
+
+  { spanish: "la tecnologia cambia la experiencia de viaje", english: "technology changes the travel experience", audio: "la-tecnologia-cambia-la-experiencia-de-viaje.mp3", question: "What does technology change?" },
+
+  { spanish: "la educacion influye en como viajamos", english: "education influences how we travel", audio: "la-educacion-influye-en-como-viajamos.mp3", question: "What influences how we travel?" },
+
+  { spanish: "analizamos el impacto cultural del turismo", english: "we analyze the cultural impact of tourism", audio: "analizamos-el-impacto-cultural-del-turismo.mp3", question: "What do they analyze?" },
+
+  { spanish: "ella viaja para proyectos a largo plazo", english: "she travels for long-term projects", audio: "ella-viaja-para-proyectos-a-largo-plazo.mp3", question: "Why does she travel?" },
+
+  { spanish: "el estudia rutas de viaje eficientes", english: "he studies efficient travel routes", audio: "el-estudia-rutas-de-viaje-eficientes.mp3", question: "What does he study?" },
+
+  { spanish: "nosotros discutimos desafios de transporte", english: "we discuss transport challenges", audio: "nosotros-discutimos-desafios-de-transporte.mp3", question: "What do they discuss?" },
+
+  { spanish: "ella analiza como la cultura afecta el viaje", english: "she analyzes how culture affects travel", audio: "ella-analiza-como-la-cultura-afecta-el-viaje.mp3", question: "What does she analyze?" },
+
+  { spanish: "yo manejo decisiones de viaje en proyectos largos", english: "I handle travel decisions in long-term projects", audio: "yo-manejo-decisiones-de-viaje-en-proyectos-largos.mp3", question: "What kind of decisions does the speaker handle?" },
+
+  { spanish: "ellos cambian sus planes de viaje por nuevos desafios", english: "they change their travel plans because of new challenges", audio: "ellos-cambian-sus-planes-de-viaje-por-nuevos-desafios.mp3", question: "Why do they change their travel plans?" },
+
+  { spanish: "la sociedad analiza el futuro del transporte", english: "society analyzes the future of transport", audio: "la-sociedad-analiza-el-futuro-del-transporte.mp3", question: "What does society analyze?" }
     ]
-  }
-};
+    },
 
-   
+   /* ============================================================
+   WORK — CEFR Listening Packs (A1 → B2)
+   ============================================================ */
+
+const CEFR_LISTENING_TOPICS = {
+
+  work: {
 
     /* ============================================================
-       TRAVEL
+       A1 — Beginner (20 items)
        ============================================================ */
-    travel: {
+    A1: [
+      { spanish: "tu trabajas en una tienda", english: "you work in a store", audio: "tu-trabajas-en-una-tienda.mp3", question: "Where does the listener work?" },
+      { spanish: "yo trabajo en la ciudad", english: "I work in the city", audio: "yo-trabajo-en-la-ciudad.mp3", question: "Where does the speaker work?" },
+      { spanish: "el trabaja en un hotel", english: "he works in a hotel", audio: "el-trabaja-en-un-hotel.mp3", question: "Where does he work?" },
+      { spanish: "ella trabaja en una farmacia", english: "she works in a pharmacy", audio: "ella-trabaja-en-una-farmacia.mp3", question: "Where does she work?" },
+      { spanish: "nosotros trabajamos juntos", english: "we work together", audio: "nosotros-trabajamos-juntos.mp3", question: "How do they work?" },
+      { spanish: "yo estudio y trabajo", english: "I study and work", audio: "yo-estudio-y-trabajo.mp3", question: "What does the speaker do?" },
+      { spanish: "el trabaja en el centro", english: "he works in the center", audio: "el-trabaja-en-el-centro.mp3", question: "Where does he work?" },
+      { spanish: "ella trabaja en una tienda de comida", english: "she works in a food store", audio: "ella-trabaja-en-una-tienda-de-comida.mp3", question: "Where does she work?" },
+      { spanish: "yo trabajo por la manana", english: "I work in the morning", audio: "yo-trabajo-por-la-manana.mp3", question: "When does the speaker work?" },
+      { spanish: "nosotros trabajamos en un supermercado", english: "we work in a supermarket", audio: "nosotros-trabajamos-en-un-supermercado.mp3", question: "Where do they work?" },
+      { spanish: "el trabaja en una estacion", english: "he works in a station", audio: "el-trabaja-en-una-estacion.mp3", question: "Where does he work?" },
+      { spanish: "ella trabaja cerca del centro", english: "she works near the center", audio: "ella-trabaja-cerca-del-centro.mp3", question: "Where does she work?" },
+      { spanish: "yo trabajo en un hotel pequeno", english: "I work in a small hotel", audio: "yo-trabajo-en-un-hotel-pequeno.mp3", question: "Where does the speaker work?" },
+      { spanish: "nosotros trabajamos en la ciudad", english: "we work in the city", audio: "nosotros-trabajamos-en-la-ciudad.mp3", question: "Where do they work?" },
+      { spanish: "el trabaja en una tienda barata", english: "he works in a cheap store", audio: "el-trabaja-en-una-tienda-barata.mp3", question: "Where does he work?" },
+      { spanish: "ella trabaja en un restaurante", english: "she works in a restaurant", audio: "ella-trabaja-en-un-restaurante.mp3", question: "Where does she work?" },
+      { spanish: "yo trabajo con mi amigo", english: "I work with my friend", audio: "yo-trabajo-con-mi-amigo.mp3", question: "Who does the speaker work with?" },
+      { spanish: "nosotros trabajamos en una farmacia", english: "we work in a pharmacy", audio: "nosotros-trabajamos-en-una-farmacia.mp3", question: "Where do they work?" },
+      { spanish: "el trabaja en una tienda de ropa", english: "he works in a clothing store", audio: "el-trabaja-en-una-tienda-de-ropa.mp3", question: "Where does he work?" },
+      { spanish: "ella trabaja en una oficina", english: "she works in an office", audio: "ella-trabaja-en-una-oficina.mp3", question: "Where does she work?" }
+    ],
 
-        A1: [
-            { spanish: "dónde está la parada de autobús", english: "where is the bus stop", audio: "donde-esta-la-parada-de-autobus.mp3", question: "What place is the speaker looking for?" },
-            { spanish: "el aeropuerto está abierto", english: "the airport is open", audio: "el-aeropuerto-esta-abierto.mp3", question: "Is the airport open?" },
-            { spanish: "quiero un boleto", english: "I want a ticket", audio: "quiero-un-boleto.mp3", question: "What does the speaker want?" },
-            { spanish: "dónde está el hotel", english: "where is the hotel", audio: "donde-esta-el-hotel.mp3", question: "What place is the speaker looking for?" },
-            { spanish: "ella vive cerca de la estación", english: "she lives near the station", audio: "ella-vive-cerca-de-la-estacion.mp3", question: "Where does she live?" },
-            { spanish: "quiero ir al aeropuerto", english: "I want to go to the airport", audio: "quiero-ir-al-aeropuerto.mp3", question: "Where does the speaker want to go?" },
-            { spanish: "el autobús llega temprano", english: "the bus arrives early", audio: "el-autobus-llega-temprano.mp3", question: "When does the bus arrive?" },
-            { spanish: "la estación está cerrada", english: "the station is closed", audio: "la-estacion-esta-cerrada.mp3", question: "Is the station open?" },
-            { spanish: "quiero viajar hoy", english: "I want to travel today", audio: "quiero-viajar-hoy.mp3", question: "When does the speaker want to travel?" },
-            { spanish: "ella quiere ir al centro", english: "she wants to go to the center", audio: "ella-quiere-ir-al-centro.mp3", question: "Where does she want to go?" },
-            { spanish: "dónde está la parada de tren", english: "where is the train stop", audio: "donde-esta-la-parada-de-tren.mp3", question: "What place is the speaker looking for?" },
-            { spanish: "el hotel está cerca del aeropuerto", english: "the hotel is near the airport", audio: "el-hotel-esta-cerca-del-aeropuerto.mp3", question: "Where is the hotel?" },
-            { spanish: "quiero un boleto barato", english: "I want a cheap ticket", audio: "quiero-un-boleto-barato.mp3", question: "What kind of ticket does the speaker want?" },
-            { spanish: "ella vive lejos del centro", english: "she lives far from the center", audio: "ella-vive-lejos-del-centro.mp3", question: "Where does she live?" },
-            { spanish: "el tren llega tarde", english: "the train arrives late", audio: "el-tren-llega-tarde.mp3", question: "When does the train arrive?" },
-            { spanish: "la estación está abierta", english: "the station is open", audio: "la-estacion-esta-abierta.mp3", question: "Is the station open?" },
-            { spanish: "quiero ir a la ciudad", english: "I want to go to the city", audio: "quiero-ir-a-la-ciudad.mp3", question: "Where does the speaker want to go?" },
-            { spanish: "ella quiere viajar mañana", english: "she wants to travel tomorrow", audio: "ella-quiere-viajar-manana.mp3", question: "When does she want to travel?" },
-            { spanish: "nosotros viajamos en autobús", english: "we travel by bus", audio: "nosotros-viajamos-en-autobus.mp3", question: "How do they travel?" },
-            { spanish: "yo quiero ir a la estación", english: "I want to go to the station", audio: "yo-quiero-ir-a-la-estacion.mp3", question: "Where does the speaker want to go?" }
-        ],
+    /* ============================================================
+       A2 — Elementary (20 items)
+       ============================================================ */
+    A2: [
+      { spanish: "el trabaja cada manana", english: "he works every morning", audio: "el-trabaja-cada-manana.mp3", question: "When does he work?" },
+      { spanish: "yo termine el trabajo temprano", english: "I finished work early", audio: "yo-termine-el-trabajo-temprano.mp3", question: "When did the speaker finish work?" },
+      { spanish: "ella trabaja en el centro de la ciudad", english: "she works in the city center", audio: "ella-trabaja-en-el-centro-de-la-ciudad.mp3", question: "Where does she work?" },
+      { spanish: "nosotros usamos transporte para ir al trabajo", english: "we use transport to go to work", audio: "nosotros-usamos-transporte-para-ir-al-trabajo.mp3", question: "Why do they use transport?" },
+      { spanish: "yo compre almuerzo para el trabajo", english: "I bought lunch for work", audio: "yo-compre-almuerzo-para-el-trabajo.mp3", question: "What did the speaker buy?" },
+      { spanish: "el trabaja en un supermercado grande", english: "he works in a big supermarket", audio: "el-trabaja-en-un-supermercado-grande.mp3", question: "Where does he work?" },
+      { spanish: "ella termino el trabajo ayer", english: "she finished work yesterday", audio: "ella-termino-el-trabajo-ayer.mp3", question: "When did she finish work?" },
+      { spanish: "yo trabajo a menudo por la tarde", english: "I often work in the afternoon", audio: "yo-trabajo-a-menudo-por-la-tarde.mp3", question: "When does the speaker often work?" },
+      { spanish: "nosotros trabajamos juntos la semana pasada", english: "we worked together last week", audio: "nosotros-trabajamos-juntos-la-semana-pasada.mp3", question: "When did they work together?" },
+      { spanish: "el usa transporte para ir al trabajo", english: "he uses transport to go to work", audio: "el-usa-transporte-para-ir-al-trabajo.mp3", question: "Why does he use transport?" },
+      { spanish: "ella compro comida para el trabajo", english: "she bought food for work", audio: "ella-compro-comida-para-el-trabajo.mp3", question: "What did she buy?" },
+      { spanish: "yo trabaje en la ciudad ayer", english: "I worked in the city yesterday", audio: "yo-trabaje-en-la-ciudad-ayer.mp3", question: "Where did the speaker work?" },
+      { spanish: "nosotros terminamos el trabajo tarde", english: "we finished work late", audio: "nosotros-terminamos-el-trabajo-tarde.mp3", question: "When did they finish work?" },
+      { spanish: "el trabaja en una oficina pequena", english: "he works in a small office", audio: "el-trabaja-en-una-oficina-pequena.mp3", question: "Where does he work?" },
+      { spanish: "ella trabaja con su familia", english: "she works with her family", audio: "ella-trabaja-con-su-familia.mp3", question: "Who does she work with?" },
+      { spanish: "yo uso transporte para ir al centro de trabajo", english: "I use transport to go to the work center", audio: "yo-uso-transporte-para-ir-al-centro-de-trabajo.mp3", question: "Why does the speaker use transport?" },
+      { spanish: "nosotros trabajamos en proyectos pequenos", english: "we work on small projects", audio: "nosotros-trabajamos-en-proyectos-pequenos.mp3", question: "What do they work on?" },
+      { spanish: "el termino el trabajo la semana pasada", english: "he finished work last week", audio: "el-termino-el-trabajo-la-semana-pasada.mp3", question: "When did he finish work?" },
+      { spanish: "ella trabaja en el centro cada dia", english: "she works in the center every day", audio: "ella-trabaja-en-el-centro-cada-dia.mp3", question: "How often does she work in the center?" },
+      { spanish: "yo compre boletos para ir al trabajo", english: "I bought tickets to go to work", audio: "yo-compre-boletos-para-ir-al-trabajo.mp3", question: "What did the speaker buy?" }
+    ],
 
-        A2: [
-            { spanish: "fuiste al aeropuerto", english: "did you go to the airport", audio: "fuiste-al-aeropuerto.mp3", question: "Where might the listener have gone?" },
-            { spanish: "viajamos a menudo", english: "we travel often", audio: "viajamos-a-menudo.mp3", question: "How often do they travel?" },
-            { spanish: "el avión llega temprano", english: "the plane arrives early", audio: "el-avion-llega-temprano.mp3", question: "When does the plane arrive?" },
-            { spanish: "visitas el centro a menudo", english: "you visit the center often", audio: "visitas-el-centro-a-menudo.mp3", question: "How often does the listener visit the center?" },
-            { spanish: "viajaste la semana pasada", english: "you traveled last week", audio: "viajaste-la-semana-pasada.mp3", question: "When did the listener travel?" },
-            { spanish: "vas a visitar mañana", english: "you will visit tomorrow", audio: "vas-a-visitar-manana.mp3", question: "When will the visit happen?" },
-            { spanish: "ella visita a su familia", english: "she visits her family", audio: "ella-visita-a-su-familia.mp3", question: "Who does she visit?" },
-            { spanish: "yo visité ayer", english: "I visited yesterday", audio: "yo-visite-ayer.mp3", question: "When did the speaker visit?" },
-            { spanish: "él usa transporte cada día", english: "he uses transport every day", audio: "el-usa-transporte-cada-dia.mp3", question: "What does he use?" },
-            { spanish: "ella compró un boleto barato", english: "she bought a cheap ticket", audio: "ella-compro-un-boleto-barato.mp3", question: "What did she buy?" },
-            { spanish: "nosotros viajamos en tren", english: "we travel by train", audio: "nosotros-viajamos-en-tren.mp3", question: "How do they travel?" },
-            { spanish: "fuiste al centro ayer", english: "you went to the center yesterday", audio: "fuiste-al-centro-ayer.mp3", question: "When did the listener go to the center?" },
-            { spanish: "viajamos juntos la semana pasada", english: "we traveled together last week", audio: "viajamos-juntos-la-semana-pasada.mp3", question: "When did they travel together?" },
-            { spanish: "ella usa transporte público", english: "she uses public transport", audio: "ella-usa-transporte-publico.mp3", question: "What does she use?" },
-            { spanish: "yo compré un boleto ayer", english: "I bought a ticket yesterday", audio: "yo-compre-un-boleto-ayer.mp3", question: "What did the speaker buy?" },
-            { spanish: "él viaja a menudo por trabajo", english: "he travels often for work", audio: "el-viaja-a-menudo-por-trabajo.mp3", question: "Why does he travel often?" },
-            { spanish: "ella visitó la ciudad el fin de semana", english: "she visited the city on the weekend", audio: "ella-visito-la-ciudad-el-fin-de-semana.mp3", question: "When did she visit the city?" },
-            { spanish: "nosotros usamos transporte para ir al centro", english: "we use transport to go to the center", audio: "nosotros-usamos-transporte-para-ir-al-centro.mp3", question: "Why do they use transport?" },
-            { spanish: "yo viajé en avión ayer", english: "I traveled by plane yesterday", audio: "yo-viaje-en-avion-ayer.mp3", question: "How did the speaker travel?" },
-            { spanish: "él compró boletos para su familia", english: "he bought tickets for his family", audio: "el-compro-boletos-para-su-familia.mp3", question: "Who did he buy tickets for?" }
-        ],
+    /* ============================================================
+       B1 — Intermediate (20 items)
+       ============================================================ */
+    B1: [
+      { spanish: "ella es desarrollador y trabaja en proyectos largos", english: "she is a developer and works on long projects", audio: "ella-es-desarrollador-y-trabaja-en-proyectos-largos.mp3", question: "What is her job?" },
+      { spanish: "el quiere mejorar sus habilidades en el trabajo", english: "he wants to improve his skills at work", audio: "el-quiere-mejorar-sus-habilidades-en-el-trabajo.mp3", question: "What does he want to improve?" },
+      { spanish: "nosotros hablamos sobre problemas diarios en el trabajo", english: "we talk about daily problems at work", audio: "nosotros-hablamos-sobre-problemas-diarios-en-el-trabajo.mp3", question: "What do they talk about?" },
+      { spanish: "yo disfruto trabajar con mi equipo", english: "I enjoy working with my team", audio: "yo-disfruto-trabajar-con-mi-equipo.mp3", question: "Who does the speaker enjoy working with?" },
+      { spanish: "ella estudia para mejorar su comunicacion en el trabajo", english: "she studies to improve her communication at work", audio: "ella-estudia-para-mejorar-su-comunicacion-en-el-trabajo.mp3", question: "Why does she study?" },
+      { spanish: "el usa redes sociales para su trabajo", english: "he uses social networks for his work", audio: "el-usa-redes-sociales-para-su-trabajo.mp3", question: "What does he use for work?" },
+      { spanish: "nosotros tenemos reuniones diarias", english: "we have daily meetings", audio: "nosotros-tenemos-reuniones-diarias.mp3", question: "How often do they have meetings?" },
+      { spanish: "yo leo correos cada manana", english: "I read emails every morning", audio: "yo-leo-correos-cada-manana.mp3", question: "What does the speaker read?" },
+      { spanish: "ella trabaja mientras estudia", english: "she works while she studies", audio: "ella-trabaja-mientras-estudia.mp3", question: "What does she do while studying?" },
+      { spanish: "el disfruta su tiempo libre despues del trabajo", english: "he enjoys his free time after work", audio: "el-disfruta-su-tiempo-libre-despues-del-trabajo.mp3", question: "When does he enjoy free time?" },
+      { spanish: "nosotros planeamos proyectos futuros en el trabajo", english: "we plan future projects at work", audio: "nosotros-planeamos-proyectos-futuros-en-el-trabajo.mp3", question: "What do they plan?" },
+      { spanish: "yo hablo con mi jefe sobre nuevas ideas", english: "I talk with my boss about new ideas", audio: "yo-hablo-con-mi-jefe-sobre-nuevas-ideas.mp3", question: "Who does the speaker talk with?" },
+      { spanish: "ella usa tecnologia para mejorar su trabajo", english: "she uses technology to improve her work", audio: "ella-usa-tecnologia-para-mejorar-su-trabajo.mp3", question: "What does she use to improve her work?" },
+      { spanish: "el estudia para tener mejores oportunidades de trabajo", english: "he studies to have better work opportunities", audio: "el-estudia-para-tener-mejores-oportunidades-de-trabajo.mp3", question: "Why does he study?" },
+      { spanish: "nosotros analizamos problemas en el equipo", english: "we analyze problems in the team", audio: "nosotros-analizamos-problemas-en-el-equipo.mp3", question: "What do they analyze?" },
+      { spanish: "yo escribo informes cada semana", english: "I write reports every week", audio: "yo-escribo-informes-cada-semana.mp3", question: "What does the speaker write?" },
+      { spanish: "ella organiza reuniones importantes", english: "she organizes important meetings", audio: "ella-organiza-reuniones-importantes.mp3", question: "What does she organize?" },
+      { spanish: "el trabaja en proyectos internacionales", english: "he works on international projects", audio: "el-trabaja-en-proyectos-internacionales.mp3", question: "What kind of projects does he work on?" },
+      { spanish: "nosotros hablamos sobre cambios en el trabajo", english: "we talk about changes at work", audio: "nosotros-hablamos-sobre-cambios-en-el-trabajo.mp3", question: "What do they talk about?" },
+      { spanish: "yo disfruto aprender cosas nuevas en el trabajo", english: "I enjoy learning new things at work", audio: "yo-disfruto-aprender-cosas-nuevas-en-el-trabajo.mp3", question: "What does the speaker enjoy learning?" }
+    ],
 
-        B1: [
-            { spanish: "disfruto viajar con amigos", english: "I enjoy traveling with friends", audio: "disfruto-viajar-con-amigos.mp3", question: "Who does the speaker travel with?" },
-            { spanish: "planeamos viajes futuros", english: "we plan future trips", audio: "planeamos-viajes-futuros.mp3", question: "What do they plan?" },
-            { spanish: "ella viaja sola a menudo", english: "she travels alone often", audio: "ella-viaja-sola-a-menudo.mp3", question: "How does she travel?" },
-            { spanish: "él recuerda viajes pasados", english: "he remembers past trips", audio: "el-recuerda-viajes-pasados.mp3", question: "What does he remember?" },
-            { spanish: "yo quiero viajar más", english: "I want to travel more", audio: "yo-quiero-viajar-mas.mp3", question: "What does the speaker want?" },
-            { spanish: "ella visita lugares nuevos", english: "she visits new places", audio: "ella-visita-lugares-nuevos.mp3", question: "What does she visit?" },
-            { spanish: "ellos viajan juntos los fines de semana", english: "they travel together on weekends", audio: "ellos-viajan-juntos-los-fines-de-semana.mp3", question: "When do they travel together?" },
-            { spanish: "yo uso transporte para viajar", english: "I use transport to travel", audio: "yo-uso-transporte-para-viajar.mp3", question: "What does the speaker use to travel?" },
-            { spanish: "ella disfruta viajar por la ciudad", english: "she enjoys traveling through the city", audio: "ella-disfruta-viajar-por-la-ciudad.mp3", question: "Where does she enjoy traveling?" },
-            { spanish: "nosotros hablamos sobre viajes futuros", english: "we talk about future trips", audio: "nosotros-hablamos-sobre-viajes-futuros.mp3", question: "What do they talk about?" },
-            { spanish: "él viaja por trabajo cada mes", english: "he travels for work every month", audio: "el-viaja-por-trabajo-cada-mes.mp3", question: "Why does he travel?" },
-            { spanish: "ella planea un viaje con su familia", english: "she plans a trip with her family", audio: "ella-planea-un-viaje-con-su-familia.mp3", question: "Who does she plan a trip with?" },
-            { spanish: "yo recuerdo un viaje interesante", english: "I remember an interesting trip", audio: "yo-recuerdo-un-viaje-interesante.mp3", question: "What does the speaker remember?" },
-            { spanish: "ellos visitan ciudades nuevas cada año", english: "they visit new cities every year", audio: "ellos-visitan-ciudades-nuevas-cada-ano.mp3", question: "What do they visit?" },
-            { spanish: "nosotros usamos transporte público en la ciudad", english: "we use public transport in the city", audio: "nosotros-usamos-transporte-publico-en-la-ciudad.mp3", question: "What do they use?" },
-            { spanish: "ella disfruta viajar en tren", english: "she enjoys traveling by train", audio: "ella-disfruta-viajar-en-tren.mp3", question: "How does she enjoy traveling?" },
-            { spanish: "yo hablo sobre viajes con mis amigos", english: "I talk about trips with my friends", audio: "yo-hablo-sobre-viajes-con-mis-amigos.mp3", question: "Who does the speaker talk with?" },
-            { spanish: "él planea visitar el centro mañana", english: "he plans to visit the center tomorrow", audio: "el-planea-visitar-el-centro-manana.mp3", question: "When will he visit the center?" },
-            { spanish: "ella viaja a menudo para ver a su familia", english: "she travels often to see her family", audio: "ella-viaja-a-menudo-para-ver-a-su-familia.mp3", question: "Why does she travel often?" },
-            { spanish: "nosotros organizamos viajes largos cada año", english: "we organize long trips every year", audio: "nosotros-organizamos-viajes-largos-cada-ano.mp3", question: "What do they organize?" }
-        ],
+    /* ============================================================
+       B2 — Upper Intermediate (20 items)
+       ============================================================ */
+   B2: [
+  { spanish: "la tecnologia cambia la forma de trabajar", english: "technology changes the way we work", audio: "la-tecnologia-cambia-la-forma-de-trabajar.mp3", question: "What does technology change?" },
 
-        B2: [
-            { spanish: "la tecnología cambia cómo viajamos", english: "technology changes how we travel", audio: "la-tecnologia-cambia-como-viajamos.mp3", question: "What does technology change?" },
-            { spanish: "la cultura afecta nuestras decisiones de viaje", english: "culture affects our travel decisions", audio: "la-cultura-afecta-nuestras-decisiones-de-viaje.mp3", question: "What affects travel decisions?" },
-            { spanish: "viajar crea oportunidades importantes", english: "travel creates important opportunities", audio: "viajar-crea-oportunidades-importantes.mp3", question: "What does travel create?" },
-            { spanish: "analizamos cambios en la forma de viajar", english: "we analyze changes in the way we travel", audio: "analizamos-cambios-en-la-forma-de-viajar.mp3", question: "What do they analyze?" },
-            { spanish: "ella viaja a pesar de los desafíos", english: "she travels despite the challenges", audio: "ella-viaja-a-pesar-de-los-desafios.mp3", question: "What does she travel despite?" },
-            { spanish: "él trabaja remoto por lo tanto viaja más", english: "he works remotely therefore he travels more", audio: "el-trabaja-remoto-por-lo-tanto-viaja-mas.mp3", question: "Why does he travel more?" },
-            { spanish: "ellos viajan juntos sin embargo tienen horarios diferentes", english: "they travel together however they have different schedules", audio: "ellos-viajan-juntos-sin-embargo-tienen-horarios-diferentes.mp3", question: "What do they do together?" },
-            { spanish: "ella estudia viajes culturales para oportunidades futuras", english: "she studies cultural travel for future opportunities", audio: "ella-estudia-viajes-culturales-para-oportunidades-futuras.mp3", question: "Why does she study cultural travel?" },
-            { spanish: "yo analizo destinos para proyectos largos", english: "I analyze destinations for long-term projects", audio: "yo-analizo-destinos-para-proyectos-largos.mp3", question: "What does the speaker analyze?" },
-            { spanish: "la sociedad enfrenta nuevos desafíos de viaje", english: "society faces new travel challenges", audio: "la-sociedad-enfrenta-nuevos-desafios-de-viaje.mp3", question: "What does society face?" },
-            { spanish: "la tecnología cambia la experiencia de viaje", english: "technology changes the travel experience", audio: "la-tecnologia-cambia-la-experiencia-de-viaje.mp3", question: "What does technology change?" },
-            { spanish: "la educación influye en cómo viajamos", english: "education influences how we travel", audio: "la-educacion-influye-en-como-viajamos.mp3", question: "What influences how we travel?" },
-            { spanish: "analizamos el impacto cultural del turismo", english: "we analyze the cultural impact of tourism", audio: "analizamos-el-impacto-cultural-del-turismo.mp3", question: "What do they analyze?" },
-            { spanish: "ella viaja para proyectos a largo plazo", english: "she travels for long-term projects", audio: "ella-viaja-para-proyectos-a-largo-plazo.mp3", question: "Why does she travel?" },
-            { spanish: "él estudia rutas de viaje eficientes", english: "he studies efficient travel routes", audio: "el-estudia-rutas-de-viaje-eficientes.mp3", question: "What does he study?" },
-            { spanish: "nosotros discutimos desafíos de transporte", english: "we discuss transport challenges", audio: "nosotros-discutimos-desafios-de-transporte.mp3", question: "What do they discuss?" },
-            { spanish: "ella analiza cómo la cultura afecta el viaje", english: "she analyzes how culture affects travel", audio: "ella-analiza-como-la-cultura-afecta-el-viaje.mp3", question: "What does she analyze?" },
-            { spanish: "yo manejo decisiones de viaje en proyectos largos", english: "I handle travel decisions in long-term projects", audio: "yo-manejo-decisiones-de-viaje-en-proyectos-largos.mp3", question: "What kind of decisions does the speaker handle?" },
-            { spanish: "ellos cambian sus planes de viaje por nuevos desafíos", english: "they change their travel plans because of new challenges", audio: "ellos-cambian-sus-planes-de-viaje-por-nuevos-desafios.mp3", question: "Why do they change their travel plans?" },
-            { spanish: "la sociedad analiza el futuro del transporte", english: "society analyzes the future of transport", audio: "la-sociedad-analiza-el-futuro-del-transporte.mp3", question: "What does society analyze?" }
-        ]
+  { spanish: "la educacion es importante para el desarrollo profesional", english: "education is important for professional development", audio: "la-educacion-es-importante-para-el-desarrollo-profesional.mp3", question: "What is education important for?" },
+
+  { spanish: "analizamos desafios en el lugar de trabajo", english: "we analyze challenges in the workplace", audio: "analizamos-desafios-en-el-lugar-de-trabajo.mp3", question: "What do they analyze?" },
+
+  { spanish: "ella maneja proyectos a largo plazo", english: "she handles long-term projects", audio: "ella-maneja-proyectos-a-largo-plazo.mp3", question: "What kind of projects does she handle?" },
+
+  { spanish: "yo estudio nuevas habilidades para mejorar mi trabajo", english: "I study new skills to improve my work", audio: "yo-estudio-nuevas-habilidades-para-mejorar-mi-trabajo.mp3", question: "Why does the speaker study new skills?" },
+
+  { spanish: "ellos enfrentan desafios importantes en su empresa", english: "they face important challenges in their company", audio: "ellos-enfrentan-desafios-importantes-en-su-empresa.mp3", question: "What do they face?" },
+
+  { spanish: "ella trabaja remoto sin embargo colabora con su equipo", english: "she works remotely however she collaborates with her team", audio: "ella-trabaja-remoto-sin-embargo-colabora-con-su-equipo.mp3", question: "How does she work?" },
+
+  { spanish: "el organiza reuniones por lo tanto mejora la comunicacion", english: "he organizes meetings therefore he improves communication", audio: "el-organiza-reuniones-por-lo-tanto-mejora-la-comunicacion.mp3", question: "What does he improve?" },
+
+  { spanish: "nosotros discutimos cambios culturales en el trabajo", english: "we discuss cultural changes at work", audio: "nosotros-discutimos-cambios-culturales-en-el-trabajo.mp3", question: "What do they discuss?" },
+
+  { spanish: "ella analiza como la sociedad afecta el trabajo", english: "she analyzes how society affects work", audio: "ella-analiza-como-la-sociedad-afecta-el-trabajo.mp3", question: "What does she analyze?" },
+
+  { spanish: "la motivacion ayuda a lograr metas profesionales", english: "motivation helps achieve professional goals", audio: "la-motivacion-ayuda-a-lograr-metas-profesionales.mp3", question: "What does motivation help achieve?" },
+
+  { spanish: "la cultura de la empresa cambia con el tiempo", english: "company culture changes over time", audio: "la-cultura-de-la-empresa-cambia-con-el-tiempo.mp3", question: "What changes over time?" },
+
+  { spanish: "analizamos el impacto de la tecnologia en el trabajo", english: "we analyze the impact of technology at work", audio: "analizamos-el-impacto-de-la-tecnologia-en-el-trabajo.mp3", question: "What do they analyze?" },
+
+  { spanish: "ella estudia comunicacion para proyectos internacionales", english: "she studies communication for international projects", audio: "ella-estudia-comunicacion-para-proyectos-internacionales.mp3", question: "Why does she study communication?" },
+
+  { spanish: "el maneja decisiones importantes en la empresa", english: "he handles important decisions in the company", audio: "el-maneja-decisiones-importantes-en-la-empresa.mp3", question: "What does he handle?" },
+
+  { spanish: "nosotros discutimos el futuro del trabajo remoto", english: "we discuss the future of remote work", audio: "nosotros-discutimos-el-futuro-del-trabajo-remoto.mp3", question: "What do they discuss?" },
+
+  { spanish: "ella analiza como la educacion afecta el trabajo", english: "she analyzes how education affects work", audio: "ella-analiza-como-la-educacion-afecta-el-trabajo.mp3", question: "What does she analyze?" },
+
+  { spanish: "yo manejo proyectos largos a pesar de los desafios", english: "I handle long projects despite the challenges", audio: "yo-manejo-proyectos-largos-a-pesar-de-los-desafios.mp3", question: "What does the speaker handle?" },
+
+  { spanish: "ellos cambian su forma de trabajar por nuevos desafios", english: "they change their way of working because of new challenges", audio: "ellos-cambian-su-forma-de-trabajar-por-nuevos-desafios.mp3", question: "Why do they change their way of working?" },
+
+  { spanish: "la sociedad analiza el futuro del trabajo", english: "society analyzes the future of work", audio: "la-sociedad-analiza-el-futuro-del-trabajo.mp3", question: "What does society analyze?" }
+]
+
     },
 
     /* ============================================================
-       WORK
-       ============================================================ */
-    work: {
+   FAMILY — CEFR Listening Packs (A1 → B2)
+   ============================================================ */
 
-        A1: [
-            { spanish: "tú trabajas en una tienda", english: "you work in a store", audio: "tu-trabajas-en-una-tienda.mp3", question: "Where does the listener work?" },
-            { spanish: "yo trabajo en la ciudad", english: "I work in the city", audio: "yo-trabajo-en-la-ciudad.mp3", question: "Where does the speaker work?" },
-            { spanish: "él trabaja en un hotel", english: "he works in a hotel", audio: "el-trabaja-en-un-hotel.mp3", question: "Where does he work?" },
-            { spanish: "ella trabaja en una farmacia", english: "she works in a pharmacy", audio: "ella-trabaja-en-una-farmacia.mp3", question: "Where does she work?" },
-            { spanish: "nosotros trabajamos juntos", english: "we work together", audio: "nosotros-trabajamos-juntos.mp3", question: "How do they work?" },
-            { spanish: "yo estudio y trabajo", english: "I study and work", audio: "yo-estudio-y-trabajo.mp3", question: "What does the speaker do?" },
-            { spanish: "él trabaja en el centro", english: "he works in the center", audio: "el-trabaja-en-el-centro.mp3", question: "Where does he work?" },
-            { spanish: "ella trabaja en una tienda de comida", english: "she works in a food store", audio: "ella-trabaja-en-una-tienda-de-comida.mp3", question: "Where does she work?" },
-            { spanish: "yo trabajo por la mañana", english: "I work in the morning", audio: "yo-trabajo-por-la-manana.mp3", question: "When does the speaker work?" },
-            { spanish: "nosotros trabajamos en un supermercado", english: "we work in a supermarket", audio: "nosotros-trabajamos-en-un-supermercado.mp3", question: "Where do they work?" },
-            { spanish: "él trabaja en una estación", english: "he works in a station", audio: "el-trabaja-en-una-estacion.mp3", question: "Where does he work?" },
-            { spanish: "ella trabaja cerca del centro", english: "she works near the center", audio: "ella-trabaja-cerca-del-centro.mp3", question: "Where does she work?" },
-            { spanish: "yo trabajo en un hotel pequeño", english: "I work in a small hotel", audio: "yo-trabajo-en-un-hotel-pequeno.mp3", question: "Where does the speaker work?" },
-            { spanish: "nosotros trabajamos en la ciudad", english: "we work in the city", audio: "nosotros-trabajamos-en-la-ciudad.mp3", question: "Where do they work?" },
-            { spanish: "él trabaja en una tienda barata", english: "he works in a cheap store", audio: "el-trabaja-en-una-tienda-barata.mp3", question: "Where does he work?" },
-            { spanish: "ella trabaja en un restaurante", english: "she works in a restaurant", audio: "ella-trabaja-en-un-restaurante.mp3", question: "Where does she work?" },
-            { spanish: "yo trabajo con mi amigo", english: "I work with my friend", audio: "yo-trabajo-con-mi-amigo.mp3", question: "Who does the speaker work with?" },
-            { spanish: "nosotros trabajamos en una farmacia", english: "we work in a pharmacy", audio: "nosotros-trabajamos-en-una-farmacia.mp3", question: "Where do they work?" },
-            { spanish: "él trabaja en una tienda de ropa", english: "he works in a clothing store", audio: "el-trabaja-en-una-tienda-de-ropa.mp3", question: "Where does he work?" },
-            { spanish: "ella trabaja en una oficina", english: "she works in an office", audio: "ella-trabaja-en-una-oficina.mp3", question: "Where does she work?" }
-        ],
+const CEFR_LISTENING_TOPICS = {
 
-        A2: [
-            { spanish: "él trabaja cada mañana", english: "he works every morning", audio: "el-trabaja-cada-manana.mp3", question: "When does he work?" },
-            { spanish: "yo terminé el trabajo temprano", english: "I finished work early", audio: "yo-termine-el-trabajo-temprano.mp3", question: "When did the speaker finish work?" },
-            { spanish: "ella trabaja en el centro de la ciudad", english: "she works in the city center", audio: "ella-trabaja-en-el-centro-de-la-ciudad.mp3", question: "Where does she work?" },
-            { spanish: "nosotros usamos transporte para ir al trabajo", english: "we use transport to go to work", audio: "nosotros-usamos-transporte-para-ir-al-trabajo.mp3", question: "Why do they use transport?" },
-            { spanish: "yo compré almuerzo para el trabajo", english: "I bought lunch for work", audio: "yo-compre-almuerzo-para-el-trabajo.mp3", question: "What did the speaker buy?" },
-            { spanish: "él trabaja en un supermercado grande", english: "he works in a big supermarket", audio: "el-trabaja-en-un-supermercado-grande.mp3", question: "Where does he work?" },
-            { spanish: "ella terminó el trabajo ayer", english: "she finished work yesterday", audio: "ella-termino-el-trabajo-ayer.mp3", question: "When did she finish work?" },
-            { spanish: "yo trabajo a menudo por la tarde", english: "I often work in the afternoon", audio: "yo-trabajo-a-menudo-por-la-tarde.mp3", question: "When does the speaker often work?" },
-            { spanish: "nosotros trabajamos juntos la semana pasada", english: "we worked together last week", audio: "nosotros-trabajamos-juntos-la-semana-pasada.mp3", question: "When did they work together?" },
-            { spanish: "él usa transporte para ir al trabajo", english: "he uses transport to go to work", audio: "el-usa-transporte-para-ir-al-trabajo.mp3", question: "Why does he use transport?" },
-            { spanish: "ella compró comida para el trabajo", english: "she bought food for work", audio: "ella-compro-comida-para-el-trabajo.mp3", question: "What did she buy?" },
-            { spanish: "yo trabajé en la ciudad ayer", english: "I worked in the city yesterday", audio: "yo-trabaje-en-la-ciudad-ayer.mp3", question: "Where did the speaker work?" },
-            { spanish: "nosotros terminamos el trabajo tarde", english: "we finished work late", audio: "nosotros-terminamos-el-trabajo-tarde.mp3", question: "When did they finish work?" },
-            { spanish: "él trabaja en una oficina pequeña", english: "he works in a small office", audio: "el-trabaja-en-una-oficina-pequena.mp3", question: "Where does he work?" },
-            { spanish: "ella trabaja con su familia", english: "she works with her family", audio: "ella-trabaja-con-su-familia.mp3", question: "Who does she work with?" },
-            { spanish: "yo uso transporte para ir al centro de trabajo", english: "I use transport to go to the work center", audio: "yo-uso-transporte-para-ir-al-centro-de-trabajo.mp3", question: "Why does the speaker use transport?" },
-            { spanish: "nosotros trabajamos en proyectos pequeños", english: "we work on small projects", audio: "nosotros-trabajamos-en-proyectos-pequenos.mp3", question: "What do they work on?" },
-            { spanish: "él terminó el trabajo la semana pasada", english: "he finished work last week", audio: "el-termino-el-trabajo-la-semana-pasada.mp3", question: "When did he finish work?" },
-            { spanish: "ella trabaja en el centro cada día", english: "she works in the center every day", audio: "ella-trabaja-en-el-centro-cada-dia.mp3", question: "How often does she work in the center?" },
-            { spanish: "yo compré boletos para ir al trabajo", english: "I bought tickets to go to work", audio: "yo-compre-boletos-para-ir-al-trabajo.mp3", question: "What did the speaker buy?" }
-        ],
-
-        B1: [
-            { spanish: "ella es desarrollador y trabaja en proyectos largos", english: "she is a developer and works on long projects", audio: "ella-es-desarrollador-y-trabaja-en-proyectos-largos.mp3", question: "What is her job?" },
-            { spanish: "él quiere mejorar sus habilidades en el trabajo", english: "he wants to improve his skills at work", audio: "el-quiere-mejorar-sus-habilidades-en-el-trabajo.mp3", question: "What does he want to improve?" },
-            { spanish: "nosotros hablamos sobre problemas diarios en el trabajo", english: "we talk about daily problems at work", audio: "nosotros-hablamos-sobre-problemas-diarios-en-el-trabajo.mp3", question: "What do they talk about?" },
-            { spanish: "yo disfruto trabajar con mi equipo", english: "I enjoy working with my team", audio: "yo-disfruto-trabajar-con-mi-equipo.mp3", question: "Who does the speaker enjoy working with?" },
-            { spanish: "ella estudia para mejorar su comunicación en el trabajo", english: "she studies to improve her communication at work", audio: "ella-estudia-para-mejorar-su-comunicacion-en-el-trabajo.mp3", question: "Why does she study?" },
-            { spanish: "él usa redes sociales para su trabajo", english: "he uses social networks for his work", audio: "el-usa-redes-sociales-para-su-trabajo.mp3", question: "What does he use for work?" },
-            { spanish: "nosotros tenemos reuniones diarias", english: "we have daily meetings", audio: "nosotros-tenemos-reuniones-diarias.mp3", question: "How often do they have meetings?" },
-            { spanish: "yo leo correos cada mañana", english: "I read emails every morning", audio: "yo-leo-correos-cada-manana.mp3", question: "What does the speaker read?" },
-            { spanish: "ella trabaja mientras estudia", english: "she works while she studies", audio: "ella-trabaja-mientras-estudia.mp3", question: "What does she do while studying?" },
-            { spanish: "él disfruta su tiempo libre después del trabajo", english: "he enjoys his free time after work", audio: "el-disfruta-su-tiempo-libre-despues-del-trabajo.mp3", question: "When does he enjoy free time?" },
-            { spanish: "nosotros planeamos proyectos futuros en el trabajo", english: "we plan future projects at work", audio: "nosotros-planeamos-proyectos-futuros-en-el-trabajo.mp3", question: "What do they plan?" },
-            { spanish: "yo hablo con mi jefe sobre nuevas ideas", english: "I talk with my boss about new ideas", audio: "yo-hablo-con-mi-jefe-sobre-nuevas-ideas.mp3", question: "Who does the speaker talk with?" },
-            { spanish: "ella usa tecnología para mejorar su trabajo", english: "she uses technology to improve her work", audio: "ella-usa-tecnologia-para-mejorar-su-trabajo.mp3", question: "What does she use to improve her work?" },
-            { spanish: "él estudia para tener mejores oportunidades de trabajo", english: "he studies to have better work opportunities", audio: "el-estudia-para-tener-mejores-oportunidades-de-trabajo.mp3", question: "Why does he study?" },
-            { spanish: "nosotros analizamos problemas en el equipo", english: "we analyze problems in the team", audio: "nosotros-analizamos-problemas-en-el-equipo.mp3", question: "What do they analyze?" },
-            { spanish: "yo escribo informes cada semana", english: "I write reports every week", audio: "yo-escribo-informes-cada-semana.mp3", question: "What does the speaker write?" },
-            { spanish: "ella organiza reuniones importantes", english: "she organizes important meetings", audio: "ella-organiza-reuniones-importantes.mp3", question: "What does she organize?" },
-            { spanish: "él trabaja en proyectos internacionales", english: "he works on international projects", audio: "el-trabaja-en-proyectos-internacionales.mp3", question: "What kind of projects does he work on?" },
-            { spanish: "nosotros hablamos sobre cambios en el trabajo", english: "we talk about changes at work", audio: "nosotros-hablamos-sobre-cambios-en-el-trabajo.mp3", question: "What do they talk about?" },
-            { spanish: "yo disfruto aprender cosas nuevas en el trabajo", english: "I enjoy learning new things at work", audio: "yo-disfruto-aprender-cosas-nuevas-en-el-trabajo.mp3", question: "What does the speaker enjoy learning?" }
-        ],
-
-        B2: [
-            { spanish: "la tecnología cambia la forma de trabajar", english: "technology changes the way we work", audio: "la-tecnologia-cambia-la-forma-de-trabajar.mp3", question: "What does technology change?" },
-            { spanish: "la educación es importante para el desarrollo profesional", english: "education is important for professional development", audio: "la-educacion-es-importante-para-el-desarrollo-profesional.mp3", question: "What is education important for?" },
-            { spanish: "analizamos desafíos en el lugar de trabajo", english: "we analyze challenges in the workplace", audio: "analizamos-desafios-en-el-lugar-de-trabajo.mp3", question: "What do they analyze?" },
-            { spanish: "ella maneja proyectos a largo plazo", english: "she handles long-term projects", audio: "ella-maneja-proyectos-a-largo-plazo.mp3", question: "What kind of projects does she handle?" },
-            { spanish: "yo estudio nuevas habilidades para mejorar mi trabajo", english: "I study new skills to improve my work", audio: "yo-estudio-nuevas-habilidades-para-mejorar-mi-trabajo.mp3", question: "Why does the speaker study new skills?" },
-            { spanish: "ellos enfrentan desafíos importantes en su empresa", english: "they face important challenges in their company", audio: "ellos-enfrentan-desafios-importantes-en-su-empresa.mp3", question: "What do they face?" },
-            { spanish: "ella trabaja remoto sin embargo colabora con su equipo", english: "she works remotely however she collaborates with her team", audio: "ella-trabaja-remoto-sin-embargo-colabora-con-su-equipo.mp3", question: "How does she work?" },
-            { spanish: "él organiza reuniones por lo tanto mejora la comunicación", english: "he organizes meetings therefore he improves communication", audio: "el-organiza-reuniones-por-lo-tanto-mejora-la-comunicacion.mp3", question: "What does he improve?" },
-            { spanish: "nosotros discutimos cambios culturales en el trabajo", english: "we discuss cultural changes at work", audio: "nosotros-discutimos-cambios-culturales-en-el-trabajo.mp3", question: "What do they discuss?" },
-            { spanish: "ella analiza cómo la sociedad afecta el trabajo", english: "she analyzes how society affects work", audio: "ella-analiza-como-la-sociedad-afecta-el-trabajo.mp3", question: "What does she analyze?" },
-            { spanish: "la motivación ayuda a lograr metas profesionales", english: "motivation helps achieve professional goals", audio: "la-motivacion-ayuda-a-lograr-metas-profesionales.mp3", question: "What does motivation help achieve?" },
-            { spanish: "la cultura de la empresa cambia con el tiempo", english: "company culture changes over time", audio: "la-cultura-de-la-empresa-cambia-con-el-tiempo.mp3", question: "What changes over time?" },
-            { spanish: "analizamos el impacto de la tecnología en el trabajo", english: "we analyze the impact of technology at work", audio: "analizamos-el-impacto-de-la-tecnologia-en-el-trabajo.mp3", question: "What do they analyze?" },
-            { spanish: "ella estudia comunicación para proyectos internacionales", english: "she studies communication for international projects", audio: "ella-estudia-comunicacion-para-proyectos-internacionales.mp3", question: "Why does she study communication?" },
-            { spanish: "él maneja decisiones importantes en la empresa", english: "he handles important decisions in the company", audio: "el-maneja-decisiones-importantes-en-la-empresa.mp3", question: "What does he handle?" },
-            { spanish: "nosotros discutimos el futuro del trabajo remoto", english: "we discuss the future of remote work", audio: "nosotros-discutimos-el-futuro-del-trabajo-remoto.mp3", question: "What do they discuss?" },
-            { spanish: "ella analiza cómo la educación afecta el trabajo", english: "she analyzes how education affects work", audio: "ella-analiza-como-la-educacion-afecta-el-trabajo.mp3", question: "What does she analyze?" },
-            { spanish: "yo manejo proyectos largos a pesar de los desafíos", english: "I handle long projects despite the challenges", audio: "yo-manejo-proyectos-largos-a-pesar-de-los-desafios.mp3", question: "What does the speaker handle?" },
-            { spanish: "ellos cambian su forma de trabajar por nuevos desafíos", english: "they change their way of working because of new challenges", audio: "ellos-cambian-su-forma-de-trabajar-por-nuevos-desafios.mp3", question: "Why do they change their way of working?" },
-            { spanish: "la sociedad analiza el futuro del trabajo", english: "society analyzes the future of work", audio: "la-sociedad-analiza-el-futuro-del-trabajo.mp3", question: "What does society analyze?" }
-        ]
-    },
+  family: {
 
     /* ============================================================
-       FAMILY
+       A1 — Beginner (20 items)
        ============================================================ */
-    family: {
+    A1: [
+      { spanish: "tengo hermanos y hermanas", english: "I have brothers and sisters", audio: "tengo-hermanos-y-hermanas.mp3", question: "Who does the speaker have?" },
+      { spanish: "ella es mi hermana", english: "she is my sister", audio: "ella-es-mi-hermana.mp3", question: "Who is she?" },
+      { spanish: "el es mi hermano", english: "he is my brother", audio: "el-es-mi-hermano.mp3", question: "Who is he?" },
+      { spanish: "nosotros somos familia", english: "we are family", audio: "nosotros-somos-familia.mp3", question: "What is their relationship?" },
+      { spanish: "yo vivo con mi familia", english: "I live with my family", audio: "yo-vivo-con-mi-familia.mp3", question: "Who does the speaker live with?" },
+      { spanish: "ella vive con sus padres", english: "she lives with her parents", audio: "ella-vive-con-sus-padres.mp3", question: "Who does she live with?" },
+      { spanish: "el vive con su hermano", english: "he lives with his brother", audio: "el-vive-con-su-hermano.mp3", question: "Who does he live with?" },
+      { spanish: "nosotros comemos juntos en familia", english: "we eat together as a family", audio: "nosotros-comemos-juntos-en-familia.mp3", question: "When do they eat together?" },
+      { spanish: "yo hablo con mi familia cada dia", english: "I talk with my family every day", audio: "yo-hablo-con-mi-familia-cada-dia.mp3", question: "Who does the speaker talk with?" },
+      { spanish: "ella visita a su familia", english: "she visits her family", audio: "ella-visita-a-su-familia.mp3", question: "Who does she visit?" },
+      { spanish: "el tiene una familia grande", english: "he has a big family", audio: "el-tiene-una-familia-grande.mp3", question: "What kind of family does he have?" },
+      { spanish: "yo tengo una familia pequena", english: "I have a small family", audio: "yo-tengo-una-familia-pequena.mp3", question: "What kind of family does the speaker have?" },
+      { spanish: "nosotros vivimos juntos", english: "we live together", audio: "nosotros-vivimos-juntos.mp3", question: "How do they live?" },
+      { spanish: "ella come con su familia", english: "she eats with her family", audio: "ella-come-con-su-familia.mp3", question: "Who does she eat with?" },
+      { spanish: "el habla con su hermana", english: "he talks with his sister", audio: "el-habla-con-su-hermana.mp3", question: "Who does he talk with?" },
+      { spanish: "yo juego con mi hermano", english: "I play with my brother", audio: "yo-juego-con-mi-hermano.mp3", question: "Who does the speaker play with?" },
+      { spanish: "nosotros visitamos a nuestros padres", english: "we visit our parents", audio: "nosotros-visitamos-a-nuestros-padres.mp3", question: "Who do they visit?" },
+      { spanish: "ella vive cerca de su familia", english: "she lives near her family", audio: "ella-vive-cerca-de-su-familia.mp3", question: "Where does she live?" },
+      { spanish: "el come con su familia cada noche", english: "he eats with his family every night", audio: "el-come-con-su-familia-cada-noche.mp3", question: "When does he eat with his family?" },
+      { spanish: "yo hablo con mi madre", english: "I talk with my mother", audio: "yo-hablo-con-mi-madre.mp3", question: "Who does the speaker talk with?" }
+    ],
 
-        A1: [
-            { spanish: "tengo hermanos y hermanas", english: "I have brothers and sisters", audio: "tengo-hermanos-y-hermanas.mp3", question: "Who does the speaker have?" },
-            { spanish: "ella es mi hermana", english: "she is my sister", audio: "ella-es-mi-hermana.mp3", question: "Who is she?" },
-            { spanish: "él es mi hermano", english: "he is my brother", audio: "el-es-mi-hermano.mp3", question: "Who is he?" },
-            { spanish: "nosotros somos familia", english: "we are family", audio: "nosotros-somos-familia.mp3", question: "What is their relationship?" },
-            { spanish: "yo vivo con mi familia", english: "I live with my family", audio: "yo-vivo-con-mi-familia.mp3", question: "Who does the speaker live with?" },
-            { spanish: "ella vive con sus padres", english: "she lives with her parents", audio: "ella-vive-con-sus-padres.mp3", question: "Who does she live with?" },
-            { spanish: "él vive con su hermano", english: "he lives with his brother", audio: "el-vive-con-su-hermano.mp3", question: "Who does he live with?" },
-            { spanish: "nosotros comemos juntos en familia", english: "we eat together as a family", audio: "nosotros-comemos-juntos-en-familia.mp3", question: "When do they eat together?" },
-            { spanish: "yo hablo con mi familia cada día", english: "I talk with my family every day", audio: "yo-hablo-con-mi-familia-cada-dia.mp3", question: "Who does the speaker talk with?" },
-            { spanish: "ella visita a su familia", english: "she visits her family", audio: "ella-visita-a-su-familia.mp3", question: "Who does she visit?" },
-            { spanish: "él tiene una familia grande", english: "he has a big family", audio: "el-tiene-una-familia-grande.mp3", question: "What kind of family does he have?" },
-            { spanish: "yo tengo una familia pequeña", english: "I have a small family", audio: "yo-tengo-una-familia-pequena.mp3", question: "What kind of family does the speaker have?" },
-            { spanish: "nosotros vivimos juntos", english: "we live together", audio: "nosotros-vivimos-juntos.mp3", question: "How do they live?" },
-            { spanish: "ella come con su familia", english: "she eats with her family", audio: "ella-come-con-su-familia.mp3", question: "Who does she eat with?" },
-            { spanish: "él habla con su hermana", english: "he talks with his sister", audio: "el-habla-con-su-hermana.mp3", question: "Who does he talk with?" },
-            { spanish: "yo juego con mi hermano", english: "I play with my brother", audio: "yo-juego-con-mi-hermano.mp3", question: "Who does the speaker play with?" },
-            { spanish: "nosotros visitamos a nuestros padres", english: "we visit our parents", audio: "nosotros-visitamos-a-nuestros-padres.mp3", question: "Who do they visit?" },
-            { spanish: "ella vive cerca de su familia", english: "she lives near her family", audio: "ella-vive-cerca-de-su-familia.mp3", question: "Where does she live?" },
-            { spanish: "él come con su familia cada noche", english: "he eats with his family every night", audio: "el-come-con-su-familia-cada-noche.mp3", question: "When does he eat with his family?" },
-            { spanish: "yo hablo con mi madre", english: "I talk with my mother", audio: "yo-hablo-con-mi-madre.mp3", question: "Who does the speaker talk with?" }
-        ],
+    /* ============================================================
+       A2 — Elementary (20 items)
+       ============================================================ */
+    A2: [
+      { spanish: "celebramos con nuestra familia el fin de semana", english: "we celebrated with our family on the weekend", audio: "celebramos-con-nuestra-familia-el-fin-de-semana.mp3", question: "Who did they celebrate with?" },
+      { spanish: "ella visito a su familia ayer", english: "she visited her family yesterday", audio: "ella-visito-a-su-familia-ayer.mp3", question: "When did she visit her family?" },
+      { spanish: "yo comi con mi familia la semana pasada", english: "I ate with my family last week", audio: "yo-comi-con-mi-familia-la-semana-pasada.mp3", question: "When did the speaker eat with family?" },
+      { spanish: "el viajo para ver a su familia", english: "he traveled to see his family", audio: "el-viajo-para-ver-a-su-familia.mp3", question: "Why did he travel?" },
+      { spanish: "nosotros visitamos a nuestra familia a menudo", english: "we visit our family often", audio: "nosotros-visitamos-a-nuestra-familia-a-menudo.mp3", question: "How often do they visit family?" },
+      { spanish: "ella compro comida para su familia", english: "she bought food for her family", audio: "ella-compro-comida-para-su-familia.mp3", question: "What did she buy?" },
+      { spanish: "yo hable con mi padre ayer", english: "I talked with my father yesterday", audio: "yo-hable-con-mi-padre-ayer.mp3", question: "Who did the speaker talk with?" },
+      { spanish: "el comio con su familia en el centro", english: "he ate with his family in the center", audio: "el-comio-con-su-familia-en-el-centro.mp3", question: "Where did he eat with his family?" },
+      { spanish: "nosotros celebramos el cumpleanos en familia", english: "we celebrated the birthday with family", audio: "nosotros-celebramos-el-cumpleanos-en-familia.mp3", question: "What did they celebrate?" },
+      { spanish: "ella visito a sus padres la semana pasada", english: "she visited her parents last week", audio: "ella-visito-a-sus-padres-la-semana-pasada.mp3", question: "When did she visit her parents?" },
+      { spanish: "yo comi cena con mi familia ayer", english: "I ate dinner with my family yesterday", audio: "yo-comi-cena-con-mi-familia-ayer.mp3", question: "When did the speaker eat dinner with family?" },
+      { spanish: "el hablo con su madre por la tarde", english: "he talked with his mother in the afternoon", audio: "el-hablo-con-su-madre-por-la-tarde.mp3", question: "When did he talk with his mother?" },
+      { spanish: "nosotros visitamos a nuestra familia en la ciudad", english: "we visited our family in the city", audio: "nosotros-visitamos-a-nuestra-familia-en-la-ciudad.mp3", question: "Where did they visit family?" },
+      { spanish: "ella compro regalos para su familia", english: "she bought gifts for her family", audio: "ella-compro-regalos-para-su-familia.mp3", question: "What did she buy?" },
+      { spanish: "yo hable con mi hermano la semana pasada", english: "I talked with my brother last week", audio: "yo-hable-con-mi-hermano-la-semana-pasada.mp3", question: "Who did the speaker talk with?" },
+      { spanish: "el comio almuerzo con su familia", english: "he ate lunch with his family", audio: "el-comio-almuerzo-con-su-familia.mp3", question: "What meal did he eat with family?" },
+      { spanish: "nosotros celebramos juntos en familia", english: "we celebrated together as a family", audio: "nosotros-celebramos-juntos-en-familia.mp3", question: "How did they celebrate?" },
+      { spanish: "ella visito a su familia en el centro", english: "she visited her family in the center", audio: "ella-visito-a-su-familia-en-el-centro.mp3", question: "Where did she visit her family?" },
+      { spanish: "yo comi con mi familia en casa", english: "I ate with my family at home", audio: "yo-comi-con-mi-familia-en-casa.mp3", question: "Where did the speaker eat with family?" },
+      { spanish: "el hablo con su padre por la noche", english: "he talked with his father at night", audio: "el-hablo-con-su-padre-por-la-noche.mp3", question: "When did he talk with his father?" }
+    ],
 
-        A2: [
-            { spanish: "celebramos con nuestra familia el fin de semana", english: "we celebrated with our family on the weekend", audio: "celebramos-con-nuestra-familia-el-fin-de-semana.mp3", question: "Who did they celebrate with?" },
-            { spanish: "ella visitó a su familia ayer", english: "she visited her family yesterday", audio: "ella-visito-a-su-familia-ayer.mp3", question: "When did she visit her family?" },
-            { spanish: "yo comí con mi familia la semana pasada", english: "I ate with my family last week", audio: "yo-comi-con-mi-familia-la-semana-pasada.mp3", question: "When did the speaker eat with family?" },
-            { spanish: "él viajó para ver a su familia", english: "he traveled to see his family", audio: "el-viajo-para-ver-a-su-familia.mp3", question: "Why did he travel?" },
-            { spanish: "nosotros visitamos a nuestra familia a menudo", english: "we visit our family often", audio: "nosotros-visitamos-a-nuestra-familia-a-menudo.mp3", question: "How often do they visit family?" },
-            { spanish: "ella compró comida para su familia", english: "she bought food for her family", audio: "ella-compro-comida-para-su-familia.mp3", question: "What did she buy?" },
-            { spanish: "yo hablé con mi padre ayer", english: "I talked with my father yesterday", audio: "yo-hable-con-mi-padre-ayer.mp3", question: "Who did the speaker talk with?" },
-            { spanish: "él comió con su familia en el centro", english: "he ate with his family in the center", audio: "el-comio-con-su-familia-en-el-centro.mp3", question: "Where did he eat with his family?" },
-            { spanish: "nosotros celebramos el cumpleaños en familia", english: "we celebrated the birthday with family", audio: "nosotros-celebramos-el-cumpleanos-en-familia.mp3", question: "What did they celebrate?" },
-            { spanish: "ella visitó a sus padres la semana pasada", english: "she visited her parents last week", audio: "ella-visito-a-sus-padres-la-semana-pasada.mp3", question: "When did she visit her parents?" },
-            { spanish: "yo comí cena con mi familia ayer", english: "I ate dinner with my family yesterday", audio: "yo-comi-cena-con-mi-familia-ayer.mp3", question: "When did the speaker eat dinner with family?" },
-            { spanish: "él habló con su madre por la tarde", english: "he talked with his mother in the afternoon", audio: "el-hablo-con-su-madre-por-la-tarde.mp3", question: "When did he talk with his mother?" },
-            { spanish: "nosotros visitamos a nuestra familia en la ciudad", english: "we visited our family in the city", audio: "nosotros-visitamos-a-nuestra-familia-en-la-ciudad.mp3", question: "Where did they visit family?" },
-            { spanish: "ella compró regalos para su familia", english: "she bought gifts for her family", audio: "ella-compro-regalos-para-su-familia.mp3", question: "What did she buy?" },
-            { spanish: "yo hablé con mi hermano la semana pasada", english: "I talked with my brother last week", audio: "yo-hable-con-mi-hermano-la-semana-pasada.mp3", question: "Who did the speaker talk with?" },
-            { spanish: "él comió almuerzo con su familia", english: "he ate lunch with his family", audio: "el-comio-almuerzo-con-su-familia.mp3", question: "What meal did he eat with family?" },
-            { spanish: "nosotros celebramos juntos en familia", english: "we celebrated together as a family", audio: "nosotros-celebramos-juntos-en-familia.mp3", question: "How did they celebrate?" },
-            { spanish: "ella visitó a su familia en el centro", english: "she visited her family in the center", audio: "ella-visito-a-su-familia-en-el-centro.mp3", question: "Where did she visit her family?" },
-            { spanish: "yo comí con mi familia en casa", english: "I ate with my family at home", audio: "yo-comi-con-mi-familia-en-casa.mp3", question: "Where did the speaker eat with family?" },
-            { spanish: "él habló con su padre por la noche", english: "he talked with his father at night", audio: "el-hablo-con-su-padre-por-la-noche.mp3", question: "When did he talk with his father?" }
-        ],
+    /* ============================================================
+       B1 — Intermediate (20 items)
+       ============================================================ */
+    B1: [
+      { spanish: "disfruto pasar tiempo con mi familia", english: "I enjoy spending time with my family", audio: "disfruto-pasar-tiempo-con-mi-familia.mp3", question: "Who does the speaker enjoy spending time with?" },
+      { spanish: "ella habla con su familia sobre problemas diarios", english: "she talks with her family about daily problems", audio: "ella-habla-con-su-familia-sobre-problemas-diarios.mp3", question: "What does she talk about?" },
+      { spanish: "el recuerda experiencias pasadas con su familia", english: "he remembers past experiences with his family", audio: "el-recuerda-experiencias-pasadas-con-su-familia.mp3", question: "What does he remember?" },
+      { spanish: "nosotros tenemos conversaciones diarias en familia", english: "we have daily conversations as a family", audio: "nosotros-tenemos-conversaciones-diarias-en-familia.mp3", question: "How often do they have conversations?" },
+      { spanish: "yo hablo con mis padres sobre el futuro", english: "I talk with my parents about the future", audio: "yo-hablo-con-mis-padres-sobre-el-futuro.mp3", question: "Who does the speaker talk with?" },
+      { spanish: "ella disfruta viajar con su familia", english: "she enjoys traveling with her family", audio: "ella-disfruta-viajar-con-su-familia.mp3", question: "Who does she enjoy traveling with?" },
+      { spanish: "el come con su familia los fines de semana", english: "he eats with his family on weekends", audio: "el-come-con-su-familia-los-fines-de-semana.mp3", question: "When does he eat with his family?" },
+      { spanish: "nosotros hablamos sobre planes futuros en familia", english: "we talk about future plans as a family", audio: "nosotros-hablamos-sobre-planes-futuros-en-familia.mp3", question: "What do they talk about?" },
+      { spanish: "yo recuerdo viajes con mi familia", english: "I remember trips with my family", audio: "yo-recuerdo-viajes-con-mi-familia.mp3", question: "What does the speaker remember?" },
+      { spanish: "ella estudia para ayudar a su familia", english: "she studies to help her family", audio: "ella-estudia-para-ayudar-a-su-familia.mp3", question: "Why does she study?" },
+      { spanish: "el habla con su hermano sobre problemas", english: "he talks with his brother about problems", audio: "el-habla-con-su-hermano-sobre-problemas.mp3", question: "Who does he talk with?" },
+      { spanish: "nosotros visitamos a nuestra familia cada ano", english: "we visit our family every year", audio: "nosotros-visitamos-a-nuestra-familia-cada-ano.mp3", question: "How often do they visit family?" },
+      { spanish: "yo disfruto comer con mi familia en casa", english: "I enjoy eating with my family at home", audio: "yo-disfruto-comer-con-mi-familia-en-casa.mp3", question: "Where does the speaker enjoy eating with family?" },
+      { spanish: "ella habla con su madre sobre su trabajo", english: "she talks with her mother about her work", audio: "ella-habla-con-su-madre-sobre-su-trabajo.mp3", question: "What does she talk about?" },
+      { spanish: "el recuerda celebraciones en familia", english: "he remembers family celebrations", audio: "el-recuerda-celebraciones-en-familia.mp3", question: "What does he remember?" },
+      { spanish: "nosotros hablamos sobre cambios en la familia", english: "we talk about changes in the family", audio: "nosotros-hablamos-sobre-cambios-en-la-familia.mp3", question: "What do they talk about?" },
+      { spanish: "yo estudio para tener un futuro mejor para mi familia", english: "I study to have a better future for my family", audio: "yo-estudio-para-tener-un-futuro-mejor-para-mi-familia.mp3", question: "Why does the speaker study?" },
+      { spanish: "ella disfruta pasar tiempo libre con su familia", english: "she enjoys spending free time with her family", audio: "ella-disfruta-pasar-tiempo-libre-con-su-familia.mp3", question: "What does she enjoy doing?" },
+      { spanish: "el habla con su familia sobre decisiones importantes", english: "he talks with his family about important decisions", audio: "el-habla-con-su-familia-sobre-decisiones-importantes.mp3", question: "What does he talk about?" },
+      { spanish: "nosotros organizamos reuniones familiares cada mes", english: "we organize family meetings every month", audio: "nosotros-organizamos-reuniones-familiares-cada-mes.mp3", question: "What do they organize?" }
+    ],
 
-        B1: [
-            { spanish: "disfruto pasar tiempo con mi familia", english: "I enjoy spending time with my family", audio: "disfruto-pasar-tiempo-con-mi-familia.mp3", question: "Who does the speaker enjoy spending time with?" },
-            { spanish: "ella habla con su familia sobre problemas diarios", english: "she talks with her family about daily problems", audio: "ella-habla-con-su-familia-sobre-problemas-diarios.mp3", question: "What does she talk about?" },
-            { spanish: "él recuerda experiencias pasadas con su familia", english: "he remembers past experiences with his family", audio: "el-recuerda-experiencias-pasadas-con-su-familia.mp3", question: "What does he remember?" },
-            { spanish: "nosotros tenemos conversaciones diarias en familia", english: "we have daily conversations as a family", audio: "nosotros-tenemos-conversaciones-diarias-en-familia.mp3", question: "How often do they have conversations?" },
-            { spanish: "yo hablo con mis padres sobre el futuro", english: "I talk with my parents about the future", audio: "yo-hablo-con-mis-padres-sobre-el-futuro.mp3", question: "Who does the speaker talk with?" },
-            { spanish: "ella disfruta viajar con su familia", english: "she enjoys traveling with her family", audio: "ella-disfruta-viajar-con-su-familia.mp3", question: "Who does she enjoy traveling with?" },
-            { spanish: "él come con su familia los fines de semana", english: "he eats with his family on weekends", audio: "el-come-con-su-familia-los-fines-de-semana.mp3", question: "When does he eat with his family?" },
-            { spanish: "nosotros hablamos sobre planes futuros en familia", english: "we talk about future plans as a family", audio: "nosotros-hablamos-sobre-planes-futuros-en-familia.mp3", question: "What do they talk about?" },
-            { spanish: "yo recuerdo viajes con mi familia", english: "I remember trips with my family", audio: "yo-recuerdo-viajes-con-mi-familia.mp3", question: "What does the speaker remember?" },
-            { spanish: "ella estudia para ayudar a su familia", english: "she studies to help her family", audio: "ella-estudia-para-ayudar-a-su-familia.mp3", question: "Why does she study?" },
-            { spanish: "él habla con su hermano sobre problemas", english: "he talks with his brother about problems", audio: "el-habla-con-su-hermano-sobre-problemas.mp3", question: "Who does he talk with?" },
-            { spanish: "nosotros visitamos a nuestra familia cada año", english: "we visit our family every year", audio: "nosotros-visitamos-a-nuestra-familia-cada-ano.mp3", question: "How often do they visit family?" },
-            { spanish: "yo disfruto comer con mi familia en casa", english: "I enjoy eating with my family at home", audio: "yo-disfruto-comer-con-mi-familia-en-casa.mp3", question: "Where does the speaker enjoy eating with family?" },
-            { spanish: "ella habla con su madre sobre su trabajo", english: "she talks with her mother about her work", audio: "ella-habla-con-su-madre-sobre-su-trabajo.mp3", question: "What does she talk about?" },
-            { spanish: "él recuerda celebraciones en familia", english: "he remembers family celebrations", audio: "el-recuerda-celebraciones-en-familia.mp3", question: "What does he remember?" },
-            { spanish: "nosotros hablamos sobre cambios en la familia", english: "we talk about changes in the family", audio: "nosotros-hablamos-sobre-cambios-en-la-familia.mp3", question: "What do they talk about?" },
-            { spanish: "yo estudio para tener un futuro mejor para mi familia", english: "I study to have a better future for my family", audio: "yo-estudio-para-tener-un-futuro-mejor-para-mi-familia.mp3", question: "Why does the speaker study?" },
-            { spanish: "ella disfruta pasar tiempo libre con su familia", english: "she enjoys spending free time with her family", audio: "ella-disfruta-pasar-tiempo-libre-con-su-familia.mp3", question: "What does she enjoy doing?" },
-            { spanish: "él habla con su familia sobre decisiones importantes", english: "he talks with his family about important decisions", audio: "el-habla-con-su-familia-sobre-decisiones-importantes.mp3", question: "What does he talk about?" },
-            { spanish: "nosotros organizamos reuniones familiares cada mes", english: "we organize family meetings every month", audio: "nosotros-organizamos-reuniones-familiares-cada-mes.mp3", question: "What do they organize?" }
-        ],
+    /* ============================================================
+   B2 — Upper Intermediate (20 items)
+   ============================================================ */
+B2: [
+  { spanish: "la familia es importante para la sociedad", english: "family is important for society", audio: "la-familia-es-importante-para-la-sociedad.mp3", question: "What is important for society?" },
 
-        B2: [
-            { spanish: "la familia es importante para la sociedad", english: "family is important for society", audio: "la-familia-es-importante-para-la-sociedad.mp3", question: "What is important for society?" },
-            { spanish: "analizamos cambios en la estructura familiar", english: "we analyze changes in the family structure", audio: "analizamos-cambios-en-la-estructura-familiar.mp3", question: "What do they analyze?" },
-            { spanish: "ella maneja decisiones familiares importantes", english: "she handles important family decisions", audio: "ella-maneja-decisiones-familiares-importantes.mp3", question: "What does she handle?" },
-            { spanish: "yo estudio cómo la cultura afecta la familia", english: "I study how culture affects the family", audio: "yo-estudio-como-la-cultura-afecta-la-familia.mp3", question: "What does the speaker study?" },
-            { spanish: "ellos enfrentan desafíos familiares a pesar de los problemas", english: "they face family challenges despite the problems", audio: "ellos-enfrentan-desafios-familiares-a-pesar-de-los-problemas.mp3", question: "What do they face?" },
-            { spanish: "ella analiza el impacto de la educación en la familia", english: "she analyzes the impact of education on the family", audio: "ella-analiza-el-impacto-de-la-educacion-en-la-familia.mp3", question: "What does she analyze?" },
-            { spanish: "él trabaja mucho por lo tanto ayuda a su familia", english: "he works a lot therefore he helps his family", audio: "el-trabaja-mucho-por-lo-tanto-ayuda-a-su-familia.mp3", question: "Why does he help his family?" },
-            { spanish: "nosotros discutimos decisiones familiares importantes", english: "we discuss important family decisions", audio: "nosotros-discutimos-decisiones-familiares-importantes.mp3", question: "What do they discuss?" },
-            { spanish: "ella estudia cambios culturales en la familia", english: "she studies cultural changes in the family", audio: "ella-estudia-cambios-culturales-en-la-familia.mp3", question: "What does she study?" },
-            { spanish: "yo manejo proyectos largos para apoyar a mi familia", english: "I handle long projects to support my family", audio: "yo-manejo-proyectos-largos-para-apoyar-a-mi-familia.mp3", question: "Why does the speaker handle long projects?" },
-            { spanish: "la sociedad analiza el papel de la familia en el futuro", english: "society analyzes the role of the family in the future", audio: "la-sociedad-analiza-el-papel-de-la-familia-en-el-futuro.mp3", question: "What does society analyze?" },
-            { spanish: "la cultura familiar cambia con el tiempo", english: "family culture changes over time", audio: "la-cultura-familiar-cambia-con-el-tiempo.mp3", question: "What changes over time?" },
-            { spanish: "analizamos cómo la tecnología afecta la familia", english: "we analyze how technology affects the family", audio: "analizamos-como-la-tecnologia-afecta-la-familia.mp3", question: "What do they analyze?" },
-            { spanish: "ella maneja conflictos familiares a pesar de los desafíos", english: "she handles family conflicts despite the challenges", audio: "ella-maneja-conflictos-familiares-a-pesar-de-los-desafios.mp3", question: "What does she handle?" },
-            { spanish: "él estudia educación para apoyar a su familia", english: "he studies education to support his family", audio: "el-estudia-educacion-para-apoyar-a-su-familia.mp3", question: "Why does he study education?" },
-            { spanish: "nosotros discutimos el futuro de nuestra familia", english: "we discuss the future of our family", audio: "nosotros-discutimos-el-futuro-de-nuestra-familia.mp3", question: "What do they discuss?" },
-            { spanish: "ella analiza decisiones familiares a largo plazo", english: "she analyzes long-term family decisions", audio: "ella-analiza-decisiones-familiares-a-largo-plazo.mp3", question: "What does she analyze?" },
-            { spanish: "yo estudio cómo la sociedad afecta la familia", english: "I study how society affects the family", audio: "yo-estudio-como-la-sociedad-afecta-la-familia.mp3", question: "What does the speaker study?" },
-            { spanish: "ellos cambian su vida para apoyar a la familia", english: "they change their life to support the family", audio: "ellos-cambian-su-vida-para-apoyar-a-la-familia.mp3", question: "Why do they change their life?" },
-            { spanish: "la familia enfrenta desafíos importantes en la sociedad moderna", english: "the family faces important challenges in modern society", audio: "la-familia-enfrenta-desafios-importantes-en-la-sociedad-moderna.mp3", question: "What does the family face?" }
-        ]
-    }
-};
+  { spanish: "analizamos cambios en la estructura familiar", english: "we analyze changes in the family structure", audio: "analizamos-cambios-en-la-estructura-familiar.mp3", question: "What do they analyze?" },
 
+  { spanish: "ella maneja decisiones familiares importantes", english: "she handles important family decisions", audio: "ella-maneja-decisiones-familiares-importantes.mp3", question: "What does she handle?" },
+
+  { spanish: "yo estudio como la cultura afecta la familia", english: "I study how culture affects the family", audio: "yo-estudio-como-la-cultura-afecta-la-familia.mp3", question: "What does the speaker study?" },
+
+  { spanish: "ellos enfrentan desafios familiares a pesar de los problemas", english: "they face family challenges despite the problems", audio: "ellos-enfrentan-desafios-familiares-a-pesar-de-los-problemas.mp3", question: "What do they face?" },
+
+  { spanish: "ella analiza el impacto de la educacion en la familia", english: "she analyzes the impact of education on the family", audio: "ella-analiza-el-impacto-de-la-educacion-en-la-familia.mp3", question: "What does she analyze?" },
+
+  { spanish: "el trabaja mucho por lo tanto ayuda a su familia", english: "he works a lot therefore he helps his family", audio: "el-trabaja-mucho-por-lo-tanto-ayuda-a-su-familia.mp3", question: "Why does he help his family?" },
+
+  { spanish: "nosotros discutimos decisiones familiares importantes", english: "we discuss important family decisions", audio: "nosotros-discutimos-decisiones-familiares-importantes.mp3", question: "What do they discuss?" },
+
+  { spanish: "ella estudia cambios culturales en la familia", english: "she studies cultural changes in the family", audio: "ella-estudia-cambios-culturales-en-la-familia.mp3", question: "What does she study?" },
+
+  { spanish: "yo manejo proyectos largos para apoyar a mi familia", english: "I handle long projects to support my family", audio: "yo-manejo-proyectos-largos-para-apoyar-a-mi-familia.mp3", question: "Why does the speaker handle long projects?" },
+
+  { spanish: "la sociedad analiza el papel de la familia en el futuro", english: "society analyzes the role of the family in the future", audio: "la-sociedad-analiza-el-papel-de-la-familia-en-el-futuro.mp3", question: "What does society analyze?" },
+
+  { spanish: "la cultura familiar cambia con el tiempo", english: "family culture changes over time", audio: "la-cultura-familiar-cambia-con-el-tiempo.mp3", question: "What changes over time?" },
+
+  { spanish: "analizamos como la tecnologia afecta la familia", english: "we analyze how technology affects the family", audio: "analizamos-como-la-tecnologia-afecta-la-familia.mp3", question: "What do they analyze?" },
+
+  { spanish: "ella maneja conflictos familiares a pesar de los desafios", english: "she handles family conflicts despite the challenges", audio: "ella-maneja-conflictos-familiares-a-pesar-de-los-desafios.mp3", question: "What does she handle?" },
+
+  { spanish: "el estudia educacion para apoyar a su familia", english: "he studies education to support his family", audio: "el-estudia-educacion-para-apoyar-a-su-familia.mp3", question: "Why does he study education?" },
+
+  { spanish: "nosotros discutimos el futuro de nuestra familia", english: "we discuss the future of our family", audio: "nosotros-discutimos-el-futuro-de-nuestra-familia.mp3", question: "What do they discuss?" },
+
+  { spanish: "ella analiza decisiones familiares a largo plazo", english: "she analyzes long-term family decisions", audio: "ella-analiza-decisiones-familiares-a-largo-plazo.mp3", question: "What does she analyze?" },
+
+  { spanish: "yo estudio como la sociedad afecta la familia", english: "I study how society affects the family", audio: "yo-estudio-como-la-sociedad-afecta-la-familia.mp3", question: "What does the speaker study?" },
+
+  { spanish: "ellos cambian su vida para apoyar a la familia", english: "they change their life to support the family", audio: "ellos-cambian-su-vida-para-apoyar-a-la-familia.mp3", question: "Why do they change their life?" },
+
+  { spanish: "la familia enfrenta desafios importantes en la sociedad moderna", english: "the family faces important challenges in modern society", audio: "la-familia-enfrenta-desafios-importantes-en-la-sociedad-moderna.mp3", question: "What does the family face?" }
+]
+
+ordering: {
+
+    /* ============================================================
+       A1 — Beginner (20 items)
+       ============================================================ */
+    A1: [
+        { spanish: "quiero agua por favor", english: "I want water please", audio: "quiero-agua-por-favor.mp3", question: "What does the speaker want?" },
+        { spanish: "quiero cafe", english: "I want coffee", audio: "quiero-cafe.mp3", question: "What does the speaker want?" },
+        { spanish: "quiero te", english: "I want tea", audio: "quiero-te.mp3", question: "What does the speaker want?" },
+        { spanish: "quiero sopa", english: "I want soup", audio: "quiero-sopa.mp3", question: "What does the speaker want?" },
+        { spanish: "quiero jugo", english: "I want juice", audio: "quiero-jugo.mp3", question: "What does the speaker want?" },
+        { spanish: "quiero arroz con pollo", english: "I want rice with chicken", audio: "quiero-arroz-con-pollo.mp3", question: "What does the speaker want?" },
+        { spanish: "quiero pan con mantequilla", english: "I want bread with butter", audio: "quiero-pan-con-mantequilla.mp3", question: "What does the speaker want?" },
+        { spanish: "quiero una botella de agua", english: "I want a bottle of water", audio: "quiero-una-botella-de-agua.mp3", question: "What does the speaker want?" },
+        { spanish: "quiero una ensalada", english: "I want a salad", audio: "quiero-una-ensalada.mp3", question: "What does the speaker want?" },
+        { spanish: "quiero un cafe pequeno", english: "I want a small coffee", audio: "quiero-un-cafe-pequeno.mp3", question: "What does the speaker want?" },
+        { spanish: "quiero comida", english: "I want food", audio: "quiero-comida.mp3", question: "What does the speaker want?" },
+        { spanish: "quiero un desayuno simple", english: "I want a simple breakfast", audio: "quiero-un-desayuno-simple.mp3", question: "What does the speaker want?" },
+        { spanish: "quiero un almuerzo rapido", english: "I want a quick lunch", audio: "quiero-un-almuerzo-rapido.mp3", question: "What does the speaker want?" },
+        { spanish: "quiero un cafe para llevar", english: "I want a coffee to go", audio: "quiero-un-cafe-para-llevar.mp3", question: "What does the speaker want?" },
+        { spanish: "quiero agua fria", english: "I want cold water", audio: "quiero-agua-fria.mp3", question: "What does the speaker want?" },
+        { spanish: "quiero te caliente", english: "I want hot tea", audio: "quiero-te-caliente.mp3", question: "What does the speaker want?" },
+        { spanish: "quiero pan", english: "I want bread", audio: "quiero-pan.mp3", question: "What does the speaker want?" },
+        { spanish: "quiero pollo", english: "I want chicken", audio: "quiero-pollo.mp3", question: "What does the speaker want?" },
+        { spanish: "quiero arroz", english: "I want rice", audio: "quiero-arroz.mp3", question: "What does the speaker want?" },
+        { spanish: "quiero comida para hoy", english: "I want food for today", audio: "quiero-comida-para-hoy.mp3", question: "What does the speaker want?" }
+    ],
+
+    /* ============================================================
+       A2 — Elementary (20 items)
+       ============================================================ */
+    A2: [
+        { spanish: "quiero un cafe grande por favor", english: "I want a large coffee please", audio: "quiero-un-cafe-grande-por-favor.mp3", question: "What size coffee does the speaker want?" },
+        { spanish: "quiero una sopa porque tengo hambre", english: "I want soup because I am hungry", audio: "quiero-una-sopa-porque-tengo-hambre.mp3", question: "Why does the speaker want soup?" },
+        { spanish: "quiero arroz con pollo para el almuerzo", english: "I want rice with chicken for lunch", audio: "quiero-arroz-con-pollo-para-el-almuerzo.mp3", question: "What meal is the speaker ordering for?" },
+        { spanish: "quiero un te sin azucar", english: "I want tea without sugar", audio: "quiero-un-te-sin-azucar.mp3", question: "How does the speaker want the tea?" },
+        { spanish: "quiero una ensalada con pan", english: "I want a salad with bread", audio: "quiero-una-ensalada-con-pan.mp3", question: "What does the speaker want with the salad?" },
+        { spanish: "quiero agua fria por favor", english: "I want cold water please", audio: "quiero-agua-fria-por-favor.mp3", question: "What kind of water does the speaker want?" },
+        { spanish: "quiero un jugo porque tengo sed", english: "I want juice because I am thirsty", audio: "quiero-un-jugo-porque-tengo-sed.mp3", question: "Why does the speaker want juice?" },
+        { spanish: "quiero un cafe para llevar", english: "I want a coffee to go", audio: "quiero-un-cafe-para-llevar.mp3", question: "How does the speaker want the coffee?" },
+        { spanish: "quiero pan con queso para la manana", english: "I want bread with cheese for the morning", audio: "quiero-pan-con-queso-para-la-manana.mp3", question: "What does the speaker want for the morning?" },
+        { spanish: "quiero una comida simple hoy", english: "I want a simple meal today", audio: "quiero-una-comida-simple-hoy.mp3", question: "What kind of meal does the speaker want?" },
+        { spanish: "yo compre comida para el almuerzo", english: "I bought food for lunch", audio: "yo-compre-comida-para-el-almuerzo.mp3", question: "What did the speaker buy?" },
+        { spanish: "ella pidio agua en el restaurante", english: "she ordered water in the restaurant", audio: "ella-pidio-agua-en-el-restaurante.mp3", question: "What did she order?" },
+        { spanish: "nosotros pedimos sopa ayer", english: "we ordered soup yesterday", audio: "nosotros-pedimos-sopa-ayer.mp3", question: "What did they order?" },
+        { spanish: "el pidio un cafe en el hotel", english: "he ordered a coffee in the hotel", audio: "el-pidio-un-cafe-en-el-hotel.mp3", question: "Where did he order coffee?" },
+        { spanish: "yo pedi comida en el aeropuerto", english: "I ordered food at the airport", audio: "yo-pedi-comida-en-el-aeropuerto.mp3", question: "Where did the speaker order food?" },
+        { spanish: "ella pidio una ensalada en el centro", english: "she ordered a salad in the city center", audio: "ella-pidio-una-ensalada-en-el-centro.mp3", question: "Where did she order the salad?" },
+        { spanish: "nosotros pedimos bebidas para la cena", english: "we ordered drinks for dinner", audio: "nosotros-pedimos-bebidas-para-la-cena.mp3", question: "What did they order?" },
+        { spanish: "el pidio arroz con pollo ayer", english: "he ordered rice with chicken yesterday", audio: "el-pidio-arroz-con-pollo-ayer.mp3", question: "When did he order rice with chicken?" },
+        { spanish: "yo pedi un jugo en la tienda", english: "I ordered a juice in the store", audio: "yo-pedi-un-jugo-en-la-tienda.mp3", question: "Where did the speaker order juice?" },
+        { spanish: "ella pidio comida para llevar", english: "she ordered food to go", audio: "ella-pidio-comida-para-llevar.mp3", question: "How did she want the food?" }
+    ],
+
+    /* ============================================================
+       B1 — Intermediate (20 items)
+       ============================================================ */
+    B1: [
+        { spanish: "prefiero un cafe porque necesito energia", english: "I prefer coffee because I need energy", audio: "prefiero-un-cafe-porque-necesito-energia.mp3", question: "Why does the speaker prefer coffee?" },
+        { spanish: "quiero una sopa simple porque no tengo mucho tiempo", english: "I want simple soup because I don't have much time", audio: "quiero-una-sopa-simple-porque-no-tengo-mucho-tiempo.mp3", question: "Why does the speaker want simple soup?" },
+        { spanish: "me gusta pedir arroz con pollo cuando viajo", english: "I like to order rice with chicken when I travel", audio: "me-gusta-pedir-arroz-con-pollo-cuando-viajo.mp3", question: "When does the speaker like to order rice with chicken?" },
+        { spanish: "quiero un te caliente porque hace frio", english: "I want hot tea because it is cold", audio: "quiero-un-te-caliente-porque-hace-frio.mp3", question: "Why does the speaker want hot tea?" },
+        { spanish: "prefiero agua porque no quiero azucar", english: "I prefer water because I don't want sugar", audio: "prefiero-agua-porque-no-quiero-azucar.mp3", question: "Why does the speaker prefer water?" },
+        { spanish: "quiero una ensalada porque quiero comer saludable", english: "I want a salad because I want to eat healthy", audio: "quiero-una-ensalada-porque-quiero-comer-saludable.mp3", question: "Why does the speaker want a salad?" },
+        { spanish: "me gusta pedir comida simple en restaurantes nuevos", english: "I like to order simple food in new restaurants", audio: "me-gusta-pedir-comida-simple-en-restaurantes-nuevos.mp3", question: "Where does the speaker like to order simple food?" },
+        { spanish: "quiero un cafe sin embargo no quiero algo muy dulce", english: "I want coffee however I don't want something very sweet", audio: "quiero-un-cafe-sin-embargo-no-quiero-algo-muy-dulce.mp3", question: "What does the speaker not want?" },
+        { spanish: "quiero un jugo porque estoy cansado", english: "I want juice because I am tired", audio: "quiero-un-jugo-porque-estoy-cansado.mp3", question: "Why does the speaker want juice?" },
+        { spanish: "prefiero comida caliente para sentirme mejor", english: "I prefer hot food to feel better", audio: "prefiero-comida-caliente-para-sentirme-mejor.mp3", question: "Why does the speaker prefer hot food?" },
+        { spanish: "ella pide comida saludable cada dia", english: "she orders healthy food every day", audio: "ella-pide-comida-saludable-cada-dia.mp3", question: "How often does she order healthy food?" },
+        { spanish: "yo pido cafe en el trabajo cada manana", english: "I order coffee at work every morning", audio: "yo-pido-cafe-en-el-trabajo-cada-manana.mp3", question: "Where does the speaker order coffee?" },
+        { spanish: "nosotros pedimos comida simple cuando estamos ocupados", english: "we order simple food when we are busy", audio: "nosotros-pedimos-comida-simple-cuando-estamos-ocupados.mp3", question: "When do they order simple food?" },
+        { spanish: "ella pide agua porque no quiere cafe", english: "she orders water because she doesn't want coffee", audio: "ella-pide-agua-porque-no-quiere-cafe.mp3", question: "Why does she order water?" },
+        { spanish: "yo pido comida para llevar cuando tengo prisa", english: "I order food to go when I am in a hurry", audio: "yo-pido-comida-para-llevar-cuando-tengo-prisa.mp3", question: "When does the speaker order food to go?" },
+        { spanish: "el pide sopa porque quiere algo caliente", english: "he orders soup because he wants something hot", audio: "el-pide-sopa-porque-quiere-algo-caliente.mp3", question: "Why does he order soup?" },
+        { spanish: "nosotros pedimos bebidas para compartir", english: "we order drinks to share", audio: "nosotros-pedimos-bebidas-para-compartir.mp3", question: "Why do they order drinks?" },
+        { spanish: "ella pide comida en el hotel cuando viaja", english: "she orders food in the hotel when she travels", audio: "ella-pide-comida-en-el-hotel-cuando-viaja.mp3", question: "Where does she order food?" },
+        { spanish: "yo pido arroz con pollo porque es mi comida favorita", english: "I order rice with chicken because it is my favorite food", audio: "yo-pido-arroz-con-pollo-porque-es-mi-comida-favorita.mp3", question: "Why does the speaker order rice with chicken?" },
+        { spanish: "ellos piden comida simple para estar bien", english: "they order simple food to feel well", audio: "ellos-piden-comida-simple-para-estar-bien.mp3", question: "Why do they order simple food?" }
+    ],
+
+    /* ============================================================
+       B2 — Upper Intermediate (20 items)
+       ============================================================ */
+    B2: [
+        { spanish: "quiero un cafe para empezar bien el dia", english: "I want coffee to start the day well", audio: "quiero-un-cafe-para-empezar-bien-el-dia.mp3", question: "Why does the speaker want coffee?" },
+        { spanish: "prefiero comida simple sin embargo quiero probar algo nuevo", english: "I prefer simple food however I want to try something new", audio: "prefiero-comida-simple-sin-embargo-quiero-probar-algo-nuevo.mp3", question: "What does the speaker want to try?" },
+        { spanish: "quiero una sopa caliente a pesar de que hace calor", english: "I want hot soup even though it is hot", audio: "quiero-una-sopa-caliente-a-pesar-de-que-hace-calor.mp3", question: "What does the speaker want?" },
+        { spanish: "quiero un te para sentirme mejor despues del trabajo", english: "I want tea to feel better after work", audio: "quiero-un-te-para-sentirme-mejor-despues-del-trabajo.mp3", question: "Why does the speaker want tea?" },
+        { spanish: "prefiero agua por lo tanto no quiero bebidas dulces", english: "I prefer water therefore I don't want sweet drinks", audio: "prefiero-agua-por-lo-tanto-no-quiero-bebidas-dulces.mp3", question: "What does the speaker not want?" },
+        { spanish: "quiero arroz con pollo para tener energia en el viaje", english: "I want rice with chicken to have energy on the trip", audio: "quiero-arroz-con-pollo-para-tener-energia-en-el-viaje.mp3", question: "Why does the speaker want rice with chicken?" },
+        { spanish: "quiero una ensalada sin embargo tambien quiero pan", english: "I want a salad however I also want bread", audio: "quiero-una-ensalada-sin-embargo-tambien-quiero-pan.mp3", question: "What else does the speaker want?" },
+        { spanish: "quiero un cafe para trabajar mejor en la tarde", english: "I want coffee to work better in the afternoon", audio: "quiero-un-cafe-para-trabajar-mejor-en-la-tarde.mp3", question: "Why does the speaker want coffee?" },
+        { spanish: "prefiero comida ligera a pesar de tener hambre", english: "I prefer light food despite being hungry", audio: "prefiero-comida-ligera-a-pesar-de-tener-hambre.mp3", question: "What does the speaker prefer?" },
+        { spanish: "quiero un jugo para estar bien durante el dia", english: "I want juice to feel well during the day", audio: "quiero-un-jugo-para-estar-bien-durante-el-dia.mp3", question: "Why does the speaker want juice?" },
+        { spanish: "ella pide comida saludable para tener energia", english: "she orders healthy food to have energy", audio: "ella-pide-comida-saludable-para-tener-energia.mp3", question: "Why does she order healthy food?" },
+       { spanish: "yo pido cafe sin embargo quiero algo simple", english: "I order coffee however I want something simple", audio: "yo-pido-cafe-sin-embargo-quiero-algo-simple.mp3", question: "What does the speaker want?" },
+
+  { spanish: "nosotros pedimos comida para estar mejor en el viaje", english: "we order food to feel better on the trip", audio: "nosotros-pedimos-comida-para-estar-mejor-en-el-viaje.mp3", question: "Why do they order food?" },
+
+  { spanish: "ella pide una ensalada para comer ligero", english: "she orders a salad to eat light", audio: "ella-pide-una-ensalada-para-comer-ligero.mp3", question: "Why does she order a salad?" },
+
+  { spanish: "yo pido comida simple sin embargo quiero buen sabor", english: "I order simple food however I want good flavor", audio: "yo-pido-comida-simple-sin-embargo-quiero-buen-sabor.mp3", question: "What does the speaker want?" },
+
+  { spanish: "ellos piden bebidas para tener energia en el dia", english: "they order drinks to have energy during the day", audio: "ellos-piden-bebidas-para-tener-energia-en-el-dia.mp3", question: "Why do they order drinks?" },
+
+  { spanish: "ella pide comida ligera a pesar de estar cansada", english: "she orders light food despite being tired", audio: "ella-pide-comida-ligera-a-pesar-de-estar-cansada.mp3", question: "Why does she order light food?" },
+
+  { spanish: "yo pido arroz con pollo para estar bien en el trabajo", english: "I order rice with chicken to feel well at work", audio: "yo-pido-arroz-con-pollo-para-estar-bien-en-el-trabajo.mp3", question: "Why does the speaker order rice with chicken?" },
+
+  { spanish: "nosotros pedimos comida simple sin embargo queremos buen servicio", english: "we order simple food however we want good service", audio: "nosotros-pedimos-comida-simple-sin-embargo-queremos-buen-servicio.mp3", question: "What do they want?" },
+
+  { spanish: "ella pide bebidas para estar mejor despues del trabajo", english: "she orders drinks to feel better after work", audio: "ella-pide-bebidas-para-estar-mejor-despues-del-trabajo.mp3", question: "Why does she order drinks?" }
+]
 function loadListening(topic, level) {
     const bank = CEFR_LISTENING_TOPICS[topic][level];
     return bank[Math.floor(Math.random() * bank.length)];
