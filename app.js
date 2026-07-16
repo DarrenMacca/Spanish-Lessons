@@ -1445,120 +1445,155 @@ const CEFR_LISTENING_TOPICS = {
 }
 
 
-
-ordering: {
-
-    /* ============================================================
+   /* ============================================================
        A1 — Beginner (20 items)
        ============================================================ */
-    A1: [
-        { spanish: "quiero agua por favor", english: "I want water please", audio: "quiero-agua-por-favor.mp3", question: "What does the speaker want?" },
-        { spanish: "quiero cafe", english: "I want coffee", audio: "quiero-cafe.mp3", question: "What does the speaker want?" },
-        { spanish: "quiero te", english: "I want tea", audio: "quiero-te.mp3", question: "What does the speaker want?" },
-        { spanish: "quiero sopa", english: "I want soup", audio: "quiero-sopa.mp3", question: "What does the speaker want?" },
-        { spanish: "quiero jugo", english: "I want juice", audio: "quiero-jugo.mp3", question: "What does the speaker want?" },
-        { spanish: "quiero arroz con pollo", english: "I want rice with chicken", audio: "quiero-arroz-con-pollo.mp3", question: "What does the speaker want?" },
-        { spanish: "quiero pan con mantequilla", english: "I want bread with butter", audio: "quiero-pan-con-mantequilla.mp3", question: "What does the speaker want?" },
-        { spanish: "quiero una botella de agua", english: "I want a bottle of water", audio: "quiero-una-botella-de-agua.mp3", question: "What does the speaker want?" },
-        { spanish: "quiero una ensalada", english: "I want a salad", audio: "quiero-una-ensalada.mp3", question: "What does the speaker want?" },
-        { spanish: "quiero un cafe pequeno", english: "I want a small coffee", audio: "quiero-un-cafe-pequeno.mp3", question: "What does the speaker want?" },
-        { spanish: "quiero comida", english: "I want food", audio: "quiero-comida.mp3", question: "What does the speaker want?" },
-        { spanish: "quiero un desayuno simple", english: "I want a simple breakfast", audio: "quiero-un-desayuno-simple.mp3", question: "What does the speaker want?" },
-        { spanish: "quiero un almuerzo rapido", english: "I want a quick lunch", audio: "quiero-un-almuerzo-rapido.mp3", question: "What does the speaker want?" },
-        { spanish: "quiero un cafe para llevar", english: "I want a coffee to go", audio: "quiero-un-cafe-para-llevar.mp3", question: "What does the speaker want?" },
-        { spanish: "quiero agua fria", english: "I want cold water", audio: "quiero-agua-fria.mp3", question: "What does the speaker want?" },
-        { spanish: "quiero te caliente", english: "I want hot tea", audio: "quiero-te-caliente.mp3", question: "What does the speaker want?" },
-        { spanish: "quiero pan", english: "I want bread", audio: "quiero-pan.mp3", question: "What does the speaker want?" },
-        { spanish: "quiero pollo", english: "I want chicken", audio: "quiero-pollo.mp3", question: "What does the speaker want?" },
-        { spanish: "quiero arroz", english: "I want rice", audio: "quiero-arroz.mp3", question: "What does the speaker want?" },
-        { spanish: "quiero comida para hoy", english: "I want food for today", audio: "quiero-comida-para-hoy.mp3", question: "What does the speaker want?" }
-    ],
+ordering: {
+  A1: [
+    { spanish: "quiero agua por favor", english: "I want water please", audio: "quiero-agua-por-favor.mp3", question: "What does the speaker want?" },
+    { spanish: "quiero cafe", english: "I want coffee", audio: "quiero-cafe.mp3", question: "What does the speaker want?" },
+    { spanish: "quiero te", english: "I want tea", audio: "quiero-te.mp3", question: "What does the speaker want?" },
+    { spanish: "quiero sopa", english: "I want soup", audio: "quiero-sopa.mp3", question: "What does the speaker want?" },
+    { spanish: "quiero jugo", english: "I want juice", audio: "quiero-jugo.mp3", question: "What does the speaker want?" },
+    { spanish: "quiero pan", english: "I want bread", audio: "quiero-pan.mp3", question: "What does the speaker want?" },
+    { spanish: "quiero arroz con pollo", english: "I want rice with chicken", audio: "quiero-arroz-con-pollo.mp3", question: "What does the speaker want?" },
+    { spanish: "quiero ensalada", english: "I want salad", audio: "quiero-ensalada.mp3", question: "What does the speaker want?" },
+    { spanish: "quiero comida", english: "I want food", audio: "quiero-comida.mp3", question: "What does the speaker want?" },
+    { spanish: "quiero cafe pequeno", english: "I want a small coffee", audio: "quiero-cafe-pequeno.mp3", question: "What size coffee does the speaker want?" }
+    { spanish: "quiero agua fria", english: "I want cold water", audio: "quiero-agua-fria.mp3", question: "What does the speaker want?" },
+    { spanish: "quiero te caliente", english: "I want hot tea", audio: "quiero-te-caliente.mp3", question: "What does the speaker want?" },
+    { spanish: "quiero pan con mantequilla", english: "I want bread with butter", audio: "quiero-pan-con-mantequilla.mp3", question: "What does the speaker want?" },
+    { spanish: "quiero pan con queso", english: "I want bread with cheese", audio: "quiero-pan-con-queso.mp3", question: "What does the speaker want?" },
+    { spanish: "quiero comida simple", english: "I want simple food", audio: "quiero-comida-simple.mp3", question: "What does the speaker want?" },
+    { spanish: "quiero jugo de naranja", english: "I want orange juice", audio: "quiero-jugo-de-naranja.mp3", question: "What does the speaker want?" },
+    { spanish: "quiero sopa caliente", english: "I want hot soup", audio: "quiero-sopa-caliente.mp3", question: "What does the speaker want?" },
+    { spanish: "quiero cafe con leche", english: "I want coffee with milk", audio: "quiero-cafe-con-leche.mp3", question: "What does the speaker want?" },
+    { spanish: "quiero una botella de agua", english: "I want a bottle of water", audio: "quiero-una-botella-de-agua.mp3", question: "What does the speaker want?" },
+    { spanish: "quiero comida para llevar", english: "I want food to go", audio: "quiero-comida-para-llevar.mp3", question: "What does the speaker want?" }
+  ],
+
 
     /* ============================================================
        A2 — Elementary (20 items)
        ============================================================ */
-    A2: [
-        { spanish: "quiero un cafe grande por favor", english: "I want a large coffee please", audio: "quiero-un-cafe-grande-por-favor.mp3", question: "What size coffee does the speaker want?" },
-        { spanish: "quiero una sopa porque tengo hambre", english: "I want soup because I am hungry", audio: "quiero-una-sopa-porque-tengo-hambre.mp3", question: "Why does the speaker want soup?" },
-        { spanish: "quiero arroz con pollo para el almuerzo", english: "I want rice with chicken for lunch", audio: "quiero-arroz-con-pollo-para-el-almuerzo.mp3", question: "What meal is the speaker ordering for?" },
-        { spanish: "quiero un te sin azucar", english: "I want tea without sugar", audio: "quiero-un-te-sin-azucar.mp3", question: "How does the speaker want the tea?" },
-        { spanish: "quiero una ensalada con pan", english: "I want a salad with bread", audio: "quiero-una-ensalada-con-pan.mp3", question: "What does the speaker want with the salad?" },
-        { spanish: "quiero agua fria por favor", english: "I want cold water please", audio: "quiero-agua-fria-por-favor.mp3", question: "What kind of water does the speaker want?" },
-        { spanish: "quiero un jugo porque tengo sed", english: "I want juice because I am thirsty", audio: "quiero-un-jugo-porque-tengo-sed.mp3", question: "Why does the speaker want juice?" },
-        { spanish: "quiero un cafe para llevar", english: "I want a coffee to go", audio: "quiero-un-cafe-para-llevar.mp3", question: "How does the speaker want the coffee?" },
-        { spanish: "quiero pan con queso para la manana", english: "I want bread with cheese for the morning", audio: "quiero-pan-con-queso-para-la-manana.mp3", question: "What does the speaker want for the morning?" },
-        { spanish: "quiero una comida simple hoy", english: "I want a simple meal today", audio: "quiero-una-comida-simple-hoy.mp3", question: "What kind of meal does the speaker want?" },
-        { spanish: "yo compre comida para el almuerzo", english: "I bought food for lunch", audio: "yo-compre-comida-para-el-almuerzo.mp3", question: "What did the speaker buy?" },
-        { spanish: "ella pidio agua en el restaurante", english: "she ordered water in the restaurant", audio: "ella-pidio-agua-en-el-restaurante.mp3", question: "What did she order?" },
-        { spanish: "nosotros pedimos sopa ayer", english: "we ordered soup yesterday", audio: "nosotros-pedimos-sopa-ayer.mp3", question: "What did they order?" },
-        { spanish: "el pidio un cafe en el hotel", english: "he ordered a coffee in the hotel", audio: "el-pidio-un-cafe-en-el-hotel.mp3", question: "Where did he order coffee?" },
-        { spanish: "yo pedi comida en el aeropuerto", english: "I ordered food at the airport", audio: "yo-pedi-comida-en-el-aeropuerto.mp3", question: "Where did the speaker order food?" },
-        { spanish: "ella pidio una ensalada en el centro", english: "she ordered a salad in the city center", audio: "ella-pidio-una-ensalada-en-el-centro.mp3", question: "Where did she order the salad?" },
-        { spanish: "nosotros pedimos bebidas para la cena", english: "we ordered drinks for dinner", audio: "nosotros-pedimos-bebidas-para-la-cena.mp3", question: "What did they order?" },
-        { spanish: "el pidio arroz con pollo ayer", english: "he ordered rice with chicken yesterday", audio: "el-pidio-arroz-con-pollo-ayer.mp3", question: "When did he order rice with chicken?" },
-        { spanish: "yo pedi un jugo en la tienda", english: "I ordered a juice in the store", audio: "yo-pedi-un-jugo-en-la-tienda.mp3", question: "Where did the speaker order juice?" },
-        { spanish: "ella pidio comida para llevar", english: "she ordered food to go", audio: "ella-pidio-comida-para-llevar.mp3", question: "How did she want the food?" }
-    ],
+      A2: [
+    { spanish: "quiero un cafe grande por favor", english: "I want a large coffee please", audio: "quiero-un-cafe-grande-por-favor.mp3", question: "What size coffee does the speaker want?" },
+    { spanish: "quiero una sopa porque tengo hambre", english: "I want soup because I am hungry", audio: "quiero-una-sopa-porque-tengo-hambre.mp3", question: "Why does the speaker want soup?" },
+    { spanish: "quiero arroz con pollo para el almuerzo", english: "I want rice with chicken for lunch", audio: "quiero-arroz-con-pollo-para-el-almuerzo.mp3", question: "What does the speaker want for lunch?" },
+    { spanish: "quiero un te sin azucar", english: "I want tea without sugar", audio: "quiero-un-te-sin-azucar.mp3", question: "How does the speaker want the tea?" },
+    { spanish: "quiero una ensalada con pan", english: "I want a salad with bread", audio: "quiero-una-ensalada-con-pan.mp3", question: "What does the speaker want with the salad?" },
+    { spanish: "quiero agua fria por favor", english: "I want cold water please", audio: "quiero-agua-fria-por-favor.mp3", question: "What does the speaker want?" },
+    { spanish: "quiero un jugo porque tengo sed", english: "I want juice because I am thirsty", audio: "quiero-un-jugo-porque-tengo-sed.mp3", question: "Why does the speaker want juice?" },
+    { spanish: "quiero un cafe para llevar", english: "I want a coffee to go", audio: "quiero-un-cafe-para-llevar.mp3", question: "What does the speaker want?" },
+    { spanish: "quiero pan con queso para la manana", english: "I want bread with cheese for the morning", audio: "quiero-pan-con-queso-para-la-manana.mp3", question: "When does the speaker want bread with cheese?" },
+    { spanish: "quiero una comida simple hoy", english: "I want simple food today", audio: "quiero-una-comida-simple-hoy.mp3", question: "What does the speaker want today?" }
+    { spanish: "quiero un cafe porque estoy cansado", english: "I want coffee because I am tired", audio: "quiero-un-cafe-porque-estoy-cansado.mp3", question: "Why does the speaker want coffee?" },
+    { spanish: "quiero una sopa simple para la tarde", english: "I want simple soup for the afternoon", audio: "quiero-una-sopa-simple-para-la-tarde.mp3", question: "When does the speaker want soup?" },
+    { spanish: "quiero un te caliente porque hace frio", english: "I want hot tea because it is cold", audio: "quiero-un-te-caliente-porque-hace-frio.mp3", question: "Why does the speaker want hot tea?" },
+    { spanish: "quiero agua porque no quiero azucar", english: "I want water because I do not want sugar", audio: "quiero-agua-porque-no-quiero-azucar.mp3", question: "Why does the speaker want water?" },
+    { spanish: "quiero una ensalada porque quiero comer saludable", english: "I want a salad because I want to eat healthy", audio: "quiero-una-ensalada-porque-quiero-comer-saludable.mp3", question: "Why does the speaker want a salad?" },
+    { spanish: "quiero comida simple porque no tengo tiempo", english: "I want simple food because I do not have time", audio: "quiero-comida-simple-porque-no-tengo-tiempo.mp3", question: "Why does the speaker want simple food?" },
+    { spanish: "quiero un cafe sin embargo no quiero algo dulce", english: "I want coffee however I do not want something sweet", audio: "quiero-un-cafe-sin-embargo-no-quiero-algo-dulce.mp3", question: "What does the speaker not want?" },
+    { spanish: "quiero un jugo porque estoy cansado", english: "I want juice because I am tired", audio: "quiero-un-jugo-porque-estoy-cansado.mp3", question: "Why does the speaker want juice?" },
+    { spanish: "quiero comida caliente para sentirme mejor", english: "I want hot food to feel better", audio: "quiero-comida-caliente-para-sentirme-mejor.mp3", question: "Why does the speaker want hot food?" },
+    { spanish: "quiero un cafe para empezar el dia", english: "I want coffee to start the day", audio: "quiero-un-cafe-para-empezar-el-dia.mp3", question: "Why does the speaker want coffee?" }
+  ],
+
 
     /* ============================================================
        B1 — Intermediate (20 items)
        ============================================================ */
-    B1: [
-        { spanish: "prefiero un cafe porque necesito energia", english: "I prefer coffee because I need energy", audio: "prefiero-un-cafe-porque-necesito-energia.mp3", question: "Why does the speaker prefer coffee?" },
-        { spanish: "quiero una sopa simple porque no tengo mucho tiempo", english: "I want simple soup because I don't have much time", audio: "quiero-una-sopa-simple-porque-no-tengo-mucho-tiempo.mp3", question: "Why does the speaker want simple soup?" },
-        { spanish: "me gusta pedir arroz con pollo cuando viajo", english: "I like to order rice with chicken when I travel", audio: "me-gusta-pedir-arroz-con-pollo-cuando-viajo.mp3", question: "When does the speaker like to order rice with chicken?" },
-        { spanish: "quiero un te caliente porque hace frio", english: "I want hot tea because it is cold", audio: "quiero-un-te-caliente-porque-hace-frio.mp3", question: "Why does the speaker want hot tea?" },
-        { spanish: "prefiero agua porque no quiero azucar", english: "I prefer water because I don't want sugar", audio: "prefiero-agua-porque-no-quiero-azucar.mp3", question: "Why does the speaker prefer water?" },
-        { spanish: "quiero una ensalada porque quiero comer saludable", english: "I want a salad because I want to eat healthy", audio: "quiero-una-ensalada-porque-quiero-comer-saludable.mp3", question: "Why does the speaker want a salad?" },
-        { spanish: "me gusta pedir comida simple en restaurantes nuevos", english: "I like to order simple food in new restaurants", audio: "me-gusta-pedir-comida-simple-en-restaurantes-nuevos.mp3", question: "Where does the speaker like to order simple food?" },
-        { spanish: "quiero un cafe sin embargo no quiero algo muy dulce", english: "I want coffee however I don't want something very sweet", audio: "quiero-un-cafe-sin-embargo-no-quiero-algo-muy-dulce.mp3", question: "What does the speaker not want?" },
-        { spanish: "quiero un jugo porque estoy cansado", english: "I want juice because I am tired", audio: "quiero-un-jugo-porque-estoy-cansado.mp3", question: "Why does the speaker want juice?" },
-        { spanish: "prefiero comida caliente para sentirme mejor", english: "I prefer hot food to feel better", audio: "prefiero-comida-caliente-para-sentirme-mejor.mp3", question: "Why does the speaker prefer hot food?" },
-        { spanish: "ella pide comida saludable cada dia", english: "she orders healthy food every day", audio: "ella-pide-comida-saludable-cada-dia.mp3", question: "How often does she order healthy food?" },
-        { spanish: "yo pido cafe en el trabajo cada manana", english: "I order coffee at work every morning", audio: "yo-pido-cafe-en-el-trabajo-cada-manana.mp3", question: "Where does the speaker order coffee?" },
-        { spanish: "nosotros pedimos comida simple cuando estamos ocupados", english: "we order simple food when we are busy", audio: "nosotros-pedimos-comida-simple-cuando-estamos-ocupados.mp3", question: "When do they order simple food?" },
-        { spanish: "ella pide agua porque no quiere cafe", english: "she orders water because she doesn't want coffee", audio: "ella-pide-agua-porque-no-quiere-cafe.mp3", question: "Why does she order water?" },
-        { spanish: "yo pido comida para llevar cuando tengo prisa", english: "I order food to go when I am in a hurry", audio: "yo-pido-comida-para-llevar-cuando-tengo-prisa.mp3", question: "When does the speaker order food to go?" },
-        { spanish: "el pide sopa porque quiere algo caliente", english: "he orders soup because he wants something hot", audio: "el-pide-sopa-porque-quiere-algo-caliente.mp3", question: "Why does he order soup?" },
-        { spanish: "nosotros pedimos bebidas para compartir", english: "we order drinks to share", audio: "nosotros-pedimos-bebidas-para-compartir.mp3", question: "Why do they order drinks?" },
-        { spanish: "ella pide comida en el hotel cuando viaja", english: "she orders food in the hotel when she travels", audio: "ella-pide-comida-en-el-hotel-cuando-viaja.mp3", question: "Where does she order food?" },
-        { spanish: "yo pido arroz con pollo porque es mi comida favorita", english: "I order rice with chicken because it is my favorite food", audio: "yo-pido-arroz-con-pollo-porque-es-mi-comida-favorita.mp3", question: "Why does the speaker order rice with chicken?" },
-        { spanish: "ellos piden comida simple para estar bien", english: "they order simple food to feel well", audio: "ellos-piden-comida-simple-para-estar-bien.mp3", question: "Why do they order simple food?" }
-    ],
+     B1: [
+    { spanish: "prefiero un cafe porque necesito energia", english: "I prefer coffee because I need energy", audio: "prefiero-un-cafe-porque-necesito-energia.mp3", question: "Why does the speaker prefer coffee?" },
+    { spanish: "quiero una sopa simple porque no tengo mucho tiempo", english: "I want simple soup because I do not have much time", audio: "quiero-una-sopa-simple-porque-no-tengo-mucho-tiempo.mp3", question: "Why does the speaker want soup?" },
+    { spanish: "me gusta pedir arroz con pollo cuando viajo", english: "I like to order rice with chicken when I travel", audio: "me-gusta-pedir-arroz-con-pollo-cuando-viajo.mp3", question: "When does the speaker like to order rice with chicken?" },
+    { spanish: "quiero un te caliente porque hace frio", english: "I want hot tea because it is cold", audio: "quiero-un-te-caliente-porque-hace-frio.mp3", question: "Why does the speaker want tea?" },
+    { spanish: "prefiero agua porque no quiero azucar", english: "I prefer water because I do not want sugar", audio: "prefiero-agua-porque-no-quiero-azucar.mp3", question: "Why does the speaker prefer water?" },
+    { spanish: "quiero una ensalada porque quiero comer saludable", english: "I want a salad because I want to eat healthy", audio: "quiero-una-ensalada-porque-quiero-comer-saludable.mp3", question: "Why does the speaker want a salad?" },
+    { spanish: "me gusta pedir comida simple en restaurantes nuevos", english: "I like to order simple food in new restaurants", audio: "me-gusta-pedir-comida-simple-en-restaurantes-nuevos.mp3", question: "Where does the speaker like to order simple food?" },
+    { spanish: "quiero un cafe sin embargo no quiero algo muy dulce", english: "I want coffee however I do not want something very sweet", audio: "quiero-un-cafe-sin-embargo-no-quiero-algo-muy-dulce.mp3", question: "What does the speaker not want?" },
+    { spanish: "quiero un jugo porque estoy cansado", english: "I want juice because I am tired", audio: "quiero-un-jugo-porque-estoy-cansado.mp3", question: "Why does the speaker want juice?" },
+    { spanish: "prefiero comida caliente para sentirme mejor", english: "I prefer hot food to feel better", audio: "prefiero-comida-caliente-para-sentirme-mejor.mp3", question: "Why does the speaker prefer hot food?" }
+    { spanish: "quiero un cafe para trabajar mejor en la tarde", english: "I want coffee to work better in the afternoon", audio: "quiero-un-cafe-para-trabajar-mejor-en-la-tarde.mp3", question: "Why does the speaker want coffee?" },
+    { spanish: "prefiero comida ligera a pesar de tener hambre", english: "I prefer light food despite being hungry", audio: "prefiero-comida-ligera-a-pesar-de-tener-hambre.mp3", question: "What does the speaker prefer?" },
+    { spanish: "quiero un jugo para estar bien durante el dia", english: "I want juice to feel well during the day", audio: "quiero-un-jugo-para-estar-bien-durante-el-dia.mp3", question: "Why does the speaker want juice?" },
+    { spanish: "ella pide comida saludable para tener energia", english: "she orders healthy food to have energy", audio: "ella-pide-comida-saludable-para-tener-energia.mp3", question: "Why does she order healthy food?" },
+    { spanish: "yo pido cafe sin embargo quiero algo simple", english: "I order coffee however I want something simple", audio: "yo-pido-cafe-sin-embargo-quiero-algo-simple.mp3", question: "What does the speaker want?" },
+    { spanish: "nosotros pedimos comida para estar mejor en el viaje", english: "we order food to feel better on the trip", audio: "nosotros-pedimos-comida-para-estar-mejor-en-el-viaje.mp3", question: "Why do they order food?" },
+    { spanish: "ella pide una ensalada para comer ligero", english: "she orders a salad to eat light", audio: "ella-pide-una-ensalada-para-comer-ligero.mp3", question: "Why does she order a salad?" },
+    { spanish: "yo pido comida simple sin embargo quiero buen sabor", english: "I order simple food however I want good flavor", audio: "yo-pido-comida-simple-sin-embargo-quiero-buen-sabor.mp3", question: "What does the speaker want?" },
+    { spanish: "ellos piden bebidas para tener energia en el dia", english: "they order drinks to have energy during the day", audio: "ellos-piden-bebidas-para-tener-energia-en-el-dia.mp3", question: "Why do they order drinks?" },
+    { spanish: "ella pide comida ligera a pesar de estar cansada", english: "she orders light food despite being tired", audio: "ella-pide-comida-ligera-a-pesar-de-estar-cansada.mp3", question: "Why does she order light food?" }
+  ],
+
 
     /* ============================================================
        B2 — Upper Intermediate (20 items)
        ============================================================ */
-    B2: [
-        { spanish: "quiero un cafe para empezar bien el dia", english: "I want coffee to start the day well", audio: "quiero-un-cafe-para-empezar-bien-el-dia.mp3", question: "Why does the speaker want coffee?" },
-        { spanish: "prefiero comida simple sin embargo quiero probar algo nuevo", english: "I prefer simple food however I want to try something new", audio: "prefiero-comida-simple-sin-embargo-quiero-probar-algo-nuevo.mp3", question: "What does the speaker want to try?" },
-        { spanish: "quiero una sopa caliente a pesar de que hace calor", english: "I want hot soup even though it is hot", audio: "quiero-una-sopa-caliente-a-pesar-de-que-hace-calor.mp3", question: "What does the speaker want?" },
-        { spanish: "quiero un te para sentirme mejor despues del trabajo", english: "I want tea to feel better after work", audio: "quiero-un-te-para-sentirme-mejor-despues-del-trabajo.mp3", question: "Why does the speaker want tea?" },
-        { spanish: "prefiero agua por lo tanto no quiero bebidas dulces", english: "I prefer water therefore I don't want sweet drinks", audio: "prefiero-agua-por-lo-tanto-no-quiero-bebidas-dulces.mp3", question: "What does the speaker not want?" },
-        { spanish: "quiero arroz con pollo para tener energia en el viaje", english: "I want rice with chicken to have energy on the trip", audio: "quiero-arroz-con-pollo-para-tener-energia-en-el-viaje.mp3", question: "Why does the speaker want rice with chicken?" },
-        { spanish: "quiero una ensalada sin embargo tambien quiero pan", english: "I want a salad however I also want bread", audio: "quiero-una-ensalada-sin-embargo-tambien-quiero-pan.mp3", question: "What else does the speaker want?" },
-        { spanish: "quiero un cafe para trabajar mejor en la tarde", english: "I want coffee to work better in the afternoon", audio: "quiero-un-cafe-para-trabajar-mejor-en-la-tarde.mp3", question: "Why does the speaker want coffee?" },
-        { spanish: "prefiero comida ligera a pesar de tener hambre", english: "I prefer light food despite being hungry", audio: "prefiero-comida-ligera-a-pesar-de-tener-hambre.mp3", question: "What does the speaker prefer?" },
-        { spanish: "quiero un jugo para estar bien durante el dia", english: "I want juice to feel well during the day", audio: "quiero-un-jugo-para-estar-bien-durante-el-dia.mp3", question: "Why does the speaker want juice?" },
-        { spanish: "ella pide comida saludable para tener energia", english: "she orders healthy food to have energy", audio: "ella-pide-comida-saludable-para-tener-energia.mp3", question: "Why does she order healthy food?" },
-       { spanish: "yo pido cafe sin embargo quiero algo simple", english: "I order coffee however I want something simple", audio: "yo-pido-cafe-sin-embargo-quiero-algo-simple.mp3", question: "What does the speaker want?" },
+     B2: [
+    { spanish: "quiero un cafe para empezar bien el dia", english: "I want coffee to start the day well", audio: "quiero-un-cafe-para-empezar-bien-el-dia.mp3", question: "Why does the speaker want coffee?" },
+    { spanish: "prefiero comida simple sin embargo quiero probar algo nuevo", english: "I prefer simple food however I want to try something new", audio: "prefiero-comida-simple-sin-embargo-quiero-probar-algo-nuevo.mp3", question: "What does the speaker want to try?" },
+    { spanish: "quiero una sopa caliente a pesar de que hace calor", english: "I want hot soup even though it is hot", audio: "quiero-una-sopa-caliente-a-pesar-de-que-hace-calor.mp3", question: "What does the speaker want?" },
+    { spanish: "quiero un te para sentirme mejor despues del trabajo", english: "I want tea to feel better after work", audio: "quiero-un-te-para-sentirme-mejor-despues-del-trabajo.mp3", question: "Why does the speaker want tea?" },
+    { spanish: "prefiero agua por lo tanto no quiero bebidas dulces", english: "I prefer water therefore I do not want sweet drinks", audio: "prefiero-agua-por-lo-tanto-no-quiero-bebidas-dulces.mp3", question: "What does the speaker not want?" },
+    { spanish: "quiero arroz con pollo para tener energia en el viaje", english: "I want rice with chicken to have energy on the trip", audio: "quiero-arroz-con-pollo-para-tener-energia-en-el-viaje.mp3", question: "Why does the speaker want rice with chicken?" },
+    { spanish: "quiero una ensalada sin embargo tambien quiero pan", english: "I want a salad however I also want bread", audio: "quiero-una-ensalada-sin-embargo-tambien-quiero-pan.mp3", question: "What else does the speaker want?" },
+    { spanish: "quiero un cafe para trabajar mejor en la tarde", english: "I want coffee to work better in the afternoon", audio: "quiero-un-cafe-para-trabajar-mejor-en-la-tarde.mp3", question: "Why does the speaker want coffee?" },
+    { spanish: "prefiero comida ligera a pesar de tener hambre", english: "I prefer light food despite being hungry", audio: "prefiero-comida-ligera-a-pesar-de-tener-hambre.mp3", question: "What does the speaker prefer?" },
+    { spanish: "quiero un jugo para estar bien durante el dia", english: "I want juice to feel well during the day", audio: "quiero-un-jugo-para-estar-bien-durante-el-dia.mp3", question
+    { spanish: "quiero comida ligera para trabajar mejor en la tarde",
+      english: "I want light food to work better in the afternoon",
+      audio: "quiero-comida-ligera-para-trabajar-mejor-en-la-tarde.mp3",
+      question: "Why does the speaker want light food?" },
 
-  { spanish: "nosotros pedimos comida para estar mejor en el viaje", english: "we order food to feel better on the trip", audio: "nosotros-pedimos-comida-para-estar-mejor-en-el-viaje.mp3", question: "Why do they order food?" },
+    { spanish: "prefiero agua sin embargo quiero buen sabor",
+      english: "I prefer water however I want good flavor",
+      audio: "prefiero-agua-sin-embargo-quiero-buen-sabor.mp3",
+      question: "What does the speaker want?" },
 
-  { spanish: "ella pide una ensalada para comer ligero", english: "she orders a salad to eat light", audio: "ella-pide-una-ensalada-para-comer-ligero.mp3", question: "Why does she order a salad?" },
+    { spanish: "quiero comida simple para estar bien durante el dia",
+      english: "I want simple food to feel well during the day",
+      audio: "quiero-comida-simple-para-estar-bien-durante-el-dia.mp3",
+      question: "Why does the speaker want simple food?" },
 
-  { spanish: "yo pido comida simple sin embargo quiero buen sabor", english: "I order simple food however I want good flavor", audio: "yo-pido-comida-simple-sin-embargo-quiero-buen-sabor.mp3", question: "What does the speaker want?" },
+    { spanish: "ella pide comida saludable para tener energia en el trabajo",
+      english: "she orders healthy food to have energy at work",
+      audio: "ella-pide-comida-saludable-para-tener-energia-en-el-trabajo.mp3",
+      question: "Why does she order healthy food?" },
 
-  { spanish: "ellos piden bebidas para tener energia en el dia", english: "they order drinks to have energy during the day", audio: "ellos-piden-bebidas-para-tener-energia-en-el-dia.mp3", question: "Why do they order drinks?" },
+    { spanish: "el pide comida ligera sin embargo quiere buen servicio",
+      english: "he orders light food however he wants good service",
+      audio: "el-pide-comida-ligera-sin-embargo-quiere-buen-servicio.mp3",
+      question: "What does he want?" },
 
-  { spanish: "ella pide comida ligera a pesar de estar cansada", english: "she orders light food despite being tired", audio: "ella-pide-comida-ligera-a-pesar-de-estar-cansada.mp3", question: "Why does she order light food?" },
+    { spanish: "yo pido comida caliente para sentirme mejor despues del trabajo",
+      english: "I order hot food to feel better after work",
+      audio: "yo-pido-comida-caliente-para-sentirme-mejor-despues-del-trabajo.mp3",
+      question: "Why does the speaker order hot food?" },
 
-  { spanish: "yo pido arroz con pollo para estar bien en el trabajo", english: "I order rice with chicken to feel well at work", audio: "yo-pido-arroz-con-pollo-para-estar-bien-en-el-trabajo.mp3", question: "Why does the speaker order rice with chicken?" },
+    { spanish: "ella pide un cafe para empezar bien el dia",
+      english: "she orders a coffee to start the day well",
+      audio: "ella-pide-un-cafe-para-empezar-bien-el-dia.mp3",
+      question: "Why does she order coffee?" },
 
-  { spanish: "nosotros pedimos comida simple sin embargo queremos buen servicio", english: "we order simple food however we want good service", audio: "nosotros-pedimos-comida-simple-sin-embargo-queremos-buen-servicio.mp3", question: "What do they want?" },
+    { spanish: "el pide una ensalada a pesar de tener hambre",
+      english: "he orders a salad despite being hungry",
+      audio: "el-pide-una-ensalada-a-pesar-de-tener-hambre.mp3",
+      question: "What does he order?" },
 
-  { spanish: "ella pide bebidas para estar mejor despues del trabajo", english: "she orders drinks to feel better after work", audio: "ella-pide-bebidas-para-estar-mejor-despues-del-trabajo.mp3", question: "Why does she order drinks?" }
-]
+    { spanish: "yo pido un jugo para estar mejor en el viaje",
+      english: "I order juice to feel better on the trip",
+      audio: "yo-pido-un-jugo-para-estar-mejor-en-el-viaje.mp3",
+      question: "Why does the speaker order juice?" },
+
+    { spanish: "ella pide comida simple sin embargo quiere buen sabor",
+      english: "she orders simple food however she wants good flavor",
+      audio: "ella-pide-comida-simple-sin-embargo-quiere-buen-sabor.mp3",
+      question: "What does she want?" }
+  ]
+}
+
+       
 function loadListening(topic, level) {
     const bank = CEFR_LISTENING_TOPICS[topic][level];
     return bank[Math.floor(Math.random() * bank.length)];
