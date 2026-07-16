@@ -573,6 +573,19 @@ autoExpandDictionary();
 
 function translateToEnglish(spanishText) {
     const normalized = spanishText.toLowerCase().trim();
+
+    // 1. Phrase detection
+    if (CEFR_PHRASES[normalized]) {
+        return CEFR_PHRASES[normalized];
+    }
+
+    // 2. Word-by-word fallback
+    return normalized
+        .split(/\s+/)
+        .map(w => WORD_DICT[w] || `[${w}]`)
+        .join(" ");
+}
+
    
 /* ============================================================
    GRAMMAR ERROR EXPLAINER
