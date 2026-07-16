@@ -1,4 +1,458 @@
 /* ============================================================
+   TRANSLATION ENGINE — CEFR Phrases + Word Dictionary
+   ============================================================ */
+
+function translateToEnglish(spanishText) {
+    const normalized = spanishText.toLowerCase().trim();
+
+    /* ============================================================
+       MULTI-WORD PHRASES (CEFR-aligned)
+       ============================================================ */
+    const CEFR_PHRASES = {
+        // A1
+        "cómo estás": "how are you",
+        "dónde vives": "where do you live",
+        "qué hora es": "what time is it",
+        "te gusta el café": "you like coffee",
+        "me gusta la música": "I like music",
+        "vivo en la ciudad": "I live in the city",
+        "trabajo en un hotel": "I work in a hotel",
+        "quiero comer": "I want to eat",
+        "quiero beber": "I want to drink",
+        "dónde está el baño": "where is the bathroom",
+
+        // A2
+        "qué hiciste ayer": "what did you do yesterday",
+        "fuiste al supermercado": "did you go to the supermarket",
+        "viajas a menudo": "you travel often",
+        "qué compraste": "what did you buy",
+        "qué estás haciendo": "what are you doing",
+        "sueles comer temprano": "you usually eat early",
+        "necesito ayuda": "I need help",
+        "quiero hacer una reserva": "I want to make a reservation",
+        "dónde está la estación": "where is the station",
+
+        // B1
+        "he estado aprendiendo español": "I have been learning Spanish",
+        "disfruto viajar": "I enjoy traveling",
+        "quiero mejorar mis habilidades": "I want to improve my skills",
+        "qué piensas de la ciudad": "what do you think of the city",
+        "cómo mantienes una vida saludable": "how do you maintain a healthy life",
+        "qué aprendiste recientemente": "what did you learn recently",
+        "cuáles son tus metas": "what are your goals",
+        "qué experiencias pasadas tienes": "what past experiences do you have",
+
+        // B2
+        "cómo manejas situaciones estresantes": "how do you handle stressful situations",
+        "cuál es tu opinión sobre la tecnología": "what is your opinion on technology",
+        "cómo ha cambiado tu vida": "how has your life changed",
+        "qué desafíos enfrentas": "what challenges do you face",
+        "qué esperas lograr": "what do you hope to achieve",
+        "qué piensas del futuro": "what do you think about the future",
+        "cómo ves la sociedad actual": "how do you see modern society",
+        "cuál es tu perspectiva": "what is your perspective"
+    };
+
+    if (CEFR_PHRASES[normalized]) {
+        return CEFR_PHRASES[normalized];
+    }
+
+    /* ============================================================
+   WORD-BY-WORD DICTIONARY — CEFR A1 → B2 (Categorized)
+   ============================================================ */
+
+const WORD_DICT = {
+
+    /* ============================================================
+       A1 — Beginner Vocabulary
+       ============================================================ */
+
+    // Core greetings & basics
+    "hola": "hello",
+    "adiós": "goodbye",
+    "por": "for",
+    "favor": "favor",
+    "gracias": "thank you",
+    "sí": "yes",
+    "no": "no",
+    "lo": "it",
+    "siento": "sorry",
+    "perdón": "excuse me",
+
+    // Pronouns
+    "yo": "I",
+    "tú": "you",
+    "él": "he",
+    "ella": "she",
+    "nosotros": "we",
+    "ellos": "they",
+
+    // Connectors
+    "y": "and",
+    "o": "or",
+    "pero": "but",
+    "porque": "because",
+    "con": "with",
+    "sin": "without",
+    "también": "also",
+    "muy": "very",
+    "más": "more",
+    "poco": "little",
+    "entonces": "then",
+    "un": "a",
+
+    // Food & drink
+    "agua": "water",
+    "comida": "food",
+    "café": "coffee",
+    "té": "tea",
+    "leche": "milk",
+    "pan": "bread",
+    "cerveza": "beer",
+    "bistec": "steak",
+    "papas": "potatoes",
+    "fritas": "fried",
+    "huevo": "egg",
+    "fruta": "fruit",
+    "manzana": "apple",
+    "naranja": "orange",
+    "plátano": "banana",
+    "pollo": "chicken",
+    "pescado": "fish",
+    "sopa": "soup",
+    "ensalada": "salad",
+    "arroz": "rice",
+    "frijoles": "beans",
+    "queso": "cheese",
+    "mantequilla": "butter",
+    "azúcar": "sugar",
+    "sal": "salt",
+
+    // Places & objects
+    "baño": "bathroom",
+    "hotel": "hotel",
+    "habitación": "room",
+    "llave": "key",
+    "mesa": "table",
+    "silla": "chair",
+
+    // Restaurant
+    "menú": "menu",
+    "cuenta": "bill",
+    "camarero": "waiter",
+    "quiero": "I want",
+    "gustaría": "would like",
+
+    // Transport
+    "autobús": "bus",
+    "tren": "train",
+    "boleto": "ticket",
+    "estación": "station",
+    "aeropuerto": "airport",
+
+    // Shopping
+    "cuánto": "how much",
+    "cuesta": "costs",
+    "barato": "cheap",
+    "caro": "expensive",
+    "abierto": "open",
+    "cerrado": "closed",
+
+    // Emergency
+    "ayuda": "help",
+    "doctor": "doctor",
+    "policía": "police",
+    "estoy": "I am",
+    "perdido": "lost",
+
+    // A1 Verbs & actions
+    "cómo": "how",
+    "estás": "are you",
+    "hoy": "today",
+    "dónde": "where",
+    "vives": "you live",
+    "vivo": "I live",
+    "vive": "he/she lives",
+    "vivimos": "we live",
+    "viven": "they live",
+    "trabajas": "you work",
+    "trabajo": "I work",
+    "trabaja": "he/she works",
+    "estudias": "you study",
+    "llamas": "you are called",
+    "de": "from",
+    "eres": "you are",
+    "tienes": "you have",
+    "hermanos": "brothers",
+    "hermanas": "sisters",
+    "hora": "time",
+    "levantas": "you get up",
+    "te": "you",
+    "gusta": "like",
+    "gustan": "like (plural)",
+    "música": "music",
+    "televisión": "television",
+    "lees": "you read",
+    "leo": "I read",
+    "libros": "books",
+    "solo": "only",
+    "nunca": "never",
+    "mañana": "tomorrow",
+    "rápido": "fast",
+    "lento": "slow",
+    "ciudad": "city",
+    "parada": "stop",
+
+
+    /* ============================================================
+       A2 — Elementary Vocabulary
+       ============================================================ */
+
+    // Daily life & routines
+    "me": "me",
+    "necesito": "I need",
+    "qué": "what",
+    "ayer": "yesterday",
+    "pasado": "last",
+    "semana": "week",
+    "fin": "end",
+    "próximo": "next",
+    "todavía": "still",
+    "ya": "already",
+    "antes": "before",
+
+    // Meals
+    "desayuno": "breakfast",
+    "almuerzo": "lunch",
+    "cena": "dinner",
+
+    // Shopping & places
+    "centro": "center",
+    "farmacia": "pharmacy",
+    "supermercado": "supermarket",
+    "tienda": "store",
+
+    // Travel
+    "avión": "plane",
+    "visitar": "to visit",
+
+    // Actions & verbs
+    "hiciste": "you did",
+    "fuiste": "you went",
+    "haciendo": "doing",
+    "sueles": "you usually",
+    "comer": "to eat",
+    "como": "I eat",
+    "comes": "you eat",
+    "terminaste": "you finished",
+    "compraste": "you bought",
+    "viajas": "you travel",
+    "menudo": "often",
+    "celebraste": "you celebrated",
+    "recientemente": "recently",
+    "ves": "you watch",
+    "ver": "to watch",
+    "usas": "you use",
+    "transporte": "transport",
+
+    // Family
+    "familia": "family",
+
+    // Missing A2 phrases
+    "a menudo": "often",
+    "pasado mañana": "day after tomorrow",
+
+
+    /* ============================================================
+       B1 — Intermediate Vocabulary
+       ============================================================ */
+
+    // Experiences & learning
+    "he": "I have",
+    "estado": "been",
+    "aprendiendo": "learning",
+    "español": "Spanish",
+    "experiencias": "experiences",
+    "pasadas": "past",
+
+    // Opinions & descriptions
+    "interesante": "interesting",
+    "último": "last",
+
+    // Life & routines
+    "tiempo": "time",
+    "libre": "free",
+    "diarias": "daily",
+
+    // Communication
+    "comunicación": "communication",
+    "conversaciones": "conversations",
+
+    // Work & skills
+    "desarrollador": "developer",
+    "mejorar": "to improve",
+    "habilidades": "skills",
+
+    // Social
+    "redes": "networks",
+    "sociales": "social",
+
+    // Missing B1 connectors
+    "mientras": "while",
+    "sin embargo": "however",
+
+
+    /* ============================================================
+       B2 — Upper‑Intermediate Vocabulary
+       ============================================================ */
+
+    // Abstract concepts
+    "opinión": "opinion",
+    "tecnología": "technology",
+    "educación": "education",
+    "cultura": "culture",
+    "sociedad": "society",
+    "importantes": "important",
+
+    // Life & change
+    "vida": "life",
+    "cambiado": "changed",
+    "años": "years",
+    "cambios": "changes",
+    "saludable": "healthy",
+
+    // Challenges & goals
+    "desafíos": "challenges",
+    "enfrentas": "you face",
+    "motivación": "motivation",
+    "lograr": "to achieve",
+    "esperas": "you expect",
+
+    // Advanced connectors
+    "además": "in addition",
+    "por lo tanto": "therefore",
+    "a pesar de": "despite",
+
+    // Other
+    "remoto": "remote",
+    "futuro": "future",
+    "vivir": "to live",
+    "largo": "long",
+    "plazo": "term",
+
+
+    /* ============================================================
+       Disruptors / Connectors (All Levels)
+       ============================================================ */
+
+    "siempre": "always",
+    "aunque": "although",
+    "cuando": "when",
+    "donde": "where"
+};
+
+
+
+    /* ============================================================
+       FALLBACK — Word-by-word translation
+       ============================================================ */
+    return normalized
+        .split(/\s+/)
+        .map(w => WORD_DICT[w] || `[${w}]`)
+        .join(" ");
+}
+
+/* ============================================================
+   GRAMMAR ERROR EXPLAINER
+   ============================================================ */
+function explainGrammarError(user, correct) {
+    const u = user.toLowerCase().trim();
+    const c = correct.toLowerCase().trim();
+
+    // Missing pronoun "te"
+    if (c.includes("te gusta") && !u.includes("te") && u.includes("gusta")) {
+        return "You forgot the pronoun “te”. Spanish requires “Te gusta…” to mean “You like…”.";
+    }
+
+    // Missing article
+    if ((c.includes("el ") || c.includes("la ")) &&
+        !u.includes("el ") && !u.includes("la ")) {
+        return "You missed the article (el/la). Spanish usually needs an article before nouns.";
+    }
+
+    // Wrong adverb vs frequency
+    if (c.includes("a menudo") && u.includes("lento")) {
+        return "You used “lento” (slow) instead of a frequency word like “a menudo” (often).";
+    }
+
+    // Wrong verb form
+    if (c.split(" ")[0] !== u.split(" ")[0]) {
+        return "Your verb form doesn’t match the target sentence. Check the conjugation.";
+    }
+
+    return "Your sentence is understandable, but the grammar or word choice doesn’t match the target answer.";
+}
+
+function getCEFRGrammarHint(level, user, correct) {
+    const u = user.toLowerCase().trim();
+    const c = correct.toLowerCase().trim();
+
+    /* ============================
+       A1 HINTS
+       ============================ */
+    if (level === "A1") {
+        if (!u.includes("el") && !u.includes("la") && (c.includes("el") || c.includes("la"))) {
+            return "A1 hint: Remember to include articles (el/la) before nouns.";
+        }
+        if (!u.includes("te") && c.includes("te gusta")) {
+            return "A1 hint: Use “te gusta” to say “you like”.";
+        }
+        return "A1 hint: Focus on simple present tense and basic sentence structure.";
+    }
+
+    /* ============================
+       A2 HINTS
+       ============================ */
+    if (level === "A2") {
+        if (u.includes("lento") && c.includes("a menudo")) {
+            return "A2 hint: Use frequency words like “a menudo” instead of speed words like “lento”.";
+        }
+        if (!u.includes("ayer") && c.includes("ayer")) {
+            return "A2 hint: Practice past-time markers like “ayer”.";
+        }
+        return "A2 hint: Practice common past tense verbs and daily routine vocabulary.";
+    }
+
+    /* ============================
+       B1 HINTS
+       ============================ */
+    if (level === "B1") {
+        if (!u.includes("porque") && c.includes("porque")) {
+            return "B1 hint: Use connectors like “porque” to explain reasons.";
+        }
+        if (!u.includes("que") && c.includes("que")) {
+            return "B1 hint: Multi‑clause sentences often require “que”.";
+        }
+        return "B1 hint: Try adding connectors (porque, aunque, cuando) to build longer sentences.";
+    }
+
+    /* ============================
+       B2 HINTS
+       ============================ */
+    if (level === "B2") {
+        if (!u.includes("aunque") && c.includes("aunque")) {
+            return "B2 hint: Use contrast connectors like “aunque” for complex ideas.";
+        }
+        if (!u.includes("para") && c.includes("para")) {
+            return "B2 hint: Use “para” to express purpose or intention.";
+        }
+        return "B2 hint: Aim for abstract vocabulary and multi‑clause structures.";
+    }
+
+    return "";
+}
+
+/* ============================================================
    CEFR SENTENCE BANKS (for Build tab)
    ============================================================ */
 
