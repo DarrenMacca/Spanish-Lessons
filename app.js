@@ -1606,8 +1606,6 @@ travel: {
 ]
 }   // end of ordering topic
 
-};   // end of CEFR_LISTENING_TOPICS (ONLY ONCE)
-
 const listenAutoPlay = {
     list: [],
     active: false,
