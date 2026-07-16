@@ -836,6 +836,31 @@ function setupQuizEvents() {
 /* ============================================================
    BUILD TAB — English → Spanish Builder (with disruptors + feedback)
    ============================================================ */
+function translateToEnglish(spanishText) {
+    if (!spanishText.trim()) return "(no answer provided)";
+
+    const dict = {
+        "dónde": "where",
+        "está": "is",
+        "el": "the",
+        "baño": "bathroom",
+        "yo": "I",
+        "manejo": "I handle",
+        "decisiones": "decisions",
+        "familiares": "family",
+        "para": "to",
+        "apoyar": "support",
+        "mi": "my",
+        "familia": "family"
+    };
+
+    return spanishText
+    .split(" ")
+    .filter(Boolean)
+    .map(w => dict[w.toLowerCase()] || `[${w}]`)
+    .join(" ");
+}
+
 
 function renderBuildTab() {
     const container = document.getElementById("build-content");
@@ -942,37 +967,45 @@ function setupBuildEvents(sentence) {
     });
 
     checkBtn.addEventListener("click", () => {
-        const correct = sentence.spanish.trim();
-        const user = buildState.answer.join(" ").trim();
+    const correct = sentence.spanish.trim();
+    const user = buildState.answer.join(" ").trim();
 
-        if (user === correct) {
-            feedback.innerHTML = `<span style="color:#4ade80;font-weight:600;">Correct! 🎉</span>`;
-            appState.levelStats[appState.currentLevel].buildCompleted++;
-            updateBadges();
-            updateProgressMeters();
-            setTimeout(() => speakQuiz(correct), 300);
-        } else {
-            const correctTokens = correct.split(" ");
-            const userTokens = buildState.answer;
+    // NEW: translate learner answer to English
+    const learnerEnglish = translateToEnglish(user);
 
-            let html = `<strong>Correct Answer:</strong><br>${correct}<br><br>`;
-            html += `<strong>Your Answer:</strong><br>${user}<br><br>`;
-            html += `<strong>Word-by-word feedback:</strong><br>`;
+    if (user === correct) {
+        feedback.innerHTML = `
+            <span style="color:#4ade80;font-weight:600;">Correct! 🎉</span><br><br>
+            <strong>Your Translated Response is:</strong><br>${learnerEnglish}
+        `;
+        appState.levelStats[appState.currentLevel].buildCompleted++;
+        updateBadges();
+        updateProgressMeters();
+        setTimeout(() => speakQuiz(correct), 300);
+    } else {
+        const correctTokens = correct.split(" ");
+        const userTokens = buildState.answer;
 
-            userTokens.forEach((t, i) => {
-                if (correctTokens[i] === t) {
-                    html += `<span style="color:#4ade80;">${t} ✔</span> `;
-                } else {
-                    html += `<span style="color:#f87171;">${t} ✖</span> `;
-                }
-            });
+        let html = `<strong>Correct Answer:</strong><br>${correct}<br><br>`;
+        html += `<strong>Your Answer:</strong><br>${user}<br><br>`;
+        html += `<strong>Your Translated Response is:</strong><br>${learnerEnglish}<br><br>`;
+        html += `<strong>Word-by-word feedback:</strong><br>`;
 
-            feedback.innerHTML = html;
-            setTimeout(() => speakQuiz(correct), 300);
-        }
+        userTokens.forEach((t, i) => {
+            if (correctTokens[i] === t) {
+                html += `<span style="color:#4ade80;">${t} ✔</span> `;
+            } else {
+                html += `<span style="color:#f87171;">${t} ✖</span> `;
+            }
+        });
 
-        saveState();
-    });
+        feedback.innerHTML = html;
+        setTimeout(() => speakQuiz(correct), 300);
+    }
+
+    saveState();
+});
+
 
     nextBtn.addEventListener("click", () => {
         renderBuildTab();
