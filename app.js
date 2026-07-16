@@ -2076,7 +2076,16 @@ function renderFlashcards() {
     updateTabHeader("flash");
 
     const container = document.getElementById("flash-content");
-    const words = CEFR_LEVELS[appState.currentLevel];
+    const topic = appState.listenTopic;
+    const level = appState.currentLevel;
+
+    let words = CEFR_LISTENING_TOPICS[topic]?.[level] || [];
+
+    words = words.map(w => ({
+        ...w,
+        category: w.category || autoAssignCategory({ spanish: w.spanish })
+    }));
+
     const grouped = groupByCategory(words);
 
     let html = `
@@ -2195,12 +2204,15 @@ function renderQuiz() {
     updateTabHeader("quiz");
 
     const container = document.getElementById("quiz-content");
-    const words = CEFR_LEVELS[appState.currentLevel];
+    const topic = appState.listenTopic;
+    const level = appState.currentLevel;
 
-    if (!words || !words.length) {
+    const words = CEFR_LISTENING_TOPICS[topic]?.[level] || [];
+
+    if (!words.length) {
         container.innerHTML = `
             <div class="glass-panel quiz-card">
-                <p>No words found for level ${appState.currentLevel}.</p>
+                <p>No words found for level ${level} and topic ${topic}.</p>
             </div>
         `;
         return;
@@ -2209,6 +2221,7 @@ function renderQuiz() {
     quizState.currentWord = words[Math.floor(Math.random() * words.length)];
     quizState.options = generateQuizOptions(words, quizState.currentWord);
     quizState.selected = null;
+
 
     container.innerHTML = `
         <div class="glass-panel quiz-card">
@@ -2330,9 +2343,17 @@ function renderBuild() {
     updateTabHeader("build");
 
     const level = appState.currentLevel;
+    const topic = appState.listenTopic;
     const container = document.getElementById("build-content");
 
-    const pool = CEFR_SENTENCES[level];
+    // Correct CEFR source
+    const pool = CEFR_LISTENING_TOPICS[topic]?.[level] || [];
+
+    if (!pool.length) {
+        container.innerHTML = `<div class="glass-panel build-card">No sentences found.</div>`;
+        return;
+    }
+
     const sentence = pool[Math.floor(Math.random() * pool.length)];
 
     const english = sentence.english;
@@ -2383,6 +2404,7 @@ function renderBuild() {
 
     setupBuildEvents(sentence);
 }
+
 
 /* ============================================================
    BUILD TAB — EVENTS
