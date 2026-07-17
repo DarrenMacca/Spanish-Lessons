@@ -956,7 +956,7 @@ let listenAutoPlay = {
 
 function renderListenTab() {
     const container = document.getElementById("listen-content");
-    const words = CEFR_LEVELS[appState.currentLevel];
+    const words = LISTEN_VOCAB[appState.currentLevel];
     const grouped = groupByCategory(words);
 
     let html = `
