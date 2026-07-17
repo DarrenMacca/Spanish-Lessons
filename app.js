@@ -268,6 +268,9 @@ A1: [
     { spanish: "para", english: "for", category: "Connectors" },
     { spanish: "a", english: "to", category: "Connectors" },
     { spanish: "en", english: "in", category: "Connectors" },
+    { spanish: "ella", english: "she", category: "Connectors" },
+    { spanish: "el", english: "he", category: "Connectors" },
+    { spanish: "rapido", english: "fast", category: "Connectors" },
 
     // Numbers
     { spanish: "uno", english: "one", category: "Numbers" },
@@ -590,6 +593,9 @@ const WORD_DICT = {
     "es": "he/she is",
     "somos": "we are",
     "son": "they are",
+    "ella": "she",
+    "el": "he",
+    "rapido": "fast",
 
     "estoy": "I am (feeling/location)",
     "estás": "you are (feeling/location)",
@@ -641,6 +647,9 @@ const CEFR_PHRASES = {
     "quiero comer": "I want to eat",
     "quiero beber": "I want to drink",
     "dónde está el baño": "where is the bathroom",
+    "ella corre rápido": "she runs fast",
+    "ella es rápida": "she is fast",
+    "ella va rápido": "she goes fast",
 
     // A2
     "qué hiciste ayer": "what did you do yesterday",
