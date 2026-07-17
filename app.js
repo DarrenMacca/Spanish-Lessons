@@ -520,20 +520,10 @@ const LISTEN_VOCAB = {
             "y","o","con","sin","más","poco","solo","muy",
             "cerca","para","a","en"
         ],
-        "Numbers": [
-            "uno","dos","diez"
-        ]
+        
        "Numbers": [
-    "uno",
-    "dos",
-    "tres",
-    "cuatro",
-    "cinco",
-    "seis",
-    "siete",
-    "ocho",
-    "nueve",
-    "diez"
+    "uno",   "dos", "tres", "cuatro", "cinco", "seis", "siete", "ocho",
+    "nueve", "diez"
 ]
 
     },
