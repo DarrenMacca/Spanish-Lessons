@@ -472,7 +472,7 @@ B1: [
     { spanish: "ha", english: "he/she has (auxiliary)" },
     { spanish: "hemos", english: "we have (auxiliary)" },
     { spanish: "habéis", english: "you (plural) have (auxiliary)" },
-    { spanish: "han", english: "they have (auxiliary)" }
+    { spanish: "han", english: "they have (auxiliary)" },
     { spanish: "estado", english: "been" },
     { spanish: "aprendiendo", english: "learning" },
     { spanish: "español", english: "Spanish" },
