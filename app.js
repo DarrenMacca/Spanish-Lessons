@@ -273,10 +273,6 @@ A1: [
     { spanish: "rapido", english: "fast", category: "Connectors" },
 
     // Numbers
-    { spanish: "uno", english: "one", category: "Numbers" },
-    { spanish: "dos", english: "two", category: "Numbers" },
-    { spanish: "diez", english: "ten", category: "Numbers" },
-
     { english: "one", spanish: "uno", category: "Numbers" },
     { english: "two", spanish: "dos", category: "Numbers" },
     { english: "three", spanish: "tres", category: "Numbers" },
