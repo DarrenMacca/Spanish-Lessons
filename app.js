@@ -275,7 +275,19 @@ A1: [
     // Numbers
     { spanish: "uno", english: "one", category: "Numbers" },
     { spanish: "dos", english: "two", category: "Numbers" },
-    { spanish: "diez", english: "ten", category: "Numbers" }
+    { spanish: "diez", english: "ten", category: "Numbers" },
+
+    { english: "one", spanish: "uno", category: "Numbers" },
+    { english: "two", spanish: "dos", category: "Numbers" },
+    { english: "three", spanish: "tres", category: "Numbers" },
+    { english: "four", spanish: "cuatro", category: "Numbers" },
+    { english: "five", spanish: "cinco", category: "Numbers" },
+    { english: "six", spanish: "seis", category: "Numbers" },
+    { english: "seven", spanish: "siete", category: "Numbers" },
+    { english: "eight", spanish: "ocho", category: "Numbers" },
+    { english: "nine", spanish: "nueve", category: "Numbers" },
+    { english: "ten", spanish: "diez", category: "Numbers" }
+
 ],
 
 A2: [
@@ -324,7 +336,19 @@ A2: [
     { spanish: "antes", english: "before", category: "Connectors" },
     { spanish: "ya", english: "already", category: "Connectors" },
     { spanish: "todavía", english: "still", category: "Connectors" },
-    { spanish: "normalmente", english: "normally", category: "Connectors" }
+    { spanish: "normalmente", english: "normally", category: "Connectors" },
+
+    { english: "eleven", spanish: "once", category: "Numbers" },
+    { english: "twelve", spanish: "doce", category: "Numbers" },
+    { english: "thirteen", spanish: "trece", category: "Numbers" },
+    { english: "fourteen", spanish: "catorce", category: "Numbers" },
+    { english: "fifteen", spanish: "quince", category: "Numbers" },
+    { english: "sixteen", spanish: "dieciséis", category: "Numbers" },
+    { english: "seventeen", spanish: "diecisiete", category: "Numbers" },
+    { english: "eighteen", spanish: "dieciocho", category: "Numbers" },
+    { english: "nineteen", spanish: "diecinueve", category: "Numbers" },
+    { english: "twenty", spanish: "veinte", category: "Numbers" }
+
 ],
 
 B1: [
@@ -499,6 +523,19 @@ const LISTEN_VOCAB = {
         "Numbers": [
             "uno","dos","diez"
         ]
+       "Numbers": [
+    "uno",
+    "dos",
+    "tres",
+    "cuatro",
+    "cinco",
+    "seis",
+    "siete",
+    "ocho",
+    "nueve",
+    "diez"
+]
+
     },
 
     A2: {
@@ -520,7 +557,19 @@ const LISTEN_VOCAB = {
         "Connectors": [
             "a menudo","antes","ya","todavía","normalmente"
         ],
-        "Numbers": []
+        "Numbers": [
+    "once",
+    "doce",
+    "trece",
+    "catorce",
+    "quince",
+    "dieciséis",
+    "diecisiete",
+    "dieciocho",
+    "diecinueve",
+    "veinte"
+]
+
     },
 
     B1: {
@@ -1808,14 +1857,6 @@ let listenAutoPlay = {
     list: []
 };
 
-function getListenRange(level) {
-    if (level === "A1") return "(1–10)";
-    if (level === "A2") return "(11–20)";
-    if (level === "B1") return "(21–30)";
-    if (level === "B2") return "(31–40)";
-    return "";
-}
-
 function renderListenTab() {
     const container = document.getElementById("listen-content");
     if (!container) return;
@@ -1852,10 +1893,8 @@ function renderListenTab() {
        html += `
 <div class="glass-panel">
     <div class="listen-category-header" data-cat="${categoryName}">
-        <span class="listen-category-title">
-            ${categoryName} <span class="listen-range">${getListenRange(appState.currentLevel)}</span>
-        </span>
-        <span class="listen-arrow">▶</span>
+       <span class="listen-category-title">${categoryName}</span>
+       <span class="listen-arrow">▶</span>
     </div>
 
 
@@ -1978,13 +2017,6 @@ function playNextListenWord() {
    FLASHCARDS — CATEGORY GROUPED + FLIP + AUDIO (STABLE VERSION)
    ============================================================ */
 
-function getFlashRange(level) {
-    if (level === "A1") return "(1–10)";
-    if (level === "A2") return "(11–20)";
-    if (level === "B1") return "(21–30)";
-    if (level === "B2") return "(31–40)";
-    return "";
-}
 
 function renderFlashcardsTab() {
     const container = document.getElementById("flash-content");
@@ -2002,10 +2034,8 @@ function renderFlashcardsTab() {
         html += `
         <div class="glass-panel">
         <div class="flash-category-header" data-cat="${cat}">
-            <span class="listen-category-title">
-                ${cat.toUpperCase()} <span class="flash-range">${getFlashRange(appState.currentLevel)}</span>
-            </span>
-            <span class="listen-arrow">▶</span>
+           <span class="listen-category-title">${cat.toUpperCase()}</span>
+           <span class="listen-arrow">▶</span>
         </div>
 
             <div class="flash-category-content" data-cat="${cat}">
