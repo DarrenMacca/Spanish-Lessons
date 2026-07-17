@@ -746,7 +746,7 @@ const WORD_DICT = {
     "todavía": "still",
     "normalmente": "normally",
 
-    /* ============================
+       /* ============================
        B1 — Daily Life
        ============================ */
     "he": "I have",
@@ -892,13 +892,80 @@ const WORD_DICT = {
     "otra vez": "again",
     "cuidadosamente": "carefully",
 
-    /* ============================
+       /* ============================
        Build Tab Missing Words
        ============================ */
     "ella": "she",
+    "él": "he",
+    "ellos": "they",
+    "ellas": "they (female)",
+    "nosotros": "we",
+    "ustedes": "you (plural)",
+
+    "soy": "I am",
+    "eres": "you are",
+    "es": "he/she is",
+    "somos": "we are",
+    "son": "they are",
+
+    "estoy": "I am",
+    "estás": "you are",
+    "está": "he/she is",
+    "estamos": "we are",
+    "están": "they are",
+
+    "el": "the",
+    "la": "the",
+    "los": "the",
+    "las": "the",
+    "un": "a",
+    "una": "a",
+
+    "pronto": "soon",
     "rápido": "fast",
-    "rápidamente": "quickly"
+    "rápidamente": "quickly",
+    "lento": "slow",
+    "lentamente": "slowly",
+
+    "aquí": "here",
+    "allí": "there",
+    "casi": "almost",
+    "nunca": "never",
+    "siempre": "always",
+
+    "porque": "because",
+    "pero": "but",
+    "también": "also",
+    "entonces": "then",
+
+       /* ============================
+       Conversation / Quiz / Sentence
+       ============================ */
+    "hola": "hello",
+    "adiós": "goodbye",
+    "gracias": "thank you",
+    "por favor": "please",
+    "lo siento": "sorry",
+
+    "qué": "what",
+    "quién": "who",
+    "dónde": "where",
+    "cuándo": "when",
+    "cómo": "how",
+    "cuál": "which",
+
+    "bueno": "good",
+    "malo": "bad",
+    "grande": "big",
+    "pequeño": "small",
+    "fácil": "easy",
+    "difícil": "difficult",
+
+    "coche": "car",
+    "calle": "street",
+    "ciudad": "city"
 };
+
 
 
 /* ============================================================
