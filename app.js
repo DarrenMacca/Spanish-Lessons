@@ -372,7 +372,7 @@ A2: [
     { spanish: "ya", english: "already", category: "Connectors" },
     { spanish: "todavía", english: "still", category: "Connectors" },
     { spanish: "normalmente", english: "normally", category: "Connectors" },
-    { english: "argued", spanish: "argumentó", category: "Connectors" }
+    { english: "argued", spanish: "argumentó", category: "Connectors" },
 
     { english: "eleven", spanish: "once", category: "Numbers" },
     { english: "twelve", spanish: "doce", category: "Numbers" },
