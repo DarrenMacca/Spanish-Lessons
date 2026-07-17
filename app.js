@@ -189,6 +189,15 @@ const CEFR_LEVELS = {
     { spanish: "favor", english: "please" },
     { spanish: "siento", english: "sorry" },
     { spanish: "perdón", english: "excuse me" },
+    { spanish: "bueno", english: "good" },
+    { spanish: "buena", english: "good (fem.)" },
+    { spanish: "buenos", english: "good (plural masc.)" },
+    { spanish: "buenas", english: "good (plural fem.)" },
+    { spanish: "malo", english: "bad" },
+    { spanish: "mala", english: "bad (fem.)" },
+    { spanish: "caliente", english: "hot" },       // weather/food
+    { spanish: "frío", english: "cold" },          // masculine form
+
 
     // Articles & determiners
     { spanish: "un", english: "a" },
@@ -243,6 +252,7 @@ const CEFR_LEVELS = {
     { spanish: "arroz", english: "rice" },
     { spanish: "frijoles", english: "beans" },
     { spanish: "queso", english: "cheese" },
+    { spanish: "hambre", english: "hunger" },
     { spanish: "sal", english: "salt" },
 
     // Places & objects
@@ -358,11 +368,14 @@ const CEFR_LEVELS = {
     { spanish: "todavía", english: "still" },
     { spanish: "ya", english: "already" },
     { spanish: "antes", english: "before" },
+    { spanish: "tenemos", english: "we have" },
+    { spanish: "tienen", english: "they have" },
 
     // Meals
     { spanish: "desayuno", english: "breakfast" },
     { spanish: "almuerzo", english: "lunch" },
     { spanish: "cena", english: "dinner" },
+       
 
     // Shopping & places
     { spanish: "centro", english: "center" },
