@@ -662,8 +662,6 @@ function groupByCategory(words) {
     return out;
 }
  
-
-const CEFR_LEVELS = {
     A1: A1_WORDS,
     A2: A2_WORDS,
     B1: B1_WORDS,
