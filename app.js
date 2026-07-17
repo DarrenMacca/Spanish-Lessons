@@ -204,6 +204,7 @@ const CEFR_LEVELS = {
         { spanish: "sin", english: "without" },
         { spanish: "más", english: "more" },
         { spanish: "poco", english: "little" },
+        { spanish: "solo", english: "alone" }
         { spanish: "un", english: "a" },
         { spanish: "una", english: "a" },
 
@@ -233,6 +234,7 @@ const CEFR_LEVELS = {
         { spanish: "baño", english: "bathroom" },
         { spanish: "hotel", english: "hotel" },
         { spanish: "casa", english: "house" },
+        { spanish: "escuela", english: "school" },
         { spanish: "habitación", english: "room" },
         { spanish: "llave", english: "key" },
         { spanish: "mesa", english: "table" },
@@ -270,6 +272,17 @@ const CEFR_LEVELS = {
         { spanish: "trabajas", english: "you work" },
         { spanish: "trabajo", english: "I work" },
         { spanish: "trabaja", english: "he/she works" },
+        { spanish: "trabajar", english: "to work" },
+        { spanish: "estudiar", english: "to study" },
+        { spanish: "leer", english: "to read" },
+        { spanish: "vivir", english: "to live" },
+        { spanish: "gustar", english: "to like" },
+        { spanish: "ir", english: "to go" },
+        { spanish: "hacer", english: "to do" },
+        { spanish: "ver", english: "to see" },
+        { spanish: "tener", english: "to have" },
+        { spanish: "levantarse", english: "to get up" },
+        { spanish: "llamarse", english: "to be called" },
         { spanish: "estudias", english: "you study" },
         { spanish: "llamas", english: "you are called" },
         { spanish: "tienes", english: "you have" },
@@ -342,6 +355,11 @@ const CEFR_LEVELS = {
 
         // Missing A2 phrases
         { spanish: "a menudo", english: "often" },
+        { spanish: "mañana", english: "morning" },
+        { spanish: "tarde", english: "afternoon" },
+        { spanish: "noche", english: "night" },
+        { spanish: "temprano", english: "early" },
+        { spanish: "tarde", english: "late" },   // same Spanish word, different meaning
         { spanish: "pasado mañana", english: "day after tomorrow" }
     ],
 
@@ -360,6 +378,10 @@ const CEFR_LEVELS = {
         // Life & routines
         { spanish: "tiempo", english: "time" },
         { spanish: "libre", english: "free" },
+        { spanish: "trabajando", english: "working" },
+        { spanish: "estudiando", english: "studying" },
+        { spanish: "leyendo", english: "reading" },
+        { spanish: "viviendo", english: "living" }
         { spanish: "diarias", english: "daily" },
 
         // Communication
@@ -407,6 +429,10 @@ const CEFR_LEVELS = {
         { spanish: "además", english: "in addition" },
         { spanish: "por lo tanto", english: "therefore" },
         { spanish: "a pesar de", english: "despite" },
+        { spanish: "cotidiano", english: "everyday" },
+        { spanish: "complejo", english: "complex" },
+        { spanish: "profundo", english: "deep" },
+        { spanish: "significativo", english: "meaningful" },
 
         // Other
         { spanish: "remoto", english: "remote" },
