@@ -415,38 +415,51 @@ const CEFR_LEVELS = {
     ]
 };
 
-   /* ============================================================
-   AUTO‑EXTRACT + AUTO‑EXPAND DICTIONARY
+/* ============================================================
+   WORD-BY-WORD DICTIONARY — CEFR A1 → B2 (Categorized)
    ============================================================ */
 
-function extractWordsFromCEFR() {
-    const allWords = new Set();
+const WORD_DICT = {
+    "soy": "I am",
+    "eres": "you are",
+    "es": "he/she is",
+    "somos": "we are",
+    "son": "they are",
 
-    Object.keys(CEFR_SENTENCES).forEach(level => {
-        CEFR_SENTENCES[level].forEach(item => {
-            item.spanish
-                .toLowerCase()
-                .split(/\s+/)
-                .forEach(w => allWords.add(w));
-        });
-    });
+    "estoy": "I am (feeling/location)",
+    "estás": "you are (feeling/location)",
+    "está": "is (feeling/location)",
 
-    return Array.from(allWords);
-}
+    "muy": "very",
+    "pero": "but",
+    "porque": "because",
+    "también": "also",
+    "nunca": "never",
+    "siempre": "always",
+    "ayer": "yesterday",
+    "mañana": "tomorrow",
+    "entonces": "then",
+    "aunque": "although",
+    "cuando": "when",
+    "donde": "where"
+};
 
-function detectMissingDictionaryWords() {
-    const cefrWords = extractWordsFromCEFR();
-    return cefrWords.filter(w => !WORD_DICT[w]);
-}
+/* ============================================================
+   AUTO‑EXPAND DICTIONARY FROM CEFR LEVELS
+   ============================================================ */
 
 function autoExpandDictionary() {
-    const missing = detectMissingDictionaryWords();
-    missing.forEach(w => WORD_DICT[w] = `[${w}]`);
-    console.log("Dictionary expanded with missing words:", missing);
+    const allWords = Object.values(CEFR_LEVELS).flat();
+
+    allWords.forEach(item => {
+        const key = item.spanish.toLowerCase().trim();
+        const value = item.english.trim();
+        WORD_DICT[key] = value;   // real translation
+    });
 }
 
 autoExpandDictionary();
-
+  
 /* ============================================================
    MULTI-WORD PHRASES (CEFR-aligned)
    ============================================================ */
@@ -494,49 +507,6 @@ const CEFR_PHRASES = {
     "cómo ves la sociedad actual": "how do you see modern society",
     "cuál es tu perspectiva": "what is your perspective"
 };
-
-
-
- /* ============================================================
-   WORD-BY-WORD DICTIONARY — CEFR A1 → B2 (Categorized)
-   ============================================================ */
-
-const WORD_DICT = {
-    "soy": "I am",
-    "eres": "you are",
-    "es": "he/she is",
-    "somos": "we are",
-    "son": "they are",
-
-    "estoy": "I am (feeling/location)",
-    "estás": "you are (feeling/location)",
-    "está": "is (feeling/location)",
-
-    "muy": "very",
-    "pero": "but",
-    "porque": "because",
-    "también": "also",
-    "nunca": "never",
-    "siempre": "always",
-    "ayer": "yesterday",
-    "mañana": "tomorrow",
-    "entonces": "then",
-    "aunque": "although",
-    "cuando": "when",
-    "donde": "where"
-};
-
-function autoExpandDictionary() {
-    // Flatten all CEFR levels (A1 → B2) into one array
-    const allWords = Object.values(CEFR_LEVELS).flat();
-
-    // Insert each Spanish → English mapping into WORD_DICT
-    allWords.forEach(item => {
-        const key = item.spanish.toLowerCase().trim();
-        const value = item.english.trim();
-        WORD_DICT[key] = value;
-    });
-}
 
 /* ============================================================
    TRANSLATION ENGINE — CEFR Phrases + Word Dictionary
