@@ -457,7 +457,11 @@ const WORD_DICT = {
     "largo": "long",
     "plazo": "term",
 
-
+// Disruptors / Connectors (All Levels)
+"siempre": "always",
+"aunque": "although",
+"cuando": "when",
+"donde": "where"
   
 
 };
