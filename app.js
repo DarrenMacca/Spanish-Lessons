@@ -204,7 +204,7 @@ const CEFR_LEVELS = {
         { spanish: "sin", english: "without" },
         { spanish: "más", english: "more" },
         { spanish: "poco", english: "little" },
-        { spanish: "solo", english: "alone" ,
+        { spanish: "solo", english: "alone" },
         { spanish: "un", english: "a" },
         { spanish: "una", english: "a" },
 
