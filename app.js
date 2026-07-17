@@ -205,6 +205,7 @@ const CEFR_LEVELS = {
         { spanish: "más", english: "more" },
         { spanish: "poco", english: "little" },
         { spanish: "un", english: "a" },
+        { spanish: "una", english: "a" },
 
         // Food & drink
         { spanish: "agua", english: "water" },
@@ -231,6 +232,7 @@ const CEFR_LEVELS = {
         // Places & objects
         { spanish: "baño", english: "bathroom" },
         { spanish: "hotel", english: "hotel" },
+        { spanish: "casa", english: "house" },
         { spanish: "habitación", english: "room" },
         { spanish: "llave", english: "key" },
         { spanish: "mesa", english: "table" },
