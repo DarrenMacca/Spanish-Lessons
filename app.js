@@ -582,7 +582,6 @@ const LISTEN_VOCAB = {
     }
 };
 
-
 /* ============================================================
    WORD-BY-WORD DICTIONARY — CEFR A1 → B2 (Categorized)
    ============================================================ */
@@ -592,316 +591,315 @@ const WORD_DICT = {
     /* ============================
        A1 — Daily Life
        ============================ */
-    [vivir](ca://s?q=Tell_me_more_about_vivir): "to live",
-    [trabajar](ca://s?q=Tell_me_more_about_trabajar): "to work",
-    [estudiar](ca://s?q=Tell_me_more_about_estudiar): "to study",
-    [leer](ca://s?q=Tell_me_more_about_leer): "to read",
-    [libros](ca://s?q=Tell_me_more_about_libros): "books",
-    [hora](ca://s?q=Tell_me_more_about_hora): "hour",
-    [levantarse](ca://s?q=Tell_me_more_about_levantarse): "to get up",
-    [música](ca://s?q=Tell_me_more_about_música): "music",
-    [televisión](ca://s?q=Tell_me_more_about_televisión): "television",
-    [limpiar](ca://s?q=Tell_me_more_about_limpiar): "to clean",
-    [cocinar](ca://s?q=Tell_me_more_about_cocinar): "to cook",
-    [abrir](ca://s?q=Tell_me_more_about_abrir): "to open",
-    [terminar](ca://s?q=Tell_me_more_about_terminar): "to finish",
-    [escribir](ca://s?q=Tell_me_more_about_escribir): "to write",
-    [aprender](ca://s?q=Tell_me_more_about_aprender): "to learn",
-    [ir](ca://s?q=Tell_me_more_about_ir): "to go",
-    [hacer](ca://s?q=Tell_me_more_about_hacer): "to do",
-    [ver](ca://s?q=Tell_me_more_about_ver): "to see",
-    [escuchar](ca://s?q=Tell_me_more_about_escuchar): "to listen",
-    [salir](ca://s?q=Tell_me_more_about_salir): "to go out",
-    [descansar](ca://s?q=Tell_me_more_about_descansar): "to rest",
-    [caliente](ca://s?q=Tell_me_more_about_caliente): "hot",
-    [frío](ca://s?q=Tell_me_more_about_frío): "cold",
-    [feliz](ca://s?q=Tell_me_more_about_feliz): "happy",
-    [nuevo](ca://s?q=Tell_me_more_about_nuevo): "new",
+    "vivir": "to live",
+    "trabajar": "to work",
+    "estudiar": "to study",
+    "leer": "to read",
+    "libros": "books",
+    "hora": "hour",
+    "levantarse": "to get up",
+    "música": "music",
+    "televisión": "television",
+    "limpiar": "to clean",
+    "cocinar": "to cook",
+    "abrir": "to open",
+    "terminar": "to finish",
+    "escribir": "to write",
+    "aprender": "to learn",
+    "ir": "to go",
+    "hacer": "to do",
+    "ver": "to see",
+    "escuchar": "to listen",
+    "salir": "to go out",
+    "descansar": "to rest",
+    "caliente": "hot",
+    "frío": "cold",
+    "feliz": "happy",
+    "nuevo": "new",
 
     /* ============================
        A1 — Family
        ============================ */
-    [familia](ca://s?q=Tell_me_more_about_familia): "family",
-    [madre](ca://s?q=Tell_me_more_about_madre): "mother",
-    [padre](ca://s?q=Tell_me_more_about_padre): "father",
-    [hijo](ca://s?q=Tell_me_more_about_hijo): "son",
-    [hija](ca://s?q=Tell_me_more_about_hija): "daughter",
-    [amigo](ca://s?q=Tell_me_more_about_amigo): "friend",
-    [amiga](ca://s?q=Tell_me_more_about_amiga): "friend (female)",
-    [hermana](ca://s?q=Tell_me_more_about_hermana): "sister",
-    [hermanos](ca://s?q=Tell_me_more_about_hermanos): "brothers",
-    [hermanas](ca://s?q=Tell_me_more_about_hermanas): "sisters",
-    [abuela](ca://s?q=Tell_me_more_about_abuela): "grandmother",
-    [hambre](ca://s?q=Tell_me_more_about_hambre): "hunger",
-    [tenemos](ca://s?q=Tell_me_more_about_tenemos): "we have",
-    [tienen](ca://s?q=Tell_me_more_about_tienen): "they have",
+    "familia": "family",
+    "madre": "mother",
+    "padre": "father",
+    "hijo": "son",
+    "hija": "daughter",
+    "amigo": "friend",
+    "amiga": "friend (female)",
+    "hermana": "sister",
+    "hermanos": "brothers",
+    "hermanas": "sisters",
+    "abuela": "grandmother",
+    "hambre": "hunger",
+    "tenemos": "we have",
+    "tienen": "they have",
 
     /* ============================
        A1 — Food & Drink
        ============================ */
-    [agua](ca://s?q=Tell_me_more_about_agua): "water",
-    [comida](ca://s?q=Tell_me_more_about_comida): "food",
-    [café](ca://s?q=Tell_me_more_about_café): "coffee",
-    [té](ca://s?q=Tell_me_more_about_té): "tea",
-    [leche](ca://s?q=Tell_me_more_about_leche): "milk",
-    [pan](ca://s?q=Tell_me_more_about_pan): "bread",
-    [cerveza](ca://s?q=Tell_me_more_about_cerveza): "beer",
-    [huevo](ca://s?q=Tell_me_more_about_huevo): "egg",
-    [fruta](ca://s?q=Tell_me_more_about_fruta): "fruit",
-    [manzana](ca://s?q=Tell_me_more_about_manzana): "apple",
-    [naranja](ca://s?q=Tell_me_more_about_naranja): "orange",
-    [plátano](ca://s?q=Tell_me_more_about_plátano): "banana",
-    [pollo](ca://s?q=Tell_me_more_about_pollo): "chicken",
-    [pescado](ca://s?q=Tell_me_more_about_pescado): "fish",
-    [sopa](ca://s?q=Tell_me_more_about_sopa): "soup",
-    [ensalada](ca://s?q=Tell_me_more_about_ensalada): "salad",
-    [arroz](ca://s?q=Tell_me_more_about_arroz): "rice",
-    [frijoles](ca://s?q=Tell_me_more_about_frijoles): "beans",
-    [queso](ca://s?q=Tell_me_more_about_queso): "cheese",
-    [sal](ca://s?q=Tell_me_more_about_sal): "salt",
+    "agua": "water",
+    "comida": "food",
+    "café": "coffee",
+    "té": "tea",
+    "leche": "milk",
+    "pan": "bread",
+    "cerveza": "beer",
+    "huevo": "egg",
+    "fruta": "fruit",
+    "manzana": "apple",
+    "naranja": "orange",
+    "plátano": "banana",
+    "pollo": "chicken",
+    "pescado": "fish",
+    "sopa": "soup",
+    "ensalada": "salad",
+    "arroz": "rice",
+    "frijoles": "beans",
+    "queso": "cheese",
+    "sal": "salt",
 
     /* ============================
        A1 — Travel
        ============================ */
-    [autobús](ca://s?q=Tell_me_more_about_autobús): "bus",
-    [tren](ca://s?q=Tell_me_more_about_tren): "train",
-    [boleto](ca://s?q=Tell_me_more_about_boleto): "ticket",
-    [estación](ca://s?q=Tell_me_more_about_estación): "station",
-    [aeropuerto](ca://s?q=Tell_me_more_about_aeropuerto): "airport",
-    [casa](ca://s?q=Tell_me_more_about_casa): "house",
-    [escuela](ca://s?q=Tell_me_more_about_escuela): "school",
-    [hotel](ca://s?q=Tell_me_more_about_hotel): "hotel",
-    [baño](ca://s?q=Tell_me_more_about_baño): "bathroom",
-    [lugar](ca://s?q=Tell_me_more_about_lugar): "place",
+    "autobús": "bus",
+    "tren": "train",
+    "boleto": "ticket",
+    "estación": "station",
+    "aeropuerto": "airport",
+    "casa": "house",
+    "escuela": "school",
+    "hotel": "hotel",
+    "baño": "bathroom",
+    "lugar": "place",
 
     /* ============================
        A1 — Connectors
        ============================ */
-    [y](ca://s?q=Tell_me_more_about_y): "and",
-    [o](ca://s?q=Tell_me_more_about_o): "or",
-    [con](ca://s?q=Tell_me_more_about_con): "with",
-    [sin](ca://s?q=Tell_me_more_about_sin): "without",
-    [más](ca://s?q=Tell_me_more_about_más): "more",
-    [poco](ca://s?q=Tell_me_more_about_poco): "little",
-    [solo](ca://s?q=Tell_me_more_about_solo): "only",
-    [muy](ca://s?q=Tell_me_more_about_muy): "very",
-    [cerca](ca://s?q=Tell_me_more_about_cerca): "near",
-    [para](ca://s?q=Tell_me_more_about_para): "for",
-    [a](ca://s?q=Tell_me_more_about_a): "to",
-    [en](ca://s?q=Tell_me_more_about_en): "in",
+    "y": "and",
+    "o": "or",
+    "con": "with",
+    "sin": "without",
+    "más": "more",
+    "poco": "little",
+    "solo": "only",
+    "muy": "very",
+    "cerca": "near",
+    "para": "for",
+    "a": "to",
+    "en": "in",
 
     /* ============================
        A1 — Numbers
        ============================ */
-    [uno](ca://s?q=Tell_me_more_about_uno): "one",
-    [dos](ca://s?q=Tell_me_more_about_dos): "two",
-    [diez](ca://s?q=Tell_me_more_about_diez): "ten",
+    "uno": "one",
+    "dos": "two",
+    "diez": "ten",
 
     /* ============================
        A2 — Daily Life
        ============================ */
-    [desayuno](ca://s?q=Tell_me_more_about_desayuno): "breakfast",
-    [almuerzo](ca://s?q=Tell_me_more_about_almuerzo): "lunch",
-    [cena](ca://s?q=Tell_me_more_about_cena): "dinner",
-    [temprano](ca://s?q=Tell_me_more_about_temprano): "early",
-    [tarde](ca://s?q=Tell_me_more_about_tarde): "late",
-    [anoche](ca://s?q=Tell_me_more_about_anoche): "last night",
-    [ahora](ca://s?q=Tell_me_more_about_ahora): "now",
-    [minutos](ca://s?q=Tell_me_more_about_minutos): "minutes",
-    [tarea](ca://s?q=Tell_me_more_about_tarea): "homework",
-    [mensaje](ca://s?q=Tell_me_more_about_mensaje): "message",
-    [información](ca://s?q=Tell_me_more_about_información): "information",
-    [película](ca://s?q=Tell_me_more_about_película): "movie",
-    [ventana](ca://s?q=Tell_me_more_about_ventana): "window",
-    [cocina](ca://s?q=Tell_me_more_about_cocina): "kitchen",
-    [zapatos](ca://s?q=Tell_me_more_about_zapatos): "shoes",
-    [viaje](ca://s?q=Tell_me_more_about_viaje): "trip",
-    [probar](ca://s?q=Tell_me_more_about_probar): "to try",
-    [olvidar](ca://s?q=Tell_me_more_about_olvidar): "to forget",
-    [esperar](ca://s?q=Tell_me_more_about_esperar): "to wait",
-    [conducir](ca://s?q=Tell_me_more_about_conducir): "to drive",
-    [arreglar](ca://s?q=Tell_me_more_about_arreglar): "to fix",
-    [irse](ca://s?q=Tell_me_more_about_irse): "to leave",
-    [llegar](ca://s?q=Tell_me_more_about_llegar): "to arrive",
+    "desayuno": "breakfast",
+    "almuerzo": "lunch",
+    "cena": "dinner",
+    "temprano": "early",
+    "tarde": "late",
+    "anoche": "last night",
+    "ahora": "now",
+    "minutos": "minutes",
+    "tarea": "homework",
+    "mensaje": "message",
+    "información": "information",
+    "película": "movie",
+    "ventana": "window",
+    "cocina": "kitchen",
+    "zapatos": "shoes",
+    "viaje": "trip",
+    "probar": "to try",
+    "olvidar": "to forget",
+    "esperar": "to wait",
+    "conducir": "to drive",
+    "arreglar": "to fix",
+    "irse": "to leave",
+    "llegar": "to arrive",
 
     /* ============================
        A2 — Family
        ============================ */
-    [padres](ca://s?q=Tell_me_more_about_padres): "parents",
-    [abuela](ca://s?q=Tell_me_more_about_abuela): "grandmother",
-    [amiga](ca://s?q=Tell_me_more_about_amiga): "friend (female)",
+    "padres": "parents",
+    "abuela": "grandmother",
+    "amiga": "friend (female)",
 
     /* ============================
        A2 — Travel
        ============================ */
-    [avión](ca://s?q=Tell_me_more_about_avión): "plane",
-    [visitar](ca://s?q=Tell_me_more_about_visitar): "to visit",
-    [transporte](ca://s?q=Tell_me_more_about_transporte): "transport",
+    "avión": "plane",
+    "visitar": "to visit",
+    "transporte": "transport",
 
     /* ============================
        A2 — Connectors
        ============================ */
-    [a menudo](ca://s?q=Tell_me_more_about_a_menudo): "often",
-    [antes](ca://s?q=Tell_me_more_about_antes): "before",
-    [ya](ca://s?q=Tell_me_more_about_ya): "already",
-    [todavía](ca://s?q=Tell_me_more_about_todavía): "still",
-    [normalmente](ca://s?q=Tell_me_more_about_normalmente): "normally",
+    "a menudo": "often",
+    "antes": "before",
+    "ya": "already",
+    "todavía": "still",
+    "normalmente": "normally",
 
     /* ============================
        B1 — Daily Life
        ============================ */
-    [he](ca://s?q=Tell_me_more_about_he): "I have",
-    [has](ca://s?q=Tell_me_more_about_has): "you have",
-    [ha](ca://s?q=Tell_me_more_about_ha): "he/she has",
-    [hemos](ca://s?q=Tell_me_more_about_hemos): "we have",
-    [habéis](ca://s?q=Tell_me_more_about_habéis): "you (plural) have",
-    [han](ca://s?q=Tell_me_more_about_han): "they have",
+    "he": "I have",
+    "has": "you have",
+    "ha": "he/she has",
+    "hemos": "we have",
+    "habéis": "you (plural) have",
+    "han": "they have",
 
-    [estado](ca://s?q=Tell_me_more_about_estado): "been",
-    [aprendido](ca://s?q=Tell_me_more_about_aprendido): "learned",
-    [trabajando](ca://s?q=Tell_me_more_about_trabajando): "working",
-    [estudiando](ca://s?q=Tell_me_more_about_estudiando): "studying",
-    [leyendo](ca://s?q=Tell_me_more_about_leyendo): "reading",
-    [viviendo](ca://s?q=Tell_me_more_about_viviendo): "living",
-    [diarias](ca://s?q=Tell_me_more_about_diarias): "daily",
+    "estado": "been",
+    "aprendido": "learned",
+    "trabajando": "working",
+    "estudiando": "studying",
+    "leyendo": "reading",
+    "viviendo": "living",
+    "diarias": "daily",
 
-    [comunicación](ca://s?q=Tell_me_more_about_comunicación): "communication",
-    [conversaciones](ca://s?q=Tell_me_more_about_conversaciones): "conversations",
-    [mejorar](ca://s?q=Tell_me_more_about_mejorar): "to improve",
-    [habilidades](ca://s?q=Tell_me_more_about_habilidades): "skills",
-    [revisar](ca://s?q=Tell_me_more_about_revisar): "to review",
-    [continuar](ca://s?q=Tell_me_more_about_continuar): "to continue",
-    [cambiar](ca://s?q=Tell_me_more_about_cambiar): "to change",
-    [seguir](ca://s?q=Tell_me_more_about_seguir): "to follow",
-    [preparar](ca://s?q=Tell_me_more_about_preparar): "to prepare",
-    [conseguir](ca://s?q=Tell_me_more_about_conseguir): "to get",
-    [entender](ca://s?q=Tell_me_more_about_entender): "to understand",
+    "comunicación": "communication",
+    "conversaciones": "conversations",
+    "mejorar": "to improve",
+    "habilidades": "skills",
+    "revisar": "to review",
+    "continuar": "to continue",
+    "cambiar": "to change",
+    "seguir": "to follow",
+    "preparar": "to prepare",
+    "conseguir": "to get",
+    "entender": "to understand",
 
     /* ============================
        B1 — Family
        ============================ */
-    [experiencias](ca://s?q=Tell_me_more_about_experiencias): "experiences",
-    [pasadas](ca://s?q=Tell_me_more_about_pasadas): "past",
+    "experiencias": "experiences",
+    "pasadas": "past",
 
     /* ============================
        B1 — Food & Drink
        ============================ */
-    [restaurante](ca://s?q=Tell_me_more_about_restaurante): "restaurant",
-    [menú](ca://s?q=Tell_me_more_about_menú): "menu",
-    [cuenta](ca://s?q=Tell_me_more_about_cuenta): "bill",
+    "restaurante": "restaurant",
+    "menú": "menu",
+    "cuenta": "bill",
 
     /* ============================
        B1 — Travel
        ============================ */
-    [encontrar](ca://s?q=Tell_me_more_about_encontrar): "to find",
-    [cancelar](ca://s?q=Tell_me_more_about_cancelar): "to cancel",
-    [traer](ca://s?q=Tell_me_more_about_traer): "to bring",
-    [planear](ca://s?q=Tell_me_more_about_planear): "to plan",
-    [mudarse](ca://s?q=Tell_me_more_about_mudarse): "to move",
-    [unirse](ca://s?q=Tell_me_more_about_unirse): "to join",
+    "encontrar": "to find",
+    "cancelar": "to cancel",
+    "traer": "to bring",
+    "planear": "to plan",
+    "mudarse": "to move",
+    "unirse": "to join",
 
     /* ============================
        B1 — Connectors
        ============================ */
-    [mientras](ca://s?q=Tell_me_more_about_mientras): "while",
-    [sin embargo](ca://s?q=Tell_me_more_about_sin_embargo): "however",
-    [sobre](ca://s?q=Tell_me_more_about_sobre): "about",
-    [cuando](ca://s?q=Tell_me_more_about_cuando): "when",
-    [después](ca://s?q=Tell_me_more_about_después): "after",
-    [durante](ca://s?q=Tell_me_more_about_durante): "during",
+    "mientras": "while",
+    "sin embargo": "however",
+    "sobre": "about",
+    "cuando": "when",
+    "después": "after",
+    "durante": "during",
 
     /* ============================
        B1 — Numbers
        ============================ */
-    [mes](ca://s?q=Tell_me_more_about_mes): "month",
-    [años](ca://s?q=Tell_me_more_about_años): "years",
+    "mes": "month",
+    "años": "years",
 
     /* ============================
-   B2 — Daily Life (abstract nouns)
-   ============================ */
-[proceso](ca://s?q=Tell_me_more_about_proceso): "process",
-[tarea](ca://s?q=Tell_me_more_about_tarea): "task",
-[resultados](ca://s?q=Tell_me_more_about_resultados): "results",
-[rendimiento](ca://s?q=Tell_me_more_about_rendimiento): "performance",
-[estrategia](ca://s?q=Tell_me_more_about_estrategia): "strategy",
-[sistema](ca://s?q=Tell_me_more_about_sistema): "system",
-[enfoque](ca://s?q=Tell_me_more_about_enfoque): "approach",
-[concepto](ca://s?q=Tell_me_more_about_concepto): "concept",
-[riesgo](ca://s?q=Tell_me_more_about_riesgo): "risk",
-[posibilidad](ca://s?q=Tell_me_more_about_posibilidad): "possibility",
-[situación](ca://s?q=Tell_me_more_about_situación): "situation",
+       B2 — Daily Life
+       ============================ */
+    "proceso": "process",
+    "tarea": "task",
+    "resultados": "results",
+    "rendimiento": "performance",
+    "estrategia": "strategy",
+    "sistema": "system",
+    "enfoque": "approach",
+    "concepto": "concept",
+    "riesgo": "risk",
+    "posibilidad": "possibility",
+    "situación": "situation",
 
-/* ============================
-   B2 — Daily Life (advanced verbs)
-   ============================ */
-[optimizar](ca://s?q=Tell_me_more_about_optimizar): "to optimize",
-[coordinar](ca://s?q=Tell_me_more_about_coordinar): "to coordinate",
-[aumentar](ca://s?q=Tell_me_more_about_aumentar): "to increase",
-[actualizar](ca://s?q=Tell_me_more_about_actualizar): "to update",
-[analizar](ca://s?q=Tell_me_more_about_analizar): "to analyze",
-[evaluar](ca://s?q=Tell_me_more_about_evaluar): "to evaluate",
-[discutir](ca://s?q=Tell_me_more_about_discutir): "to discuss",
-[aclarar](ca://s?q=Tell_me_more_about_aclarar): "to clarify",
-[fortalecer](ca://s?q=Tell_me_more_about_fortalecer): "to strengthen",
-[adaptarse](ca://s?q=Tell_me_more_about_adaptarse): "to adapt",
-[lograr](ca://s?q=Tell_me_more_about_lograr): "to achieve",
+    "optimizar": "to optimize",
+    "coordinar": "to coordinate",
+    "aumentar": "to increase",
+    "actualizar": "to update",
+    "analizar": "to analyze",
+    "evaluar": "to evaluate",
+    "discutir": "to discuss",
+    "aclarar": "to clarify",
+    "fortalecer": "to strengthen",
+    "adaptarse": "to adapt",
+    "lograr": "to achieve",
 
-/* ============================
-   B2 — Daily Life (adjectives)
-   ============================ */
-[complicado](ca://s?q=Tell_me_more_about_complicado): "complicated",
-[necesario](ca://s?q=Tell_me_more_about_necesario): "necessary",
-[posible](ca://s?q=Tell_me_more_about_posible): "possible",
-[efectivo](ca://s?q=Tell_me_more_about_efectivo): "effective",
-[realista](ca://s?q=Tell_me_more_about_realista): "realistic",
-[innovadora](ca://s?q=Tell_me_more_about_innovadora): "innovative",
-[profesional](ca://s?q=Tell_me_more_about_profesional): "professional",
-[positivo](ca://s?q=Tell_me_more_about_positivo): "positive",
+    "complicado": "complicated",
+    "necesario": "necessary",
+    "posible": "possible",
+    "efectivo": "effective",
+    "realista": "realistic",
+    "innovadora": "innovative",
+    "profesional": "professional",
+    "positivo": "positive",
 
-/* ============================
-   B2 — Daily Life (participles)
-   ============================ */
-[analizado](ca://s?q=Tell_me_more_about_analizado): "analyzed",
-[evaluado](ca://s?q=Tell_me_more_about_evaluado): "evaluated",
-[argumentado](ca://s?q=Tell_me_more_about_argumentado): "argued",
-[ampliado](ca://s?q=Tell_me_more_about_ampliado): "expanded",
-[adaptado](ca://s?q=Tell_me_more_about_adaptado): "adapted",
-[reducido](ca://s?q=Tell_me_more_about_reducido): "reduced",
-[insistido](ca://s?q=Tell_me_more_about_insistido): "insisted",
-[explorado](ca://s?q=Tell_me_more_about_explorado): "explored",
-[aclarado](ca://s?q=Tell_me_more_about_aclarado): "clarified",
-[fortalecido](ca://s?q=Tell_me_more_about_fortalecido): "strengthened",
-[discutido](ca://s?q=Tell_me_more_about_discutido): "discussed",
-[actualizado](ca://s?q=Tell_me_more_about_actualizado): "updated",
-[optimizado](ca://s?q=Tell_me_more_about_optimizado): "optimized",
+    "analizado": "analyzed",
+    "evaluado": "evaluated",
+    "argumentado": "argued",
+    "ampliado": "expanded",
+    "adaptado": "adapted",
+    "reducido": "reduced",
+    "insistido": "insisted",
+    "explorado": "explored",
+    "aclarado": "clarified",
+    "fortalecido": "strengthened",
+    "discutido": "discussed",
+    "actualizado": "updated",
+    "optimizado": "optimized",
 
-/* ============================
-   B2 — Family (abstract concepts)
-   ============================ */
-[sociedad](ca://s?q=Tell_me_more_about_sociedad): "society",
-[cultura](ca://s?q=Tell_me_more_about_cultura): "culture",
-[motivación](ca://s?q=Tell_me_more_about_motivación): "motivation",
-[desafíos](ca://s?q=Tell_me_more_about_desafíos): "challenges",
-[expectativas](ca://s?q=Tell_me_more_about_expectativas): "expectations",
+    /* ============================
+       B2 — Family
+       ============================ */
+    "sociedad": "society",
+    "cultura": "culture",
+    "motivación": "motivation",
+    "desafíos": "challenges",
+    "expectativas": "expectations",
 
-/* ============================
-   B2 — Travel (abstract travel concepts)
-   ============================ */
-[remoto](ca://s?q=Tell_me_more_about_remoto): "remote",
-[futuro](ca://s?q=Tell_me_more_about_futuro): "future",
-[largo plazo](ca://s?q=Tell_me_more_about_largo_plazo): "long term",
+    /* ============================
+       B2 — Travel
+       ============================ */
+    "remoto": "remote",
+    "futuro": "future",
+    "largo plazo": "long term",
 
-/* ============================
-   B2 — Connectors (logical connectors)
-   ============================ */
-[además](ca://s?q=Tell_me_more_about_además): "in addition",
-[por lo tanto](ca://s?q=Tell_me_more_about_por_lo_tanto): "therefore",
-[a pesar de](ca://s?q=Tell_me_more_about_a_pesar_de): "despite",
-[aunque](ca://s?q=Tell_me_more_about_aunque): "although",
-[incluso](ca://s?q=Tell_me_more_about_incluso): "even",
-[otra vez](ca://s?q=Tell_me_more_about_otra_vez): "again",
-[cuidadosamente](ca://s?q=Tell_me_more_about_cuidadosamente): "carefully"
+    /* ============================
+       B2 — Connectors
+       ============================ */
+    "además": "in addition",
+    "por lo tanto": "therefore",
+    "a pesar de": "despite",
+    "aunque": "although",
+    "incluso": "even",
+    "otra vez": "again",
+    "cuidadosamente": "carefully",
+
+    /* ============================
+       Build Tab Missing Words
+       ============================ */
+    "ella": "she",
+    "rápido": "fast",
+    "rápidamente": "quickly"
 };
+
 
 /* ============================================================
    AUTO‑EXPAND DICTIONARY FROM CEFR LEVELS
