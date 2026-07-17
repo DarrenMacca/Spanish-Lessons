@@ -684,7 +684,6 @@ const WORD_DICT = {
     "dos": "two",
     "diez": "ten",
     "nueve": "nine"
-};
 
 /* A2 — Daily Life */
 "desayuno": "breakfast",
