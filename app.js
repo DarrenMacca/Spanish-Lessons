@@ -172,6 +172,249 @@ const CEFR_SENTENCES = {
     ]
 };
 
+/* ============================================================
+   CEFR LEVELS — A1 → B2 Vocabulary (Spanish → English)
+   ============================================================ */
+
+const CEFR_LEVELS = {
+
+    A1: [
+        { spanish: "hola", english: "hello" },
+        { spanish: "adiós", english: "goodbye" },
+        { spanish: "gracias", english: "thank you" },
+        { spanish: "sí", english: "yes" },
+        { spanish: "no", english: "no" },
+        { spanish: "por", english: "for" },
+        { spanish: "favor", english: "favor" },
+        { spanish: "siento", english: "sorry" },
+        { spanish: "perdón", english: "excuse me" },
+
+        // Pronouns
+        { spanish: "yo", english: "I" },
+        { spanish: "tú", english: "you" },
+        { spanish: "él", english: "he" },
+        { spanish: "ella", english: "she" },
+        { spanish: "nosotros", english: "we" },
+        { spanish: "ellos", english: "they" },
+
+        // Connectors
+        { spanish: "y", english: "and" },
+        { spanish: "o", english: "or" },
+        { spanish: "con", english: "with" },
+        { spanish: "sin", english: "without" },
+        { spanish: "más", english: "more" },
+        { spanish: "poco", english: "little" },
+        { spanish: "un", english: "a" },
+
+        // Food & drink
+        { spanish: "agua", english: "water" },
+        { spanish: "comida", english: "food" },
+        { spanish: "café", english: "coffee" },
+        { spanish: "té", english: "tea" },
+        { spanish: "leche", english: "milk" },
+        { spanish: "pan", english: "bread" },
+        { spanish: "cerveza", english: "beer" },
+        { spanish: "huevo", english: "egg" },
+        { spanish: "fruta", english: "fruit" },
+        { spanish: "manzana", english: "apple" },
+        { spanish: "naranja", english: "orange" },
+        { spanish: "plátano", english: "banana" },
+        { spanish: "pollo", english: "chicken" },
+        { spanish: "pescado", english: "fish" },
+        { spanish: "sopa", english: "soup" },
+        { spanish: "ensalada", english: "salad" },
+        { spanish: "arroz", english: "rice" },
+        { spanish: "frijoles", english: "beans" },
+        { spanish: "queso", english: "cheese" },
+        { spanish: "sal", english: "salt" },
+
+        // Places & objects
+        { spanish: "baño", english: "bathroom" },
+        { spanish: "hotel", english: "hotel" },
+        { spanish: "habitación", english: "room" },
+        { spanish: "llave", english: "key" },
+        { spanish: "mesa", english: "table" },
+        { spanish: "silla", english: "chair" },
+
+        // Restaurant
+        { spanish: "menú", english: "menu" },
+        { spanish: "cuenta", english: "bill" },
+        { spanish: "camarero", english: "waiter" },
+        { spanish: "quiero", english: "I want" },
+        { spanish: "gustaría", english: "would like" },
+
+        // Transport
+        { spanish: "autobús", english: "bus" },
+        { spanish: "tren", english: "train" },
+        { spanish: "boleto", english: "ticket" },
+        { spanish: "estación", english: "station" },
+        { spanish: "aeropuerto", english: "airport" },
+
+        // Emergency
+        { spanish: "ayuda", english: "help" },
+        { spanish: "doctor", english: "doctor" },
+        { spanish: "policía", english: "police" },
+        { spanish: "perdido", english: "lost" },
+
+        // Verbs & actions
+        { spanish: "cómo", english: "how" },
+        { spanish: "hoy", english: "today" },
+        { spanish: "dónde", english: "where" },
+        { spanish: "vives", english: "you live" },
+        { spanish: "vivo", english: "I live" },
+        { spanish: "vive", english: "he/she lives" },
+        { spanish: "vivimos", english: "we live" },
+        { spanish: "viven", english: "they live" },
+        { spanish: "trabajas", english: "you work" },
+        { spanish: "trabajo", english: "I work" },
+        { spanish: "trabaja", english: "he/she works" },
+        { spanish: "estudias", english: "you study" },
+        { spanish: "llamas", english: "you are called" },
+        { spanish: "tienes", english: "you have" },
+        { spanish: "hermanos", english: "brothers" },
+        { spanish: "hermanas", english: "sisters" },
+        { spanish: "hora", english: "time" },
+        { spanish: "levantas", english: "you get up" },
+        { spanish: "gusta", english: "like" },
+        { spanish: "gustan", english: "like (plural)" },
+        { spanish: "música", english: "music" },
+        { spanish: "televisión", english: "television" },
+        { spanish: "lees", english: "you read" },
+        { spanish: "leo", english: "I read" },
+        { spanish: "libros", english: "books" },
+        { spanish: "solo", english: "only" },
+        { spanish: "rápido", english: "fast" },
+        { spanish: "lento", english: "slow" },
+        { spanish: "ciudad", english: "city" },
+        { spanish: "parada", english: "stop" }
+    ],
+
+    A2: [
+        { spanish: "necesito", english: "I need" },
+        { spanish: "qué", english: "what" },
+        { spanish: "ayer", english: "yesterday" },
+        { spanish: "pasado", english: "last" },
+        { spanish: "semana", english: "week" },
+        { spanish: "fin", english: "end" },
+        { spanish: "próximo", english: "next" },
+        { spanish: "todavía", english: "still" },
+        { spanish: "ya", english: "already" },
+        { spanish: "antes", english: "before" },
+
+        // Meals
+        { spanish: "desayuno", english: "breakfast" },
+        { spanish: "almuerzo", english: "lunch" },
+        { spanish: "cena", english: "dinner" },
+
+        // Shopping & places
+        { spanish: "centro", english: "center" },
+        { spanish: "farmacia", english: "pharmacy" },
+        { spanish: "supermercado", english: "supermarket" },
+        { spanish: "tienda", english: "store" },
+
+        // Travel
+        { spanish: "avión", english: "plane" },
+        { spanish: "visitar", english: "to visit" },
+
+        // Actions & verbs
+        { spanish: "hiciste", english: "you did" },
+        { spanish: "fuiste", english: "you went" },
+        { spanish: "haciendo", english: "doing" },
+        { spanish: "sueles", english: "you usually" },
+        { spanish: "comer", english: "to eat" },
+        { spanish: "como", english: "I eat" },
+        { spanish: "comes", english: "you eat" },
+        { spanish: "terminaste", english: "you finished" },
+        { spanish: "compraste", english: "you bought" },
+        { spanish: "viajas", english: "you travel" },
+        { spanish: "menudo", english: "often" },
+        { spanish: "celebraste", english: "you celebrated" },
+        { spanish: "recientemente", english: "recently" },
+        { spanish: "ves", english: "you watch" },
+        { spanish: "ver", english: "to watch" },
+        { spanish: "usas", english: "you use" },
+        { spanish: "transporte", english: "transport" },
+
+        // Family
+        { spanish: "familia", english: "family" },
+
+        // Missing A2 phrases
+        { spanish: "a menudo", english: "often" },
+        { spanish: "pasado mañana", english: "day after tomorrow" }
+    ],
+
+    B1: [
+        { spanish: "he", english: "I have" },
+        { spanish: "estado", english: "been" },
+        { spanish: "aprendiendo", english: "learning" },
+        { spanish: "español", english: "Spanish" },
+        { spanish: "experiencias", english: "experiences" },
+        { spanish: "pasadas", english: "past" },
+
+        // Opinions & descriptions
+        { spanish: "interesante", english: "interesting" },
+        { spanish: "último", english: "last" },
+
+        // Life & routines
+        { spanish: "tiempo", english: "time" },
+        { spanish: "libre", english: "free" },
+        { spanish: "diarias", english: "daily" },
+
+        // Communication
+        { spanish: "comunicación", english: "communication" },
+        { spanish: "conversaciones", english: "conversations" },
+
+        // Work & skills
+        { spanish: "desarrollador", english: "developer" },
+        { spanish: "mejorar", english: "to improve" },
+        { spanish: "habilidades", english: "skills" },
+
+        // Social
+        { spanish: "redes", english: "networks" },
+        { spanish: "sociales", english: "social" },
+
+        // Connectors
+        { spanish: "mientras", english: "while" },
+        { spanish: "sin embargo", english: "however" }
+    ],
+
+    B2: [
+        // Abstract concepts
+        { spanish: "opinión", english: "opinion" },
+        { spanish: "tecnología", english: "technology" },
+        { spanish: "educación", english: "education" },
+        { spanish: "cultura", english: "culture" },
+        { spanish: "sociedad", english: "society" },
+        { spanish: "importantes", english: "important" },
+
+        // Life & change
+        { spanish: "vida", english: "life" },
+        { spanish: "cambiado", english: "changed" },
+        { spanish: "años", english: "years" },
+        { spanish: "cambios", english: "changes" },
+        { spanish: "saludable", english: "healthy" },
+
+        // Challenges & goals
+        { spanish: "desafíos", english: "challenges" },
+        { spanish: "enfrentas", english: "you face" },
+        { spanish: "motivación", english: "motivation" },
+        { spanish: "lograr", english: "to achieve" },
+        { spanish: "esperas", english: "you expect" },
+
+        // Advanced connectors
+        { spanish: "además", english: "in addition" },
+        { spanish: "por lo tanto", english: "therefore" },
+        { spanish: "a pesar de", english: "despite" },
+
+        // Other
+        { spanish: "remoto", english: "remote" },
+        { spanish: "futuro", english: "future" },
+        { spanish: "vivir", english: "to live" },
+        { spanish: "largo", english: "long" },
+        { spanish: "plazo", english: "term" }
+    ]
+};
+
    /* ============================================================
    AUTO‑EXTRACT + AUTO‑EXPAND DICTIONARY
    ============================================================ */
