@@ -588,9 +588,7 @@ const LISTEN_VOCAB = {
 
 const WORD_DICT = {
 
-    /* ============================
-       A1 — Daily Life
-       ============================ */
+    /* A1 — Daily Life */
     "vivir": "to live",
     "trabajar": "to work",
     "estudiar": "to study",
@@ -617,9 +615,7 @@ const WORD_DICT = {
     "feliz": "happy",
     "nuevo": "new",
 
-    /* ============================
-       A1 — Family
-       ============================ */
+    /* A1 — Family */
     "familia": "family",
     "madre": "mother",
     "padre": "father",
@@ -635,9 +631,7 @@ const WORD_DICT = {
     "tenemos": "we have",
     "tienen": "they have",
 
-    /* ============================
-       A1 — Food & Drink
-       ============================ */
+    /* A1 — Food */
     "agua": "water",
     "comida": "food",
     "café": "coffee",
@@ -659,9 +653,7 @@ const WORD_DICT = {
     "queso": "cheese",
     "sal": "salt",
 
-    /* ============================
-       A1 — Travel
-       ============================ */
+    /* A1 — Travel */
     "autobús": "bus",
     "tren": "train",
     "boleto": "ticket",
@@ -673,9 +665,7 @@ const WORD_DICT = {
     "baño": "bathroom",
     "lugar": "place",
 
-    /* ============================
-       A1 — Connectors
-       ============================ */
+    /* A1 — Connectors */
     "y": "and",
     "o": "or",
     "con": "with",
@@ -689,283 +679,193 @@ const WORD_DICT = {
     "a": "to",
     "en": "in",
 
-    /* ============================
-       A1 — Numbers
-       ============================ */
+    /* A1 — Numbers */
     "uno": "one",
     "dos": "two",
     "diez": "ten",
-
-    /* ============================
-       A2 — Daily Life
-       ============================ */
-    "desayuno": "breakfast",
-    "almuerzo": "lunch",
-    "cena": "dinner",
-    "temprano": "early",
-    "tarde": "late",
-    "anoche": "last night",
-    "ahora": "now",
-    "minutos": "minutes",
-    "tarea": "homework",
-    "mensaje": "message",
-    "información": "information",
-    "película": "movie",
-    "ventana": "window",
-    "cocina": "kitchen",
-    "zapatos": "shoes",
-    "viaje": "trip",
-    "probar": "to try",
-    "olvidar": "to forget",
-    "esperar": "to wait",
-    "conducir": "to drive",
-    "arreglar": "to fix",
-    "irse": "to leave",
-    "llegar": "to arrive",
-
-    /* ============================
-       A2 — Family
-       ============================ */
-    "padres": "parents",
-    "abuela": "grandmother",
-    "amiga": "friend (female)",
-
-    /* ============================
-       A2 — Travel
-       ============================ */
-    "avión": "plane",
-    "visitar": "to visit",
-    "transporte": "transport",
-
-    /* ============================
-       A2 — Connectors
-       ============================ */
-    "a menudo": "often",
-    "antes": "before",
-    "ya": "already",
-    "todavía": "still",
-    "normalmente": "normally",
-
-       /* ============================
-       B1 — Daily Life
-       ============================ */
-    "he": "I have",
-    "has": "you have",
-    "ha": "he/she has",
-    "hemos": "we have",
-    "habéis": "you (plural) have",
-    "han": "they have",
-
-    "estado": "been",
-    "aprendido": "learned",
-    "trabajando": "working",
-    "estudiando": "studying",
-    "leyendo": "reading",
-    "viviendo": "living",
-    "diarias": "daily",
-
-    "comunicación": "communication",
-    "conversaciones": "conversations",
-    "mejorar": "to improve",
-    "habilidades": "skills",
-    "revisar": "to review",
-    "continuar": "to continue",
-    "cambiar": "to change",
-    "seguir": "to follow",
-    "preparar": "to prepare",
-    "conseguir": "to get",
-    "entender": "to understand",
-
-    /* ============================
-       B1 — Family
-       ============================ */
-    "experiencias": "experiences",
-    "pasadas": "past",
-
-    /* ============================
-       B1 — Food & Drink
-       ============================ */
-    "restaurante": "restaurant",
-    "menú": "menu",
-    "cuenta": "bill",
-
-    /* ============================
-       B1 — Travel
-       ============================ */
-    "encontrar": "to find",
-    "cancelar": "to cancel",
-    "traer": "to bring",
-    "planear": "to plan",
-    "mudarse": "to move",
-    "unirse": "to join",
-
-    /* ============================
-       B1 — Connectors
-       ============================ */
-    "mientras": "while",
-    "sin embargo": "however",
-    "sobre": "about",
-    "cuando": "when",
-    "después": "after",
-    "durante": "during",
-
-    /* ============================
-       B1 — Numbers
-       ============================ */
-    "mes": "month",
-    "años": "years",
-
-    /* ============================
-       B2 — Daily Life
-       ============================ */
-    "proceso": "process",
-    "tarea": "task",
-    "resultados": "results",
-    "rendimiento": "performance",
-    "estrategia": "strategy",
-    "sistema": "system",
-    "enfoque": "approach",
-    "concepto": "concept",
-    "riesgo": "risk",
-    "posibilidad": "possibility",
-    "situación": "situation",
-
-    "optimizar": "to optimize",
-    "coordinar": "to coordinate",
-    "aumentar": "to increase",
-    "actualizar": "to update",
-    "analizar": "to analyze",
-    "evaluar": "to evaluate",
-    "discutir": "to discuss",
-    "aclarar": "to clarify",
-    "fortalecer": "to strengthen",
-    "adaptarse": "to adapt",
-    "lograr": "to achieve",
-
-    "complicado": "complicated",
-    "necesario": "necessary",
-    "posible": "possible",
-    "efectivo": "effective",
-    "realista": "realistic",
-    "innovadora": "innovative",
-    "profesional": "professional",
-    "positivo": "positive",
-
-    "analizado": "analyzed",
-    "evaluado": "evaluated",
-    "argumentado": "argued",
-    "ampliado": "expanded",
-    "adaptado": "adapted",
-    "reducido": "reduced",
-    "insistido": "insisted",
-    "explorado": "explored",
-    "aclarado": "clarified",
-    "fortalecido": "strengthened",
-    "discutido": "discussed",
-    "actualizado": "updated",
-    "optimizado": "optimized",
-
-    /* ============================
-       B2 — Family
-       ============================ */
-    "sociedad": "society",
-    "cultura": "culture",
-    "motivación": "motivation",
-    "desafíos": "challenges",
-    "expectativas": "expectations",
-
-    /* ============================
-       B2 — Travel
-       ============================ */
-    "remoto": "remote",
-    "futuro": "future",
-    "largo plazo": "long term",
-
-    /* ============================
-       B2 — Connectors
-       ============================ */
-    "además": "in addition",
-    "por lo tanto": "therefore",
-    "a pesar de": "despite",
-    "aunque": "although",
-    "incluso": "even",
-    "otra vez": "again",
-    "cuidadosamente": "carefully",
-
-       /* ============================
-       Build Tab Missing Words
-       ============================ */
-    "ella": "she",
-    "él": "he",
-    "ellos": "they",
-    "ellas": "they (female)",
-    "nosotros": "we",
-    "ustedes": "you (plural)",
-
-    "soy": "I am",
-    "eres": "you are",
-    "es": "he/she is",
-    "somos": "we are",
-    "son": "they are",
-
-    "estoy": "I am",
-    "estás": "you are",
-    "está": "he/she is",
-    "estamos": "we are",
-    "están": "they are",
-
-    "el": "the",
-    "la": "the",
-    "los": "the",
-    "las": "the",
-    "un": "a",
-    "una": "a",
-
-    "pronto": "soon",
-    "rápido": "fast",
-    "rápidamente": "quickly",
-    "lento": "slow",
-    "lentamente": "slowly",
-
-    "aquí": "here",
-    "allí": "there",
-    "casi": "almost",
-    "nunca": "never",
-    "siempre": "always",
-
-    "porque": "because",
-    "pero": "but",
-    "también": "also",
-    "entonces": "then",
-
-       /* ============================
-       Conversation / Quiz / Sentence
-       ============================ */
-    "hola": "hello",
-    "adiós": "goodbye",
-    "gracias": "thank you",
-    "por favor": "please",
-    "lo siento": "sorry",
-
-    "qué": "what",
-    "quién": "who",
-    "dónde": "where",
-    "cuándo": "when",
-    "cómo": "how",
-    "cuál": "which",
-
-    "bueno": "good",
-    "malo": "bad",
-    "grande": "big",
-    "pequeño": "small",
-    "fácil": "easy",
-    "difícil": "difficult",
-
-    "coche": "car",
-    "calle": "street",
-    "ciudad": "city"
+    "nueve": "nine"
 };
 
+/* A2 — Daily Life */
+"desayuno": "breakfast",
+"almuerzo": "lunch",
+"cena": "dinner",
+"temprano": "early",
+"tarde": "late",
+"anoche": "last night",
+"ahora": "now",
+"minutos": "minutes",
+"tarea": "homework",
+"mensaje": "message",
+"información": "information",
+"película": "movie",
+"ventana": "window",
+"cocina": "kitchen",
+"zapatos": "shoes",
+"viaje": "trip",
+"probar": "to try",
+"olvidar": "to forget",
+"esperar": "to wait",
+"conducir": "to drive",
+"arreglar": "to fix",
+"irse": "to leave",
+"llegar": "to arrive",
+
+/* A2 — Extra from sentences */
+"mercado": "market",
+"reunión": "meeting",
+"llaves": "keys",
+"teléfono": "phone",
+"afuera": "outside",
+"nuevos": "new (plural)",
+"nueva": "new (feminine)",
+"nuevas": "new (feminine plural)",
+
+/* A2 — Connectors */
+"a menudo": "often",
+"antes": "before",
+"ya": "already",
+"todavía": "still",
+"normalmente": "normally",
+
+/* A2 — Verbs from sentences */
+"compró": "bought",
+"comprar": "to buy",
+"visitó": "visited",
+"estudiaré": "I will study",
+"olvidó": "forgot",
+"esperando": "waiting",
+"viendo": "watching",
+"hablando": "talking",
+"desayunando": "eating breakfast",
+"salir": "to go out"
+
+/* B1 — Verbs */
+"organizar": "to organize",
+"mejorar": "to improve",
+"espera": "hopes",
+"encontrar": "to find",
+"decidieron": "decided",
+"cancelar": "to cancel",
+"hablar": "to talk",
+"traer": "to bring",
+"llamaré": "I will call",
+"llegue": "I arrive (subj.)",
+"viajar": "to travel",
+"terminar": "to finish",
+"explicó": "explained",
+"resolver": "to solve",
+"pidió": "asked",
+"ayudara": "help (subj.)",
+"planean": "they plan",
+"mudarse": "to move",
+"seguir": "to follow",
+"deberíamos": "we should",
+"continuaremos": "we will continue",
+"revisar": "to review",
+"conseguir": "to get",
+"ayudaré": "I will help",
+
+/* B1 — Nouns */
+"español": "Spanish",
+"trabajo": "job",
+"problema": "problem",
+"documentos": "documents",
+"año": "year",
+"proyecto": "project",
+"situación": "situation",
+"reglas": "rules",
+"informe": "report",
+"metas": "goals",
+"plan": "plan",
+"ropa": "clothes",
+"detalles": "details",
+
+/* B1 — Adverbs */
+"claramente": "clearly",
+"pronto": "soon",
+"ahora": "now",
+"más tarde": "later",
+"mañana": "tomorrow",
+"este año": "this year",
+"próximo mes": "next month",
+
+/* B1 — Determiners */
+"nuestras": "our (fem. plural)",
+"todo": "everything"
+
+/* B2 — Verbs */
+"analizar": "to analyze",
+"considerar": "to consider",
+"sugirió": "suggested",
+"completar": "to complete",
+"evaluar": "to evaluate",
+"argumentaron": "argued",
+"ampliar": "to expand",
+"continuar": "to continue",
+"terminaron": "they finished",
+"adaptarnos": "to adapt",
+"reducir": "to reduce",
+"insistió": "insisted",
+"revisar": "to review",
+"lograr": "to achieve",
+"explorar": "to explore",
+"aclarar": "to clarify",
+"fortalecer": "to strengthen",
+"actualizar": "to update",
+"aumentar": "to increase",
+"preparar": "to prepare",
+"expandir": "to expand",
+"coordinar": "to coordinate",
+"optimizar": "to optimize",
+
+/* B2 — Nouns */
+"posibilidades": "possibilities",
+"comunicación": "communication",
+"proceso": "process",
+"tarea": "task",
+"riesgos": "risks",
+"problemas": "problems",
+"experiencia": "experience",
+"desafíos": "challenges",
+"concepto": "concept",
+"manera": "way",
+"instrucciones": "instructions",
+"idea": "idea",
+"gastos": "expenses",
+"datos": "data",
+"habilidades": "skills",
+"rendimiento": "performance",
+"tema": "topic",
+"enfoque": "approach",
+"sistema": "system",
+"cambios": "changes",
+"negocio": "business",
+"flujo": "flow",
+"equipo": "team",
+"oportunidades": "opportunities",
+"productividad": "productivity",
+"estrategia": "strategy",
+
+/* B2 — Adjectives */
+"difícil": "difficult",
+"realista": "realistic",
+"profesional": "professional",
+"innovadora": "innovative",
+"innecesarios": "unnecessary",
+"posible": "possible",
+"arriesgada": "risky",
+"capaz": "capable",
+"efectivo": "effective",
+"positivo": "positive",
+"complicado": "complicated",
+
+/* B2 — Adverbs / Connectors */
+"cuidadosamente": "carefully",
+"incluso": "even",
+"otra vez": "again",
+"en detalle": "in detail"
+};
 
 
 /* ============================================================
@@ -1969,9 +1869,6 @@ function setupBuildEvents(sentence) {
         renderBuildTab();
     });
 }
-
-
-
 
 /* ============================================================
    SENTENCE TAB — CEFR MULTIPLE‑CHOICE (FINAL MASTER VERSION)
