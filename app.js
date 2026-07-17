@@ -204,6 +204,16 @@ A1: [
     { spanish: "frío", english: "cold", category: "Daily Life" },
     { spanish: "feliz", english: "happy", category: "Daily Life" },
     { spanish: "nuevo", english: "new", category: "Daily Life" },
+    { english: "hello", spanish: "hola", category: "daily-life" },
+    { english: "goodbye", spanish: "adiós", category: "daily-life" },
+    { english: "thank you", spanish: "gracias", category: "daily-life" },
+    { english: "sorry / I feel", spanish: "siento", category: "daily-life" },
+    { english: "you are", spanish: "estás", category: "daily-life" },
+    { english: "ready", spanish: "listos", category: "daily-life" },
+    { english: "awake", spanish: "despierto", category: "daily-life" },
+    { english: "time", spanish: "tiempo", category: "daily-life" },
+    { english: "problems", spanish: "problemas", category: "daily-life" },
+    { english: "change", spanish: "cambio", category: "daily-life" },
 
     // Family
     { spanish: "familia", english: "family", category: "Family" },
@@ -271,6 +281,35 @@ A1: [
     { spanish: "ella", english: "she", category: "Connectors" },
     { spanish: "el", english: "he", category: "Connectors" },
     { spanish: "rapido", english: "fast", category: "Connectors" },
+    { english: "what", spanish: "qué", category: "connectors" },
+    { english: "who", spanish: "quién", category: "connectors" },
+    { english: "when", spanish: "cuándo", category: "connectors" },
+    { english: "how", spanish: "cómo", category: "connectors" },
+    { english: "which", spanish: "cuál", category: "connectors" },
+    { english: "where", spanish: "dónde", category: "connectors" },
+    { english: "no / not", spanish: "no", category: "connectors" },
+    { english: "there is / there are", spanish: "hay", category: "connectors" },
+    { english: "other / another", spanish: "otra", category: "connectors" },
+    { english: "despite", spanish: "pesar", category: "connectors" },
+    { english: "favor (por favor)", spanish: "favor", category: "connectors" },
+    { english: "they", spanish: "ellos", category: "connectors" },
+    { english: "his / her / their", spanish: "su", category: "connectors" },
+   // VERBS
+    { english: "is", spanish: "es", category: "connectors" },
+    { english: "likes", spanish: "gusta", category: "connectors" },
+    { english: "they like", spanish: "gustan", category: "connectors" },
+    { english: "would like", spanish: "gustaría", category: "connectors" },
+    { english: "learning", spanish: "aprendiendo", category: "connectors" },
+    { english: "fixing", spanish: "arreglando", category: "connectors" },
+
+    // ADJECTIVES
+    { english: "good", spanish: "bueno", category: "connectors" },
+    { english: "difficult", spanish: "difícil", category: "connectors" },
+    { english: "clear", spanish: "clara", category: "connectors" },
+    { english: "easy", spanish: "fácil", category: "connectors" },
+    { english: "bad", spanish: "malo", category: "connectors" },
+    { english: "small", spanish: "pequeño", category: "connectors" },
+   
 
     // Numbers
     { english: "one", spanish: "uno", category: "Numbers" },
@@ -333,6 +372,7 @@ A2: [
     { spanish: "ya", english: "already", category: "Connectors" },
     { spanish: "todavía", english: "still", category: "Connectors" },
     { spanish: "normalmente", english: "normally", category: "Connectors" },
+    { english: "argued", spanish: "argumentó", category: "Connectors" }
 
     { english: "eleven", spanish: "once", category: "Numbers" },
     { english: "twelve", spanish: "doce", category: "Numbers" },
@@ -496,7 +536,16 @@ const LISTEN_VOCAB = {
             "levantarse","música","televisión","limpiar","cocinar",
             "abrir","terminar","escribir","aprender","ir","hacer",
             "ver","escuchar","salir","descansar","caliente","frío",
-            "feliz","nuevo"
+            "feliz","nuevo", "hola",
+    "adiós",
+    "gracias",
+    "siento",
+    "estás",
+    "listos",
+    "despierto",
+    "tiempo",
+    "problemas",
+    "cambio"
         ],
         "Family": [
             "familia","madre","padre","hijo","hija","amigo","amiga",
@@ -514,7 +563,28 @@ const LISTEN_VOCAB = {
         ],
         "Connectors": [
             "y","o","con","sin","más","poco","solo","muy",
-            "cerca","para","a","en"
+            "cerca","para","a","en",  "qué",
+    "quién",
+    "cuándo",
+    "cómo",
+    "cuál",
+    "dónde",
+    "no",
+    "hay",
+    "otra",
+    "pesar",
+    "favor",  "es",
+    "gusta",
+    "gustan",
+    "gustaría",
+    "aprendiendo",
+    "arreglando",  "bueno",
+    "difícil",
+    "clara",
+    "fácil",
+    "malo",
+    "pequeño", "ellos",
+    "su"
         ],
         
        "Numbers": [
@@ -541,7 +611,7 @@ const LISTEN_VOCAB = {
             "avión","visitar","transporte"
         ],
         "Connectors": [
-            "a menudo","antes","ya","todavía","normalmente"
+            "a menudo","antes","ya","todavía","normalmente", "argumentó"
         ],
         "Numbers": [
     "once",
@@ -648,8 +718,17 @@ const WORD_DICT = {
 "porque": "because",
 "también": "also",
 "entonces": "then",
-
-
+"qué": "what",
+"quién": "who",
+"cuándo": "when",
+"cómo": "how",
+"cuál": "which",
+"dónde": "where",
+"no": "no / not",
+"hay": "there is / there are",
+"otra": "other / another",
+"pesar": "despite",
+"favor": "favor (por favor)",
 
     /* ============================
        A1 — Numbers
@@ -749,6 +828,30 @@ const WORD_DICT = {
 "ayuda": "help",
 "cansado": "tired",
 "alto": "tall",
+"hola": "hello",
+"adiós": "goodbye",
+"gracias": "thank you",
+"siento": "sorry / I feel",
+"estás": "you are",
+"listos": "ready",
+"despierto": "awake",
+"tiempo": "time",
+"problemas": "problems",
+"cambio": "change",
+"es": "is",
+"gusta": "likes",
+"gustan": "they like",
+"gustaría": "would like",
+"aprendiendo": "learning",
+"arreglando": "fixing",
+"bueno": "good",
+"difícil": "difficult",
+"clara": "clear",
+"fácil": "easy",
+"malo": "bad",
+"pequeño": "small",
+"ellos": "they",
+"su": "his / her / their",
 
 
 /* ============================
@@ -954,6 +1057,7 @@ const WORD_DICT = {
 "también": "also",
 "entonces": "then",
 "si": "if",
+"argumentó": "argued",
 
 
 /* ============================
