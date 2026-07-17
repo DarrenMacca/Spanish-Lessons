@@ -1112,6 +1112,7 @@ function validateMissingWords() {
    ============================================================ */
 
 function validateAndEnhanceDictionary() {
+
     const missing = new Set();
     const added = [];
 
@@ -1131,26 +1132,20 @@ function validateAndEnhanceDictionary() {
         if (isConnector(word)) return "and / or / but / because / also / then";
         if (isAdverb(word)) return "time-related adverb";
 
-        if (isMultiWord(word)) {
-            return "multi-word phrase";
-        }
+        if (isMultiWord(word)) return "multi-word phrase";
 
-        // Verb heuristic: ends in -ar, -er, -ir
         if (word.endsWith("ar")) return "to " + word.slice(0, -2);
         if (word.endsWith("er")) return "to " + word.slice(0, -2);
         if (word.endsWith("ir")) return "to " + word.slice(0, -2);
 
-        // Past tense heuristic: ó, aron, ió, aba, ía
         if (word.endsWith("ó")) return word + " (past tense)";
         if (word.endsWith("aron")) return word + " (they past tense)";
         if (word.endsWith("ieron")) return word + " (they past tense)";
         if (word.endsWith("aba")) return word + " (imperfect)";
         if (word.endsWith("ía")) return word + " (imperfect)";
 
-        // Adjective heuristic: ends in -o, -a, -os, -as
         if (word.match(/(o|a|os|as)$/)) return word + " (adjective)";
 
-        // Default fallback
         return word + " (unclassified)";
     }
 
@@ -1231,6 +1226,7 @@ function validateAndEnhanceDictionary() {
 
     console.groupEnd();
 }
+
 
 /* ============================================================
    GRAMMAR ERROR EXPLAINER
