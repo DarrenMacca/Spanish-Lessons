@@ -381,7 +381,7 @@ const CEFR_LEVELS = {
         { spanish: "trabajando", english: "working" },
         { spanish: "estudiando", english: "studying" },
         { spanish: "leyendo", english: "reading" },
-        { spanish: "viviendo", english: "living" }
+        { spanish: "viviendo", english: "living" },
         { spanish: "diarias", english: "daily" },
 
         // Communication
