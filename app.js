@@ -683,7 +683,7 @@ const WORD_DICT = {
     "uno": "one",
     "dos": "two",
     "diez": "ten",
-    "nueve": "nine"
+    "nueve": "nine",
 
 /* A2 — Daily Life */
 "desayuno": "breakfast",
@@ -737,7 +737,7 @@ const WORD_DICT = {
 "viendo": "watching",
 "hablando": "talking",
 "desayunando": "eating breakfast",
-"salir": "to go out"
+"salir": "to go out",
 
 /* B1 — Verbs */
 "organizar": "to organize",
@@ -791,7 +791,7 @@ const WORD_DICT = {
 
 /* B1 — Determiners */
 "nuestras": "our (fem. plural)",
-"todo": "everything"
+"todo": "everything",
 
 /* B2 — Verbs */
 "analizar": "to analyze",
