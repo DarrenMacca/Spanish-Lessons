@@ -662,12 +662,7 @@ function groupByCategory(words) {
     return out;
 }
  
-    A1: A1_WORDS,
-    A2: A2_WORDS,
-    B1: B1_WORDS,
-    B2: B2_WORDS
-};
-
+    
 const STORAGE_KEY = "cefr_trainer_state_v2";
 
 let appState = {
@@ -675,14 +670,13 @@ let appState = {
     speechRate: 1.0,
     studentName: "",
     badges: [],
-   levelStats: {
-  A1: { listens: 0, flashSeen: 0, quizScore: null, quizCompleted: 0, buildCompleted: 0, sentenceCompleted: 0, conversationCompleted: 0 },
-  A2: { listens: 0, flashSeen: 0, quizScore: null, quizCompleted: 0, buildCompleted: 0, sentenceCompleted: 0, conversationCompleted: 0 },
-  B1: { listens: 0, flashSeen: 0, quizScore: null, quizCompleted: 0, buildCompleted: 0, sentenceCompleted: 0, conversationCompleted: 0 },
-  B2: { listens: 0, flashSeen: 0, quizScore: null, quizCompleted: 0, buildCompleted: 0, sentenceCompleted: 0, conversationCompleted: 0 }
-}
+    levelStats: {
+        A1: { listens: 0, flashSeen: 0, quizScore: null, quizCompleted: 0, buildCompleted: 0, sentenceCompleted: 0, conversationCompleted: 0 },
+        A2: { listens: 0, flashSeen: 0, quizScore: null, quizCompleted: 0, buildCompleted: 0, sentenceCompleted: 0, conversationCompleted: 0 },
+        B1: { listens: 0, flashSeen: 0, quizScore: null, quizCompleted: 0, buildCompleted: 0, sentenceCompleted: 0, conversationCompleted: 0 },
+        B2: { listens: 0, flashSeen: 0, quizScore: null, quizCompleted: 0, buildCompleted: 0, sentenceCompleted: 0, conversationCompleted: 0 }
+    }
 };
-
 
 /* ============================================================
    CATEGORY AUTO‑ASSIGNER — PLACE HERE
