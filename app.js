@@ -1115,11 +1115,17 @@ function renderListenTab() {
                     gap:6px;
                     margin-top:8px;
                 ">
-                    ${words.map(spanish => `
-                        <button class="pill" data-spanish="${spanish}">
-                            ${spanish}
-                        </button>
-                    `).join("")}
+                    ${words.map(spanish => {
+                         const entry = CEFR_LEVELS[appState.currentLevel].find(w => w.spanish === spanish);
+                         const english = entry ? entry.english : "";
+                         return `
+                           <button class="pill listen-pill" data-spanish="${spanish}">
+                             <div class="listen-pill-en">${english}</div>
+                             <div class="listen-pill-es">${spanish}</div>
+                           </button>
+                       `;
+                   }).join("")}
+
                 </div>
             </div>
         </div>`;
