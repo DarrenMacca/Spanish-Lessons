@@ -460,7 +460,6 @@ B2: [
 
     // Numbers — B2 has no new number vocabulary
 ]      // ✔ closes B2 array
-},     // ✔ closes B2 object inside CEFR_LEVELS
 };     // ✔ closes CEFR_LEVELS object
 
 
