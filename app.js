@@ -458,26 +458,44 @@ const WORD_DICT = {
     "plazo": "term",
 
 
-    /* ============================================================
-       Disruptors / Connectors (All Levels)
-       ============================================================ */
+   /* ============================================================
+   WORD-BY-WORD DICTIONARY — CEFR A1 → B2
+   ============================================================ */
+const WORD_DICT = {
+    /* your dictionary entries here */
 
+    // Disruptors / Connectors (All Levels)
     "siempre": "always",
     "aunque": "although",
     "cuando": "when",
     "donde": "where"
 };
 
+/* ============================================================
+   MULTI-WORD PHRASES (CEFR-aligned)
+   ============================================================ */
+const CEFR_PHRASES = {
+    /* your A1 → B2 phrases here */
+};
 
+/* ============================================================
+   TRANSLATION ENGINE — CEFR Phrases + Word Dictionary
+   ============================================================ */
+function translateToEnglish(spanishText) {
+    const normalized = spanishText.toLowerCase().trim();
 
-    /* ============================================================
-       FALLBACK — Word-by-word translation
-       ============================================================ */
+    // 1. Phrase detection
+    if (CEFR_PHRASES[normalized]) {
+        return CEFR_PHRASES[normalized];
+    }
+
+    // 2. Word-by-word fallback
     return normalized
         .split(/\s+/)
         .map(w => WORD_DICT[w] || `[${w}]`)
         .join(" ");
 }
+
 
 /* ============================================================
        MULTI-WORD PHRASES (CEFR-aligned)
