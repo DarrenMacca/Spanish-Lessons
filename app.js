@@ -489,62 +489,57 @@ function translateToEnglish(spanishText) {
 
 
 /* ============================================================
-       MULTI-WORD PHRASES (CEFR-aligned)
-       ============================================================ */
-    const CEFR_PHRASES = {
-        // A1
-        "cómo estás": "how are you",
-        "dónde vives": "where do you live",
-        "qué hora es": "what time is it",
-        "te gusta el café": "you like coffee",
-        "me gusta la música": "I like music",
-        "vivo en la ciudad": "I live in the city",
-        "trabajo en un hotel": "I work in a hotel",
-        "quiero comer": "I want to eat",
-        "quiero beber": "I want to drink",
-        "dónde está el baño": "where is the bathroom",
+   MULTI-WORD PHRASES (CEFR-aligned)
+   ============================================================ */
+const CEFR_PHRASES = {
+    // A1
+    "cómo estás": "how are you",
+    "dónde vives": "where do you live",
+    "qué hora es": "what time is it",
+    "te gusta el café": "you like coffee",
+    "me gusta la música": "I like music",
+    "vivo en la ciudad": "I live in the city",
+    "trabajo en un hotel": "I work in a hotel",
+    "quiero comer": "I want to eat",
+    "quiero beber": "I want to drink",
+    "dónde está el baño": "where is the bathroom",
 
-        // A2
-        "qué hiciste ayer": "what did you do yesterday",
-        "fuiste al supermercado": "did you go to the supermarket",
-        "viajas a menudo": "you travel often",
-        "qué compraste": "what did you buy",
-        "qué estás haciendo": "what are you doing",
-        "sueles comer temprano": "you usually eat early",
-        "necesito ayuda": "I need help",
-        "quiero hacer una reserva": "I want to make a reservation",
-        "dónde está la estación": "where is the station",
+    // A2
+    "qué hiciste ayer": "what did you do yesterday",
+    "fuiste al supermercado": "did you go to the supermarket",
+    "viajas a menudo": "you travel often",
+    "qué compraste": "what did you buy",
+    "qué estás haciendo": "what are you doing",
+    "sueles comer temprano": "you usually eat early",
+    "necesito ayuda": "I need help",
+    "quiero hacer una reserva": "I want to make a reservation",
+    "dónde está la estación": "where is the station",
 
-        // B1
-        "he estado aprendiendo español": "I have been learning Spanish",
-        "disfruto viajar": "I enjoy traveling",
-        "quiero mejorar mis habilidades": "I want to improve my skills",
-        "qué piensas de la ciudad": "what do you think of the city",
-        "cómo mantienes una vida saludable": "how do you maintain a healthy life",
-        "qué aprendiste recientemente": "what did you learn recently",
-        "cuáles son tus metas": "what are your goals",
-        "qué experiencias pasadas tienes": "what past experiences do you have",
+    // B1
+    "he estado aprendiendo español": "I have been learning Spanish",
+    "disfruto viajar": "I enjoy traveling",
+    "quiero mejorar mis habilidades": "I want to improve my skills",
+    "qué piensas de la ciudad": "what do you think of the city",
+    "cómo mantienes una vida saludable": "how do you maintain a healthy life",
+    "qué aprendiste recientemente": "what did you learn recently",
+    "cuáles son tus metas": "what are your goals",
+    "qué experiencias pasadas tienes": "what past experiences do you have",
 
-        // B2
-        "cómo manejas situaciones estresantes": "how do you handle stressful situations",
-        "cuál es tu opinión sobre la tecnología": "what is your opinion on technology",
-        "cómo ha cambiado tu vida": "how has your life changed",
-        "qué desafíos enfrentas": "what challenges do you face",
-        "qué esperas lograr": "what do you hope to achieve",
-        "qué piensas del futuro": "what do you think about the future",
-        "cómo ves la sociedad actual": "how do you see modern society",
-        "cuál es tu perspectiva": "what is your perspective"
-    };
-
-    if (CEFR_PHRASES[normalized]) {
-        return CEFR_PHRASES[normalized];
-    }
+    // B2
+    "cómo manejas situaciones estresantes": "how do you handle stressful situations",
+    "cuál es tu opinión sobre la tecnología": "what is your opinion on technology",
+    "cómo ha cambiado tu vida": "how has your life changed",
+    "qué desafíos enfrentas": "what challenges do you face",
+    "qué esperas lograr": "what do you hope to achieve",
+    "qué piensas del futuro": "what do you think about the future",
+    "cómo ves la sociedad actual": "how do you see modern society",
+    "cuál es tu perspectiva": "what is your perspective"
+};
 
 /* ============================================================
    AUTO‑EXTRACT + AUTO‑EXPAND DICTIONARY
    ============================================================ */
 
-// 1. Extract all Spanish words from CEFR sentences
 function extractWordsFromCEFR() {
     const allWords = new Set();
 
@@ -560,35 +555,29 @@ function extractWordsFromCEFR() {
     return Array.from(allWords);
 }
 
-// 2. Detect missing dictionary entries
 function detectMissingDictionaryWords() {
     const cefrWords = extractWordsFromCEFR();
     return cefrWords.filter(w => !WORD_DICT[w]);
 }
 
-// 3. Auto‑expand dictionary with placeholders
 function autoExpandDictionary() {
     const missing = detectMissingDictionaryWords();
     missing.forEach(w => WORD_DICT[w] = `[${w}]`);
     console.log("Dictionary expanded with missing words:", missing);
 }
 
-// 4. Run expansion immediately
 autoExpandDictionary();
 
 /* ============================================================
    TRANSLATION ENGINE — CEFR Phrases + Word Dictionary
    ============================================================ */
-
 function translateToEnglish(spanishText) {
     const normalized = spanishText.toLowerCase().trim();
 
-    // 1. Phrase detection
     if (CEFR_PHRASES[normalized]) {
         return CEFR_PHRASES[normalized];
     }
 
-    // 2. Word-by-word fallback
     return normalized
         .split(/\s+/)
         .map(w => WORD_DICT[w] || `[${w}]`)
@@ -723,9 +712,6 @@ let appState = {
   B1: { listens: 0, flashSeen: 0, quizScore: null, quizCompleted: 0, buildCompleted: 0, sentenceCompleted: 0, conversationCompleted: 0 },
   B2: { listens: 0, flashSeen: 0, quizScore: null, quizCompleted: 0, buildCompleted: 0, sentenceCompleted: 0, conversationCompleted: 0 }
 }
-
-
-
 };
 
 
@@ -1362,32 +1348,6 @@ function setupQuizEvents() {
 /* ============================================================
    BUILD TAB — English → Spanish Builder (with disruptors + feedback)
    ============================================================ */
-function translateToEnglish(spanishText) {
-    if (!spanishText.trim()) return "(no answer provided)";
-
-    const dict = {
-        "dónde": "where",
-        "está": "is",
-        "el": "the",
-        "baño": "bathroom",
-        "yo": "I",
-        "manejo": "I handle",
-        "decisiones": "decisions",
-        "familiares": "family",
-        "para": "to",
-        "apoyar": "support",
-        "mi": "my",
-        "familia": "family"
-    };
-
-    return spanishText
-    .split(" ")
-    .filter(Boolean)
-    .map(w => dict[w.toLowerCase()] || `[${w}]`)
-    .join(" ");
-}
-
-
 function renderBuildTab() {
     const container = document.getElementById("build-content");
 
@@ -2020,20 +1980,19 @@ function setupConversationEvents() {
     if (appState.levelStats[appState.currentLevel].conversationCompleted == null) {
         appState.levelStats[appState.currentLevel].conversationCompleted = 0;
     }
-    appState.levelStats[appState.currentLevel].conversationCompleted++;   // ← use this
+    appState.levelStats[appState.currentLevel].conversationCompleted++;
 
     updateBadges();
     updateProgressMeters();
     setTimeout(() => speakQuiz(correct), 300);
-} else {
-    ...
-}
- else {
-            feedback.textContent = `Not quite. A natural response would be: ${convoState.currentPrompt.spanishTarget}`;
-            setTimeout(() => speakQuiz(correct), 300);
-        }
 
-        saveState();
+} else {
+    feedback.textContent = `Not quite. A natural response would be: ${convoState.currentPrompt.spanishTarget}`;
+    setTimeout(() => speakQuiz(correct), 300);
+}
+
+saveState();
+
     });
 
     // Next
