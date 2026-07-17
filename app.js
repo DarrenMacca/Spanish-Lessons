@@ -172,65 +172,37 @@ const CEFR_SENTENCES = {
     ]
 };
 
-    /* ============================================================
-   WORD-BY-WORD DICTIONARY — CEFR A1 → B2 (Categorized)
+   /* ============================================================
+   AUTO‑EXTRACT + AUTO‑EXPAND DICTIONARY
    ============================================================ */
 
-const WORD_DICT = {
-    "soy": "I am",
-    "eres": "you are",
-    "es": "he/she is",
-    "somos": "we are",
-    "son": "they are",
+function extractWordsFromCEFR() {
+    const allWords = new Set();
 
-    "estoy": "I am (feeling/location)",
-    "estás": "you are (feeling/location)",
-    "está": "is (feeling/location)",
+    Object.keys(CEFR_SENTENCES).forEach(level => {
+        CEFR_SENTENCES[level].forEach(item => {
+            item.spanish
+                .toLowerCase()
+                .split(/\s+/)
+                .forEach(w => allWords.add(w));
+        });
+    });
 
-    "muy": "very",
-    "pero": "but",
-    "porque": "because",
-    "también": "also",
-    "nunca": "never",
-    "siempre": "always",
-    "ayer": "yesterday",
-    "mañana": "tomorrow",
-    "entonces": "then",
-    "aunque": "although",
-    "cuando": "when",
-    "donde": "where"
-};
+    return Array.from(allWords);
+}
+
+function detectMissingDictionaryWords() {
+    const cefrWords = extractWordsFromCEFR();
+    return cefrWords.filter(w => !WORD_DICT[w]);
+}
 
 function autoExpandDictionary() {
-    // Flatten all CEFR levels (A1 → B2) into one array
-    const allWords = Object.values(CEFR_LEVELS).flat();
-
-    // Insert each Spanish → English mapping into WORD_DICT
-    allWords.forEach(item => {
-        const key = item.spanish.toLowerCase().trim();
-        const value = item.english.trim();
-        WORD_DICT[key] = value;
-    });
+    const missing = detectMissingDictionaryWords();
+    missing.forEach(w => WORD_DICT[w] = `[${w}]`);
+    console.log("Dictionary expanded with missing words:", missing);
 }
 
-
-/* ============================================================
-   TRANSLATION ENGINE — CEFR Phrases + Word Dictionary
-   ============================================================ */
-function translateToEnglish(spanishText) {
-    const normalized = spanishText.toLowerCase().trim();
-
-    // 1. Phrase detection
-    if (CEFR_PHRASES[normalized]) {
-        return CEFR_PHRASES[normalized];
-    }
-
-    // 2. Word-by-word fallback
-    return normalized
-        .split(/\s+/)
-        .map(w => WORD_DICT[w] || `[${w}]`)
-        .join(" ");
-}
+autoExpandDictionary();
 
 /* ============================================================
    MULTI-WORD PHRASES (CEFR-aligned)
@@ -280,38 +252,67 @@ const CEFR_PHRASES = {
     "cuál es tu perspectiva": "what is your perspective"
 };
 
-/* ============================================================
-   AUTO‑EXTRACT + AUTO‑EXPAND DICTIONARY
+
+
+ /* ============================================================
+   WORD-BY-WORD DICTIONARY — CEFR A1 → B2 (Categorized)
    ============================================================ */
 
-function extractWordsFromCEFR() {
-    const allWords = new Set();
+const WORD_DICT = {
+    "soy": "I am",
+    "eres": "you are",
+    "es": "he/she is",
+    "somos": "we are",
+    "son": "they are",
 
-    Object.keys(CEFR_SENTENCES).forEach(level => {
-        CEFR_SENTENCES[level].forEach(item => {
-            item.spanish
-                .toLowerCase()
-                .split(/\s+/)
-                .forEach(w => allWords.add(w));
-        });
-    });
+    "estoy": "I am (feeling/location)",
+    "estás": "you are (feeling/location)",
+    "está": "is (feeling/location)",
 
-    return Array.from(allWords);
-}
-
-function detectMissingDictionaryWords() {
-    const cefrWords = extractWordsFromCEFR();
-    return cefrWords.filter(w => !WORD_DICT[w]);
-}
+    "muy": "very",
+    "pero": "but",
+    "porque": "because",
+    "también": "also",
+    "nunca": "never",
+    "siempre": "always",
+    "ayer": "yesterday",
+    "mañana": "tomorrow",
+    "entonces": "then",
+    "aunque": "although",
+    "cuando": "when",
+    "donde": "where"
+};
 
 function autoExpandDictionary() {
-    const missing = detectMissingDictionaryWords();
-    missing.forEach(w => WORD_DICT[w] = `[${w}]`);
-    console.log("Dictionary expanded with missing words:", missing);
+    // Flatten all CEFR levels (A1 → B2) into one array
+    const allWords = Object.values(CEFR_LEVELS).flat();
+
+    // Insert each Spanish → English mapping into WORD_DICT
+    allWords.forEach(item => {
+        const key = item.spanish.toLowerCase().trim();
+        const value = item.english.trim();
+        WORD_DICT[key] = value;
+    });
 }
 
-autoExpandDictionary();
-   
+/* ============================================================
+   TRANSLATION ENGINE — CEFR Phrases + Word Dictionary
+   ============================================================ */
+function translateToEnglish(spanishText) {
+    const normalized = spanishText.toLowerCase().trim();
+
+    // 1. Phrase detection
+    if (CEFR_PHRASES[normalized]) {
+        return CEFR_PHRASES[normalized];
+    }
+
+    // 2. Word-by-word fallback
+    return normalized
+        .split(/\s+/)
+        .map(w => WORD_DICT[w] || `[${w}]`)
+        .join(" ");
+}
+
 /* ============================================================
    GRAMMAR ERROR EXPLAINER
    ============================================================ */
