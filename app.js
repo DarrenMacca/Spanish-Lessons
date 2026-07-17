@@ -1808,6 +1808,14 @@ let listenAutoPlay = {
     list: []
 };
 
+function getListenRange(level) {
+    if (level === "A1") return "(1–10)";
+    if (level === "A2") return "(11–20)";
+    if (level === "B1") return "(21–30)";
+    if (level === "B2") return "(31–40)";
+    return "";
+}
+
 function renderListenTab() {
     const container = document.getElementById("listen-content");
     if (!container) return;
