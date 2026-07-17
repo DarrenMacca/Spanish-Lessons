@@ -1054,9 +1054,6 @@ function initTabNavigation() {
 initTabNavigation();
 activateTab("dashboard");
 
-
-
-
 /* ============================================================
    LISTEN TAB — CATEGORY + AUDIO PLAYER + CLEAN UI
    ============================================================ */
@@ -1070,8 +1067,10 @@ let listenAutoPlay = {
 
 function renderListenTab() {
     const container = document.getElementById("listen-content");
-    const words = LISTEN_VOCAB[appState.currentLevel];
-    const grouped = groupByCategory(words);
+    if (!container) return;
+
+    // Pull the correct CEFR level vocabulary (already categorized)
+    const levelData = LISTEN_VOCAB[appState.currentLevel];
 
     let html = `
         <div class="glass-panel quiz-card">
@@ -1094,27 +1093,28 @@ function renderListenTab() {
     `;
 
     /* ============================================================
-       CATEGORY LIST
+       CATEGORY LIST (already grouped in LISTEN_VOCAB)
        ============================================================ */
-    Object.keys(grouped).forEach(cat => {
+    Object.keys(levelData).forEach(categoryName => {
+        const words = levelData[categoryName];
+
         html += `
         <div class="glass-panel">
-            <div class="listen-category-header" data-cat="${cat}">
-                <span class="listen-category-title">${cat.toUpperCase()}</span>
+            <div class="listen-category-header" data-cat="${categoryName}">
+                <span class="listen-category-title">${categoryName}</span>
                 <span class="listen-arrow">▶</span>
             </div>
 
-            <div class="listen-category-content" data-cat="${cat}">
+            <div class="listen-category-content" data-cat="${categoryName}">
                 <div class="listen-grid" style="
                     display:grid;
                     grid-template-columns:repeat(auto-fill, minmax(120px, 1fr));
                     gap:6px;
                     margin-top:8px;
                 ">
-                    ${grouped[cat].map(w => `
-                        <button class="pill" data-spanish="${w.spanish}">
-                            ${w.english}
-                            <span style="opacity:0.7;">(${w.spanish})</span>
+                    ${words.map(spanish => `
+                        <button class="pill" data-spanish="${spanish}">
+                            ${spanish}
                         </button>
                     `).join("")}
                 </div>
@@ -1130,7 +1130,9 @@ function renderListenTab() {
     container.querySelectorAll(".listen-category-header").forEach(header => {
         header.addEventListener("click", () => {
             const cat = header.dataset.cat;
-            const content = container.querySelector(`.listen-category-content[data-cat="${cat}"]`);
+            const content = container.querySelector(
+                `.listen-category-content[data-cat="${cat}"]`
+            );
             const arrow = header.querySelector(".listen-arrow");
             const open = content.classList.toggle("open");
             arrow.classList.toggle("open", open);
@@ -1140,7 +1142,7 @@ function renderListenTab() {
     /* ============================================================
        SINGLE WORD PLAYBACK
        ============================================================ */
-    container.querySelectorAll(".pill").forEach(btn => {
+    container.querySelectorAll(".pill[data-spanish]").forEach(btn => {
         btn.addEventListener("click", () => {
             speakSpanish(btn.dataset.spanish);
             appState.levelStats[appState.currentLevel].listens++;
@@ -1153,7 +1155,9 @@ function renderListenTab() {
     /* ============================================================
        AUTO PLAY — PLAY ALL WORDS
        ============================================================ */
-    listenAutoPlay.list = words.map(w => w.spanish);
+
+    // Flatten all categories into one list
+    listenAutoPlay.list = Object.values(levelData).flat();
 
     document.getElementById("listen-playall").onclick = () => {
         listenAutoPlay.active = true;
@@ -1180,6 +1184,7 @@ function renderListenTab() {
         if (speechSynthesis.cancel) speechSynthesis.cancel();
     };
 }
+
 
 /* ============================================================
    AUTO PLAY ENGINE
