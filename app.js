@@ -1042,6 +1042,131 @@ function translateToEnglish(spanishText) {
 }
 
 /* ============================================================
+   SUPER VALIDATOR — AUTO-TRANSLATE + AUTO-CATEGORIZE + AUTO-FIX
+   ============================================================ */
+
+function validateAndEnhanceDictionary() {
+    const missing = new Set();
+    const added = [];
+
+    // === CATEGORY DETECTORS ===
+    const isArticle = w => ["el","la","los","las","un","una"].includes(w);
+    const isPronoun = w => ["me","te","le","nos","les","lo","la","los","las"].includes(w);
+    const isPreposition = w => ["a","de","por","para","con","sin","al","del","en"].includes(w);
+    const isConnector = w => ["y","o","pero","porque","también","entonces"].includes(w);
+    const isAdverb = w => ["hoy","ayer","mañana","ahora","pronto","temprano","tarde","claramente"].includes(w);
+    const isMultiWord = w => w.includes(" ");
+
+    // === SMART TRANSLATION RULES ===
+    function inferTranslation(word) {
+        if (isArticle(word)) return "the";
+        if (isPronoun(word)) return "it / him / her / them";
+        if (isPreposition(word)) return "to / from / for / by / with";
+        if (isConnector(word)) return "and / or / but / because / also / then";
+        if (isAdverb(word)) return "time-related adverb";
+
+        if (isMultiWord(word)) {
+            return "multi-word phrase";
+        }
+
+        // Verb heuristic: ends in -ar, -er, -ir
+        if (word.endsWith("ar")) return "to " + word.slice(0, -2);
+        if (word.endsWith("er")) return "to " + word.slice(0, -2);
+        if (word.endsWith("ir")) return "to " + word.slice(0, -2);
+
+        // Past tense heuristic: ó, aron, ió, aba, ía
+        if (word.endsWith("ó")) return word + " (past tense)";
+        if (word.endsWith("aron")) return word + " (they past tense)";
+        if (word.endsWith("ieron")) return word + " (they past tense)";
+        if (word.endsWith("aba")) return word + " (imperfect)";
+        if (word.endsWith("ía")) return word + " (imperfect)";
+
+        // Adjective heuristic: ends in -o, -a, -os, -as
+        if (word.match(/(o|a|os|as)$/)) return word + " (adjective)";
+
+        // Default fallback
+        return word + " (unclassified)";
+    }
+
+    // === TOKEN SCANNER ===
+    function scanSentence(sentence) {
+        sentence.toLowerCase()
+            .split(/\s+/)
+            .forEach(tok => {
+                if (!WORD_DICT[tok]) missing.add(tok);
+            });
+    }
+
+    // === 1. Scan CEFR sentences ===
+    Object.values(CEFR_SENTENCES).forEach(levelArr => {
+        levelArr.forEach(item => scanSentence(item.spanish));
+    });
+
+    // === 2. Scan disruptors ===
+    const BUILD_DISRUPTORS = [
+        "rápido","lento","siempre","nunca","ayer","mañana",
+        "porque","pero","muy","también","solo","entonces"
+    ];
+    BUILD_DISRUPTORS.forEach(tok => {
+        if (!WORD_DICT[tok]) missing.add(tok);
+    });
+
+    // === 3. Scan grammar helpers ===
+    const SENTENCE_GRAMMAR = [
+        "yo","tú","él","ella","ellos","ellas","nosotros","ustedes",
+        "soy","eres","es","somos","son",
+        "estoy","estás","está","estamos","están"
+    ];
+    SENTENCE_GRAMMAR.forEach(tok => {
+        if (!WORD_DICT[tok]) missing.add(tok);
+    });
+
+    // === 4. Scan conversation fillers ===
+    const CONVERSATION_FILLERS = [
+        "hola","adiós","gracias","por","favor","lo","siento",
+        "qué","quién","dónde","cuándo","cómo","cuál",
+        "porque","pero","también","entonces"
+    ];
+    CONVERSATION_FILLERS.forEach(tok => {
+        if (!WORD_DICT[tok]) missing.add(tok);
+    });
+
+    // === 5. Scan quiz distractors ===
+    const QUIZ_DISTRACTORS = [
+        "bueno","malo","grande","pequeño","fácil","difícil",
+        "coche","calle","ciudad"
+    ];
+    QUIZ_DISTRACTORS.forEach(tok => {
+        if (!WORD_DICT[tok]) missing.add(tok);
+    });
+
+    // === 6. Auto-add missing words with inferred translations ===
+    missing.forEach(w => {
+        if (!WORD_DICT[w]) {
+            WORD_DICT[w] = inferTranslation(w);
+            added.push({ word: w, translation: WORD_DICT[w] });
+        }
+    });
+
+    // === 7. Diagnostic report ===
+    console.group("=== SUPER VALIDATOR REPORT ===");
+
+    console.log("Missing words found:", missing.size);
+    console.log("Auto-added:", added.length);
+
+    if (added.length > 0) {
+        console.log("=== Added Entries ===");
+        added.forEach(entry => {
+            console.log(`+ ${entry.word} → ${entry.translation}`);
+        });
+    }
+
+    console.log("New dictionary size:", Object.keys(WORD_DICT).length);
+
+    console.groupEnd();
+}
+
+/* ============================================================
    GRAMMAR ERROR EXPLAINER
    ============================================================ */
 function explainGrammarError(user, correct) {
