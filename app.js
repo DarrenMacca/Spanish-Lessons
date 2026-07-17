@@ -567,23 +567,6 @@ function autoExpandDictionary() {
 }
 
 autoExpandDictionary();
-
-/* ============================================================
-   TRANSLATION ENGINE — CEFR Phrases + Word Dictionary
-   ============================================================ */
-function translateToEnglish(spanishText) {
-    const normalized = spanishText.toLowerCase().trim();
-
-    if (CEFR_PHRASES[normalized]) {
-        return CEFR_PHRASES[normalized];
-    }
-
-    return normalized
-        .split(/\s+/)
-        .map(w => WORD_DICT[w] || `[${w}]`)
-        .join(" ");
-}
-
    
 /* ============================================================
    GRAMMAR ERROR EXPLAINER
