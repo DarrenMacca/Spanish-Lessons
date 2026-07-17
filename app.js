@@ -466,12 +466,7 @@ const WORD_DICT = {
 
 };
 
-/* ============================================================
-   MULTI-WORD PHRASES (CEFR-aligned)
-   ============================================================ */
-const CEFR_PHRASES = {
-    /* your A1 → B2 phrases here */
-};
+
 
 /* ============================================================
    TRANSLATION ENGINE — CEFR Phrases + Word Dictionary
