@@ -472,19 +472,6 @@ const WORD_DICT = {
 };
 
 /* ============================================================
-   WORD-BY-WORD DICTIONARY — CEFR A1 → B2
-   ============================================================ */
-const WORD_DICT = {
-    /* your dictionary entries here */
-
-    // Disruptors / Connectors (All Levels)
-    "siempre": "always",
-    "aunque": "although",
-    "cuando": "when",
-    "donde": "where"
-};
-
-/* ============================================================
    MULTI-WORD PHRASES (CEFR-aligned)
    ============================================================ */
 const CEFR_PHRASES = {
