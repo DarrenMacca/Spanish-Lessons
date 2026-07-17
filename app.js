@@ -1042,6 +1042,72 @@ function translateToEnglish(spanishText) {
 }
 
 /* ============================================================
+   CLEAN MISSING WORD VALIDATOR — NO AUTO-TRANSLATION
+   ============================================================ */
+
+function validateMissingWords() {
+    const missing = new Set();
+
+    function scan(sentence) {
+        sentence.toLowerCase()
+            .split(/\s+/)
+            .forEach(tok => {
+                if (!WORD_DICT[tok]) missing.add(tok);
+            });
+    }
+
+    // 1. CEFR sentences
+    Object.values(CEFR_SENTENCES).forEach(levelArr => {
+        levelArr.forEach(item => scan(item.spanish));
+    });
+
+    // 2. Build disruptors
+    [
+        "rápido","lento","siempre","nunca","ayer","mañana",
+        "porque","pero","muy","también","solo","entonces"
+    ].forEach(tok => {
+        if (!WORD_DICT[tok]) missing.add(tok);
+    });
+
+    // 3. Grammar helpers
+    [
+        "yo","tú","él","ella","ellos","ellas","nosotros","ustedes",
+        "soy","eres","es","somos","son",
+        "estoy","estás","está","estamos","están"
+    ].forEach(tok => {
+        if (!WORD_DICT[tok]) missing.add(tok);
+    });
+
+    // 4. Conversation fillers
+    [
+        "hola","adiós","gracias","por","favor","lo","siento",
+        "qué","quién","dónde","cuándo","cómo","cuál",
+        "porque","pero","también","entonces"
+    ].forEach(tok => {
+        if (!WORD_DICT[tok]) missing.add(tok);
+    });
+
+    // 5. Quiz distractors
+    [
+        "bueno","malo","grande","pequeño","fácil","difícil",
+        "coche","calle","ciudad"
+    ].forEach(tok => {
+        if (!WORD_DICT[tok]) missing.add(tok);
+    });
+
+    console.group("=== CLEAN MISSING WORD REPORT ===");
+
+    if (missing.size === 0) {
+        console.log("✔ No missing words! Dictionary is complete.");
+    } else {
+        console.log("❌ Missing words (" + missing.size + "):");
+        missing.forEach(w => console.log(" - " + w));
+    }
+
+    console.groupEnd();
+}
+
+/* ============================================================
    SUPER VALIDATOR — AUTO-TRANSLATE + AUTO-CATEGORIZE + AUTO-FIX
    ============================================================ */
 
