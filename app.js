@@ -1841,12 +1841,15 @@ function renderListenTab() {
     Object.keys(levelData).forEach(categoryName => {
         const words = levelData[categoryName];
 
-        html += `
-        <div class="glass-panel">
-            <div class="listen-category-header" data-cat="${categoryName}">
-                <span class="listen-category-title">${categoryName}</span>
-                <span class="listen-arrow">▶</span>
-            </div>
+       html += `
+<div class="glass-panel">
+    <div class="listen-category-header" data-cat="${categoryName}">
+        <span class="listen-category-title">
+            ${categoryName} <span class="listen-range">${getListenRange(appState.currentLevel)}</span>
+        </span>
+        <span class="listen-arrow">▶</span>
+    </div>
+
 
             <div class="listen-category-content" data-cat="${categoryName}">
                 <div class="listen-grid" style="
@@ -1967,6 +1970,14 @@ function playNextListenWord() {
    FLASHCARDS — CATEGORY GROUPED + FLIP + AUDIO (STABLE VERSION)
    ============================================================ */
 
+function getFlashRange(level) {
+    if (level === "A1") return "(1–10)";
+    if (level === "A2") return "(11–20)";
+    if (level === "B1") return "(21–30)";
+    if (level === "B2") return "(31–40)";
+    return "";
+}
+
 function renderFlashcardsTab() {
     const container = document.getElementById("flash-content");
     const words = CEFR_LEVELS[appState.currentLevel];
@@ -1983,9 +1994,11 @@ function renderFlashcardsTab() {
         html += `
         <div class="glass-panel">
         <div class="flash-category-header" data-cat="${cat}">
-        <span class="listen-category-title">${cat.toUpperCase()}</span>
-                <span class="listen-arrow">▶</span>
-            </div>
+            <span class="listen-category-title">
+                ${cat.toUpperCase()} <span class="flash-range">${getFlashRange(appState.currentLevel)}</span>
+            </span>
+            <span class="listen-arrow">▶</span>
+        </div>
 
             <div class="flash-category-content" data-cat="${cat}">
                 <div class="fc-grid">
