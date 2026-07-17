@@ -463,6 +463,10 @@ B2: [
 },     // ✔ closes B2 object inside CEFR_LEVELS
 };     // ✔ closes CEFR_LEVELS object
 
+
+/* ============================================================
+   LISTEN VOCAB — A1 → B2 (Category → Word List)
+   ============================================================ */
 const LISTEN_VOCAB = {
     A1: {
         "Daily Life": [
