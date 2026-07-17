@@ -459,6 +459,7 @@ function autoExpandDictionary() {
 }
 
 autoExpandDictionary();
+
   
 /* ============================================================
    MULTI-WORD PHRASES (CEFR-aligned)
