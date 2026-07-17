@@ -459,14 +459,7 @@ const WORD_DICT = {
 
 
   
-const WORD_DICT = {
-    /* your dictionary entries here */
 
-    // Disruptors / Connectors (All Levels)
-    "siempre": "always",
-    "aunque": "although",
-    "cuando": "when",
-    "donde": "where"
 };
 
 /* ============================================================
