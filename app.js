@@ -458,9 +458,7 @@ const WORD_DICT = {
     "plazo": "term",
 
 
-   /* ============================================================
-   WORD-BY-WORD DICTIONARY — CEFR A1 → B2
-   ============================================================ */
+  
 const WORD_DICT = {
     /* your dictionary entries here */
 
