@@ -2927,8 +2927,11 @@ function renderQuizTab() {
 
 
 
+/* ============================================================
+   BUILD TAB — English → Spanish Builder (with disruptors + feedback)
+   ============================================================ */
 function renderBuildTab() {
-    const container = document.getElementById("buildGrid");   // ✔ FIXED
+    const container = document.getElementById("build-content");
 
     const pool = CEFR_SENTENCES[appState.currentLevel];
     const sentence = pool[Math.floor(Math.random() * pool.length)];
@@ -2979,11 +2982,10 @@ function renderBuildTab() {
         </div>
     `;
 
-    wireBuildEvents(sentence);
+    setupBuildEvents(sentence);
 }
 
-
-function wireBuildEvents(sentence) {
+function setupBuildEvents(sentence) {
     const selectedArea = document.getElementById("build-selected");
     const grid = document.getElementById("build-words");
     const input = document.getElementById("build-input");
@@ -2996,9 +2998,6 @@ function wireBuildEvents(sentence) {
 
     buildState.answer = [];
 
-    /* ============================================================
-       WORD PILL SELECTION
-    ============================================================ */
     grid.querySelectorAll(".build-opt").forEach(btn => {
         btn.addEventListener("click", () => {
             buildState.answer.push(btn.dataset.token);
@@ -3008,17 +3007,11 @@ function wireBuildEvents(sentence) {
         });
     });
 
-    /* ============================================================
-       TYPING MODE
-    ============================================================ */
     input.addEventListener("input", () => {
         buildState.answer = input.value.trim().split(" ");
         selectedArea.textContent = buildState.answer.join(" ");
     });
 
-    /* ============================================================
-       UNDO BUTTON
-    ============================================================ */
     undoBtn.addEventListener("click", () => {
         buildState.answer.pop();
         selectedArea.textContent = buildState.answer.join(" ");
@@ -3031,9 +3024,6 @@ function wireBuildEvents(sentence) {
         });
     });
 
-    /* ============================================================
-       RESET BUTTON
-    ============================================================ */
     resetBtn.addEventListener("click", () => {
         buildState.answer = [];
         selectedArea.textContent = "";
@@ -3044,68 +3034,64 @@ function wireBuildEvents(sentence) {
         });
     });
 
-    /* ============================================================
-       CHECK ANSWER
-    ============================================================ */
     checkBtn.addEventListener("click", () => {
-        const correct = sentence.spanish.trim();
-        const user = buildState.answer.join(" ").trim();
+    const correct = sentence.spanish.trim();
+    const user = buildState.answer.join(" ").trim();
 
-        const learnerEnglish = translateToEnglish(user);
+    // NEW: translate learner answer to English
+    const learnerEnglish = translateToEnglish(user);
 
-        if (user === correct) {
-            feedback.innerHTML = `
-                <span style="color:#4ade80;font-weight:600;">Correct! 🎉</span><br><br>
-                <strong>Your Translated Response is:</strong><br>${learnerEnglish}
-            `;
-            appState.levelStats[appState.currentLevel].buildCompleted++;
-            updateBadges();
-            updateProgressMeters();
-            setTimeout(() => speakQuiz(correct), 300);
-        } else {
-            const correctTokens = correct.split(" ");
-            const userTokens = buildState.answer;
+    if (user === correct) {
+        feedback.innerHTML = `
+            <span style="color:#4ade80;font-weight:600;">Correct! 🎉</span><br><br>
+            <strong>Your Translated Response is:</strong><br>${learnerEnglish}
+        `;
+        appState.levelStats[appState.currentLevel].buildCompleted++;
+        updateBadges();
+        updateProgressMeters();
+        setTimeout(() => speakQuiz(correct), 300);
+    } else {
+        const correctTokens = correct.split(" ");
+        const userTokens = buildState.answer;
 
-            let html = `<strong>Correct Answer:</strong><br>${correct}<br><br>`;
-            html += `<strong>Your Answer:</strong><br>${user}<br><br>`;
-            html += `<strong>Your Translated Response is:</strong><br>${learnerEnglish}<br><br>`;
-            html += `<strong>Word-by-word feedback:</strong><br>`;
+        let html = `<strong>Correct Answer:</strong><br>${correct}<br><br>`;
+        html += `<strong>Your Answer:</strong><br>${user}<br><br>`;
+        html += `<strong>Your Translated Response is:</strong><br>${learnerEnglish}<br><br>`;
+        html += `<strong>Word-by-word feedback:</strong><br>`;
 
-            userTokens.forEach((t, i) => {
-                if (correctTokens[i] === t) {
-                    html += `<span style="color:#4ade80;">${t} ✔</span> `;
-                } else {
-                    html += `<span style="color:#f87171;">${t} ✖</span> `;
-                }
-            });
+        userTokens.forEach((t, i) => {
+            if (correctTokens[i] === t) {
+                html += `<span style="color:#4ade80;">${t} ✔</span> `;
+            } else {
+                html += `<span style="color:#f87171;">${t} ✖</span> `;
+            }
+        });
 
-            feedback.innerHTML = html;
-            setTimeout(() => speakQuiz(correct), 300);
-        }
+        feedback.innerHTML = html;
+        setTimeout(() => speakQuiz(correct), 300);
+    }
 
-        saveState();
-    });
+    saveState();
+});
 
-    /* ============================================================
-       NEXT SENTENCE
-    ============================================================ */
+
     nextBtn.addEventListener("click", () => {
         renderBuildTab();
     });
 }
 
-
 /* ============================================================
-   SENTENCE TAB — CEFR MULTIPLE‑CHOICE (Stable Version)
-============================================================ */
+   SENTENCE TAB — CEFR MULTIPLE‑CHOICE (FINAL MASTER VERSION)
+   ============================================================ */
 
 function generateSentenceForLevel(level) {
     const pool = CEFR_SENTENCE_CHOICES[level];
     const item = pool[Math.floor(Math.random() * pool.length)];
 
     const shuffled = [...item.options]
-        .filter(Boolean)
-        .sort(() => Math.random() - 0.5);
+    .filter(Boolean)
+    .sort(() => Math.random() - 0.5);
+
 
     return {
         english: item.english,
@@ -3118,13 +3104,14 @@ function renderSentenceTab() {
     const container = document.getElementById("sentence-content");
     const level = appState.currentLevel;
 
-    // Safety check
+    // SAFETY CHECK — prevents crashes if level has no sentences
     if (!CEFR_SENTENCE_CHOICES[level]) {
         container.innerHTML = "<p>No sentences available for this level.</p>";
         return;
     }
 
     const q = generateSentenceForLevel(level);
+
 
     container.innerHTML = `
         <div class="glass-panel sentence-card">
@@ -3137,7 +3124,7 @@ function renderSentenceTab() {
 
             <div id="sentence-options" class="sentence-options">
                 ${q.options.map(opt => `
-                    <button class="pill sentence-opt" data-opt="${opt}">
+                    <button class="pill" data-opt="${opt}">
                         ${opt}
                     </button>
                 `).join("")}
@@ -3151,57 +3138,50 @@ function renderSentenceTab() {
         </div>
     `;
 
-    // ⭐ Wire events immediately after rendering
-    wireSentenceEvents(q);
+    setupSentenceEvents(q);
 }
 
-function wireSentenceEvents(q) {
-    const buttons = document.querySelectorAll(".sentence-opt");
+function setupSentenceEvents(q) {
+    const buttons = document.querySelectorAll(".pill");
     const feedback = document.getElementById("sentence-feedback");
     const nextBtn = document.getElementById("sentence-next");
 
-   /* ============================================================
-   OPTION SELECTION
-============================================================ */
-buttons.forEach(btn => {
-    btn.addEventListener("click", () => {
-        const chosen = btn.dataset.opt;
+    buttons.forEach(btn => {
+        btn.addEventListener("click", () => {
+            const chosen = btn.dataset.opt;
 
-        if (chosen === q.correct) {
-            feedback.innerHTML = `
-                <span style="color:#4ade80;font-weight:600;">
-                    Correct! 🎉
-                </span>
-            `;
+            if (chosen === q.correct) {
+                feedback.innerHTML = `
+                    <span style="color:#4ade80;font-weight:600;">
+                        Correct! 🎉
+                    </span>
+                `;
 
-            appState.levelStats[appState.currentLevel].sentenceCompleted++;
-            updateBadges();
-            updateProgressMeters();
+                appState.levelStats[appState.currentLevel].sentenceCompleted++;
+                updateBadges();
+                updateProgressMeters();
 
-            speakQuiz(q.correct);
+                speakQuiz(q.correct);
 
-        } else {
-            feedback.innerHTML = `
-                <span style="color:#f87171;font-weight:600;">
-                    Incorrect.</span><br>
-                Correct answer: <strong>${q.correct}</strong>
-            `;
+            } else {
+                feedback.innerHTML = `
+                    <span style="color:#f87171;font-weight:600;">
+                        Incorrect.</span><br>
+                    Correct answer: <strong>${q.correct}</strong>
+                `;
 
-            speakQuiz(q.correct);
-        }
+                speakQuiz(q.correct);
+            }
 
-        // Disable all buttons after answer
-        buttons.forEach(b => b.disabled = true);
+            buttons.forEach(b => b.disabled = true);
+        });
     });
-});
 
-    /* ============================================================
-       NEXT QUESTION
-    ============================================================ */
     nextBtn.addEventListener("click", () => {
         renderSentenceTab();
     });
 }
+
 
 
 /* ============================================================
