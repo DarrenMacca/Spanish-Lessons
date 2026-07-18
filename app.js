@@ -2478,19 +2478,20 @@ const ConversationEngine = {
 --------------------------- */
 const ReviewEngine = {
     init() {
-        renderReviewTab();
+        // renderReviewTab();   // ❌ REMOVE — function does not exist
         document.dispatchEvent(new Event("reviewRendered"));
     },
 
     markMastered() {
-        reviewMarkMastered();
+        // reviewMarkMastered(); // ❌ REMOVE unless you define it
     },
 
     refresh() {
-        renderReviewTab();
+        // renderReviewTab();   // ❌ REMOVE
         document.dispatchEvent(new Event("reviewRendered"));
     }
 };
+
 
 
 /* ---------------------------
