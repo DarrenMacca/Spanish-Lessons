@@ -2710,20 +2710,28 @@ const App = {
         });
     },
 
-   init() {
-    this.initLevelSelector();
-    this.initCategorySelector();
-    this.initListenControls();
-    this.initSearchControls();
-    this.initAudioToggle();
+    init() {
+        this.initLevelSelector();
+        this.initCategorySelector();
+        this.initListenControls();
+        this.initSearchControls();
+        this.initAudioToggle();
 
-    document.querySelectorAll(".tab-btn").forEach(btn => {
-        btn.addEventListener("click", () => {
-            const tab = btn.id.replace("btn-", "");
-            Router.switch(tab);
+        // ⭐ Tab switching
+        document.querySelectorAll(".tab-btn").forEach(btn => {
+            btn.addEventListener("click", () => {
+                const tab = btn.id.replace("btn-", "");
+                Router.switch(tab);
+            });
         });
-    });
-  }
+
+        // ⭐ Restore Listen categories
+        if (document.getElementById("tab-listen")) {
+            ListenEngine.setLevel(APP_STATE.currentLevel);
+            ListenEngine.setCategory(APP_STATE.currentCategory);
+            ListenEngine.render();   // <— YOU MUST HAVE THIS
+        }
+    }
 };
 
 
