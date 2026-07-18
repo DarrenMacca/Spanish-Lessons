@@ -170,10 +170,6 @@ body {
             drop-shadow(0 0 14px rgba(0,255,180,0.7));
 }
 
-/* Remove old conflicting rule */
-.hidden {
-    display: none;
-}
 
 
 /* ------------------------------------------------------------
