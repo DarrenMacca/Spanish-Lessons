@@ -2717,8 +2717,7 @@ const App = {
         this.initSearchControls();
         this.initAudioToggle();
 
-        Router.switch("dashboard");
-    }
+   }
 };
 
 document.addEventListener("DOMContentLoaded", () => {
