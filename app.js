@@ -2700,8 +2700,8 @@ function renderFlashcardsTab() {
         html += `
         <div class="glass-panel">
             <div class="flash-category-header" data-cat="${cat}">
-                <span class="listen-category-title">${cat.toUpperCase()}</span>
-                <span class="listen-arrow">▶</span>
+                <span class="flash-category-title">${cat.toUpperCase()}</span>
+                <span class="flash-arrow">▶</span>
             </div>
 
             <div class="flash-category-content" data-cat="${cat}">
@@ -2726,7 +2726,7 @@ function renderFlashcardsTab() {
         header.addEventListener("click", () => {
             const cat = header.dataset.cat;
             const content = container.querySelector(`.flash-category-content[data-cat="${cat}"]`);
-            const arrow = header.querySelector(".listen-arrow");
+            const arrow = header.querySelector(".flash-arrow");
             const open = content.classList.toggle("open");
             arrow.classList.toggle("open", open);
         });
@@ -2751,6 +2751,7 @@ function renderFlashcardsTab() {
         });
     });
 }
+
 
 
 /* ============================================================
