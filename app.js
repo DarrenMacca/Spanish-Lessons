@@ -2803,137 +2803,126 @@ function renderFlashcardsTab() {
 
 
 /* ============================================================
-   QUIZ — ORIGINAL SIMPLE VERSION (RESTORED + FIXED)
-============================================================ */
+   QUIZ TAB — RENDER + EVENTS
+   ============================================================ */
 
 function renderQuizTab() {
-    const container = document.getElementById("tab-quiz");
-    const level = appState.currentLevel;
-    const words = CEFR_LEVELS[level];
+    const container = document.getElementById("quiz-content");
+    const words = CEFR_LEVELS[appState.currentLevel];
 
     if (!words || !words.length) {
-        container.innerHTML = `
-            <div class="glass-panel quiz-card">
-                <p>No words found for level ${level}.</p>
-            </div>
-        `;
+        container.innerHTML = `<div class="glass-panel quiz-card">
+            <p>No words found for level ${appState.currentLevel}.</p>
+        </div>`;
         return;
     }
 
-    // Pick a random word
-    const item = words[Math.floor(Math.random() * words.length)];
+    quizState.currentWord = words[Math.floor(Math.random() * words.length)];
+    quizState.options = generateQuizOptions(words, quizState.currentWord);
+    quizState.selected = null;
 
-    // Build 3 options (1 correct + 2 incorrect)
-    const options = [item.spanish];
-    while (options.length < 3) {
-        const r = words[Math.floor(Math.random() * words.length)].spanish;
-        if (!options.includes(r)) options.push(r);
-    }
+container.innerHTML = `
+<div class="glass-panel quiz-card">
+    <h2>Quiz — Level ${appState.currentLevel}</h2>
+    <p>Select the correct Spanish for the English word.</p>
 
-    // Shuffle options
-    options.sort(() => Math.random() - 0.5);
+    <div id="qb-meta"><strong>English:</strong> ${quizState.currentWord.english}</div>
 
-    // Build HTML
-    container.innerHTML = `
-        <h2>Quiz — Level ${level}</h2>
-        <p>Select the correct Spanish for the English word.</p>
+    <div id="qb-grid" class="sb-grid">
+        ${quizState.options.map(opt => `
+            <button class="pill" data-spanish="${opt}">${opt}</button>
+        `).join("")}
+    </div>
 
-        <div id="quizPrompt" class="pill quiz-word-pill">${item.english}</div>
+    <!-- ⭐ ANSWER FIELD MOVED UP -->
+    <div id="qb-answer" class="qb-answer"></div>
 
-        <div id="quizOptions" class="quiz-options">
-            ${options.map(opt => `
-                <button class="quiz-option pill">${opt}</button>
-            `).join("")}
-        </div>
+    <!-- ⭐ BUTTONS MOVED CLOSER TO ANSWER -->
+    <div class="sb-controls quiz-controls-tight">
+        <button id="qb-submit">Check</button>
+        <button id="qb-next">Next</button>
+        <button id="qb-harder" class="${quizState.harderMode ? "active" : ""}">Harder</button>
+    </div>
 
-        <div id="quizSelected" class="quiz-selected-word"></div>
+    <!-- ⭐ FEEDBACK MOVED BELOW BUTTONS -->
+    <div id="qb-feedback" class="qb-feedback"></div>
+</div>
+`;
 
-        <div class="quiz-controls">
-            <button id="quizCheck" class="pill-btn">Check</button>
-            <button id="quizNext" class="pill-btn">Next</button>
-            <button id="quizHarder" class="pill-btn">Harder</button>
-        </div>
 
-        <div id="quizFeedback" class="quiz-feedback"></div>
-    `;
+    setupQuizEvents();
+}
 
-    /* ---------------------------
-       OPTION SELECTION
-    --------------------------- */
-    let selected = null;
+function setupQuizEvents() {
+    const grid = document.getElementById("qb-grid");
+    const submitBtn = document.getElementById("qb-submit");
+    const nextBtn = document.getElementById("qb-next");
+    const harderBtn = document.getElementById("qb-harder");
+    const feedback = document.getElementById("qb-feedback");
+    const answerBox = document.getElementById("qb-answer");
 
-    container.querySelectorAll(".quiz-option").forEach(btn => {
+    quizState.selected = null;
+
+    // Pill selection
+    grid.querySelectorAll(".pill").forEach(btn => {
         btn.addEventListener("click", () => {
-
-            container.querySelectorAll(".quiz-option")
-                .forEach(b => b.classList.remove("selected"));
-
-            btn.classList.add("selected");
-            selected = btn.textContent.trim();
-
-            document.getElementById("quizSelected").textContent =
-                `Selected: ${selected}`;
+            grid.querySelectorAll(".pill").forEach(b => b.classList.remove("active"));
+            btn.classList.add("active");
+            quizState.selected = btn.dataset.spanish;
+            answerBox.textContent = quizState.selected;
         });
     });
 
-    /* ---------------------------
-       CHECK ANSWER
-    --------------------------- */
-    document.getElementById("quizCheck").onclick = () => {
-        if (!selected) return;
+    // Check button
+    submitBtn.addEventListener("click", () => {
+    if (!quizState.selected) {
+        feedback.textContent = "Choose an answer first.";
+        return;
+    }
 
-        const correct = item.spanish;
-        const fb = document.getElementById("quizFeedback");
+    const correct = quizState.currentWord.spanish;
 
-        if (selected === correct) {
-            fb.textContent = "Correct!";
-            fb.className = "quiz-feedback correct";
+    // ⭐ Ensure quizScore is not null before incrementing
+    if (appState.levelStats[appState.currentLevel].quizScore === null) {
+        appState.levelStats[appState.currentLevel].quizScore = 0;
+    }
 
-            const stats = appState.levelStats[level];
-            if (stats) {
-                stats.quizCompleted = (stats.quizCompleted || 0) + 1;
-                stats.quizScore     = (stats.quizScore     || 0) + 1;
-            }
+   if (quizState.selected === correct) {
+    feedback.textContent = "Correct! 🎉";
 
-            updateBadges();
-            updateProgressMeters();
+    if (appState.levelStats[appState.currentLevel].quizScore === null) {
+        appState.levelStats[appState.currentLevel].quizScore = 0;
+    }
 
-        } else {
-            fb.textContent = `Incorrect — correct answer: ${correct}`;
-            fb.className = "quiz-feedback incorrect";
-        }
+    appState.levelStats[appState.currentLevel].quizScore++;
+    appState.levelStats[appState.currentLevel].quizCompleted++;   // ⭐ ADD THIS LINE
 
-        saveState();
-    };
-
-    /* ---------------------------
-       NEXT QUESTION
-    --------------------------- */
-    document.getElementById("quizNext").onclick = () => {
-        renderQuizTab();
-    };
-
-    /* ---------------------------
-       HARDER LEVEL — FIXED
-    --------------------------- */
-    document.getElementById("quizHarder").onclick = () => {
-
-        // Jump to next CEFR level
-        const newLevel = getHarderLevel(level);
-
-        // Only update if level actually changes
-        if (newLevel !== level) {
-            appState.currentLevel = newLevel;
-
-            const fb = document.getElementById("quizFeedback");
-            fb.textContent = `Harder mode: now practicing ${newLevel}`;
-            fb.className = "quiz-feedback";
-        }
-
-        renderQuizTab();
-    };
+    updateBadges();
+    updateProgressMeters();
 }
+ else {
+        feedback.textContent = `Incorrect — correct answer: ${correct}`;
+    }
 
+    // Sabina audio
+    setTimeout(() => speakQuiz(correct), 300);
+
+    saveState();
+});
+
+
+    // Next button
+    nextBtn.addEventListener("click", () => {
+        renderQuizTab();
+    });
+
+    // Harder mode toggle
+    harderBtn.addEventListener("click", () => {
+        quizState.harderMode = !quizState.harderMode;
+        harderBtn.classList.toggle("active");
+        renderQuizTab();
+    });
+}
 
 
 /* ============================================================
