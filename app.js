@@ -2878,6 +2878,150 @@ const UI = {
     }
 };
 
+/* ============================================================
+   LISTEN ENGINE — Fully Corrected
+   ============================================================ */
+
+const ListenEngine = {
+
+    list: [],          // full list of items for current level+category
+    index: 0,          // current position
+    auto: false,       // autoplay flag
+    timer: null,       // autoplay timer
+
+    /* ------------------------------------------------------------
+       SET LEVEL
+    ------------------------------------------------------------ */
+    setLevel(level) {
+        APP_STATE.currentLevel = level;
+        this.load();
+    },
+
+    /* ------------------------------------------------------------
+       SET CATEGORY
+    ------------------------------------------------------------ */
+    setCategory(category) {
+        APP_STATE.currentCategory = category;
+        this.load();
+    },
+
+    /* ------------------------------------------------------------
+       LOAD LIST (Level + Category)
+    ------------------------------------------------------------ */
+    load() {
+        const level = APP_STATE.currentLevel;
+        const category = APP_STATE.currentCategory;
+
+        // Pull from CEFR_LISTENING_TOPICS safely
+        const safeList =
+            CEFR_LISTENING_TOPICS?.[category]?.[level] || [];
+
+        this.list = safeList;
+        this.index = 0;
+
+        this.render();
+    },
+
+    /* ------------------------------------------------------------
+       RENDER LIST INTO UI
+    ------------------------------------------------------------ */
+    render() {
+        const container = document.getElementById("listenList");
+        if (!container) return;
+
+        if (!this.list.length) {
+            container.innerHTML = `
+                <div class="empty-msg glass-panel">
+                    No listening items found for ${APP_STATE.currentLevel} / ${APP_STATE.currentCategory}.
+                </div>
+            `;
+            return;
+        }
+
+        container.innerHTML = this.list.map((item, i) => `
+            <div class="listen-item glass-panel ${i === this.index ? "active-listen" : ""}"
+                 onclick="ListenEngine.jumpTo(${i})">
+                <div class="listen-es">${item.spanish}</div>
+                <div class="listen-en">${item.english}</div>
+                <div class="listen-q">${item.question}</div>
+            </div>
+        `).join("");
+    },
+
+    /* ------------------------------------------------------------
+       JUMP TO INDEX
+    ------------------------------------------------------------ */
+    jumpTo(i) {
+        this.index = i;
+        this.render();
+        this.playCurrent();
+    },
+
+    /* ------------------------------------------------------------
+       PLAY CURRENT ITEM (Sabina TTS)
+    ------------------------------------------------------------ */
+    playCurrent() {
+        const item = this.list[this.index];
+        if (!item) return;
+
+        const utter = new SpeechSynthesisUtterance(
+            item.spanish.replace(".mp3", "")
+        );
+
+        utter.lang = "es-ES";
+        utter.rate = APP_STATE.speechRate || 1;
+
+        speechSynthesis.cancel();
+        speechSynthesis.speak(utter);
+    },
+
+    /* ------------------------------------------------------------
+       NEXT ITEM
+    ------------------------------------------------------------ */
+    next() {
+        if (!this.list.length) return;
+
+        this.index = (this.index + 1) % this.list.length;
+        this.render();
+        this.playCurrent();
+    },
+
+    /* ------------------------------------------------------------
+       PREVIOUS ITEM
+    ------------------------------------------------------------ */
+    previous() {
+        if (!this.list.length) return;
+
+        this.index = (this.index - 1 + this.list.length) % this.list.length;
+        this.render();
+        this.playCurrent();
+    },
+
+    /* ------------------------------------------------------------
+       AUTOPLAY
+    ------------------------------------------------------------ */
+    startAutoPlay() {
+        if (!this.list.length) return;
+
+        this.auto = true;
+
+        const step = () => {
+            if (!this.auto) return;
+            this.playCurrent();
+            this.next();
+            this.timer = setTimeout(step, 3500); // 3.5s per item
+        };
+
+        step();
+    },
+
+    stopAutoPlay() {
+        this.auto = false;
+        clearTimeout(this.timer);
+    }
+};
+
+
 
 /* ============================================================
    LISTEN TAB UI — Word List + Controls
