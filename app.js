@@ -57,8 +57,9 @@ const Router = {
                 break;
 
             case "flashcards":
-                setTimeout(() => FlashcardEngine.refresh(), 0);
-                break;
+    FlashcardEngine.refresh();
+    break;
+
 
 
             case "quiz":
@@ -2412,14 +2413,12 @@ const ListenEngine = {
 const FlashcardEngine = {
     init() {
         renderFlashcardsTab();
-        document.dispatchEvent(new Event("flashcardsRendered"));
     },
-
     refresh() {
         renderFlashcardsTab();
-        document.dispatchEvent(new Event("flashcardsRendered"));
     }
 };
+
 
 
 /* ---------------------------
@@ -2724,12 +2723,23 @@ function playNextListenWord() {
 
 function renderFlashcardsTab() {
     const container = document.getElementById("flash-content");
-    const words = CEFR_LEVELS[appState.currentLevel];
+    if (!container) {
+        console.warn("Flashcards: #flash-content not found.");
+        return;
+    }
+
+    const level = appState.currentLevel || "A1";
+    const words = CEFR_LEVELS[level];
+    if (!words) {
+        console.warn("Flashcards: no CEFR data for level", level);
+        return;
+    }
+
     const grouped = groupByCategory(words);
 
     let html = `
         <div class="glass-panel">
-            <h2>Flashcards — Level ${appState.currentLevel}</h2>
+            <h2>Flashcards — Level ${level}</h2>
             <p>Tap a card to flip. Spanish side plays audio.</p>
         </div>
     `;
@@ -2737,10 +2747,10 @@ function renderFlashcardsTab() {
     Object.keys(grouped).forEach(cat => {
         html += `
         <div class="glass-panel">
-        <div class="flash-category-header" data-cat="${cat}">
-           <span class="listen-category-title">${cat.toUpperCase()}</span>
-           <span class="listen-arrow">▶</span>
-        </div>
+            <div class="flash-category-header" data-cat="${cat}">
+                <span class="listen-category-title">${cat.toUpperCase()}</span>
+                <span class="listen-arrow">▶</span>
+            </div>
 
             <div class="flash-category-content" data-cat="${cat}">
                 <div class="fc-grid">
@@ -2759,6 +2769,7 @@ function renderFlashcardsTab() {
 
     container.innerHTML = html;
 
+    // Category collapse
     container.querySelectorAll(".flash-category-header").forEach(header => {
         header.addEventListener("click", () => {
             const cat = header.dataset.cat;
@@ -2769,27 +2780,26 @@ function renderFlashcardsTab() {
         });
     });
 
-    container.querySelectorAll(".fc-card").forEach(card => {
+    // Flip + audio
+    const cards = container.querySelectorAll(".fc-card");
+    console.log("Flashcards: cards found =", cards.length);
+
+    cards.forEach(card => {
         card.addEventListener("click", () => {
             const inner = card.querySelector(".fc-inner");
             const flipped = inner.classList.toggle("fc-flipped");
             const spanish = inner.querySelector(".fc-back").textContent.trim();
 
+            console.log("Flashcard clicked, flipped =", flipped, "spanish =", spanish);
+
             if (flipped) {
                 speakSpanish(spanish);
-                appState.levelStats[appState.currentLevel].flashSeen++;
-                saveState();
-                updateBadges();
-                updateProgressMeters();
             } else {
                 speechSynthesis.cancel();
             }
         });
     });
 }
-
-
-
 
 
 /* ============================================================
