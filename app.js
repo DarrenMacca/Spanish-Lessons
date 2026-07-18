@@ -2830,55 +2830,30 @@ function renderQuizTab() {
         if (!options.includes(r)) options.push(r);
     }
 
-   function getHarderLevel(level) {
-    switch (level) {
-        case "A1": return "A2";
-        case "A2": return "B1";
-        case "B1": return "B2";
-        default: return "B2";
-    }
-}
-
-   document.getElementById("quizHarder").onclick = () => {
-    appState.currentLevel = getHarderLevel(level);
-
-    const fb = document.getElementById("quizFeedback");
-    fb.textContent = `Harder mode: now practicing ${appState.currentLevel}`;
-    fb.className = "quiz-feedback";
-
-    renderQuizTab();
-};
-
-
     // Shuffle options
     options.sort(() => Math.random() - 0.5);
 
-    // Build HTML (restored original layout)
+    // Build HTML
     container.innerHTML = `
         <h2>Quiz — Level ${level}</h2>
         <p>Select the correct Spanish for the English word.</p>
 
-        <!-- Word pill -->
         <div id="quizPrompt" class="pill quiz-word-pill">${item.english}</div>
 
-        <!-- Option pills -->
         <div id="quizOptions" class="quiz-options">
             ${options.map(opt => `
                 <button class="quiz-option pill">${opt}</button>
             `).join("")}
         </div>
 
-        <!-- Selected word display -->
         <div id="quizSelected" class="quiz-selected-word"></div>
 
-        <!-- Controls -->
         <div class="quiz-controls">
             <button id="quizCheck" class="pill-btn">Check</button>
             <button id="quizNext" class="pill-btn">Next</button>
             <button id="quizHarder" class="pill-btn">Harder</button>
         </div>
 
-        <!-- Feedback -->
         <div id="quizFeedback" class="quiz-feedback"></div>
     `;
 
@@ -2890,16 +2865,12 @@ function renderQuizTab() {
     container.querySelectorAll(".quiz-option").forEach(btn => {
         btn.addEventListener("click", () => {
 
-            // remove highlight from all
             container.querySelectorAll(".quiz-option")
                 .forEach(b => b.classList.remove("selected"));
 
-            // highlight selected
             btn.classList.add("selected");
-
             selected = btn.textContent.trim();
 
-            // show selected word
             document.getElementById("quizSelected").textContent =
                 `Selected: ${selected}`;
         });
@@ -2918,7 +2889,6 @@ function renderQuizTab() {
             fb.textContent = "Correct!";
             fb.className = "quiz-feedback correct";
 
-            // scoring safety
             const stats = appState.levelStats[level];
             if (stats) {
                 stats.quizCompleted = (stats.quizCompleted || 0) + 1;
@@ -2944,13 +2914,26 @@ function renderQuizTab() {
     };
 
     /* ---------------------------
-       HARDER LEVEL
+       HARDER LEVEL — FIXED
     --------------------------- */
     document.getElementById("quizHarder").onclick = () => {
-        appState.currentLevel = getHarderLevel(level);
+
+        // Jump to next CEFR level
+        const newLevel = getHarderLevel(level);
+
+        // Only update if level actually changes
+        if (newLevel !== level) {
+            appState.currentLevel = newLevel;
+
+            const fb = document.getElementById("quizFeedback");
+            fb.textContent = `Harder mode: now practicing ${newLevel}`;
+            fb.className = "quiz-feedback";
+        }
+
         renderQuizTab();
     };
 }
+
 
 
 /* ============================================================
