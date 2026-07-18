@@ -1297,1873 +1297,1783 @@ const WORD_DICT = {
 "entonces": "then"
 }
 
-
 /* ============================================================
-   AUTO‑EXPAND DICTIONARY FROM CEFR LEVELS
+   PART 2 — CORE STATE + HELPERS
    ============================================================ */
 
-function autoExpandDictionary() {
-    const allWords = Object.values(CEFR_LEVELS).flat();
-
-    allWords.forEach(item => {
-        const key = item.spanish.toLowerCase().trim();
-        const value = item.english.trim();
-        WORD_DICT[key] = value;   // real translation
-    });
-}
-
-autoExpandDictionary();
-
-  
-/* ============================================================
-   MULTI-WORD PHRASES (CEFR-aligned)
-   ============================================================ */
-const CEFR_PHRASES = {
-    // A1
-    "cómo estás": "how are you",
-    "dónde vives": "where do you live",
-    "qué hora es": "what time is it",
-    "te gusta el café": "you like coffee",
-    "me gusta la música": "I like music",
-    "vivo en la ciudad": "I live in the city",
-    "trabajo en un hotel": "I work in a hotel",
-    "quiero comer": "I want to eat",
-    "quiero beber": "I want to drink",
-    "dónde está el baño": "where is the bathroom",
-    "ella corre rápido": "she runs fast",
-    "ella es rápida": "she is fast",
-    "ella va rápido": "she goes fast",
-
-    // A2
-    "qué hiciste ayer": "what did you do yesterday",
-    "fuiste al supermercado": "did you go to the supermarket",
-    "viajas a menudo": "you travel often",
-    "qué compraste": "what did you buy",
-    "qué estás haciendo": "what are you doing",
-    "sueles comer temprano": "you usually eat early",
-    "necesito ayuda": "I need help",
-    "quiero hacer una reserva": "I want to make a reservation",
-    "dónde está la estación": "where is the station",
-
-    // B1
-    "he estado aprendiendo español": "I have been learning Spanish",
-    "disfruto viajar": "I enjoy traveling",
-    "quiero mejorar mis habilidades": "I want to improve my skills",
-    "qué piensas de la ciudad": "what do you think of the city",
-    "cómo mantienes una vida saludable": "how do you maintain a healthy life",
-    "qué aprendiste recientemente": "what did you learn recently",
-    "cuáles son tus metas": "what are your goals",
-    "qué experiencias pasadas tienes": "what past experiences do you have",
-
-    // B2
-    "cómo manejas situaciones estresantes": "how do you handle stressful situations",
-    "cuál es tu opinión sobre la tecnología": "what is your opinion on technology",
-    "cómo ha cambiado tu vida": "how has your life changed",
-    "qué desafíos enfrentas": "what challenges do you face",
-    "qué esperas lograr": "what do you hope to achieve",
-    "qué piensas del futuro": "what do you think about the future",
-    "cómo ves la sociedad actual": "how do you see modern society",
-    "cuál es tu perspectiva": "what is your perspective"
-};
-
-/* ============================================================
-   TRANSLATION ENGINE — CEFR Phrases + Word Dictionary
-   ============================================================ */
-function translateToEnglish(spanishText) {
-    const normalized = spanishText.toLowerCase().trim();
-
-    // 1. Phrase detection
-    if (CEFR_PHRASES[normalized]) {
-        return CEFR_PHRASES[normalized];
-    }
-
-    // 2. Word-by-word fallback
-    return normalized
-        .split(/\s+/)
-        .map(w => WORD_DICT[w] || `[${w}]`)
-        .join(" ");
-}
-
-/* ============================================================
-   CLEAN MISSING WORD VALIDATOR — NO AUTO-TRANSLATION
-   ============================================================ */
-
-function validateMissingWords() {
-    const missing = new Set();
-
-    function scan(sentence) {
-        sentence.toLowerCase()
-            .split(/\s+/)
-            .forEach(tok => {
-                if (!WORD_DICT[tok]) missing.add(tok);
-            });
-    }
-
-    // 1. CEFR sentences
-    Object.values(CEFR_SENTENCES).forEach(levelArr => {
-        levelArr.forEach(item => scan(item.spanish));
-    });
-
-    // 2. Build disruptors
-    [
-        "rápido","lento","siempre","nunca","ayer","mañana",
-        "porque","pero","muy","también","solo","entonces"
-    ].forEach(tok => {
-        if (!WORD_DICT[tok]) missing.add(tok);
-    });
-
-    // 3. Grammar helpers
-    [
-        "yo","tú","él","ella","ellos","ellas","nosotros","ustedes",
-        "soy","eres","es","somos","son",
-        "estoy","estás","está","estamos","están"
-    ].forEach(tok => {
-        if (!WORD_DICT[tok]) missing.add(tok);
-    });
-
-    // 4. Conversation fillers
-    [
-        "hola","adiós","gracias","por","favor","lo","siento",
-        "qué","quién","dónde","cuándo","cómo","cuál",
-        "porque","pero","también","entonces"
-    ].forEach(tok => {
-        if (!WORD_DICT[tok]) missing.add(tok);
-    });
-
-    // 5. Quiz distractors
-    [
-        "bueno","malo","grande","pequeño","fácil","difícil",
-        "coche","calle","ciudad"
-    ].forEach(tok => {
-        if (!WORD_DICT[tok]) missing.add(tok);
-    });
-
-    console.group("=== CLEAN MISSING WORD REPORT ===");
-
-    if (missing.size === 0) {
-        console.log("✔ No missing words! Dictionary is complete.");
-    } else {
-        console.log("❌ Missing words (" + missing.size + "):");
-        missing.forEach(w => console.log(" - " + w));
-    }
-
-    console.groupEnd();
-}
-
-/* ============================================================
-   SUPER VALIDATOR — AUTO-TRANSLATE + AUTO-CATEGORIZE + AUTO-FIX
-   ============================================================ */
-
-function validateAndEnhanceDictionary() {
-
-    const missing = new Set();
-    const added = [];
-
-    // === CATEGORY DETECTORS ===
-    const isArticle = w => ["el","la","los","las","un","una"].includes(w);
-    const isPronoun = w => ["me","te","le","nos","les","lo","la","los","las"].includes(w);
-    const isPreposition = w => ["a","de","por","para","con","sin","al","del","en"].includes(w);
-    const isConnector = w => ["y","o","pero","porque","también","entonces"].includes(w);
-    const isAdverb = w => ["hoy","ayer","mañana","ahora","pronto","temprano","tarde","claramente"].includes(w);
-    const isMultiWord = w => w.includes(" ");
-
-    // === SMART TRANSLATION RULES ===
-    function inferTranslation(word) {
-        if (isArticle(word)) return "the";
-        if (isPronoun(word)) return "it / him / her / them";
-        if (isPreposition(word)) return "to / from / for / by / with";
-        if (isConnector(word)) return "and / or / but / because / also / then";
-        if (isAdverb(word)) return "time-related adverb";
-
-        if (isMultiWord(word)) return "multi-word phrase";
-
-        if (word.endsWith("ar")) return "to " + word.slice(0, -2);
-        if (word.endsWith("er")) return "to " + word.slice(0, -2);
-        if (word.endsWith("ir")) return "to " + word.slice(0, -2);
-
-        if (word.endsWith("ó")) return word + " (past tense)";
-        if (word.endsWith("aron")) return word + " (they past tense)";
-        if (word.endsWith("ieron")) return word + " (they past tense)";
-        if (word.endsWith("aba")) return word + " (imperfect)";
-        if (word.endsWith("ía")) return word + " (imperfect)";
-
-        if (word.match(/(o|a|os|as)$/)) return word + " (adjective)";
-
-        return word + " (unclassified)";
-    }
-
-    // === TOKEN SCANNER ===
-    function scanSentence(sentence) {
-        sentence.toLowerCase()
-            .split(/\s+/)
-            .forEach(tok => {
-                if (!WORD_DICT[tok]) missing.add(tok);
-            });
-    }
-
-    // === 1. Scan CEFR sentences ===
-    Object.values(CEFR_SENTENCES).forEach(levelArr => {
-        levelArr.forEach(item => scanSentence(item.spanish));
-    });
-
-    // === 2. Scan disruptors ===
-    const BUILD_DISRUPTORS = [
-        "rápido","lento","siempre","nunca","ayer","mañana",
-        "porque","pero","muy","también","solo","entonces"
-    ];
-    BUILD_DISRUPTORS.forEach(tok => {
-        if (!WORD_DICT[tok]) missing.add(tok);
-    });
-
-    // === 3. Scan grammar helpers ===
-    const SENTENCE_GRAMMAR = [
-        "yo","tú","él","ella","ellos","ellas","nosotros","ustedes",
-        "soy","eres","es","somos","son",
-        "estoy","estás","está","estamos","están"
-    ];
-    SENTENCE_GRAMMAR.forEach(tok => {
-        if (!WORD_DICT[tok]) missing.add(tok);
-    });
-
-    // === 4. Scan conversation fillers ===
-    const CONVERSATION_FILLERS = [
-        "hola","adiós","gracias","por","favor","lo","siento",
-        "qué","quién","dónde","cuándo","cómo","cuál",
-        "porque","pero","también","entonces"
-    ];
-    CONVERSATION_FILLERS.forEach(tok => {
-        if (!WORD_DICT[tok]) missing.add(tok);
-    });
-
-    // === 5. Scan quiz distractors ===
-    const QUIZ_DISTRACTORS = [
-        "bueno","malo","grande","pequeño","fácil","difícil",
-        "coche","calle","ciudad"
-    ];
-    QUIZ_DISTRACTORS.forEach(tok => {
-        if (!WORD_DICT[tok]) missing.add(tok);
-    });
-
-    // === 6. Auto-add missing words with inferred translations ===
-    missing.forEach(w => {
-        if (!WORD_DICT[w]) {
-            WORD_DICT[w] = inferTranslation(w);
-            added.push({ word: w, translation: WORD_DICT[w] });
-        }
-    });
-
-    // === 7. Diagnostic report ===
-    console.group("=== SUPER VALIDATOR REPORT ===");
-
-    console.log("Missing words found:", missing.size);
-    console.log("Auto-added:", added.length);
-
-    if (added.length > 0) {
-        console.log("=== Added Entries ===");
-        added.forEach(entry => {
-            console.log(`+ ${entry.word} → ${entry.translation}`);
-        });
-    }
-
-    console.log("New dictionary size:", Object.keys(WORD_DICT).length);
-
-    console.groupEnd();
-}
-
-
-/* ============================================================
-   GRAMMAR ERROR EXPLAINER
-   ============================================================ */
-function explainGrammarError(user, correct) {
-    const u = user.toLowerCase().trim();
-    const c = correct.toLowerCase().trim();
-
-    // Missing pronoun "te"
-    if (c.includes("te gusta") && !u.includes("te") && u.includes("gusta")) {
-        return "You forgot the pronoun “te”. Spanish requires “Te gusta…” to mean “You like…”.";
-    }
-
-    // Missing article
-    if ((c.includes("el ") || c.includes("la ")) &&
-        !u.includes("el ") && !u.includes("la ")) {
-        return "You missed the article (el/la). Spanish usually needs an article before nouns.";
-    }
-
-    // Wrong adverb vs frequency
-    if (c.includes("a menudo") && u.includes("lento")) {
-        return "You used “lento” (slow) instead of a frequency word like “a menudo” (often).";
-    }
-
-    // Wrong verb form
-    if (c.split(" ")[0] !== u.split(" ")[0]) {
-        return "Your verb form doesn’t match the target sentence. Check the conjugation.";
-    }
-
-    return "Your sentence is understandable, but the grammar or word choice doesn’t match the target answer.";
-}
-
-function getCEFRGrammarHint(level, user, correct) {
-    const u = user.toLowerCase().trim();
-    const c = correct.toLowerCase().trim();
-
-    /* ============================
-       A1 HINTS
-       ============================ */
-    if (level === "A1") {
-        if (!u.includes("el") && !u.includes("la") && (c.includes("el") || c.includes("la"))) {
-            return "A1 hint: Remember to include articles (el/la) before nouns.";
-        }
-        if (!u.includes("te") && c.includes("te gusta")) {
-            return "A1 hint: Use “te gusta” to say “you like”.";
-        }
-        return "A1 hint: Focus on simple present tense and basic sentence structure.";
-    }
-
-    /* ============================
-       A2 HINTS
-       ============================ */
-    if (level === "A2") {
-        if (u.includes("lento") && c.includes("a menudo")) {
-            return "A2 hint: Use frequency words like “a menudo” instead of speed words like “lento”.";
-        }
-        if (!u.includes("ayer") && c.includes("ayer")) {
-            return "A2 hint: Practice past-time markers like “ayer”.";
-        }
-        return "A2 hint: Practice common past tense verbs and daily routine vocabulary.";
-    }
-
-    /* ============================
-       B1 HINTS
-       ============================ */
-    if (level === "B1") {
-        if (!u.includes("porque") && c.includes("porque")) {
-            return "B1 hint: Use connectors like “porque” to explain reasons.";
-        }
-        if (!u.includes("que") && c.includes("que")) {
-            return "B1 hint: Multi‑clause sentences often require “que”.";
-        }
-        return "B1 hint: Try adding connectors (porque, aunque, cuando) to build longer sentences.";
-    }
-
-    /* ============================
-       B2 HINTS
-       ============================ */
-    if (level === "B2") {
-        if (!u.includes("aunque") && c.includes("aunque")) {
-            return "B2 hint: Use contrast connectors like “aunque” for complex ideas.";
-        }
-        if (!u.includes("para") && c.includes("para")) {
-            return "B2 hint: Use “para” to express purpose or intention.";
-        }
-        return "B2 hint: Aim for abstract vocabulary and multi‑clause structures.";
-    }
-
-    return "";
-}
-
-
-
-
-/* ============================================================
-   CEFR TRAINER — CLEAN APP.JS (PART 1)
-   ============================================================ */
-
-function groupByCategory(words) {
-    const out = {};
-    words.forEach(w => {
-        if (!out[w.category]) out[w.category] = [];
-        out[w.category].push(w);
-    });
-    return out;
-}
- 
-    
-const STORAGE_KEY = "cefr_trainer_state_v2";
-
-let appState = {
+const APP_STATE = {
     currentLevel: "A1",
-    speechRate: 1.0,
-    studentName: "",
-    badges: [],
-    levelStats: {
-        A1: { listens: 0, flashSeen: 0, quizScore: null, quizCompleted: 0, buildCompleted: 0, sentenceCompleted: 0, conversationCompleted: 0 },
-        A2: { listens: 0, flashSeen: 0, quizScore: null, quizCompleted: 0, buildCompleted: 0, sentenceCompleted: 0, conversationCompleted: 0 },
-        B1: { listens: 0, flashSeen: 0, quizScore: null, quizCompleted: 0, buildCompleted: 0, sentenceCompleted: 0, conversationCompleted: 0 },
-        B2: { listens: 0, flashSeen: 0, quizScore: null, quizCompleted: 0, buildCompleted: 0, sentenceCompleted: 0, conversationCompleted: 0 }
-    }
+    currentCategory: null,
+    currentWord: null,
+    currentSentence: null,
+    listenIndex: 0,
+    flashIndex: 0,
+    quizIndex: 0,
+    buildTokens: [],
+    conversationHistory: [],
+    reviewQueue: [],
+    audioEnabled: true,
 };
 
 /* ============================================================
-   CATEGORY AUTO‑ASSIGNER — PLACE HERE
+   RANDOM HELPERS
    ============================================================ */
 
-function autoAssignCategory(word) {
-    const w = word.spanish.toLowerCase();
+function rand(arr) {
+    return arr[Math.floor(Math.random() * arr.length)];
+}
 
-    // Verbs (infinitives)
-    if (w.endsWith("ar") || w.endsWith("er") || w.endsWith("ir"))
-        return "verbs";
-
-    // Adjectives
-    if (w.endsWith("o") || w.endsWith("a") || w.endsWith("os") || w.endsWith("as"))
-        return "adjectives";
-
-    // Numbers
-    if (!isNaN(parseInt(w)))
-        return "numbers";
-
-    // Food & drink
-    if (["manzana","pan","agua","carne","café","té","huevo","cerveza","vino","arroz","pollo","pescado","ensalada","verdura","fruta"].includes(w))
-        return "food-drink";
-
-    // Travel
-    if (["aeropuerto","hotel","taxi","tren","avión","billete","mapa","ciudad","país","viaje","turista"].includes(w))
-        return "travel";
-
-    // Daily life
-    if (["mañana","tarde","noche","casa","trabajo","escuela","día","semana","mes"].includes(w))
-        return "daily-life";
-
-    // Family
-    if (["madre","padre","hermano","hermana","abuelo","abuela","tío","tía","primo","prima","familia"].includes(w))
-        return "family";
-
-    // Shopping
-    if (["dinero","precio","tienda","comprar","vender","mercado","producto"].includes(w))
-        return "shopping";
-
-    // Emergency
-    if (["ayuda","policía","hospital","ambulancia","fuego","emergencia"].includes(w))
-        return "emergency";
-
-    // Work
-    if (["trabajo","oficina","jefe","empleado","empresa","reunión"].includes(w))
-        return "work";
-
-    // Places / objects
-    if (["casa","escuela","parque","calle","puerta","mesa","silla","coche","habitacion","baño"].includes(w))
-        return "places-objects";
-
-    // Connectors
-    if (["y","pero","porque","aunque","cuando","si","o","entonces","luego","después","antes"].includes(w))
-        return "connectors";
-
-    // Grammar words
-    if (["el","la","los","las","un","una","unos","unas","yo","tú","él","ella","nosotros","vosotros","ellos"].includes(w))
-        return "grammar";
-
-    return "daily-life";
+function shuffle(arr) {
+    return [...arr].sort(() => Math.random() - 0.5);
 }
 
 /* ============================================================
-   APPLY CATEGORIES TO ALL CEFR LEVELS — PLACE HERE
+   LEVEL + CATEGORY HELPERS
    ============================================================ */
 
-Object.keys(CEFR_LEVELS).forEach(level => {
-    CEFR_LEVELS[level] = CEFR_LEVELS[level].map(w => ({
-        ...w,
-        category: w.category || autoAssignCategory(w)
-    }));
-});
-
-/* ============================================================
-   STATE LOAD / SAVE
-   ============================================================ */
-function loadState() {
-    try {
-        const raw = localStorage.getItem(STORAGE_KEY);
-        if (raw) Object.assign(appState, JSON.parse(raw));
-    } catch (e) {
-        console.error("State load error:", e);
-    }
+function getLevelWords(level) {
+    return CEFR_LEVELS[level] || [];
 }
 
-
-function saveState() {
-    try {
-        localStorage.setItem(STORAGE_KEY, JSON.stringify(appState));
-    } catch (e) {
-        console.error("State save error:", e);
-    }
+function getListenWords(level, category) {
+    return LISTEN_VOCAB[level]?.[category] || [];
 }
 
-/* ============================================================
-   SABINA VOICE (Spanish TTS for explanations)
-   ============================================================ */
-function speak(text) {
-    if (!("speechSynthesis" in window)) return;
-    window.speechSynthesis.cancel();
-
-    const u = new SpeechSynthesisUtterance(text);
-    u.lang = "es-ES";        // Sabina Spanish voice
-    u.rate = appState.speechRate;
-    u.pitch = 1.0;
-
-    window.speechSynthesis.speak(u);
+function getSentence(level) {
+    return rand(CEFR_SENTENCES[level]);
 }
 
-/* ============================================================
-   SPEECH SYNTHESIS — Spanish word pronunciation
-   ============================================================ */
-function speakSpanish(text) {
-    if (!("speechSynthesis" in window)) return;
-    window.speechSynthesis.cancel();
-
-    const u = new SpeechSynthesisUtterance(text);
-    u.lang = "es-ES";
-    u.rate = appState.speechRate;
-
-    window.speechSynthesis.speak(u);
+function getWordMeaning(word) {
+    return WORD_DICT[word] || null;
 }
 
 
 /* ============================================================
-   QUIZ AUDIO — Sabina (correct + incorrect)
-   ============================================================ */
-function speakQuiz(correctAnswer) {
-    const message = `La respuesta correcta es: ${correctAnswer}`;
-    speak(message); // Sabina voice
-}
-
-
-
-/* ============================================================
-   LEVEL SELECTOR
-   ============================================================ */
-function setLevel(level) {
-    if (!CEFR_LEVELS[level]) return;
-
-    appState.currentLevel = level;
-    saveState();
-
-    document.querySelectorAll(".level-btn").forEach(btn => {
-        btn.classList.toggle("active", btn.dataset.level === level);
-    });
-
-    activateTab(currentTab);
-}
-
-/* ============================================================
-   TAB SYSTEM — FINAL CLEAN VERSION
+   LISTEN ENGINE — Auto Play, Manual Play, Category Selection
    ============================================================ */
 
-const TABS = [
-    "dashboard",
-    "listen",
-    "flash",
-    "quiz",
-    "build",
-    "sentence",
-    "conversation",
-    "grammar"
-];
+const ListenEngine = {
+    setLevel(level) {
+        APP_STATE.currentLevel = level;
+        APP_STATE.listenIndex = 0;
+    },
 
-let currentTab = "dashboard";
+    setCategory(category) {
+        APP_STATE.currentCategory = category;
+        APP_STATE.listenIndex = 0;
+    },
 
-/* ============================================================
-   ACTIVATE TAB
-   ============================================================ */
-function activateTab(tabName) {
-    if (!TABS.includes(tabName)) return;
-    currentTab = tabName;
+    getCurrentList() {
+        const lvl = APP_STATE.currentLevel;
+        const cat = APP_STATE.currentCategory;
+        return LISTEN_VOCAB[lvl]?.[cat] || [];
+    },
 
-    // Hide all tabs
-    TABS.forEach(id => {
-        const panel = document.getElementById(id);
-        if (panel) panel.classList.add("hidden");
-    });
+    playWord(word) {
+        if (!APP_STATE.audioEnabled || !word) return;
 
-    // Show active tab
-    const activePanel = document.getElementById(tabName);
-    if (activePanel) activePanel.classList.remove("hidden");
+        const utter = new SpeechSynthesisUtterance(word);
+        utter.lang = "es-ES";
+        speechSynthesis.cancel();
+        speechSynthesis.speak(utter);
+    },
 
-    // Update nav button highlight
-    document.querySelectorAll(".tab-btn").forEach(btn => {
-        btn.classList.toggle("active", btn.dataset.tab === tabName);
-    });
+    playCurrent() {
+        const list = this.getCurrentList();
+        const word = list[APP_STATE.listenIndex];
+        this.playWord(word);
+    },
 
-    // Load dynamic content
-    switch (tabName) {
-        case "listen":
-            renderListenTab();
-            break;
+    next() {
+        const list = this.getCurrentList();
+        APP_STATE.listenIndex++;
 
-        case "flash":
-            renderFlashcardsTab();
-            break;
-
-        case "quiz":
-            renderQuizTab();
-            break;
-
-        case "build":
-            renderBuildTab();
-            break;
-
-        case "sentence":
-            renderSentenceTab();
-            break;
-
-        case "conversation":
-            renderConversationTab();
-            break;
-
-        case "grammar":
-            renderGrammarTab();
-            break;
-
-        case "dashboard":
-            // static
-            break;
-    }
-}
-
-/* ============================================================
-   TAB NAVIGATION WIRING
-   ============================================================ */
-function initTabNavigation() {
-    const buttons = document.querySelectorAll(".tab-btn");
-
-    buttons.forEach(btn => {
-        btn.addEventListener("click", () => {
-            const tab = btn.dataset.tab;
-            activateTab(tab);
-        });
-    });
-}
-
-// Initialize navigation + default tab
-initTabNavigation();
-activateTab("dashboard");
-
-/* ============================================================
-   LISTEN TAB — CATEGORY + AUDIO PLAYER + CLEAN UI
-   ============================================================ */
-
-let listenAutoPlay = {
-    active: false,
-    paused: false,
-    index: 0,
-    list: []
-};
-
-function renderListenTab() {
-    const container = document.getElementById("listen-content");
-    if (!container) return;
-
-    // Pull the correct CEFR level vocabulary (already categorized)
-    const levelData = LISTEN_VOCAB[appState.currentLevel];
-
-    let html = `
-        <div class="glass-panel quiz-card">
-            <h2>Listen — Level ${appState.currentLevel}</h2>
-            <p>Tap a category, then click a word pill to hear it.</p>
-
-            <div class="listen-player-controls" style="
-                display:flex;
-                gap:6px;
-                flex-wrap:wrap;
-                margin-top:6px;
-                justify-content:flex-start;
-            ">
-                <button class="pill" id="listen-playall">Play All</button>
-                <button class="pill" id="listen-pause">Pause</button>
-                <button class="pill" id="listen-resume">Resume</button>
-                <button class="pill" id="listen-stop">Stop</button>
-            </div>
-        </div>
-    `;
-
-    /* ============================================================
-       CATEGORY LIST (already grouped in LISTEN_VOCAB)
-       ============================================================ */
-    Object.keys(levelData).forEach(categoryName => {
-        const words = levelData[categoryName];
-
-       html += `
-<div class="glass-panel">
-    <div class="listen-category-header" data-cat="${categoryName}">
-       <span class="listen-category-title">${categoryName}</span>
-       <span class="listen-arrow">▶</span>
-    </div>
-
-
-            <div class="listen-category-content" data-cat="${categoryName}">
-                <div class="listen-grid" style="
-                    display:grid;
-                    grid-template-columns:repeat(auto-fill, minmax(120px, 1fr));
-                    gap:6px;
-                    margin-top:8px;
-                ">
-                    ${words.map(spanish => {
-                         const entry = CEFR_LEVELS[appState.currentLevel].find(w => w.spanish === spanish);
-                         const english = entry ? entry.english : "";
-                         return `
-                           <button class="pill listen-pill" data-spanish="${spanish}">
-                             <div class="listen-pill-en">${english}</div>
-                             <div class="listen-pill-es">${spanish}</div>
-                           </button>
-                       `;
-                   }).join("")}
-
-                </div>
-            </div>
-        </div>`;
-    });
-
-    container.innerHTML = html;
-
-    /* ============================================================
-       CATEGORY COLLAPSE
-       ============================================================ */
-    container.querySelectorAll(".listen-category-header").forEach(header => {
-        header.addEventListener("click", () => {
-            const cat = header.dataset.cat;
-            const content = container.querySelector(
-                `.listen-category-content[data-cat="${cat}"]`
-            );
-            const arrow = header.querySelector(".listen-arrow");
-            const open = content.classList.toggle("open");
-            arrow.classList.toggle("open", open);
-        });
-    });
-
-    /* ============================================================
-       SINGLE WORD PLAYBACK
-       ============================================================ */
-    container.querySelectorAll(".pill[data-spanish]").forEach(btn => {
-        btn.addEventListener("click", () => {
-            speakSpanish(btn.dataset.spanish);
-            appState.levelStats[appState.currentLevel].listens++;
-            saveState();
-            updateBadges();
-            updateProgressMeters();
-        });
-    });
-
-    /* ============================================================
-       AUTO PLAY — PLAY ALL WORDS
-       ============================================================ */
-
-    // Flatten all categories into one list
-    listenAutoPlay.list = Object.values(levelData).flat();
-
-    document.getElementById("listen-playall").onclick = () => {
-        listenAutoPlay.active = true;
-        listenAutoPlay.paused = false;
-        listenAutoPlay.index = 0;
-        playNextListenWord();
-    };
-
-    document.getElementById("listen-pause").onclick = () => {
-        listenAutoPlay.paused = true;
-        if (speechSynthesis.pause) speechSynthesis.pause();
-    };
-
-    document.getElementById("listen-resume").onclick = () => {
-        listenAutoPlay.paused = false;
-        if (speechSynthesis.resume) speechSynthesis.resume();
-        playNextListenWord();
-    };
-
-    document.getElementById("listen-stop").onclick = () => {
-        listenAutoPlay.active = false;
-        listenAutoPlay.paused = false;
-        listenAutoPlay.index = 0;
-        if (speechSynthesis.cancel) speechSynthesis.cancel();
-    };
-}
-
-
-/* ============================================================
-   AUTO PLAY ENGINE
-   ============================================================ */
-function playNextListenWord() {
-    if (!listenAutoPlay.active || listenAutoPlay.paused) return;
-
-    const list = listenAutoPlay.list;
-    if (listenAutoPlay.index >= list.length) {
-        listenAutoPlay.active = false;
-        return;
-    }
-
-    const word = list[listenAutoPlay.index];
-    const utter = new SpeechSynthesisUtterance(word);
-    utter.lang = "es-ES";
-    utter.rate = appState.speechRate;
-
-    utter.onend = () => {
-        if (!listenAutoPlay.paused) {
-            listenAutoPlay.index++;
-            setTimeout(playNextListenWord, 500);
+        if (APP_STATE.listenIndex >= list.length) {
+            APP_STATE.listenIndex = 0; // loop
         }
-    };
+
+        this.playCurrent();
+    },
+
+    previous() {
+        const list = this.getCurrentList();
+        APP_STATE.listenIndex--;
+
+        if (APP_STATE.listenIndex < 0) {
+            APP_STATE.listenIndex = list.length - 1;
+        }
+
+        this.playCurrent();
+    },
+
+    /* ============================================================
+       AUTO PLAY ENGINE
+       ============================================================ */
+
+    autoPlayActive: false,
+    autoPlayPaused: false,
+
+    startAutoPlay() {
+        const list = this.getCurrentList();
+        if (!list.length) return;
+
+        this.autoPlayActive = true;
+        this.autoPlayPaused = false;
+        APP_STATE.listenIndex = 0;
+
+        this._autoLoop();
+    },
+
+    pauseAutoPlay() {
+        this.autoPlayPaused = true;
+        speechSynthesis.pause();
+    },
+
+    resumeAutoPlay() {
+        this.autoPlayPaused = false;
+        speechSynthesis.resume();
+        this._autoLoop();
+    },
+
+    stopAutoPlay() {
+        this.autoPlayActive = false;
+        this.autoPlayPaused = false;
+        APP_STATE.listenIndex = 0;
+        speechSynthesis.cancel();
+    },
+
+    _autoLoop() {
+        if (!this.autoPlayActive || this.autoPlayPaused) return;
+
+        const list = this.getCurrentList();
+        const word = list[APP_STATE.listenIndex];
+
+        const utter = new SpeechSynthesisUtterance(word);
+        utter.lang = "es-ES";
+
+        utter.onend = () => {
+            if (!this.autoPlayActive || this.autoPlayPaused) return;
+
+            APP_STATE.listenIndex++;
+            if (APP_STATE.listenIndex >= list.length) {
+                this.stopAutoPlay();
+                return;
+            }
+
+            setTimeout(() => this._autoLoop(), 400);
+        };
+
+        speechSynthesis.cancel();
+        speechSynthesis.speak(utter);
+    }
+};
+
+
+/* ============================================================
+   FLASHCARDS ENGINE — Flip, Category Grouping, Review Support
+   ============================================================ */
+
+const FlashcardsEngine = {
+    setLevel(level) {
+        APP_STATE.currentLevel = level;
+        APP_STATE.flashIndex = 0;
+    },
+
+    setCategory(category) {
+        APP_STATE.currentCategory = category;
+        APP_STATE.flashIndex = 0;
+    },
+
+    /* ============================================================
+       BUILD FLASHCARD LIST (Spanish → English)
+       ============================================================ */
+    getFlashcards() {
+        const level = APP_STATE.currentLevel;
+        const category = APP_STATE.currentCategory;
+
+        const vocab = CEFR_LEVELS[level] || [];
+
+        // Filter by category
+        const filtered = vocab.filter(v => v.category === category);
+
+        // Convert to flashcard objects
+        return filtered.map(v => ({
+            spanish: v.spanish,
+            english: v.english,
+            flipped: false
+        }));
+    },
+
+    /* ============================================================
+       FLIP CARD (Spanish → English → Spanish)
+       ============================================================ */
+    flipCard(card) {
+        // Spanish → English (play audio)
+        if (!card.flipped) {
+            card.flipped = true;
+
+            if (APP_STATE.audioEnabled) {
+                const utter = new SpeechSynthesisUtterance(card.spanish);
+                utter.lang = "es-ES";
+                speechSynthesis.cancel();
+                speechSynthesis.speak(utter);
+            }
+        }
+        // English → Spanish (NO audio)
+        else {
+            card.flipped = false;
+        }
+    },
+
+    /* ============================================================
+       REVIEW QUEUE INJECTION
+       ============================================================ */
+    markForReview(card) {
+        APP_STATE.reviewQueue.push({
+            spanish: card.spanish,
+            english: card.english,
+            category: APP_STATE.currentCategory,
+            level: APP_STATE.currentLevel
+        });
+    },
+
+    /* ============================================================
+       RANDOMIZATION
+       ============================================================ */
+    shuffleCards(cards) {
+        return shuffle(cards);
+    }
+};
+
+
+/* ============================================================
+   QUIZ ENGINE — Multiple Choice, Scoring, Review Queue
+   ============================================================ */
+
+const QuizEngine = {
+    setLevel(level) {
+        APP_STATE.currentLevel = level;
+        APP_STATE.quizIndex = 0;
+    },
+
+    setCategory(category) {
+        APP_STATE.currentCategory = category;
+        APP_STATE.quizIndex = 0;
+    },
+
+    /* ============================================================
+       BUILD QUIZ LIST (Spanish → English)
+       ============================================================ */
+    getQuizItems() {
+        const level = APP_STATE.currentLevel;
+        const category = APP_STATE.currentCategory;
+
+        const vocab = CEFR_LEVELS[level] || [];
+        return vocab.filter(v => v.category === category);
+    },
+
+    /* ============================================================
+       GENERATE DISTRACTORS
+       ============================================================ */
+    getDistractors(correctEnglish) {
+        const allWords = Object.values(WORD_DICT);
+
+        // Filter out the correct answer
+        const pool = allWords.filter(w => w !== correctEnglish);
+
+        // Pick 3 random distractors
+        return shuffle(pool).slice(0, 3);
+    },
+
+    /* ============================================================
+       BUILD A SINGLE QUIZ QUESTION
+       ============================================================ */
+    buildQuestion() {
+        const items = this.getQuizItems();
+        if (!items.length) return null;
+
+        const item = items[APP_STATE.quizIndex];
+        const correct = item.english;
+
+        const distractors = this.getDistractors(correct);
+
+        const options = shuffle([correct, ...distractors]);
+
+        return {
+            spanish: item.spanish,
+            correct,
+            options
+        };
+    },
+
+    /* ============================================================
+       PLAY AUDIO FOR PROMPT
+       ============================================================ */
+    playPrompt(spanishWord) {
+        if (!APP_STATE.audioEnabled) return;
+
+        const utter = new SpeechSynthesisUtterance(spanishWord);
+        utter.lang = "es-ES";
+        speechSynthesis.cancel();
+        speechSynthesis.speak(utter);
+    },
+
+    /* ============================================================
+       CHECK ANSWER
+       ============================================================ */
+    checkAnswer(selected, question) {
+        const isCorrect = selected === question.correct;
+
+        if (!isCorrect) {
+            // Add to review queue
+            APP_STATE.reviewQueue.push({
+                spanish: question.spanish,
+                english: question.correct,
+                category: APP_STATE.currentCategory,
+                level: APP_STATE.currentLevel
+            });
+        }
+
+        return isCorrect;
+    },
+
+    /* ============================================================
+       NEXT QUESTION
+       ============================================================ */
+    next() {
+        const items = this.getQuizItems();
+        APP_STATE.quizIndex++;
+
+        if (APP_STATE.quizIndex >= items.length) {
+            APP_STATE.quizIndex = 0; // loop
+        }
+
+        return this.buildQuestion();
+    },
+
+    /* ============================================================
+       RESET QUIZ
+       ============================================================ */
+    reset() {
+        APP_STATE.quizIndex = 0;
+    }
+};
+
+
+/* ============================================================
+   BUILD ENGINE — CEFR Sentence Builder (Spanish)
+   ============================================================ */
+
+const BuildEngine = {
+    /* ------------------------------------------------------------
+       LEVEL SELECTION
+    ------------------------------------------------------------ */
+    setLevel(level) {
+        APP_STATE.currentLevel = level;
+    },
+
+    /* ------------------------------------------------------------
+       PICK A SENTENCE FOR CURRENT LEVEL
+    ------------------------------------------------------------ */
+    pickSentence() {
+        const level = APP_STATE.currentLevel;
+        const item = rand(CEFR_SENTENCES[level]);
+        APP_STATE.currentSentence = item.spanish;
+        return item.spanish;
+    },
+
+    /* ------------------------------------------------------------
+       TOKENIZE SENTENCE
+    ------------------------------------------------------------ */
+    tokenize(sentence) {
+        return sentence.split(" ").map(w => w.trim());
+    },
+
+    /* ------------------------------------------------------------
+       GENERATE DISTRACTORS (from WORD_DICT)
+    ------------------------------------------------------------ */
+    generateDistractors(count = 6) {
+        const keys = Object.keys(WORD_DICT);
+        const picks = [];
+
+        while (picks.length < count) {
+            const w = rand(keys);
+            if (!picks.includes(w)) picks.push(w);
+        }
+
+        return picks;
+    },
+
+    /* ------------------------------------------------------------
+       BUILD WORD GRID (correct tokens + distractors)
+    ------------------------------------------------------------ */
+    buildGrid() {
+        const sentence = APP_STATE.currentSentence || this.pickSentence();
+        const tokens = this.tokenize(sentence);
+        const distractors = this.generateDistractors(6);
+
+        const mixed = shuffle([...tokens, ...distractors]);
+
+        APP_STATE.buildTokens = mixed;
+        return mixed;
+    },
+
+    /* ------------------------------------------------------------
+       RENDER GRID INTO DOM
+    ------------------------------------------------------------ */
+    renderGrid() {
+        const grid = document.getElementById("buildGrid");
+        if (!grid) return;
+
+        grid.innerHTML = "";
+
+        APP_STATE.buildTokens.forEach(word => {
+            const btn = document.createElement("button");
+            btn.className = "builder-word-btn";
+            btn.textContent = word;
+
+            btn.addEventListener("click", () => {
+                APP_STATE.currentWord = word;
+                this.addWord(word);
+            });
+
+            grid.appendChild(btn);
+        });
+    },
+
+    /* ------------------------------------------------------------
+       ADD WORD TO USER OUTPUT
+    ------------------------------------------------------------ */
+    addWord(word) {
+        const out = document.getElementById("buildOutput");
+        if (!out) return;
+
+        if (!APP_STATE.userSentence) APP_STATE.userSentence = [];
+
+        APP_STATE.userSentence.push(word);
+        out.textContent = APP_STATE.userSentence.join(" ");
+    },
+
+    /* ------------------------------------------------------------
+       CHECK BUILT SENTENCE
+    ------------------------------------------------------------ */
+    checkSentence() {
+        const result = document.getElementById("buildResult");
+        if (!result) return;
+
+        const userSentence = APP_STATE.userSentence.join(" ");
+        const correctSentence = APP_STATE.currentSentence;
+
+        if (userSentence === correctSentence) {
+            result.textContent = "Correct!";
+            result.style.color = "#7fd0ff";
+            return { correct: true, score: 10 };
+        }
+
+        // Partial scoring
+        const userWords = APP_STATE.userSentence;
+        const correctWords = correctSentence.split(" ");
+
+        let score = 0;
+        for (let i = 0; i < userWords.length; i++) {
+            if (userWords[i] === correctWords[i]) score += 3;
+        }
+
+        result.textContent = `Almost! +${score} points`;
+        result.style.color = "#ffb27f";
+
+        return { correct: false, score };
+    },
+
+    /* ------------------------------------------------------------
+       NEW CHALLENGE
+    ------------------------------------------------------------ */
+    newChallenge() {
+        APP_STATE.userSentence = [];
+        const out = document.getElementById("buildOutput");
+        if (out) out.textContent = "";
+
+        this.pickSentence();
+        this.buildGrid();
+        this.renderGrid();
+
+        const result = document.getElementById("buildResult");
+        if (result) result.textContent = "";
+    },
+
+    /* ------------------------------------------------------------
+       INITIALIZE ENGINE
+    ------------------------------------------------------------ */
+    init() {
+        const checkBtn = document.getElementById("buildCheckBtn");
+        const newBtn = document.getElementById("buildNewBtn");
+
+        if (checkBtn) {
+            checkBtn.addEventListener("click", () => this.checkSentence());
+        }
+
+        if (newBtn) {
+            newBtn.addEventListener("click", () => this.newChallenge());
+        }
+
+        this.newChallenge();
+    }
+};
+
+
+/* ============================================================
+   SENTENCE ENGINE — CEFR Grammar-Based Generation
+   ============================================================ */
+
+const SentenceEngine = {
+
+    /* ------------------------------------------------------------
+       LEVEL SELECTION
+    ------------------------------------------------------------ */
+    setLevel(level) {
+        APP_STATE.currentLevel = level;
+    },
+
+    /* ------------------------------------------------------------
+       SUBJECT POOL (CEFR aligned)
+    ------------------------------------------------------------ */
+    subjects: {
+        A1: ["yo", "tú", "él", "ella", "nosotros", "ellos"],
+        A2: ["mi amigo", "mi familia", "la gente", "nosotros dos"],
+        B1: ["el equipo", "los estudiantes", "mi grupo", "la empresa"],
+        B2: ["la organización", "el sistema", "el proyecto", "la estrategia"]
+    },
+
+    /* ------------------------------------------------------------
+       VERB POOL (CEFR aligned)
+    ------------------------------------------------------------ */
+    verbs: {
+        A1: ["trabaja", "vive", "estudia", "come", "quiere", "necesita"],
+        A2: ["espera", "olvida", "conduce", "planea", "llega"],
+        B1: ["mejorar", "organizar", "resolver", "continuar", "encontrar"],
+        B2: ["analizar", "evaluar", "optimizar", "fortalecer", "coordinar"]
+    },
+
+    /* ------------------------------------------------------------
+       OBJECT POOL (CEFR aligned)
+    ------------------------------------------------------------ */
+    objects: {
+        A1: ["la comida", "el libro", "la casa", "la música"],
+        A2: ["el mensaje", "la reunión", "el viaje", "la ventana"],
+        B1: ["el proyecto", "las metas", "los detalles", "la situación"],
+        B2: ["la estrategia", "el proceso", "el sistema", "los resultados"]
+    },
+
+    /* ------------------------------------------------------------
+       MODIFIER POOL (CEFR aligned)
+    ------------------------------------------------------------ */
+    modifiers: {
+        A1: ["hoy", "ahora", "rápido"],
+        A2: ["más tarde", "esta noche", "normalmente"],
+        B1: ["claramente", "pronto", "lentamente"],
+        B2: ["cuidadosamente", "en detalle", "efectivamente"]
+    },
+
+    /* ------------------------------------------------------------
+       PICK FROM LEVEL POOL
+    ------------------------------------------------------------ */
+    pick(level, pool) {
+        return rand(pool[level]);
+    },
+
+    /* ------------------------------------------------------------
+       GENERATE SENTENCE (CEFR grammar)
+    ------------------------------------------------------------ */
+    generate() {
+        const lvl = APP_STATE.currentLevel;
+
+        const subj = this.pick(lvl, this.subjects);
+        const verb = this.pick(lvl, this.verbs);
+        const obj  = this.pick(lvl, this.objects);
+        const mod  = this.pick(lvl, this.modifiers);
+
+        const sentence = `${subj} ${verb} ${obj} ${mod}`;
+        APP_STATE.currentSentence = sentence;
+
+        return sentence;
+    },
+
+    /* ------------------------------------------------------------
+       PLAY AUDIO
+    ------------------------------------------------------------ */
+    play(sentence) {
+        if (!APP_STATE.audioEnabled) return;
+
+        const utter = new SpeechSynthesisUtterance(sentence);
+        utter.lang = "es-ES";
+        speechSynthesis.cancel();
+        speechSynthesis.speak(utter);
+    },
+
+    /* ------------------------------------------------------------
+       REVIEW QUEUE INJECTION
+    ------------------------------------------------------------ */
+    addToReview(sentence) {
+        const words = sentence.split(" ");
+
+        words.forEach(w => {
+            APP_STATE.reviewQueue.push({
+                spanish: w,
+                english: WORD_DICT[w] || "(unknown)",
+                level: APP_STATE.currentLevel,
+                category: "SentenceEngine"
+            });
+        });
+    },
+
+    /* ------------------------------------------------------------
+       NEW SENTENCE
+    ------------------------------------------------------------ */
+    newSentence() {
+        const s = this.generate();
+        this.play(s);
+        return s;
+    }
+};
+
+
+
+/* ============================================================
+   CONVERSATION ENGINE — CEFR Dialogue Generator
+   ============================================================ */
+
+const ConversationEngine = {
+
+    /* ------------------------------------------------------------
+       LEVEL SELECTION
+    ------------------------------------------------------------ */
+    setLevel(level) {
+        APP_STATE.currentLevel = level;
+    },
+
+    /* ------------------------------------------------------------
+       RESET CONVERSATION
+    ------------------------------------------------------------ */
+    reset() {
+        APP_STATE.conversationHistory = [];
+    },
+
+    /* ------------------------------------------------------------
+       ADD TURN TO HISTORY
+    ------------------------------------------------------------ */
+    addTurn(role, text) {
+        APP_STATE.conversationHistory.push({ role, text });
+    },
+
+    /* ------------------------------------------------------------
+       PLAY AUDIO
+    ------------------------------------------------------------ */
+    play(text) {
+        if (!APP_STATE.audioEnabled) return;
+
+        const utter = new SpeechSynthesisUtterance(text);
+        utter.lang = "es-ES";
+        speechSynthesis.cancel();
+        speechSynthesis.speak(utter);
+    },
+
+    /* ------------------------------------------------------------
+       CEFR DIALOGUE TEMPLATES
+    ------------------------------------------------------------ */
+    templates: {
+        A1: [
+            (u) => `Hola, ¿cómo estás?`,
+            (u) => `¿Dónde vives?`,
+            (u) => `¿Qué haces hoy?`,
+            (u) => `¿Te gusta la comida?`
+        ],
+        A2: [
+            (u) => `¿Qué planes tienes para esta noche?`,
+            (u) => `¿A qué hora llegaste ayer?`,
+            (u) => `¿Puedes esperar un momento?`,
+            (u) => `¿Qué información necesitas?`
+        ],
+        B1: [
+            (u) => `¿Cómo podemos mejorar esta situación?`,
+            (u) => `¿Has revisado los detalles del proyecto?`,
+            (u) => `¿Qué opinas sobre continuar mañana?`,
+            (u) => `¿Puedes explicar tu idea más claramente?`
+        ],
+        B2: [
+            (u) => `¿Cuál es tu enfoque para resolver este problema?`,
+            (u) => `¿Has evaluado los riesgos del proceso?`,
+            (u) => `¿Cómo podríamos optimizar la estrategia actual?`,
+            (u) => `¿Puedes aclarar los resultados que mencionaste?`
+        ]
+    },
+
+    /* ------------------------------------------------------------
+       GENERATE AI RESPONSE
+    ------------------------------------------------------------ */
+    generateResponse(userInput) {
+        const lvl = APP_STATE.currentLevel;
+
+        const template = rand(this.templates[lvl]);
+        const response = template(userInput);
+
+        this.addTurn("assistant", response);
+        this.play(response);
+
+        return response;
+    },
+
+    /* ------------------------------------------------------------
+       USER TURN
+    ------------------------------------------------------------ */
+    userTurn(text) {
+        this.addTurn("user", text);
+
+        const words = text.split(" ");
+        words.forEach(w => {
+            APP_STATE.reviewQueue.push({
+                spanish: w,
+                english: WORD_DICT[w] || "(unknown)",
+                level: APP_STATE.currentLevel,
+                category: "ConversationEngine"
+            });
+        });
+
+        return this.generateResponse(text);
+    },
+
+    /* ------------------------------------------------------------
+       GET FULL CONVERSATION
+    ------------------------------------------------------------ */
+    getHistory() {
+        return APP_STATE.conversationHistory;
+    }
+};
+
+
+/* ============================================================
+   FREE PRACTICE ENGINE — Open Spanish Input + Scoring
+   ============================================================ */
+
+const FreePracticeEngine = {
+
+    /* ------------------------------------------------------------
+       LEVEL SELECTION
+    ------------------------------------------------------------ */
+    setLevel(level) {
+        APP_STATE.currentLevel = level;
+    },
+
+    /* ------------------------------------------------------------
+       TOKENIZE USER INPUT
+    ------------------------------------------------------------ */
+    tokenize(text) {
+        return text
+            .trim()
+            .toLowerCase()
+            .split(" ")
+            .map(w => w.trim());
+    },
+
+    /* ------------------------------------------------------------
+       PLAY AUDIO
+    ------------------------------------------------------------ */
+    play(text) {
+        if (!APP_STATE.audioEnabled) return;
+
+        const utter = new SpeechSynthesisUtterance(text);
+        utter.lang = "es-ES";
+        speechSynthesis.cancel();
+        speechSynthesis.speak(utter);
+    },
+
+    /* ------------------------------------------------------------
+       SCORE INPUT (WORD-BY-WORD)
+    ------------------------------------------------------------ */
+    scoreInput(words) {
+        let score = 0;
+        let unknown = [];
+        let known = [];
+
+        words.forEach(w => {
+            if (WORD_DICT[w]) {
+                score += 2;
+                known.push(w);
+            } else {
+                score -= 1;
+                unknown.push(w);
+            }
+        });
+
+        return { score, known, unknown };
+    },
+
+    /* ------------------------------------------------------------
+       CEFR HINTS
+    ------------------------------------------------------------ */
+    getHint(level) {
+        const hints = {
+            A1: "Try simple verbs like vivir, trabajar, estudiar.",
+            A2: "Use connectors like antes, ya, todavía.",
+            B1: "Try adding details: proyecto, situación, mejorar.",
+            B2: "Use abstract nouns: estrategia, proceso, rendimiento."
+        };
+        return hints[level];
+    },
+
+    /* ------------------------------------------------------------
+       REVIEW QUEUE INJECTION
+    ------------------------------------------------------------ */
+    addToReview(words) {
+        words.forEach(w => {
+            APP_STATE.reviewQueue.push({
+                spanish: w,
+                english: WORD_DICT[w] || "(unknown)",
+                level: APP_STATE.currentLevel,
+                category: "FreePractice"
+            });
+        });
+    },
+
+    /* ------------------------------------------------------------
+       PROCESS USER INPUT
+    ------------------------------------------------------------ */
+    process(text) {
+        const lvl = APP_STATE.currentLevel;
+        const words = this.tokenize(text);
+
+        const { score, known, unknown } = this.scoreInput(words);
+
+        this.addToReview(words);
+        this.play(text);
+
+        return {
+            input: text,
+            score,
+            known,
+            unknown,
+            hint: this.getHint(lvl)
+        };
+    }
+};
+
+
+/* ============================================================
+   REVIEW ENGINE — Spaced Repetition for Missed Words
+   ============================================================ */
+
+const ReviewEngine = {
+
+    /* ------------------------------------------------------------
+       ADD ITEM TO REVIEW QUEUE
+    ------------------------------------------------------------ */
+    add(item) {
+        APP_STATE.reviewQueue.push({
+            spanish: item.spanish,
+            english: item.english || WORD_DICT[item.spanish] || "(unknown)",
+            level: item.level || APP_STATE.currentLevel,
+            category: item.category || "Review"
+        });
+    },
+
+    /* ------------------------------------------------------------
+       BULK ADD
+    ------------------------------------------------------------ */
+    addMany(items) {
+        items.forEach(i => this.add(i));
+    },
+
+    /* ------------------------------------------------------------
+       GET NEXT REVIEW ITEM
+    ------------------------------------------------------------ */
+    next() {
+        if (!APP_STATE.reviewQueue.length) return null;
+        return APP_STATE.reviewQueue[0];
+    },
+
+    /* ------------------------------------------------------------
+       MARK ITEM AS MASTERED (REMOVE FROM QUEUE)
+    ------------------------------------------------------------ */
+    markMastered() {
+        if (!APP_STATE.reviewQueue.length) return;
+        APP_STATE.reviewQueue.shift();
+    },
+
+    /* ------------------------------------------------------------
+       PLAY AUDIO FOR REVIEW ITEM
+    ------------------------------------------------------------ */
+    play(item) {
+        if (!APP_STATE.audioEnabled || !item) return;
+
+        const utter = new SpeechSynthesisUtterance(item.spanish);
+        utter.lang = "es-ES";
+        speechSynthesis.cancel();
+        speechSynthesis.speak(utter);
+    },
+
+    /* ------------------------------------------------------------
+       RUN SINGLE REVIEW STEP
+    ------------------------------------------------------------ */
+    step() {
+        const item = this.next();
+        if (!item) return null;
+
+        this.play(item);
+        return item;
+    },
+
+    /* ------------------------------------------------------------
+       RESET REVIEW QUEUE
+    ------------------------------------------------------------ */
+    reset() {
+        APP_STATE.reviewQueue = [];
+    }
+};
+
+
+/* ============================================================
+   SEARCH ENGINE — Spanish/English Lookup + Fuzzy Matching
+   ============================================================ */
+
+const SearchEngine = {
+
+    /* ------------------------------------------------------------
+       CLEAN QUERY
+    ------------------------------------------------------------ */
+    normalize(q) {
+        return q.trim().toLowerCase();
+    },
+
+    /* ------------------------------------------------------------
+       DIRECT SPANISH → ENGLISH LOOKUP
+    ------------------------------------------------------------ */
+    lookupSpanish(word) {
+        const w = this.normalize(word);
+        return WORD_DICT[w] || null;
+    },
+
+    /* ------------------------------------------------------------
+       DIRECT ENGLISH → SPANISH LOOKUP
+    ------------------------------------------------------------ */
+    lookupEnglish(word) {
+        const q = this.normalize(word);
+
+        const entries = Object.entries(WORD_DICT);
+        for (const [spanish, english] of entries) {
+            if (english.toLowerCase() === q) return spanish;
+        }
+        return null;
+    },
+
+    /* ------------------------------------------------------------
+       FUZZY MATCH (Spanish)
+    ------------------------------------------------------------ */
+    fuzzySpanish(query) {
+        const q = this.normalize(query);
+        const keys = Object.keys(WORD_DICT);
+
+        return keys.filter(k => k.includes(q));
+    },
+
+    /* ------------------------------------------------------------
+       FUZZY MATCH (English)
+    ------------------------------------------------------------ */
+    fuzzyEnglish(query) {
+        const q = this.normalize(query);
+        const entries = Object.entries(WORD_DICT);
+
+        return entries
+            .filter(([spanish, english]) => english.toLowerCase().includes(q))
+            .map(([spanish]) => spanish);
+    },
+
+    /* ------------------------------------------------------------
+       CATEGORY FILTER (CEFR_LEVELS)
+    ------------------------------------------------------------ */
+    filterByCategory(level, category) {
+        const list = CEFR_LEVELS[level] || [];
+        return list.filter(item => item.category === category);
+    },
+
+    /* ------------------------------------------------------------
+       PLAY AUDIO
+    ------------------------------------------------------------ */
+    play(word) {
+        if (!APP_STATE.audioEnabled || !word) return;
+
+        const utter = new SpeechSynthesisUtterance(word);
+        utter.lang = "es-ES";
+        speechSynthesis.cancel();
+        speechSynthesis.speak(utter);
+    },
+
+    /* ------------------------------------------------------------
+       ADD TO REVIEW QUEUE
+    ------------------------------------------------------------ */
+    addToReview(spanish) {
+        APP_STATE.reviewQueue.push({
+            spanish,
+            english: WORD_DICT[spanish] || "(unknown)",
+            level: APP_STATE.currentLevel,
+            category: "SearchEngine"
+        });
+    },
+
+    /* ------------------------------------------------------------
+       FULL SEARCH PIPELINE
+    ------------------------------------------------------------ */
+    search(query) {
+        const q = this.normalize(query);
+
+        // Direct Spanish → English
+        const directES = this.lookupSpanish(q);
+        if (directES) {
+            this.play(q);
+            this.addToReview(q);
+            return {
+                type: "spanish",
+                spanish: q,
+                english: directES,
+                matches: []
+            };
+        }
+
+        // Direct English → Spanish
+        const directEN = this.lookupEnglish(q);
+        if (directEN) {
+            this.play(directEN);
+            this.addToReview(directEN);
+            return {
+                type: "english",
+                spanish: directEN,
+                english: q,
+                matches: []
+            };
+        }
+
+        // Fuzzy search
+        const fuzzyES = this.fuzzySpanish(q);
+        const fuzzyEN = this.fuzzyEnglish(q);
+
+        const combined = [...new Set([...fuzzyES, ...fuzzyEN])];
+
+        return {
+            type: "fuzzy",
+            query: q,
+            matches: combined.map(s => ({
+                spanish: s,
+                english: WORD_DICT[s] || "(unknown)"
+            }))
+        };
+    }
+};
+
+
+/* ============================================================
+   AUDIO SYSTEM — Global Speech Wrapper + Voice Selection
+   ============================================================ */
+
+const AudioSystem = {
+
+    /* ------------------------------------------------------------
+       ENABLE / DISABLE AUDIO
+    ------------------------------------------------------------ */
+    enable() {
+        APP_STATE.audioEnabled = true;
+    },
+
+    disable() {
+        APP_STATE.audioEnabled = false;
+        speechSynthesis.cancel();
+    },
+
+    toggle() {
+        APP_STATE.audioEnabled = !APP_STATE.audioEnabled;
+        if (!APP_STATE.audioEnabled) speechSynthesis.cancel();
+    },
+
+    /* ------------------------------------------------------------
+       VOICE SELECTION
+    ------------------------------------------------------------ */
+    spanishVoice: null,
+
+    loadVoice() {
+        const voices = speechSynthesis.getVoices();
+
+        this.spanishVoice =
+            voices.find(v => v.lang.startsWith("es") && /female|mujer/i.test(v.name)) ||
+            voices.find(v => v.lang.startsWith("es")) ||
+            voices[0] ||
+            null;
+    }
+};
+
+speechSynthesis.onvoiceschanged = () => AudioSystem.loadVoice();
+
+AudioSystem.loadVoice();
+
+const speak = (text, rate = 1.0, pitch = 1.0) => {
+    if (!APP_STATE.audioEnabled || !text) return;
+
+    const utter = new SpeechSynthesisUtterance(text);
+    utter.lang = "es-ES";
+    utter.rate = rate;
+    utter.pitch = pitch;
+
+    if (AudioSystem.spanishVoice) {
+        utter.voice = AudioSystem.spanishVoice;
+    }
 
     speechSynthesis.cancel();
     speechSynthesis.speak(utter);
-}
+};
+
 
 /* ============================================================
-   FLASHCARDS — CATEGORY GROUPED + FLIP + AUDIO (STABLE VERSION)
+   ACHIEVEMENTS ENGINE — CEFR Progress Badges
    ============================================================ */
 
+const AchievementsEngine = {
 
-function renderFlashcardsTab() {
-    const container = document.getElementById("flash-content");
-    const words = CEFR_LEVELS[appState.currentLevel];
-    const grouped = groupByCategory(words);
+    /* ------------------------------------------------------------
+       STORAGE KEY
+    ------------------------------------------------------------ */
+    KEY: "cefr_achievements_v3",
 
-    let html = `
-        <div class="glass-panel">
-            <h2>Flashcards — Level ${appState.currentLevel}</h2>
-            <p>Tap a card to flip. Spanish side plays audio.</p>
-        </div>
-    `;
+    /* ------------------------------------------------------------
+       LOCAL CACHE
+    ------------------------------------------------------------ */
+    unlocked: [],
 
-    Object.keys(grouped).forEach(cat => {
-        html += `
-        <div class="glass-panel">
-        <div class="flash-category-header" data-cat="${cat}">
-           <span class="listen-category-title">${cat.toUpperCase()}</span>
-           <span class="listen-arrow">▶</span>
-        </div>
+    /* ------------------------------------------------------------
+       BADGE METADATA
+    ------------------------------------------------------------ */
+    badges: {
+        a1_master: {
+            title: "A1 Master",
+            desc: "Score 90%+ across all A1 categories.",
+            icon: "🥇"
+        },
+        a2_master: {
+            title: "A2 Master",
+            desc: "Score 90%+ across all A2 categories.",
+            icon: "🥈"
+        },
+        b1_master: {
+            title: "B1 Master",
+            desc: "Score 90%+ across all B1 categories.",
+            icon: "🏅"
+        },
+        b2_master: {
+            title: "B2 Master",
+            desc: "Score 90%+ across all B2 categories.",
+            icon: "🏆"
+        },
+        full_progress: {
+            title: "200‑Word Explorer",
+            desc: "Reach 90% average across A1 → B2.",
+            icon: "🚀"
+        }
+    },
 
-            <div class="flash-category-content" data-cat="${cat}">
-                <div class="fc-grid">
-                    ${grouped[cat].map(item => `
-                        <div class="fc-card">
-                            <div class="fc-inner">
-                                <div class="fc-front pill">${item.english}</div>
-                                <div class="fc-back pill">${item.spanish}</div>
-                            </div>
-                        </div>
-                    `).join("")}
-                </div>
-            </div>
-        </div>`;
-    });
+    /* ------------------------------------------------------------
+       LOAD FROM LOCAL STORAGE
+    ------------------------------------------------------------ */
+    load() {
+        try {
+            const raw = localStorage.getItem(this.KEY);
+            if (raw) this.unlocked = JSON.parse(raw);
+        } catch {
+            this.unlocked = [];
+        }
+    },
 
-    container.innerHTML = html;
+    /* ------------------------------------------------------------
+       SAVE TO LOCAL STORAGE
+    ------------------------------------------------------------ */
+    save() {
+        localStorage.setItem(this.KEY, JSON.stringify(this.unlocked));
+    },
 
-    container.querySelectorAll(".flash-category-header").forEach(header => {
-        header.addEventListener("click", () => {
-            const cat = header.dataset.cat;
-            const content = container.querySelector(`.flash-category-content[data-cat="${cat}"]`);
-            const arrow = header.querySelector(".listen-arrow");
-            const open = content.classList.toggle("open");
-            arrow.classList.toggle("open", open);
-        });
-    });
+    /* ------------------------------------------------------------
+       CHECK + UNLOCK ACHIEVEMENTS
+    ------------------------------------------------------------ */
+    evaluate() {
+        const stats = getLevelStats(); // your existing scoring system
 
-    container.querySelectorAll(".fc-card").forEach(card => {
-        card.addEventListener("click", () => {
-            const inner = card.querySelector(".fc-inner");
-            const flipped = inner.classList.toggle("fc-flipped");
-            const spanish = inner.querySelector(".fc-back").textContent.trim();
+        const ACHIEVEMENTS = [
+            { id: "a1_master", condition: () => stats.A1.avg >= 90 },
+            { id: "a2_master", condition: () => stats.A2.avg >= 90 },
+            { id: "b1_master", condition: () => stats.B1.avg >= 90 },
+            { id: "b2_master", condition: () => stats.B2.avg >= 90 },
+            {
+                id: "full_progress",
+                condition: () => {
+                    const totalAvg = Math.round(
+                        (stats.A1.avg + stats.A2.avg + stats.B1.avg + stats.B2.avg) / 4
+                    );
+                    return totalAvg >= 90;
+                }
+            }
+        ];
 
-            if (flipped) {
-                speakSpanish(spanish);
-                appState.levelStats[appState.currentLevel].flashSeen++;
-                saveState();
-                updateBadges();
-                updateProgressMeters();
-            } else {
-                speechSynthesis.cancel();
+        ACHIEVEMENTS.forEach(a => {
+            if (!this.unlocked.includes(a.id) && a.condition()) {
+                this.unlocked.push(a.id);
+                this.save();
             }
         });
-    });
-}
+    },
+
+    /* ------------------------------------------------------------
+       GET ALL UNLOCKED BADGES
+    ------------------------------------------------------------ */
+    getUnlocked() {
+        return this.unlocked.map(id => this.badges[id]);
+    },
+
+    /* ------------------------------------------------------------
+       GET FULL ACHIEVEMENT FEED
+    ------------------------------------------------------------ */
+    getFeed() {
+        return this.unlocked.map(id => ({
+            id,
+            ...this.badges[id]
+        }));
+    },
+
+    /* ------------------------------------------------------------
+       RESET ALL ACHIEVEMENTS
+    ------------------------------------------------------------ */
+    reset() {
+        this.unlocked = [];
+        this.save();
+    }
+};
+
+AchievementsEngine.load();
+
 
 
 /* ============================================================
-   SHARED QUIZ / BUILD / SENTENCE / CONVERSATION STATE
+   DASHBOARD + ROUTER — Tab Switching + Engine Initialization
    ============================================================ */
 
-let quizState = {
-    currentWord: null,
-    options: [],
-    harderMode: false,
-    selected: null
-};
+const Router = {
 
-let buildState = {
-    currentWord: null,
-    tokens: []
-};
+    /* ------------------------------------------------------------
+       CURRENT TAB
+    ------------------------------------------------------------ */
+    currentTab: "dashboard",
 
-let sentenceState = {
-    currentSentence: null,
-    tokens: []
-};
+    /* ------------------------------------------------------------
+       SWITCH TAB
+    ------------------------------------------------------------ */
+    switch(tabName) {
+        this.currentTab = tabName;
 
-let convoState = {
-    currentPrompt: null,
-    tokens: []
-};
-
-function generateQuizOptions(words, correctWord) {
-    let opts = [correctWord.spanish];
-    const count = quizState.harderMode ? 5 : 3;
-
-    while (opts.length < count) {
-        const w = words[Math.floor(Math.random() * words.length)];
-        if (!opts.includes(w.spanish)) opts.push(w.spanish);
-    }
-
-    return opts.sort(() => Math.random() - 0.5);
-}
-
-/* ============================================================
-   QUIZ TAB — RENDER + EVENTS
-   ============================================================ */
-
-function renderQuizTab() {
-    const container = document.getElementById("quiz-content");
-    const words = CEFR_LEVELS[appState.currentLevel];
-
-    if (!words || !words.length) {
-        container.innerHTML = `<div class="glass-panel quiz-card">
-            <p>No words found for level ${appState.currentLevel}.</p>
-        </div>`;
-        return;
-    }
-
-    quizState.currentWord = words[Math.floor(Math.random() * words.length)];
-    quizState.options = generateQuizOptions(words, quizState.currentWord);
-    quizState.selected = null;
-
-container.innerHTML = `
-<div class="glass-panel quiz-card">
-    <h2>Quiz — Level ${appState.currentLevel}</h2>
-    <p>Select the correct Spanish for the English word.</p>
-
-    <div id="qb-meta"><strong>English:</strong> ${quizState.currentWord.english}</div>
-
-    <div id="qb-grid" class="sb-grid">
-        ${quizState.options.map(opt => `
-            <button class="pill" data-spanish="${opt}">${opt}</button>
-        `).join("")}
-    </div>
-
-    <!-- ⭐ ANSWER FIELD MOVED UP -->
-    <div id="qb-answer" class="qb-answer"></div>
-
-    <!-- ⭐ BUTTONS MOVED CLOSER TO ANSWER -->
-    <div class="sb-controls quiz-controls-tight">
-        <button id="qb-submit">Check</button>
-        <button id="qb-next">Next</button>
-        <button id="qb-harder" class="${quizState.harderMode ? "active" : ""}">Harder</button>
-    </div>
-
-    <!-- ⭐ FEEDBACK MOVED BELOW BUTTONS -->
-    <div id="qb-feedback" class="qb-feedback"></div>
-</div>
-`;
-
-
-    setupQuizEvents();
-}
-
-function setupQuizEvents() {
-    const grid = document.getElementById("qb-grid");
-    const submitBtn = document.getElementById("qb-submit");
-    const nextBtn = document.getElementById("qb-next");
-    const harderBtn = document.getElementById("qb-harder");
-    const feedback = document.getElementById("qb-feedback");
-    const answerBox = document.getElementById("qb-answer");
-
-    quizState.selected = null;
-
-    // Pill selection
-    grid.querySelectorAll(".pill").forEach(btn => {
-        btn.addEventListener("click", () => {
-            grid.querySelectorAll(".pill").forEach(b => b.classList.remove("active"));
-            btn.classList.add("active");
-            quizState.selected = btn.dataset.spanish;
-            answerBox.textContent = quizState.selected;
+        // Hide all tabs
+        document.querySelectorAll(".tab-page").forEach(el => {
+            el.style.display = "none";
         });
-    });
 
-    // Check button
-    submitBtn.addEventListener("click", () => {
-    if (!quizState.selected) {
-        feedback.textContent = "Choose an answer first.";
-        return;
+        // Show selected tab
+        const active = document.getElementById(`tab-${tabName}`);
+        if (active) active.style.display = "block";
+
+        // Highlight active button
+        document.querySelectorAll(".tab-btn").forEach(btn => {
+            btn.classList.remove("active-tab");
+        });
+        const btn = document.getElementById(`btn-${tabName}`);
+        if (btn) btn.classList.add("active-tab");
+
+        // Cancel any ongoing audio
+        speechSynthesis.cancel();
+
+        // Initialize engines when entering their tab
+        this.initTab(tabName);
+    },
+
+    /* ------------------------------------------------------------
+       INITIALIZE TAB
+    ------------------------------------------------------------ */
+    initTab(tabName) {
+        switch (tabName) {
+
+            case "listen":
+                ListenEngine.setLevel(APP_STATE.currentLevel);
+                ListenEngine.setCategory(APP_STATE.currentCategory);
+                break;
+
+            case "flashcards":
+                FlashcardsEngine.setLevel(APP_STATE.currentLevel);
+                FlashcardsEngine.setCategory(APP_STATE.currentCategory);
+                break;
+
+            case "quiz":
+                QuizEngine.setLevel(APP_STATE.currentLevel);
+                QuizEngine.setCategory(APP_STATE.currentCategory);
+                break;
+
+            case "build":
+                BuildEngine.setLevel(APP_STATE.currentLevel);
+                BuildEngine.init();
+                break;
+
+            case "sentence":
+                SentenceEngine.setLevel(APP_STATE.currentLevel);
+                SentenceEngine.newSentence();
+                break;
+
+            case "conversation":
+                ConversationEngine.setLevel(APP_STATE.currentLevel);
+                ConversationEngine.reset();
+                break;
+
+            case "practice":
+                FreePracticeEngine.setLevel(APP_STATE.currentLevel);
+                break;
+
+            case "review":
+                ReviewEngine.step();
+                break;
+
+            case "achievements":
+                AchievementsEngine.evaluate();
+                break;
+
+            case "dashboard":
+            default:
+                break;
+        }
     }
+};
 
-    const correct = quizState.currentWord.spanish;
-
-    // ⭐ Ensure quizScore is not null before incrementing
-    if (appState.levelStats[appState.currentLevel].quizScore === null) {
-        appState.levelStats[appState.currentLevel].quizScore = 0;
-    }
-
-   if (quizState.selected === correct) {
-    feedback.textContent = "Correct! 🎉";
-
-    if (appState.levelStats[appState.currentLevel].quizScore === null) {
-        appState.levelStats[appState.currentLevel].quizScore = 0;
-    }
-
-    appState.levelStats[appState.currentLevel].quizScore++;
-    appState.levelStats[appState.currentLevel].quizCompleted++;   // ⭐ ADD THIS LINE
-
-    updateBadges();
-    updateProgressMeters();
-}
- else {
-        feedback.textContent = `Incorrect — correct answer: ${correct}`;
-    }
-
-    // Sabina audio
-    setTimeout(() => speakQuiz(correct), 300);
-
-    saveState();
+/* ------------------------------------------------------------
+   INITIAL ROUTE
+------------------------------------------------------------ */
+document.addEventListener("DOMContentLoaded", () => {
+    Router.switch("dashboard");
 });
 
 
-    // Next button
-    nextBtn.addEventListener("click", () => {
-        renderQuizTab();
-    });
-
-    // Harder mode toggle
-    harderBtn.addEventListener("click", () => {
-        quizState.harderMode = !quizState.harderMode;
-        harderBtn.classList.toggle("active");
-        renderQuizTab();
-    });
-}
-
-
 /* ============================================================
-   BUILD TAB — English → Spanish Builder (with disruptors + feedback)
+   FINAL ASSEMBLY — Wiring Controls + Global Init
    ============================================================ */
-function renderBuildTab() {
-    const container = document.getElementById("build-content");
 
-    const pool = CEFR_SENTENCES[appState.currentLevel];
-    const sentence = pool[Math.floor(Math.random() * pool.length)];
+const App = {
 
-    const english = sentence.english;
-    const spanish = sentence.spanish;
+    initLevelSelector() {
+        const levelSelect = document.getElementById("levelSelect");
+        if (!levelSelect) return;
 
-    const coreTokens = spanish.split(" ");
+        levelSelect.addEventListener("change", (e) => {
+            APP_STATE.currentLevel = e.target.value;
+            AchievementsEngine.evaluate();
+        });
+    },
 
-    const disruptors = [
-        "rápido","lento","siempre","nunca","ayer","mañana",
-        "porque","pero","muy","también","solo","entonces"
-    ];
+    initCategorySelector() {
+        const catSelect = document.getElementById("categorySelect");
+        if (!catSelect) return;
 
-    let bank = [...coreTokens];
+        catSelect.addEventListener("change", (e) => {
+            APP_STATE.currentCategory = e.target.value;
+        });
+    },
 
-    while (bank.length < coreTokens.length + 5) {
-        const d = disruptors[Math.floor(Math.random() * disruptors.length)];
-        if (!bank.includes(d)) bank.push(d);
-    }
+    initListenControls() {
+        const playBtn = document.getElementById("listenPlay");
+        const nextBtn = document.getElementById("listenNext");
+        const prevBtn = document.getElementById("listenPrev");
+        const autoBtn = document.getElementById("listenAuto");
 
-    bank = bank.sort(() => Math.random() - 0.5);
+        if (playBtn) playBtn.addEventListener("click", () => ListenEngine.playCurrent());
+        if (nextBtn) nextBtn.addEventListener("click", () => ListenEngine.next());
+        if (prevBtn) prevBtn.addEventListener("click", () => ListenEngine.previous());
+        if (autoBtn) autoBtn.addEventListener("click", () => ListenEngine.startAutoPlay());
+    },
 
-    buildState.tokens = bank;
-    buildState.answer = [];
+    initSearchControls() {
+        const input = document.getElementById("searchInput");
+        const btn = document.getElementById("searchBtn");
+        const out = document.getElementById("searchResult");
 
-    container.innerHTML = `
-        <div class="glass-panel build-card">
-            <h2>Duplicate this sentence in Spanish</h2>
-            <p class="build-english"><strong>English:</strong> ${english}</p>
+        if (!btn || !input || !out) return;
 
-            <div id="build-selected" class="build-selected"></div>
-
-            <div id="build-words" class="sb-grid">
-                ${bank.map(w => `<button class="pill build-opt" data-token="${w}">${w}</button>`).join("")}
-            </div>
-
-            <input id="build-input" class="input-field" placeholder="Or type the Spanish sentence…">
-
-            <div id="build-feedback"></div>
-
-            <div class="sb-controls">
-                <button id="build-undo">Undo</button>
-                <button id="build-reset">Reset</button>
-                <button id="build-check">Check</button>
-                <button id="build-next">Next</button>
-            </div>
-        </div>
-    `;
-
-    setupBuildEvents(sentence);
-}
-
-function setupBuildEvents(sentence) {
-    const selectedArea = document.getElementById("build-selected");
-    const grid = document.getElementById("build-words");
-    const input = document.getElementById("build-input");
-    const feedback = document.getElementById("build-feedback");
-
-    const undoBtn = document.getElementById("build-undo");
-    const resetBtn = document.getElementById("build-reset");
-    const checkBtn = document.getElementById("build-check");
-    const nextBtn = document.getElementById("build-next");
-
-    buildState.answer = [];
-
-    grid.querySelectorAll(".build-opt").forEach(btn => {
         btn.addEventListener("click", () => {
-            buildState.answer.push(btn.dataset.token);
-            btn.classList.add("used");
-            btn.disabled = true;
-            selectedArea.textContent = buildState.answer.join(" ");
+            const res = SearchEngine.search(input.value);
+            out.innerHTML = JSON.stringify(res, null, 2);
         });
-    });
+    },
 
-    input.addEventListener("input", () => {
-        buildState.answer = input.value.trim().split(" ");
-        selectedArea.textContent = buildState.answer.join(" ");
-    });
+    initAudioToggle() {
+        const toggle = document.getElementById("audioToggle");
+        if (!toggle) return;
 
-    undoBtn.addEventListener("click", () => {
-        buildState.answer.pop();
-        selectedArea.textContent = buildState.answer.join(" ");
-
-        grid.querySelectorAll(".build-opt").forEach(btn => {
-            if (!buildState.answer.includes(btn.dataset.token)) {
-                btn.classList.remove("used");
-                btn.disabled = false;
-            }
+        toggle.addEventListener("click", () => {
+            AudioSystem.toggle();
+            toggle.textContent = APP_STATE.audioEnabled ? "Audio: ON" : "Audio: OFF";
         });
-    });
+    },
 
-    resetBtn.addEventListener("click", () => {
-        buildState.answer = [];
-        selectedArea.textContent = "";
-        input.value = "";
-        grid.querySelectorAll(".build-opt").forEach(btn => {
-            btn.classList.remove("used");
-            btn.disabled = false;
-        });
-    });
+    init() {
+        this.initLevelSelector();
+        this.initCategorySelector();
+        this.initListenControls();
+        this.initSearchControls();
+        this.initAudioToggle();
 
-    checkBtn.addEventListener("click", () => {
-    const correct = sentence.spanish.trim();
-    const user = buildState.answer.join(" ").trim();
-
-    // NEW: translate learner answer to English
-    const learnerEnglish = translateToEnglish(user);
-
-    if (user === correct) {
-        feedback.innerHTML = `
-            <span style="color:#4ade80;font-weight:600;">Correct! 🎉</span><br><br>
-            <strong>Your Translated Response is:</strong><br>${learnerEnglish}
-        `;
-        appState.levelStats[appState.currentLevel].buildCompleted++;
-        updateBadges();
-        updateProgressMeters();
-        setTimeout(() => speakQuiz(correct), 300);
-    } else {
-        const correctTokens = correct.split(" ");
-        const userTokens = buildState.answer;
-
-        let html = `<strong>Correct Answer:</strong><br>${correct}<br><br>`;
-        html += `<strong>Your Answer:</strong><br>${user}<br><br>`;
-        html += `<strong>Your Translated Response is:</strong><br>${learnerEnglish}<br><br>`;
-        html += `<strong>Word-by-word feedback:</strong><br>`;
-
-        userTokens.forEach((t, i) => {
-            if (correctTokens[i] === t) {
-                html += `<span style="color:#4ade80;">${t} ✔</span> `;
-            } else {
-                html += `<span style="color:#f87171;">${t} ✖</span> `;
-            }
-        });
-
-        feedback.innerHTML = html;
-        setTimeout(() => speakQuiz(correct), 300);
+        Router.switch("dashboard");
     }
-
-    saveState();
-});
-
-
-    nextBtn.addEventListener("click", () => {
-        renderBuildTab();
-    });
-}
-
-/* ============================================================
-   SENTENCE TAB — CEFR MULTIPLE‑CHOICE (FINAL MASTER VERSION)
-   ============================================================ */
-
-function generateSentenceForLevel(level) {
-    const pool = CEFR_SENTENCE_CHOICES[level];
-    const item = pool[Math.floor(Math.random() * pool.length)];
-
-    const shuffled = [...item.options]
-    .filter(Boolean)
-    .sort(() => Math.random() - 0.5);
-
-
-    return {
-        english: item.english,
-        correct: item.correct,
-        options: shuffled
-    };
-}
-
-function renderSentenceTab() {
-    const container = document.getElementById("sentence-content");
-    const level = appState.currentLevel;
-
-    // SAFETY CHECK — prevents crashes if level has no sentences
-    if (!CEFR_SENTENCE_CHOICES[level]) {
-        container.innerHTML = "<p>No sentences available for this level.</p>";
-        return;
-    }
-
-    const q = generateSentenceForLevel(level);
-
-
-    container.innerHTML = `
-        <div class="glass-panel sentence-card">
-            <h2>Sentence — Level ${level}</h2>
-            <p>Select the correct Spanish translation.</p>
-
-            <div class="sentence-english">
-                <strong>English:</strong> ${q.english}
-            </div>
-
-            <div id="sentence-options" class="sentence-options">
-                ${q.options.map(opt => `
-                    <button class="pill" data-opt="${opt}">
-                        ${opt}
-                    </button>
-                `).join("")}
-            </div>
-
-            <div id="sentence-feedback"></div>
-
-            <div class="sentence-controls">
-                <button id="sentence-next" class="pill">Next</button>
-            </div>
-        </div>
-    `;
-
-    setupSentenceEvents(q);
-}
-
-function setupSentenceEvents(q) {
-    const buttons = document.querySelectorAll(".pill");
-    const feedback = document.getElementById("sentence-feedback");
-    const nextBtn = document.getElementById("sentence-next");
-
-    buttons.forEach(btn => {
-        btn.addEventListener("click", () => {
-            const chosen = btn.dataset.opt;
-
-            if (chosen === q.correct) {
-                feedback.innerHTML = `
-                    <span style="color:#4ade80;font-weight:600;">
-                        Correct! 🎉
-                    </span>
-                `;
-
-                appState.levelStats[appState.currentLevel].sentenceCompleted++;
-                updateBadges();
-                updateProgressMeters();
-
-                speakQuiz(q.correct);
-
-            } else {
-                feedback.innerHTML = `
-                    <span style="color:#f87171;font-weight:600;">
-                        Incorrect.</span><br>
-                    Correct answer: <strong>${q.correct}</strong>
-                `;
-
-                speakQuiz(q.correct);
-            }
-
-            buttons.forEach(b => b.disabled = true);
-        });
-    });
-
-    nextBtn.addEventListener("click", () => {
-        renderSentenceTab();
-    });
-}
-
-/* ============================================================
-   CEFR SENTENCE CHOICES — FULL PACK (A1 → B2)
-   ============================================================ */
-
-const CEFR_SENTENCE_CHOICES = {
-
-    /* ============================
-       A1 — Beginner
-       ============================ */
-    A1: [
-        {
-            english: "I want a coffee.",
-            correct: "quiero un café",
-            options: ["quiero un café", "necesito agua", "tengo hambre"]
-        },
-        {
-            english: "Where is the bathroom?",
-            correct: "dónde está el baño",
-            options: ["dónde está el baño", "dónde está la mesa", "dónde está mi amigo"]
-        },
-        {
-            english: "I need help.",
-            correct: "necesito ayuda",
-            options: ["necesito ayuda", "necesito comida", "necesito descansar"]
-        },
-        {
-            english: "The room is clean.",
-            correct: "la habitación está limpia",
-            options: ["la habitación está limpia", "la habitación está sucia", "la habitación está lejos"]
-        },
-        {
-            english: "He likes cold water.",
-            correct: "a él le gusta el agua fría",
-            options: ["a él le gusta el agua fría", "a él le gusta el café caliente", "a él le gusta la comida"]
-        },
-        {
-            english: "We are at home.",
-            correct: "estamos en casa",
-            options: ["estamos en casa", "estamos en el hotel", "estamos en la tienda"]
-        },
-        {
-            english: "She is my sister.",
-            correct: "ella es mi hermana",
-            options: ["ella es mi hermana", "ella es mi madre", "ella es mi amiga"]
-        },
-        {
-            english: "The bus is late.",
-            correct: "el autobús está retrasado",
-            options: ["el autobús está retrasado", "el autobús está aquí", "el autobús está limpio"]
-        },
-        {
-            english: "I am tired today.",
-            correct: "estoy cansado hoy",
-            options: ["estoy cansado hoy", "estoy feliz hoy", "estoy en casa hoy"]
-        },
-        {
-            english: "The food is delicious.",
-            correct: "la comida es deliciosa",
-            options: ["la comida es deliciosa", "la comida es fría", "la comida es nueva"]
-        },
-        {
-            english: "I want to go home.",
-            correct: "quiero ir a casa",
-            options: ["quiero ir a casa", "quiero ir al hotel", "quiero ir a la tienda"]
-        },
-        {
-            english: "He has a big car.",
-            correct: "él tiene un coche grande",
-            options: ["él tiene un coche grande", "él tiene un coche pequeño", "él tiene una casa grande"]
-        },
-        {
-            english: "My friend is very nice.",
-            correct: "mi amigo es muy amable",
-            options: ["mi amigo es muy amable", "mi amigo es muy alto", "mi amigo es muy cansado"]
-        },
-        {
-            english: "The hotel is near.",
-            correct: "el hotel está cerca",
-            options: ["el hotel está cerca", "el hotel está lejos", "el hotel está limpio"]
-        },
-        {
-            english: "I have two brothers.",
-            correct: "tengo dos hermanos",
-            options: ["tengo dos hermanos", "tengo dos casas", "tengo dos cafés"]
-        }
-    ],
-
-    /* ============================
-       A2 — Elementary
-       ============================ */
-    A2: [
-        {
-            english: "We are going to visit my parents.",
-            correct: "vamos a visitar a mis padres",
-            options: ["vamos a visitar a mis padres", "vamos a comprar comida", "vamos a limpiar la casa"]
-        },
-        {
-            english: "She bought fruit at the market.",
-            correct: "ella compró fruta en el mercado",
-            options: ["ella compró fruta en el mercado", "ella compró ropa nueva", "ella compró un teléfono"]
-        },
-        {
-            english: "I cleaned the kitchen yesterday.",
-            correct: "limpié la cocina ayer",
-            options: ["limpié la cocina ayer", "cociné la cena ayer", "compré comida ayer"]
-        },
-        {
-            english: "He called me last night.",
-            correct: "él me llamó anoche",
-            options: ["él me llamó anoche", "él me visitó anoche", "él me vio anoche"]
-        },
-        {
-            english: "She is cooking dinner now.",
-            correct: "ella está cocinando la cena ahora",
-            options: ["ella está cocinando la cena ahora", "ella está limpiando ahora", "ella está leyendo ahora"]
-        },
-        {
-            english: "We arrived early.",
-            correct: "llegamos temprano",
-            options: ["llegamos temprano", "llegamos tarde", "llegamos mañana"]
-        },
-        {
-            english: "I want to try something new.",
-            correct: "quiero probar algo nuevo",
-            options: ["quiero probar algo nuevo", "quiero comprar algo nuevo", "quiero comer algo nuevo"]
-        },
-        {
-            english: "He forgot his keys.",
-            correct: "él olvidó sus llaves",
-            options: ["él olvidó sus llaves", "él perdió su teléfono", "él rompió su bolsa"]
-        },
-        {
-            english: "I usually wake up early.",
-            correct: "normalmente me despierto temprano",
-            options: ["normalmente me despierto temprano", "normalmente me duermo temprano", "normalmente como temprano"]
-        },
-        {
-            english: "She likes to read at night.",
-            correct: "a ella le gusta leer por la noche",
-            options: ["a ella le gusta leer por la noche", "a ella le gusta caminar por la noche", "a ella le gusta cocinar por la noche"]
-        }
-    ],
-
-    /* ============================
-       B1 — Intermediate
-       ============================ */
-    B1: [
-        {
-            english: "We need to organize the meeting.",
-            correct: "necesitamos organizar la reunión",
-            options: ["necesitamos organizar la reunión", "necesitamos limpiar la oficina", "necesitamos terminar el informe"]
-        },
-        {
-            english: "I think this restaurant is excellent.",
-            correct: "creo que este restaurante es excelente",
-            options: ["creo que este restaurante es excelente", "creo que este restaurante es nuevo", "creo que este restaurante es pequeño"]
-        },
-        {
-            english: "She asked me to help her.",
-            correct: "ella me pidió que la ayudara",
-            options: ["ella me pidió que la ayudara", "ella me pidió que la llamara", "ella me pidió que la visitara"]
-        },
-        {
-            english: "They plan to move next month.",
-            correct: "ellos planean mudarse el próximo mes",
-            options: ["ellos planean mudarse el próximo mes", "ellos planean viajar el próximo mes", "ellos planean trabajar el próximo mes"]
-        },
-        {
-            english: "We must follow the instructions.",
-            correct: "debemos seguir las instrucciones",
-            options: ["debemos seguir las instrucciones", "debemos cambiar las instrucciones", "debemos leer las instrucciones"]
-        },
-        {
-            english: "He wants to change his schedule.",
-            correct: "él quiere cambiar su horario",
-            options: ["él quiere cambiar su horario", "él quiere cambiar su casa", "él quiere cambiar su comida"]
-        },
-        {
-            english: "Although it was difficult, she completed the task.",
-            correct: "aunque fue difícil, ella completó la tarea",
-            options: ["aunque fue difícil, ella completó la tarea", "aunque fue fácil, ella completó la tarea", "aunque fue difícil, ella canceló la tarea"]
-        },
-        {
-            english: "We talked for an hour.",
-            correct: "hablamos durante una hora",
-            options: ["hablamos durante una hora", "hablamos durante un día", "hablamos durante un minuto"]
-        }
-    ],
-
-    /* ============================
-       B2 — Upper Intermediate
-       ============================ */
-    B2: [
-        {
-            english: "We must consider all possibilities.",
-            correct: "debemos considerar todas las posibilidades",
-            options: ["debemos considerar todas las posibilidades", "debemos cancelar todas las posibilidades", "debemos ignorar todas las posibilidades"]
-        },
-        {
-            english: "They want to analyze the situation.",
-            correct: "ellos quieren analizar la situación",
-            options: ["ellos quieren analizar la situación", "ellos quieren cambiar la situación", "ellos quieren evitar la situación"]
-        },
-        {
-            english: "We need to evaluate the risks carefully.",
-            correct: "necesitamos evaluar los riesgos cuidadosamente",
-            options: ["necesitamos evaluar los riesgos cuidadosamente", "necesitamos evitar los riesgos cuidadosamente", "necesitamos reducir los riesgos cuidadosamente"]
-        },
-        {
-            english: "She believes the idea is innovative.",
-            correct: "ella cree que la idea es innovadora",
-            options: ["ella cree que la idea es innovadora", "ella cree que la idea es complicada", "ella cree que la idea es pequeña"]
-        },
-        {
-            english: "Despite the problems, they finished the project.",
-            correct: "a pesar de los problemas, terminaron el proyecto",
-            options: ["a pesar de los problemas, terminaron el proyecto", "a pesar de los problemas, cancelaron el proyecto", "a pesar de los problemas, ignoraron el proyecto"]
-        },
-        {
-            english: "They want to optimize the process.",
-            correct: "ellos quieren optimizar el proceso",
-            options: ["ellos quieren optimizar el proceso", "ellos quieren cancelar el proceso", "ellos quieren dividir el proceso"]
-        }
-    ]
 };
-
-
-
-/* ============================================================
-   CONVERSATION TAB — RENDER + EVENTS (EVERYDAY DIALOGUE)
-   ============================================================ */
-
-const CONVO_PROMPTS = [
-    { english: "How are you today?", spanishTarget: "¿Cómo estás hoy?" },
-    { english: "Where do you live?", spanishTarget: "¿Dónde vives?" },
-    { english: "What do you like to do on weekends?", spanishTarget: "¿Qué te gusta hacer los fines de semana?" },
-    { english: "Do you work or study?", spanishTarget: "¿Trabajas o estudias?" },
-    { english: "What is your favorite food?", spanishTarget: "¿Cuál es tu comida favorita?" },
-    { english: "What time do you usually get up?", spanishTarget: "¿A qué hora sueles levantarte?" }
-];
-
-function renderConversationTab() {
-    const container = document.getElementById("conversation-content");
-    const words = CEFR_LEVELS[appState.currentLevel];
-
-    if (!words || !words.length) {
-        container.innerHTML = `<div class="glass-panel convo-card">
-            <p>No words found for level ${appState.currentLevel}.</p>
-        </div>`;
-        return;
-    }
-
-    // Pick random prompt
-    convoState.currentPrompt = CONVO_PROMPTS[Math.floor(Math.random() * CONVO_PROMPTS.length)];
-    const target = convoState.currentPrompt.spanishTarget;
-
-    // Build wordbank from level words + disruptors
-    const coreTokens = target.replace(/[¿?]/g, "").split(" ");
-    const levelTokens = words.map(w => w.spanish.split(" ")).flat();
-    const disruptors = ["rápido", "lento", "siempre", "nunca", "ayer", "mañana", "porque", "pero"];
-
-    let bank = [...coreTokens];
-
-    // Add some level words
-    while (bank.length < coreTokens.length + 4) {
-        const t = levelTokens[Math.floor(Math.random() * levelTokens.length)];
-        if (t && !bank.includes(t)) bank.push(t);
-    }
-
-    // Add disruptors
-    disruptors.forEach(d => {
-        if (!bank.includes(d)) bank.push(d);
-    });
-
-    // Shuffle bank
-    bank = bank.sort(() => Math.random() - 0.5);
-
-    convoState.tokens = bank;
-    convoState.answer = [];
-
-    container.innerHTML = `
-        <div class="glass-panel convo-card">
-            <h2>Conversation — Level ${appState.currentLevel}</h2>
-            <p>Respond in Spanish by selecting the correct words from the wordbank.</p>
-
-            <div id="convo-prompt"><strong>Prompt (English):</strong> ${convoState.currentPrompt.english}</div>
-
-            <div id="convo-grid" class="sb-grid">
-                ${convoState.tokens.map(t => `
-                    <button class="pill convo-opt" data-token="${t}">${t}</button>
-                `).join("")}
-            </div>
-
-            <div id="convo-answer"></div>
-
-            <input id="convo-type" class="convo-type" placeholder="Or type your response in Spanish…" />
-
-            <div id="convo-feedback"></div>
-
-            <div class="sb-controls">
-                <button id="convo-undo">Undo</button>
-                <button id="convo-reset">Reset</button>
-                <button id="convo-check">Check</button>
-                <button id="convo-next">Next</button>
-            </div>
-        </div>
-    `;
-
-    setupConversationEvents();
-}
-
-
-
-function setupConversationEvents() {
-    const grid = document.getElementById("convo-grid");
-    const answerBox = document.getElementById("convo-answer");
-    const typeBox = document.getElementById("convo-type");
-    const feedback = document.getElementById("convo-feedback");
-
-    const undoBtn = document.getElementById("convo-undo");
-    const resetBtn = document.getElementById("convo-reset");
-    const checkBtn = document.getElementById("convo-check");
-    const nextBtn = document.getElementById("convo-next");
-
-    convoState.answer = [];
-
-    // Word-pill selection
-    grid.querySelectorAll(".convo-opt").forEach(btn => {
-        btn.addEventListener("click", () => {
-            convoState.answer.push(btn.dataset.token);
-            btn.classList.add("used");
-            btn.disabled = true;
-            answerBox.textContent = convoState.answer.join(" ");
-        });
-    });
-
-    // Typing mode
-    typeBox.addEventListener("input", () => {
-        convoState.answer = typeBox.value.trim().split(" ");
-        answerBox.textContent = convoState.answer.join(" ");
-    });
-
-    // Undo
-    undoBtn.addEventListener("click", () => {
-        convoState.answer.pop();
-        answerBox.textContent = convoState.answer.join(" ");
-
-        grid.querySelectorAll(".convo-opt").forEach(btn => {
-            if (!convoState.answer.includes(btn.dataset.token)) {
-                btn.classList.remove("used");
-                btn.disabled = false;
-            }
-        });
-    });
-
-    // Reset
-    resetBtn.addEventListener("click", () => {
-        convoState.answer = [];
-        answerBox.textContent = "";
-        typeBox.value = "";
-        grid.querySelectorAll(".convo-opt").forEach(btn => {
-            btn.classList.remove("used");
-            btn.disabled = false;
-        });
-    });
-
-    // Check
-    checkBtn.addEventListener("click", () => {
-        const correct = convoState.currentPrompt.spanishTarget.replace(/[¿?]/g, "").trim();
-        const user = convoState.answer.join(" ").trim();
-
-       if (user === correct) {
-    feedback.textContent = "Nice! That’s a natural response. 🎉";
-
-    if (appState.levelStats[appState.currentLevel].conversationCompleted == null) {
-        appState.levelStats[appState.currentLevel].conversationCompleted = 0;
-    }
-    appState.levelStats[appState.currentLevel].conversationCompleted++;
-
-    updateBadges();
-    updateProgressMeters();
-    setTimeout(() => speakQuiz(correct), 300);
-
-} else {
-    feedback.textContent = `Not quite. A natural response would be: ${convoState.currentPrompt.spanishTarget}`;
-    setTimeout(() => speakQuiz(correct), 300);
-}
-
-saveState();
-
-    });
-
-    // Next
-    nextBtn.addEventListener("click", () => {
-        renderConversationTab();
-    });
-}
-
-
-/* ============================================================
-   GRAMMAR TAB
-   ============================================================ */
-
-function renderGrammarTab() {
-    const container = document.getElementById("grammar-content");
-    const words = CEFR_LEVELS[appState.currentLevel];
-    const grouped = groupByCategory(words);
-
-    container.innerHTML = `
-        <div class="glass-panel quiz-card">
-            <h2>Grammar — Level ${appState.currentLevel}</h2>
-            <p>Breakdown of word types you're training.</p>
-        </div>
-
-        <div class="glass-panel quiz-card">
-            <ul>
-                ${Object.keys(grouped).map(cat => `
-                    <li><strong>${cat}</strong>: ${grouped[cat].length} items</li>
-                `).join("")}
-            </ul>
-            <p style="margin-top:10px;opacity:0.8;">
-                Notice how connectors, verbs, adjectives and nouns combine.
-            </p>
-        </div>
-    `;
-}
-
-/* ============================================================
-   BADGES
-   ============================================================ */
-
-function updateBadges() {
-    const list = document.getElementById("badge-list");
-    const badges = new Set(appState.badges);
-
-   Object.keys(appState.levelStats).forEach(level => {
-    const s = appState.levelStats[level];
-    if (s.listens >= 20) badges.add(`${level} Listener`);
-    if (s.flashSeen >= 30) badges.add(`${level} Flash Master`);
-    if (s.quizScore !== null && s.quizScore >= 80) badges.add(`${level} Quiz Ace`);
-    if (s.buildCompleted >= 10) badges.add(`${level} Builder`);
-
-    // ⭐ NEW BADGES — paste here
-    if (s.sentenceCompleted >= 10) badges.add(`${level} Sentence Pro`);
-    if (s.conversationCompleted >= 10) badges.add(`${level} Conversationalist`);
-});
-
-
-    appState.badges = Array.from(badges);
-    saveState();
-
-    if (appState.badges.length === 0) {
-        list.innerHTML = "<li>No badges yet. Keep training!</li>";
-        return;
-    }
-
-    list.innerHTML = appState.badges.map(b => `<li>${b}</li>`).join("");
-}
-
-/* ============================================================
-   STUDENT NAME BOX
-   ============================================================ */
-
-function initNameBox() {
-    const input = document.getElementById("student-name");
-    const btn = document.getElementById("save-name-btn");
-    const status = document.getElementById("name-status");
-
-    input.value = appState.studentName || "";
-
-    btn.onclick = () => {
-        const name = input.value.trim();
-        if (!name) {
-            status.textContent = "Please enter a name.";
-            return;
-        }
-        appState.studentName = name;
-        saveState();
-        status.textContent = `Saved as "${name}".`;
-    };
-}
-
-/* ============================================================
-   SPEECH RATE CONTROL
-   ============================================================ */
-
-function initRateControl() {
-    const slider = document.getElementById("rate");
-    slider.value = appState.speechRate;
-
-    slider.oninput = () => {
-        appState.speechRate = parseFloat(slider.value);
-        saveState();
-    };
-}
-
-/* ============================================================
-   PROGRESS METER CONTROLLER
-   ============================================================ */
-
-function animateNumber(id, target) {
-    let current = 0;
-    const step = target / 40;
-
-    const interval = setInterval(() => {
-        current += step;
-        if (current >= target) {
-            current = target;
-            clearInterval(interval);
-        }
-        document.getElementById(id).textContent = Math.round(current) + "%";
-    }, 20);
-}
-
-function updateProgressMeters() {
-
-    // Bar widths
-    document.getElementById("quiz-progress").style.width = "60%";
-    document.getElementById("build-progress").style.width = "45%";
-    document.getElementById("sentence-progress").style.width = "30%";
-
-    document.getElementById("xp-progress").style.width = "70%";
-    document.getElementById("streak-progress").style.width = "40%";
-    document.getElementById("score-progress").style.width = "85%";
-    document.getElementById("review-progress").style.width = "20%";
-
-    // Animated numbers
-    animateNumber("quiz-number", 60);
-    animateNumber("build-number", 45);
-    animateNumber("sentence-number", 30);
-
-    animateNumber("xp-number", 70);
-    animateNumber("streak-number", 40);
-    animateNumber("score-number", 85);
-    animateNumber("review-number", 20);
-
-    // Pulse animations
-    pulseTile("quiz-tile");
-    pulseTile("build-tile");
-    pulseTile("sentence-tile");
-    pulseTile("xp-tile");
-    pulseTile("streak-tile");
-    pulseTile("score-tile");
-    pulseTile("review-tile");
-}
-
-/* ============================================================
-   TILE PULSE ANIMATION
-   ============================================================ */
-
-function pulseTile(id) {
-    const tile = document.getElementById(id);
-    if (!tile) return;
-
-    tile.classList.remove("pulse");
-    void tile.offsetWidth;
-    tile.classList.add("pulse");
-}
-
-/* ============================================================
-   STARTUP
-   ============================================================ */
 
 document.addEventListener("DOMContentLoaded", () => {
-    loadState();
-
-    initTabNavigation();     // tab buttons now exist
-    activateTab("dashboard"); // show dashboard first
-
-    initRateControl();       // slider exists now
-    initNameBox();           // name box exists now
-
-    updateBadges();
-    updateProgressMeters();
+    App.init();
 });
+
+
+/* ============================================================
+   FINAL BOOTSTRAP — Global Reset + Export Hooks
+   ============================================================ */
+
+const Global = {
+
+    /* ------------------------------------------------------------
+       FULL RESET (Safe)
+    ------------------------------------------------------------ */
+    resetAll() {
+        // Cancel audio
+        speechSynthesis.cancel();
+
+        // Reset core state
+        APP_STATE.listenIndex = 0;
+        APP_STATE.flashIndex = 0;
+        APP_STATE.quizIndex = 0;
+        APP_STATE.currentWord = null;
+        APP_STATE.currentSentence = null;
+        APP_STATE.userSentence = [];
+        APP_STATE.buildTokens = [];
+        APP_STATE.conversationHistory = [];
+
+        // Reset engines
+        ReviewEngine.reset();
+        ConversationEngine.reset();
+
+        // Reset UI
+        const out = document.getElementById("buildOutput");
+        if (out) out.textContent = "";
+
+        const res = document.getElementById("buildResult");
+        if (res) res.textContent = "";
+    },
+
+    /* ------------------------------------------------------------
+       SAFE SHUTDOWN
+    ------------------------------------------------------------ */
+    shutdown() {
+        speechSynthesis.cancel();
+        console.log("App shutdown complete.");
+    },
+
+    /* ------------------------------------------------------------
+       EXPORT HOOKS (Future Modules)
+    ------------------------------------------------------------ */
+    exports() {
+        return {
+            APP_STATE,
+            ListenEngine,
+            FlashcardsEngine,
+            QuizEngine,
+            BuildEngine,
+            SentenceEngine,
+            ConversationEngine,
+            FreePracticeEngine,
+            ReviewEngine,
+            SearchEngine,
+            AudioSystem,
+            AchievementsEngine,
+            Router,
+            App
+        };
+    }
+};
+
+/* ------------------------------------------------------------
+   GLOBAL STARTUP
+------------------------------------------------------------ */
+document.addEventListener("DOMContentLoaded", () => {
+    App.init();
+    console.log("CEFR Learning Platform Initialized.");
+});
+
+
+/* ============================================================
+   UI HELPERS — Rendering + Glass Panels + Buttons
+   ============================================================ */
+
+const UI = {
+
+    /* ------------------------------------------------------------
+       APPLY GLASS PANEL STYLE
+    ------------------------------------------------------------ */
+    glass(el) {
+        if (!el) return;
+        el.classList.add("glass-panel");
+    },
+
+    /* ------------------------------------------------------------
+       APPLY PILL BUTTON STYLE
+    ------------------------------------------------------------ */
+    pill(el) {
+        if (!el) return;
+        el.classList.add("pill-btn");
+    },
+
+    /* ------------------------------------------------------------
+       SET TEXT
+    ------------------------------------------------------------ */
+    setText(id, text) {
+        const el = document.getElementById(id);
+        if (el) el.textContent = text;
+    },
+
+    /* ------------------------------------------------------------
+       SET HTML
+    ------------------------------------------------------------ */
+    setHTML(id, html) {
+        const el = document.getElementById(id);
+        if (el) el.innerHTML = html;
+    },
+
+    /* ------------------------------------------------------------
+       CLEAR ELEMENT
+    ------------------------------------------------------------ */
+    clear(id) {
+        const el = document.getElementById(id);
+        if (el) el.innerHTML = "";
+    },
+
+    /* ------------------------------------------------------------
+       CREATE BUTTON
+    ------------------------------------------------------------ */
+    button(label, onClick) {
+        const btn = document.createElement("button");
+        btn.textContent = label;
+        btn.className = "pill-btn";
+        btn.addEventListener("click", onClick);
+        return btn;
+    },
+
+    /* ------------------------------------------------------------
+       CREATE GLASS CARD
+    ------------------------------------------------------------ */
+    card(content) {
+        const div = document.createElement("div");
+        div.className = "glass-card";
+        div.innerHTML = content;
+        return div;
+    }
+};
+
+
+/* ============================================================
+   LISTEN TAB UI — Word List + Controls
+   ============================================================ */
+
+const ListenUI = {
+
+    renderList() {
+        const container = document.getElementById("listenList");
+        if (!container) return;
+
+        container.innerHTML = "";
+
+        const list = ListenEngine.getCurrentList();
+
+        list.forEach(word => {
+            const card = UI.card(`<div class="listen-word">${word}</div>`);
+            card.addEventListener("click", () => ListenEngine.playWord(word));
+            container.appendChild(card);
+        });
+    },
+
+    init() {
+        this.renderList();
+    }
+};
+
+
+/* ============================================================
+   FLASHCARDS UI — Flip Cards + Review Button
+   ============================================================ */
+
+const FlashcardsUI = {
+
+    render() {
+        const container = document.getElementById("flashcardsGrid");
+        if (!container) return;
+
+        container.innerHTML = "";
+
+        const cards = FlashcardsEngine.getFlashcards();
+
+        cards.forEach(card => {
+            const div = document.createElement("div");
+            div.className = "flashcard glass-card";
+
+            const front = `<div class="flash-front">${card.spanish}</div>`;
+            const back = `<div class="flash-back">${card.english}</div>`;
+
+            div.innerHTML = front + back;
+
+            div.addEventListener("click", () => {
+                FlashcardsEngine.flipCard(card);
+                div.classList.toggle("flipped");
+            });
+
+            container.appendChild(div);
+        });
+    },
+
+    init() {
+        this.render();
+    }
+};
+
+
+/* ============================================================
+   QUIZ UI — Options + Feedback
+   ============================================================ */
+
+const QuizUI = {
+
+    render() {
+        const q = QuizEngine.buildQuestion();
+        if (!q) return;
+
+        UI.setText("quizPrompt", q.spanish);
+
+        const container = document.getElementById("quizOptions");
+        container.innerHTML = "";
+
+        q.options.forEach(opt => {
+            const btn = UI.button(opt, () => {
+                const correct = QuizEngine.checkAnswer(opt, q);
+                UI.setText("quizFeedback", correct ? "Correct!" : "Incorrect");
+                setTimeout(() => {
+                    const next = QuizEngine.next();
+                    this.render(next);
+                }, 600);
+            });
+            container.appendChild(btn);
+        });
+    },
+
+    init() {
+        this.render();
+    }
+};
+
+
+/* ============================================================
+   BUILD UI — Word Pills + Output
+   ============================================================ */
+
+const BuildUI = {
+
+    renderGrid() {
+        const grid = document.getElementById("buildGrid");
+        grid.innerHTML = "";
+
+        APP_STATE.buildTokens.forEach(word => {
+            const btn = UI.button(word, () => BuildEngine.addWord(word));
+            btn.classList.add("word-pill");
+            grid.appendChild(btn);
+        });
+    },
+
+    renderOutput() {
+        const out = document.getElementById("buildOutput");
+        out.textContent = APP_STATE.userSentence.join(" ");
+    },
+
+    init() {
+        BuildEngine.newChallenge();
+        this.renderGrid();
+        this.renderOutput();
+    }
+};
+
+
+/* ============================================================
+   CONVERSATION UI — Chat Bubbles
+   ============================================================ */
+
+const ConversationUI = {
+
+    render() {
+        const container = document.getElementById("conversationFeed");
+        container.innerHTML = "";
+
+        ConversationEngine.getHistory().forEach(turn => {
+            const bubble = document.createElement("div");
+            bubble.className = turn.role === "user" ? "bubble-user" : "bubble-ai";
+            bubble.textContent = turn.text;
+            container.appendChild(bubble);
+        });
+
+        container.scrollTop = container.scrollHeight;
+    },
+
+    send(text) {
+        const reply = ConversationEngine.userTurn(text);
+        this.render();
+        return reply;
+    },
+
+    init() {
+        this.render();
+    }
+};
+
+
+/* ============================================================
+   REVIEW UI — Missed Words
+   ============================================================ */
+
+const ReviewUI = {
+
+    render() {
+        const item = ReviewEngine.next();
+        const container = document.getElementById("reviewCard");
+
+        if (!item) {
+            container.innerHTML = "<div class='glass-card'>No items to review.</div>";
+            return;
+        }
+
+        container.innerHTML = `
+            <div class="glass-card review-item">
+                <div class="review-spanish">${item.spanish}</div>
+                <div class="review-english">${item.english}</div>
+            </div>
+        `;
+    },
+
+    markMastered() {
+        ReviewEngine.markMastered();
+        this.render();
+    },
+
+    init() {
+        this.render();
+    }
+};
+
+
+
+
+
+
 
