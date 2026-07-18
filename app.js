@@ -2801,6 +2801,20 @@ function renderFlashcardsTab() {
     });
 }
 
+/* ============================================================
+   QUIZ OPTION GENERATOR
+============================================================ */
+
+function generateQuizOptions(words, correctWord) {
+    const opts = [correctWord.spanish];
+
+    while (opts.length < 3) {
+        const r = words[Math.floor(Math.random() * words.length)].spanish;
+        if (!opts.includes(r)) opts.push(r);
+    }
+
+    return opts.sort(() => Math.random() - 0.5);
+}
 
 /* ============================================================
    QUIZ TAB — RENDER + EVENTS
