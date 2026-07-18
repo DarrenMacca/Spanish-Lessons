@@ -2845,8 +2845,8 @@ function generateQuizOptions(words, correctWord) {
 ============================================================ */
 
 function renderQuizTab() {
-    const promptBox  = document.getElementById("quizPrompt");
-    const optionsBox = document.getElementById("quizOptions");
+    const promptBox   = document.getElementById("quizPrompt");
+    const optionsBox  = document.getElementById("quizOptions");
     const feedbackBox = document.getElementById("quizFeedback");
 
     if (!promptBox || !optionsBox || !feedbackBox) return;
@@ -2869,20 +2869,20 @@ function renderQuizTab() {
     quizState.options = generateQuizOptions(words, quizState.currentWord);
     quizState.selected = null;
 
-    // Prompt
+    // Prompt (restored pill layout)
     promptBox.innerHTML = `
         <div class="glass-panel quiz-card">
             <h2>Quiz — Level ${appState.currentLevel}</h2>
             <p>Select the correct Spanish for the English word.</p>
-            <div id="qb-meta"><strong>English:</strong> ${quizState.currentWord.english}</div>
+            <div class="pill quiz-word-pill">${quizState.currentWord.english}</div>
         </div>
     `;
 
-    // Options
+    // Options + Controls
     optionsBox.innerHTML = `
         <div id="qb-grid" class="sb-grid">
             ${quizState.options.map(opt => `
-                <button class="pill" data-spanish="${opt}">${opt}</button>
+                <button class="pill qb-opt" data-spanish="${opt}">${opt}</button>
             `).join("")}
         </div>
 
@@ -2895,7 +2895,7 @@ function renderQuizTab() {
         </div>
     `;
 
-    // Clear feedback
+    // Feedback
     feedbackBox.innerHTML = `<div id="qb-feedback" class="qb-feedback"></div>`;
 
     // Wire events
@@ -2903,9 +2903,13 @@ function renderQuizTab() {
 }
 
 
+/* ============================================================
+   QUIZ TAB — EVENTS
+============================================================ */
+
 function wireQuizEvents() {
     const optionsBox  = document.getElementById("quizOptions");
-    const feedbackBox = document.getElementById("quizFeedback");
+    const feedbackBox = document.getElementById("qb-feedback");
 
     if (!optionsBox || !feedbackBox) return;
 
@@ -2916,29 +2920,29 @@ function wireQuizEvents() {
 
     quizState.selected = null;
 
-    /* ============================================================
+    /* ---------------------------
        OPTION SELECTION
-    ============================================================ */
-    optionsBox.querySelectorAll(".pill").forEach(btn => {
+    --------------------------- */
+    optionsBox.querySelectorAll(".qb-opt").forEach(btn => {
         btn.addEventListener("click", () => {
-            quizState.selected = btn.dataset.spanish;
 
             // highlight selected
-            optionsBox.querySelectorAll(".pill")
+            optionsBox.querySelectorAll(".qb-opt")
                 .forEach(b => b.classList.remove("active"));
 
             btn.classList.add("active");
 
-            // show selected answer
+            quizState.selected = btn.dataset.spanish;
             answerBox.textContent = quizState.selected;
         });
     });
 
-    /* ============================================================
+    /* ---------------------------
        CHECK ANSWER
-    ============================================================ */
+    --------------------------- */
     if (submitBtn) {
         submitBtn.addEventListener("click", () => {
+
             if (!quizState.selected) {
                 feedbackBox.textContent = "Choose an answer first.";
                 return;
@@ -2949,20 +2953,20 @@ function wireQuizEvents() {
             if (quizState.selected === correct) {
                 feedbackBox.textContent = "Correct! 🎉";
 
-                // scoring
-                appState.levelStats[appState.currentLevel].quizCompleted++;
-                appState.levelStats[appState.currentLevel].quizScore++;
+                // scoring safety
+                const stats = appState.levelStats[appState.currentLevel];
+                if (stats) {
+                    stats.quizCompleted = (stats.quizCompleted || 0) + 1;
+                    stats.quizScore     = (stats.quizScore     || 0) + 1;
+                }
 
                 updateBadges();
                 updateProgressMeters();
 
-                // audio
                 speakQuiz(correct);
 
             } else {
-                feedbackBox.textContent =
-                    `Incorrect — correct answer: ${correct}`;
-
+                feedbackBox.textContent = `Incorrect — correct answer: ${correct}`;
                 speakQuiz(correct);
             }
 
@@ -2970,18 +2974,18 @@ function wireQuizEvents() {
         });
     }
 
-    /* ============================================================
+    /* ---------------------------
        NEXT QUESTION
-    ============================================================ */
+    --------------------------- */
     if (nextBtn) {
         nextBtn.addEventListener("click", () => {
             renderQuizTab();
         });
     }
 
-    /* ============================================================
+    /* ---------------------------
        HARDER MODE TOGGLE
-    ============================================================ */
+    --------------------------- */
     if (harderBtn) {
         harderBtn.addEventListener("click", () => {
             quizState.harderMode = !quizState.harderMode;
@@ -2990,8 +2994,6 @@ function wireQuizEvents() {
         });
     }
 }
-
-
 
 
 function renderBuildTab() {
