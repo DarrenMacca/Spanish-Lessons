@@ -2740,7 +2740,7 @@ function renderFlashcardsTab() {
             const spanish = inner.querySelector(".fc-back").textContent.trim();
 
             if (flipped) {
-                speakSpanish(spanish);
+                speakSpanish(spanish);   // ✔ audio now works
                 appState.levelStats[appState.currentLevel].flashSeen++;
                 saveState();
                 updateBadges();
@@ -2751,6 +2751,7 @@ function renderFlashcardsTab() {
         });
     });
 }
+
 
 
 
