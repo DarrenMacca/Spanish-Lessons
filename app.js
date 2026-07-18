@@ -2959,47 +2959,47 @@ function wireSentenceEvents(q) {
     const feedback = document.getElementById("sentence-feedback");
     const nextBtn = document.getElementById("sentence-next");
 
-    /* ============================================================
-       OPTION SELECTION
-    ============================================================ */
-    buttons.forEach(btn => {
-        btn.addEventListener("click", () => {
-            const chosen = btn.dataset.opt;
+   /* ============================================================
+   OPTION SELECTION
+============================================================ */
+buttons.forEach(btn => {
+    btn.addEventListener("click", () => {
+        const chosen = btn.dataset.opt;
 
-            if (chosen === q.correct) {
-                feedback.innerHTML = `
-                    <span style="color:#4ade80;font-weight:600;">
-                        Correct! 🎉
-                    </span>
-                `;
+        if (chosen === q.correct) {
+            feedback.innerHTML = `
+                <span style="color:#4ade80;font-weight:600;">
+                    Correct! 🎉
+                </span>
+            `;
 
-                appState.levelStats[appState.currentLevel].sentenceCompleted++;
-                updateBadges();
-                updateProgressMeters();
+            appState.levelStats[appState.currentLevel].sentenceCompleted++;
+            updateBadges();
+            updateProgressMeters();
 
-                speakQuiz(q.correct);
+            speakQuiz(q.correct);
 
-            } else {
-                feedback.innerHTML = `
-                    <span style="color:#f87171;font-weight:600;">
-                        Incorrect.</span><br>
-                    Correct answer: <strong>${q.correct}</strong>
-                `;
+        } else {
+            feedback.innerHTML = `
+                <span style="color:#f87171;font-weight:600;">
+                    Incorrect.</span><br>
+                Correct answer: <strong>${q.correct}</strong>
+            `;
 
-                speakQuiz(q.correct);
-            }
+            speakQuiz(q.correct);
+        }
 
-            // Disable all buttons after answer
-            buttons.forEach(b => b.disabled = true);
-        });
+        // Disable all buttons after answer
+        buttons.forEach(b => b.disabled = true);
     });
+});
 
-    /* ============================================================
-       NEXT QUESTION
-    ============================================================ */
-    nextBtn.addEventListener("click", () => {
-        renderSentenceTab();
-    });
+/* ============================================================
+   NEXT QUESTION
+============================================================ */
+nextBtn.addEventListener("click", () => {
+    renderSentenceTab();
+});
 }
 
 
