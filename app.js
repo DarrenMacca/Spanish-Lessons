@@ -2524,7 +2524,7 @@ let listenAutoPlay = {
 };
 
 function renderListenTab() {
-    const container = document.getElementById("listen-content");
+    const container = document.getElementById("listenList");
     if (!container) return;
 
     // Pull the correct CEFR level vocabulary (already categorized)
