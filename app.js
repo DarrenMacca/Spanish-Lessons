@@ -2804,7 +2804,7 @@ function renderFlashcardsTab() {
 
 /* ============================================================
    QUIZ TAB — RENDER + EVENTS
-   ============================================================ */
+============================================================ */
 
 function renderQuizTab() {
     const container = document.getElementById("quiz-content");
@@ -2821,34 +2821,30 @@ function renderQuizTab() {
     quizState.options = generateQuizOptions(words, quizState.currentWord);
     quizState.selected = null;
 
-container.innerHTML = `
-<div class="glass-panel quiz-card">
-    <h2>Quiz — Level ${appState.currentLevel}</h2>
-    <p>Select the correct Spanish for the English word.</p>
+    container.innerHTML = `
+    <div class="glass-panel quiz-card">
+        <h2>Quiz — Level ${appState.currentLevel}</h2>
+        <p>Select the correct Spanish for the English word.</p>
 
-    <div id="qb-meta"><strong>English:</strong> ${quizState.currentWord.english}</div>
+        <div id="qb-meta"><strong>English:</strong> ${quizState.currentWord.english}</div>
 
-    <div id="qb-grid" class="sb-grid">
-        ${quizState.options.map(opt => `
-            <button class="pill" data-spanish="${opt}">${opt}</button>
-        `).join("")}
+        <div id="qb-grid" class="sb-grid">
+            ${quizState.options.map(opt => `
+                <button class="pill" data-spanish="${opt}">${opt}</button>
+            `).join("")}
+        </div>
+
+        <div id="qb-answer" class="qb-answer"></div>
+
+        <div class="sb-controls quiz-controls-tight">
+            <button id="qb-submit">Check</button>
+            <button id="qb-next">Next</button>
+            <button id="qb-harder" class="${quizState.harderMode ? "active" : ""}">Harder</button>
+        </div>
+
+        <div id="qb-feedback" class="qb-feedback"></div>
     </div>
-
-    <!-- ⭐ ANSWER FIELD MOVED UP -->
-    <div id="qb-answer" class="qb-answer"></div>
-
-    <!-- ⭐ BUTTONS MOVED CLOSER TO ANSWER -->
-    <div class="sb-controls quiz-controls-tight">
-        <button id="qb-submit">Check</button>
-        <button id="qb-next">Next</button>
-        <button id="qb-harder" class="${quizState.harderMode ? "active" : ""}">Harder</button>
-    </div>
-
-    <!-- ⭐ FEEDBACK MOVED BELOW BUTTONS -->
-    <div id="qb-feedback" class="qb-feedback"></div>
-</div>
-`;
-
+    `;
 
     setupQuizEvents();
 }
@@ -2863,7 +2859,9 @@ function setupQuizEvents() {
 
     quizState.selected = null;
 
-    // Pill selection
+    /* ============================================================
+       OPTION SELECTION
+    ============================================================ */
     grid.querySelectorAll(".pill").forEach(btn => {
         btn.addEventListener("click", () => {
             grid.querySelectorAll(".pill").forEach(b => b.classList.remove("active"));
@@ -2873,56 +2871,66 @@ function setupQuizEvents() {
         });
     });
 
-    // Check button
+    /* ============================================================
+       CHECK ANSWER
+    ============================================================ */
     submitBtn.addEventListener("click", () => {
-    if (!quizState.selected) {
-        feedback.textContent = "Choose an answer first.";
-        return;
-    }
+        if (!quizState.selected) {
+            feedback.textContent = "Choose an answer first.";
+            return;
+        }
 
-    const correct = quizState.currentWord.spanish;
+        const correct = quizState.currentWord.spanish;
 
-    // ⭐ Ensure quizScore is not null before incrementing
-    if (appState.levelStats[appState.currentLevel].quizScore === null) {
-        appState.levelStats[appState.currentLevel].quizScore = 0;
-    }
+        if (quizState.selected === correct) {
+            feedback.textContent = "Correct! 🎉";
 
-   if (quizState.selected === correct) {
-    feedback.textContent = "Correct! 🎉";
+            const stats = appState.levelStats[appState.currentLevel];
+            if (stats) {
+                stats.quizScore = (stats.quizScore || 0) + 1;
+                stats.quizCompleted = (stats.quizCompleted || 0) + 1;
+            }
 
-    if (appState.levelStats[appState.currentLevel].quizScore === null) {
-        appState.levelStats[appState.currentLevel].quizScore = 0;
-    }
+            updateBadges();
+            updateProgressMeters();
+        } else {
+            feedback.textContent = `Incorrect — correct answer: ${correct}`;
+        }
 
-    appState.levelStats[appState.currentLevel].quizScore++;
-    appState.levelStats[appState.currentLevel].quizCompleted++;   // ⭐ ADD THIS LINE
+        setTimeout(() => speakQuiz(correct), 300);
+        saveState();
+    });
 
-    updateBadges();
-    updateProgressMeters();
-}
- else {
-        feedback.textContent = `Incorrect — correct answer: ${correct}`;
-    }
-
-    // Sabina audio
-    setTimeout(() => speakQuiz(correct), 300);
-
-    saveState();
-});
-
-
-    // Next button
+    /* ============================================================
+       NEXT QUESTION
+    ============================================================ */
     nextBtn.addEventListener("click", () => {
         renderQuizTab();
     });
 
-    // Harder mode toggle
+    /* ============================================================
+       HARDER MODE — FIXED
+    ============================================================ */
     harderBtn.addEventListener("click", () => {
+
+        // toggle visual state
         quizState.harderMode = !quizState.harderMode;
         harderBtn.classList.toggle("active");
+
+        // ⭐ ACTUAL HARDER LOGIC (RESTORED)
+        const newLevel = getHarderLevel(appState.currentLevel);
+
+        if (newLevel !== appState.currentLevel) {
+            appState.currentLevel = newLevel;
+            feedback.textContent = `Harder mode: now practicing ${newLevel}`;
+        } else {
+            feedback.textContent = `Already at hardest level (${newLevel}).`;
+        }
+
         renderQuizTab();
     });
 }
+
 
 
 /* ============================================================
