@@ -1,430 +1,4 @@
 /* ============================================================
-   GLOBAL STATE
-============================================================ */
-
-const Global = {
-    level: "A1",
-    audioRate: 1,
-    name: "",
-    resetAll() {
-        localStorage.clear();
-        location.reload();
-    }
-};
-
-/* ============================================================
-   CEFR WORDBANK MERGING (Conversation + Engines)
-============================================================ */
-
-function getConversationWordbank(level) {
-    if (level === "A1") return [...A1];
-    if (level === "A2") return [...A1, ...A2];
-    if (level === "B1") return [...A1, ...A2, ...B1];
-    if (level === "B2") return [...A1, ...A2, ...B1, ...B2];
-    return [...A1];
-}
-
-function getAllWordbanksUpTo(level) {
-    return getConversationWordbank(level);
-}
-
-/* ============================================================
-   ROUTER — TAB SWITCHING
-============================================================ */
-
-const Router = {
-    current: "dashboard",
-
-    show(tabName) {
-        const pages = document.querySelectorAll(".tab-page");
-        pages.forEach(p => p.classList.add("hidden"));
-
-        const target = document.getElementById(`tab-${tabName}`);
-        if (target) target.classList.remove("hidden");
-
-        const buttons = document.querySelectorAll(".tab-btn");
-        buttons.forEach(btn => btn.classList.remove("active"));
-
-        const activeBtn = document.querySelector(`[data-tab="${tabName}"]`);
-        if (activeBtn) activeBtn.classList.add("active");
-
-        this.current = tabName;
-
-        // ⭐ REQUIRED: engine refresh logic
-        switch (tabName) {
-            case "listen":
-                ListenEngine.refresh();
-                break;
-
-            case "flashcards":
-    FlashcardEngine.refresh();
-    break;
-
-
-
-            case "quiz":
-                QuizEngine.refresh();
-                break;
-
-            case "build":
-                BuildEngine.refresh();
-                break;
-
-            case "sentence":
-                SentenceEngine.refresh();
-                break;
-
-            case "conversation":
-                ConversationEngine.refresh();
-                break;
-
-            case "review":
-                ReviewEngine.refresh();
-                break;
-        }
-    }
-};
-
-
-/* ============================================================
-   INITIAL BOOT
-============================================================ */
-
-document.addEventListener("DOMContentLoaded", () => {
-
-    /* Load saved name */
-    const savedName = localStorage.getItem("studentName");
-    if (savedName) {
-        Global.name = savedName;
-        const nameField = document.getElementById("student-name");
-        if (nameField) nameField.value = savedName;
-    }
-
-    /* Load saved level */
-    const savedLevel = localStorage.getItem("skillLevel");
-    if (savedLevel) {
-        Global.level = savedLevel;
-        highlightLevelButton(savedLevel);
-    }
-
-    /* Load saved audio rate */
-    const savedRate = localStorage.getItem("audioRate");
-    if (savedRate) {
-        Global.audioRate = parseFloat(savedRate);
-        const rateSlider = document.getElementById("rate");
-        if (rateSlider) rateSlider.value = savedRate;
-    }
-
-    /* Activate dashboard by default */
-    Router.show("dashboard");
-
-    /* Initialize engines that require startup */
-    ListenEngine.init();
-    FlashcardEngine.init();
-    QuizEngine.init();
-    BuildEngine.init();
-    SentenceEngine.init();
-    ConversationEngine.init();
-    ReviewEngine.init();
-    AchievementsEngine.init();
-});
-
-/* ============================================================
-   SKILL LEVEL BUTTONS
-============================================================ */
-
-function highlightLevelButton(level) {
-    document.querySelectorAll(".level-buttons .pill").forEach(btn => {
-        btn.classList.remove("active");
-        if (btn.dataset.level === level) btn.classList.add("active");
-    });
-}
-
-document.querySelectorAll(".level-buttons .pill").forEach(btn => {
-    btn.addEventListener("click", () => {
-        const level = btn.dataset.level;
-        Global.level = level;
-        localStorage.setItem("skillLevel", level);
-        highlightLevelButton(level);
-
-        // Re‑initialise engines that depend on CEFR level
-        ConversationEngine.init();
-        QuizEngine.init();
-        BuildEngine.init();
-        SentenceEngine.init();
-    });
-});
-
-/* ============================================================
-   AUDIO SPEED
-============================================================ */
-
-const rateSlider = document.getElementById("rate");
-if (rateSlider) {
-    rateSlider.addEventListener("input", () => {
-        Global.audioRate = parseFloat(rateSlider.value);
-        localStorage.setItem("audioRate", Global.audioRate);
-    });
-}
-
-/* ============================================================
-   SAVE NAME
-============================================================ */
-
-const saveNameBtn = document.getElementById("save-name-btn");
-if (saveNameBtn) {
-    saveNameBtn.addEventListener("click", () => {
-        const nameField = document.getElementById("student-name");
-        const status = document.getElementById("name-status");
-
-        if (!nameField.value.trim()) {
-            status.textContent = "Please enter a name.";
-            return;
-        }
-
-        Global.name = nameField.value.trim();
-        localStorage.setItem("studentName", Global.name);
-        status.textContent = "Saved!";
-    });
-}
-
-/* ============================================================
-   RESET BUTTON
-============================================================ */
-
-const resetBtn = document.getElementById("resetBtn");
-if (resetBtn) {
-    resetBtn.addEventListener("click", () => {
-        Global.resetAll();
-    });
-}
-
-/* ============================================================
-   SEARCH BOX
-============================================================ */
-
-const searchBtn = document.getElementById("searchBtn");
-if (searchBtn) {
-    searchBtn.addEventListener("click", () => {
-        const word = document.getElementById("searchInput").value.trim();
-        const result = SearchEngine.lookup(word);
-        document.getElementById("searchResult").textContent =
-            result || "Not found.";
-    });
-}
-
-/* ============================================================
-   REVIEW TILE → REVIEW TAB
-============================================================ */
-
-const reviewTile = document.getElementById("review-tile");
-if (reviewTile) {
-    reviewTile.addEventListener("click", () => {
-        Router.show("review");
-        ReviewEngine.init();
-    });
-}
-
-/* ============================================================
-   FREE PRACTICE TAB
-============================================================ */
-
-const practiceBtn = document.getElementById("practiceBtn");
-if (practiceBtn) {
-    practiceBtn.addEventListener("click", () => {
-        const text = document.getElementById("practiceInput").value.trim();
-        const feedback = FreePracticeEngine.evaluate(text);
-        document.getElementById("practiceResult").textContent = feedback;
-    });
-}
-
-/* ============================================================
-   LISTEN TAB
-============================================================ */
-
-const listenPlay = document.getElementById("listenPlay");
-const listenNext = document.getElementById("listenNext");
-const listenPrev = document.getElementById("listenPrev");
-const listenAuto = document.getElementById("listenAuto");
-
-if (listenPlay) {
-    listenPlay.addEventListener("click", () => {
-        ListenEngine.play(Global.audioRate);
-    });
-}
-
-if (listenNext) {
-    listenNext.addEventListener("click", () => {
-        ListenEngine.next();
-    });
-}
-
-if (listenPrev) {
-    listenPrev.addEventListener("click", () => {
-        ListenEngine.prev();
-    });
-}
-
-if (listenAuto) {
-    listenAuto.addEventListener("click", () => {
-        ListenEngine.toggleAuto(Global.audioRate);
-    });
-}
-
-/* ============================================================
-   FLASHCARDS TAB
-============================================================ */
-
-function wireFlashcardEvents() {
-    const cards = document.querySelectorAll(".fc-inner");
-    cards.forEach(card => {
-        card.addEventListener("click", () => {
-            card.classList.toggle("fc-flipped");
-        });
-    });
-}
-
-document.addEventListener("flashcardsRendered", () => {
-    wireFlashcardEvents();
-});
-
-/* ============================================================
-   QUIZ TAB
-============================================================ */
-
-document.addEventListener("quizRendered", () => {
-    const options = document.querySelectorAll("#quizOptions .pill");
-    options.forEach(opt => {
-        opt.addEventListener("click", () => {
-            const chosen = opt.dataset.answer;
-            const feedback = QuizEngine.check(chosen);
-            document.getElementById("quizFeedback").textContent = feedback;
-        });
-    });
-});
-
-/* ============================================================
-   BUILD TAB
-============================================================ */
-
-document.addEventListener("buildRendered", () => {
-    const wordButtons = document.querySelectorAll("#buildGrid .pill");
-    wordButtons.forEach(btn => {
-        btn.addEventListener("click", () => {
-            BuildEngine.addWord(btn.dataset.word);
-        });
-    });
-});
-
-const buildCheckBtn = document.getElementById("buildCheckBtn");
-if (buildCheckBtn) {
-    buildCheckBtn.addEventListener("click", () => {
-        const result = BuildEngine.check();
-        document.getElementById("buildOutput").textContent = result;
-    });
-}
-
-const buildNewBtn = document.getElementById("buildNewBtn");
-if (buildNewBtn) {
-    buildNewBtn.addEventListener("click", () => {
-        BuildEngine.init();
-    });
-}
-
-/* ============================================================
-   SENTENCE TAB
-============================================================ */
-
-document.addEventListener("sentenceRendered", () => {
-    // SentenceEngine already writes directly to #sentence-content
-    // No additional UI wiring needed here
-});
-
-/* ============================================================
-   CONVERSATION TAB
-============================================================ */
-
-document.addEventListener("conversationRendered", () => {
-    // Word pills already rendered by ConversationEngine
-    const pills = document.querySelectorAll("#conversationFeed .pill");
-    pills.forEach(pill => {
-        pill.addEventListener("click", () => {
-            ConversationEngine.addWord(pill.dataset.word);
-        });
-    });
-});
-
-const conversationSend = document.getElementById("conversationSend");
-if (conversationSend) {
-    conversationSend.addEventListener("click", () => {
-        const input = document.getElementById("conversationInput").value.trim();
-        const reply = ConversationEngine.evaluate(input);
-        ConversationEngine.appendReply(reply);
-        document.getElementById("conversationInput").value = "";
-    });
-}
-
-/* ============================================================
-   REVIEW TAB
-============================================================ */
-
-document.addEventListener("reviewRendered", () => {
-    // ReviewEngine writes directly to #reviewCard
-});
-
-const reviewMastered = document.getElementById("reviewMastered");
-if (reviewMastered) {
-    reviewMastered.addEventListener("click", () => {
-        ReviewEngine.markMastered();
-        ReviewEngine.init(); // load next card
-    });
-}
-
-/* ============================================================
-   ACHIEVEMENTS TAB
-============================================================ */
-function renderAchievementsTab() {
-    // placeholder so init doesn't crash
-}
-
-const AchievementsEngine = {
-    init() {
-        // renderAchievementsTab();   // ❌ REMOVE
-        renderGrammarTab();          // ✔ safe
-        document.dispatchEvent(new Event("achievementsRendered"));
-    },
-
-    refresh() {
-        // renderAchievementsTab();   // ❌ REMOVE
-        renderGrammarTab();          // ✔ safe
-        document.dispatchEvent(new Event("achievementsRendered"));
-    }
-};
-
-
-/* ============================================================
-   TAB BUTTONS → ROUTER
-============================================================ */
-
-document.querySelectorAll(".tab-btn").forEach(btn => {
-    btn.addEventListener("click", () => {
-        const tab = btn.dataset.tab;
-        Router.show(tab);
-
-        // Re-render engines when their tab is opened
-        if (tab === "listen") ListenEngine.init();
-        if (tab === "flashcards") FlashcardEngine.init();
-        if (tab === "quiz") QuizEngine.init();
-        if (tab === "build") BuildEngine.init();
-        if (tab === "sentence") SentenceEngine.init();
-        if (tab === "conversation") ConversationEngine.init();
-        if (tab === "practice") FreePracticeEngine.init();
-        if (tab === "review") ReviewEngine.init();
-        if (tab === "achievements") AchievementsEngine.init();
-    });
-});
-
-/* ============================================================
    CEFR SENTENCE BANKS (for Build tab)
    ============================================================ */
 
@@ -2363,193 +1937,6 @@ initTabNavigation();
 activateTab("dashboard");
 
 /* ============================================================
-   ENGINE PACK — MATCHED TO YOUR HTML
-============================================================ */
-
-/* ---------------------------
-   LISTEN ENGINE
---------------------------- */
-const ListenEngine = {
-    init() {
-        renderListenTab();
-    },
-
-    play(rate) {
-        Global.audioRate = rate;
-        listenAutoPlay.active = true;
-        listenAutoPlay.paused = false;
-        listenAutoPlay.index = 0;
-        playNextListenWord();
-    },
-
-    next() {
-        listenAutoPlay.index++;
-        playNextListenWord();
-    },
-
-    prev() {
-        listenAutoPlay.index = Math.max(0, listenAutoPlay.index - 1);
-        playNextListenWord();
-    },
-
-    toggleAuto(rate) {
-        Global.audioRate = rate;
-        listenAutoPlay.active = !listenAutoPlay.active;
-        listenAutoPlay.paused = false;
-        listenAutoPlay.index = 0;
-
-        if (listenAutoPlay.active) {
-            playNextListenWord();
-        } else {
-            speechSynthesis.cancel();
-        }
-    }
-};
-
-
-/* ---------------------------
-   FLASHCARD ENGINE
---------------------------- */
-const FlashcardEngine = {
-    init() {
-        renderFlashcardsTab();
-    },
-    refresh() {
-        renderFlashcardsTab();
-    }
-};
-
-
-
-/* ---------------------------
-   QUIZ ENGINE
---------------------------- */
-const QuizEngine = {
-    init() {
-        renderQuizTab();
-        document.dispatchEvent(new Event("quizRendered"));
-    },
-
-    check(answer) {
-        return quizCheckAnswer(answer);
-    },
-
-    refresh() {
-        renderQuizTab();
-        document.dispatchEvent(new Event("quizRendered"));
-    }
-};
-
-
-/* ---------------------------
-   BUILD ENGINE
---------------------------- */
-const BuildEngine = {
-    init() {
-        renderBuildTab();
-        document.dispatchEvent(new Event("buildRendered"));
-    },
-
-    addWord(word) {
-        buildAddWord(word);
-    },
-
-    check() {
-        return buildCheckSentence();
-    },
-
-    refresh() {
-        renderBuildTab();
-        document.dispatchEvent(new Event("buildRendered"));
-    }
-};
-
-
-/* ---------------------------
-   SENTENCE ENGINE
---------------------------- */
-const SentenceEngine = {
-    init() {
-        renderSentenceTab();
-        document.dispatchEvent(new Event("sentenceRendered"));
-    },
-
-    refresh() {
-        renderSentenceTab();
-        document.dispatchEvent(new Event("sentenceRendered"));
-    }
-};
-
-
-/* ---------------------------
-   CONVERSATION ENGINE
---------------------------- */
-const ConversationEngine = {
-    init() {
-        renderConversationTab();
-        document.dispatchEvent(new Event("conversationRendered"));
-    },
-
-    addWord(word) {
-        conversationAddWord(word);
-    },
-
-    evaluate(input) {
-        return conversationEvaluate(input);
-    },
-
-    appendReply(reply) {
-        conversationAppendReply(reply);
-    },
-
-    refresh() {
-        renderConversationTab();
-        document.dispatchEvent(new Event("conversationRendered"));
-    }
-};
-
-
-/* ---------------------------
-   REVIEW ENGINE
---------------------------- */
-const ReviewEngine = {
-    init() {
-        // renderReviewTab();   // ❌ REMOVE — function does not exist
-        document.dispatchEvent(new Event("reviewRendered"));
-    },
-
-    markMastered() {
-        // reviewMarkMastered(); // ❌ REMOVE unless you define it
-    },
-
-    refresh() {
-        // renderReviewTab();   // ❌ REMOVE
-        document.dispatchEvent(new Event("reviewRendered"));
-    }
-};
-
-
-
-/* ---------------------------
-   ACHIEVEMENTS ENGINE
---------------------------- */
-
-function renderListenTab() {
-    const container = document.getElementById("listenList");   // ✔ correct ID
-    if (!container) return;
-
-    // your existing Listen renderer code stays exactly the same
-}
-
-function renderFlashcardsTab() {
-    const container = document.getElementById("flash-content");   // ✔ correct ID
-    if (!container) return;
-
-    // your existing Flashcards renderer code stays exactly the same
-}
-
-
-/* ============================================================
    LISTEN TAB — CATEGORY + AUDIO PLAYER + CLEAN UI
    ============================================================ */
 
@@ -2561,7 +1948,7 @@ let listenAutoPlay = {
 };
 
 function renderListenTab() {
-    const container = document.getElementById("listenList");
+    const container = document.getElementById("listen-content");
     if (!container) return;
 
     // Pull the correct CEFR level vocabulary (already categorized)
@@ -2688,7 +2075,6 @@ function renderListenTab() {
 }
 
 
-
 /* ============================================================
    AUTO PLAY ENGINE
    ============================================================ */
@@ -2719,27 +2105,17 @@ function playNextListenWord() {
 
 /* ============================================================
    FLASHCARDS — CATEGORY GROUPED + FLIP + AUDIO (STABLE VERSION)
-============================================================ */
+   ============================================================ */
+
 
 function renderFlashcardsTab() {
     const container = document.getElementById("flash-content");
-    if (!container) {
-        console.warn("Flashcards: #flash-content not found.");
-        return;
-    }
-
-    const level = appState.currentLevel || "A1";
-    const words = CEFR_LEVELS[level];
-    if (!words) {
-        console.warn("Flashcards: no CEFR data for level", level);
-        return;
-    }
-
+    const words = CEFR_LEVELS[appState.currentLevel];
     const grouped = groupByCategory(words);
 
     let html = `
         <div class="glass-panel">
-            <h2>Flashcards — Level ${level}</h2>
+            <h2>Flashcards — Level ${appState.currentLevel}</h2>
             <p>Tap a card to flip. Spanish side plays audio.</p>
         </div>
     `;
@@ -2747,10 +2123,10 @@ function renderFlashcardsTab() {
     Object.keys(grouped).forEach(cat => {
         html += `
         <div class="glass-panel">
-            <div class="flash-category-header" data-cat="${cat}">
-                <span class="listen-category-title">${cat.toUpperCase()}</span>
-                <span class="listen-arrow">▶</span>
-            </div>
+        <div class="flash-category-header" data-cat="${cat}">
+           <span class="listen-category-title">${cat.toUpperCase()}</span>
+           <span class="listen-arrow">▶</span>
+        </div>
 
             <div class="flash-category-content" data-cat="${cat}">
                 <div class="fc-grid">
@@ -2769,7 +2145,6 @@ function renderFlashcardsTab() {
 
     container.innerHTML = html;
 
-    // Category collapse
     container.querySelectorAll(".flash-category-header").forEach(header => {
         header.addEventListener("click", () => {
             const cat = header.dataset.cat;
@@ -2780,20 +2155,18 @@ function renderFlashcardsTab() {
         });
     });
 
-    // Flip + audio
-    const cards = container.querySelectorAll(".fc-card");
-    console.log("Flashcards: cards found =", cards.length);
-
-    cards.forEach(card => {
+    container.querySelectorAll(".fc-card").forEach(card => {
         card.addEventListener("click", () => {
             const inner = card.querySelector(".fc-inner");
             const flipped = inner.classList.toggle("fc-flipped");
             const spanish = inner.querySelector(".fc-back").textContent.trim();
 
-            console.log("Flashcard clicked, flipped =", flipped, "spanish =", spanish);
-
             if (flipped) {
                 speakSpanish(spanish);
+                appState.levelStats[appState.currentLevel].flashSeen++;
+                saveState();
+                updateBadges();
+                updateProgressMeters();
             } else {
                 speechSynthesis.cancel();
             }
@@ -2801,16 +2174,40 @@ function renderFlashcardsTab() {
     });
 }
 
+
 /* ============================================================
-   QUIZ OPTION GENERATOR
-============================================================ */
+   SHARED QUIZ / BUILD / SENTENCE / CONVERSATION STATE
+   ============================================================ */
+
+let quizState = {
+    currentWord: null,
+    options: [],
+    harderMode: false,
+    selected: null
+};
+
+let buildState = {
+    currentWord: null,
+    tokens: []
+};
+
+let sentenceState = {
+    currentSentence: null,
+    tokens: []
+};
+
+let convoState = {
+    currentPrompt: null,
+    tokens: []
+};
 
 function generateQuizOptions(words, correctWord) {
-    const opts = [correctWord.spanish];
+    let opts = [correctWord.spanish];
+    const count = quizState.harderMode ? 5 : 3;
 
-    while (opts.length < 3) {
-        const r = words[Math.floor(Math.random() * words.length)].spanish;
-        if (!opts.includes(r)) opts.push(r);
+    while (opts.length < count) {
+        const w = words[Math.floor(Math.random() * words.length)];
+        if (!opts.includes(w.spanish)) opts.push(w.spanish);
     }
 
     return opts.sort(() => Math.random() - 0.5);
@@ -2818,7 +2215,7 @@ function generateQuizOptions(words, correctWord) {
 
 /* ============================================================
    QUIZ TAB — RENDER + EVENTS
-============================================================ */
+   ============================================================ */
 
 function renderQuizTab() {
     const container = document.getElementById("quiz-content");
@@ -2835,30 +2232,34 @@ function renderQuizTab() {
     quizState.options = generateQuizOptions(words, quizState.currentWord);
     quizState.selected = null;
 
-    container.innerHTML = `
-    <div class="glass-panel quiz-card">
-        <h2>Quiz — Level ${appState.currentLevel}</h2>
-        <p>Select the correct Spanish for the English word.</p>
+container.innerHTML = `
+<div class="glass-panel quiz-card">
+    <h2>Quiz — Level ${appState.currentLevel}</h2>
+    <p>Select the correct Spanish for the English word.</p>
 
-        <div id="qb-meta"><strong>English:</strong> ${quizState.currentWord.english}</div>
+    <div id="qb-meta"><strong>English:</strong> ${quizState.currentWord.english}</div>
 
-        <div id="qb-grid" class="sb-grid">
-            ${quizState.options.map(opt => `
-                <button class="pill" data-spanish="${opt}">${opt}</button>
-            `).join("")}
-        </div>
-
-        <div id="qb-answer" class="qb-answer"></div>
-
-        <div class="sb-controls quiz-controls-tight">
-            <button id="qb-submit">Check</button>
-            <button id="qb-next">Next</button>
-            <button id="qb-harder" class="${quizState.harderMode ? "active" : ""}">Harder</button>
-        </div>
-
-        <div id="qb-feedback" class="qb-feedback"></div>
+    <div id="qb-grid" class="sb-grid">
+        ${quizState.options.map(opt => `
+            <button class="pill" data-spanish="${opt}">${opt}</button>
+        `).join("")}
     </div>
-    `;
+
+    <!-- ⭐ ANSWER FIELD MOVED UP -->
+    <div id="qb-answer" class="qb-answer"></div>
+
+    <!-- ⭐ BUTTONS MOVED CLOSER TO ANSWER -->
+    <div class="sb-controls quiz-controls-tight">
+        <button id="qb-submit">Check</button>
+        <button id="qb-next">Next</button>
+        <button id="qb-harder" class="${quizState.harderMode ? "active" : ""}">Harder</button>
+    </div>
+
+    <!-- ⭐ FEEDBACK MOVED BELOW BUTTONS -->
+    <div id="qb-feedback" class="qb-feedback"></div>
+</div>
+`;
+
 
     setupQuizEvents();
 }
@@ -2873,9 +2274,7 @@ function setupQuizEvents() {
 
     quizState.selected = null;
 
-    /* ============================================================
-       OPTION SELECTION
-    ============================================================ */
+    // Pill selection
     grid.querySelectorAll(".pill").forEach(btn => {
         btn.addEventListener("click", () => {
             grid.querySelectorAll(".pill").forEach(b => b.classList.remove("active"));
@@ -2885,78 +2284,56 @@ function setupQuizEvents() {
         });
     });
 
-    /* ============================================================
-       CHECK ANSWER
-    ============================================================ */
+    // Check button
     submitBtn.addEventListener("click", () => {
-        if (!quizState.selected) {
-            feedback.textContent = "Choose an answer first.";
-            return;
-        }
+    if (!quizState.selected) {
+        feedback.textContent = "Choose an answer first.";
+        return;
+    }
 
-        const correct = quizState.currentWord.spanish;
+    const correct = quizState.currentWord.spanish;
 
-        if (quizState.selected === correct) {
-            feedback.textContent = "Correct! 🎉";
+    // ⭐ Ensure quizScore is not null before incrementing
+    if (appState.levelStats[appState.currentLevel].quizScore === null) {
+        appState.levelStats[appState.currentLevel].quizScore = 0;
+    }
 
-            const stats = appState.levelStats[appState.currentLevel];
-            if (stats) {
-                stats.quizScore = (stats.quizScore || 0) + 1;
-                stats.quizCompleted = (stats.quizCompleted || 0) + 1;
-            }
+   if (quizState.selected === correct) {
+    feedback.textContent = "Correct! 🎉";
 
-            updateBadges();
-            updateProgressMeters();
-        } else {
-            feedback.textContent = `Incorrect — correct answer: ${correct}`;
-        }
+    if (appState.levelStats[appState.currentLevel].quizScore === null) {
+        appState.levelStats[appState.currentLevel].quizScore = 0;
+    }
 
-        setTimeout(() => speakQuiz(correct), 300);
-        saveState();
-    });
+    appState.levelStats[appState.currentLevel].quizScore++;
+    appState.levelStats[appState.currentLevel].quizCompleted++;   // ⭐ ADD THIS LINE
 
-/* ============================================================
-   SHARED QUIZ STATE
-============================================================ */
+    updateBadges();
+    updateProgressMeters();
+}
+ else {
+        feedback.textContent = `Incorrect — correct answer: ${correct}`;
+    }
 
-let quizState = {
-    currentWord: null,
-    options: [],
-    selected: null,
-    harderMode: false
-};
+    // Sabina audio
+    setTimeout(() => speakQuiz(correct), 300);
 
-   
-    /* ============================================================
-       NEXT QUESTION
-    ============================================================ */
+    saveState();
+});
+
+
+    // Next button
     nextBtn.addEventListener("click", () => {
         renderQuizTab();
     });
 
-    /* ============================================================
-       HARDER MODE — FIXED
-    ============================================================ */
+    // Harder mode toggle
     harderBtn.addEventListener("click", () => {
-
-        // toggle visual state
         quizState.harderMode = !quizState.harderMode;
         harderBtn.classList.toggle("active");
-
-        // ⭐ ACTUAL HARDER LOGIC (RESTORED)
-        const newLevel = getHarderLevel(appState.currentLevel);
-
-        if (newLevel !== appState.currentLevel) {
-            appState.currentLevel = newLevel;
-            feedback.textContent = `Harder mode: now practicing ${newLevel}`;
-        } else {
-            feedback.textContent = `Already at hardest level (${newLevel}).`;
-        }
-
         renderQuizTab();
     });
 }
-
 
 
 /* ============================================================
@@ -3214,8 +2591,6 @@ function setupSentenceEvents(q) {
     });
 }
 
-
-
 /* ============================================================
    CEFR SENTENCE CHOICES — FULL PACK (A1 → B2)
    ============================================================ */
@@ -3445,8 +2820,8 @@ const CEFR_SENTENCE_CHOICES = {
 
 
 /* ============================================================
-   CONVERSATION TAB — RENDER + EVENTS (Stable Version)
-============================================================ */
+   CONVERSATION TAB — RENDER + EVENTS (EVERYDAY DIALOGUE)
+   ============================================================ */
 
 const CONVO_PROMPTS = [
     { english: "How are you today?", spanishTarget: "¿Cómo estás hoy?" },
@@ -3458,8 +2833,8 @@ const CONVO_PROMPTS = [
 ];
 
 function renderConversationTab() {
-   const container = document.getElementById("conversationFeed");
-   const words = CEFR_LEVELS[appState.currentLevel];
+    const container = document.getElementById("conversation-content");
+    const words = CEFR_LEVELS[appState.currentLevel];
 
     if (!words || !words.length) {
         container.innerHTML = `<div class="glass-panel convo-card">
@@ -3524,11 +2899,12 @@ function renderConversationTab() {
         </div>
     `;
 
-    // ⭐ Wire events immediately after rendering
-    wireConversationEvents();
+    setupConversationEvents();
 }
 
-function wireConversationEvents() {
+
+
+function setupConversationEvents() {
     const grid = document.getElementById("convo-grid");
     const answerBox = document.getElementById("convo-answer");
     const typeBox = document.getElementById("convo-type");
@@ -3541,9 +2917,7 @@ function wireConversationEvents() {
 
     convoState.answer = [];
 
-    /* ============================================================
-       WORD PILL SELECTION
-    ============================================================ */
+    // Word-pill selection
     grid.querySelectorAll(".convo-opt").forEach(btn => {
         btn.addEventListener("click", () => {
             convoState.answer.push(btn.dataset.token);
@@ -3553,17 +2927,13 @@ function wireConversationEvents() {
         });
     });
 
-    /* ============================================================
-       TYPING MODE
-    ============================================================ */
+    // Typing mode
     typeBox.addEventListener("input", () => {
         convoState.answer = typeBox.value.trim().split(" ");
         answerBox.textContent = convoState.answer.join(" ");
     });
 
-    /* ============================================================
-       UNDO BUTTON
-    ============================================================ */
+    // Undo
     undoBtn.addEventListener("click", () => {
         convoState.answer.pop();
         answerBox.textContent = convoState.answer.join(" ");
@@ -3576,9 +2946,7 @@ function wireConversationEvents() {
         });
     });
 
-    /* ============================================================
-       RESET BUTTON
-    ============================================================ */
+    // Reset
     resetBtn.addEventListener("click", () => {
         convoState.answer = [];
         answerBox.textContent = "";
@@ -3589,41 +2957,37 @@ function wireConversationEvents() {
         });
     });
 
-    /* ============================================================
-       CHECK ANSWER
-    ============================================================ */
+    // Check
     checkBtn.addEventListener("click", () => {
         const correct = convoState.currentPrompt.spanishTarget.replace(/[¿?]/g, "").trim();
         const user = convoState.answer.join(" ").trim();
 
-        if (user === correct) {
-            feedback.textContent = "Nice! That’s a natural response. 🎉";
+       if (user === correct) {
+    feedback.textContent = "Nice! That’s a natural response. 🎉";
 
-            if (appState.levelStats[appState.currentLevel].conversationCompleted == null) {
-                appState.levelStats[appState.currentLevel].conversationCompleted = 0;
-            }
-            appState.levelStats[appState.currentLevel].conversationCompleted++;
+    if (appState.levelStats[appState.currentLevel].conversationCompleted == null) {
+        appState.levelStats[appState.currentLevel].conversationCompleted = 0;
+    }
+    appState.levelStats[appState.currentLevel].conversationCompleted++;
 
-            updateBadges();
-            updateProgressMeters();
-            setTimeout(() => speakQuiz(correct), 300);
+    updateBadges();
+    updateProgressMeters();
+    setTimeout(() => speakQuiz(correct), 300);
 
-        } else {
-            feedback.textContent = `Not quite. A natural response would be: ${convoState.currentPrompt.spanishTarget}`;
-            setTimeout(() => speakQuiz(correct), 300);
-        }
+} else {
+    feedback.textContent = `Not quite. A natural response would be: ${convoState.currentPrompt.spanishTarget}`;
+    setTimeout(() => speakQuiz(correct), 300);
+}
 
-        saveState();
+saveState();
+
     });
 
-    /* ============================================================
-       NEXT PROMPT
-    ============================================================ */
+    // Next
     nextBtn.addEventListener("click", () => {
         renderConversationTab();
     });
 }
-
 
 
 /* ============================================================
@@ -3631,12 +2995,12 @@ function wireConversationEvents() {
    ============================================================ */
 
 function renderGrammarTab() {
-    const container = document.getElementById("achievements-content"); // ✔ Achievements tab
+    const container = document.getElementById("grammar-content");
     const words = CEFR_LEVELS[appState.currentLevel];
     const grouped = groupByCategory(words);
 
-    container.insertAdjacentHTML("beforeend", `
-        <div class="glass-panel quiz-card" style="margin-top:20px;">
+    container.innerHTML = `
+        <div class="glass-panel quiz-card">
             <h2>Grammar — Level ${appState.currentLevel}</h2>
             <p>Breakdown of word types you're training.</p>
         </div>
@@ -3651,9 +3015,8 @@ function renderGrammarTab() {
                 Notice how connectors, verbs, adjectives and nouns combine.
             </p>
         </div>
-    `);
+    `;
 }
-
 
 /* ============================================================
    BADGES
