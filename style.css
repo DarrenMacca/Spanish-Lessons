@@ -435,13 +435,14 @@ html, body {
 }
 
 /* ============================================================
-   FLASHCARDS — UPDATED FOR #tab-flashcards + #flashcardsGrid
+   FLASHCARDS — UPDATED FOR #tab-flashcards + #flash-content
 ============================================================ */
 
 #tab-flashcards h2 {
     margin-bottom: 12px;
 }
 
+/* Grid for cards inside each category */
 .fc-grid {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
@@ -449,10 +450,13 @@ html, body {
     margin-top: 20px;
 }
 
+/* Card container */
 .fc-card {
     perspective: 1000px;
+    cursor: pointer;
 }
 
+/* Inner flip element */
 .fc-inner {
     position: relative;
     width: 100%;
@@ -461,10 +465,12 @@ html, body {
     transition: transform 0.6s ease;
 }
 
-.fc-inner.fc-flipped {
+/* ✔ FIXED: correct flip selector */
+.fc-flipped {
     transform: rotateY(180deg);
 }
 
+/* Front + Back faces */
 .fc-front,
 .fc-back {
     position: absolute;
@@ -479,16 +485,29 @@ html, body {
     border-radius: 18px;
 }
 
+/* Front face */
 .fc-front {
     background: rgba(15, 23, 42, 0.7);
     color: #e2e8f0;
 }
 
+/* Back face rotated */
 .fc-back {
     background: rgba(14, 165, 233, 0.95);
     color: #0f172a;
     transform: rotateY(180deg);
 }
+
+/* Category collapse */
+.flash-category-content {
+    display: none;
+    margin-top: 10px;
+}
+
+.flash-category-content.open {
+    display: block;
+}
+
 
 /* ============================================================
    QUIZ TAB — UPDATED FOR #tab-quiz + #quizPrompt + #quizOptions
