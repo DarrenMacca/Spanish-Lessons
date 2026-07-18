@@ -2685,7 +2685,7 @@ function playNextListenWord() {
 ============================================================ */
 
 function renderFlashcardsTab() {
-    const container = document.getElementById("flashcardsGrid");
+    const container = document.getElementById("flash-content"); // ✔ FIXED
     const words = CEFR_LEVELS[appState.currentLevel];
     const grouped = groupByCategory(words);
 
@@ -2721,9 +2721,7 @@ function renderFlashcardsTab() {
 
     container.innerHTML = html;
 
-    /* ============================================================
-       CATEGORY COLLAPSE
-    ============================================================ */
+    // CATEGORY COLLAPSE
     container.querySelectorAll(".flash-category-header").forEach(header => {
         header.addEventListener("click", () => {
             const cat = header.dataset.cat;
@@ -2734,9 +2732,7 @@ function renderFlashcardsTab() {
         });
     });
 
-    /* ============================================================
-       FLASHCARD FLIP + AUDIO
-    ============================================================ */
+    // FLASHCARD FLIP + AUDIO
     container.querySelectorAll(".fc-card").forEach(card => {
         card.addEventListener("click", () => {
             const inner = card.querySelector(".fc-inner");
@@ -2755,7 +2751,6 @@ function renderFlashcardsTab() {
         });
     });
 }
-
 
 
 /* ============================================================
