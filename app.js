@@ -2723,7 +2723,7 @@ function playNextListenWord() {
 ============================================================ */
 
 function renderFlashcardsTab() {
-    const container = document.getElementById("flash-content"); // ✔ FIXED
+    const container = document.getElementById("flash-content");
     const words = CEFR_LEVELS[appState.currentLevel];
     const grouped = groupByCategory(words);
 
@@ -2737,10 +2737,10 @@ function renderFlashcardsTab() {
     Object.keys(grouped).forEach(cat => {
         html += `
         <div class="glass-panel">
-            <div class="flash-category-header" data-cat="${cat}">
-                <span class="flash-category-title">${cat.toUpperCase()}</span>
-                <span class="flash-arrow">▶</span>
-            </div>
+        <div class="flash-category-header" data-cat="${cat}">
+           <span class="listen-category-title">${cat.toUpperCase()}</span>
+           <span class="listen-arrow">▶</span>
+        </div>
 
             <div class="flash-category-content" data-cat="${cat}">
                 <div class="fc-grid">
@@ -2759,18 +2759,16 @@ function renderFlashcardsTab() {
 
     container.innerHTML = html;
 
-    // CATEGORY COLLAPSE
     container.querySelectorAll(".flash-category-header").forEach(header => {
         header.addEventListener("click", () => {
             const cat = header.dataset.cat;
             const content = container.querySelector(`.flash-category-content[data-cat="${cat}"]`);
-            const arrow = header.querySelector(".flash-arrow");
+            const arrow = header.querySelector(".listen-arrow");
             const open = content.classList.toggle("open");
             arrow.classList.toggle("open", open);
         });
     });
 
-    // FLASHCARD FLIP + AUDIO
     container.querySelectorAll(".fc-card").forEach(card => {
         card.addEventListener("click", () => {
             const inner = card.querySelector(".fc-inner");
@@ -2778,7 +2776,7 @@ function renderFlashcardsTab() {
             const spanish = inner.querySelector(".fc-back").textContent.trim();
 
             if (flipped) {
-                speakSpanish(spanish);   // ✔ audio now works
+                speakSpanish(spanish);
                 appState.levelStats[appState.currentLevel].flashSeen++;
                 saveState();
                 updateBadges();
@@ -2789,6 +2787,7 @@ function renderFlashcardsTab() {
         });
     });
 }
+
 
 
 
