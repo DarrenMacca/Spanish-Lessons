@@ -2657,58 +2657,48 @@ function wireQuizEvents() {
 
     quizState.selected = null;
 
-    /* ============================================================
-       OPTION SELECTION
-    ============================================================ */
-    grid.querySelectorAll(".pill").forEach(btn => {
-        btn.addEventListener("click", () => {
-            grid.querySelectorAll(".pill").forEach(b => b.classList.remove("active"));
-            btn.classList.add("active");
-            quizState.selected = btn.dataset.spanish;
-            answerBox.textContent = quizState.selected;
-        });
-    });
+   /* ============================================================
+   OPTION SELECTION
+============================================================ */
+buttons.forEach(btn => {
+    btn.addEventListener("click", () => {
+        const chosen = btn.dataset.opt;
 
-    /* ============================================================
-       CHECK ANSWER
-    ============================================================ */
-    submitBtn.addEventListener("click", () => {
-        if (!quizState.selected) {
-            feedback.textContent = "Choose an answer first.";
-            return;
-        }
+        if (chosen === q.correct) {
+            feedback.innerHTML = `
+                <span style="color:#4ade80;font-weight:600;">
+                    Correct! 🎉
+                </span>
+            `;
 
-        const correct = quizState.currentWord.spanish;
-
-        // Ensure score exists
-        if (appState.levelStats[appState.currentLevel].quizScore === null) {
-            appState.levelStats[appState.currentLevel].quizScore = 0;
-        }
-
-        if (quizState.selected === correct) {
-            feedback.textContent = "Correct! 🎉";
-
-            appState.levelStats[appState.currentLevel].quizScore++;
-            appState.levelStats[appState.currentLevel].quizCompleted++;
-
+            appState.levelStats[appState.currentLevel].sentenceCompleted++;
             updateBadges();
             updateProgressMeters();
+
+            speakQuiz(q.correct);
+
         } else {
-            feedback.textContent = `Incorrect — correct answer: ${correct}`;
+            feedback.innerHTML = `
+                <span style="color:#f87171;font-weight:600;">
+                    Incorrect.</span><br>
+                Correct answer: <strong>${q.correct}</strong>
+            `;
+
+            speakQuiz(q.correct);
         }
 
-        // Sabina audio
-        setTimeout(() => speakQuiz(correct), 300);
-
-        saveState();
+        buttons.forEach(b => b.disabled = true);
     });
+});
 
-    /* ============================================================
-       NEXT QUESTION
-    ============================================================ */
-    nextBtn.addEventListener("click", () => {
-        renderQuizTab();
-    });
+/* ============================================================
+   NEXT QUESTION
+============================================================ */
+nextBtn.addEventListener("click", () => {
+    renderSentenceTab();
+});
+} // ← closes setupSentenceEvents(q)
+
 
     /* ============================================================
        HARDER MODE
