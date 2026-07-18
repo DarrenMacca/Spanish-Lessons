@@ -2571,21 +2571,21 @@ const Router = {
     switch(tabName) {
         this.currentTab = tabName;
 
-        // Hide all tabs
+        // Hide all tab pages
         document.querySelectorAll(".tab-page").forEach(el => {
             el.style.display = "none";
         });
 
-        // Show selected tab
-        const active = document.getElementById(`tab-${tabName}`);
-        if (active) active.style.display = "block";
+        // Show selected tab page
+        const activePage = document.getElementById(`tab-${tabName}`);
+        if (activePage) activePage.style.display = "block";
 
-        // Highlight active button
+        // Update active tab button
         document.querySelectorAll(".tab-btn").forEach(btn => {
             btn.classList.remove("active-tab");
         });
-        const btn = document.getElementById(`btn-${tabName}`);
-        if (btn) btn.classList.add("active-tab");
+        const activeBtn = document.getElementById(`btn-${tabName}`);
+        if (activeBtn) activeBtn.classList.add("active-tab");
 
         // Cancel any ongoing audio
         speechSynthesis.cancel();
@@ -2644,8 +2644,384 @@ const Router = {
 
             case "dashboard":
             default:
+                // Dashboard: no engine init needed here
                 break;
         }
+    }
+};
+
+
+/* ============================================================
+   ENGINE GROUP — All Engines Together
+   ============================================================ */
+
+/* ------------------------------------------------------------
+   LISTEN ENGINE
+------------------------------------------------------------ */
+const ListenEngine = {
+    list: [],
+    index: 0,
+    auto: false,
+    timer: null,
+
+    setLevel(level) {
+        APP_STATE.currentLevel = level;
+        this.load();
+    },
+
+    setCategory(category) {
+        APP_STATE.currentCategory = category;
+        this.load();
+    },
+
+    load() {
+        const level = APP_STATE.currentLevel;
+        const category = APP_STATE.currentCategory;
+
+        this.list = CEFR_LISTENING_TOPICS?.[category]?.[level] || [];
+        this.index = 0;
+        this.render();
+    },
+
+    render() {
+        const container = document.getElementById("listenList");
+        if (!container) return;
+
+        if (!this.list.length) {
+            container.innerHTML = `<div class="empty-msg glass-panel">
+                No listening items found for ${APP_STATE.currentLevel} / ${APP_STATE.currentCategory}.
+            </div>`;
+            return;
+        }
+
+        container.innerHTML = this.list.map((item, i) => `
+            <div class="listen-item glass-panel ${i === this.index ? "active-listen" : ""}"
+                 onclick="ListenEngine.jumpTo(${i})">
+                <div class="listen-es">${item.spanish}</div>
+                <div class="listen-en">${item.english}</div>
+                <div class="listen-q">${item.question}</div>
+            </div>
+        `).join("");
+    },
+
+    jumpTo(i) {
+        this.index = i;
+        this.render();
+        this.playCurrent();
+    },
+
+    playCurrent() {
+        const item = this.list[this.index];
+        if (!item) return;
+
+        const utter = new SpeechSynthesisUtterance(item.spanish);
+        utter.lang = "es-ES";
+        utter.rate = APP_STATE.speechRate || 1;
+
+        speechSynthesis.cancel();
+        speechSynthesis.speak(utter);
+    },
+
+    next() {
+        if (!this.list.length) return;
+        this.index = (this.index + 1) % this.list.length;
+        this.render();
+        this.playCurrent();
+    },
+
+    previous() {
+        if (!this.list.length) return;
+        this.index = (this.index - 1 + this.list.length) % this.list.length;
+        this.render();
+        this.playCurrent();
+    },
+
+    startAutoPlay() {
+        if (!this.list.length) return;
+        this.auto = true;
+
+        const step = () => {
+            if (!this.auto) return;
+            this.playCurrent();
+            this.next();
+            this.timer = setTimeout(step, 3500);
+        };
+
+        step();
+    },
+
+    stopAutoPlay() {
+        this.auto = false;
+        clearTimeout(this.timer);
+    }
+};
+
+/* ------------------------------------------------------------
+   FLASHCARDS ENGINE
+------------------------------------------------------------ */
+const FlashcardsEngine = {
+    list: [],
+    index: 0,
+    showFront: true,
+
+    setLevel(level) {
+        APP_STATE.currentLevel = level;
+        this.load();
+    },
+
+    setCategory(category) {
+        APP_STATE.currentCategory = category;
+        this.load();
+    },
+
+    load() {
+        const level = APP_STATE.currentLevel;
+        const category = APP_STATE.currentCategory;
+
+        this.list = CEFR_FLASHCARDS?.[category]?.[level] || [];
+        this.index = 0;
+        this.showFront = true;
+        this.render();
+    },
+
+    render() {
+        const grid = document.getElementById("flashcardsGrid");
+        if (!grid) return;
+
+        if (!this.list.length) {
+            grid.innerHTML = `<div class="empty-msg glass-panel">
+                No flashcards found for ${APP_STATE.currentLevel} / ${APP_STATE.currentCategory}.
+            </div>`;
+            return;
+        }
+
+        const card = this.list[this.index];
+
+        grid.innerHTML = `
+            <div class="flashcard glass-panel ${this.showFront ? "front" : "back"}"
+                 onclick="FlashcardsEngine.flip()">
+                <div class="flashcard-text">
+                    ${this.showFront ? card.spanish : card.english}
+                </div>
+                <div class="flashcard-meta">
+                    Card ${this.index + 1} of ${this.list.length}
+                </div>
+            </div>
+        `;
+    },
+
+    flip() {
+        this.showFront = !this.showFront;
+        this.render();
+    },
+
+    next() {
+        if (!this.list.length) return;
+        this.index = (this.index + 1) % this.list.length;
+        this.showFront = true;
+        this.render();
+    },
+
+    previous() {
+        if (!this.list.length) return;
+        this.index = (this.index - 1 + this.list.length) % this.list.length;
+        this.showFront = true;
+        this.render();
+    }
+};
+
+/* ------------------------------------------------------------
+   QUIZ ENGINE
+------------------------------------------------------------ */
+const QuizEngine = {
+    list: [],
+    index: 0,
+
+    setLevel(level) {
+        APP_STATE.currentLevel = level;
+        this.load();
+    },
+
+    setCategory(category) {
+        APP_STATE.currentCategory = category;
+        this.load();
+    },
+
+    load() {
+        const level = APP_STATE.currentLevel;
+        const category = APP_STATE.currentCategory;
+
+        this.list = CEFR_QUIZ?.[category]?.[level] || [];
+        this.index = 0;
+        this.render();
+    },
+
+    render() {
+        const prompt = document.getElementById("quizPrompt");
+        const options = document.getElementById("quizOptions");
+        const feedback = document.getElementById("quizFeedback");
+
+        if (!this.list.length) {
+            prompt.innerHTML = "No quiz items found.";
+            options.innerHTML = "";
+            feedback.innerHTML = "";
+            return;
+        }
+
+        const q = this.list[this.index];
+        prompt.innerHTML = q.question;
+
+        options.innerHTML = q.options.map((opt, i) => `
+            <button class="pill-btn" onclick="QuizEngine.answer(${i})">${opt}</button>
+        `).join("");
+
+        feedback.innerHTML = "";
+    },
+
+    answer(i) {
+        const q = this.list[this.index];
+        const feedback = document.getElementById("quizFeedback");
+
+        if (i === q.correct) {
+            feedback.innerHTML = `<span class="correct">Correct!</span>`;
+        } else {
+            feedback.innerHTML = `<span class="incorrect">Incorrect.</span>`;
+        }
+
+        this.index = (this.index + 1) % this.list.length;
+        setTimeout(() => this.render(), 800);
+    }
+};
+
+/* ------------------------------------------------------------
+   BUILD ENGINE
+------------------------------------------------------------ */
+const BuildEngine = {
+    tokens: [],
+    correct: [],
+
+    setLevel(level) {
+        APP_STATE.currentLevel = level;
+    },
+
+    init() {
+        const level = APP_STATE.currentLevel;
+        const list = CEFR_BUILD[level] || [];
+
+        const item = list[Math.floor(Math.random() * list.length)];
+        this.correct = item.correct;
+        this.tokens = [...item.tokens].sort(() => Math.random() - 0.5);
+
+        this.render();
+    },
+
+    render() {
+        const grid = document.getElementById("buildGrid");
+        const output = document.getElementById("buildOutput");
+        const result = document.getElementById("buildResult");
+
+        grid.innerHTML = this.tokens.map((t, i) => `
+            <button class="pill-btn" onclick="BuildEngine.pick(${i})">${t}</button>
+        `).join("");
+
+        output.innerHTML = APP_STATE.userSentence.join(" ");
+        result.innerHTML = "";
+    },
+
+    pick(i) {
+        APP_STATE.userSentence.push(this.tokens[i]);
+        this.render();
+    },
+
+    check() {
+        const result = document.getElementById("buildResult");
+        const correctSentence = this.correct.join(" ");
+        const userSentence = APP_STATE.userSentence.join(" ");
+
+        result.innerHTML = (correctSentence === userSentence)
+            ? `<span class="correct">Correct!</span>`
+            : `<span class="incorrect">Try again.</span>`;
+    }
+};
+
+/* ------------------------------------------------------------
+   SENTENCE ENGINE
+------------------------------------------------------------ */
+const SentenceEngine = {
+    setLevel(level) {
+        APP_STATE.currentLevel = level;
+    },
+
+    newSentence() {
+        const level = APP_STATE.currentLevel;
+        const list = CEFR_SENTENCES[level] || [];
+
+        const item = list[Math.floor(Math.random() * list.length)];
+        document.getElementById("sentence-content").innerHTML = item;
+    }
+};
+
+/* ------------------------------------------------------------
+   CONVERSATION ENGINE
+------------------------------------------------------------ */
+const ConversationEngine = {
+    history: [],
+
+    setLevel(level) {
+        APP_STATE.currentLevel = level;
+    },
+
+    reset() {
+        this.history = [];
+        document.getElementById("conversationFeed").innerHTML = "";
+    },
+
+    send(text) {
+        this.history.push(text);
+        document.getElementById("conversationFeed").innerHTML += `
+            <div class="user-msg">${text}</div>
+        `;
+    }
+};
+
+/* ------------------------------------------------------------
+   FREE PRACTICE ENGINE
+------------------------------------------------------------ */
+const FreePracticeEngine = {
+    setLevel(level) {
+        APP_STATE.currentLevel = level;
+    },
+
+    score(text) {
+        document.getElementById("practiceScore").innerHTML =
+            `Score: ${Math.floor(Math.random() * 100)}`;
+    }
+};
+
+/* ------------------------------------------------------------
+   REVIEW ENGINE
+------------------------------------------------------------ */
+const ReviewEngine = {
+    index: 0,
+
+    reset() {
+        this.index = 0;
+    },
+
+    step() {
+        document.getElementById("reviewCard").innerHTML =
+            `Review item #${this.index + 1}`;
+        this.index++;
+    }
+};
+
+/* ------------------------------------------------------------
+   ACHIEVEMENTS ENGINE
+------------------------------------------------------------ */
+const AchievementsEngine = {
+    evaluate() {
+        document.getElementById("achievementsList").innerHTML =
+            `<li>XP: ${Math.floor(Math.random() * 500)}</li>`;
     }
 };
 
@@ -2878,148 +3254,6 @@ const UI = {
     }
 };
 
-/* ============================================================
-   LISTEN ENGINE — Fully Corrected
-   ============================================================ */
-
-const ListenEngine = {
-
-    list: [],          // full list of items for current level+category
-    index: 0,          // current position
-    auto: false,       // autoplay flag
-    timer: null,       // autoplay timer
-
-    /* ------------------------------------------------------------
-       SET LEVEL
-    ------------------------------------------------------------ */
-    setLevel(level) {
-        APP_STATE.currentLevel = level;
-        this.load();
-    },
-
-    /* ------------------------------------------------------------
-       SET CATEGORY
-    ------------------------------------------------------------ */
-    setCategory(category) {
-        APP_STATE.currentCategory = category;
-        this.load();
-    },
-
-    /* ------------------------------------------------------------
-       LOAD LIST (Level + Category)
-    ------------------------------------------------------------ */
-    load() {
-        const level = APP_STATE.currentLevel;
-        const category = APP_STATE.currentCategory;
-
-        // Pull from CEFR_LISTENING_TOPICS safely
-        const safeList =
-            CEFR_LISTENING_TOPICS?.[category]?.[level] || [];
-
-        this.list = safeList;
-        this.index = 0;
-
-        this.render();
-    },
-
-    /* ------------------------------------------------------------
-       RENDER LIST INTO UI
-    ------------------------------------------------------------ */
-    render() {
-        const container = document.getElementById("listenList");
-        if (!container) return;
-
-        if (!this.list.length) {
-            container.innerHTML = `
-                <div class="empty-msg glass-panel">
-                    No listening items found for ${APP_STATE.currentLevel} / ${APP_STATE.currentCategory}.
-                </div>
-            `;
-            return;
-        }
-
-        container.innerHTML = this.list.map((item, i) => `
-            <div class="listen-item glass-panel ${i === this.index ? "active-listen" : ""}"
-                 onclick="ListenEngine.jumpTo(${i})">
-                <div class="listen-es">${item.spanish}</div>
-                <div class="listen-en">${item.english}</div>
-                <div class="listen-q">${item.question}</div>
-            </div>
-        `).join("");
-    },
-
-    /* ------------------------------------------------------------
-       JUMP TO INDEX
-    ------------------------------------------------------------ */
-    jumpTo(i) {
-        this.index = i;
-        this.render();
-        this.playCurrent();
-    },
-
-    /* ------------------------------------------------------------
-       PLAY CURRENT ITEM (Sabina TTS)
-    ------------------------------------------------------------ */
-    playCurrent() {
-        const item = this.list[this.index];
-        if (!item) return;
-
-        const utter = new SpeechSynthesisUtterance(
-            item.spanish.replace(".mp3", "")
-        );
-
-        utter.lang = "es-ES";
-        utter.rate = APP_STATE.speechRate || 1;
-
-        speechSynthesis.cancel();
-        speechSynthesis.speak(utter);
-    },
-
-    /* ------------------------------------------------------------
-       NEXT ITEM
-    ------------------------------------------------------------ */
-    next() {
-        if (!this.list.length) return;
-
-        this.index = (this.index + 1) % this.list.length;
-        this.render();
-        this.playCurrent();
-    },
-
-    /* ------------------------------------------------------------
-       PREVIOUS ITEM
-    ------------------------------------------------------------ */
-    previous() {
-        if (!this.list.length) return;
-
-        this.index = (this.index - 1 + this.list.length) % this.list.length;
-        this.render();
-        this.playCurrent();
-    },
-
-    /* ------------------------------------------------------------
-       AUTOPLAY
-    ------------------------------------------------------------ */
-    startAutoPlay() {
-        if (!this.list.length) return;
-
-        this.auto = true;
-
-        const step = () => {
-            if (!this.auto) return;
-            this.playCurrent();
-            this.next();
-            this.timer = setTimeout(step, 3500); // 3.5s per item
-        };
-
-        step();
-    },
-
-    stopAutoPlay() {
-        this.auto = false;
-        clearTimeout(this.timer);
-    }
-};
 
 
 
