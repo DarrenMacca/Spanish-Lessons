@@ -2496,17 +2496,6 @@ const ReviewEngine = {
 /* ---------------------------
    ACHIEVEMENTS ENGINE
 --------------------------- */
-const AchievementsEngine = {
-    init() {
-        renderAchievementsTab();
-        document.dispatchEvent(new Event("achievementsRendered"));
-    },
-
-    refresh() {
-        renderAchievementsTab();
-        document.dispatchEvent(new Event("achievementsRendered"));
-    }
-};
 
 function renderListenTab() {
     const container = document.getElementById("listenList");   // ✔ correct ID
@@ -2521,8 +2510,6 @@ function renderFlashcardsTab() {
 
     // your existing Flashcards renderer code stays exactly the same
 }
-
-
 
 
 /* ============================================================
