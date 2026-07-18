@@ -384,17 +384,18 @@ if (reviewMastered) {
 
 const AchievementsEngine = {
     init() {
-        renderAchievementsTab();   // existing achievements + badges
-        renderGrammarTab();        // append grammar insights
+        // renderAchievementsTab();   // ❌ REMOVE
+        renderGrammarTab();          // ✔ safe
         document.dispatchEvent(new Event("achievementsRendered"));
     },
 
     refresh() {
-        renderAchievementsTab();
-        renderGrammarTab();
+        // renderAchievementsTab();   // ❌ REMOVE
+        renderGrammarTab();          // ✔ safe
         document.dispatchEvent(new Event("achievementsRendered"));
     }
 };
+
 
 /* ============================================================
    TAB BUTTONS → ROUTER
