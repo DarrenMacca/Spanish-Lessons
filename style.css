@@ -580,6 +580,7 @@ html, body {
 /* ============================================================
    QUIZ — ORIGINAL SIMPLE VERSION (RESTORED)
 ============================================================ */
+
 .quiz-word-pill {
     margin: 12px 0 18px 0;
     font-size: 22px;
@@ -587,97 +588,38 @@ html, body {
     text-align: center;
 }
 
-
-function renderQuizTab() {
-    const container = document.getElementById("tab-quiz");
-    const level = appState.currentLevel;
-    const words = CEFR_LEVELS[level];
-
-    // Pick a random word
-    const item = words[Math.floor(Math.random() * words.length)];
-
-    // Build 3 options (1 correct + 2 incorrect)
-    const options = [item.spanish];
-    while (options.length < 3) {
-        const r = words[Math.floor(Math.random() * words.length)].spanish;
-        if (!options.includes(r)) options.push(r);
-    }
-
-    // Shuffle options
-    options.sort(() => Math.random() - 0.5);
-
-    // Build HTML (restored original layout)
-    container.innerHTML = `
-        <h2>Quiz — Level ${level}</h2>
-        <p>Select the correct Spanish for the English word.</p>
-
-        <!-- Word pill -->
-        <div id="quizPrompt" class="pill quiz-word-pill">${item.english}</div>
-
-        <!-- Option pills -->
-        <div id="quizOptions" class="quiz-options">
-            ${options.map(opt => `
-                <button class="quiz-option pill">${opt}</button>
-            `).join("")}
-        </div>
-
-        <!-- Controls -->
-        <div class="quiz-controls">
-            <button id="quizCheck" class="pill-btn">Check</button>
-            <button id="quizNext" class="pill-btn">Next</button>
-            <button id="quizHarder" class="pill-btn">Harder</button>
-        </div>
-
-        <!-- Feedback -->
-        <div id="quizFeedback" class="quiz-feedback"></div>
-    `;
-
-    /* ---------------------------
-       OPTION SELECTION
-    --------------------------- */
-    let selected = null;
-
-    container.querySelectorAll(".quiz-option").forEach(btn => {
-        btn.addEventListener("click", () => {
-            container.querySelectorAll(".quiz-option").forEach(b => b.classList.remove("selected"));
-            btn.classList.add("selected");
-            selected = btn.textContent.trim();
-        });
-    });
-
-    /* ---------------------------
-       CHECK ANSWER
-    --------------------------- */
-    document.getElementById("quizCheck").onclick = () => {
-        if (!selected) return;
-
-        const correct = item.spanish;
-        const fb = document.getElementById("quizFeedback");
-
-        if (selected === correct) {
-            fb.textContent = "Correct!";
-            fb.className = "quiz-feedback correct";
-        } else {
-            fb.textContent = `Incorrect — correct answer: ${correct}`;
-            fb.className = "quiz-feedback incorrect";
-        }
-    };
-
-    /* ---------------------------
-       NEXT QUESTION
-    --------------------------- */
-    document.getElementById("quizNext").onclick = () => {
-        renderQuizTab();
-    };
-
-    /* ---------------------------
-       HARDER LEVEL
-    --------------------------- */
-    document.getElementById("quizHarder").onclick = () => {
-        appState.currentLevel = getHarderLevel(level);
-        renderQuizTab();
-    };
+/* Option pill highlight */
+.quiz-option.selected {
+    background: rgba(14, 165, 233, 0.85);
+    color: #0f172a;
+    transform: scale(1.05);
 }
+
+/* ============================================================
+   PILL BUTTONS (Check / Next / Harder)
+============================================================ */
+
+.pill-btn {
+    background: rgba(255, 255, 255, 0.15);
+    color: #e2e8f0;
+    border: none;
+    padding: 10px 18px;
+    border-radius: 18px;
+    font-size: 16px;
+    cursor: pointer;
+    transition: 0.25s ease;
+    backdrop-filter: blur(6px);
+}
+
+.pill-btn:hover {
+    background: rgba(255, 255, 255, 0.25);
+    transform: scale(1.05);
+}
+
+.pill-btn:active {
+    transform: scale(0.97);
+}
+
 
 
 /* ============================================================
