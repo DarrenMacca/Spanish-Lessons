@@ -2483,8 +2483,7 @@ function playNextListenWord() {
 
 /* ============================================================
    FLASHCARDS — CATEGORY GROUPED + FLIP + AUDIO (STABLE VERSION)
-   ============================================================ */
-
+============================================================ */
 
 function renderFlashcardsTab() {
     const container = document.getElementById("flash-content");
@@ -2501,10 +2500,10 @@ function renderFlashcardsTab() {
     Object.keys(grouped).forEach(cat => {
         html += `
         <div class="glass-panel">
-        <div class="flash-category-header" data-cat="${cat}">
-           <span class="listen-category-title">${cat.toUpperCase()}</span>
-           <span class="listen-arrow">▶</span>
-        </div>
+            <div class="flash-category-header" data-cat="${cat}">
+                <span class="listen-category-title">${cat.toUpperCase()}</span>
+                <span class="listen-arrow">▶</span>
+            </div>
 
             <div class="flash-category-content" data-cat="${cat}">
                 <div class="fc-grid">
@@ -2523,6 +2522,9 @@ function renderFlashcardsTab() {
 
     container.innerHTML = html;
 
+    /* ============================================================
+       CATEGORY COLLAPSE
+    ============================================================ */
     container.querySelectorAll(".flash-category-header").forEach(header => {
         header.addEventListener("click", () => {
             const cat = header.dataset.cat;
@@ -2533,6 +2535,9 @@ function renderFlashcardsTab() {
         });
     });
 
+    /* ============================================================
+       FLASHCARD FLIP + AUDIO
+    ============================================================ */
     container.querySelectorAll(".fc-card").forEach(card => {
         card.addEventListener("click", () => {
             const inner = card.querySelector(".fc-inner");
@@ -2551,6 +2556,7 @@ function renderFlashcardsTab() {
         });
     });
 }
+
 
 
 /* ============================================================
@@ -2592,8 +2598,8 @@ function generateQuizOptions(words, correctWord) {
 }
 
 /* ============================================================
-   QUIZ TAB — RENDER + EVENTS
-   ============================================================ */
+   QUIZ TAB — RENDER + EVENTS (STABLE VERSION)
+============================================================ */
 
 function renderQuizTab() {
     const container = document.getElementById("quiz-content");
@@ -2606,43 +2612,42 @@ function renderQuizTab() {
         return;
     }
 
+    // Pick random word
     quizState.currentWord = words[Math.floor(Math.random() * words.length)];
     quizState.options = generateQuizOptions(words, quizState.currentWord);
     quizState.selected = null;
 
-container.innerHTML = `
-<div class="glass-panel quiz-card">
-    <h2>Quiz — Level ${appState.currentLevel}</h2>
-    <p>Select the correct Spanish for the English word.</p>
+    // Render quiz UI
+    container.innerHTML = `
+        <div class="glass-panel quiz-card">
+            <h2>Quiz — Level ${appState.currentLevel}</h2>
+            <p>Select the correct Spanish for the English word.</p>
 
-    <div id="qb-meta"><strong>English:</strong> ${quizState.currentWord.english}</div>
+            <div id="qb-meta"><strong>English:</strong> ${quizState.currentWord.english}</div>
 
-    <div id="qb-grid" class="sb-grid">
-        ${quizState.options.map(opt => `
-            <button class="pill" data-spanish="${opt}">${opt}</button>
-        `).join("")}
-    </div>
+            <div id="qb-grid" class="sb-grid">
+                ${quizState.options.map(opt => `
+                    <button class="pill" data-spanish="${opt}">${opt}</button>
+                `).join("")}
+            </div>
 
-    <!-- ⭐ ANSWER FIELD MOVED UP -->
-    <div id="qb-answer" class="qb-answer"></div>
+            <div id="qb-answer" class="qb-answer"></div>
 
-    <!-- ⭐ BUTTONS MOVED CLOSER TO ANSWER -->
-    <div class="sb-controls quiz-controls-tight">
-        <button id="qb-submit">Check</button>
-        <button id="qb-next">Next</button>
-        <button id="qb-harder" class="${quizState.harderMode ? "active" : ""}">Harder</button>
-    </div>
+            <div class="sb-controls quiz-controls-tight">
+                <button id="qb-submit">Check</button>
+                <button id="qb-next">Next</button>
+                <button id="qb-harder" class="${quizState.harderMode ? "active" : ""}">Harder</button>
+            </div>
 
-    <!-- ⭐ FEEDBACK MOVED BELOW BUTTONS -->
-    <div id="qb-feedback" class="qb-feedback"></div>
-</div>
-`;
+            <div id="qb-feedback" class="qb-feedback"></div>
+        </div>
+    `;
 
-
-    setupQuizEvents();
+    // ⭐ Wire events immediately after rendering
+    wireQuizEvents();
 }
 
-function setupQuizEvents() {
+function wireQuizEvents() {
     const grid = document.getElementById("qb-grid");
     const submitBtn = document.getElementById("qb-submit");
     const nextBtn = document.getElementById("qb-next");
@@ -2652,7 +2657,9 @@ function setupQuizEvents() {
 
     quizState.selected = null;
 
-    // Pill selection
+    /* ============================================================
+       OPTION SELECTION
+    ============================================================ */
     grid.querySelectorAll(".pill").forEach(btn => {
         btn.addEventListener("click", () => {
             grid.querySelectorAll(".pill").forEach(b => b.classList.remove("active"));
@@ -2662,50 +2669,50 @@ function setupQuizEvents() {
         });
     });
 
-    // Check button
+    /* ============================================================
+       CHECK ANSWER
+    ============================================================ */
     submitBtn.addEventListener("click", () => {
-    if (!quizState.selected) {
-        feedback.textContent = "Choose an answer first.";
-        return;
-    }
+        if (!quizState.selected) {
+            feedback.textContent = "Choose an answer first.";
+            return;
+        }
 
-    const correct = quizState.currentWord.spanish;
+        const correct = quizState.currentWord.spanish;
 
-    // ⭐ Ensure quizScore is not null before incrementing
-    if (appState.levelStats[appState.currentLevel].quizScore === null) {
-        appState.levelStats[appState.currentLevel].quizScore = 0;
-    }
+        // Ensure score exists
+        if (appState.levelStats[appState.currentLevel].quizScore === null) {
+            appState.levelStats[appState.currentLevel].quizScore = 0;
+        }
 
-   if (quizState.selected === correct) {
-    feedback.textContent = "Correct! 🎉";
+        if (quizState.selected === correct) {
+            feedback.textContent = "Correct! 🎉";
 
-    if (appState.levelStats[appState.currentLevel].quizScore === null) {
-        appState.levelStats[appState.currentLevel].quizScore = 0;
-    }
+            appState.levelStats[appState.currentLevel].quizScore++;
+            appState.levelStats[appState.currentLevel].quizCompleted++;
 
-    appState.levelStats[appState.currentLevel].quizScore++;
-    appState.levelStats[appState.currentLevel].quizCompleted++;   // ⭐ ADD THIS LINE
+            updateBadges();
+            updateProgressMeters();
+        } else {
+            feedback.textContent = `Incorrect — correct answer: ${correct}`;
+        }
 
-    updateBadges();
-    updateProgressMeters();
-}
- else {
-        feedback.textContent = `Incorrect — correct answer: ${correct}`;
-    }
+        // Sabina audio
+        setTimeout(() => speakQuiz(correct), 300);
 
-    // Sabina audio
-    setTimeout(() => speakQuiz(correct), 300);
+        saveState();
+    });
 
-    saveState();
-});
-
-
-    // Next button
+    /* ============================================================
+       NEXT QUESTION
+    ============================================================ */
     nextBtn.addEventListener("click", () => {
         renderQuizTab();
     });
 
-    // Harder mode toggle
+    /* ============================================================
+       HARDER MODE
+    ============================================================ */
     harderBtn.addEventListener("click", () => {
         quizState.harderMode = !quizState.harderMode;
         harderBtn.classList.toggle("active");
@@ -2714,9 +2721,11 @@ function setupQuizEvents() {
 }
 
 
+
 /* ============================================================
-   BUILD TAB — English → Spanish Builder (with disruptors + feedback)
-   ============================================================ */
+   BUILD TAB — English → Spanish Builder (Stable Version)
+============================================================ */
+
 function renderBuildTab() {
     const container = document.getElementById("build-content");
 
@@ -2769,10 +2778,11 @@ function renderBuildTab() {
         </div>
     `;
 
-    setupBuildEvents(sentence);
+    // ⭐ Wire events immediately after rendering
+    wireBuildEvents(sentence);
 }
 
-function setupBuildEvents(sentence) {
+function wireBuildEvents(sentence) {
     const selectedArea = document.getElementById("build-selected");
     const grid = document.getElementById("build-words");
     const input = document.getElementById("build-input");
@@ -2785,6 +2795,9 @@ function setupBuildEvents(sentence) {
 
     buildState.answer = [];
 
+    /* ============================================================
+       WORD PILL SELECTION
+    ============================================================ */
     grid.querySelectorAll(".build-opt").forEach(btn => {
         btn.addEventListener("click", () => {
             buildState.answer.push(btn.dataset.token);
@@ -2794,11 +2807,17 @@ function setupBuildEvents(sentence) {
         });
     });
 
+    /* ============================================================
+       TYPING MODE
+    ============================================================ */
     input.addEventListener("input", () => {
         buildState.answer = input.value.trim().split(" ");
         selectedArea.textContent = buildState.answer.join(" ");
     });
 
+    /* ============================================================
+       UNDO BUTTON
+    ============================================================ */
     undoBtn.addEventListener("click", () => {
         buildState.answer.pop();
         selectedArea.textContent = buildState.answer.join(" ");
@@ -2811,6 +2830,9 @@ function setupBuildEvents(sentence) {
         });
     });
 
+    /* ============================================================
+       RESET BUTTON
+    ============================================================ */
     resetBtn.addEventListener("click", () => {
         buildState.answer = [];
         selectedArea.textContent = "";
@@ -2821,64 +2843,68 @@ function setupBuildEvents(sentence) {
         });
     });
 
+    /* ============================================================
+       CHECK ANSWER
+    ============================================================ */
     checkBtn.addEventListener("click", () => {
-    const correct = sentence.spanish.trim();
-    const user = buildState.answer.join(" ").trim();
+        const correct = sentence.spanish.trim();
+        const user = buildState.answer.join(" ").trim();
 
-    // NEW: translate learner answer to English
-    const learnerEnglish = translateToEnglish(user);
+        const learnerEnglish = translateToEnglish(user);
 
-    if (user === correct) {
-        feedback.innerHTML = `
-            <span style="color:#4ade80;font-weight:600;">Correct! 🎉</span><br><br>
-            <strong>Your Translated Response is:</strong><br>${learnerEnglish}
-        `;
-        appState.levelStats[appState.currentLevel].buildCompleted++;
-        updateBadges();
-        updateProgressMeters();
-        setTimeout(() => speakQuiz(correct), 300);
-    } else {
-        const correctTokens = correct.split(" ");
-        const userTokens = buildState.answer;
+        if (user === correct) {
+            feedback.innerHTML = `
+                <span style="color:#4ade80;font-weight:600;">Correct! 🎉</span><br><br>
+                <strong>Your Translated Response is:</strong><br>${learnerEnglish}
+            `;
+            appState.levelStats[appState.currentLevel].buildCompleted++;
+            updateBadges();
+            updateProgressMeters();
+            setTimeout(() => speakQuiz(correct), 300);
+        } else {
+            const correctTokens = correct.split(" ");
+            const userTokens = buildState.answer;
 
-        let html = `<strong>Correct Answer:</strong><br>${correct}<br><br>`;
-        html += `<strong>Your Answer:</strong><br>${user}<br><br>`;
-        html += `<strong>Your Translated Response is:</strong><br>${learnerEnglish}<br><br>`;
-        html += `<strong>Word-by-word feedback:</strong><br>`;
+            let html = `<strong>Correct Answer:</strong><br>${correct}<br><br>`;
+            html += `<strong>Your Answer:</strong><br>${user}<br><br>`;
+            html += `<strong>Your Translated Response is:</strong><br>${learnerEnglish}<br><br>`;
+            html += `<strong>Word-by-word feedback:</strong><br>`;
 
-        userTokens.forEach((t, i) => {
-            if (correctTokens[i] === t) {
-                html += `<span style="color:#4ade80;">${t} ✔</span> `;
-            } else {
-                html += `<span style="color:#f87171;">${t} ✖</span> `;
-            }
-        });
+            userTokens.forEach((t, i) => {
+                if (correctTokens[i] === t) {
+                    html += `<span style="color:#4ade80;">${t} ✔</span> `;
+                } else {
+                    html += `<span style="color:#f87171;">${t} ✖</span> `;
+                }
+            });
 
-        feedback.innerHTML = html;
-        setTimeout(() => speakQuiz(correct), 300);
-    }
+            feedback.innerHTML = html;
+            setTimeout(() => speakQuiz(correct), 300);
+        }
 
-    saveState();
-});
+        saveState();
+    });
 
-
+    /* ============================================================
+       NEXT SENTENCE
+    ============================================================ */
     nextBtn.addEventListener("click", () => {
         renderBuildTab();
     });
 }
 
+
 /* ============================================================
-   SENTENCE TAB — CEFR MULTIPLE‑CHOICE (FINAL MASTER VERSION)
-   ============================================================ */
+   SENTENCE TAB — CEFR MULTIPLE‑CHOICE (Stable Version)
+============================================================ */
 
 function generateSentenceForLevel(level) {
     const pool = CEFR_SENTENCE_CHOICES[level];
     const item = pool[Math.floor(Math.random() * pool.length)];
 
     const shuffled = [...item.options]
-    .filter(Boolean)
-    .sort(() => Math.random() - 0.5);
-
+        .filter(Boolean)
+        .sort(() => Math.random() - 0.5);
 
     return {
         english: item.english,
@@ -2891,14 +2917,13 @@ function renderSentenceTab() {
     const container = document.getElementById("sentence-content");
     const level = appState.currentLevel;
 
-    // SAFETY CHECK — prevents crashes if level has no sentences
+    // Safety check
     if (!CEFR_SENTENCE_CHOICES[level]) {
         container.innerHTML = "<p>No sentences available for this level.</p>";
         return;
     }
 
     const q = generateSentenceForLevel(level);
-
 
     container.innerHTML = `
         <div class="glass-panel sentence-card">
@@ -2911,7 +2936,7 @@ function renderSentenceTab() {
 
             <div id="sentence-options" class="sentence-options">
                 ${q.options.map(opt => `
-                    <button class="pill" data-opt="${opt}">
+                    <button class="pill sentence-opt" data-opt="${opt}">
                         ${opt}
                     </button>
                 `).join("")}
@@ -2925,14 +2950,18 @@ function renderSentenceTab() {
         </div>
     `;
 
-    setupSentenceEvents(q);
+    // ⭐ Wire events immediately after rendering
+    wireSentenceEvents(q);
 }
 
-function setupSentenceEvents(q) {
-    const buttons = document.querySelectorAll(".pill");
+function wireSentenceEvents(q) {
+    const buttons = document.querySelectorAll(".sentence-opt");
     const feedback = document.getElementById("sentence-feedback");
     const nextBtn = document.getElementById("sentence-next");
 
+    /* ============================================================
+       OPTION SELECTION
+    ============================================================ */
     buttons.forEach(btn => {
         btn.addEventListener("click", () => {
             const chosen = btn.dataset.opt;
@@ -2960,14 +2989,28 @@ function setupSentenceEvents(q) {
                 speakQuiz(q.correct);
             }
 
+            // Disable all buttons after answer
             buttons.forEach(b => b.disabled = true);
         });
     });
 
+    /* ============================================================
+       NEXT QUESTION
+    ============================================================ */
     nextBtn.addEventListener("click", () => {
         renderSentenceTab();
     });
 }
+
+
+    /* ============================================================
+       NEXT QUESTION
+    ============================================================ */
+    nextBtn.addEventListener("click", () => {
+        renderSentenceTab();
+    });
+}
+
 
 /* ============================================================
    CEFR SENTENCE CHOICES — FULL PACK (A1 → B2)
@@ -3198,8 +3241,8 @@ const CEFR_SENTENCE_CHOICES = {
 
 
 /* ============================================================
-   CONVERSATION TAB — RENDER + EVENTS (EVERYDAY DIALOGUE)
-   ============================================================ */
+   CONVERSATION TAB — RENDER + EVENTS (Stable Version)
+============================================================ */
 
 const CONVO_PROMPTS = [
     { english: "How are you today?", spanishTarget: "¿Cómo estás hoy?" },
@@ -3277,12 +3320,11 @@ function renderConversationTab() {
         </div>
     `;
 
-    setupConversationEvents();
+    // ⭐ Wire events immediately after rendering
+    wireConversationEvents();
 }
 
-
-
-function setupConversationEvents() {
+function wireConversationEvents() {
     const grid = document.getElementById("convo-grid");
     const answerBox = document.getElementById("convo-answer");
     const typeBox = document.getElementById("convo-type");
@@ -3295,7 +3337,9 @@ function setupConversationEvents() {
 
     convoState.answer = [];
 
-    // Word-pill selection
+    /* ============================================================
+       WORD PILL SELECTION
+    ============================================================ */
     grid.querySelectorAll(".convo-opt").forEach(btn => {
         btn.addEventListener("click", () => {
             convoState.answer.push(btn.dataset.token);
@@ -3305,13 +3349,17 @@ function setupConversationEvents() {
         });
     });
 
-    // Typing mode
+    /* ============================================================
+       TYPING MODE
+    ============================================================ */
     typeBox.addEventListener("input", () => {
         convoState.answer = typeBox.value.trim().split(" ");
         answerBox.textContent = convoState.answer.join(" ");
     });
 
-    // Undo
+    /* ============================================================
+       UNDO BUTTON
+    ============================================================ */
     undoBtn.addEventListener("click", () => {
         convoState.answer.pop();
         answerBox.textContent = convoState.answer.join(" ");
@@ -3324,7 +3372,9 @@ function setupConversationEvents() {
         });
     });
 
-    // Reset
+    /* ============================================================
+       RESET BUTTON
+    ============================================================ */
     resetBtn.addEventListener("click", () => {
         convoState.answer = [];
         answerBox.textContent = "";
@@ -3335,37 +3385,41 @@ function setupConversationEvents() {
         });
     });
 
-    // Check
+    /* ============================================================
+       CHECK ANSWER
+    ============================================================ */
     checkBtn.addEventListener("click", () => {
         const correct = convoState.currentPrompt.spanishTarget.replace(/[¿?]/g, "").trim();
         const user = convoState.answer.join(" ").trim();
 
-       if (user === correct) {
-    feedback.textContent = "Nice! That’s a natural response. 🎉";
+        if (user === correct) {
+            feedback.textContent = "Nice! That’s a natural response. 🎉";
 
-    if (appState.levelStats[appState.currentLevel].conversationCompleted == null) {
-        appState.levelStats[appState.currentLevel].conversationCompleted = 0;
-    }
-    appState.levelStats[appState.currentLevel].conversationCompleted++;
+            if (appState.levelStats[appState.currentLevel].conversationCompleted == null) {
+                appState.levelStats[appState.currentLevel].conversationCompleted = 0;
+            }
+            appState.levelStats[appState.currentLevel].conversationCompleted++;
 
-    updateBadges();
-    updateProgressMeters();
-    setTimeout(() => speakQuiz(correct), 300);
+            updateBadges();
+            updateProgressMeters();
+            setTimeout(() => speakQuiz(correct), 300);
 
-} else {
-    feedback.textContent = `Not quite. A natural response would be: ${convoState.currentPrompt.spanishTarget}`;
-    setTimeout(() => speakQuiz(correct), 300);
-}
+        } else {
+            feedback.textContent = `Not quite. A natural response would be: ${convoState.currentPrompt.spanishTarget}`;
+            setTimeout(() => speakQuiz(correct), 300);
+        }
 
-saveState();
-
+        saveState();
     });
 
-    // Next
+    /* ============================================================
+       NEXT PROMPT
+    ============================================================ */
     nextBtn.addEventListener("click", () => {
         renderConversationTab();
     });
 }
+
 
 
 /* ============================================================
