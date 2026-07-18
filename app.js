@@ -49,8 +49,40 @@ const Router = {
         if (activeBtn) activeBtn.classList.add("active");
 
         this.current = tabName;
+
+        // ⭐ REQUIRED: engine refresh logic
+        switch (tabName) {
+            case "listen":
+                ListenEngine.refresh();
+                break;
+
+            case "flashcards":
+                FlashcardEngine.refresh();   // ⭐ THIS FIXES FLIP + AUDIO
+                break;
+
+            case "quiz":
+                QuizEngine.refresh();
+                break;
+
+            case "build":
+                BuildEngine.refresh();
+                break;
+
+            case "sentence":
+                SentenceEngine.refresh();
+                break;
+
+            case "conversation":
+                ConversationEngine.refresh();
+                break;
+
+            case "review":
+                ReviewEngine.refresh();
+                break;
+        }
     }
 };
+
 
 /* ============================================================
    INITIAL BOOT
