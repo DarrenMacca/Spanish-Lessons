@@ -2848,6 +2848,9 @@ function renderQuizTab() {
             `).join("")}
         </div>
 
+        <!-- Selected word display -->
+        <div id="quizSelected" class="quiz-selected-word"></div>
+
         <!-- Controls -->
         <div class="quiz-controls">
             <button id="quizCheck" class="pill-btn">Check</button>
@@ -2875,6 +2878,10 @@ function renderQuizTab() {
             btn.classList.add("selected");
 
             selected = btn.textContent.trim();
+
+            // show selected word
+            document.getElementById("quizSelected").textContent =
+                `Selected: ${selected}`;
         });
     });
 
@@ -2924,7 +2931,6 @@ function renderQuizTab() {
         renderQuizTab();
     };
 }
-
 
 
 /* ============================================================
