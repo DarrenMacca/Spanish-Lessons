@@ -57,8 +57,9 @@ const Router = {
                 break;
 
             case "flashcards":
-                FlashcardEngine.refresh();   // ⭐ THIS FIXES FLIP + AUDIO
+                setTimeout(() => FlashcardEngine.refresh(), 0);
                 break;
+
 
             case "quiz":
                 QuizEngine.refresh();
