@@ -2830,6 +2830,26 @@ function renderQuizTab() {
         if (!options.includes(r)) options.push(r);
     }
 
+   function getHarderLevel(level) {
+    switch (level) {
+        case "A1": return "A2";
+        case "A2": return "B1";
+        case "B1": return "B2";
+        default: return "B2";
+    }
+}
+
+   document.getElementById("quizHarder").onclick = () => {
+    appState.currentLevel = getHarderLevel(level);
+
+    const fb = document.getElementById("quizFeedback");
+    fb.textContent = `Harder mode: now practicing ${appState.currentLevel}`;
+    fb.className = "quiz-feedback";
+
+    renderQuizTab();
+};
+
+
     // Shuffle options
     options.sort(() => Math.random() - 0.5);
 
