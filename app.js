@@ -2672,7 +2672,7 @@ function playNextListenWord() {
 ============================================================ */
 
 function renderFlashcardsTab() {
-    const container = document.getElementById("flash-content");
+    const container = document.getElementById("flashcardsGrid");
     const words = CEFR_LEVELS[appState.currentLevel];
     const grouped = groupByCategory(words);
 
