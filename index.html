@@ -20,7 +20,7 @@
 </div>
 
 <!-- ============================================================
-     NAVIGATION (Original)
+     NAVIGATION (Corrected IDs, dashboard preserved)
 ============================================================ -->
 <nav class="glass-panel nav-bar">
     <button id="btn-dashboard" class="tab-btn active" data-tab="dashboard">
@@ -56,7 +56,7 @@
 </nav>
 
 <!-- ============================================================
-     DASHBOARD TAB (Original)
+     DASHBOARD TAB (UNCHANGED)
 ============================================================ -->
 <div id="tab-dashboard" class="tab-page">
 
@@ -159,10 +159,10 @@
 </div>
 
 <!-- ============================================================
-     NEW TABS (Part 3 Scaffolding)
+     TABS (Corrected IDs, removed hidden)
 ============================================================ -->
 
-<div id="tab-listen" class="tab-page hidden glass-panel">
+<div id="tab-listen" class="tab-page glass-panel">
     <h2>Listen</h2>
     <div id="listenControls">
         <button id="listenPlay" class="pill-btn">Play</button>
@@ -173,19 +173,19 @@
     <div id="listenList" class="listen-grid"></div>
 </div>
 
-<div id="tab-flashcards" class="tab-page hidden glass-panel">
+<div id="tab-flashcards" class="tab-page glass-panel">
     <h2>Flashcards</h2>
     <div id="flashcardsGrid" class="flashcards-grid"></div>
 </div>
 
-<div id="tab-quiz" class="tab-page hidden glass-panel">
+<div id="tab-quiz" class="tab-page glass-panel">
     <h2>Quiz</h2>
     <div id="quizPrompt" class="quiz-prompt"></div>
     <div id="quizOptions" class="quiz-options"></div>
     <div id="quizFeedback" class="quiz-feedback"></div>
 </div>
 
-<div id="tab-build" class="tab-page hidden glass-panel">
+<div id="tab-build" class="tab-page glass-panel">
     <h2>Build a Sentence</h2>
     <div id="buildGrid" class="build-grid"></div>
     <div id="buildOutput" class="build-output"></div>
@@ -194,34 +194,39 @@
     <button id="buildNewBtn" class="pill-btn">New</button>
 </div>
 
-<div id="tab-sentence" class="tab-page hidden glass-panel">
+<div id="tab-sentence" class="tab-page glass-panel">
     <h2>Sentence Generator</h2>
     <div id="sentence-content"></div>
+    <button id="sentence-next" class="pill-btn">New Sentence</button>
 </div>
 
-<div id="tab-conversation" class="tab-page hidden glass-panel">
+<div id="tab-conversation" class="tab-page glass-panel">
     <h2>Conversation</h2>
     <div id="conversationFeed" class="conversation-feed"></div>
     <input id="conversationInput" class="pill-input" placeholder="Type in Spanish...">
     <button id="conversationSend" class="pill-btn">Send</button>
 </div>
 
-<div id="tab-practice" class="tab-page hidden glass-panel">
+<div id="tab-practice" class="tab-page glass-panel">
     <h2>Free Practice</h2>
     <input id="practiceInput" class="pill-input" placeholder="Write anything in Spanish...">
-    <button id="practiceBtn" class="pill-btn">Submit</button>
-    <div id="practiceResult" class="practice-result"></div>
+    <button id="practiceSubmit" class="pill-btn">Submit</button>
+    <div id="practiceScore"></div>
+    <div id="practiceKnown"></div>
+    <div id="practiceUnknown"></div>
+    <div id="practiceHint"></div>
 </div>
 
-<div id="tab-review" class="tab-page hidden glass-panel">
+<div id="tab-review" class="tab-page glass-panel">
     <h2>Review</h2>
     <div id="reviewCard"></div>
     <button id="reviewMastered" class="pill-btn">Mastered</button>
 </div>
 
-<div id="tab-achievements" class="tab-page hidden glass-panel">
+<div id="tab-achievements" class="tab-page glass-panel">
     <h2>Achievements</h2>
-    <div id="achievements-content"></div>
+    <div id="achievementsList"></div>
+    <button id="achievementsReset" class="pill-btn">Reset Achievements</button>
 </div>
 
 <!-- ============================================================
