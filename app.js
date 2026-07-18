@@ -2315,20 +2315,22 @@ initTabNavigation();
 activateTab("dashboard");
 
 /* ============================================================
-   LISTEN ENGINE — WRAPPER FOR LISTEN TAB
+   ENGINE PACK — CLEAN, STABLE, WRAPPER-BASED ARCHITECTURE
 ============================================================ */
 
+/* ---------------------------
+   LISTEN ENGINE
+--------------------------- */
 const ListenEngine = {
     init() {
         renderListenTab();
     },
 
     play(rate) {
-        // Play first word in autoplay list
+        Global.audioRate = rate;
         listenAutoPlay.active = true;
         listenAutoPlay.paused = false;
         listenAutoPlay.index = 0;
-        Global.audioRate = rate;
         playNextListenWord();
     },
 
@@ -2355,6 +2357,147 @@ const ListenEngine = {
         }
     }
 };
+
+
+/* ---------------------------
+   FLASHCARD ENGINE
+--------------------------- */
+const FlashcardEngine = {
+    init() {
+        renderFlashcardsTab();
+        document.dispatchEvent(new Event("flashcardsRendered"));
+    },
+
+    refresh() {
+        renderFlashcardsTab();
+        document.dispatchEvent(new Event("flashcardsRendered"));
+    }
+};
+
+
+/* ---------------------------
+   QUIZ ENGINE
+--------------------------- */
+const QuizEngine = {
+    init() {
+        renderQuizTab();
+        document.dispatchEvent(new Event("quizRendered"));
+    },
+
+    check(answer) {
+        return quizCheckAnswer(answer); // your existing quiz logic
+    },
+
+    refresh() {
+        renderQuizTab();
+        document.dispatchEvent(new Event("quizRendered"));
+    }
+};
+
+
+/* ---------------------------
+   BUILD ENGINE
+--------------------------- */
+const BuildEngine = {
+    init() {
+        renderBuildTab();
+        document.dispatchEvent(new Event("buildRendered"));
+    },
+
+    addWord(word) {
+        buildAddWord(word); // your existing builder logic
+    },
+
+    check() {
+        return buildCheckSentence(); // your existing builder logic
+    },
+
+    refresh() {
+        renderBuildTab();
+        document.dispatchEvent(new Event("buildRendered"));
+    }
+};
+
+
+/* ---------------------------
+   SENTENCE ENGINE
+--------------------------- */
+const SentenceEngine = {
+    init() {
+        renderSentenceTab();
+        document.dispatchEvent(new Event("sentenceRendered"));
+    },
+
+    refresh() {
+        renderSentenceTab();
+        document.dispatchEvent(new Event("sentenceRendered"));
+    }
+};
+
+
+/* ---------------------------
+   CONVERSATION ENGINE
+--------------------------- */
+const ConversationEngine = {
+    init() {
+        renderConversationTab();
+        document.dispatchEvent(new Event("conversationRendered"));
+    },
+
+    addWord(word) {
+        conversationAddWord(word);
+    },
+
+    evaluate(input) {
+        return conversationEvaluate(input);
+    },
+
+    appendReply(reply) {
+        conversationAppendReply(reply);
+    },
+
+    refresh() {
+        renderConversationTab();
+        document.dispatchEvent(new Event("conversationRendered"));
+    }
+};
+
+
+/* ---------------------------
+   REVIEW ENGINE
+--------------------------- */
+const ReviewEngine = {
+    init() {
+        renderReviewTab();
+        document.dispatchEvent(new Event("reviewRendered"));
+    },
+
+    markMastered() {
+        reviewMarkMastered();
+    },
+
+    refresh() {
+        renderReviewTab();
+        document.dispatchEvent(new Event("reviewRendered"));
+    }
+};
+
+
+/* ---------------------------
+   ACHIEVEMENTS ENGINE
+--------------------------- */
+const AchievementsEngine = {
+    init() {
+        renderAchievementsTab();
+        document.dispatchEvent(new Event("achievementsRendered"));
+    },
+
+    refresh() {
+        renderAchievementsTab();
+        document.dispatchEvent(new Event("achievementsRendered"));
+    }
+};
+
 
 /* ============================================================
    LISTEN TAB — CATEGORY + AUDIO PLAYER + CLEAN UI
@@ -2493,6 +2636,7 @@ function renderListenTab() {
         if (speechSynthesis.cancel) speechSynthesis.cancel();
     };
 }
+
 
 
 /* ============================================================
