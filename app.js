@@ -2720,11 +2720,6 @@ const App = {
    }
 };
 
-document.addEventListener("DOMContentLoaded", () => {
-    App.init();
-});
-
-
 /* ============================================================
    FINAL BOOTSTRAP — Global Reset + Export Hooks
    ============================================================ */
