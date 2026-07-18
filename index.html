@@ -1,1179 +1,237 @@
-/* ============================================================
-   GLOBAL BASE — DARK GLASS CEFR THEME
-   ============================================================ */
- 
-body {
-    margin: 0;
-    padding: 0;
-    font-family: system-ui, sans-serif;
-    background: linear-gradient(135deg, #0f172a 0%, #1a2538 100%);
-    color: #e2e8f0;
-}
-
-/* ------------------------------------------------------------
-   GLASS PANELS
------------------------------------------------------------- */
-.glass-panel {
-    background: rgba(15, 23, 42, 0.55);
-    border-radius: 18px;
-    border: 1px solid rgba(148, 163, 184, 0.35);
-    box-shadow: 0 18px 40px rgba(0, 0, 0, 0.55);
-    backdrop-filter: blur(14px);
-    -webkit-backdrop-filter: blur(14px);
-    padding: 16px;
-    margin: 16px auto;
-}
-
-/* ------------------------------------------------------------
-   EXTENSION — Glass Panel Hover Lift (Safe)
------------------------------------------------------------- */
-.glass-panel:hover {
-    transform: translateY(-2px);
-    transition: transform 0.25s ease;
-}
-
-
-
-/* ------------------------------------------------------------
-   HEADER
------------------------------------------------------------- */
-.glass-header {
-    width: 100%;
-    display: flex;
-    flex-direction: column;
-    align-items: center;     /* centers title + hero */
-    justify-content: center;
-    text-align: center;
-    padding: 20px 0;
-}
-
-.glass-header h1 {
-    margin: 0;
-    color: #a5f3fc;
-    font-weight: 700;
-}
-
-/* ------------------------------------------------------------
-   HERO IMAGE (Mobile Friendly)
------------------------------------------------------------- */
-.dashboard-hero-img {
-    width: 100%;
-    max-width: 337px;
-    height: auto;
-    display: block;
-    margin: 20px auto 0 auto;
-    border-radius: 18px;
-    filter: drop-shadow(0 0 20px rgba(0, 255, 255, 0.4));
-}
-
-/* Mobile adjustments */
-@media (max-width: 600px) {
-    .dashboard-hero-img {
-        max-width: 100%;
-        margin-top: 12px;
-        border-radius: 12px;
-        filter: drop-shadow(0 0 12px rgba(0, 255, 255, 0.3));
-    }
-}
-
-/* ------------------------------------------------------------
-   HERO IMAGE
------------------------------------------------------------- */
-.dashboard-hero-img {
-    width: 100%;
-    max-width: 675px;
-    display: block;
-    margin: 20px auto 0 auto;
-    border-radius: 18px;
-    filter: drop-shadow(0 0 20px rgba(0, 255, 255, 0.4));
-}
-
-/* --------------------------------------------------------------
-   DASHBOARD
--------------------------------------------------------------- */
-
-.dashboard {
-    display: flex;
-    justify-content: center;
-    gap: 20px;
-    max-width: 900px;
-    margin: 20px auto;
-}
-
-.dashboard-row {
-    display: flex;
-    justify-content: center;
-    align-items: stretch;
-    gap: 20px;
-    max-width: 700px;
-    margin: 20px auto;
-}
-
-
-
-.nav-bar {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    gap: 14px;
-    padding: 14px;
-}
-
-
-
-/* Smaller pills ONLY for Build tab */
-.build-pill {
-    padding: 6px 10px;
-    font-size: 14px;
-    border-radius: 10px;
-}
-
-
-/* Make both dashboard boxes equal height */
-.dash-left,
-.dash-right {
-    flex: 1;
-    min-width: 280px;
-    max-width: 320px;
-    padding: 16px;
-}
-
-
-
-.dash-link {
-    background: rgba(51, 65, 85, 0.85);
-    color: #e2e8f0;
-    padding: 10px 16px;
-    border-radius: 14px;
-    border: 1px solid rgba(148, 163, 184, 0.45);
-    cursor: pointer;
-    font-size: 14px;
-    transition: background 0.25s ease;
-}
-
-.dash-link.active {
-    background: rgba(14, 165, 233, 0.95);
-    color: #0f172a;
-}
-
-/* ------------------------------------------------------------
-   LEVEL SELECTOR
------------------------------------------------------------- */
-.level-select {
-    display: flex;
-    justify-content: center;
-    gap: 10px;
-    max-width: 500px;
-    margin: 16px auto;
-}
-
-.level-btn {
-    padding: 8px 14px;
-    border-radius: 14px;
-    background: rgba(71, 85, 105, 0.9);
-    color: #e2e8f0;
-    cursor: pointer;
-    border: 1px solid rgba(148, 163, 184, 0.5);
-    font-size: 13px;
-    transition: background 0.25s ease;
-}
-
-.level-btn.active {
-    background: rgba(14, 165, 233, 0.95);
-    color: #0f172a;
-}
-
-.level-buttons {
-    display: flex;
-    justify-content: space-between;
-    gap: 8px;
-}
-
-
-.section-title {
-    font-size: 14px;
-    margin-bottom: 8px;
-    display: block;
-}
-
-
-/* ------------------------------------------------------------
-   SPEECH RATE CONTROL
------------------------------------------------------------- */
-.rate-control {
-    max-width: 500px;
-    margin: 16px auto;
-    text-align: center;
-}
-/* Compact slider inside Audio Speed box */
-#rate {
-    width: 100%;
-    max-width: 220px;
-    margin: 0 auto;
-    display: block;
-}
-
-
-/* ------------------------------------------------------------
-   STUDENT NAME BOX
------------------------------------------------------------- */
-.student-name-box {
-    margin: 20px auto;
-    max-width: 350px; /* FIXED */
-    padding: 16px;
-    background: rgba(15, 23, 42, 0.55);
-    border-radius: 18px;
-    border: 1px solid rgba(148, 163, 184, 0.35);
-    backdrop-filter: blur(14px);
-    display: flex;
-    flex-direction: column;
-    gap: 12px;
-}
-
-.section-title {
-    font-size: 14px;
-    margin-bottom: 8px;
-    display: block;
-}
-
-/* student-name-box override */
-.student-name-box .section-title {
-    font-size: 14px;
-    color: #a5f3fc;
-}
-
-/* ------------------------------------------------------------
-   EXTENSION — Section Title Glow
------------------------------------------------------------- */
-.section-title {
-    text-shadow: 0 0 6px rgba(14,165,233,0.45);
-}
-
-.input-field {
-    width: 100%;
-    padding: 10px 14px;
-    border-radius: 12px;
-    border: 1px solid rgba(148, 163, 184, 0.45);
-    background: rgba(30, 41, 59, 0.6);
-    color: #e2e8f0;
-    font-size: 14px;
-}
-
-/* FIXED — compact input field */
-.student-name-box .input-field {
-    max-width: 260px;
-    margin: 0 auto;
-    display: block;
-}
-
-/* Base pill button style */
-.pill {
-    background: rgba(14, 165, 233, 0.95);
-    color: #0f172a;
-    padding: 10px 22px;
-    border-radius: 999px;
-    border: 1px solid rgba(148, 163, 184, 0.45);
-    cursor: pointer;
-    font-size: 14px;
-    transition: background 0.25s ease, transform 0.15s ease;
-}
-
-/* FIXED — compact save button */
-.student-name-box .pill {
-    max-width: 140px;
-    margin: 0 auto;
-}
-
-/* Hover lift */
-.pill:hover {
-    background: rgba(14, 165, 233, 1);
-    transform: translateY(-1px);
-}
-
-/* ✔ Correct Listen Player Button Styling */
-.listen-player-controls button {
-    padding: 6px 14px;
-    font-size: 0.85rem;
-    border-radius: 20px;
-    min-width: 90px;
-}
-
-.name-status {
-    font-size: 13px;
-    color: #a5f3fc;
-    min-height: 18px;
-}
-
-/* ------------------------------------------------------------
-   PROGRESS METERS
------------------------------------------------------------- */
-
-
-.progress-section {
-    max-width: 900px; /* wider to support 4 tiles */
-    margin: 20px auto;
-    display: grid;
-    grid-template-columns: repeat(4, 1fr); /* FOUR per row */
-    gap: 20px;
-}
-
-
-/* ------------------------------------------------------------
-   PROGRESS TILE — NEON GLOW SYSTEM
------------------------------------------------------------- */
-
-.progress-tile {
-    padding: 14px;
-    position: relative;
-    transition: transform 0.25s ease, box-shadow 0.25s ease;
-    box-shadow: 0 0 10px rgba(0,255,255,0.15);
-   animation: fadeInTile 0.4s ease-out;
-}
-
-/* ------------------------------------------------------------
-   EXTENSION — Fade‑In Animation for Tiles
------------------------------------------------------------- */
-@keyframes fadeInTile {
-    from { opacity: 0; }
-    to   { opacity: 1; }
-}
-
-
-
-
-
-/* Hover glow */
-.progress-tile:hover {
-    transform: translateY(-3px);
-    box-shadow:
-        0 0 12px rgba(0,255,255,0.35),
-        0 0 22px rgba(0,255,255,0.25);
-}
-
-
-/* ------------------------------------------------------------
-   PROGRESS TILE — PULSE ANIMATION (correct version)
------------------------------------------------------------- */
-
-@keyframes progressPulse {
-    0%   { box-shadow: 0 0 10px rgba(0,255,255,0.25); transform: scale(1); }
-    50%  { box-shadow: 0 0 22px rgba(0,255,255,0.55); transform: scale(1.03); }
-    100% { box-shadow: 0 0 10px rgba(0,255,255,0.25); transform: scale(1); }
-}
-
-.progress-tile.pulse {
-    animation: progressPulse 0.9s ease-out;
-}
-
-
-
-.progress-bar {
-    width: 100%;
-    height: 12px;
-    background: rgba(51, 65, 85, 0.4);
-    border-radius: 10px;
-    overflow: hidden;
-    margin-top: 8px;
-}
-/* ------------------------------------------------------------
-   EXTENSION — Progress Bar Glow Ripple
------------------------------------------------------------- */
-.progress-fill {
-    position: relative;
-}
-
-.progress-fill::after {
-    content: "";
-    position: absolute;
-    top: 0;
-    left: 0;
-    height: 100%;
-    width: 40%;
-    background: linear-gradient(
-        90deg,
-        rgba(255,255,255,0.0),
-        rgba(255,255,255,0.25),
-        rgba(255,255,255,0.0)
-    );
-    animation: rippleGlow 2.4s infinite ease-in-out;
-}
-
-@keyframes rippleGlow {
-    0%   { transform: translateX(-40%); }
-    100% { transform: translateX(140%); }
-}
-
-
-.progress-fill {
-    height: 100%;
-    background: rgba(14, 165, 233, 0.95);
-    width: 0%;
-    transition: width 0.4s ease;
-}
-
-/* Icon + label row */
-.progress-icon-row {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    margin-bottom: 6px;
-}
-
-/* Base icon style */
-.progress-icon {
-    font-size: 18px;
-    padding: 8px;
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    color: #fff;
-}
-
-.progress-img {
-    width: 28px;
-    height: 28px;
-    border-radius: 8px;
-    object-fit: cover;
-    box-shadow: 0 0 6px rgba(0,0,0,0.35);
-}
-
-/* Icon glow */
-.progress-img {
-    filter: drop-shadow(0 0 6px rgba(0,255,255,0.45));
-    transition: filter 0.25s ease;
-}
-
-.progress-tile:hover .progress-img {
-    filter: drop-shadow(0 0 12px rgba(0,255,255,0.75));
-}
-
-
-.progress-number {
-    margin-left: auto;
-    font-size: 14px;
-    color: #a5f3fc;
-    font-weight: 600;
-}
-
-/* CEFR gradient styles */
-.gradient-a1 {
-    background: linear-gradient(135deg, #3b82f6, #06b6d4);
-    box-shadow: 0 0 10px rgba(59, 130, 246, 0.6);
-}
-
-.gradient-a2 {
-    background: linear-gradient(135deg, #22c55e, #4ade80);
-    box-shadow: 0 0 10px rgba(34, 197, 94, 0.6);
-}
-
-.gradient-b1 {
-    background: linear-gradient(135deg, #f97316, #fb923c);
-    box-shadow: 0 0 10px rgba(249, 115, 22, 0.6);
-}
-
-.gradient-b2 {
-    background: linear-gradient(135deg, #ef4444, #f87171);
-    box-shadow: 0 0 10px rgba(239, 68, 68, 0.6);
-}
-
-/* CEFR gradient glow */
-.gradient-a1,
-.gradient-a2,
-.gradient-b1,
-.gradient-b2 {
-    transition: box-shadow 0.25s ease;
-}
-
-.progress-tile:hover .gradient-a1 {
-    box-shadow: 0 0 14px rgba(59,130,246,0.9);
-}
-
-.progress-tile:hover .gradient-a2 {
-    box-shadow: 0 0 14px rgba(34,197,94,0.9);
-}
-
-.progress-tile:hover .gradient-b1 {
-    box-shadow: 0 0 14px rgba(249,115,22,0.9);
-}
-
-.progress-tile:hover .gradient-b2 {
-    box-shadow: 0 0 14px rgba(239,68,68,0.9);
-}
-
-
-
-.progress-svg {
-    width: 26px;
-    height: 26px;
-    fill: #38bdf8;
-}
-
-/* ------------------------------------------------------------
-   TAB BAR
------------------------------------------------------------- */
-.nav-bar {
-    position: sticky;
-    top: 0;
-    z-index: 999;
-    display: flex;
-    justify-content: center;
-    gap: 10px;
-    max-width: 900px;
-    margin: 0 auto;
-    padding: 12px 0;
-    background: rgba(15, 23, 42, 0.6);
-    backdrop-filter: blur(12px);
-}
-
-
-.tab-btn {
-    padding: 10px 16px;
-    border-radius: 14px;
-    background: rgba(51, 65, 85, 0.9);
-    color: #e2e8f0;
-    cursor: pointer;
-    border: 1px solid rgba(148, 163, 184, 0.5);
-    font-size: 14px;
-    transition: background 0.25s ease;
-}
-
-.tab-btn.active {
-    background: rgba(14, 165, 233, 0.95);
-    color: #0f172a;
-}
-/* ------------------------------------------------------------
-   EXTENSION — Active Tab Neon Edge
------------------------------------------------------------- */
-.tab-btn.active {
-    box-shadow:
-        0 0 10px rgba(14,165,233,0.55),
-        inset 0 0 6px rgba(14,165,233,0.45);
-}
-
-/* ------------------------------------------------------------
-   TAB ICONS — NEON GLOW SYSTEM
------------------------------------------------------------- */
-.tab-icon {
-    width: 26px;
-    height: 26px;
-    margin-right: 8px;
-    vertical-align: middle;
-    filter: drop-shadow(0 0 4px rgba(255,255,255,0.4));
-    transition: filter 0.25s ease, transform 0.25s ease;
-}
-
-/* Hover glow */
-.tab-btn:hover .tab-icon {
-    filter: drop-shadow(0 0 6px rgba(0,255,255,0.8))
-            drop-shadow(0 0 12px rgba(0,255,255,0.6));
-    transform: translateY(-2px);
-}
-
-/* Active tab glow */
-.tab-btn.active .tab-icon {
-    filter: drop-shadow(0 0 8px rgba(0,255,180,0.9))
-            drop-shadow(0 0 14px rgba(0,255,180,0.7));
-}
-
-
-
-.hidden {
-    display: none;
-}
-
-/* ============================================================
-   LISTEN TAB
-   ============================================================ */
-
-
-
-.listen-category-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 10px 14px;
-    margin: 10px 0;
-    cursor: pointer;
-    border-radius: 14px;
-    background: rgba(15, 23, 42, 0.7);
-    border: 1px solid rgba(148, 163, 184, 0.5);
-    backdrop-filter: blur(14px);
-}
-
-.listen-category-title {
-    font-size: 15px;
-}
-
-.listen-arrow {
-    transition: transform 0.25s ease;
-}
-
-.listen-arrow.open {
-    transform: rotate(90deg);
-}
-
-.listen-category-content {
-    max-height: 0;
-    overflow: hidden;
-    transition: max-height 0.25s ease;
-    padding: 0 4px;
-}
-
-.listen-category-content.open {
-    max-height: none !important;
-    padding-top: 8px;
-}
-
-/* ============================================================
-   FLASHCARDS
-   ============================================================ */
-
-.flip-wrapper {
-    perspective: 1000px;
-}
-
-.flip-card {
-    position: relative;
-    width: 100%;
-    height: 140px;
-    transform-style: preserve-3d;
-    transition: transform 0.4s ease;
-}
-
-.flip-card.flipped {
-    transform: rotateY(180deg);
-}
-
-.flip-face {
-    position: absolute;
-    width: 100%;
-    height: 100%;
-    backface-visibility: hidden;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    border-radius: 18px;
-    font-size: 20px;
-    padding: 10px;
-    border: 1px solid rgba(148, 163, 184, 0.5);
-    box-shadow: 0 18px 40px rgba(0, 0, 0, 0.55);
-    backdrop-filter: blur(14px);
-}
-
-.flip-front {
-    background: rgba(15, 23, 42, 0.7);
-    color: #e2e8f0;
-}
-
-.flip-back {
-    background: rgba(14, 165, 233, 0.95);
-    color: #0f172a;
-    transform: rotateY(180deg);
-}
-
-/* ------------------------------------------------------------
-   EXTENSION — Flashcard Flip Glow
------------------------------------------------------------- */
-.flip-card.flipped .flip-back {
-    box-shadow:
-        0 0 12px rgba(14,165,233,0.65),
-        0 0 22px rgba(14,165,233,0.45);
-}
-
-/* ============================================================
-   FLASHCARDS — NEW UNIFIED SYSTEM (A1–B2)
-   ============================================================ */
-
-/* Grid layout for flashcards */
-.fc-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
-    gap: 20px;
-    margin-top: 20px;
-}
-
-/* Card container */
-.fc-card {
-    perspective: 1000px;
-}
-
-/* Inner flip element */
-.fc-inner {
-    position: relative;
-    width: 100%;
-    height: 140px;
-    transform-style: preserve-3d;
-    transition: transform 0.6s ease;
-}
-
-/* Flip state */
-.fc-inner.fc-flipped {
-    transform: rotateY(180deg);
-}
-
-/* Front + Back faces */
-.fc-front,
-.fc-back {
-    position: absolute;
-    width: 100%;
-    height: 100%;
-    backface-visibility: hidden;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 20px;
-    padding: 20px;
-    border-radius: 18px;
-}
-
-/* Back face rotated */
-.fc-back {
-    transform: rotateY(180deg);
-}
-
-.flash-category-content {
-    display: none;
-    margin-top: 10px;
-}
-
-.flash-category-content.open {
-    display: block;
-}
-
-
-/* ============================================================
-   SHARED BUILDER CARD STYLING (Quiz / Build / Sentence / Convo)
-   ============================================================ */
-
-.quiz-card {
-    padding: 20px;
-    border-radius: 16px;
-    background: rgba(255, 255, 255, 0.12);
-    backdrop-filter: blur(12px);
-    margin-bottom: 20px;
-}
-
-/* ============================================================
-   SHARED GRID (Perfect Pill Alignment)
-   ============================================================ */
-
-.sb-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
-    gap: 10px;
-    margin-top: 15px;
-}
-
-/* ============================================================
-   SHARED CONTROLS (Bottom Buttons)
-   ============================================================ */
-
-.sb-controls {
-    display: flex;
-    gap: 10px;
-    margin-top: 20px;
-}
-
-.sb-controls button {
-    padding: 10px 16px;
-    border-radius: 20px;
-    border: none;
-    cursor: pointer;
-    background: rgba(255, 255, 255, 0.18);
-    color: #fff;
-    transition: 0.2s;
-}
-
-.sb-controls button:hover {
-    background: rgba(255, 255, 255, 0.28);
-    transform: scale(1.05);
-}
-
-.sb-controls .active {
-    background: rgba(0, 200, 255, 0.35);
-}
-
-/* ============================================================
-   SHARED ANSWER + FEEDBACK PANELS
-   ============================================================ */
-
-#qb-answer,
-#bb-answer,
-#sb-answer,
-#cb-answer {
-    min-height: 40px;
-    padding: 10px;
-    margin-top: 15px;
-    border-radius: 12px;
-    background: rgba(255, 255, 255, 0.10);
-}
-
-#qb-feedback,
-#bb-feedback,
-#sb-feedback,
-#cb-feedback {
-    margin-top: 10px;
-    font-weight: 600;
-    min-height: 24px;
-}
-
-/* ============================================================
-   SENTENCE TAB — SPACING FIX
-   ============================================================ */
-
-.sentence-english {
-    margin-bottom: 12px;   /* space between question and pills */
-}
-
-.sentence-options {
-    margin-top: 8px;       /* optional: small top spacing */
-}
-
-#sentence-next {
-    margin-top: 12px;      /* spacing below pills */
-}
-
-/* ============================================================
-   BUILD TAB — SPACING FIX
-   ============================================================ */
-
-.build-selected {
-    margin-bottom: 12px;   /* space between answer field and pills */
-}
-
-#build-words {
-    margin-top: 10px;      /* space above the pill grid */
-}
-
-#build-words .pill {
-    margin: 4px;           /* optional: small spacing between pills */
-}
-
-/* ============================================================
-   GRAMMAR TAB
-   ============================================================ */
-
-
-#grammar ul {
-    list-style: none;
-    padding-left: 0;
-}
-
-#grammar li {
-    padding: 6px 0;
-    font-size: 15px;
-}
-
-/* ============================================================
-   BADGES
-   ============================================================ */
-
-.badge-section {
-    padding: 20px;
-    margin: 16px auto;
-    max-width: 700px;
-}
-
-.badge-section ul {
-    list-style: none;
-    padding-left: 0;
-}
-
-.badge-section li {
-    background: rgba(51, 65, 85, 0.85);
-    padding: 8px 12px;
-    border-radius: 12px;
-    margin-bottom: 6px;
-    border: 1px solid rgba(148, 163, 184, 0.4);
-    font-size: 14px;
-}
-
-
-
-
-/* ------------------------------------------------------------
-   EXTENSION — Word Pill Micro‑Bounce
------------------------------------------------------------- */
-.pill:hover {
-    transform: translateY(-2px) scale(1.02);
-}
-
-/* ============================================================
-   GLOBAL PILL STYLE — MATCHES SAVE NAME BUTTON
-   ============================================================ */
-
-.pill {
-    background: rgba(14, 165, 233, 0.95);        /* same blue */
-    color: #0f172a;                              /* same dark text */
-    padding: 10px 22px;                          /* same spacing */
-    border-radius: 999px;                        /* full pill */
-    border: 1px solid rgba(148, 163, 184, 0.45); /* same border */
-    cursor: pointer;
-    font-size: 14px;
-    font-weight: 500;
-    letter-spacing: 0.3px;
-    transition: background 0.25s ease, transform 0.15s ease;
-    backdrop-filter: blur(6px);                  /* glass effect */
-}
-
-.pill:hover:not(:disabled) {
-    background: rgba(14, 165, 233, 1);           /* brighter blue */
-    transform: translateY(-1px);                 /* subtle lift */
-}
-
-.pill:disabled {
-    opacity: 0.55;
-    cursor: default;
-    transform: none;
-}
-
-
-
-/* ============================================================
-   MOBILE — ≤600px
-   ============================================================ */
-@media (max-width: 600px) {
-
-    /* iPhone Safari scroll fix */
-html, body {
-    overflow-x: hidden !important;
-    overflow-y: auto !important;
-    height: auto !important;
-}
-
-/* Remove sticky nav on mobile */
-.nav-bar {
-    position: relative !important;
-    top: auto !important;
-    z-index: 10 !important;
-}
-
-/* Prevent nav-bar width overflow */
-.nav-bar {
-    max-width: 100% !important;
-    width: 100% !important;
-}
-
-/* Stack dashboard panels */
-.dashboard-row {
-    flex-direction: column;
-    max-width: 100%;
-    gap: 16px;
-}
-
-   /* FIX — Listen tab must expand fully */
-    .listen-category-content {
-        max-height: none !important;
-    }
-
-    /* Prevent dashboard overflow */
-    .dashboard,
-    .dashboard-row {
-        max-width: 100% !important;
-        width: 100% !important;
-        margin-left: 0 !important;
-        margin-right: 0 !important;
-    }
-
-    /* Allow dashboard boxes to shrink */
-    .dash-left,
-    .dash-right {
-        min-width: 0 !important;
-        max-width: 100% !important;
-        width: 100% !important;
-        padding: 14px;
-    }
-
-    /* Progress tiles: 4 → 2 columns */
-    .progress-section {
-        grid-template-columns: repeat(2, 1fr);
-        gap: 14px;
-        width: 100%;
-        max-width: 100%;
-    }
-
-    .progress-tile {
-        padding: 12px;
-    }
-
-    /* Flashcards flexible */
-    .flip-card {
-        height: auto;
-        min-height: 120px;
-    }
-
-    /* Listen tab spacing */
-    .listen-category-header {
-        padding: 8px 10px;
-    }
-}
-
-/* ============================================================
-   ULTRA‑SMALL PHONES — ≤360px
-   ============================================================ */
-@media (max-width: 360px) {
-
-    .dashboard-row {
-        flex-direction: column;
-        gap: 14px;
-        max-width: 100%;
-    }
-
-    /* Progress tiles: 4 → 1 column */
-    .progress-section {
-        grid-template-columns: 1fr;
-        gap: 12px;
-        width: 100%;
-        max-width: 100%;
-    }
-
-    .progress-tile {
-        padding: 10px;
-    }
-
-    .progress-img {
-        width: 24px;
-        height: 24px;
-    }
-
-    .section-title,
-    .progress-number {
-        font-size: 13px;
-    }
-
-    .flip-card {
-        height: auto;
-        min-height: 110px;
-    }
-
-    .tab-btn {
-        padding: 8px 12px;
-        font-size: 13px;
-    }
-
-   .glass-panel {
-    margin-left: 0 !important;
-    margin-right: 0 !important;
-    width: 100% !important;
-}
-
-}
-
-/* ============================================================
-   FOLDABLE PHONES — FOLDED (≤500px)
-   ============================================================ */
-@media (max-width: 500px) {
-
-    .dashboard-row {
-        flex-direction: column;
-        gap: 16px;
-        max-width: 100%;
-    }
-
-    .progress-section {
-        grid-template-columns: 1fr;
-        gap: 14px;
-    }
-
-    .progress-tile {
-        padding: 12px;
-    }
-
-    .progress-img {
-        width: 26px;
-        height: 26px;
-    }
-
-    .flip-card {
-        height: auto;
-        min-height: 120px;
-    }
-
-    .tab-btn {
-        padding: 10px 14px;
-        font-size: 14px;
-    }
-}
-
-/* ============================================================
-   TABLETS — 600–900px
-   ============================================================ */
-@media (min-width: 600px) and (max-width: 900px) {
-
-    .dashboard-row {
-        flex-direction: row;
-        gap: 20px;
-        max-width: 100%;
-    }
-
-    .progress-section {
-        grid-template-columns: repeat(3, 1fr);
-        gap: 18px;
-    }
-
-    .progress-img {
-        width: 32px;
-        height: 32px;
-    }
-
-    .section-title {
-        font-size: 15px;
-    }
-
-    .flip-card {
-        height: 160px;
-    }
-
-    .tab-btn {
-        padding: 12px 18px;
-        font-size: 15px;
-    }
-}
-
-/* ============================================================
-   FOLDABLE PHONES — UNFOLDED (700–900px)
-   ============================================================ */
-@media (min-width: 700px) and (max-width: 900px) {
-
-    .dashboard-row {
-        flex-direction: row;
-        gap: 24px;
-        max-width: 100%;
-    }
-
-    .progress-section {
-        grid-template-columns: repeat(3, 1fr);
-        gap: 20px;
-    }
-
-    .progress-img {
-        width: 34px;
-        height: 34px;
-    }
-
-    .section-title {
-        font-size: 16px;
-    }
-
-    .flip-card {
-        height: 170px;
-    }
-
-    .tab-btn {
-        padding: 14px 20px;
-        font-size: 16px;
-    }
-}
-
-/* ============================================================
-   GLOBAL OVERFLOW PROTECTION
-   ============================================================ */
-* {
-    box-sizing: border-box;
-}
-
-html, body {
-    overflow-x: hidden;
-    max-width: 100%;
-}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Spanish CEFR Trainer</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+<!-- ============================================================
+     HEADER + HERO
+============================================================ -->
+<div class="glass-header">
+    <h1>Spanish Trainer</h1>
+    <img src="images/dashboard-hero.png" 
+         alt="Dashboard Hero" 
+         class="dashboard-hero-img">
+</div>
+
+<!-- ============================================================
+     NAVIGATION (Original)
+============================================================ -->
+<nav class="glass-panel nav-bar">
+    <button id="btn-dashboard" class="tab-btn active" data-tab="dashboard">
+        <img src="images/dashboard.png" class="tab-icon"> Dashboard
+    </button>
+    <button id="btn-listen" class="tab-btn" data-tab="listen">
+        <img src="images/listen.png" class="tab-icon"> Listen
+    </button>
+    <button id="btn-flashcards" class="tab-btn" data-tab="flashcards">
+        <img src="images/flashcards.png" class="tab-icon"> Flashcards
+    </button>
+    <button id="btn-quiz" class="tab-btn" data-tab="quiz">
+        <img src="images/badge-quiz.png" class="tab-icon"> Quiz
+    </button>
+    <button id="btn-build" class="tab-btn" data-tab="build">
+        <img src="images/badge-build.png" class="tab-icon"> Build
+    </button>
+    <button id="btn-sentence" class="tab-btn" data-tab="sentence">
+        <img src="images/icon-sentence.png" class="tab-icon"> Sentence
+    </button>
+    <button id="btn-conversation" class="tab-btn" data-tab="conversation">
+        <img src="images/badge-conversation.png" class="tab-icon"> Conversation
+    </button>
+    <button id="btn-practice" class="tab-btn" data-tab="practice">
+        <img src="images/grammar.png" class="tab-icon"> Practice
+    </button>
+    <button id="btn-review" class="tab-btn" data-tab="review">
+        <img src="images/icon-review.png" class="tab-icon"> Review
+    </button>
+    <button id="btn-achievements" class="tab-btn" data-tab="achievements">
+        <img src="images/icon-level.png" class="tab-icon"> Achievements
+    </button>
+</nav>
+
+<!-- ============================================================
+     DASHBOARD TAB (Original)
+============================================================ -->
+<div id="tab-dashboard" class="tab-page">
+
+    <div class="dashboard-row">
+        <div class="dash-left glass-panel">
+            <label class="section-title">Audio Speed</label>
+            <input type="range" id="rate" min="0.6" max="1.4" step="0.1" value="1">
+        </div>
+
+        <div class="dash-right glass-panel">
+            <label class="section-title">Skill Level</label>
+            <div class="level-buttons">
+                <button class="pill" data-level="A1">A1</button>
+                <button class="pill" data-level="A2">A2</button>
+                <button class="pill" data-level="B1">B1</button>
+                <button class="pill" data-level="B2">B2</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="student-name-box glass-panel">
+        <label class="section-title">Your name for certificates</label>
+        <input id="student-name" class="input-field" type="text" placeholder="Enter your name">
+        <button id="save-name-btn" class="pill">Save Name</button>
+        <div id="name-status" class="name-status"></div>
+    </div>
+
+    <div class="progress-section">
+
+        <div id="quiz-tile" class="progress-tile glass-panel">
+            <div class="progress-icon-row">
+                <img src="images/badge-quiz.png" class="progress-img">
+                <label class="section-title">Quiz Progress</label>
+                <span class="progress-number" id="quiz-number">0%</span>
+            </div>
+            <div class="progress-bar"><div class="progress-fill" id="quiz-progress"></div></div>
+        </div>
+
+        <div id="build-tile" class="progress-tile glass-panel">
+            <div class="progress-icon-row">
+                <img src="images/badge-build.png" class="progress-img">
+                <label class="section-title">Build Progress</label>
+                <span class="progress-number" id="build-number">0%</span>
+            </div>
+            <div class="progress-bar"><div class="progress-fill" id="build-progress"></div></div>
+        </div>
+
+        <div id="sentence-tile" class="progress-tile glass-panel">
+            <div class="progress-icon-row">
+                <img src="images/icon-sentence.png" class="progress-img">
+                <label class="section-title">Sentence Progress</label>
+                <span class="progress-number" id="sentence-number">0%</span>
+            </div>
+            <div class="progress-bar"><div class="progress-fill" id="sentence-progress"></div></div>
+        </div>
+
+        <div id="xp-tile" class="progress-tile glass-panel">
+            <div class="progress-icon-row">
+                <img src="images/icon-xp.png" class="progress-img">
+                <label class="section-title">XP Progress</label>
+                <span class="progress-number" id="xp-number">0%</span>
+            </div>
+            <div class="progress-bar"><div class="progress-fill" id="xp-progress"></div></div>
+        </div>
+
+        <div id="streak-tile" class="progress-tile glass-panel">
+            <div class="progress-icon-row">
+                <img src="images/icon-streak.png" class="progress-img">
+                <label class="section-title">Streak</label>
+                <span class="progress-number" id="streak-number">0%</span>
+            </div>
+            <div class="progress-bar"><div class="progress-fill" id="streak-progress"></div></div>
+        </div>
+
+        <div id="score-tile" class="progress-tile glass-panel">
+            <div class="progress-icon-row">
+                <img src="images/icon-level.png" class="progress-img">
+                <label class="section-title">Score Rating</label>
+                <span class="progress-number" id="score-number">0%</span>
+            </div>
+            <div class="progress-bar"><div class="progress-fill" id="score-progress"></div></div>
+        </div>
+
+        <div id="review-tile" class="progress-tile glass-panel">
+            <div class="progress-icon-row">
+                <img src="images/icon-review.png" class="progress-img">
+                <label class="section-title">Due for Review</label>
+                <span class="progress-number" id="review-number">0%</span>
+            </div>
+            <div class="progress-bar"><div class="progress-fill" id="review-progress"></div></div>
+        </div>
+
+    </div>
+
+    <div class="badge-section glass-panel">
+        <h3>Your Badges</h3>
+        <ul id="badge-list"></ul>
+    </div>
+
+</div>
+
+<!-- ============================================================
+     NEW TABS (Part 3 Scaffolding)
+============================================================ -->
+
+<div id="tab-listen" class="tab-page hidden glass-panel">
+    <h2>Listen</h2>
+    <div id="listenControls">
+        <button id="listenPlay" class="pill-btn">Play</button>
+        <button id="listenNext" class="pill-btn">Next</button>
+        <button id="listenPrev" class="pill-btn">Prev</button>
+        <button id="listenAuto" class="pill-btn">Auto</button>
+    </div>
+    <div id="listenList" class="listen-grid"></div>
+</div>
+
+<div id="tab-flashcards" class="tab-page hidden glass-panel">
+    <h2>Flashcards</h2>
+    <div id="flashcardsGrid" class="flashcards-grid"></div>
+</div>
+
+<div id="tab-quiz" class="tab-page hidden glass-panel">
+    <h2>Quiz</h2>
+    <div id="quizPrompt" class="quiz-prompt"></div>
+    <div id="quizOptions" class="quiz-options"></div>
+    <div id="quizFeedback" class="quiz-feedback"></div>
+</div>
+
+<div id="tab-build" class="tab-page hidden glass-panel">
+    <h2>Build a Sentence</h2>
+    <div id="buildGrid" class="build-grid"></div>
+    <div id="buildOutput" class="build-output"></div>
+    <div id="buildResult" class="build-result"></div>
+    <button id="buildCheckBtn" class="pill-btn">Check</button>
+    <button id="buildNewBtn" class="pill-btn">New</button>
+</div>
+
+<div id="tab-sentence" class="tab-page hidden glass-panel">
+    <h2>Sentence Generator</h2>
+    <div id="sentence-content"></div>
+</div>
+
+<div id="tab-conversation" class="tab-page hidden glass-panel">
+    <h2>Conversation</h2>
+    <div id="conversationFeed" class="conversation-feed"></div>
+    <input id="conversationInput" class="pill-input" placeholder="Type in Spanish...">
+    <button id="conversationSend" class="pill-btn">Send</button>
+</div>
+
+<div id="tab-practice" class="tab-page hidden glass-panel">
+    <h2>Free Practice</h2>
+    <input id="practiceInput" class="pill-input" placeholder="Write anything in Spanish...">
+    <button id="practiceBtn" class="pill-btn">Submit</button>
+    <div id="practiceResult" class="practice-result"></div>
+</div>
+
+<div id="tab-review" class="tab-page hidden glass-panel">
+    <h2>Review</h2>
+    <div id="reviewCard"></div>
+    <button id="reviewMastered" class="pill-btn">Mastered</button>
+</div>
+
+<div id="tab-achievements" class="tab-page hidden glass-panel">
+    <h2>Achievements</h2>
+    <div id="achievements-content"></div>
+</div>
+
+<!-- ============================================================
+     SCRIPTS
+============================================================ -->
+<script src="wordbanks/A1.js"></script>
+<script src="wordbanks/A2.js"></script>
+<script src="wordbanks/B1.js"></script>
+<script src="wordbanks/B2.js"></script>
+<script src="app.js"></script>
+
+</body>
+</html>
