@@ -2710,21 +2710,22 @@ const App = {
         });
     },
 
-  init() {
+   init() {
     this.initLevelSelector();
     this.initCategorySelector();
     this.initListenControls();
     this.initSearchControls();
     this.initAudioToggle();
 
-    // ⭐ Add this here
     document.querySelectorAll(".tab-btn").forEach(btn => {
         btn.addEventListener("click", () => {
             const tab = btn.id.replace("btn-", "");
             Router.switch(tab);
         });
     });
-}
+  }
+};
+
 
 /* ============================================================
    FINAL BOOTSTRAP — Global Reset + Export Hooks
