@@ -2804,13 +2804,22 @@ function generateQuizOptions(words, correctWord) {
 ============================================================ */
 
 function renderQuizTab() {
-    const container = document.getElementById("quiz-content");
+    const promptBox  = document.getElementById("quizPrompt");
+    const optionsBox = document.getElementById("quizOptions");
+    const feedbackBox = document.getElementById("quizFeedback");
+
+    if (!promptBox || !optionsBox || !feedbackBox) return;
+
     const words = CEFR_LEVELS[appState.currentLevel];
 
     if (!words || !words.length) {
-        container.innerHTML = `<div class="glass-panel quiz-card">
-            <p>No words found for level ${appState.currentLevel}.</p>
-        </div>`;
+        promptBox.innerHTML = `
+            <div class="glass-panel quiz-card">
+                <p>No words found for level ${appState.currentLevel}.</p>
+            </div>
+        `;
+        optionsBox.innerHTML = "";
+        feedbackBox.innerHTML = "";
         return;
     }
 
@@ -2819,87 +2828,130 @@ function renderQuizTab() {
     quizState.options = generateQuizOptions(words, quizState.currentWord);
     quizState.selected = null;
 
-    // Render quiz UI
-    container.innerHTML = `
+    // Prompt
+    promptBox.innerHTML = `
         <div class="glass-panel quiz-card">
             <h2>Quiz — Level ${appState.currentLevel}</h2>
             <p>Select the correct Spanish for the English word.</p>
-
             <div id="qb-meta"><strong>English:</strong> ${quizState.currentWord.english}</div>
-
-            <div id="qb-grid" class="sb-grid">
-                ${quizState.options.map(opt => `
-                    <button class="pill" data-spanish="${opt}">${opt}</button>
-                `).join("")}
-            </div>
-
-            <div id="qb-answer" class="qb-answer"></div>
-
-            <div class="sb-controls quiz-controls-tight">
-                <button id="qb-submit">Check</button>
-                <button id="qb-next">Next</button>
-                <button id="qb-harder" class="${quizState.harderMode ? "active" : ""}">Harder</button>
-            </div>
-
-            <div id="qb-feedback" class="qb-feedback"></div>
         </div>
     `;
 
-    // ⭐ Wire events immediately after rendering
+    // Options
+    optionsBox.innerHTML = `
+        <div id="qb-grid" class="sb-grid">
+            ${quizState.options.map(opt => `
+                <button class="pill" data-spanish="${opt}">${opt}</button>
+            `).join("")}
+        </div>
+
+        <div id="qb-answer" class="qb-answer"></div>
+
+        <div class="sb-controls quiz-controls-tight">
+            <button id="qb-submit">Check</button>
+            <button id="qb-next">Next</button>
+            <button id="qb-harder" class="${quizState.harderMode ? "active" : ""}">Harder</button>
+        </div>
+    `;
+
+    // Clear feedback
+    feedbackBox.innerHTML = `<div id="qb-feedback" class="qb-feedback"></div>`;
+
+    // Wire events
     wireQuizEvents();
 }
 
+
 function wireQuizEvents() {
-    const grid = document.getElementById("qb-grid");
+    const optionsBox  = document.getElementById("quizOptions");
+    const feedbackBox = document.getElementById("quizFeedback");
+
+    if (!optionsBox || !feedbackBox) return;
+
     const submitBtn = document.getElementById("qb-submit");
-    const nextBtn = document.getElementById("qb-next");
+    const nextBtn   = document.getElementById("qb-next");
     const harderBtn = document.getElementById("qb-harder");
-    const feedback = document.getElementById("qb-feedback");
     const answerBox = document.getElementById("qb-answer");
 
     quizState.selected = null;
 
-  /* ============================================================
-   OPTION SELECTION
-============================================================ */
-buttons.forEach(btn => {
-    btn.addEventListener("click", () => {
-        const chosen = btn.dataset.opt;
+    /* ============================================================
+       OPTION SELECTION
+    ============================================================ */
+    optionsBox.querySelectorAll(".pill").forEach(btn => {
+        btn.addEventListener("click", () => {
+            quizState.selected = btn.dataset.spanish;
 
-        if (chosen === q.correct) {
-            feedback.innerHTML = `
-                <span style="color:#4ade80;font-weight:600;">
-                    Correct! 🎉
-                </span>
-            `;
+            // highlight selected
+            optionsBox.querySelectorAll(".pill")
+                .forEach(b => b.classList.remove("active"));
 
-            appState.levelStats[appState.currentLevel].sentenceCompleted++;
-            updateBadges();
-            updateProgressMeters();
+            btn.classList.add("active");
 
-            speakQuiz(q.correct);
-
-        } else {
-            feedback.innerHTML = `
-                <span style="color:#f87171;font-weight:600;">
-                    Incorrect.</span><br>
-                Correct answer: <strong>${q.correct}</strong>
-            `;
-
-            speakQuiz(q.correct);
-        }
-
-        buttons.forEach(b => b.disabled = true);
+            // show selected answer
+            answerBox.textContent = quizState.selected;
+        });
     });
-});
 
-/* ============================================================
-   NEXT QUESTION
-============================================================ */
-nextBtn.addEventListener("click", () => {
-    renderSentenceTab();
-});
-} // closes setupSentenceEvents(q)
+    /* ============================================================
+       CHECK ANSWER
+    ============================================================ */
+    if (submitBtn) {
+        submitBtn.addEventListener("click", () => {
+            if (!quizState.selected) {
+                feedbackBox.textContent = "Choose an answer first.";
+                return;
+            }
+
+            const correct = quizState.currentWord.spanish;
+
+            if (quizState.selected === correct) {
+                feedbackBox.textContent = "Correct! 🎉";
+
+                // scoring
+                appState.levelStats[appState.currentLevel].quizCompleted++;
+                appState.levelStats[appState.currentLevel].quizScore++;
+
+                updateBadges();
+                updateProgressMeters();
+
+                // audio
+                speakQuiz(correct);
+
+            } else {
+                feedbackBox.textContent =
+                    `Incorrect — correct answer: ${correct}`;
+
+                speakQuiz(correct);
+            }
+
+            saveState();
+        });
+    }
+
+    /* ============================================================
+       NEXT QUESTION
+    ============================================================ */
+    if (nextBtn) {
+        nextBtn.addEventListener("click", () => {
+            renderQuizTab();
+        });
+    }
+
+    /* ============================================================
+       HARDER MODE TOGGLE
+    ============================================================ */
+    if (harderBtn) {
+        harderBtn.addEventListener("click", () => {
+            quizState.harderMode = !quizState.harderMode;
+            harderBtn.classList.toggle("active", quizState.harderMode);
+            renderQuizTab();
+        });
+    }
+}
+
+
+
 
 /* ============================================================
    BUILD TAB — English → Spanish Builder (Stable Version)
