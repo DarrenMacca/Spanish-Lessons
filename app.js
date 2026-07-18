@@ -2649,13 +2649,6 @@ const Router = {
     }
 };
 
-/* ------------------------------------------------------------
-   INITIAL ROUTE
------------------------------------------------------------- */
-document.addEventListener("DOMContentLoaded", () => {
-    Router.switch("dashboard");
-});
-
 
 /* ============================================================
    FINAL ASSEMBLY — Wiring Controls + Global Init
