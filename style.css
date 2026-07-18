@@ -569,18 +569,7 @@ html, body {
    PILL STYLE (GLOBAL CONSISTENCY)
 ============================================================ */
 
-.pill {
-    border-radius: 18px;
-    padding: 12px 16px;
-    text-align: center;
-}
-
-
-
-/* ============================================================
-   QUIZ — ORIGINAL SIMPLE VERSION (RESTORED)
-============================================================ */
-
+/* Word pill */
 .quiz-word-pill {
     margin: 12px 0 18px 0;
     font-size: 22px;
@@ -595,10 +584,12 @@ html, body {
     transform: scale(1.05);
 }
 
-/* ============================================================
-   PILL BUTTONS (Check / Next / Harder)
-============================================================ */
+/* Spacing between options and controls */
+.quiz-options {
+    margin-bottom: 22px;
+}
 
+/* Pill buttons */
 .pill-btn {
     background: rgba(255, 255, 255, 0.15);
     color: #e2e8f0;
@@ -620,6 +611,13 @@ html, body {
     transform: scale(0.97);
 }
 
+/* Selected word display */
+.quiz-selected-word {
+    margin-top: 10px;
+    text-align: center;
+    font-size: 18px;
+    opacity: 0.8;
+}
 
 
 /* ============================================================
