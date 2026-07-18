@@ -381,6 +381,9 @@ if (reviewMastered) {
 /* ============================================================
    ACHIEVEMENTS TAB
 ============================================================ */
+function renderAchievementsTab() {
+    // placeholder so init doesn't crash
+}
 
 const AchievementsEngine = {
     init() {
