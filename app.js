@@ -2315,6 +2315,48 @@ initTabNavigation();
 activateTab("dashboard");
 
 /* ============================================================
+   LISTEN ENGINE — WRAPPER FOR LISTEN TAB
+============================================================ */
+
+const ListenEngine = {
+    init() {
+        renderListenTab();
+    },
+
+    play(rate) {
+        // Play first word in autoplay list
+        listenAutoPlay.active = true;
+        listenAutoPlay.paused = false;
+        listenAutoPlay.index = 0;
+        Global.audioRate = rate;
+        playNextListenWord();
+    },
+
+    next() {
+        listenAutoPlay.index++;
+        playNextListenWord();
+    },
+
+    prev() {
+        listenAutoPlay.index = Math.max(0, listenAutoPlay.index - 1);
+        playNextListenWord();
+    },
+
+    toggleAuto(rate) {
+        Global.audioRate = rate;
+        listenAutoPlay.active = !listenAutoPlay.active;
+        listenAutoPlay.paused = false;
+        listenAutoPlay.index = 0;
+
+        if (listenAutoPlay.active) {
+            playNextListenWord();
+        } else {
+            speechSynthesis.cancel();
+        }
+    }
+};
+
+/* ============================================================
    LISTEN TAB — CATEGORY + AUDIO PLAYER + CLEAN UI
    ============================================================ */
 
