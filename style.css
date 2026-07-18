@@ -578,33 +578,100 @@ html, body {
 
 
 /* ============================================================
-   QUIZ TAB — UPDATED FOR #tab-quiz + #quizPrompt + #quizOptions
+   QUIZ — ORIGINAL SIMPLE VERSION (RESTORED)
 ============================================================ */
 
-#tab-quiz h2 {
-    margin-bottom: 12px;
+function renderQuizTab() {
+    const container = document.getElementById("tab-quiz");
+    const level = appState.currentLevel;
+    const words = CEFR_LEVELS[level];
+
+    // Pick a random word
+    const item = words[Math.floor(Math.random() * words.length)];
+
+    // Build 3 options (1 correct + 2 incorrect)
+    const options = [item.spanish];
+    while (options.length < 3) {
+        const r = words[Math.floor(Math.random() * words.length)].spanish;
+        if (!options.includes(r)) options.push(r);
+    }
+
+    // Shuffle options
+    options.sort(() => Math.random() - 0.5);
+
+    // Build HTML (restored original layout)
+    container.innerHTML = `
+        <h2>Quiz — Level ${level}</h2>
+        <p>Select the correct Spanish for the English word.</p>
+
+        <!-- Word pill -->
+        <div id="quizPrompt" class="pill quiz-word-pill">${item.english}</div>
+
+        <!-- Option pills -->
+        <div id="quizOptions" class="quiz-options">
+            ${options.map(opt => `
+                <button class="quiz-option pill">${opt}</button>
+            `).join("")}
+        </div>
+
+        <!-- Controls -->
+        <div class="quiz-controls">
+            <button id="quizCheck" class="pill-btn">Check</button>
+            <button id="quizNext" class="pill-btn">Next</button>
+            <button id="quizHarder" class="pill-btn">Harder</button>
+        </div>
+
+        <!-- Feedback -->
+        <div id="quizFeedback" class="quiz-feedback"></div>
+    `;
+
+    /* ---------------------------
+       OPTION SELECTION
+    --------------------------- */
+    let selected = null;
+
+    container.querySelectorAll(".quiz-option").forEach(btn => {
+        btn.addEventListener("click", () => {
+            container.querySelectorAll(".quiz-option").forEach(b => b.classList.remove("selected"));
+            btn.classList.add("selected");
+            selected = btn.textContent.trim();
+        });
+    });
+
+    /* ---------------------------
+       CHECK ANSWER
+    --------------------------- */
+    document.getElementById("quizCheck").onclick = () => {
+        if (!selected) return;
+
+        const correct = item.spanish;
+        const fb = document.getElementById("quizFeedback");
+
+        if (selected === correct) {
+            fb.textContent = "Correct!";
+            fb.className = "quiz-feedback correct";
+        } else {
+            fb.textContent = `Incorrect — correct answer: ${correct}`;
+            fb.className = "quiz-feedback incorrect";
+        }
+    };
+
+    /* ---------------------------
+       NEXT QUESTION
+    --------------------------- */
+    document.getElementById("quizNext").onclick = () => {
+        renderQuizTab();
+    };
+
+    /* ---------------------------
+       HARDER LEVEL
+    --------------------------- */
+    document.getElementById("quizHarder").onclick = () => {
+        appState.currentLevel = getHarderLevel(level);
+        renderQuizTab();
+    };
 }
 
-#quizPrompt {
-    font-size: 18px;
-    margin-bottom: 14px;
-}
-
-#quizOptions {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
-    gap: 12px;
-}
-
-#quizOptions .pill {
-    text-align: center;
-}
-
-#quizFeedback {
-    margin-top: 14px;
-    font-weight: 600;
-    min-height: 24px;
-}
 
 /* ============================================================
    BUILD TAB — UPDATED FOR #tab-build + #buildGrid + #buildOutput
