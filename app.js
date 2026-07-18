@@ -2506,7 +2506,7 @@ function renderListenTab() {
 }
 
 function renderFlashcardsTab() {
-    const container = document.getElementById("flashcardsGrid");   // ✔ correct ID
+    const container = document.getElementById("flash-content");   // ✔ correct ID
     if (!container) return;
 
     // your existing Flashcards renderer code stays exactly the same
