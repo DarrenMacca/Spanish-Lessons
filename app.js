@@ -2315,7 +2315,7 @@ initTabNavigation();
 activateTab("dashboard");
 
 /* ============================================================
-   ENGINE PACK — CLEAN, STABLE, WRAPPER-BASED ARCHITECTURE
+   ENGINE PACK — MATCHED TO YOUR HTML
 ============================================================ */
 
 /* ---------------------------
@@ -2385,7 +2385,7 @@ const QuizEngine = {
     },
 
     check(answer) {
-        return quizCheckAnswer(answer); // your existing quiz logic
+        return quizCheckAnswer(answer);
     },
 
     refresh() {
@@ -2405,11 +2405,11 @@ const BuildEngine = {
     },
 
     addWord(word) {
-        buildAddWord(word); // your existing builder logic
+        buildAddWord(word);
     },
 
     check() {
-        return buildCheckSentence(); // your existing builder logic
+        return buildCheckSentence();
     },
 
     refresh() {
@@ -2497,6 +2497,22 @@ const AchievementsEngine = {
         document.dispatchEvent(new Event("achievementsRendered"));
     }
 };
+
+function renderListenTab() {
+    const container = document.getElementById("listenList");   // ✔ correct ID
+    if (!container) return;
+
+    // your existing Listen renderer code stays exactly the same
+}
+
+function renderFlashcardsTab() {
+    const container = document.getElementById("flashcardsGrid");   // ✔ correct ID
+    if (!container) return;
+
+    // your existing Flashcards renderer code stays exactly the same
+}
+
+
 
 
 /* ============================================================
