@@ -2657,7 +2657,7 @@ function wireQuizEvents() {
 
     quizState.selected = null;
 
-   /* ============================================================
+  /* ============================================================
    OPTION SELECTION
 ============================================================ */
 buttons.forEach(btn => {
@@ -2697,24 +2697,12 @@ buttons.forEach(btn => {
 nextBtn.addEventListener("click", () => {
     renderSentenceTab();
 });
-} // ← closes setupSentenceEvents(q)
-
-
-    /* ============================================================
-       HARDER MODE
-    ============================================================ */
-    harderBtn.addEventListener("click", () => {
-        quizState.harderMode = !quizState.harderMode;
-        harderBtn.classList.toggle("active");
-        renderQuizTab();
-    });
-}
-
-
+} // closes setupSentenceEvents(q)
 
 /* ============================================================
    BUILD TAB — English → Spanish Builder (Stable Version)
 ============================================================ */
+
 
 function renderBuildTab() {
     const container = document.getElementById("build-content");
