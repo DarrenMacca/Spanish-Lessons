@@ -580,6 +580,13 @@ html, body {
 /* ============================================================
    QUIZ — ORIGINAL SIMPLE VERSION (RESTORED)
 ============================================================ */
+.quiz-word-pill {
+    margin: 12px 0 18px 0;
+    font-size: 22px;
+    font-weight: 600;
+    text-align: center;
+}
+
 
 function renderQuizTab() {
     const container = document.getElementById("tab-quiz");
