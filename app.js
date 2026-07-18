@@ -350,9 +350,19 @@ if (reviewMastered) {
    ACHIEVEMENTS TAB
 ============================================================ */
 
-document.addEventListener("achievementsRendered", () => {
-    // AchievementsEngine writes directly to #achievements-content
-});
+const AchievementsEngine = {
+    init() {
+        renderAchievementsTab();   // existing achievements + badges
+        renderGrammarTab();        // append grammar insights
+        document.dispatchEvent(new Event("achievementsRendered"));
+    },
+
+    refresh() {
+        renderAchievementsTab();
+        renderGrammarTab();
+        document.dispatchEvent(new Event("achievementsRendered"));
+    }
+};
 
 /* ============================================================
    TAB BUTTONS → ROUTER
@@ -2953,13 +2963,8 @@ function wireQuizEvents() {
 
 
 
-/* ============================================================
-   BUILD TAB — English → Spanish Builder (Stable Version)
-============================================================ */
-
-
 function renderBuildTab() {
-    const container = document.getElementById("build-content");
+    const container = document.getElementById("buildGrid");   // ✔ FIXED
 
     const pool = CEFR_SENTENCES[appState.currentLevel];
     const sentence = pool[Math.floor(Math.random() * pool.length)];
@@ -3010,9 +3015,9 @@ function renderBuildTab() {
         </div>
     `;
 
-    // ⭐ Wire events immediately after rendering
     wireBuildEvents(sentence);
 }
+
 
 function wireBuildEvents(sentence) {
     const selectedArea = document.getElementById("build-selected");
@@ -3477,8 +3482,8 @@ const CONVO_PROMPTS = [
 ];
 
 function renderConversationTab() {
-    const container = document.getElementById("conversation-content");
-    const words = CEFR_LEVELS[appState.currentLevel];
+   const container = document.getElementById("conversationFeed");
+   const words = CEFR_LEVELS[appState.currentLevel];
 
     if (!words || !words.length) {
         container.innerHTML = `<div class="glass-panel convo-card">
@@ -3650,12 +3655,12 @@ function wireConversationEvents() {
    ============================================================ */
 
 function renderGrammarTab() {
-    const container = document.getElementById("grammar-content");
+    const container = document.getElementById("achievements-content"); // ✔ Achievements tab
     const words = CEFR_LEVELS[appState.currentLevel];
     const grouped = groupByCategory(words);
 
-    container.innerHTML = `
-        <div class="glass-panel quiz-card">
+    container.insertAdjacentHTML("beforeend", `
+        <div class="glass-panel quiz-card" style="margin-top:20px;">
             <h2>Grammar — Level ${appState.currentLevel}</h2>
             <p>Breakdown of word types you're training.</p>
         </div>
@@ -3670,8 +3675,9 @@ function renderGrammarTab() {
                 Notice how connectors, verbs, adjectives and nouns combine.
             </p>
         </div>
-    `;
+    `);
 }
+
 
 /* ============================================================
    BADGES
