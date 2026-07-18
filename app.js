@@ -1,4 +1,382 @@
 /* ============================================================
+   GLOBAL STATE
+============================================================ */
+
+const Global = {
+    level: "A1",
+    audioRate: 1,
+    name: "",
+    resetAll() {
+        localStorage.clear();
+        location.reload();
+    }
+};
+
+/* ============================================================
+   CEFR WORDBANK MERGING (Conversation + Engines)
+============================================================ */
+
+function getConversationWordbank(level) {
+    if (level === "A1") return [...A1];
+    if (level === "A2") return [...A1, ...A2];
+    if (level === "B1") return [...A1, ...A2, ...B1];
+    if (level === "B2") return [...A1, ...A2, ...B1, ...B2];
+    return [...A1];
+}
+
+function getAllWordbanksUpTo(level) {
+    return getConversationWordbank(level);
+}
+
+/* ============================================================
+   ROUTER — TAB SWITCHING
+============================================================ */
+
+const Router = {
+    current: "dashboard",
+
+    show(tabName) {
+        const pages = document.querySelectorAll(".tab-page");
+        pages.forEach(p => p.classList.add("hidden"));
+
+        const target = document.getElementById(`tab-${tabName}`);
+        if (target) target.classList.remove("hidden");
+
+        const buttons = document.querySelectorAll(".tab-btn");
+        buttons.forEach(btn => btn.classList.remove("active"));
+
+        const activeBtn = document.querySelector(`[data-tab="${tabName}"]`);
+        if (activeBtn) activeBtn.classList.add("active");
+
+        this.current = tabName;
+    }
+};
+
+/* ============================================================
+   INITIAL BOOT
+============================================================ */
+
+document.addEventListener("DOMContentLoaded", () => {
+
+    /* Load saved name */
+    const savedName = localStorage.getItem("studentName");
+    if (savedName) {
+        Global.name = savedName;
+        const nameField = document.getElementById("student-name");
+        if (nameField) nameField.value = savedName;
+    }
+
+    /* Load saved level */
+    const savedLevel = localStorage.getItem("skillLevel");
+    if (savedLevel) {
+        Global.level = savedLevel;
+        highlightLevelButton(savedLevel);
+    }
+
+    /* Load saved audio rate */
+    const savedRate = localStorage.getItem("audioRate");
+    if (savedRate) {
+        Global.audioRate = parseFloat(savedRate);
+        const rateSlider = document.getElementById("rate");
+        if (rateSlider) rateSlider.value = savedRate;
+    }
+
+    /* Activate dashboard by default */
+    Router.show("dashboard");
+
+    /* Initialize engines that require startup */
+    ListenEngine.init();
+    FlashcardEngine.init();
+    QuizEngine.init();
+    BuildEngine.init();
+    SentenceEngine.init();
+    ConversationEngine.init();
+    ReviewEngine.init();
+    AchievementsEngine.init();
+});
+
+/* ============================================================
+   SKILL LEVEL BUTTONS
+============================================================ */
+
+function highlightLevelButton(level) {
+    document.querySelectorAll(".level-buttons .pill").forEach(btn => {
+        btn.classList.remove("active");
+        if (btn.dataset.level === level) btn.classList.add("active");
+    });
+}
+
+document.querySelectorAll(".level-buttons .pill").forEach(btn => {
+    btn.addEventListener("click", () => {
+        const level = btn.dataset.level;
+        Global.level = level;
+        localStorage.setItem("skillLevel", level);
+        highlightLevelButton(level);
+
+        // Re‑initialise engines that depend on CEFR level
+        ConversationEngine.init();
+        QuizEngine.init();
+        BuildEngine.init();
+        SentenceEngine.init();
+    });
+});
+
+/* ============================================================
+   AUDIO SPEED
+============================================================ */
+
+const rateSlider = document.getElementById("rate");
+if (rateSlider) {
+    rateSlider.addEventListener("input", () => {
+        Global.audioRate = parseFloat(rateSlider.value);
+        localStorage.setItem("audioRate", Global.audioRate);
+    });
+}
+
+/* ============================================================
+   SAVE NAME
+============================================================ */
+
+const saveNameBtn = document.getElementById("save-name-btn");
+if (saveNameBtn) {
+    saveNameBtn.addEventListener("click", () => {
+        const nameField = document.getElementById("student-name");
+        const status = document.getElementById("name-status");
+
+        if (!nameField.value.trim()) {
+            status.textContent = "Please enter a name.";
+            return;
+        }
+
+        Global.name = nameField.value.trim();
+        localStorage.setItem("studentName", Global.name);
+        status.textContent = "Saved!";
+    });
+}
+
+/* ============================================================
+   RESET BUTTON
+============================================================ */
+
+const resetBtn = document.getElementById("resetBtn");
+if (resetBtn) {
+    resetBtn.addEventListener("click", () => {
+        Global.resetAll();
+    });
+}
+
+/* ============================================================
+   SEARCH BOX
+============================================================ */
+
+const searchBtn = document.getElementById("searchBtn");
+if (searchBtn) {
+    searchBtn.addEventListener("click", () => {
+        const word = document.getElementById("searchInput").value.trim();
+        const result = SearchEngine.lookup(word);
+        document.getElementById("searchResult").textContent =
+            result || "Not found.";
+    });
+}
+
+/* ============================================================
+   REVIEW TILE → REVIEW TAB
+============================================================ */
+
+const reviewTile = document.getElementById("review-tile");
+if (reviewTile) {
+    reviewTile.addEventListener("click", () => {
+        Router.show("review");
+        ReviewEngine.init();
+    });
+}
+
+/* ============================================================
+   FREE PRACTICE TAB
+============================================================ */
+
+const practiceBtn = document.getElementById("practiceBtn");
+if (practiceBtn) {
+    practiceBtn.addEventListener("click", () => {
+        const text = document.getElementById("practiceInput").value.trim();
+        const feedback = FreePracticeEngine.evaluate(text);
+        document.getElementById("practiceResult").textContent = feedback;
+    });
+}
+
+/* ============================================================
+   LISTEN TAB
+============================================================ */
+
+const listenPlay = document.getElementById("listenPlay");
+const listenNext = document.getElementById("listenNext");
+const listenPrev = document.getElementById("listenPrev");
+const listenAuto = document.getElementById("listenAuto");
+
+if (listenPlay) {
+    listenPlay.addEventListener("click", () => {
+        ListenEngine.play(Global.audioRate);
+    });
+}
+
+if (listenNext) {
+    listenNext.addEventListener("click", () => {
+        ListenEngine.next();
+    });
+}
+
+if (listenPrev) {
+    listenPrev.addEventListener("click", () => {
+        ListenEngine.prev();
+    });
+}
+
+if (listenAuto) {
+    listenAuto.addEventListener("click", () => {
+        ListenEngine.toggleAuto(Global.audioRate);
+    });
+}
+
+/* ============================================================
+   FLASHCARDS TAB
+============================================================ */
+
+function wireFlashcardEvents() {
+    const cards = document.querySelectorAll(".fc-inner");
+    cards.forEach(card => {
+        card.addEventListener("click", () => {
+            card.classList.toggle("fc-flipped");
+        });
+    });
+}
+
+document.addEventListener("flashcardsRendered", () => {
+    wireFlashcardEvents();
+});
+
+/* ============================================================
+   QUIZ TAB
+============================================================ */
+
+document.addEventListener("quizRendered", () => {
+    const options = document.querySelectorAll("#quizOptions .pill");
+    options.forEach(opt => {
+        opt.addEventListener("click", () => {
+            const chosen = opt.dataset.answer;
+            const feedback = QuizEngine.check(chosen);
+            document.getElementById("quizFeedback").textContent = feedback;
+        });
+    });
+});
+
+/* ============================================================
+   BUILD TAB
+============================================================ */
+
+document.addEventListener("buildRendered", () => {
+    const wordButtons = document.querySelectorAll("#buildGrid .pill");
+    wordButtons.forEach(btn => {
+        btn.addEventListener("click", () => {
+            BuildEngine.addWord(btn.dataset.word);
+        });
+    });
+});
+
+const buildCheckBtn = document.getElementById("buildCheckBtn");
+if (buildCheckBtn) {
+    buildCheckBtn.addEventListener("click", () => {
+        const result = BuildEngine.check();
+        document.getElementById("buildOutput").textContent = result;
+    });
+}
+
+const buildNewBtn = document.getElementById("buildNewBtn");
+if (buildNewBtn) {
+    buildNewBtn.addEventListener("click", () => {
+        BuildEngine.init();
+    });
+}
+
+/* ============================================================
+   SENTENCE TAB
+============================================================ */
+
+document.addEventListener("sentenceRendered", () => {
+    // SentenceEngine already writes directly to #sentence-content
+    // No additional UI wiring needed here
+});
+
+/* ============================================================
+   CONVERSATION TAB
+============================================================ */
+
+document.addEventListener("conversationRendered", () => {
+    // Word pills already rendered by ConversationEngine
+    const pills = document.querySelectorAll("#conversationFeed .pill");
+    pills.forEach(pill => {
+        pill.addEventListener("click", () => {
+            ConversationEngine.addWord(pill.dataset.word);
+        });
+    });
+});
+
+const conversationSend = document.getElementById("conversationSend");
+if (conversationSend) {
+    conversationSend.addEventListener("click", () => {
+        const input = document.getElementById("conversationInput").value.trim();
+        const reply = ConversationEngine.evaluate(input);
+        ConversationEngine.appendReply(reply);
+        document.getElementById("conversationInput").value = "";
+    });
+}
+
+/* ============================================================
+   REVIEW TAB
+============================================================ */
+
+document.addEventListener("reviewRendered", () => {
+    // ReviewEngine writes directly to #reviewCard
+});
+
+const reviewMastered = document.getElementById("reviewMastered");
+if (reviewMastered) {
+    reviewMastered.addEventListener("click", () => {
+        ReviewEngine.markMastered();
+        ReviewEngine.init(); // load next card
+    });
+}
+
+/* ============================================================
+   ACHIEVEMENTS TAB
+============================================================ */
+
+document.addEventListener("achievementsRendered", () => {
+    // AchievementsEngine writes directly to #achievements-content
+});
+
+/* ============================================================
+   TAB BUTTONS → ROUTER
+============================================================ */
+
+document.querySelectorAll(".tab-btn").forEach(btn => {
+    btn.addEventListener("click", () => {
+        const tab = btn.dataset.tab;
+        Router.show(tab);
+
+        // Re-render engines when their tab is opened
+        if (tab === "listen") ListenEngine.init();
+        if (tab === "flashcards") FlashcardEngine.init();
+        if (tab === "quiz") QuizEngine.init();
+        if (tab === "build") BuildEngine.init();
+        if (tab === "sentence") SentenceEngine.init();
+        if (tab === "conversation") ConversationEngine.init();
+        if (tab === "practice") FreePracticeEngine.init();
+        if (tab === "review") ReviewEngine.init();
+        if (tab === "achievements") AchievementsEngine.init();
+    });
+});
+
+/* ============================================================
    CEFR SENTENCE BANKS (for Build tab)
    ============================================================ */
 
