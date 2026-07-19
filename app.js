@@ -2753,23 +2753,23 @@ const Global = {
     },
 
     exports() {
-        return {
-            APP_STATE,
-            ListenEngine,
-            FlashcardsEngine,
-            QuizEngine,
-            BuildEngine,
-            SentenceEngine,
-            ConversationEngine,
-            FreePracticeEngine,
-            ReviewEngine,
-            SearchEngine,
-            AudioSystem,
-            AchievementsEngine,
-            Router,
-            App
-        };
-    }
+    return {
+        APP_STATE,
+        ListenEngine,
+        FlashcardsEngine,
+        QuizEngine,
+        BuildEngine,
+        SentenceEngine,
+        ConversationEngine,
+        FreePracticeEngine,
+        ReviewEngine,
+        AchievementsEngine,
+        AudioSystem,
+        Router,
+        App
+    };
+}
+
 };
 
 /* ============================================================
