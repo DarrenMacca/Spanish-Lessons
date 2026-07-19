@@ -1885,6 +1885,129 @@ function getWordMeaning(word) {
 }
 
 /* ============================================================
+   LISTEN ENGINE — Topic-based
+   ============================================================ */
+function renderListenTab(level) {
+    level = level.trim().toUpperCase();
+
+const ListenEngine = {
+    list: [],
+    index: 0,
+    auto: false,
+    timer: null,
+
+    setLevel(level) {
+        APP_STATE.currentLevel = level;
+        this.load();
+    },
+
+    setCategory(category) {
+        APP_STATE.currentCategory = category;
+        this.load();
+    },
+
+    load() {
+        const level = APP_STATE.currentLevel;
+        const category = APP_STATE.currentCategory;
+
+        // HARD GUARD: never throw if CEFR_LISTENING_TOPICS is missing
+        const hasTopics = (typeof CEFR_LISTENING_TOPICS !== "undefined") &&
+                          CEFR_LISTENING_TOPICS &&
+                          CEFR_LISTENING_TOPICS[category] &&
+                          CEFR_LISTENING_TOPICS[category][level];
+
+        this.list = hasTopics ? CEFR_LISTENING_TOPICS[category][level] : [];
+        this.index = 0;
+        this.render();
+    },
+
+    render() {
+        const container = document.getElementById("listenList");
+        if (!container) return;
+
+        if (!this.list.length) {
+            container.innerHTML = `<div class="empty-msg glass-panel">
+                No listening items found for ${APP_STATE.currentLevel} / ${APP_STATE.currentCategory}.
+            </div>`;
+            return;
+        }
+
+        container.innerHTML = this.list.map((item, i) => `
+            <div class="listen-item glass-panel ${i === this.index ? "active-listen" : ""}"
+                 onclick="ListenEngine.jumpTo(${i})">
+                <div class="listen-es">${item.spanish}</div>
+                <div class="listen-en">${item.english}</div>
+                <div class="listen-q">${item.question}</div>
+            </div>
+        `).join("");
+    },
+
+    jumpTo(i) {
+        this.index = i;
+        this.render();
+        this.playCurrent();
+    },
+
+    playCurrent() {
+        const item = this.list[this.index];
+        if (!item) return;
+
+        const utter = new SpeechSynthesisUtterance(item.spanish);
+        utter.lang = "es-ES";
+        utter.rate = APP_STATE.speechRate || 1;
+
+        speechSynthesis.cancel();
+        speechSynthesis.speak(utter);
+    },
+
+    next() {
+        if (!this.list.length) return;
+        this.index = (this.index + 1) % this.list.length;
+        this.render();
+        this.playCurrent();
+    },
+
+    previous() {
+        if (!this.list.length) return;
+        this.index = (this.index - 1 + this.list.length) % this.list.length;
+        this.render();
+        this.playCurrent();
+    },
+
+    startAutoPlay() {
+        if (!this.list.length) return;
+        this.auto = true;
+
+        const step = () => {
+            if (!this.auto) return;
+            this.playCurrent();
+            this.next();
+            this.timer = setTimeout(step, 3500);
+        };
+
+        step();
+    },
+
+    stopAutoPlay() {
+        this.auto = false;
+        clearTimeout(this.timer);
+    },
+
+    getCurrentList() {
+        return this.list.map(item => item.spanish);
+    },
+
+    playWord(word) {
+        if (!APP_STATE.audioEnabled || !word) return;
+
+        const utter = new SpeechSynthesisUtterance(word);
+        utter.lang = "es-ES";
+        speechSynthesis.cancel();
+        speechSynthesis.speak(utter);
+    }
+};
+
+/* ============================================================
    FLASHCARDS ENGINE
    ============================================================ */
 
@@ -2614,127 +2737,6 @@ const speak = (text, rate = 1.0, pitch = 1.0) => {
 
     speechSynthesis.cancel();
     speechSynthesis.speak(utter);
-};
-
-/* ============================================================
-   LISTEN ENGINE — Topic-based
-   ============================================================ */
-
-const ListenEngine = {
-    list: [],
-    index: 0,
-    auto: false,
-    timer: null,
-
-    setLevel(level) {
-        APP_STATE.currentLevel = level;
-        this.load();
-    },
-
-    setCategory(category) {
-        APP_STATE.currentCategory = category;
-        this.load();
-    },
-
-    load() {
-        const level = APP_STATE.currentLevel;
-        const category = APP_STATE.currentCategory;
-
-        // HARD GUARD: never throw if CEFR_LISTENING_TOPICS is missing
-        const hasTopics = (typeof CEFR_LISTENING_TOPICS !== "undefined") &&
-                          CEFR_LISTENING_TOPICS &&
-                          CEFR_LISTENING_TOPICS[category] &&
-                          CEFR_LISTENING_TOPICS[category][level];
-
-        this.list = hasTopics ? CEFR_LISTENING_TOPICS[category][level] : [];
-        this.index = 0;
-        this.render();
-    },
-
-    render() {
-        const container = document.getElementById("listenList");
-        if (!container) return;
-
-        if (!this.list.length) {
-            container.innerHTML = `<div class="empty-msg glass-panel">
-                No listening items found for ${APP_STATE.currentLevel} / ${APP_STATE.currentCategory}.
-            </div>`;
-            return;
-        }
-
-        container.innerHTML = this.list.map((item, i) => `
-            <div class="listen-item glass-panel ${i === this.index ? "active-listen" : ""}"
-                 onclick="ListenEngine.jumpTo(${i})">
-                <div class="listen-es">${item.spanish}</div>
-                <div class="listen-en">${item.english}</div>
-                <div class="listen-q">${item.question}</div>
-            </div>
-        `).join("");
-    },
-
-    jumpTo(i) {
-        this.index = i;
-        this.render();
-        this.playCurrent();
-    },
-
-    playCurrent() {
-        const item = this.list[this.index];
-        if (!item) return;
-
-        const utter = new SpeechSynthesisUtterance(item.spanish);
-        utter.lang = "es-ES";
-        utter.rate = APP_STATE.speechRate || 1;
-
-        speechSynthesis.cancel();
-        speechSynthesis.speak(utter);
-    },
-
-    next() {
-        if (!this.list.length) return;
-        this.index = (this.index + 1) % this.list.length;
-        this.render();
-        this.playCurrent();
-    },
-
-    previous() {
-        if (!this.list.length) return;
-        this.index = (this.index - 1 + this.list.length) % this.list.length;
-        this.render();
-        this.playCurrent();
-    },
-
-    startAutoPlay() {
-        if (!this.list.length) return;
-        this.auto = true;
-
-        const step = () => {
-            if (!this.auto) return;
-            this.playCurrent();
-            this.next();
-            this.timer = setTimeout(step, 3500);
-        };
-
-        step();
-    },
-
-    stopAutoPlay() {
-        this.auto = false;
-        clearTimeout(this.timer);
-    },
-
-    getCurrentList() {
-        return this.list.map(item => item.spanish);
-    },
-
-    playWord(word) {
-        if (!APP_STATE.audioEnabled || !word) return;
-
-        const utter = new SpeechSynthesisUtterance(word);
-        utter.lang = "es-ES";
-        speechSynthesis.cancel();
-        speechSynthesis.speak(utter);
-    }
 };
 
 
