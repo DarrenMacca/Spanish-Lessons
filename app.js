@@ -3337,8 +3337,12 @@ const Global = {
 /* ============================================================
    STARTUP
    ============================================================ */
-console.log("INIT level:", APP_STATE.currentLevel);
-console.log("INIT category:", APP_STATE.currentCategory);
+if (!APP_STATE.currentCategory) {
+    const catSelect = document.getElementById("categorySelect");
+    if (catSelect && catSelect.options.length > 0) {
+        APP_STATE.currentCategory = catSelect.options[0].value;
+    }
+}
 
 document.addEventListener("DOMContentLoaded", () => {
     App.init();
