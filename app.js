@@ -72,7 +72,7 @@ const CEFR_SENTENCES = {
         { english: "I am waiting for my friend.", spanish: "estoy esperando a mi amigo" },
         { english: "She likes to read at night.", spanish: "a ella le gusta leer por la noche" },
         { english: "We need to buy milk.", spanish: "necesitamos comprar leche" },
-        { english: "He is driving to work.", spanish: "él está conduciendo al trabajo" },
+        { english: "He is driving to work.", spanish: "él está conduduciendo al trabajo" },
         { english: "I wrote a message.", spanish: "escribí un mensaje" },
         { english: "They are watching TV.", spanish: "ellos están viendo televisión" },
         { english: "She visited her grandmother.", spanish: "ella visitó a su abuela" },
@@ -175,11 +175,13 @@ const CEFR_SENTENCES = {
     ]
 };
 
+   
 /* ============================================================
    CEFR LEVELS — A1 → B2 Vocabulary (Spanish → English)
    ============================================================ */
 
 const CEFR_LEVELS = {
+
 A1: [
     // Daily Life
     { spanish: "vivir", english: "to live", category: "Daily Life" },
@@ -207,6 +209,8 @@ A1: [
     { spanish: "frío", english: "cold", category: "Daily Life" },
     { spanish: "feliz", english: "happy", category: "Daily Life" },
     { spanish: "nuevo", english: "new", category: "Daily Life" },
+
+    // Daily Life (English→Spanish entries)
     { english: "hello", spanish: "hola", category: "daily-life" },
     { english: "goodbye", spanish: "adiós", category: "daily-life" },
     { english: "thank you", spanish: "gracias", category: "daily-life" },
@@ -245,7 +249,6 @@ A1: [
     { spanish: "cerveza", english: "beer", category: "Food & Drink" },
     { spanish: "bistec", english: "steak", category: "Food & Drink" },
     { spanish: "papas fritas", english: "french fries", category: "Food & Drink" },
-    { spanish: "cerveza", english: "beer", category: "Food & Drink" },
     { spanish: "huevo", english: "egg", category: "Food & Drink" },
     { spanish: "fruta", english: "fruit", category: "Food & Drink" },
     { spanish: "manzana", english: "apple", category: "Food & Drink" },
@@ -260,7 +263,7 @@ A1: [
     { spanish: "queso", english: "cheese", category: "Food & Drink" },
     { spanish: "sal", english: "salt", category: "Food & Drink" },
 
-    // Travel
+   // Travel
     { spanish: "autobus", english: "bus", category: "Travel" },
     { spanish: "tren", english: "train", category: "Travel" },
     { spanish: "boleto", english: "ticket", category: "Travel" },
@@ -288,6 +291,7 @@ A1: [
     { spanish: "ella", english: "she", category: "Connectors" },
     { spanish: "el", english: "he", category: "Connectors" },
     { spanish: "rapido", english: "fast", category: "Connectors" },
+
     { english: "what", spanish: "qué", category: "connectors" },
     { english: "who", spanish: "quién", category: "connectors" },
     { english: "when", spanish: "cuándo", category: "connectors" },
@@ -301,7 +305,8 @@ A1: [
     { english: "favor (por favor)", spanish: "favor", category: "connectors" },
     { english: "they", spanish: "ellos", category: "connectors" },
     { english: "his / her / their", spanish: "su", category: "connectors" },
-   // VERBS
+
+    // Connectors — verbs
     { english: "is", spanish: "es", category: "connectors" },
     { english: "likes", spanish: "gusta", category: "connectors" },
     { english: "they like", spanish: "gustan", category: "connectors" },
@@ -309,14 +314,13 @@ A1: [
     { english: "learning", spanish: "aprendiendo", category: "connectors" },
     { english: "fixing", spanish: "arreglando", category: "connectors" },
 
-    // ADJECTIVES
+    // Connectors — adjectives
     { english: "good", spanish: "bueno", category: "connectors" },
     { english: "difficult", spanish: "difícil", category: "connectors" },
     { english: "clear", spanish: "clara", category: "connectors" },
     { english: "easy", spanish: "fácil", category: "connectors" },
     { english: "bad", spanish: "malo", category: "connectors" },
     { english: "small", spanish: "pequeño", category: "connectors" },
-   
 
     // Numbers
     { english: "one", spanish: "uno", category: "Numbers" },
@@ -329,10 +333,9 @@ A1: [
     { english: "eight", spanish: "ocho", category: "Numbers" },
     { english: "nine", spanish: "nueve", category: "Numbers" },
     { english: "ten", spanish: "diez", category: "Numbers" }
-
 ],
-
 A2: [
+
     // Daily Life
     { spanish: "desayuno", english: "breakfast", category: "Daily Life" },
     { spanish: "almuerzo", english: "lunch", category: "DailyLife" },
@@ -381,6 +384,7 @@ A2: [
     { spanish: "normalmente", english: "normally", category: "Connectors" },
     { english: "argued", spanish: "argumentó", category: "Connectors" },
 
+    // Numbers
     { english: "eleven", spanish: "once", category: "Numbers" },
     { english: "twelve", spanish: "doce", category: "Numbers" },
     { english: "thirteen", spanish: "trece", category: "Numbers" },
@@ -391,10 +395,9 @@ A2: [
     { english: "eighteen", spanish: "dieciocho", category: "Numbers" },
     { english: "nineteen", spanish: "diecinueve", category: "Numbers" },
     { english: "twenty", spanish: "veinte", category: "Numbers" }
-
 ],
-
 B1: [
+
     // Daily Life — auxiliary verbs
     { spanish: "he", english: "I have (auxiliary)", category: "Daily Life" },
     { spanish: "has", english: "you have (auxiliary)", category: "Daily Life" },
@@ -454,8 +457,8 @@ B1: [
     { spanish: "mes", english: "month", category: "Numbers" },
     { spanish: "años", english: "years", category: "Numbers" }
 ],
-
 B2: [
+
     // Daily Life — abstract nouns & professional vocabulary
     { spanish: "proceso", english: "process", category: "Daily Life" },
     { spanish: "tarea", english: "task", category: "Daily Life" },
@@ -529,8 +532,9 @@ B2: [
     { spanish: "cuidadosamente", english: "carefully", category: "Connectors" },
 
     // Numbers — B2 has no new number vocabulary
-]      // ✔ closes B2 array
-};     // ✔ closes CEFR_LEVELS object
+];   // ✔ closes B2 array
+
+};   // ✔ closes CEFR_LEVELS object
 
 
 /* ============================================================
