@@ -6,12 +6,10 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="style.css">
 </head>
-
+ 
 <body>
 
-<!-- ============================================================
-     HEADER + HERO
-============================================================ -->
+<!-- HEADER + HERO -->
 <div class="glass-header">
     <h1>Spanish Trainer</h1>
     <img src="images/dashboard-hero.png" 
@@ -19,46 +17,37 @@
          class="dashboard-hero-img">
 </div>
 
-<!-- ============================================================
-     NAVIGATION (Corrected IDs, dashboard preserved)
-============================================================ -->
+<!-- NAVIGATION -->
 <nav class="glass-panel nav-bar">
-    <button id="btn-dashboard" class="tab-btn active" data-tab="dashboard">
+    <button class="tab-btn active" data-tab="dashboard">
         <img src="images/dashboard.png" class="tab-icon"> Dashboard
     </button>
-    <button id="btn-listen" class="tab-btn" data-tab="listen">
+    <button class="tab-btn" data-tab="listen">
         <img src="images/listen.png" class="tab-icon"> Listen
     </button>
-    <button id="btn-flashcards" class="tab-btn" data-tab="flashcards">
+    <button class="tab-btn" data-tab="flash">
         <img src="images/flashcards.png" class="tab-icon"> Flashcards
     </button>
-    <button id="btn-quiz" class="tab-btn" data-tab="quiz">
+    <button class="tab-btn" data-tab="quiz">
         <img src="images/badge-quiz.png" class="tab-icon"> Quiz
     </button>
-    <button id="btn-build" class="tab-btn" data-tab="build">
+    <button class="tab-btn" data-tab="build">
         <img src="images/badge-build.png" class="tab-icon"> Build
     </button>
-    <button id="btn-sentence" class="tab-btn" data-tab="sentence">
+    <button class="tab-btn" data-tab="sentence">
         <img src="images/icon-sentence.png" class="tab-icon"> Sentence
     </button>
-    <button id="btn-conversation" class="tab-btn" data-tab="conversation">
+    <button class="tab-btn" data-tab="conversation">
         <img src="images/badge-conversation.png" class="tab-icon"> Conversation
     </button>
-    <button id="btn-practice" class="tab-btn" data-tab="practice">
-        <img src="images/grammar.png" class="tab-icon"> Practice
-    </button>
-    <button id="btn-review" class="tab-btn" data-tab="review">
-        <img src="images/icon-review.png" class="tab-icon"> Review
-    </button>
-    <button id="btn-achievements" class="tab-btn" data-tab="achievements">
-        <img src="images/icon-level.png" class="tab-icon"> Achievements
+    <button class="tab-btn" data-tab="grammar">
+        <img src="images/grammar.png" class="tab-icon"> Grammar
     </button>
 </nav>
 
-<!-- ============================================================
-     DASHBOARD TAB (FIXED)
-============================================================ -->
-<div id="tab-dashboard" class="tab-page">
+
+<!-- DASHBOARD TAB CONTENT -->
+<div id="dashboard">
 
     <div class="dashboard-row">
         <div class="dash-left glass-panel">
@@ -77,10 +66,6 @@
         </div>
     </div>
 
-  
-    <!-- rest of dashboard unchanged -->
-
-
     <div class="student-name-box glass-panel">
         <label class="section-title">Your name for certificates</label>
         <input id="student-name" class="input-field" type="text" placeholder="Enter your name">
@@ -88,69 +73,92 @@
         <div id="name-status" class="name-status"></div>
     </div>
 
+    <!-- PROGRESS METERS -->
     <div class="progress-section">
 
+        <!-- QUIZ -->
         <div id="quiz-tile" class="progress-tile glass-panel">
             <div class="progress-icon-row">
                 <img src="images/badge-quiz.png" class="progress-img">
                 <label class="section-title">Quiz Progress</label>
                 <span class="progress-number" id="quiz-number">0%</span>
             </div>
-            <div class="progress-bar"><div class="progress-fill" id="quiz-progress"></div></div>
+
+            <div class="progress-bar">
+                <div class="progress-fill" id="quiz-progress"></div>
+            </div>
         </div>
 
+        <!-- BUILD -->
         <div id="build-tile" class="progress-tile glass-panel">
             <div class="progress-icon-row">
                 <img src="images/badge-build.png" class="progress-img">
                 <label class="section-title">Build Progress</label>
                 <span class="progress-number" id="build-number">0%</span>
             </div>
-            <div class="progress-bar"><div class="progress-fill" id="build-progress"></div></div>
+            <div class="progress-bar">
+                <div class="progress-fill" id="build-progress"></div>
+            </div>
         </div>
 
+        <!-- SENTENCE -->
         <div id="sentence-tile" class="progress-tile glass-panel">
             <div class="progress-icon-row">
                 <img src="images/icon-sentence.png" class="progress-img">
                 <label class="section-title">Sentence Progress</label>
                 <span class="progress-number" id="sentence-number">0%</span>
             </div>
-            <div class="progress-bar"><div class="progress-fill" id="sentence-progress"></div></div>
+            <div class="progress-bar">
+                <div class="progress-fill" id="sentence-progress"></div>
+            </div>
         </div>
 
+        <!-- XP -->
         <div id="xp-tile" class="progress-tile glass-panel">
             <div class="progress-icon-row">
                 <img src="images/icon-xp.png" class="progress-img">
                 <label class="section-title">XP Progress</label>
                 <span class="progress-number" id="xp-number">0%</span>
             </div>
-            <div class="progress-bar"><div class="progress-fill" id="xp-progress"></div></div>
+            <div class="progress-bar">
+                <div class="progress-fill" id="xp-progress"></div>
+            </div>
         </div>
 
+        <!-- STREAK -->
         <div id="streak-tile" class="progress-tile glass-panel">
             <div class="progress-icon-row">
                 <img src="images/icon-streak.png" class="progress-img">
                 <label class="section-title">Streak</label>
                 <span class="progress-number" id="streak-number">0%</span>
             </div>
-            <div class="progress-bar"><div class="progress-fill" id="streak-progress"></div></div>
+            <div class="progress-bar">
+                <div class="progress-fill" id="streak-progress"></div>
+            </div>
         </div>
 
+        <!-- SCORE -->
         <div id="score-tile" class="progress-tile glass-panel">
             <div class="progress-icon-row">
                 <img src="images/icon-level.png" class="progress-img">
                 <label class="section-title">Score Rating</label>
                 <span class="progress-number" id="score-number">0%</span>
             </div>
-            <div class="progress-bar"><div class="progress-fill" id="score-progress"></div></div>
+            <div class="progress-bar">
+                <div class="progress-fill" id="score-progress"></div>
+            </div>
         </div>
 
+        <!-- REVIEW -->
         <div id="review-tile" class="progress-tile glass-panel">
             <div class="progress-icon-row">
                 <img src="images/icon-review.png" class="progress-img">
                 <label class="section-title">Due for Review</label>
                 <span class="progress-number" id="review-number">0%</span>
             </div>
-            <div class="progress-bar"><div class="progress-fill" id="review-progress"></div></div>
+            <div class="progress-bar">
+                <div class="progress-fill" id="review-progress"></div>
+            </div>
         </div>
 
     </div>
@@ -162,80 +170,43 @@
 
 </div>
 
-<!-- ============================================================
-     TABS (Corrected IDs, removed hidden)
-============================================================ -->
+<!-- OTHER TABS -->
 
-<div id="tab-listen" class="tab-page glass-panel">
-    <h2>Listen</h2>
-    <div id="listenControls">
-        <button id="listenPlay" class="pill-btn">Play</button>
-        <button id="listenNext" class="pill-btn">Next</button>
-        <button id="listenPrev" class="pill-btn">Prev</button>
-        <button id="listenAuto" class="pill-btn">Auto</button>
-    </div>
-    <div id="listenList" class="listen-grid"></div>
+<!-- LISTEN TAB -->
+<div id="listen" class="hidden">
+    <div id="listen-content"></div>
 </div>
 
-<div id="tab-flashcards" class="tab-page glass-panel">
-    <h2>Flashcards</h2>
-    <div id="flashcardsGrid" class="flashcards-grid"></div>
+<!-- FLASHCARDS TAB -->
+<div id="flash" class="hidden">
+    <div id="flash-content"></div>
 </div>
 
-<div id="tab-quiz" class="tab-page glass-panel">
-    <h2>Quiz</h2>
-    <div id="quizPrompt" class="quiz-prompt"></div>
-    <div id="quizOptions" class="quiz-options"></div>
-    <div id="quizFeedback" class="quiz-feedback"></div>
+<!-- QUIZ TAB -->
+<div id="quiz" class="hidden">
+    <div id="quiz-content"></div>
 </div>
 
-<div id="tab-build" class="tab-page glass-panel">
-    <h2>Build a Sentence</h2>
-    <div id="buildGrid" class="build-grid"></div>
-    <div id="buildOutput" class="build-output"></div>
-    <div id="buildResult" class="build-result"></div>
-    <button id="buildCheckBtn" class="pill-btn">Check</button>
-    <button id="buildNewBtn" class="pill-btn">New</button>
+<!-- BUILD TAB -->
+<div id="build" class="hidden">
+    <div id="build-content"></div>
 </div>
 
-<div id="tab-sentence" class="tab-page glass-panel">
-    <h2>Sentence Generator</h2>
+<!-- SENTENCE TAB -->
+<div id="sentence" class="hidden">
     <div id="sentence-content"></div>
-    <button id="sentence-next" class="pill-btn">New Sentence</button>
 </div>
 
-<div id="tab-conversation" class="tab-page glass-panel">
-    <h2>Conversation</h2>
-    <div id="conversationFeed" class="conversation-feed"></div>
-    <input id="conversationInput" class="pill-input" placeholder="Type in Spanish...">
-    <button id="conversationSend" class="pill-btn">Send</button>
+<!-- CONVERSATION TAB -->
+<div id="conversation" class="hidden">
+    <div id="conversation-content"></div>
 </div>
 
-<div id="tab-practice" class="tab-page glass-panel">
-    <h2>Free Practice</h2>
-    <input id="practiceInput" class="pill-input" placeholder="Write anything in Spanish...">
-    <button id="practiceSubmit" class="pill-btn">Submit</button>
-    <div id="practiceScore"></div>
-    <div id="practiceKnown"></div>
-    <div id="practiceUnknown"></div>
-    <div id="practiceHint"></div>
+<!-- GRAMMAR TAB -->
+<div id="grammar" class="hidden">
+    <div id="grammar-content"></div>
 </div>
 
-<div id="tab-review" class="tab-page glass-panel">
-    <h2>Review</h2>
-    <div id="reviewCard"></div>
-    <button id="reviewMastered" class="pill-btn">Mastered</button>
-</div>
-
-<div id="tab-achievements" class="tab-page glass-panel">
-    <h2>Achievements</h2>
-    <div id="achievementsList"></div>
-    <button id="achievementsReset" class="pill-btn">Reset Achievements</button>
-</div>
-
-<!-- ============================================================
-     SCRIPTS
-============================================================ -->
 <script src="wordbanks/A1.js"></script>
 <script src="wordbanks/A2.js"></script>
 <script src="wordbanks/B1.js"></script>
