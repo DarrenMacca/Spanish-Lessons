@@ -4251,12 +4251,14 @@ function setupConversationEvents(convo) {
     const nextBtn = document.getElementById("convo-next");
     const feedback = document.getElementById("convo-feedback");
 
-    // preset buttons fill the text field
-    document.querySelectorAll(".preset-response").forEach(btn => {
-        btn.addEventListener("click", () => {
-            document.getElementById("convo-input").value = btn.dataset.response;
+    // Attach listeners AFTER DOM is fully rendered
+    setTimeout(() => {
+        document.querySelectorAll(".preset-response").forEach(btn => {
+            btn.addEventListener("click", () => {
+                document.getElementById("convo-input").value = btn.dataset.response;
+            });
         });
-    });
+    }, 0);
 
     submitBtn.addEventListener("click", () => {
         const userText = document.getElementById("convo-input").value.trim();
@@ -4288,6 +4290,7 @@ function setupConversationEvents(convo) {
         renderConversationTab();
     });
 }
+
 
 
 /* ============================================================
