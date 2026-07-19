@@ -2580,8 +2580,8 @@ function renderSentenceTab() {
 
             <div id="sentence-options" class="sentence-options">
                 ${q.options.map(opt => `
-                    <button class="pill" data-opt="${opt}">
-                        ${opt}
+                    <button class="pill" data-opt="${opt.es}">
+                        ${opt.es}
                     </button>
                 `).join("")}
             </div>
@@ -2604,19 +2604,20 @@ function setupSentenceEvents(q) {
     const nextBtn = document.getElementById("sentence-next");
 
    // Translate Spanish → English using the current sentence item
-    function getEnglishForSpanish(spanishWord) {
-        if (spanishWord === q.correct) {
-            return q.english;
-        }
-        return "[incorrect option]";
+   function getEnglishForSpanish(spanishWord) {
+    if (spanishWord === q.correct.es) {
+        return q.correct.en;
     }
+    return "[incorrect option]";
+}
+
 
     buttons.forEach(btn => {
         btn.addEventListener("click", () => {
             const chosen = btn.dataset.opt;
             const chosenEnglish = getEnglishForSpanish(chosen);
 
-            if (chosen === q.correct) {
+            if (chosen === q.correct.es) {
                 feedback.innerHTML = `
                     <span style="color:#4ade80;font-weight:600;">
                         Correct! 🎉
