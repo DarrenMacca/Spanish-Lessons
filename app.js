@@ -2598,7 +2598,7 @@ function renderSentenceTab() {
 }
 
 function setupSentenceEvents(q) {
-    const buttons = document.querySelectorAll(".pill");
+    const buttons = document.querySelectorAll("#sentence-options .pill");
     const feedback = document.getElementById("sentence-feedback");
     const nextBtn = document.getElementById("sentence-next");
 
