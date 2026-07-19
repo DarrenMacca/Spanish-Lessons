@@ -2644,7 +2644,7 @@ function setupSentenceEvents(q) {
                     </div>
                 `;
 
-                speakQuiz(q.correct);
+                speakQuiz(q.correct.es);
             }
 
             // Disable only answer buttons
