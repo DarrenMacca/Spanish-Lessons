@@ -2111,13 +2111,19 @@ const ListenEngine = {
     },
 
     load() {
-        const level = APP_STATE.currentLevel;
-        const category = APP_STATE.currentCategory;
+    const level = APP_STATE.currentLevel;
+    const category = APP_STATE.currentCategory;
 
-        this.list = CEFR_LISTENING_TOPICS?.[category]?.[level] || [];
-        this.index = 0;
-        this.render();
-    },
+    const source =
+        (typeof CEFR_LISTENING_TOPICS !== "undefined" && CEFR_LISTENING_TOPICS)
+            ? CEFR_LISTENING_TOPICS
+            : {};
+
+    this.list = source?.[category]?.[level] || [];
+    this.index = 0;
+    this.render();
+},
+
 
     render() {
         const container = document.getElementById("listenList");
