@@ -3337,15 +3337,35 @@ const Global = {
 /* ============================================================
    STARTUP
    ============================================================ */
-if (!APP_STATE.currentCategory) {
-    const catSelect = document.getElementById("categorySelect");
-    if (catSelect && catSelect.options.length > 0) {
-        APP_STATE.currentCategory = catSelect.options[0].value;
-    }
-}
-
 
 document.addEventListener("DOMContentLoaded", () => {
+
+    // Run the app init first (this builds the UI)
     App.init();
+
+    // Now the DOM exists — safe to read the selector
+    const catSelect = document.getElementById("categorySelect");
+
+    // 1) Set default category if none
+    if (!APP_STATE.currentCategory && catSelect && catSelect.options.length > 0) {
+        APP_STATE.currentCategory = catSelect.options[0].value;
+    }
+
+    // 2) React when the user changes the category
+    if (catSelect) {
+        catSelect.addEventListener("change", (e) => {
+            APP_STATE.currentCategory = e.target.value;
+
+            ListenEngine.setCategory(APP_STATE.currentCategory);
+            FlashcardsEngine.setCategory(APP_STATE.currentCategory);
+            QuizEngine.setCategory(APP_STATE.currentCategory);
+
+            // Re-render engines that depend on category
+            ListenEngine.render();
+            FlashcardsEngine.render();
+            QuizEngine.render();
+        });
+    }
+
     console.log("CEFR Learning Platform Initialized.");
 });
