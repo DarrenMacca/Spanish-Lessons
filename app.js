@@ -2139,7 +2139,7 @@ function renderFlashcardsTab() {
     let html = `
         <div class="glass-panel">
             <h2>Flashcards — Level ${appState.currentLevel}</h2>
-            <p>Tap a card to flip. Spanish side plays audio.</p>
+            <p>Translate the word then tap the card to flip it over and see if your correct. Spanish side plays audio.</p>
         </div>
     `;
 
