@@ -302,7 +302,7 @@ A1: [
     { english: "there is / there are", spanish: "hay", category: "Connectors" },
     { english: "other / another", spanish: "otra", category: "Connectors" },
     { english: "despite", spanish: "a pesar de", category: "Connectors" },
-    { english: "favor (por favor)", spanish: "favor", category: "Connectors" },
+    { english: "please", spanish: "por favor", category: "Connectors" },
     { english: "they", spanish: "ellos", category: "Connectors" },
     { english: "his / her / their", spanish: "su", category: "Connectors" },
 
@@ -541,119 +541,122 @@ B2: [
    LISTEN VOCAB — A1 → B2 (Category → Word List)
    ============================================================ */
 const LISTEN_VOCAB = {
-    A1: {
-       "Daily Life": [
-    "vivir", "trabajar", "estudiar", "leer", "libros", "hora", "levantarse",
-    "música", "televisión", "limpiar", "cocinar", "abrir", "terminar",
-    "escribir", "aprender", "ir", "hacer", "ver", "escuchar", "salir",
-    "descansar", "caliente", "frío", "feliz", "nuevo",
+  A1: {
+    "Daily Life": [
+      "vivir", "trabajar", "estudiar", "leer", "libros", "hora", "levantarse",
+      "música", "televisión", "limpiar", "cocinar", "abrir", "terminar",
+      "escribir", "aprender", "ir", "hacer", "ver", "escuchar", "salir",
+      "descansar", "caliente", "frío", "feliz", "nuevo"
+    ],
+    "Family": [
+      "familia", "madre", "padre", "hijo", "hija", "amigo", "amiga",
+      "hermana", "hermanos", "hermanas", "abuela", "hambre",
+      "tenemos", "tienen"
+    ],
+    "Food & Drink": [
+      "agua", "comida", "cafe", "azucar", "té", "leche", "pan", "cerveza",
+      "bistec", "papas fritas", "huevo", "fruta", "manzana", "naranja",
+      "plátano", "pollo", "pescado", "sopa", "ensalada", "arroz",
+      "frijoles", "queso", "sal"
+    ],
+    "Travel": [
+      "autobus", "tren", "boleto", "estacion", "aeropuerto", "casa",
+      "escuela", "hotel", "bano", "lugar"
+    ],
+    "Connectors": [
+      "y", "o", "con", "sin", "más", "poco", "solo", "muy", "cerca",
+      "para", "a", "en", "ella", "el", "rápido",
+      "qué", "quién", "cuándo", "cómo", "cuál", "dónde",
+      "no", "hay", "otra", "por favor", "ellos", "su",
+      "es", "gusta", "gustan", "gustaría",
+      "aprendiendo", "arreglando",
+      "bueno", "difícil", "clara", "fácil", "malo", "pequeño"
+    ],
+    "Numbers": [
+      "uno", "dos", "tres", "cuatro", "cinco",
+      "seis", "siete", "ocho", "nueve", "diez"
+    ]
+  },
 
-    // A2 additions
-    "desayuno", "almuerzo", "cena", "temprano", "tarde", "anoche", "ahora",
-    "minutos", "tarea", "mensaje", "información", "película", "ventana",
-    "cocina", "zapatos", "viaje", "probar", "olvidar", "esperar", "conducir",
-    "arreglar", "irse", "llegar",
+  A2: {
+    "Daily Life": [
+      "desayuno", "almuerzo", "cena", "temprano", "tarde", "anoche", "ahora",
+      "minutos", "tarea", "mensaje", "información", "película", "ventana",
+      "cocina", "zapatos", "viaje", "probar", "olvidar", "esperar",
+      "conducir", "arreglar", "irse", "llegar"
+    ],
+    "Family": [
+      "padres", "abuela", "amiga"
+    ],
+    "Food & Drink": [
+      "desayuno", "almuerzo", "cena"
+    ],
+    "Travel": [
+      "avión", "visitar", "transporte"
+    ],
+    "Connectors": [
+      "a menudo", "antes", "ya", "todavía", "normalmente", "argumentó"
+    ],
+    "Numbers": [
+      "once", "doce", "trece", "catorce", "quince",
+      "dieciséis", "diecisiete", "dieciocho", "diecinueve", "veinte"
+    ]
+  },
 
-    // B1 additions
-    "he", "has", "ha", "hemos", "habéis", "han",
-    "estado", "aprendido", "trabajando", "estudiando", "leyendo", "viviendo",
-    "diarias", "comunicación", "conversaciones", "mejorar", "habilidades",
-    "revisar", "continuar", "cambiar", "seguir", "preparar", "conseguir",
-    "entender",
+  B1: {
+    "Daily Life": [
+      "he", "has", "ha", "hemos", "habéis", "han",
+      "estado", "aprendido", "trabajando", "estudiando", "leyendo", "viviendo",
+      "diarias", "comunicación", "conversaciones", "mejorar", "habilidades",
+      "revisar", "continuar", "cambiar", "seguir", "preparar",
+      "conseguir", "entender"
+    ],
+    "Family": [
+      "experiencias", "pasadas"
+    ],
+    "Food & Drink": [
+      "restaurante", "menú", "cuenta"
+    ],
+    "Travel": [
+      "encontrar", "cancelar", "traer", "planear", "mudarse", "unirse"
+    ],
+    "Connectors": [
+      "mientras", "sin embargo", "sobre", "cuando", "después", "durante"
+    ],
+    "Numbers": [
+      "mes", "años"
+    ]
+  },
 
-    // B2 additions
-    "proceso", "tarea", "resultados", "rendimiento", "estrategia", "sistema",
-    "enfoque", "concepto", "riesgo", "posibilidad", "situación",
-    "optimizar", "coordinar", "aumentar", "actualizar", "analizar",
-    "evaluar", "discutir", "aclarar", "fortalecer", "adaptarse", "lograr",
-    "complicado", "necesario", "posible", "efectivo", "realista",
-    "innovadora", "profesional", "positivo",
-    "analizado", "evaluado", "argumentado", "ampliado", "adaptado",
-    "reducido", "insistido", "explorado", "aclarado", "fortalecido",
-    "discutido", "actualizado", "optimizado"
-],
-
-      "Family": [
-    "familia", "madre", "padre", "hijo", "hija", "amigo", "amiga",
-    "hermana", "hermanos", "hermanas", "abuela", "hambre",
-    "tenemos", "tienen",
-
-    // A2 additions
-    "padres",
-
-    // B1 additions
-    "experiencias", "pasadas",
-
-    // B2 additions
-    "sociedad", "cultura", "motivación", "desafíos", "expectativas"
-],
-
-     "Food & Drink": [
-    "agua", "comida", "cafe", "azucar", "té", "leche", "pan", "cerveza",
-    "bistec", "papas fritas", "huevo", "fruta", "manzana", "naranja",
-    "plátano", "pollo", "pescado", "sopa", "ensalada", "arroz",
-    "frijoles", "queso", "sal",
-
-    // A2 additions
-    "desayuno", "almuerzo", "cena",
-
-    // B1 additions
-    "restaurante", "menú", "cuenta"
-],
-
-       "Travel": [
-    "autobus", "tren", "boleto", "estacion", "aeropuerto", "casa",
-    "escuela", "hotel", "bano", "lugar",
-
-    // A2 additions
-    "avión", "visitar", "transporte",
-
-    // B1 additions
-    "encontrar", "cancelar", "traer", "planear", "mudarse", "unirse",
-
-    // B2 additions
-    "remoto", "futuro", "largo plazo"
-],
-
-      "Connectors": [
-    "y", "o", "con", "sin", "más", "poco", "solo", "muy", "cerca",
-    "para", "a", "en", "ella", "el", "rapido",
-
-    // question words
-    "qué", "quién", "cuándo", "cómo", "cuál", "dónde",
-
-    // misc
-    "no", "hay", "otra", "favor", "ellos", "su",
-
-    // verbs
-    "es", "gusta", "gustan", "gustaría", "aprendiendo", "arreglando",
-
-    // adjectives
-    "bueno", "difícil", "clara", "fácil", "malo", "pequeño",
-
-    // A2 additions
-    "a menudo", "antes", "ya", "todavía", "normalmente", "argumentó",
-
-    // B1 additions
-    "mientras", "sin embargo", "sobre", "cuando", "después", "durante",
-
-    // B2 additions
-    "además", "por lo tanto", "a pesar de", "aunque", "incluso",
-    "otra vez", "cuidadosamente"
-],
-
-   "Numbers": [
-    "uno", "dos", "tres", "cuatro", "cinco",
-    "seis", "siete", "ocho", "nueve", "diez",
-
-    // A2 additions
-    "once", "doce", "trece", "catorce", "quince",
-    "dieciséis", "diecisiete", "dieciocho", "diecinueve", "veinte",
-
-    // B1 additions
-    "mes", "años"
-]
+  B2: {
+    "Daily Life": [
+      "proceso", "tarea", "resultados", "rendimiento", "estrategia", "sistema",
+      "enfoque", "concepto", "riesgo", "posibilidad", "situación",
+      "optimizar", "coordinar", "aumentar", "actualizar", "analizar",
+      "evaluar", "discutir", "aclarar", "fortalecer", "adaptarse", "lograr",
+      "complicado", "necesario", "posible", "efectivo", "realista",
+      "innovadora", "profesional", "positivo",
+      "analizado", "evaluado", "argumentado", "ampliado", "adaptado",
+      "reducido", "insistido", "explorado", "aclarado", "fortalecido",
+      "discutido", "actualizado", "optimizado",
+      "largo plazo"
+    ],
+    "Family": [
+      "sociedad", "cultura", "motivación", "desafíos", "expectativas"
+    ],
+    "Travel": [
+      "remoto", "futuro"
+    ],
+    "Connectors": [
+      "además", "por lo tanto", "a pesar de", "aunque",
+      "incluso", "otra vez", "cuidadosamente"
+    ],
+    "Numbers": [
+      // no new numbers at B2
+    ]
+  }
 };
+
 
 /* ============================================================
    WORD-BY-WORD DICTIONARY — CEFR A1 → B2 (Categorized)
@@ -1355,7 +1358,8 @@ const WORD_DICT = {
     "otra": "other",
     "other": "otra",
 
-    "favor": "favor",
+    "por favor": "please",
+    "please": "por favor",
     "ellos": "they",
     "they": "ellos",
 
