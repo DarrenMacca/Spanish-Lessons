@@ -2604,12 +2604,11 @@ function setupSentenceEvents(q) {
     const nextBtn = document.getElementById("sentence-next");
 
    // Translate Spanish → English using the current sentence item
-   function getEnglishForSpanish(spanishWord) {
-    if (spanishWord === q.correct.es) {
-        return q.correct.en;
-    }
-    return "[incorrect option]";
+  function getEnglishForSpanish(spanishWord) {
+    const match = q.options.find(opt => opt.es === spanishWord);
+    return match ? match.en : "[no match]";
 }
+
 
 
     buttons.forEach(btn => {
