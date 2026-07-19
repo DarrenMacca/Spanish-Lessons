@@ -211,16 +211,16 @@ A1: [
     { spanish: "nuevo", english: "new", category: "Daily Life" },
 
     // Daily Life (English→Spanish entries)
-    { english: "hello", spanish: "hola", category: "daily-life" },
-    { english: "goodbye", spanish: "adiós", category: "daily-life" },
-    { english: "thank you", spanish: "gracias", category: "daily-life" },
-    { english: "sorry / I feel", spanish: "siento", category: "daily-life" },
-    { english: "you are", spanish: "estás", category: "daily-life" },
-    { english: "ready", spanish: "listos", category: "daily-life" },
-    { english: "awake", spanish: "despierto", category: "daily-life" },
-    { english: "time", spanish: "tiempo", category: "daily-life" },
-    { english: "problems", spanish: "problemas", category: "daily-life" },
-    { english: "change", spanish: "cambio", category: "daily-life" },
+    { english: "hello", spanish: "hola", category: "Daily Life" },
+    { english: "goodbye", spanish: "adiós", category: "Daily Life" },
+    { english: "thank you", spanish: "gracias", category: "Daily Life" },
+    { english: "sorry / I feel", spanish: "siento", category: "Daily Life" },
+    { english: "you are", spanish: "estás", category: "Daily Life" },
+    { english: "ready", spanish: "listos", category: "Daily Life" },
+    { english: "awake", spanish: "despierto", category: "Daily Life" },
+    { english: "time", spanish: "tiempo", category: "Daily Life" },
+    { english: "problems", spanish: "problemas", category: "Daily Life" },
+    { english: "change", spanish: "cambio", category: "Daily Life" },
 
     // Family
     { spanish: "familia", english: "family", category: "Family" },
@@ -292,35 +292,35 @@ A1: [
     { spanish: "el", english: "he", category: "Connectors" },
     { spanish: "rapido", english: "fast", category: "Connectors" },
 
-    { english: "what", spanish: "qué", category: "connectors" },
-    { english: "who", spanish: "quién", category: "connectors" },
-    { english: "when", spanish: "cuándo", category: "connectors" },
-    { english: "how", spanish: "cómo", category: "connectors" },
-    { english: "which", spanish: "cuál", category: "connectors" },
-    { english: "where", spanish: "dónde", category: "connectors" },
-    { english: "no / not", spanish: "no", category: "connectors" },
-    { english: "there is / there are", spanish: "hay", category: "connectors" },
-    { english: "other / another", spanish: "otra", category: "connectors" },
-    { english: "despite", spanish: "pesar", category: "connectors" },
-    { english: "favor (por favor)", spanish: "favor", category: "connectors" },
-    { english: "they", spanish: "ellos", category: "connectors" },
-    { english: "his / her / their", spanish: "su", category: "connectors" },
+    { english: "what", spanish: "qué", category: "Connectors" },
+    { english: "who", spanish: "quién", category: "Connectors" },
+    { english: "when", spanish: "cuándo", category: "Connectors" },
+    { english: "how", spanish: "cómo", category: "Connectors" },
+    { english: "which", spanish: "cuál", category: "Connectors" },
+    { english: "where", spanish: "dónde", category: "Connectors" },
+    { english: "no / not", spanish: "no", category: "Connectors" },
+    { english: "there is / there are", spanish: "hay", category: "Connectors" },
+    { english: "other / another", spanish: "otra", category: "Connectors" },
+    { english: "despite", spanish: "a pesar de", category: "Connectors" },
+    { english: "favor (por favor)", spanish: "favor", category: "Connectors" },
+    { english: "they", spanish: "ellos", category: "Connectors" },
+    { english: "his / her / their", spanish: "su", category: "Connectors" },
 
     // Connectors — verbs
-    { english: "is", spanish: "es", category: "connectors" },
-    { english: "likes", spanish: "gusta", category: "connectors" },
-    { english: "they like", spanish: "gustan", category: "connectors" },
-    { english: "would like", spanish: "gustaría", category: "connectors" },
-    { english: "learning", spanish: "aprendiendo", category: "connectors" },
-    { english: "fixing", spanish: "arreglando", category: "connectors" },
+    { english: "is", spanish: "es", category: "Connectors" },
+    { english: "likes", spanish: "gusta", category: "Connectors" },
+    { english: "they like", spanish: "gustan", category: "Connectors" },
+    { english: "would like", spanish: "gustaría", category: "Connectors" },
+    { english: "learning", spanish: "aprendiendo", category: "Connectors" },
+    { english: "fixing", spanish: "arreglando", category: "Connectors" },
 
     // Connectors — adjectives
-    { english: "good", spanish: "bueno", category: "connectors" },
-    { english: "difficult", spanish: "difícil", category: "connectors" },
-    { english: "clear", spanish: "clara", category: "connectors" },
-    { english: "easy", spanish: "fácil", category: "connectors" },
-    { english: "bad", spanish: "malo", category: "connectors" },
-    { english: "small", spanish: "pequeño", category: "connectors" },
+    { english: "good", spanish: "bueno", category: "Connectors" },
+    { english: "difficult", spanish: "difícil", category: "Connectors" },
+    { english: "clear", spanish: "clara", category: "Connectors" },
+    { english: "easy", spanish: "fácil", category: "Connectors" },
+    { english: "bad", spanish: "malo", category: "Connectors" },
+    { english: "small", spanish: "pequeño", category: "Connectors" },
 
     // Numbers
     { english: "one", spanish: "uno", category: "Numbers" },
@@ -338,7 +338,7 @@ A2: [
 
     // Daily Life
     { spanish: "desayuno", english: "breakfast", category: "Daily Life" },
-    { spanish: "almuerzo", english: "lunch", category: "DailyLife" },
+    { spanish: "almuerzo", english: "lunch", category: "Daily Life" },
     { spanish: "cena", english: "dinner", category: "Daily Life" },
     { spanish: "temprano", english: "early", category: "Daily Life" },
     { spanish: "tarde", english: "late", category: "Daily Life" },
@@ -355,6 +355,7 @@ A2: [
     { spanish: "viaje", english: "trip", category: "Daily Life" },
     { spanish: "probar", english: "to try", category: "Daily Life" },
     { spanish: "olvidar", english: "to forget", category: "Daily Life" },
+    { english: "argued", spanish: "argumentó", category: "Daily Life" },
     { spanish: "esperar", english: "to wait", category: "Daily Life" },
     { spanish: "conducir", english: "to drive", category: "Daily Life" },
     { spanish: "arreglar", english: "to fix", category: "Daily Life" },
@@ -372,7 +373,7 @@ A2: [
     { spanish: "cena", english: "dinner", category: "Food & Drink" },
 
     // Travel
-    { spanish: "avión", english: "plane", category: "Travel" },
+    { spanish: "avión", english: "airplane", category: "Travel" },
     { spanish: "visitar", english: "to visit", category: "Travel" },
     { spanish: "transporte", english: "transport", category: "Travel" },
 
@@ -382,7 +383,7 @@ A2: [
     { spanish: "ya", english: "already", category: "Connectors" },
     { spanish: "todavía", english: "still", category: "Connectors" },
     { spanish: "normalmente", english: "normally", category: "Connectors" },
-    { english: "argued", spanish: "argumentó", category: "Connectors" },
+    
 
     // Numbers
     { english: "eleven", spanish: "once", category: "Numbers" },
@@ -509,6 +510,8 @@ B2: [
     { spanish: "discutido", english: "discussed", category: "Daily Life" },
     { spanish: "actualizado", english: "updated", category: "Daily Life" },
     { spanish: "optimizado", english: "optimized", category: "Daily Life" },
+    { spanish: "largo plazo", english: "long term", category: "Daily Life" },
+
 
     // Family — abstract B2 concepts
     { spanish: "sociedad", english: "society", category: "Family" },
@@ -520,7 +523,6 @@ B2: [
     // Travel — B2 abstract travel concepts
     { spanish: "remoto", english: "remote", category: "Travel" },
     { spanish: "futuro", english: "future", category: "Travel" },
-    { spanish: "largo plazo", english: "long term", category: "Travel" },
 
    // Connectors — B2 logical connectors
 { spanish: "además", english: "in addition", category: "Connectors" },
