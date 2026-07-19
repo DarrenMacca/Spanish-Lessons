@@ -4150,174 +4150,208 @@ B2: [
 
 
 /* ============================================================
-   CONVERSATION TAB — RENDER + EVENTS (EVERYDAY DIALOGUE)
+   CONVERSATION TAB — CEFR INTERACTIVE RESPONSE ENGINE
    ============================================================ */
 
-const CONVO_PROMPTS = [
-    { english: "How are you today?", spanishTarget: "¿Cómo estás hoy?" },
-    { english: "Where do you live?", spanishTarget: "¿Dónde vives?" },
-    { english: "What do you like to do on weekends?", spanishTarget: "¿Qué te gusta hacer los fines de semana?" },
-    { english: "Do you work or study?", spanishTarget: "¿Trabajas o estudias?" },
-    { english: "What is your favorite food?", spanishTarget: "¿Cuál es tu comida favorita?" },
-    { english: "What time do you usually get up?", spanishTarget: "¿A qué hora sueles levantarte?" }
-];
+function generateConversationPrompt(level) {
+    const pool = CEFR_CONVERSATION_PROMPTS[level];
+    const item = pool[Math.floor(Math.random() * pool.length)];
+
+    return {
+        prompt_es: item.prompt_es,
+        prompt_en: item.prompt_en,
+        expected: item.expected_responses
+    };
+}
 
 function renderConversationTab() {
     const container = document.getElementById("conversation-content");
-    const words = CEFR_LEVELS[appState.currentLevel];
+    const level = appState.currentLevel;
 
-    if (!words || !words.length) {
-        container.innerHTML = `<div class="glass-panel convo-card">
-            <p>No words found for level ${appState.currentLevel}.</p>
-        </div>`;
+    if (!CEFR_CONVERSATION_PROMPTS[level]) {
+        container.innerHTML = "<p>No conversation prompts available for this level.</p>";
         return;
     }
 
-    // Pick random prompt
-    convoState.currentPrompt = CONVO_PROMPTS[Math.floor(Math.random() * CONVO_PROMPTS.length)];
-    const target = convoState.currentPrompt.spanishTarget;
-
-    // Build wordbank from level words + disruptors
-    const coreTokens = target.replace(/[¿?]/g, "").split(" ");
-    const levelTokens = words.map(w => w.spanish.split(" ")).flat();
-    const disruptors = ["rápido", "lento", "siempre", "nunca", "ayer", "mañana", "porque", "pero"];
-
-    let bank = [...coreTokens];
-
-    // Add some level words
-    while (bank.length < coreTokens.length + 4) {
-        const t = levelTokens[Math.floor(Math.random() * levelTokens.length)];
-        if (t && !bank.includes(t)) bank.push(t);
-    }
-
-    // Add disruptors
-    disruptors.forEach(d => {
-        if (!bank.includes(d)) bank.push(d);
-    });
-
-    // Shuffle bank
-    bank = bank.sort(() => Math.random() - 0.5);
-
-    convoState.tokens = bank;
-    convoState.answer = [];
+    const convo = generateConversationPrompt(level);
 
     container.innerHTML = `
         <div class="glass-panel convo-card">
-            <h2>Conversation — Level ${appState.currentLevel}</h2>
-            <p>Respond in Spanish by selecting the correct words from the wordbank.</p>
+            <h2>Conversation — Level ${level}</h2>
+            <p>Respond naturally using Spanish.</p>
 
-            <div id="convo-prompt"><strong>Prompt (English):</strong> ${convoState.currentPrompt.english}</div>
-
-            <div id="convo-grid" class="sb-grid">
-                ${convoState.tokens.map(t => `
-                    <button class="pill convo-opt" data-token="${t}">${t}</button>
-                `).join("")}
+            <div class="convo-prompt">
+                <strong>Spanish:</strong> ${convo.prompt_es}<br>
+                <strong>English:</strong> ${convo.prompt_en}
             </div>
 
-            <div id="convo-answer"></div>
+            <div id="convo-pill-box" class="convo-pill-box"></div>
 
-            <input id="convo-type" class="convo-type" placeholder="Or type your response in Spanish…" />
+            <textarea id="convo-input" class="convo-input"
+                placeholder="Type your Spanish response here..."></textarea>
+
+            <div class="convo-controls">
+                <button id="convo-submit" class="pill">Submit</button>
+                <button id="convo-next" class="pill">Next</button>
+            </div>
 
             <div id="convo-feedback"></div>
-
-            <div class="sb-controls">
-                <button id="convo-undo">Undo</button>
-                <button id="convo-reset">Reset</button>
-                <button id="convo-check">Check</button>
-                <button id="convo-next">Next</button>
-            </div>
         </div>
     `;
 
-    setupConversationEvents();
+    renderConversationPills(level);
+    setupConversationEvents(convo);
 }
 
+function renderConversationPills(level) {
+    const box = document.getElementById("convo-pill-box");
 
+    // Collect all vocabulary from A1 → current level
+    let vocab = [];
+    const levels = ["A1", "A2", "B1", "B2"];
+    const currentIndex = levels.indexOf(level);
 
-function setupConversationEvents() {
-    const grid = document.getElementById("convo-grid");
-    const answerBox = document.getElementById("convo-answer");
-    const typeBox = document.getElementById("convo-type");
+    for (let i = 0; i <= currentIndex; i++) {
+        const lvl = levels[i];
+        if (CEFR_LEVELS[lvl]) {
+            vocab = vocab.concat(CEFR_LEVELS[lvl]);
+        }
+    }
+
+    box.innerHTML = vocab.map(w => `
+        <button class="pill convo-pill" data-word="${w.spanish}">
+            ${w.spanish}
+        </button>
+    `).join("");
+
+    let builtSentence = [];
+    const pills = document.querySelectorAll(".convo-pill");
+
+    pills.forEach(p => {
+        p.addEventListener("click", () => {
+            builtSentence.push(p.dataset.word);
+            document.getElementById("convo-input").value = builtSentence.join(" ");
+        });
+    });
+}
+
+function scoreConversationResponse(userText, expectedList) {
+    const normalizedUser = userText.toLowerCase().trim();
+    const wordsUser = normalizedUser.split(" ");
+
+    let bestScore = 0;
+    let bestMatch = null;
+
+    expectedList.forEach(exp => {
+        const wordsExp = exp.es.toLowerCase().split(" ");
+
+        const matches = wordsUser.filter(w => wordsExp.includes(w)).length;
+        const score = Math.round((matches / wordsExp.length) * 100);
+
+        if (score > bestScore) {
+            bestScore = score;
+            bestMatch = exp;
+        }
+    });
+
+    return { score: bestScore, match: bestMatch };
+}
+
+function setupConversationEvents(convo) {
+    const submitBtn = document.getElementById("convo-submit");
+    const nextBtn = document.getElementById("convo-next");
     const feedback = document.getElementById("convo-feedback");
 
-    const undoBtn = document.getElementById("convo-undo");
-    const resetBtn = document.getElementById("convo-reset");
-    const checkBtn = document.getElementById("convo-check");
-    const nextBtn = document.getElementById("convo-next");
+    submitBtn.addEventListener("click", () => {
+        const userText = document.getElementById("convo-input").value.trim();
 
-    convoState.answer = [];
+        if (!userText) {
+            feedback.innerHTML = `<span style="color:#f87171;">Please enter a response.</span>`;
+            return;
+        }
 
-    // Word-pill selection
-    grid.querySelectorAll(".convo-opt").forEach(btn => {
-        btn.addEventListener("click", () => {
-            convoState.answer.push(btn.dataset.token);
-            btn.classList.add("used");
-            btn.disabled = true;
-            answerBox.textContent = convoState.answer.join(" ");
-        });
+        const result = scoreConversationResponse(userText, convo.expected);
+
+        feedback.innerHTML = `
+            <div class="convo-result">
+                <strong>Your response:</strong> ${userText}<br>
+                <strong>Score:</strong> ${result.score}%<br>
+                <strong>Closest meaning:</strong> ${result.match.en}<br>
+                <strong>Expected Spanish:</strong> ${result.match.es}
+            </div>
+        `;
+
+        speakQuiz(result.match.es);
+
+        appState.levelStats[appState.currentLevel].conversationCompleted++;
+        updateBadges();
+        updateProgressMeters();
     });
 
-    // Typing mode
-    typeBox.addEventListener("input", () => {
-        convoState.answer = typeBox.value.trim().split(" ");
-        answerBox.textContent = convoState.answer.join(" ");
-    });
-
-    // Undo
-    undoBtn.addEventListener("click", () => {
-        convoState.answer.pop();
-        answerBox.textContent = convoState.answer.join(" ");
-
-        grid.querySelectorAll(".convo-opt").forEach(btn => {
-            if (!convoState.answer.includes(btn.dataset.token)) {
-                btn.classList.remove("used");
-                btn.disabled = false;
-            }
-        });
-    });
-
-    // Reset
-    resetBtn.addEventListener("click", () => {
-        convoState.answer = [];
-        answerBox.textContent = "";
-        typeBox.value = "";
-        grid.querySelectorAll(".convo-opt").forEach(btn => {
-            btn.classList.remove("used");
-            btn.disabled = false;
-        });
-    });
-
-    // Check
-    checkBtn.addEventListener("click", () => {
-        const correct = convoState.currentPrompt.spanishTarget.replace(/[¿?]/g, "").trim();
-        const user = convoState.answer.join(" ").trim();
-
-       if (user === correct) {
-    feedback.textContent = "Nice! That’s a natural response. 🎉";
-
-    if (appState.levelStats[appState.currentLevel].conversationCompleted == null) {
-        appState.levelStats[appState.currentLevel].conversationCompleted = 0;
-    }
-    appState.levelStats[appState.currentLevel].conversationCompleted++;
-
-    updateBadges();
-    updateProgressMeters();
-    setTimeout(() => speakQuiz(correct), 300);
-
-} else {
-    feedback.textContent = `Not quite. A natural response would be: ${convoState.currentPrompt.spanishTarget}`;
-    setTimeout(() => speakQuiz(correct), 300);
-}
-
-saveState();
-
-    });
-
-    // Next
     nextBtn.addEventListener("click", () => {
         renderConversationTab();
     });
 }
+
+const CEFR_CONVERSATION_PROMPTS = {
+
+    A1: [
+        {
+            prompt_es: "¿Qué te gustaría beber?",
+            prompt_en: "What would you like to drink?",
+            expected_responses: [
+                { es: "me gustaría una cerveza por favor", en: "I would like a beer please" },
+                { es: "quiero agua por favor", en: "I want water please" },
+                { es: "me gustaría un jugo", en: "I would like a juice" }
+            ]
+        },
+        {
+            prompt_es: "¿Cómo estás hoy?",
+            prompt_en: "How are you today?",
+            expected_responses: [
+                { es: "estoy bien gracias", en: "I'm good, thank you" },
+                { es: "estoy cansado", en: "I'm tired" },
+                { es: "estoy feliz", en: "I'm happy" }
+            ]
+        }
+    ],
+
+    A2: [
+        {
+            prompt_es: "¿Dónde vives?",
+            prompt_en: "Where do you live?",
+            expected_responses: [
+                { es: "vivo en la ciudad", en: "I live in the city" },
+                { es: "vivo cerca del centro", en: "I live near downtown" },
+                { es: "vivo con mi familia", en: "I live with my family" }
+            ]
+        }
+    ],
+
+    B1: [
+        {
+            prompt_es: "¿Qué haces en tu tiempo libre?",
+            prompt_en: "What do you do in your free time?",
+            expected_responses: [
+                { es: "me gusta leer libros", en: "I like reading books" },
+                { es: "salgo a caminar", en: "I go for walks" },
+                { es: "practico deportes", en: "I practice sports" }
+            ]
+        }
+    ],
+
+    B2: [
+        {
+            prompt_es: "¿Qué opinas del trabajo remoto?",
+            prompt_en: "What do you think about remote work?",
+            expected_responses: [
+                { es: "creo que es muy conveniente", en: "I think it's very convenient" },
+                { es: "me gusta porque ahorro tiempo", en: "I like it because I save time" },
+                { es: "prefiero trabajar en la oficina", en: "I prefer working at the office" }
+            ]
+        }
+    ]
+};
 
 
 /* ============================================================
