@@ -1353,61 +1353,101 @@ function getWordMeaning(word) {
        AUTO PLAY ENGINE
        ============================================================ */
 
-    autoPlayActive: false,
-    autoPlayPaused: false,
+    const ListenEngine = {
+    list: [],
+    index: 0,
+    auto: false,
+    timer: null,
 
-    startAutoPlay() {
-        const list = this.getCurrentList();
-        if (!list.length) return;
-
-        this.autoPlayActive = true;
-        this.autoPlayPaused = false;
-        APP_STATE.listenIndex = 0;
-
-        this._autoLoop();
+    setLevel(level) {
+        APP_STATE.currentLevel = level;
+        this.load();
     },
 
-    pauseAutoPlay() {
-        this.autoPlayPaused = true;
-        speechSynthesis.pause();
+    setCategory(category) {
+        APP_STATE.currentCategory = category;
+        this.load();
     },
 
-    resumeAutoPlay() {
-        this.autoPlayPaused = false;
-        speechSynthesis.resume();
-        this._autoLoop();
+    load() {
+        const level = APP_STATE.currentLevel;
+        const category = APP_STATE.currentCategory;
+
+        this.list = CEFR_LISTENING_TOPICS?.[category]?.[level] || [];
+        this.index = 0;
+        this.render();
     },
 
-    stopAutoPlay() {
-        this.autoPlayActive = false;
-        this.autoPlayPaused = false;
-        APP_STATE.listenIndex = 0;
-        speechSynthesis.cancel();
+    render() {
+        const container = document.getElementById("listenList");
+        if (!container) return;
+
+        if (!this.list.length) {
+            container.innerHTML = `<div class="empty-msg glass-panel">
+                No listening items found for ${APP_STATE.currentLevel} / ${APP_STATE.currentCategory}.
+            </div>`;
+            return;
+        }
+
+        container.innerHTML = this.list.map((item, i) => `
+            <div class="listen-item glass-panel ${i === this.index ? "active-listen" : ""}"
+                 onclick="ListenEngine.jumpTo(${i})">
+                <div class="listen-es">${item.spanish}</div>
+                <div class="listen-en">${item.english}</div>
+                <div class="listen-q">${item.question}</div>
+            </div>
+        `).join("");
     },
 
-    _autoLoop() {
-        if (!this.autoPlayActive || this.autoPlayPaused) return;
+    jumpTo(i) {
+        this.index = i;
+        this.render();
+        this.playCurrent();
+    },
 
-        const list = this.getCurrentList();
-        const word = list[APP_STATE.listenIndex];
+    playCurrent() {
+        const item = this.list[this.index];
+        if (!item) return;
 
-        const utter = new SpeechSynthesisUtterance(word);
+        const utter = new SpeechSynthesisUtterance(item.spanish);
         utter.lang = "es-ES";
-
-        utter.onend = () => {
-            if (!this.autoPlayActive || this.autoPlayPaused) return;
-
-            APP_STATE.listenIndex++;
-            if (APP_STATE.listenIndex >= list.length) {
-                this.stopAutoPlay();
-                return;
-            }
-
-            setTimeout(() => this._autoLoop(), 400);
-        };
+        utter.rate = APP_STATE.speechRate || 1;
 
         speechSynthesis.cancel();
         speechSynthesis.speak(utter);
+    },
+
+    next() {
+        if (!this.list.length) return;
+        this.index = (this.index + 1) % this.list.length;
+        this.render();
+        this.playCurrent();
+    },
+
+    previous() {
+        if (!this.list.length) return;
+        this.index = (this.index - 1 + this.list.length) % this.list.length;
+        this.render();
+        this.playCurrent();
+    },
+
+    startAutoPlay() {
+        if (!this.list.length) return;
+        this.auto = true;
+
+        const step = () => {
+            if (!this.auto) return;
+            this.playCurrent();
+            this.next();
+            this.timer = setTimeout(step, 3500);
+        };
+
+        step();
+    },
+
+    stopAutoPlay() {
+        this.auto = false;
+        clearTimeout(this.timer);
     }
 };
 
