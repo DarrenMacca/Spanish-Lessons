@@ -2603,11 +2603,12 @@ function setupSentenceEvents(q) {
     const feedback = document.getElementById("sentence-feedback");
     const nextBtn = document.getElementById("sentence-next");
 
-    // Helper: translate Spanish → English
+   // Translate Spanish → English using the current sentence item
     function getEnglishForSpanish(spanishWord) {
-        const levelWords = CEFR_LEVELS[appState.currentLevel];
-        const match = levelWords.find(w => w.spanish === spanishWord);
-        return match ? match.english : "[no match]";
+        if (spanishWord === q.correct) {
+            return q.english;
+        }
+        return "[incorrect option]";
     }
 
     buttons.forEach(btn => {
