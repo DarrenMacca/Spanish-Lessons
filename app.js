@@ -1348,63 +1348,6 @@ function getWordMeaning(word) {
 }
 
 
-/* ============================================================
-   LISTEN ENGINE — Auto Play, Manual Play, Category Selection
-   ============================================================ */
-
-const ListenEngine = {
-    setLevel(level) {
-        APP_STATE.currentLevel = level;
-        APP_STATE.listenIndex = 0;
-    },
-
-    setCategory(category) {
-        APP_STATE.currentCategory = category;
-        APP_STATE.listenIndex = 0;
-    },
-
-    getCurrentList() {
-        const lvl = APP_STATE.currentLevel;
-        const cat = APP_STATE.currentCategory;
-        return LISTEN_VOCAB[lvl]?.[cat] || [];
-    },
-
-    playWord(word) {
-        if (!APP_STATE.audioEnabled || !word) return;
-
-        const utter = new SpeechSynthesisUtterance(word);
-        utter.lang = "es-ES";
-        speechSynthesis.cancel();
-        speechSynthesis.speak(utter);
-    },
-
-    playCurrent() {
-        const list = this.getCurrentList();
-        const word = list[APP_STATE.listenIndex];
-        this.playWord(word);
-    },
-
-    next() {
-        const list = this.getCurrentList();
-        APP_STATE.listenIndex++;
-
-        if (APP_STATE.listenIndex >= list.length) {
-            APP_STATE.listenIndex = 0; // loop
-        }
-
-        this.playCurrent();
-    },
-
-    previous() {
-        const list = this.getCurrentList();
-        APP_STATE.listenIndex--;
-
-        if (APP_STATE.listenIndex < 0) {
-            APP_STATE.listenIndex = list.length - 1;
-        }
-
-        this.playCurrent();
-    },
 
     /* ============================================================
        AUTO PLAY ENGINE
