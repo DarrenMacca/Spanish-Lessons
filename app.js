@@ -3280,23 +3280,23 @@ const Global = {
         console.log("App shutdown complete.");
     },
 
-    exports() {
-    return {
-        APP_STATE,
-        ListenEngine,
-        FlashcardsEngine,
-        QuizEngine,
-        BuildEngine,
-        SentenceEngine,
-        ConversationEngine,
-        FreePracticeEngine,
-        ReviewEngine,
-        AchievementsEngine,
-        AudioSystem,
-        Router,
-        App
-    
-}
+   exports() {
+        return {
+            APP_STATE,
+            ListenEngine,
+            FlashcardsEngine,
+            QuizEngine,
+            BuildEngine,
+            SentenceEngine,
+            ConversationEngine,
+            FreePracticeEngine,
+            ReviewEngine,
+            AchievementsEngine,
+            AudioSystem,
+            Router,
+            App
+        };
+    }
 };
 /* ============================================================
    STARTUP
