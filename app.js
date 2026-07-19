@@ -2111,19 +2111,19 @@ const ListenEngine = {
     },
 
     load() {
-    const level = APP_STATE.currentLevel;
-    const category = APP_STATE.currentCategory;
+        const level = APP_STATE.currentLevel;
+        const category = APP_STATE.currentCategory;
 
-    const source =
-        (typeof CEFR_LISTENING_TOPICS !== "undefined" && CEFR_LISTENING_TOPICS)
-            ? CEFR_LISTENING_TOPICS
-            : {};
+        // HARD GUARD: never throw if CEFR_LISTENING_TOPICS is missing
+        const hasTopics = (typeof CEFR_LISTENING_TOPICS !== "undefined") &&
+                          CEFR_LISTENING_TOPICS &&
+                          CEFR_LISTENING_TOPICS[category] &&
+                          CEFR_LISTENING_TOPICS[category][level];
 
-    this.list = source?.[category]?.[level] || [];
-    this.index = 0;
-    this.render();
-},
-
+        this.list = hasTopics ? CEFR_LISTENING_TOPICS[category][level] : [];
+        this.index = 0;
+        this.render();
+    },
 
     render() {
         const container = document.getElementById("listenList");
@@ -2210,6 +2210,7 @@ const ListenEngine = {
         speechSynthesis.speak(utter);
     }
 };
+
 
 /* ============================================================
    ACHIEVEMENTS ENGINE
