@@ -621,7 +621,7 @@ const LISTEN_VOCAB = {
     "qué", "quién", "cuándo", "cómo", "cuál", "dónde",
 
     // misc
-    "no", "hay", "otra", "pesar", "favor", "ellos", "su",
+    "no", "hay", "otra", "favor", "ellos", "su",
 
     // verbs
     "es", "gusta", "gustan", "gustaría", "aprendiendo", "arreglando",
