@@ -1887,9 +1887,13 @@ function getWordMeaning(word) {
 /* ============================================================
    LISTEN ENGINE — Topic-based
    ============================================================ */
-function renderListenTab(level) {
-    level = level.trim().toUpperCase();
-}
+
+// ❌ This global stub was useless and conflicts with ListenEngine.render.
+// Remove it entirely.
+// function renderListenTab(level) {
+//     level = level.trim().toUpperCase();
+// }
+
 const ListenEngine = {
     list: [],
     index: 0,
@@ -1911,10 +1915,11 @@ const ListenEngine = {
         const category = APP_STATE.currentCategory;
 
         // HARD GUARD: never throw if CEFR_LISTENING_TOPICS is missing
-        const hasTopics = (typeof CEFR_LISTENING_TOPICS !== "undefined") &&
-                          CEFR_LISTENING_TOPICS &&
-                          CEFR_LISTENING_TOPICS[category] &&
-                          CEFR_LISTENING_TOPICS[category][level];
+        const hasTopics =
+            (typeof CEFR_LISTENING_TOPICS !== "undefined") &&
+            CEFR_LISTENING_TOPICS &&
+            CEFR_LISTENING_TOPICS[category] &&
+            CEFR_LISTENING_TOPICS[category][level];
 
         this.list = hasTopics ? CEFR_LISTENING_TOPICS[category][level] : [];
         this.index = 0;
@@ -1932,14 +1937,18 @@ const ListenEngine = {
             return;
         }
 
-        container.innerHTML = this.list.map((item, i) => `
-            <div class="listen-item glass-panel ${i === this.index ? "active-listen" : ""}"
-                 onclick="ListenEngine.jumpTo(${i})">
-                <div class="listen-es">${item.spanish}</div>
-                <div class="listen-en">${item.english}</div>
-                <div class="listen-q">${item.question}</div>
+        // ✅ Word pills restored: clickable, highlight current, show ES + EN
+        container.innerHTML = `
+            <div class="listen-grid">
+                ${this.list.map((item, i) => `
+                    <button class="pill listen-pill ${i === this.index ? "active-listen" : ""}"
+                            onclick="ListenEngine.jumpTo(${i})">
+                        <span class="listen-es">${item.spanish}</span>
+                        <span class="listen-en">${item.english}</span>
+                    </button>
+                `).join("")}
             </div>
-        `).join("");
+        `;
     },
 
     jumpTo(i) {
@@ -2006,6 +2015,7 @@ const ListenEngine = {
         speechSynthesis.speak(utter);
     }
 };
+
 
 /* ============================================================
    FLASHCARDS ENGINE
