@@ -1317,9 +1317,10 @@ const APP_STATE = {
     flashIndex: 0,
     quizIndex: 0,
     buildTokens: [],
+    userSentence: [],
     conversationHistory: [],
     reviewQueue: [],
-    audioEnabled: true,
+    audioEnabled: true
 };
 
 /* ============================================================
@@ -1370,19 +1371,13 @@ const FlashcardsEngine = {
         APP_STATE.flashIndex = 0;
     },
 
-    /* ============================================================
-       BUILD FLASHCARD LIST (Spanish → English)
-       ============================================================ */
     getFlashcards() {
         const level = APP_STATE.currentLevel;
         const category = APP_STATE.currentCategory;
 
         const vocab = CEFR_LEVELS[level] || [];
-
-        // Filter by category
         const filtered = vocab.filter(v => v.category === category);
 
-        // Convert to flashcard objects
         return filtered.map(v => ({
             spanish: v.spanish,
             english: v.english,
@@ -1390,11 +1385,7 @@ const FlashcardsEngine = {
         }));
     },
 
-    /* ============================================================
-       FLIP CARD (Spanish → English → Spanish)
-       ============================================================ */
     flipCard(card) {
-        // Spanish → English (play audio)
         if (!card.flipped) {
             card.flipped = true;
 
@@ -1404,16 +1395,11 @@ const FlashcardsEngine = {
                 speechSynthesis.cancel();
                 speechSynthesis.speak(utter);
             }
-        }
-        // English → Spanish (NO audio)
-        else {
+        } else {
             card.flipped = false;
         }
     },
 
-    /* ============================================================
-       REVIEW QUEUE INJECTION
-       ============================================================ */
     markForReview(card) {
         APP_STATE.reviewQueue.push({
             spanish: card.spanish,
@@ -1423,9 +1409,6 @@ const FlashcardsEngine = {
         });
     },
 
-    /* ============================================================
-       RANDOMIZATION
-       ============================================================ */
     shuffleCards(cards) {
         return shuffle(cards);
     }
@@ -1447,9 +1430,6 @@ const QuizEngine = {
         APP_STATE.quizIndex = 0;
     },
 
-    /* ============================================================
-       BUILD QUIZ LIST (Spanish → English)
-       ============================================================ */
     getQuizItems() {
         const level = APP_STATE.currentLevel;
         const category = APP_STATE.currentCategory;
@@ -1458,31 +1438,19 @@ const QuizEngine = {
         return vocab.filter(v => v.category === category);
     },
 
-    /* ============================================================
-       GENERATE DISTRACTORS
-       ============================================================ */
     getDistractors(correctEnglish) {
         const allWords = Object.values(WORD_DICT);
-
-        // Filter out the correct answer
         const pool = allWords.filter(w => w !== correctEnglish);
-
-        // Pick 3 random distractors
         return shuffle(pool).slice(0, 3);
     },
 
-    /* ============================================================
-       BUILD A SINGLE QUIZ QUESTION
-       ============================================================ */
     buildQuestion() {
         const items = this.getQuizItems();
         if (!items.length) return null;
 
         const item = items[APP_STATE.quizIndex];
         const correct = item.english;
-
         const distractors = this.getDistractors(correct);
-
         const options = shuffle([correct, ...distractors]);
 
         return {
@@ -1492,9 +1460,6 @@ const QuizEngine = {
         };
     },
 
-    /* ============================================================
-       PLAY AUDIO FOR PROMPT
-       ============================================================ */
     playPrompt(spanishWord) {
         if (!APP_STATE.audioEnabled) return;
 
@@ -1504,14 +1469,10 @@ const QuizEngine = {
         speechSynthesis.speak(utter);
     },
 
-    /* ============================================================
-       CHECK ANSWER
-       ============================================================ */
     checkAnswer(selected, question) {
         const isCorrect = selected === question.correct;
 
         if (!isCorrect) {
-            // Add to review queue
             APP_STATE.reviewQueue.push({
                 spanish: question.spanish,
                 english: question.correct,
@@ -1523,23 +1484,17 @@ const QuizEngine = {
         return isCorrect;
     },
 
-    /* ============================================================
-       NEXT QUESTION
-       ============================================================ */
     next() {
         const items = this.getQuizItems();
         APP_STATE.quizIndex++;
 
         if (APP_STATE.quizIndex >= items.length) {
-            APP_STATE.quizIndex = 0; // loop
+            APP_STATE.quizIndex = 0;
         }
 
         return this.buildQuestion();
     },
 
-    /* ============================================================
-       RESET QUIZ
-       ============================================================ */
     reset() {
         APP_STATE.quizIndex = 0;
     }
@@ -1551,16 +1506,10 @@ const QuizEngine = {
    ============================================================ */
 
 const BuildEngine = {
-    /* ------------------------------------------------------------
-       LEVEL SELECTION
-    ------------------------------------------------------------ */
     setLevel(level) {
         APP_STATE.currentLevel = level;
     },
 
-    /* ------------------------------------------------------------
-       PICK A SENTENCE FOR CURRENT LEVEL
-    ------------------------------------------------------------ */
     pickSentence() {
         const level = APP_STATE.currentLevel;
         const item = rand(CEFR_SENTENCES[level]);
@@ -1568,16 +1517,10 @@ const BuildEngine = {
         return item.spanish;
     },
 
-    /* ------------------------------------------------------------
-       TOKENIZE SENTENCE
-    ------------------------------------------------------------ */
     tokenize(sentence) {
         return sentence.split(" ").map(w => w.trim());
     },
 
-    /* ------------------------------------------------------------
-       GENERATE DISTRACTORS (from WORD_DICT)
-    ------------------------------------------------------------ */
     generateDistractors(count = 6) {
         const keys = Object.keys(WORD_DICT);
         const picks = [];
@@ -1590,9 +1533,6 @@ const BuildEngine = {
         return picks;
     },
 
-    /* ------------------------------------------------------------
-       BUILD WORD GRID (correct tokens + distractors)
-    ------------------------------------------------------------ */
     buildGrid() {
         const sentence = APP_STATE.currentSentence || this.pickSentence();
         const tokens = this.tokenize(sentence);
@@ -1604,9 +1544,6 @@ const BuildEngine = {
         return mixed;
     },
 
-    /* ------------------------------------------------------------
-       RENDER GRID INTO DOM
-    ------------------------------------------------------------ */
     renderGrid() {
         const grid = document.getElementById("buildGrid");
         if (!grid) return;
@@ -1627,9 +1564,6 @@ const BuildEngine = {
         });
     },
 
-    /* ------------------------------------------------------------
-       ADD WORD TO USER OUTPUT
-    ------------------------------------------------------------ */
     addWord(word) {
         const out = document.getElementById("buildOutput");
         if (!out) return;
@@ -1640,9 +1574,6 @@ const BuildEngine = {
         out.textContent = APP_STATE.userSentence.join(" ");
     },
 
-    /* ------------------------------------------------------------
-       CHECK BUILT SENTENCE
-    ------------------------------------------------------------ */
     checkSentence() {
         const result = document.getElementById("buildResult");
         if (!result) return;
@@ -1656,7 +1587,6 @@ const BuildEngine = {
             return { correct: true, score: 10 };
         }
 
-        // Partial scoring
         const userWords = APP_STATE.userSentence;
         const correctWords = correctSentence.split(" ");
 
@@ -1671,9 +1601,6 @@ const BuildEngine = {
         return { correct: false, score };
     },
 
-    /* ------------------------------------------------------------
-       NEW CHALLENGE
-    ------------------------------------------------------------ */
     newChallenge() {
         APP_STATE.userSentence = [];
         const out = document.getElementById("buildOutput");
@@ -1687,9 +1614,6 @@ const BuildEngine = {
         if (result) result.textContent = "";
     },
 
-    /* ------------------------------------------------------------
-       INITIALIZE ENGINE
-    ------------------------------------------------------------ */
     init() {
         const checkBtn = document.getElementById("buildCheckBtn");
         const newBtn = document.getElementById("buildNewBtn");
@@ -1712,17 +1636,10 @@ const BuildEngine = {
    ============================================================ */
 
 const SentenceEngine = {
-
-    /* ------------------------------------------------------------
-       LEVEL SELECTION
-    ------------------------------------------------------------ */
     setLevel(level) {
         APP_STATE.currentLevel = level;
     },
 
-    /* ------------------------------------------------------------
-       SUBJECT POOL (CEFR aligned)
-    ------------------------------------------------------------ */
     subjects: {
         A1: ["yo", "tú", "él", "ella", "nosotros", "ellos"],
         A2: ["mi amigo", "mi familia", "la gente", "nosotros dos"],
@@ -1730,9 +1647,6 @@ const SentenceEngine = {
         B2: ["la organización", "el sistema", "el proyecto", "la estrategia"]
     },
 
-    /* ------------------------------------------------------------
-       VERB POOL (CEFR aligned)
-    ------------------------------------------------------------ */
     verbs: {
         A1: ["trabaja", "vive", "estudia", "come", "quiere", "necesita"],
         A2: ["espera", "olvida", "conduce", "planea", "llega"],
@@ -1740,9 +1654,6 @@ const SentenceEngine = {
         B2: ["analizar", "evaluar", "optimizar", "fortalecer", "coordinar"]
     },
 
-    /* ------------------------------------------------------------
-       OBJECT POOL (CEFR aligned)
-    ------------------------------------------------------------ */
     objects: {
         A1: ["la comida", "el libro", "la casa", "la música"],
         A2: ["el mensaje", "la reunión", "el viaje", "la ventana"],
@@ -1750,9 +1661,6 @@ const SentenceEngine = {
         B2: ["la estrategia", "el proceso", "el sistema", "los resultados"]
     },
 
-    /* ------------------------------------------------------------
-       MODIFIER POOL (CEFR aligned)
-    ------------------------------------------------------------ */
     modifiers: {
         A1: ["hoy", "ahora", "rápido"],
         A2: ["más tarde", "esta noche", "normalmente"],
@@ -1760,16 +1668,10 @@ const SentenceEngine = {
         B2: ["cuidadosamente", "en detalle", "efectivamente"]
     },
 
-    /* ------------------------------------------------------------
-       PICK FROM LEVEL POOL
-    ------------------------------------------------------------ */
     pick(level, pool) {
         return rand(pool[level]);
     },
 
-    /* ------------------------------------------------------------
-       GENERATE SENTENCE (CEFR grammar)
-    ------------------------------------------------------------ */
     generate() {
         const lvl = APP_STATE.currentLevel;
 
@@ -1784,9 +1686,6 @@ const SentenceEngine = {
         return sentence;
     },
 
-    /* ------------------------------------------------------------
-       PLAY AUDIO
-    ------------------------------------------------------------ */
     play(sentence) {
         if (!APP_STATE.audioEnabled) return;
 
@@ -1796,9 +1695,6 @@ const SentenceEngine = {
         speechSynthesis.speak(utter);
     },
 
-    /* ------------------------------------------------------------
-       REVIEW QUEUE INJECTION
-    ------------------------------------------------------------ */
     addToReview(sentence) {
         const words = sentence.split(" ");
 
@@ -1812,9 +1708,6 @@ const SentenceEngine = {
         });
     },
 
-    /* ------------------------------------------------------------
-       NEW SENTENCE
-    ------------------------------------------------------------ */
     newSentence() {
         const s = this.generate();
         this.play(s);
@@ -1823,37 +1716,23 @@ const SentenceEngine = {
 };
 
 
-
 /* ============================================================
    CONVERSATION ENGINE — CEFR Dialogue Generator
    ============================================================ */
 
 const ConversationEngine = {
-
-    /* ------------------------------------------------------------
-       LEVEL SELECTION
-    ------------------------------------------------------------ */
     setLevel(level) {
         APP_STATE.currentLevel = level;
     },
 
-    /* ------------------------------------------------------------
-       RESET CONVERSATION
-    ------------------------------------------------------------ */
     reset() {
         APP_STATE.conversationHistory = [];
     },
 
-    /* ------------------------------------------------------------
-       ADD TURN TO HISTORY
-    ------------------------------------------------------------ */
     addTurn(role, text) {
         APP_STATE.conversationHistory.push({ role, text });
     },
 
-    /* ------------------------------------------------------------
-       PLAY AUDIO
-    ------------------------------------------------------------ */
     play(text) {
         if (!APP_STATE.audioEnabled) return;
 
@@ -1863,9 +1742,6 @@ const ConversationEngine = {
         speechSynthesis.speak(utter);
     },
 
-    /* ------------------------------------------------------------
-       CEFR DIALOGUE TEMPLATES
-    ------------------------------------------------------------ */
     templates: {
         A1: [
             (u) => `Hola, ¿cómo estás?`,
@@ -1893,12 +1769,8 @@ const ConversationEngine = {
         ]
     },
 
-    /* ------------------------------------------------------------
-       GENERATE AI RESPONSE
-    ------------------------------------------------------------ */
     generateResponse(userInput) {
         const lvl = APP_STATE.currentLevel;
-
         const template = rand(this.templates[lvl]);
         const response = template(userInput);
 
@@ -1908,9 +1780,6 @@ const ConversationEngine = {
         return response;
     },
 
-    /* ------------------------------------------------------------
-       USER TURN
-    ------------------------------------------------------------ */
     userTurn(text) {
         this.addTurn("user", text);
 
@@ -1927,31 +1796,20 @@ const ConversationEngine = {
         return this.generateResponse(text);
     },
 
-    /* ------------------------------------------------------------
-       GET FULL CONVERSATION
-    ------------------------------------------------------------ */
     getHistory() {
         return APP_STATE.conversationHistory;
     }
 };
-
 
 /* ============================================================
    FREE PRACTICE ENGINE — Open Spanish Input + Scoring
    ============================================================ */
 
 const FreePracticeEngine = {
-
-    /* ------------------------------------------------------------
-       LEVEL SELECTION
-    ------------------------------------------------------------ */
     setLevel(level) {
         APP_STATE.currentLevel = level;
     },
 
-    /* ------------------------------------------------------------
-       TOKENIZE USER INPUT
-    ------------------------------------------------------------ */
     tokenize(text) {
         return text
             .trim()
@@ -1960,9 +1818,6 @@ const FreePracticeEngine = {
             .map(w => w.trim());
     },
 
-    /* ------------------------------------------------------------
-       PLAY AUDIO
-    ------------------------------------------------------------ */
     play(text) {
         if (!APP_STATE.audioEnabled) return;
 
@@ -1972,9 +1827,6 @@ const FreePracticeEngine = {
         speechSynthesis.speak(utter);
     },
 
-    /* ------------------------------------------------------------
-       SCORE INPUT (WORD-BY-WORD)
-    ------------------------------------------------------------ */
     scoreInput(words) {
         let score = 0;
         let unknown = [];
@@ -1993,9 +1845,6 @@ const FreePracticeEngine = {
         return { score, known, unknown };
     },
 
-    /* ------------------------------------------------------------
-       CEFR HINTS
-    ------------------------------------------------------------ */
     getHint(level) {
         const hints = {
             A1: "Try simple verbs like vivir, trabajar, estudiar.",
@@ -2006,9 +1855,6 @@ const FreePracticeEngine = {
         return hints[level];
     },
 
-    /* ------------------------------------------------------------
-       REVIEW QUEUE INJECTION
-    ------------------------------------------------------------ */
     addToReview(words) {
         words.forEach(w => {
             APP_STATE.reviewQueue.push({
@@ -2020,9 +1866,6 @@ const FreePracticeEngine = {
         });
     },
 
-    /* ------------------------------------------------------------
-       PROCESS USER INPUT
-    ------------------------------------------------------------ */
     process(text) {
         const lvl = APP_STATE.currentLevel;
         const words = this.tokenize(text);
@@ -2048,10 +1891,6 @@ const FreePracticeEngine = {
    ============================================================ */
 
 const ReviewEngine = {
-
-    /* ------------------------------------------------------------
-       ADD ITEM TO REVIEW QUEUE
-    ------------------------------------------------------------ */
     add(item) {
         APP_STATE.reviewQueue.push({
             spanish: item.spanish,
@@ -2061,32 +1900,20 @@ const ReviewEngine = {
         });
     },
 
-    /* ------------------------------------------------------------
-       BULK ADD
-    ------------------------------------------------------------ */
     addMany(items) {
         items.forEach(i => this.add(i));
     },
 
-    /* ------------------------------------------------------------
-       GET NEXT REVIEW ITEM
-    ------------------------------------------------------------ */
     next() {
         if (!APP_STATE.reviewQueue.length) return null;
         return APP_STATE.reviewQueue[0];
     },
 
-    /* ------------------------------------------------------------
-       MARK ITEM AS MASTERED (REMOVE FROM QUEUE)
-    ------------------------------------------------------------ */
     markMastered() {
         if (!APP_STATE.reviewQueue.length) return;
         APP_STATE.reviewQueue.shift();
     },
 
-    /* ------------------------------------------------------------
-       PLAY AUDIO FOR REVIEW ITEM
-    ------------------------------------------------------------ */
     play(item) {
         if (!APP_STATE.audioEnabled || !item) return;
 
@@ -2096,9 +1923,6 @@ const ReviewEngine = {
         speechSynthesis.speak(utter);
     },
 
-    /* ------------------------------------------------------------
-       RUN SINGLE REVIEW STEP
-    ------------------------------------------------------------ */
     step() {
         const item = this.next();
         if (!item) return null;
@@ -2107,39 +1931,25 @@ const ReviewEngine = {
         return item;
     },
 
-    /* ------------------------------------------------------------
-       RESET REVIEW QUEUE
-    ------------------------------------------------------------ */
     reset() {
         APP_STATE.reviewQueue = [];
     }
 };
-
 
 /* ============================================================
    SEARCH ENGINE — Spanish/English Lookup + Fuzzy Matching
    ============================================================ */
 
 const SearchEngine = {
-
-    /* ------------------------------------------------------------
-       CLEAN QUERY
-    ------------------------------------------------------------ */
     normalize(q) {
         return q.trim().toLowerCase();
     },
 
-    /* ------------------------------------------------------------
-       DIRECT SPANISH → ENGLISH LOOKUP
-    ------------------------------------------------------------ */
     lookupSpanish(word) {
         const w = this.normalize(word);
         return WORD_DICT[w] || null;
     },
 
-    /* ------------------------------------------------------------
-       DIRECT ENGLISH → SPANISH LOOKUP
-    ------------------------------------------------------------ */
     lookupEnglish(word) {
         const q = this.normalize(word);
 
@@ -2150,9 +1960,6 @@ const SearchEngine = {
         return null;
     },
 
-    /* ------------------------------------------------------------
-       FUZZY MATCH (Spanish)
-    ------------------------------------------------------------ */
     fuzzySpanish(query) {
         const q = this.normalize(query);
         const keys = Object.keys(WORD_DICT);
@@ -2160,9 +1967,6 @@ const SearchEngine = {
         return keys.filter(k => k.includes(q));
     },
 
-    /* ------------------------------------------------------------
-       FUZZY MATCH (English)
-    ------------------------------------------------------------ */
     fuzzyEnglish(query) {
         const q = this.normalize(query);
         const entries = Object.entries(WORD_DICT);
@@ -2172,17 +1976,11 @@ const SearchEngine = {
             .map(([spanish]) => spanish);
     },
 
-    /* ------------------------------------------------------------
-       CATEGORY FILTER (CEFR_LEVELS)
-    ------------------------------------------------------------ */
     filterByCategory(level, category) {
         const list = CEFR_LEVELS[level] || [];
         return list.filter(item => item.category === category);
     },
 
-    /* ------------------------------------------------------------
-       PLAY AUDIO
-    ------------------------------------------------------------ */
     play(word) {
         if (!APP_STATE.audioEnabled || !word) return;
 
@@ -2192,9 +1990,6 @@ const SearchEngine = {
         speechSynthesis.speak(utter);
     },
 
-    /* ------------------------------------------------------------
-       ADD TO REVIEW QUEUE
-    ------------------------------------------------------------ */
     addToReview(spanish) {
         APP_STATE.reviewQueue.push({
             spanish,
@@ -2204,13 +1999,9 @@ const SearchEngine = {
         });
     },
 
-    /* ------------------------------------------------------------
-       FULL SEARCH PIPELINE
-    ------------------------------------------------------------ */
     search(query) {
         const q = this.normalize(query);
 
-        // Direct Spanish → English
         const directES = this.lookupSpanish(q);
         if (directES) {
             this.play(q);
@@ -2223,7 +2014,6 @@ const SearchEngine = {
             };
         }
 
-        // Direct English → Spanish
         const directEN = this.lookupEnglish(q);
         if (directEN) {
             this.play(directEN);
@@ -2236,7 +2026,6 @@ const SearchEngine = {
             };
         }
 
-        // Fuzzy search
         const fuzzyES = this.fuzzySpanish(q);
         const fuzzyEN = this.fuzzyEnglish(q);
 
@@ -2259,10 +2048,6 @@ const SearchEngine = {
    ============================================================ */
 
 const AudioSystem = {
-
-    /* ------------------------------------------------------------
-       ENABLE / DISABLE AUDIO
-    ------------------------------------------------------------ */
     enable() {
         APP_STATE.audioEnabled = true;
     },
@@ -2277,9 +2062,6 @@ const AudioSystem = {
         if (!APP_STATE.audioEnabled) speechSynthesis.cancel();
     },
 
-    /* ------------------------------------------------------------
-       VOICE SELECTION
-    ------------------------------------------------------------ */
     spanishVoice: null,
 
     loadVoice() {
@@ -2294,7 +2076,6 @@ const AudioSystem = {
 };
 
 speechSynthesis.onvoiceschanged = () => AudioSystem.loadVoice();
-
 AudioSystem.loadVoice();
 
 const speak = (text, rate = 1.0, pitch = 1.0) => {
@@ -2319,20 +2100,9 @@ const speak = (text, rate = 1.0, pitch = 1.0) => {
    ============================================================ */
 
 const AchievementsEngine = {
-
-    /* ------------------------------------------------------------
-       STORAGE KEY
-    ------------------------------------------------------------ */
     KEY: "cefr_achievements_v3",
-
-    /* ------------------------------------------------------------
-       LOCAL CACHE
-    ------------------------------------------------------------ */
     unlocked: [],
 
-    /* ------------------------------------------------------------
-       BADGE METADATA
-    ------------------------------------------------------------ */
     badges: {
         a1_master: {
             title: "A1 Master",
@@ -2361,9 +2131,6 @@ const AchievementsEngine = {
         }
     },
 
-    /* ------------------------------------------------------------
-       LOAD FROM LOCAL STORAGE
-    ------------------------------------------------------------ */
     load() {
         try {
             const raw = localStorage.getItem(this.KEY);
@@ -2373,18 +2140,12 @@ const AchievementsEngine = {
         }
     },
 
-    /* ------------------------------------------------------------
-       SAVE TO LOCAL STORAGE
-    ------------------------------------------------------------ */
     save() {
         localStorage.setItem(this.KEY, JSON.stringify(this.unlocked));
     },
 
-    /* ------------------------------------------------------------
-       CHECK + UNLOCK ACHIEVEMENTS
-    ------------------------------------------------------------ */
     evaluate() {
-        const stats = getLevelStats(); // your existing scoring system
+        const stats = getLevelStats();
 
         const ACHIEVEMENTS = [
             { id: "a1_master", condition: () => stats.A1.avg >= 90 },
@@ -2410,16 +2171,10 @@ const AchievementsEngine = {
         });
     },
 
-    /* ------------------------------------------------------------
-       GET ALL UNLOCKED BADGES
-    ------------------------------------------------------------ */
     getUnlocked() {
         return this.unlocked.map(id => this.badges[id]);
     },
 
-    /* ------------------------------------------------------------
-       GET FULL ACHIEVEMENT FEED
-    ------------------------------------------------------------ */
     getFeed() {
         return this.unlocked.map(id => ({
             id,
@@ -2427,9 +2182,6 @@ const AchievementsEngine = {
         }));
     },
 
-    /* ------------------------------------------------------------
-       RESET ALL ACHIEVEMENTS
-    ------------------------------------------------------------ */
     reset() {
         this.unlocked = [];
         this.save();
@@ -2439,53 +2191,36 @@ const AchievementsEngine = {
 AchievementsEngine.load();
 
 
-
 /* ============================================================
    DASHBOARD + ROUTER — Tab Switching + Engine Initialization
    ============================================================ */
 
 const Router = {
-
-    /* ------------------------------------------------------------
-       CURRENT TAB
-    ------------------------------------------------------------ */
     currentTab: "dashboard",
 
-    /* ------------------------------------------------------------
-       SWITCH TAB
-    ------------------------------------------------------------ */
     switch(tabName) {
         this.currentTab = tabName;
 
-        // Hide all tab pages
         document.querySelectorAll(".tab-page").forEach(el => {
             el.style.display = "none";
         });
 
-        // Show selected tab page
         const activePage = document.getElementById(`tab-${tabName}`);
         if (activePage) activePage.style.display = "block";
 
-        // Update active tab button
         document.querySelectorAll(".tab-btn").forEach(btn => {
             btn.classList.remove("active-tab");
         });
         const activeBtn = document.getElementById(`btn-${tabName}`);
         if (activeBtn) activeBtn.classList.add("active-tab");
 
-        // Cancel any ongoing audio
         speechSynthesis.cancel();
 
-        // Initialize engines when entering their tab
         this.initTab(tabName);
     },
 
-    /* ------------------------------------------------------------
-       INITIALIZE TAB
-    ------------------------------------------------------------ */
     initTab(tabName) {
         switch (tabName) {
-
             case "listen":
                 ListenEngine.setLevel(APP_STATE.currentLevel);
                 ListenEngine.setCategory(APP_STATE.currentCategory);
@@ -2530,7 +2265,6 @@ const Router = {
 
             case "dashboard":
             default:
-                // Dashboard: no engine init needed here
                 break;
         }
     }
@@ -2538,12 +2272,9 @@ const Router = {
 
 
 /* ============================================================
-   ENGINE GROUP — All Engines Together
+   LISTEN ENGINE — CEFR Listening Topics
    ============================================================ */
 
-/* ------------------------------------------------------------
-   LISTEN ENGINE
------------------------------------------------------------- */
 const ListenEngine = {
     list: [],
     index: 0,
@@ -2639,6 +2370,20 @@ const ListenEngine = {
     stopAutoPlay() {
         this.auto = false;
         clearTimeout(this.timer);
+    },
+
+    // Helpers to keep ListenUI compatible
+    getCurrentList() {
+        return this.list.map(item => item.spanish);
+    },
+
+    playWord(word) {
+        if (!APP_STATE.audioEnabled || !word) return;
+
+        const utter = new SpeechSynthesisUtterance(word);
+        utter.lang = "es-ES";
+        speechSynthesis.cancel();
+        speechSynthesis.speak(utter);
     }
 };
 
@@ -2911,13 +2656,11 @@ const AchievementsEngine = {
     }
 };
 
-
 /* ============================================================
    FINAL ASSEMBLY — Wiring Controls + Global Init
    ============================================================ */
 
 const App = {
-
     initLevelSelector() {
         const levelSelect = document.getElementById("levelSelect");
         if (!levelSelect) return;
@@ -2979,7 +2722,6 @@ const App = {
         this.initSearchControls();
         this.initAudioToggle();
 
-        // ⭐ Tab switching
         document.querySelectorAll(".tab-btn").forEach(btn => {
             btn.addEventListener("click", () => {
                 const tab = btn.id.replace("btn-", "");
@@ -2987,11 +2729,10 @@ const App = {
             });
         });
 
-        // ⭐ Restore Listen categories
         if (document.getElementById("tab-listen")) {
             ListenEngine.setLevel(APP_STATE.currentLevel);
             ListenEngine.setCategory(APP_STATE.currentCategory);
-            ListenEngine.render();   // <— YOU MUST HAVE THIS
+            ListenEngine.render();
         }
     }
 };
@@ -3002,15 +2743,9 @@ const App = {
    ============================================================ */
 
 const Global = {
-
-    /* ------------------------------------------------------------
-       FULL RESET (Safe)
-    ------------------------------------------------------------ */
     resetAll() {
-        // Cancel audio
         speechSynthesis.cancel();
 
-        // Reset core state
         APP_STATE.listenIndex = 0;
         APP_STATE.flashIndex = 0;
         APP_STATE.quizIndex = 0;
@@ -3019,12 +2754,11 @@ const Global = {
         APP_STATE.userSentence = [];
         APP_STATE.buildTokens = [];
         APP_STATE.conversationHistory = [];
+        APP_STATE.reviewQueue = [];
 
-        // Reset engines
         ReviewEngine.reset();
         ConversationEngine.reset();
 
-        // Reset UI
         const out = document.getElementById("buildOutput");
         if (out) out.textContent = "";
 
@@ -3032,17 +2766,11 @@ const Global = {
         if (res) res.textContent = "";
     },
 
-    /* ------------------------------------------------------------
-       SAFE SHUTDOWN
-    ------------------------------------------------------------ */
     shutdown() {
         speechSynthesis.cancel();
         console.log("App shutdown complete.");
     },
 
-    /* ------------------------------------------------------------
-       EXPORT HOOKS (Future Modules)
-    ------------------------------------------------------------ */
     exports() {
         return {
             APP_STATE,
@@ -3063,6 +2791,7 @@ const Global = {
     }
 };
 
+
 /* ------------------------------------------------------------
    GLOBAL STARTUP
 ------------------------------------------------------------ */
@@ -3077,50 +2806,31 @@ document.addEventListener("DOMContentLoaded", () => {
    ============================================================ */
 
 const UI = {
-
-    /* ------------------------------------------------------------
-       APPLY GLASS PANEL STYLE
-    ------------------------------------------------------------ */
     glass(el) {
         if (!el) return;
         el.classList.add("glass-panel");
     },
 
-    /* ------------------------------------------------------------
-       APPLY PILL BUTTON STYLE
-    ------------------------------------------------------------ */
     pill(el) {
         if (!el) return;
         el.classList.add("pill-btn");
     },
 
-    /* ------------------------------------------------------------
-       SET TEXT
-    ------------------------------------------------------------ */
     setText(id, text) {
         const el = document.getElementById(id);
         if (el) el.textContent = text;
     },
 
-    /* ------------------------------------------------------------
-       SET HTML
-    ------------------------------------------------------------ */
     setHTML(id, html) {
         const el = document.getElementById(id);
         if (el) el.innerHTML = html;
     },
 
-    /* ------------------------------------------------------------
-       CLEAR ELEMENT
-    ------------------------------------------------------------ */
     clear(id) {
         const el = document.getElementById(id);
         if (el) el.innerHTML = "";
     },
 
-    /* ------------------------------------------------------------
-       CREATE BUTTON
-    ------------------------------------------------------------ */
     button(label, onClick) {
         const btn = document.createElement("button");
         btn.textContent = label;
@@ -3129,9 +2839,6 @@ const UI = {
         return btn;
     },
 
-    /* ------------------------------------------------------------
-       CREATE GLASS CARD
-    ------------------------------------------------------------ */
     card(content) {
         const div = document.createElement("div");
         div.className = "glass-card";
@@ -3141,14 +2848,11 @@ const UI = {
 };
 
 
-
-
 /* ============================================================
    LISTEN TAB UI — Word List + Controls
    ============================================================ */
 
 const ListenUI = {
-
     renderList() {
         const container = document.getElementById("listenList");
         if (!container) return;
@@ -3175,7 +2879,6 @@ const ListenUI = {
    ============================================================ */
 
 const FlashcardsUI = {
-
     render() {
         const container = document.getElementById("flashcardsGrid");
         if (!container) return;
@@ -3213,7 +2916,6 @@ const FlashcardsUI = {
    ============================================================ */
 
 const QuizUI = {
-
     render() {
         const q = QuizEngine.buildQuestion();
         if (!q) return;
@@ -3228,8 +2930,8 @@ const QuizUI = {
                 const correct = QuizEngine.checkAnswer(opt, q);
                 UI.setText("quizFeedback", correct ? "Correct!" : "Incorrect");
                 setTimeout(() => {
-                    const next = QuizEngine.next();
-                    this.render(next);
+                    QuizEngine.next();
+                    this.render();
                 }, 600);
             });
             container.appendChild(btn);
@@ -3247,9 +2949,10 @@ const QuizUI = {
    ============================================================ */
 
 const BuildUI = {
-
     renderGrid() {
         const grid = document.getElementById("buildGrid");
+        if (!grid) return;
+
         grid.innerHTML = "";
 
         APP_STATE.buildTokens.forEach(word => {
@@ -3261,6 +2964,8 @@ const BuildUI = {
 
     renderOutput() {
         const out = document.getElementById("buildOutput");
+        if (!out) return;
+
         out.textContent = APP_STATE.userSentence.join(" ");
     },
 
@@ -3277,9 +2982,10 @@ const BuildUI = {
    ============================================================ */
 
 const ConversationUI = {
-
     render() {
         const container = document.getElementById("conversationFeed");
+        if (!container) return;
+
         container.innerHTML = "";
 
         ConversationEngine.getHistory().forEach(turn => {
@@ -3309,10 +3015,10 @@ const ConversationUI = {
    ============================================================ */
 
 const ReviewUI = {
-
     render() {
         const item = ReviewEngine.next();
         const container = document.getElementById("reviewCard");
+        if (!container) return;
 
         if (!item) {
             container.innerHTML = "<div class='glass-card'>No items to review.</div>";
@@ -3336,7 +3042,6 @@ const ReviewUI = {
         this.render();
     }
 };
-
 
 
 
