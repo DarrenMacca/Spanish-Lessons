@@ -2598,19 +2598,31 @@ function renderSentenceTab() {
 }
 
 function setupSentenceEvents(q) {
+    // FIX: only select answer pills, not the Next button
     const buttons = document.querySelectorAll("#sentence-options .pill");
     const feedback = document.getElementById("sentence-feedback");
     const nextBtn = document.getElementById("sentence-next");
 
+    // Helper: translate Spanish → English
+    function getEnglishForSpanish(spanishWord) {
+        const levelWords = CEFR_LEVELS[appState.currentLevel];
+        const match = levelWords.find(w => w.spanish === spanishWord);
+        return match ? match.english : "[no match]";
+    }
+
     buttons.forEach(btn => {
         btn.addEventListener("click", () => {
             const chosen = btn.dataset.opt;
+            const chosenEnglish = getEnglishForSpanish(chosen);
 
             if (chosen === q.correct) {
                 feedback.innerHTML = `
                     <span style="color:#4ade80;font-weight:600;">
                         Correct! 🎉
-                    </span>
+                    </span><br>
+                    <div class="sentence-selected">
+                        <strong>You selected:</strong> ${chosen} (${chosenEnglish})
+                    </div>
                 `;
 
                 appState.levelStats[appState.currentLevel].sentenceCompleted++;
@@ -2622,13 +2634,18 @@ function setupSentenceEvents(q) {
             } else {
                 feedback.innerHTML = `
                     <span style="color:#f87171;font-weight:600;">
-                        Incorrect.</span><br>
-                    Correct answer: <strong>${q.correct}</strong>
+                        Incorrect.
+                    </span><br>
+                    Correct answer: <strong>${q.correct}</strong><br>
+                    <div class="sentence-selected">
+                        <strong>You selected:</strong> ${chosen} (${chosenEnglish})
+                    </div>
                 `;
 
                 speakQuiz(q.correct);
             }
 
+            // Disable only answer buttons
             buttons.forEach(b => b.disabled = true);
         });
     });
@@ -2637,6 +2654,7 @@ function setupSentenceEvents(q) {
         renderSentenceTab();
     });
 }
+
 
 /* ============================================================
    CEFR SENTENCE CHOICES — FULL PACK (A1 → B2)
