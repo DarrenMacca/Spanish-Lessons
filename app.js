@@ -3337,6 +3337,8 @@ const Global = {
 /* ============================================================
    STARTUP
    ============================================================ */
+console.log("INIT level:", APP_STATE.currentLevel);
+console.log("INIT category:", APP_STATE.currentCategory);
 
 document.addEventListener("DOMContentLoaded", () => {
     App.init();
