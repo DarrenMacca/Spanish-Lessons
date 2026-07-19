@@ -3280,7 +3280,7 @@ const Global = {
         console.log("App shutdown complete.");
     },
 
-   exports() {
+    exports() {
         return {
             APP_STATE,
             ListenEngine,
@@ -3298,6 +3298,7 @@ const Global = {
         };
     }
 };
+
 /* ============================================================
    STARTUP
    ============================================================ */
@@ -3306,6 +3307,3 @@ document.addEventListener("DOMContentLoaded", () => {
     App.init();
     console.log("CEFR Learning Platform Initialized.");
 });
-
-
-
