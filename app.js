@@ -205,16 +205,16 @@ A1: [
     { spanish: "frío", english: "cold", category: "Daily Life" },
     { spanish: "feliz", english: "happy", category: "Daily Life" },
     { spanish: "nuevo", english: "new", category: "Daily Life" },
-    { english: "hello", spanish: "hola", category: "daily-life" },
-    { english: "goodbye", spanish: "adiós", category: "daily-life" },
-    { english: "thank you", spanish: "gracias", category: "daily-life" },
-    { english: "sorry / I feel", spanish: "siento", category: "daily-life" },
-    { english: "you are", spanish: "estás", category: "daily-life" },
-    { english: "ready", spanish: "listos", category: "daily-life" },
-    { english: "awake", spanish: "despierto", category: "daily-life" },
-    { english: "time", spanish: "tiempo", category: "daily-life" },
-    { english: "problems", spanish: "problemas", category: "daily-life" },
-    { english: "change", spanish: "cambio", category: "daily-life" },
+    { english: "hello", spanish: "hola", category: "Daily Life" },
+    { english: "goodbye", spanish: "adiós", category: "Daily Life" },
+    { english: "thank you", spanish: "gracias", category: "Daily Life" },
+    { english: "sorry / I feel", spanish: "siento", category: "Daily Life" },
+    { english: "you are", spanish: "estás", category: "Daily Life" },
+    { english: "ready", spanish: "listos", category: "Daily Life" },
+    { english: "awake", spanish: "despierto", category: "Daily Life" },
+    { english: "time", spanish: "tiempo", category: "Daily Life" },
+    { english: "problems", spanish: "problemas", category: "Daily Life" },
+    { english: "change", spanish: "cambio", category: "Daily Life" },
 
     // Family
     { spanish: "familia", english: "family", category: "Family" },
@@ -1727,7 +1727,7 @@ function autoAssignCategory(word) {
 
     // Daily life
     if (["mañana","tarde","noche","casa","trabajo","escuela","día","semana","mes"].includes(w))
-        return "daily-life";
+        return "Daily Life";
 
     // Family
     if (["madre","padre","hermano","hermana","abuelo","abuela","tío","tía","primo","prima","familia"].includes(w))
@@ -1757,7 +1757,7 @@ function autoAssignCategory(word) {
     if (["el","la","los","las","un","una","unos","unas","yo","tú","él","ella","nosotros","vosotros","ellos"].includes(w))
         return "grammar";
 
-    return "daily-life";
+    return "Daily Life";
 }
 
 /* ============================================================
