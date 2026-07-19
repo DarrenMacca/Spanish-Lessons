@@ -2346,12 +2346,13 @@ const Router = {
     },
 
     initTab(tabName) {
-        switch (tabName) {
-            case "listen":
-                ListenEngine.setLevel(APP_STATE.currentLevel);
-                ListenEngine.setCategory(APP_STATE.currentCategory);
-                ListenUI.renderList();
-                break;
+    switch (tabName) {
+        case "listen":
+            ListenEngine.setLevel(APP_STATE.currentLevel);
+            ListenEngine.setCategory(APP_STATE.currentCategory);
+            ListenUI.renderList();
+            break;
+
 
             case "flashcards":
                 FlashcardsEngine.setLevel(APP_STATE.currentLevel);
