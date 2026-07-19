@@ -522,20 +522,18 @@ B2: [
     { spanish: "futuro", english: "future", category: "Travel" },
     { spanish: "largo plazo", english: "long term", category: "Travel" },
 
-    // Connectors — B2 logical connectors
-    { spanish: "además", english: "in addition", category: "Connectors" },
-    { spanish: "por lo tanto", english: "therefore", category: "Connectors" },
-    { spanish: "a pesar de", english: "despite", category: "Connectors" },
-    { spanish: "aunque", english: "although", category: "Connectors" },
-    { spanish: "incluso", english: "even", category: "Connectors" },
-    { spanish: "otra vez", english: "again", category: "Connectors" },
-    { spanish: "cuidadosamente", english: "carefully", category: "Connectors" }
+   // Connectors — B2 logical connectors
+{ spanish: "además", english: "in addition", category: "Connectors" },
+{ spanish: "por lo tanto", english: "therefore", category: "Connectors" },
+{ spanish: "a pesar de", english: "despite", category: "Connectors" },
+{ spanish: "aunque", english: "although", category: "Connectors" },
+{ spanish: "incluso", english: "even", category: "Connectors" },
+{ spanish: "otra vez", english: "again", category: "Connectors" },
+{ spanish: "cuidadosamente", english: "carefully", category: "Connectors" },
 
-  
-]   // ✔ closes B2 array
-
+// Numbers — B2 has no new number vocabulary
+];
 };   // ✔ closes CEFR_LEVELS object
-
 
 /* ============================================================
    LISTEN VOCAB — A1 → B2 (Category → Word List)
