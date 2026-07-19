@@ -3239,10 +3239,23 @@ const App = {
             });
         });
 
+        // set a sane default category if none
+        if (!APP_STATE.currentCategory) {
+            const catSelect = document.getElementById("categorySelect");
+            if (catSelect && catSelect.options.length > 0) {
+                APP_STATE.currentCategory = catSelect.options[0].value;
+            }
+        }
+
         if (document.getElementById("tab-listen")) {
             ListenEngine.setLevel(APP_STATE.currentLevel);
             ListenEngine.setCategory(APP_STATE.currentCategory);
             ListenEngine.render();
+        }
+
+        if (document.getElementById("tab-flashcards")) {
+            FlashcardsEngine.setLevel(APP_STATE.currentLevel);
+            FlashcardsEngine.render();
         }
     }
 };
