@@ -1304,8 +1304,10 @@ const WORD_DICT = {
 "entonces": "then"
 }
 
+
+
 /* ============================================================
-   PART 2 — CORE STATE + HELPERS
+   CORE STATE
    ============================================================ */
 
 const APP_STATE = {
@@ -1320,7 +1322,8 @@ const APP_STATE = {
     userSentence: [],
     conversationHistory: [],
     reviewQueue: [],
-    audioEnabled: true
+    audioEnabled: true,
+    speechRate: 1
 };
 
 /* ============================================================
@@ -1355,9 +1358,8 @@ function getWordMeaning(word) {
     return WORD_DICT[word] || null;
 }
 
-
 /* ============================================================
-   FLASHCARDS ENGINE — Flip, Category Grouping, Review Support
+   FLASHCARDS ENGINE
    ============================================================ */
 
 const FlashcardsEngine = {
@@ -1414,9 +1416,8 @@ const FlashcardsEngine = {
     }
 };
 
-
 /* ============================================================
-   QUIZ ENGINE — Multiple Choice, Scoring, Review Queue
+   QUIZ ENGINE — Vocab-based
    ============================================================ */
 
 const QuizEngine = {
@@ -1500,9 +1501,8 @@ const QuizEngine = {
     }
 };
 
-
 /* ============================================================
-   BUILD ENGINE — CEFR Sentence Builder (Spanish)
+   BUILD ENGINE — Sentence Builder (token-based)
    ============================================================ */
 
 const BuildEngine = {
@@ -1630,9 +1630,8 @@ const BuildEngine = {
     }
 };
 
-
 /* ============================================================
-   SENTENCE ENGINE — CEFR Grammar-Based Generation
+   SENTENCE ENGINE — Grammar-based generation
    ============================================================ */
 
 const SentenceEngine = {
@@ -1650,8 +1649,8 @@ const SentenceEngine = {
     verbs: {
         A1: ["trabaja", "vive", "estudia", "come", "quiere", "necesita"],
         A2: ["espera", "olvida", "conduce", "planea", "llega"],
-        B1: ["mejorar", "organizar", "resolver", "continuar", "encontrar"],
-        B2: ["analizar", "evaluar", "optimizar", "fortalecer", "coordinar"]
+        B1: ["mejora", "organiza", "resuelve", "continúa", "encuentra"],
+        B2: ["analiza", "evalúa", "optimiza", "fortalece", "coordina"]
     },
 
     objects: {
@@ -1715,9 +1714,8 @@ const SentenceEngine = {
     }
 };
 
-
 /* ============================================================
-   CONVERSATION ENGINE — CEFR Dialogue Generator
+   CONVERSATION ENGINE
    ============================================================ */
 
 const ConversationEngine = {
@@ -1802,7 +1800,7 @@ const ConversationEngine = {
 };
 
 /* ============================================================
-   FREE PRACTICE ENGINE — Open Spanish Input + Scoring
+   FREE PRACTICE ENGINE
    ============================================================ */
 
 const FreePracticeEngine = {
@@ -1885,9 +1883,8 @@ const FreePracticeEngine = {
     }
 };
 
-
 /* ============================================================
-   REVIEW ENGINE — Spaced Repetition for Missed Words
+   REVIEW ENGINE
    ============================================================ */
 
 const ReviewEngine = {
@@ -1937,7 +1934,7 @@ const ReviewEngine = {
 };
 
 /* ============================================================
-   SEARCH ENGINE — Spanish/English Lookup + Fuzzy Matching
+   SEARCH ENGINE
    ============================================================ */
 
 const SearchEngine = {
@@ -2042,9 +2039,8 @@ const SearchEngine = {
     }
 };
 
-
 /* ============================================================
-   AUDIO SYSTEM — Global Speech Wrapper + Voice Selection
+   AUDIO SYSTEM
    ============================================================ */
 
 const AudioSystem = {
@@ -2094,185 +2090,8 @@ const speak = (text, rate = 1.0, pitch = 1.0) => {
     speechSynthesis.speak(utter);
 };
 
-
 /* ============================================================
-   ACHIEVEMENTS ENGINE — CEFR Progress Badges
-   ============================================================ */
-
-const AchievementsEngine = {
-    KEY: "cefr_achievements_v3",
-    unlocked: [],
-
-    badges: {
-        a1_master: {
-            title: "A1 Master",
-            desc: "Score 90%+ across all A1 categories.",
-            icon: "🥇"
-        },
-        a2_master: {
-            title: "A2 Master",
-            desc: "Score 90%+ across all A2 categories.",
-            icon: "🥈"
-        },
-        b1_master: {
-            title: "B1 Master",
-            desc: "Score 90%+ across all B1 categories.",
-            icon: "🏅"
-        },
-        b2_master: {
-            title: "B2 Master",
-            desc: "Score 90%+ across all B2 categories.",
-            icon: "🏆"
-        },
-        full_progress: {
-            title: "200‑Word Explorer",
-            desc: "Reach 90% average across A1 → B2.",
-            icon: "🚀"
-        }
-    },
-
-    load() {
-        try {
-            const raw = localStorage.getItem(this.KEY);
-            if (raw) this.unlocked = JSON.parse(raw);
-        } catch {
-            this.unlocked = [];
-        }
-    },
-
-    save() {
-        localStorage.setItem(this.KEY, JSON.stringify(this.unlocked));
-    },
-
-    evaluate() {
-        const stats = getLevelStats();
-
-        const ACHIEVEMENTS = [
-            { id: "a1_master", condition: () => stats.A1.avg >= 90 },
-            { id: "a2_master", condition: () => stats.A2.avg >= 90 },
-            { id: "b1_master", condition: () => stats.B1.avg >= 90 },
-            { id: "b2_master", condition: () => stats.B2.avg >= 90 },
-            {
-                id: "full_progress",
-                condition: () => {
-                    const totalAvg = Math.round(
-                        (stats.A1.avg + stats.A2.avg + stats.B1.avg + stats.B2.avg) / 4
-                    );
-                    return totalAvg >= 90;
-                }
-            }
-        ];
-
-        ACHIEVEMENTS.forEach(a => {
-            if (!this.unlocked.includes(a.id) && a.condition()) {
-                this.unlocked.push(a.id);
-                this.save();
-            }
-        });
-    },
-
-    getUnlocked() {
-        return this.unlocked.map(id => this.badges[id]);
-    },
-
-    getFeed() {
-        return this.unlocked.map(id => ({
-            id,
-            ...this.badges[id]
-        }));
-    },
-
-    reset() {
-        this.unlocked = [];
-        this.save();
-    }
-};
-
-AchievementsEngine.load();
-
-
-/* ============================================================
-   DASHBOARD + ROUTER — Tab Switching + Engine Initialization
-   ============================================================ */
-
-const Router = {
-    currentTab: "dashboard",
-
-    switch(tabName) {
-        this.currentTab = tabName;
-
-        document.querySelectorAll(".tab-page").forEach(el => {
-            el.style.display = "none";
-        });
-
-        const activePage = document.getElementById(`tab-${tabName}`);
-        if (activePage) activePage.style.display = "block";
-
-        document.querySelectorAll(".tab-btn").forEach(btn => {
-            btn.classList.remove("active-tab");
-        });
-        const activeBtn = document.getElementById(`btn-${tabName}`);
-        if (activeBtn) activeBtn.classList.add("active-tab");
-
-        speechSynthesis.cancel();
-
-        this.initTab(tabName);
-    },
-
-    initTab(tabName) {
-        switch (tabName) {
-            case "listen":
-                ListenEngine.setLevel(APP_STATE.currentLevel);
-                ListenEngine.setCategory(APP_STATE.currentCategory);
-                break;
-
-            case "flashcards":
-                FlashcardsEngine.setLevel(APP_STATE.currentLevel);
-                FlashcardsEngine.setCategory(APP_STATE.currentCategory);
-                break;
-
-            case "quiz":
-                QuizEngine.setLevel(APP_STATE.currentLevel);
-                QuizEngine.setCategory(APP_STATE.currentCategory);
-                break;
-
-            case "build":
-                BuildEngine.setLevel(APP_STATE.currentLevel);
-                BuildEngine.init();
-                break;
-
-            case "sentence":
-                SentenceEngine.setLevel(APP_STATE.currentLevel);
-                SentenceEngine.newSentence();
-                break;
-
-            case "conversation":
-                ConversationEngine.setLevel(APP_STATE.currentLevel);
-                ConversationEngine.reset();
-                break;
-
-            case "practice":
-                FreePracticeEngine.setLevel(APP_STATE.currentLevel);
-                break;
-
-            case "review":
-                ReviewEngine.step();
-                break;
-
-            case "achievements":
-                AchievementsEngine.evaluate();
-                break;
-
-            case "dashboard":
-            default:
-                break;
-        }
-    }
-};
-
-
-/* ============================================================
-   LISTEN ENGINE — CEFR Listening Topics
+   LISTEN ENGINE — Topic-based
    ============================================================ */
 
 const ListenEngine = {
@@ -2372,7 +2191,6 @@ const ListenEngine = {
         clearTimeout(this.timer);
     },
 
-    // Helpers to keep ListenUI compatible
     getCurrentList() {
         return this.list.map(item => item.spanish);
     },
@@ -2387,204 +2205,433 @@ const ListenEngine = {
     }
 };
 
+/* ============================================================
+   ACHIEVEMENTS ENGINE
+   ============================================================ */
 
-/* ------------------------------------------------------------
-   QUIZ ENGINE
------------------------------------------------------------- */
-const QuizEngine = {
-    list: [],
-    index: 0,
+function getLevelStats() {
+    // Placeholder: should be wired to real stats.
+    return {
+        A1: { avg: 0 },
+        A2: { avg: 0 },
+        B1: { avg: 0 },
+        B2: { avg: 0 }
+    };
+}
 
-    setLevel(level) {
-        APP_STATE.currentLevel = level;
-        this.load();
-    },
+const AchievementsEngine = {
+    KEY: "cefr_achievements_v3",
+    unlocked: [],
 
-    setCategory(category) {
-        APP_STATE.currentCategory = category;
-        this.load();
+    badges: {
+        a1_master: {
+            title: "A1 Master",
+            desc: "Score 90%+ across all A1 categories.",
+            icon: "🥇"
+        },
+        a2_master: {
+            title: "A2 Master",
+            desc: "Score 90%+ across all A2 categories.",
+            icon: "🥈"
+        },
+        b1_master: {
+            title: "B1 Master",
+            desc: "Score 90%+ across all B1 categories.",
+            icon: "🏅"
+        },
+        b2_master: {
+            title: "B2 Master",
+            desc: "Score 90%+ across all B2 categories.",
+            icon: "🏆"
+        },
+        full_progress: {
+            title: "200‑Word Explorer",
+            desc: "Reach 90% average across A1 → B2.",
+            icon: "🚀"
+        }
     },
 
     load() {
-        const level = APP_STATE.currentLevel;
-        const category = APP_STATE.currentCategory;
-
-        this.list = CEFR_QUIZ?.[category]?.[level] || [];
-        this.index = 0;
-        this.render();
-    },
-
-    render() {
-        const prompt = document.getElementById("quizPrompt");
-        const options = document.getElementById("quizOptions");
-        const feedback = document.getElementById("quizFeedback");
-
-        if (!this.list.length) {
-            prompt.innerHTML = "No quiz items found.";
-            options.innerHTML = "";
-            feedback.innerHTML = "";
-            return;
+        try {
+            const raw = localStorage.getItem(this.KEY);
+            if (raw) this.unlocked = JSON.parse(raw);
+        } catch {
+            this.unlocked = [];
         }
-
-        const q = this.list[this.index];
-        prompt.innerHTML = q.question;
-
-        options.innerHTML = q.options.map((opt, i) => `
-            <button class="pill-btn" onclick="QuizEngine.answer(${i})">${opt}</button>
-        `).join("");
-
-        feedback.innerHTML = "";
     },
 
-    answer(i) {
-        const q = this.list[this.index];
-        const feedback = document.getElementById("quizFeedback");
-
-        if (i === q.correct) {
-            feedback.innerHTML = `<span class="correct">Correct!</span>`;
-        } else {
-            feedback.innerHTML = `<span class="incorrect">Incorrect.</span>`;
-        }
-
-        this.index = (this.index + 1) % this.list.length;
-        setTimeout(() => this.render(), 800);
-    }
-};
-
-/* ------------------------------------------------------------
-   BUILD ENGINE
------------------------------------------------------------- */
-const BuildEngine = {
-    tokens: [],
-    correct: [],
-
-    setLevel(level) {
-        APP_STATE.currentLevel = level;
+    save() {
+        localStorage.setItem(this.KEY, JSON.stringify(this.unlocked));
     },
 
-    init() {
-        const level = APP_STATE.currentLevel;
-        const list = CEFR_BUILD[level] || [];
-
-        const item = list[Math.floor(Math.random() * list.length)];
-        this.correct = item.correct;
-        this.tokens = [...item.tokens].sort(() => Math.random() - 0.5);
-
-        this.render();
-    },
-
-    render() {
-        const grid = document.getElementById("buildGrid");
-        const output = document.getElementById("buildOutput");
-        const result = document.getElementById("buildResult");
-
-        grid.innerHTML = this.tokens.map((t, i) => `
-            <button class="pill-btn" onclick="BuildEngine.pick(${i})">${t}</button>
-        `).join("");
-
-        output.innerHTML = APP_STATE.userSentence.join(" ");
-        result.innerHTML = "";
-    },
-
-    pick(i) {
-        APP_STATE.userSentence.push(this.tokens[i]);
-        this.render();
-    },
-
-    check() {
-        const result = document.getElementById("buildResult");
-        const correctSentence = this.correct.join(" ");
-        const userSentence = APP_STATE.userSentence.join(" ");
-
-        result.innerHTML = (correctSentence === userSentence)
-            ? `<span class="correct">Correct!</span>`
-            : `<span class="incorrect">Try again.</span>`;
-    }
-};
-
-/* ------------------------------------------------------------
-   SENTENCE ENGINE
------------------------------------------------------------- */
-const SentenceEngine = {
-    setLevel(level) {
-        APP_STATE.currentLevel = level;
-    },
-
-    newSentence() {
-        const level = APP_STATE.currentLevel;
-        const list = CEFR_SENTENCES[level] || [];
-
-        const item = list[Math.floor(Math.random() * list.length)];
-        document.getElementById("sentence-content").innerHTML = item;
-    }
-};
-
-/* ------------------------------------------------------------
-   CONVERSATION ENGINE
------------------------------------------------------------- */
-const ConversationEngine = {
-    history: [],
-
-    setLevel(level) {
-        APP_STATE.currentLevel = level;
-    },
-
-    reset() {
-        this.history = [];
-        document.getElementById("conversationFeed").innerHTML = "";
-    },
-
-    send(text) {
-        this.history.push(text);
-        document.getElementById("conversationFeed").innerHTML += `
-            <div class="user-msg">${text}</div>
-        `;
-    }
-};
-
-/* ------------------------------------------------------------
-   FREE PRACTICE ENGINE
------------------------------------------------------------- */
-const FreePracticeEngine = {
-    setLevel(level) {
-        APP_STATE.currentLevel = level;
-    },
-
-    score(text) {
-        document.getElementById("practiceScore").innerHTML =
-            `Score: ${Math.floor(Math.random() * 100)}`;
-    }
-};
-
-/* ------------------------------------------------------------
-   REVIEW ENGINE
------------------------------------------------------------- */
-const ReviewEngine = {
-    index: 0,
-
-    reset() {
-        this.index = 0;
-    },
-
-    step() {
-        document.getElementById("reviewCard").innerHTML =
-            `Review item #${this.index + 1}`;
-        this.index++;
-    }
-};
-
-/* ------------------------------------------------------------
-   ACHIEVEMENTS ENGINE
------------------------------------------------------------- */
-const AchievementsEngine = {
     evaluate() {
-        document.getElementById("achievementsList").innerHTML =
-            `<li>XP: ${Math.floor(Math.random() * 500)}</li>`;
+        const stats = getLevelStats();
+
+        const ACHIEVEMENTS = [
+            { id: "a1_master", condition: () => stats.A1.avg >= 90 },
+            { id: "a2_master", condition: () => stats.A2.avg >= 90 },
+            { id: "b1_master", condition: () => stats.B1.avg >= 90 },
+            { id: "b2_master", condition: () => stats.B2.avg >= 90 },
+            {
+                id: "full_progress",
+                condition: () => {
+                    const totalAvg = Math.round(
+                        (stats.A1.avg + stats.A2.avg + stats.B1.avg + stats.B2.avg) / 4
+                    );
+                    return totalAvg >= 90;
+                }
+            }
+        ];
+
+        ACHIEVEMENTS.forEach(a => {
+            if (!this.unlocked.includes(a.id) && a.condition()) {
+                this.unlocked.push(a.id);
+                this.save();
+            }
+        });
+    },
+
+    getUnlocked() {
+        return this.unlocked.map(id => this.badges[id]);
+    },
+
+    getFeed() {
+        return this.unlocked.map(id => ({
+            id,
+            ...this.badges[id]
+        }));
+    },
+
+    reset() {
+        this.unlocked = [];
+        this.save();
+    }
+};
+
+AchievementsEngine.load();
+
+/* ============================================================
+   ROUTER
+   ============================================================ */
+
+const Router = {
+    currentTab: "dashboard",
+
+    switch(tabName) {
+        this.currentTab = tabName;
+
+        document.querySelectorAll(".tab-page").forEach(el => {
+            el.style.display = "none";
+        });
+
+        const activePage = document.getElementById(`tab-${tabName}`);
+        if (activePage) activePage.style.display = "block";
+
+        document.querySelectorAll(".tab-btn").forEach(btn => {
+            btn.classList.remove("active-tab");
+        });
+        const activeBtn = document.getElementById(`btn-${tabName}`);
+        if (activeBtn) activeBtn.classList.add("active-tab");
+
+        speechSynthesis.cancel();
+
+        this.initTab(tabName);
+    },
+
+    initTab(tabName) {
+        switch (tabName) {
+            case "listen":
+                ListenEngine.setLevel(APP_STATE.currentLevel);
+                ListenEngine.setCategory(APP_STATE.currentCategory);
+                ListenUI.renderList();
+                break;
+
+            case "flashcards":
+                FlashcardsEngine.setLevel(APP_STATE.currentLevel);
+                FlashcardsEngine.setCategory(APP_STATE.currentCategory);
+                FlashcardsUI.render();
+                break;
+
+            case "quiz":
+                QuizEngine.setLevel(APP_STATE.currentLevel);
+                QuizEngine.setCategory(APP_STATE.currentCategory);
+                QuizUI.render();
+                break;
+
+            case "build":
+                BuildEngine.setLevel(APP_STATE.currentLevel);
+                BuildEngine.init();
+                break;
+
+            case "sentence":
+                SentenceEngine.setLevel(APP_STATE.currentLevel);
+                SentenceEngine.newSentence();
+                break;
+
+            case "conversation":
+                ConversationEngine.setLevel(APP_STATE.currentLevel);
+                ConversationEngine.reset();
+                ConversationUI.render();
+                break;
+
+            case "practice":
+                FreePracticeEngine.setLevel(APP_STATE.currentLevel);
+                break;
+
+            case "review":
+                ReviewEngine.step();
+                ReviewUI.render();
+                break;
+
+            case "achievements":
+                AchievementsEngine.evaluate();
+                break;
+
+            case "dashboard":
+            default:
+                break;
+        }
     }
 };
 
 /* ============================================================
-   FINAL ASSEMBLY — Wiring Controls + Global Init
+   UI HELPERS
+   ============================================================ */
+
+const UI = {
+    glass(el) {
+        if (!el) return;
+        el.classList.add("glass-panel");
+    },
+
+    pill(el) {
+        if (!el) return;
+        el.classList.add("pill-btn");
+    },
+
+    setText(id, text) {
+        const el = document.getElementById(id);
+        if (el) el.textContent = text;
+    },
+
+    setHTML(id, html) {
+        const el = document.getElementById(id);
+        if (el) el.innerHTML = html;
+    },
+
+    clear(id) {
+        const el = document.getElementById(id);
+        if (el) el.innerHTML = "";
+    },
+
+    button(label, onClick) {
+        const btn = document.createElement("button");
+        btn.textContent = label;
+        btn.className = "pill-btn";
+        btn.addEventListener("click", onClick);
+        return btn;
+    },
+
+    card(content) {
+        const div = document.createElement("div");
+        div.className = "glass-card";
+        div.innerHTML = content;
+        return div;
+    }
+};
+
+/* ============================================================
+   LISTEN UI
+   ============================================================ */
+
+const ListenUI = {
+    renderList() {
+        const container = document.getElementById("listenList");
+        if (!container) return;
+
+        container.innerHTML = "";
+
+        const list = ListenEngine.getCurrentList();
+
+        list.forEach(word => {
+            const card = UI.card(`<div class="listen-word">${word}</div>`);
+            card.addEventListener("click", () => ListenEngine.playWord(word));
+            container.appendChild(card);
+        });
+    },
+
+    init() {
+        this.renderList();
+    }
+};
+
+/* ============================================================
+   FLASHCARDS UI
+   ============================================================ */
+
+const FlashcardsUI = {
+    render() {
+        const container = document.getElementById("flashcardsGrid");
+        if (!container) return;
+
+        container.innerHTML = "";
+
+        const cards = FlashcardsEngine.getFlashcards();
+
+        cards.forEach(card => {
+            const div = document.createElement("div");
+            div.className = "flashcard glass-card";
+
+            const front = `<div class="flash-front">${card.spanish}</div>`;
+            const back = `<div class="flash-back">${card.english}</div>`;
+
+            div.innerHTML = front + back;
+
+            div.addEventListener("click", () => {
+                FlashcardsEngine.flipCard(card);
+                div.classList.toggle("flipped");
+            });
+
+            container.appendChild(div);
+        });
+    },
+
+    init() {
+        this.render();
+    }
+};
+
+/* ============================================================
+   QUIZ UI
+   ============================================================ */
+
+const QuizUI = {
+    render() {
+        const q = QuizEngine.buildQuestion();
+        if (!q) return;
+
+        UI.setText("quizPrompt", q.spanish);
+
+        const container = document.getElementById("quizOptions");
+        container.innerHTML = "";
+
+        q.options.forEach(opt => {
+            const btn = UI.button(opt, () => {
+                const correct = QuizEngine.checkAnswer(opt, q);
+                UI.setText("quizFeedback", correct ? "Correct!" : "Incorrect");
+                setTimeout(() => {
+                    QuizEngine.next();
+                    this.render();
+                }, 600);
+            });
+            container.appendChild(btn);
+        });
+    },
+
+    init() {
+        this.render();
+    }
+};
+
+/* ============================================================
+   BUILD UI
+   ============================================================ */
+
+const BuildUI = {
+    renderGrid() {
+        const grid = document.getElementById("buildGrid");
+        if (!grid) return;
+
+        grid.innerHTML = "";
+
+        APP_STATE.buildTokens.forEach(word => {
+            const btn = UI.button(word, () => BuildEngine.addWord(word));
+            btn.classList.add("word-pill");
+            grid.appendChild(btn);
+        });
+    },
+
+    renderOutput() {
+        const out = document.getElementById("buildOutput");
+        if (!out) return;
+
+        out.textContent = APP_STATE.userSentence.join(" ");
+    },
+
+    init() {
+        BuildEngine.newChallenge();
+        this.renderGrid();
+        this.renderOutput();
+    }
+};
+
+/* ============================================================
+   CONVERSATION UI
+   ============================================================ */
+
+const ConversationUI = {
+    render() {
+        const container = document.getElementById("conversationFeed");
+        if (!container) return;
+
+        container.innerHTML = "";
+
+        ConversationEngine.getHistory().forEach(turn => {
+            const bubble = document.createElement("div");
+            bubble.className = turn.role === "user" ? "bubble-user" : "bubble-ai";
+            bubble.textContent = turn.text;
+            container.appendChild(bubble);
+        });
+
+        container.scrollTop = container.scrollHeight;
+    },
+
+    send(text) {
+        const reply = ConversationEngine.userTurn(text);
+        this.render();
+        return reply;
+    },
+
+    init() {
+        this.render();
+    }
+};
+
+/* ============================================================
+   REVIEW UI
+   ============================================================ */
+
+const ReviewUI = {
+    render() {
+        const item = ReviewEngine.next();
+        const container = document.getElementById("reviewCard");
+        if (!container) return;
+
+        if (!item) {
+            container.innerHTML = "<div class='glass-card'>No items to review.</div>";
+            return;
+        }
+
+        container.innerHTML = `
+            <div class="glass-card review-item">
+                <div class="review-spanish">${item.spanish}</div>
+                <div class="review-english">${item.english}</div>
+            </div>
+        `;
+    },
+
+    markMastered() {
+        ReviewEngine.markMastered();
+        this.render();
+    },
+
+    init() {
+        this.render();
+    }
+};
+
+/* ============================================================
+   APP INIT
    ============================================================ */
 
 const App = {
@@ -2664,9 +2711,8 @@ const App = {
     }
 };
 
-
 /* ============================================================
-   FINAL BOOTSTRAP — Global Reset + Export Hooks
+   GLOBAL
    ============================================================ */
 
 const Global = {
@@ -2718,257 +2764,14 @@ const Global = {
     }
 };
 
+/* ============================================================
+   STARTUP
+   ============================================================ */
 
-/* ------------------------------------------------------------
-   GLOBAL STARTUP
------------------------------------------------------------- */
 document.addEventListener("DOMContentLoaded", () => {
     App.init();
     console.log("CEFR Learning Platform Initialized.");
 });
-
-
-/* ============================================================
-   UI HELPERS — Rendering + Glass Panels + Buttons
-   ============================================================ */
-
-const UI = {
-    glass(el) {
-        if (!el) return;
-        el.classList.add("glass-panel");
-    },
-
-    pill(el) {
-        if (!el) return;
-        el.classList.add("pill-btn");
-    },
-
-    setText(id, text) {
-        const el = document.getElementById(id);
-        if (el) el.textContent = text;
-    },
-
-    setHTML(id, html) {
-        const el = document.getElementById(id);
-        if (el) el.innerHTML = html;
-    },
-
-    clear(id) {
-        const el = document.getElementById(id);
-        if (el) el.innerHTML = "";
-    },
-
-    button(label, onClick) {
-        const btn = document.createElement("button");
-        btn.textContent = label;
-        btn.className = "pill-btn";
-        btn.addEventListener("click", onClick);
-        return btn;
-    },
-
-    card(content) {
-        const div = document.createElement("div");
-        div.className = "glass-card";
-        div.innerHTML = content;
-        return div;
-    }
-};
-
-
-/* ============================================================
-   LISTEN TAB UI — Word List + Controls
-   ============================================================ */
-
-const ListenUI = {
-    renderList() {
-        const container = document.getElementById("listenList");
-        if (!container) return;
-
-        container.innerHTML = "";
-
-        const list = ListenEngine.getCurrentList();
-
-        list.forEach(word => {
-            const card = UI.card(`<div class="listen-word">${word}</div>`);
-            card.addEventListener("click", () => ListenEngine.playWord(word));
-            container.appendChild(card);
-        });
-    },
-
-    init() {
-        this.renderList();
-    }
-};
-
-
-/* ============================================================
-   FLASHCARDS UI — Flip Cards + Review Button
-   ============================================================ */
-
-const FlashcardsUI = {
-    render() {
-        const container = document.getElementById("flashcardsGrid");
-        if (!container) return;
-
-        container.innerHTML = "";
-
-        const cards = FlashcardsEngine.getFlashcards();
-
-        cards.forEach(card => {
-            const div = document.createElement("div");
-            div.className = "flashcard glass-card";
-
-            const front = `<div class="flash-front">${card.spanish}</div>`;
-            const back = `<div class="flash-back">${card.english}</div>`;
-
-            div.innerHTML = front + back;
-
-            div.addEventListener("click", () => {
-                FlashcardsEngine.flipCard(card);
-                div.classList.toggle("flipped");
-            });
-
-            container.appendChild(div);
-        });
-    },
-
-    init() {
-        this.render();
-    }
-};
-
-
-/* ============================================================
-   QUIZ UI — Options + Feedback
-   ============================================================ */
-
-const QuizUI = {
-    render() {
-        const q = QuizEngine.buildQuestion();
-        if (!q) return;
-
-        UI.setText("quizPrompt", q.spanish);
-
-        const container = document.getElementById("quizOptions");
-        container.innerHTML = "";
-
-        q.options.forEach(opt => {
-            const btn = UI.button(opt, () => {
-                const correct = QuizEngine.checkAnswer(opt, q);
-                UI.setText("quizFeedback", correct ? "Correct!" : "Incorrect");
-                setTimeout(() => {
-                    QuizEngine.next();
-                    this.render();
-                }, 600);
-            });
-            container.appendChild(btn);
-        });
-    },
-
-    init() {
-        this.render();
-    }
-};
-
-
-/* ============================================================
-   BUILD UI — Word Pills + Output
-   ============================================================ */
-
-const BuildUI = {
-    renderGrid() {
-        const grid = document.getElementById("buildGrid");
-        if (!grid) return;
-
-        grid.innerHTML = "";
-
-        APP_STATE.buildTokens.forEach(word => {
-            const btn = UI.button(word, () => BuildEngine.addWord(word));
-            btn.classList.add("word-pill");
-            grid.appendChild(btn);
-        });
-    },
-
-    renderOutput() {
-        const out = document.getElementById("buildOutput");
-        if (!out) return;
-
-        out.textContent = APP_STATE.userSentence.join(" ");
-    },
-
-    init() {
-        BuildEngine.newChallenge();
-        this.renderGrid();
-        this.renderOutput();
-    }
-};
-
-
-/* ============================================================
-   CONVERSATION UI — Chat Bubbles
-   ============================================================ */
-
-const ConversationUI = {
-    render() {
-        const container = document.getElementById("conversationFeed");
-        if (!container) return;
-
-        container.innerHTML = "";
-
-        ConversationEngine.getHistory().forEach(turn => {
-            const bubble = document.createElement("div");
-            bubble.className = turn.role === "user" ? "bubble-user" : "bubble-ai";
-            bubble.textContent = turn.text;
-            container.appendChild(bubble);
-        });
-
-        container.scrollTop = container.scrollHeight;
-    },
-
-    send(text) {
-        const reply = ConversationEngine.userTurn(text);
-        this.render();
-        return reply;
-    },
-
-    init() {
-        this.render();
-    }
-};
-
-
-/* ============================================================
-   REVIEW UI — Missed Words
-   ============================================================ */
-
-const ReviewUI = {
-    render() {
-        const item = ReviewEngine.next();
-        const container = document.getElementById("reviewCard");
-        if (!container) return;
-
-        if (!item) {
-            container.innerHTML = "<div class='glass-card'>No items to review.</div>";
-            return;
-        }
-
-        container.innerHTML = `
-            <div class="glass-card review-item">
-                <div class="review-spanish">${item.spanish}</div>
-                <div class="review-english">${item.english}</div>
-            </div>
-        `;
-    },
-
-    markMastered() {
-        ReviewEngine.markMastered();
-        this.render();
-    },
-
-    init() {
-        this.render();
-    }
-};
 
 
 
