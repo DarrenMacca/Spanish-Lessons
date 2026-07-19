@@ -2638,7 +2638,7 @@ function setupSentenceEvents(q) {
                     <span style="color:#f87171;font-weight:600;">
                         Incorrect.
                     </span><br>
-                    Correct answer: <strong>${q.correct}</strong><br>
+                    Correct answer: <strong>${q.correct.es}</strong><br>
                     <div class="sentence-selected">
                         <strong>You selected:</strong> ${chosen} (${chosenEnglish})
                     </div>
