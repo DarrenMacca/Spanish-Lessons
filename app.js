@@ -2112,12 +2112,30 @@ function playNextListenWord() {
    FLASHCARDS — CATEGORY GROUPED + FLIP + AUDIO (STABLE VERSION)
    ============================================================ */
 
-
 function renderFlashcardsTab() {
     const container = document.getElementById("flash-content");
     const words = CEFR_LEVELS[appState.currentLevel];
     const grouped = groupByCategory(words);
 
+    /* ------------------------------------------------------------
+       NORMALIZE CATEGORY KEYS (MERGES DUPLICATES)
+       ------------------------------------------------------------ */
+    const normalized = {};
+
+    Object.keys(grouped).forEach(cat => {
+        const cleanKey = cat.trim().toLowerCase();   // canonical key
+
+        if (!normalized[cleanKey]) normalized[cleanKey] = {
+            display: cat.trim(),   // preserve original display name
+            items: []
+        };
+
+        normalized[cleanKey].items = normalized[cleanKey].items.concat(grouped[cat]);
+    });
+
+    /* ------------------------------------------------------------
+       HEADER
+       ------------------------------------------------------------ */
     let html = `
         <div class="glass-panel">
             <h2>Flashcards — Level ${appState.currentLevel}</h2>
@@ -2125,17 +2143,23 @@ function renderFlashcardsTab() {
         </div>
     `;
 
-    Object.keys(grouped).forEach(cat => {
+    /* ------------------------------------------------------------
+       RENDER MERGED CATEGORIES
+       ------------------------------------------------------------ */
+    Object.keys(normalized).forEach(cleanKey => {
+        const catDisplay = normalized[cleanKey].display.toUpperCase();
+        const items = normalized[cleanKey].items;
+
         html += `
         <div class="glass-panel">
-        <div class="flash-category-header" data-cat="${cat}">
-           <span class="listen-category-title">${cat.toUpperCase()}</span>
-           <span class="listen-arrow">▶</span>
-        </div>
+            <div class="flash-category-header" data-cat="${cleanKey}">
+                <span class="listen-category-title">${catDisplay}</span>
+                <span class="listen-arrow">▶</span>
+            </div>
 
-            <div class="flash-category-content" data-cat="${cat}">
+            <div class="flash-category-content" data-cat="${cleanKey}">
                 <div class="fc-grid">
-                    ${grouped[cat].map(item => `
+                    ${items.map(item => `
                         <div class="fc-card">
                             <div class="fc-inner">
                                 <div class="fc-front pill">${item.english}</div>
@@ -2150,6 +2174,9 @@ function renderFlashcardsTab() {
 
     container.innerHTML = html;
 
+    /* ------------------------------------------------------------
+       CATEGORY COLLAPSE
+       ------------------------------------------------------------ */
     container.querySelectorAll(".flash-category-header").forEach(header => {
         header.addEventListener("click", () => {
             const cat = header.dataset.cat;
@@ -2160,6 +2187,9 @@ function renderFlashcardsTab() {
         });
     });
 
+    /* ------------------------------------------------------------
+       FLASHCARD FLIP + AUDIO
+       ------------------------------------------------------------ */
     container.querySelectorAll(".fc-card").forEach(card => {
         card.addEventListener("click", () => {
             const inner = card.querySelector(".fc-inner");
@@ -2178,6 +2208,7 @@ function renderFlashcardsTab() {
         });
     });
 }
+
 
 
 /* ============================================================
