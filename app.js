@@ -3344,6 +3344,7 @@ if (!APP_STATE.currentCategory) {
     }
 }
 
+
 document.addEventListener("DOMContentLoaded", () => {
     App.init();
     console.log("CEFR Learning Platform Initialized.");
