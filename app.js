@@ -5,14 +5,17 @@
 const CEFR_SENTENCES = {
     A1: [
         { english: "I would like water, please.", spanish: "me gustaría agua por favor" },
-        { english: "Where is the bathroom?", spanish: "dónde está el baño" },
+        { english: "I would like beer, please.", spanish: "me gustaría cerveza por favor" },
+        { english: "i would like beer, steak and french fries please.", spanish: "Me gustaría una cerveza, bistec y papas fritas, por favor" },
+        { english: "Where is the bathroom?", spanish: "dónde está el bano" },
         { english: "I need help.", spanish: "necesito ayuda" },
+        { english: "Without sugar, please.", spanish: "Sin azucar, por favor" },
         { english: "I live in a small house.", spanish: "vivo en una casa pequeña" },
         { english: "She works in a school.", spanish: "ella trabaja en una escuela" },
         { english: "We want a table for two.", spanish: "queremos una mesa para dos" },
         { english: "The store opens at nine.", spanish: "la tienda abre a las nueve" },
-        { english: "I like cold water.", spanish: "me gusta el agua fría" },
-        { english: "He has a big car.", spanish: "él tiene un coche grande" },
+        { english: "I like cold water.", spanish: "me gusta el agua fria" },
+        { english: "He has a big car.", spanish: "el tiene un coche grande" },
         { english: "My friend is very nice.", spanish: "mi amigo es muy amable" },
         { english: "I am tired today.", spanish: "estoy cansado hoy" },
         { english: "The food is delicious.", spanish: "la comida es deliciosa" },
@@ -234,10 +237,14 @@ A1: [
     // Food & Drink
     { spanish: "agua", english: "water", category: "Food & Drink" },
     { spanish: "comida", english: "food", category: "Food & Drink" },
-    { spanish: "café", english: "coffee", category: "Food & Drink" },
+    { spanish: "cafe", english: "coffee", category: "Food & Drink" },
+    { spanish: "azucar", english: "sugar", category: "Food & Drink" },
     { spanish: "té", english: "tea", category: "Food & Drink" },
     { spanish: "leche", english: "milk", category: "Food & Drink" },
     { spanish: "pan", english: "bread", category: "Food & Drink" },
+    { spanish: "cerveza", english: "beer", category: "Food & Drink" },
+    { spanish: "bistec", english: "steak", category: "Food & Drink" },
+    { spanish: "papas fritas", english: "french fries", category: "Food & Drink" },
     { spanish: "cerveza", english: "beer", category: "Food & Drink" },
     { spanish: "huevo", english: "egg", category: "Food & Drink" },
     { spanish: "fruta", english: "fruit", category: "Food & Drink" },
@@ -254,15 +261,15 @@ A1: [
     { spanish: "sal", english: "salt", category: "Food & Drink" },
 
     // Travel
-    { spanish: "autobús", english: "bus", category: "Travel" },
+    { spanish: "autobus", english: "bus", category: "Travel" },
     { spanish: "tren", english: "train", category: "Travel" },
     { spanish: "boleto", english: "ticket", category: "Travel" },
-    { spanish: "estación", english: "station", category: "Travel" },
+    { spanish: "estacion", english: "station", category: "Travel" },
     { spanish: "aeropuerto", english: "airport", category: "Travel" },
     { spanish: "casa", english: "house", category: "Travel" },
     { spanish: "escuela", english: "school", category: "Travel" },
     { spanish: "hotel", english: "hotel", category: "Travel" },
-    { spanish: "baño", english: "bathroom", category: "Travel" },
+    { spanish: "bano", english: "bathroom", category: "Travel" },
     { spanish: "lugar", english: "place", category: "Travel" },
 
     // Connectors
@@ -554,8 +561,8 @@ const LISTEN_VOCAB = {
         ],
         "Food & Drink": [
             "agua","comida","café","té","leche","pan","cerveza",
-            "huevo","fruta","manzana","naranja","plátano","pollo",
-            "pescado","sopa","ensalada","arroz","frijoles","queso","sal"
+            "huevo","fruta","manzana","naranja","plátano","pollo","bistec","papas fritas",
+            "pescado","sopa","azucar","ensalada","arroz","frijoles","queso","sal"
         ],
         "Travel": [
             "autobús","tren","boleto","estación","aeropuerto",
