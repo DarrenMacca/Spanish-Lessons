@@ -2062,8 +2062,30 @@ const FlashcardsEngine = {
 
     shuffleCards(cards) {
         return shuffle(cards);
+    },
+
+    render() {
+        const container = document.getElementById("flashcardsList");
+        if (!container) return;
+
+        const cards = this.getFlashcards();
+
+        if (!cards.length) {
+            container.innerHTML = `<div class="empty-msg glass-panel">
+                No flashcards found for ${APP_STATE.currentLevel} / ${APP_STATE.currentCategory}.
+            </div>`;
+            return;
+        }
+
+        container.innerHTML = cards.map((card, i) => `
+            <div class="flashcard glass-panel" onclick="FlashcardsEngine.flipCard(FlashcardsEngine.getFlashcards()[${i}]); FlashcardsEngine.render();">
+                <div class="flashcard-front">${card.spanish}</div>
+                <div class="flashcard-back">${card.english}</div>
+            </div>
+        `).join("");
     }
 };
+
 
 /* ============================================================
    QUIZ ENGINE — Vocab-based
