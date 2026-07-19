@@ -5,17 +5,15 @@
 const CEFR_SENTENCES = {
     A1: [
         { english: "I would like water, please.", spanish: "me gustaría agua por favor" },
-        { english: "I would like beer, please.", spanish: "me gustaría cerveza por favor" },
-        { english: "i would like beer, steak and french fries please.", spanish: "Me gustaría una cerveza, bistec y papas fritas, por favor" },
-        { english: "Where is the bathroom?", spanish: "dónde está el bano" },
+       { english: "I would like beer, please.", spanish: "me gustaría cerveza por favor" },
+        { english: "Where is the bathroom?", spanish: "dónde está el baño" },
         { english: "I need help.", spanish: "necesito ayuda" },
-        { english: "Without sugar, please.", spanish: "Sin azucar, por favor" },
         { english: "I live in a small house.", spanish: "vivo en una casa pequeña" },
         { english: "She works in a school.", spanish: "ella trabaja en una escuela" },
         { english: "We want a table for two.", spanish: "queremos una mesa para dos" },
         { english: "The store opens at nine.", spanish: "la tienda abre a las nueve" },
-        { english: "I like cold water.", spanish: "me gusta el agua fria" },
-        { english: "He has a big car.", spanish: "el tiene un coche grande" },
+        { english: "I like cold water.", spanish: "me gusta el agua fría" },
+        { english: "He has a big car.", spanish: "él tiene un coche grande" },
         { english: "My friend is very nice.", spanish: "mi amigo es muy amable" },
         { english: "I am tired today.", spanish: "estoy cansado hoy" },
         { english: "The food is delicious.", spanish: "la comida es deliciosa" },
@@ -72,7 +70,7 @@ const CEFR_SENTENCES = {
         { english: "I am waiting for my friend.", spanish: "estoy esperando a mi amigo" },
         { english: "She likes to read at night.", spanish: "a ella le gusta leer por la noche" },
         { english: "We need to buy milk.", spanish: "necesitamos comprar leche" },
-        { english: "He is driving to work.", spanish: "él está conduduciendo al trabajo" },
+        { english: "He is driving to work.", spanish: "él está conduciendo al trabajo" },
         { english: "I wrote a message.", spanish: "escribí un mensaje" },
         { english: "They are watching TV.", spanish: "ellos están viendo televisión" },
         { english: "She visited her grandmother.", spanish: "ella visitó a su abuela" },
@@ -175,13 +173,11 @@ const CEFR_SENTENCES = {
     ]
 };
 
-   
 /* ============================================================
    CEFR LEVELS — A1 → B2 Vocabulary (Spanish → English)
    ============================================================ */
 
 const CEFR_LEVELS = {
-
 A1: [
     // Daily Life
     { spanish: "vivir", english: "to live", category: "Daily Life" },
@@ -209,18 +205,16 @@ A1: [
     { spanish: "frío", english: "cold", category: "Daily Life" },
     { spanish: "feliz", english: "happy", category: "Daily Life" },
     { spanish: "nuevo", english: "new", category: "Daily Life" },
-
-    // Daily Life (English→Spanish entries)
-    { english: "hello", spanish: "hola", category: "Daily Life" },
-    { english: "goodbye", spanish: "adiós", category: "Daily Life" },
-    { english: "thank you", spanish: "gracias", category: "Daily Life" },
-    { english: "sorry / I feel", spanish: "siento", category: "Daily Life" },
-    { english: "you are", spanish: "estás", category: "Daily Life" },
-    { english: "ready", spanish: "listos", category: "Daily Life" },
-    { english: "awake", spanish: "despierto", category: "Daily Life" },
-    { english: "time", spanish: "tiempo", category: "Daily Life" },
-    { english: "problems", spanish: "problemas", category: "Daily Life" },
-    { english: "change", spanish: "cambio", category: "Daily Life" },
+    { english: "hello", spanish: "hola", category: "daily-life" },
+    { english: "goodbye", spanish: "adiós", category: "daily-life" },
+    { english: "thank you", spanish: "gracias", category: "daily-life" },
+    { english: "sorry / I feel", spanish: "siento", category: "daily-life" },
+    { english: "you are", spanish: "estás", category: "daily-life" },
+    { english: "ready", spanish: "listos", category: "daily-life" },
+    { english: "awake", spanish: "despierto", category: "daily-life" },
+    { english: "time", spanish: "tiempo", category: "daily-life" },
+    { english: "problems", spanish: "problemas", category: "daily-life" },
+    { english: "change", spanish: "cambio", category: "daily-life" },
 
     // Family
     { spanish: "familia", english: "family", category: "Family" },
@@ -241,14 +235,13 @@ A1: [
     // Food & Drink
     { spanish: "agua", english: "water", category: "Food & Drink" },
     { spanish: "comida", english: "food", category: "Food & Drink" },
-    { spanish: "cafe", english: "coffee", category: "Food & Drink" },
-    { spanish: "azucar", english: "sugar", category: "Food & Drink" },
+    { spanish: "café", english: "coffee", category: "Food & Drink" },
     { spanish: "té", english: "tea", category: "Food & Drink" },
     { spanish: "leche", english: "milk", category: "Food & Drink" },
+    { spanish: "filete", english: "steak", category: "Food & Drink" },
+    { spanish: "papas fritas", english: "french fries", category: "Food & Drink" },
     { spanish: "pan", english: "bread", category: "Food & Drink" },
     { spanish: "cerveza", english: "beer", category: "Food & Drink" },
-    { spanish: "bistec", english: "steak", category: "Food & Drink" },
-    { spanish: "papas fritas", english: "french fries", category: "Food & Drink" },
     { spanish: "huevo", english: "egg", category: "Food & Drink" },
     { spanish: "fruta", english: "fruit", category: "Food & Drink" },
     { spanish: "manzana", english: "apple", category: "Food & Drink" },
@@ -263,16 +256,16 @@ A1: [
     { spanish: "queso", english: "cheese", category: "Food & Drink" },
     { spanish: "sal", english: "salt", category: "Food & Drink" },
 
-   // Travel
-    { spanish: "autobus", english: "bus", category: "Travel" },
+    // Travel
+    { spanish: "autobús", english: "bus", category: "Travel" },
     { spanish: "tren", english: "train", category: "Travel" },
     { spanish: "boleto", english: "ticket", category: "Travel" },
-    { spanish: "estacion", english: "station", category: "Travel" },
+    { spanish: "estación", english: "station", category: "Travel" },
     { spanish: "aeropuerto", english: "airport", category: "Travel" },
     { spanish: "casa", english: "house", category: "Travel" },
     { spanish: "escuela", english: "school", category: "Travel" },
     { spanish: "hotel", english: "hotel", category: "Travel" },
-    { spanish: "bano", english: "bathroom", category: "Travel" },
+    { spanish: "baño", english: "bathroom", category: "Travel" },
     { spanish: "lugar", english: "place", category: "Travel" },
 
     // Connectors
@@ -291,36 +284,35 @@ A1: [
     { spanish: "ella", english: "she", category: "Connectors" },
     { spanish: "el", english: "he", category: "Connectors" },
     { spanish: "rapido", english: "fast", category: "Connectors" },
+    { english: "what", spanish: "qué", category: "connectors" },
+    { english: "who", spanish: "quién", category: "connectors" },
+    { english: "when", spanish: "cuándo", category: "connectors" },
+    { english: "how", spanish: "cómo", category: "connectors" },
+    { english: "which", spanish: "cuál", category: "connectors" },
+    { english: "where", spanish: "dónde", category: "connectors" },
+    { english: "no / not", spanish: "no", category: "connectors" },
+    { english: "there is / there are", spanish: "hay", category: "connectors" },
+    { english: "other / another", spanish: "otra", category: "connectors" },
+    { english: "despite", spanish: "pesar", category: "connectors" },
+    { english: "favor (por favor)", spanish: "favor", category: "connectors" },
+    { english: "they", spanish: "ellos", category: "connectors" },
+    { english: "his / her / their", spanish: "su", category: "connectors" },
+   // VERBS
+    { english: "is", spanish: "es", category: "connectors" },
+    { english: "likes", spanish: "gusta", category: "connectors" },
+    { english: "they like", spanish: "gustan", category: "connectors" },
+    { english: "would like", spanish: "gustaría", category: "connectors" },
+    { english: "learning", spanish: "aprendiendo", category: "connectors" },
+    { english: "fixing", spanish: "arreglando", category: "connectors" },
 
-    { english: "what", spanish: "qué", category: "Connectors" },
-    { english: "who", spanish: "quién", category: "Connectors" },
-    { english: "when", spanish: "cuándo", category: "Connectors" },
-    { english: "how", spanish: "cómo", category: "Connectors" },
-    { english: "which", spanish: "cuál", category: "Connectors" },
-    { english: "where", spanish: "dónde", category: "Connectors" },
-    { english: "no / not", spanish: "no", category: "Connectors" },
-    { english: "there is / there are", spanish: "hay", category: "Connectors" },
-    { english: "other / another", spanish: "otra", category: "Connectors" },
-    { english: "despite", spanish: "a pesar de", category: "Connectors" },
-    { english: "please", spanish: "por favor", category: "Connectors" },
-    { english: "they", spanish: "ellos", category: "Connectors" },
-    { english: "his / her / their", spanish: "su", category: "Connectors" },
-
-    // Connectors — verbs
-    { english: "is", spanish: "es", category: "Connectors" },
-    { english: "likes", spanish: "gusta", category: "Connectors" },
-    { english: "they like", spanish: "gustan", category: "Connectors" },
-    { english: "would like", spanish: "gustaría", category: "Connectors" },
-    { english: "learning", spanish: "aprendiendo", category: "Connectors" },
-    { english: "fixing", spanish: "arreglando", category: "Connectors" },
-
-    // Connectors — adjectives
-    { english: "good", spanish: "bueno", category: "Connectors" },
-    { english: "difficult", spanish: "difícil", category: "Connectors" },
-    { english: "clear", spanish: "clara", category: "Connectors" },
-    { english: "easy", spanish: "fácil", category: "Connectors" },
-    { english: "bad", spanish: "malo", category: "Connectors" },
-    { english: "small", spanish: "pequeño", category: "Connectors" },
+    // ADJECTIVES
+    { english: "good", spanish: "bueno", category: "connectors" },
+    { english: "difficult", spanish: "difícil", category: "connectors" },
+    { english: "clear", spanish: "clara", category: "connectors" },
+    { english: "easy", spanish: "fácil", category: "connectors" },
+    { english: "bad", spanish: "malo", category: "connectors" },
+    { english: "small", spanish: "pequeño", category: "connectors" },
+   
 
     // Numbers
     { english: "one", spanish: "uno", category: "Numbers" },
@@ -333,12 +325,13 @@ A1: [
     { english: "eight", spanish: "ocho", category: "Numbers" },
     { english: "nine", spanish: "nueve", category: "Numbers" },
     { english: "ten", spanish: "diez", category: "Numbers" }
-],
-A2: [
 
+],
+
+A2: [
     // Daily Life
     { spanish: "desayuno", english: "breakfast", category: "Daily Life" },
-    { spanish: "almuerzo", english: "lunch", category: "Daily Life" },
+    { spanish: "almuerzo", english: "lunch", category: "DailyLife" },
     { spanish: "cena", english: "dinner", category: "Daily Life" },
     { spanish: "temprano", english: "early", category: "Daily Life" },
     { spanish: "tarde", english: "late", category: "Daily Life" },
@@ -355,7 +348,6 @@ A2: [
     { spanish: "viaje", english: "trip", category: "Daily Life" },
     { spanish: "probar", english: "to try", category: "Daily Life" },
     { spanish: "olvidar", english: "to forget", category: "Daily Life" },
-    { english: "argued", spanish: "argumentó", category: "Daily Life" },
     { spanish: "esperar", english: "to wait", category: "Daily Life" },
     { spanish: "conducir", english: "to drive", category: "Daily Life" },
     { spanish: "arreglar", english: "to fix", category: "Daily Life" },
@@ -373,7 +365,7 @@ A2: [
     { spanish: "cena", english: "dinner", category: "Food & Drink" },
 
     // Travel
-    { spanish: "avión", english: "airplane", category: "Travel" },
+    { spanish: "avión", english: "plane", category: "Travel" },
     { spanish: "visitar", english: "to visit", category: "Travel" },
     { spanish: "transporte", english: "transport", category: "Travel" },
 
@@ -383,9 +375,8 @@ A2: [
     { spanish: "ya", english: "already", category: "Connectors" },
     { spanish: "todavía", english: "still", category: "Connectors" },
     { spanish: "normalmente", english: "normally", category: "Connectors" },
-    
+    { english: "argued", spanish: "argumentó", category: "Connectors" },
 
-    // Numbers
     { english: "eleven", spanish: "once", category: "Numbers" },
     { english: "twelve", spanish: "doce", category: "Numbers" },
     { english: "thirteen", spanish: "trece", category: "Numbers" },
@@ -396,9 +387,10 @@ A2: [
     { english: "eighteen", spanish: "dieciocho", category: "Numbers" },
     { english: "nineteen", spanish: "diecinueve", category: "Numbers" },
     { english: "twenty", spanish: "veinte", category: "Numbers" }
-],
-B1: [
 
+],
+
+B1: [
     // Daily Life — auxiliary verbs
     { spanish: "he", english: "I have (auxiliary)", category: "Daily Life" },
     { spanish: "has", english: "you have (auxiliary)", category: "Daily Life" },
@@ -458,8 +450,8 @@ B1: [
     { spanish: "mes", english: "month", category: "Numbers" },
     { spanish: "años", english: "years", category: "Numbers" }
 ],
-B2: [
 
+B2: [
     // Daily Life — abstract nouns & professional vocabulary
     { spanish: "proceso", english: "process", category: "Daily Life" },
     { spanish: "tarea", english: "task", category: "Daily Life" },
@@ -510,8 +502,6 @@ B2: [
     { spanish: "discutido", english: "discussed", category: "Daily Life" },
     { spanish: "actualizado", english: "updated", category: "Daily Life" },
     { spanish: "optimizado", english: "optimized", category: "Daily Life" },
-    { spanish: "largo plazo", english: "long term", category: "Daily Life" },
-
 
     // Family — abstract B2 concepts
     { spanish: "sociedad", english: "society", category: "Family" },
@@ -523,140 +513,182 @@ B2: [
     // Travel — B2 abstract travel concepts
     { spanish: "remoto", english: "remote", category: "Travel" },
     { spanish: "futuro", english: "future", category: "Travel" },
+    { spanish: "largo plazo", english: "long term", category: "Travel" },
 
-   // Connectors — B2 logical Connectors
-{ spanish: "además", english: "in addition", category: "Connectors" },
-{ spanish: "por lo tanto", english: "therefore", category: "Connectors" },
-{ spanish: "a pesar de", english: "despite", category: "Connectors" },
-{ spanish: "aunque", english: "although", category: "Connectors" },
-{ spanish: "incluso", english: "even", category: "Connectors" },
-{ spanish: "otra vez", english: "again", category: "Connectors" },
-{ spanish: "cuidadosamente", english: "carefully", category: "Connectors" },
+    // Connectors — B2 logical connectors
+    { spanish: "además", english: "in addition", category: "Connectors" },
+    { spanish: "por lo tanto", english: "therefore", category: "Connectors" },
+    { spanish: "a pesar de", english: "despite", category: "Connectors" },
+    { spanish: "aunque", english: "although", category: "Connectors" },
+    { spanish: "incluso", english: "even", category: "Connectors" },
+    { spanish: "otra vez", english: "again", category: "Connectors" },
+    { spanish: "cuidadosamente", english: "carefully", category: "Connectors" },
 
-// Numbers — B2 has no new number vocabulary
-]
-};   // ✔ closes CEFR_LEVELS object
+    // Numbers — B2 has no new number vocabulary
+]      // ✔ closes B2 array
+};     // ✔ closes CEFR_LEVELS object
+
 
 /* ============================================================
    LISTEN VOCAB — A1 → B2 (Category → Word List)
    ============================================================ */
 const LISTEN_VOCAB = {
-  A1: {
-    "Daily Life": [
-      "vivir", "trabajar", "estudiar", "leer", "libros", "hora", "levantarse",
-      "música", "televisión", "limpiar", "cocinar", "abrir", "terminar",
-      "escribir", "aprender", "ir", "hacer", "ver", "escuchar", "salir",
-      "descansar", "caliente", "frío", "feliz", "nuevo"
-    ],
-    "Family": [
-      "familia", "madre", "padre", "hijo", "hija", "amigo", "amiga",
-      "hermana", "hermanos", "hermanas", "abuela", "hambre",
-      "tenemos", "tienen"
-    ],
-    "Food & Drink": [
-      "agua", "comida", "cafe", "azucar", "té", "leche", "pan", "cerveza",
-      "bistec", "papas fritas", "huevo", "fruta", "manzana", "naranja",
-      "plátano", "pollo", "pescado", "sopa", "ensalada", "arroz",
-      "frijoles", "queso", "sal"
-    ],
-    "Travel": [
-      "autobus", "tren", "boleto", "estacion", "aeropuerto", "casa",
-      "escuela", "hotel", "bano", "lugar"
-    ],
-    "Connectors": [
-      "y", "o", "con", "sin", "más", "poco", "solo", "muy", "cerca",
-      "para", "a", "en", "ella", "el", "rápido",
-      "qué", "quién", "cuándo", "cómo", "cuál", "dónde",
-      "no", "hay", "otra", "por favor", "ellos", "su",
-      "es", "gusta", "gustan", "gustaría",
-      "aprendiendo", "arreglando",
-      "bueno", "difícil", "clara", "fácil", "malo", "pequeño"
-    ],
-    "Numbers": [
-      "uno", "dos", "tres", "cuatro", "cinco",
-      "seis", "siete", "ocho", "nueve", "diez"
-    ]
-  },
+    A1: {
+        "Daily Life": [
+            "vivir","trabajar","estudiar","leer","libros","hora",
+            "levantarse","música","televisión","limpiar","cocinar",
+            "abrir","terminar","escribir","aprender","ir","hacer",
+            "ver","escuchar","salir","descansar","caliente","frío",
+            "feliz","nuevo", "hola",
+    "adiós",
+    "gracias",
+    "siento",
+    "estás",
+    "listos",
+    "despierto",
+    "tiempo",
+    "problemas",
+    "cambio"
+        ],
+        "Family": [
+            "familia","madre","padre","hijo","hija","amigo","amiga",
+            "hermana","hermanos","hermanas","abuela","hambre",
+            "tenemos","tienen"
+        ],
+        "Food & Drink": [
+            "agua","comida","café","té","leche","pan","cerveza","filete","papas fritas",
+            "huevo","fruta","manzana","naranja","plátano","pollo",
+            "pescado","sopa","ensalada","arroz","frijoles","queso","sal"
+        ],
+        "Travel": [
+            "autobús","tren","boleto","estación","aeropuerto",
+            "casa","escuela","hotel","baño","lugar"
+        ],
+        "Connectors": [
+            "y","o","con","sin","más","poco","solo","muy",
+            "cerca","para","a","en",  "qué",
+    "quién",
+    "cuándo",
+    "cómo",
+    "cuál",
+    "dónde",
+    "no",
+    "hay",
+    "otra",
+    "pesar",
+    "favor",  "es",
+    "gusta",
+    "gustan",
+    "gustaría",
+    "aprendiendo",
+    "arreglando",  "bueno",
+    "difícil",
+    "clara",
+    "fácil",
+    "malo",
+    "pequeño", "ellos",
+    "su"
+        ],
+        
+       "Numbers": [
+    "uno",   "dos", "tres", "cuatro", "cinco", "seis", "siete", "ocho",
+    "nueve", "diez"
+]
 
-  A2: {
-    "Daily Life": [
-      "desayuno", "almuerzo", "cena", "temprano", "tarde", "anoche", "ahora",
-      "minutos", "tarea", "mensaje", "información", "película", "ventana",
-      "cocina", "zapatos", "viaje", "probar", "olvidar", "esperar",
-      "conducir", "arreglar", "irse", "llegar"
-    ],
-    "Family": [
-      "padres", "abuela", "amiga"
-    ],
-    "Food & Drink": [
-      "desayuno", "almuerzo", "cena"
-    ],
-    "Travel": [
-      "avión", "visitar", "transporte"
-    ],
-    "Connectors": [
-      "a menudo", "antes", "ya", "todavía", "normalmente", "argumentó"
-    ],
-    "Numbers": [
-      "once", "doce", "trece", "catorce", "quince",
-      "dieciséis", "diecisiete", "dieciocho", "diecinueve", "veinte"
-    ]
-  },
+    },
 
-  B1: {
-    "Daily Life": [
-      "he", "has", "ha", "hemos", "habéis", "han",
-      "estado", "aprendido", "trabajando", "estudiando", "leyendo", "viviendo",
-      "diarias", "comunicación", "conversaciones", "mejorar", "habilidades",
-      "revisar", "continuar", "cambiar", "seguir", "preparar",
-      "conseguir", "entender"
-    ],
-    "Family": [
-      "experiencias", "pasadas"
-    ],
-    "Food & Drink": [
-      "restaurante", "menú", "cuenta"
-    ],
-    "Travel": [
-      "encontrar", "cancelar", "traer", "planear", "mudarse", "unirse"
-    ],
-    "Connectors": [
-      "mientras", "sin embargo", "sobre", "cuando", "después", "durante"
-    ],
-    "Numbers": [
-      "mes", "años"
-    ]
-  },
+    A2: {
+        "Daily Life": [
+            "desayuno","almuerzo","cena","temprano","tarde","anoche",
+            "ahora","minutos","tarea","mensaje","información",
+            "película","ventana","cocina","zapatos","viaje","probar",
+            "olvidar","esperar","conducir","arreglar","irse","llegar"
+        ],
+        "Family": [
+            "padres","abuela","amiga"
+        ],
+        "Food & Drink": [
+            "desayuno","almuerzo","cena"
+        ],
+        "Travel": [
+            "avión","visitar","transporte"
+        ],
+        "Connectors": [
+            "a menudo","antes","ya","todavía","normalmente", "argumentó"
+        ],
+        "Numbers": [
+    "once",
+    "doce",
+    "trece",
+    "catorce",
+    "quince",
+    "dieciséis",
+    "diecisiete",
+    "dieciocho",
+    "diecinueve",
+    "veinte"
+]
 
-  B2: {
-    "Daily Life": [
-      "proceso", "tarea", "resultados", "rendimiento", "estrategia", "sistema",
-      "enfoque", "concepto", "riesgo", "posibilidad", "situación",
-      "optimizar", "coordinar", "aumentar", "actualizar", "analizar",
-      "evaluar", "discutir", "aclarar", "fortalecer", "adaptarse", "lograr",
-      "complicado", "necesario", "posible", "efectivo", "realista",
-      "innovadora", "profesional", "positivo",
-      "analizado", "evaluado", "argumentado", "ampliado", "adaptado",
-      "reducido", "insistido", "explorado", "aclarado", "fortalecido",
-      "discutido", "actualizado", "optimizado",
-      "largo plazo"
-    ],
-    "Family": [
-      "sociedad", "cultura", "motivación", "desafíos", "expectativas"
-    ],
-    "Travel": [
-      "remoto", "futuro"
-    ],
-    "Connectors": [
-      "además", "por lo tanto", "a pesar de", "aunque",
-      "incluso", "otra vez", "cuidadosamente"
-    ],
-    "Numbers": [
-      // no new numbers at B2
-    ]
-  }
+    },
+
+    B1: {
+        "Daily Life": [
+            "he","has","ha","hemos","habéis","han",
+            "estado","aprendido","trabajando","estudiando",
+            "leyendo","viviendo","diarias",
+            "comunicación","conversaciones","mejorar",
+            "habilidades","revisar","continuar","cambiar",
+            "seguir","preparar","conseguir","entender"
+        ],
+        "Family": [
+            "experiencias","pasadas"
+        ],
+        "Food & Drink": [
+            "restaurante","menú","cuenta"
+        ],
+        "Travel": [
+            "encontrar","cancelar","traer","planear",
+            "mudarse","unirse"
+        ],
+        "Connectors": [
+            "mientras","sin embargo","sobre","cuando",
+            "después","durante"
+        ],
+        "Numbers": [
+            "mes","años"
+        ]
+    },
+
+    B2: {
+        "Daily Life": [
+            "proceso","tarea","resultados","rendimiento",
+            "estrategia","sistema","enfoque","concepto",
+            "riesgo","posibilidad","situación",
+            "optimizar","coordinar","aumentar","actualizar",
+            "analizar","evaluar","discutir","aclarar",
+            "fortalecer","adaptarse","lograr",
+            "complicado","necesario","posible","efectivo",
+            "realista","innovadora","profesional","positivo",
+            "analizado","evaluado","argumentado","ampliado",
+            "adaptado","reducido","insistido","explorado",
+            "aclarado","fortalecido","discutido","actualizado",
+            "optimizado"
+        ],
+        "Family": [
+            "sociedad","cultura","motivación",
+            "desafíos","expectativas"
+        ],
+        "Food & Drink": [],
+        "Travel": [
+            "remoto","futuro","largo plazo"
+        ],
+        "Connectors": [
+            "además","por lo tanto","a pesar de",
+            "aunque","incluso","otra vez","cuidadosamente"
+        ],
+        "Numbers": []
+    }
 };
-
 
 /* ============================================================
    WORD-BY-WORD DICTIONARY — CEFR A1 → B2 (Categorized)
@@ -664,2704 +696,2479 @@ const LISTEN_VOCAB = {
 
 const WORD_DICT = {
 
-"Daily Life": {
-    // A1 core verbs
-    "vivir": "to live",
-    "to live": "vivir",
-    "viviendo": "living",
-    "living": "viviendo",
-    "vivido": "lived",
-    "lived": "vivido",
-
-    "trabajar": "to work",
-    "to work": "trabajar",
-    "trabajando": "working",
-    "working": "trabajando",
-    "trabajado": "worked",
-    "worked": "trabajado",
-
-    "estudiar": "to study",
-    "to study": "estudiar",
-    "estudiando": "studying",
-    "studying": "estudiando",
-    "estudiado": "studied",
-    "studied": "estudiado",
-
-    "leer": "to read",
-    "to read": "leer",
-    "leyendo": "reading",
-    "reading": "leyendo",
-    "leído": "read",
-    "read": "leído",
-
-    "escribir": "to write",
-    "to write": "escribir",
-    "escribiendo": "writing",
-    "writing": "escribiendo",
-    "escrito": "written",
-    "written": "escrito",
-
-    // A1 daily life nouns/adjectives
-    "libros": "books",
-    "books": "libros",
-    "hora": "hour",
-    "hour": "hora",
-    "levantarse": "to get up",
-    "to get up": "levantarse",
-    "música": "music",
-    "music": "música",
-    "televisión": "television",
-    "television": "televisión",
-    "limpiar": "to clean",
-    "to clean": "limpiar",
-    "cocinar": "to cook",
-    "to cook": "cocinar",
-    "abrir": "to open",
-    "to open": "abrir",
-    "terminar": "to finish",
-    "to finish": "terminar",
-    "aprender": "to learn",
-    "to learn": "aprender",
-    "aprender": "to learn",
-    "salir": "to go out",
-    "to go out": "salir",
-    "descansar": "to rest",
-    "to rest": "descansar",
-    "caliente": "hot",
-    "hot": "caliente",
-    "frío": "cold",
-    "cold": "frío",
-    "feliz": "happy",
-    "happy": "feliz",
-    "nuevo": "new",
-    "new": "nuevo",
-
-    // A2 additions
-    "desayuno": "breakfast",
-    "breakfast": "desayuno",
-    "almuerzo": "lunch",
-    "lunch": "almuerzo",
-    "cena": "dinner",
-    "dinner": "cena",
-    "temprano": "early",
-    "early": "temprano",
-    "tarde": "late",
-    "late": "tarde",
-    "anoche": "last night",
-    "last night": "anoche",
-    "ahora": "now",
-    "now": "ahora",
-    "minutos": "minutes",
-    "minutes": "minutos",
-    "tarea": "homework",
-    "homework": "tarea",
-    "mensaje": "message",
-    "message": "mensaje",
-    "información": "information",
-    "information": "información",
-    "película": "movie",
-    "movie": "película",
-    "ventana": "window",
-    "window": "ventana",
-    "cocina": "kitchen",
-    "kitchen": "cocina",
-    "zapatos": "shoes",
-    "shoes": "zapatos",
-    "viaje": "trip",
-    "trip": "viaje",
-
-    "probar": "to try",
-    "to try": "probar",
-    "olvidar": "to forget",
-    "to forget": "olvidar",
-    "esperar": "to wait",
-    "to wait": "esperar",
-    "conducir": "to drive",
-    "to drive": "conducir",
-    "arreglar": "to fix",
-    "to fix": "arreglar",
-    "arreglando": "fixing",
-    "fixing": "arreglando",
-    "arreglado": "fixed",
-    "fixed": "arreglado",
-
-    "irse": "to leave",
-    "to leave": "irse",
-    "llegar": "to arrive",
-    "to arrive": "llegar",
-
-    // B1 auxiliary verbs
-    "he": "I have",
-    "I have": "he",
-    "has": "you have",
-    "you have": "has",
-    "ha": "he/she has",
-    "he/she has": "ha",
-    "hemos": "we have",
-    "we have": "hemos",
-    "habéis": "you (plural) have",
-    "you (plural) have": "habéis",
-    "han": "they have",
-    "they have": "han",
-
-    // B1 participles
-    "estado": "been",
-    "been": "estado",
-    "aprendido": "learned",
-    "learned": "aprendido",
-    "trabajando": "working",
-    "working": "trabajando",
-    "estudiando": "studying",
-    "studying": "estudiando",
-    "leyendo": "reading",
-    "reading": "leyendo",
-    "viviendo": "living",
-    "living": "viviendo",
-
-    // B1 abstract daily life
-    "diarias": "daily",
-    "daily": "diarias",
-    "comunicación": "communication",
-    "communication": "comunicación",
-    "conversaciones": "conversations",
-    "conversations": "conversaciones",
-    "mejorar": "to improve",
-    "to improve": "mejorar",
-    "habilidades": "skills",
-    "skills": "habilidades",
-    "revisar": "to review",
-    "to review": "revisar",
-    "continuar": "to continue",
-    "to continue": "continuar",
-    "cambiar": "to change",
-    "to change": "cambiar",
-    "seguir": "to follow",
-    "to follow": "seguir",
-    "preparar": "to prepare",
-    "to prepare": "preparar",
-    "conseguir": "to get",
-    "to get": "conseguir",
-    "entender": "to understand",
-    "to understand": "entender",
-
-    // B2 advanced daily life
-    "proceso": "process",
-    "process": "proceso",
-    "tarea": "task",
-    "task": "tarea",
-    "resultados": "results",
-    "results": "resultados",
-    "rendimiento": "performance",
-    "performance": "rendimiento",
-    "estrategia": "strategy",
-    "strategy": "estrategia",
-    "sistema": "system",
-    "system": "sistema",
-    "enfoque": "approach",
-    "approach": "enfoque",
-    "concepto": "concept",
-    "concept": "concepto",
-    "riesgo": "risk",
-    "risk": "riesgo",
-    "posibilidad": "possibility",
-    "possibility": "posibilidad",
-    "situación": "situation",
-    "situation": "situación",
-
-    // B2 advanced verbs
-    "optimizar": "to optimize",
-    "to optimize": "optimizar",
-    "coordinar": "to coordinate",
-    "to coordinate": "coordinar",
-    "aumentar": "to increase",
-    "to increase": "aumentar",
-    "actualizar": "to update",
-    "to update": "actualizar",
-    "analizar": "to analyze",
-    "to analyze": "analizar",
-    "evaluar": "to evaluate",
-    "to evaluate": "evaluar",
-    "discutir": "to discuss",
-    "to discuss": "discutir",
-    "aclarar": "to clarify",
-    "to clarify": "aclarar",
-    "fortalecer": "to strengthen",
-    "to strengthen": "fortalecer",
-    "adaptarse": "to adapt",
-    "to adapt": "adaptarse",
-    "lograr": "to achieve",
-    "to achieve": "lograr",
-
-    // B2 adjectives
-    "complicado": "complicated",
-    "complicated": "complicado",
-    "necesario": "necessary",
-    "necessary": "necesario",
-    "posible": "possible",
-    "possible": "posible",
-    "efectivo": "effective",
-    "effective": "efectivo",
-    "realista": "realistic",
-    "realistic": "realista",
-    "innovadora": "innovative",
-    "innovative": "innovadora",
-    "profesional": "professional",
-    "professional": "profesional",
-    "positivo": "positive",
-    "positive": "positivo",
-
-    // B2 participles
-    "analizado": "analyzed",
-    "analyzed": "analizado",
-    "evaluado": "evaluated",
-    "evaluated": "evaluado",
-    "argumentado": "argued",
-    "argued": "argumentado",
-    "ampliado": "expanded",
-    "expanded": "ampliado",
-    "adaptado": "adapted",
-    "adapted": "adaptado",
-    "reducido": "reduced",
-    "reduced": "reducido",
-    "insistido": "insisted",
-    "insisted": "insistido",
-    "explorado": "explored",
-    "explored": "explorado",
-    "aclarado": "clarified",
-    "clarified": "aclarado",
-    "fortalecido": "strengthened",
-    "strengthened": "fortalecido",
-    "discutido": "discussed",
-    "discussed": "discutido",
-    "actualizado": "updated",
-    "updated": "actualizado",
-    "optimizado": "optimized",
-    "optimized": "optimizado"
-},
-
-"Family": {
-    // A1 core family nouns
-    "familia": "family",
-    "family": "familia",
-
-    "madre": "mother",
-    "mother": "madre",
-
-    "padre": "father",
-    "father": "padre",
-
-    "hijo": "son",
-    "son": "hijo",
-
-    "hija": "daughter",
-    "daughter": "hija",
-
-    "amigo": "friend",
-    "friend": "amigo",
-
-    "amiga": "friend (female)",
-    "friend (female)": "amiga",
-
-    "hermana": "sister",
-    "sister": "hermana",
-
-    "hermanos": "brothers",
-    "brothers": "hermanos",
-
-    "hermanas": "sisters",
-    "sisters": "hermanas",
-
-    "abuela": "grandmother",
-    "grandmother": "abuela",
-
-    "hambre": "hunger",
-    "hunger": "hambre",
-
-    "tenemos": "we have",
-    "we have": "tenemos",
-
-    "tienen": "they have",
-    "they have": "tienen",
-
-    // A2 additions
-    "padres": "parents",
-    "parents": "padres",
-
-    // B1 additions (family context)
-    "experiencias": "experiences",
-    "experiences": "experiencias",
-
-    "pasadas": "past",
-    "past": "pasadas",
-
-    // B2 abstract family/social nouns
-    "sociedad": "society",
-    "society": "sociedad",
-
-    "cultura": "culture",
-    "culture": "cultura",
-
-    "motivación": "motivation",
-    "motivation": "motivación",
-
-    "desafíos": "challenges",
-    "challenges": "desafíos",
-
-    "expectativas": "expectations",
-    "expectations": "expectativas"
-},
-
-"Food & Drink": {
-    // A1 core food nouns
-    "agua": "water",
-    "water": "agua",
-
-    "comida": "food",
-    "food": "comida",
-
-    "cafe": "coffee",
-    "coffee": "cafe",
-
-    "azucar": "sugar",
-    "sugar": "azucar",
-
-    "té": "tea",
-    "tea": "té",
-
-    "leche": "milk",
-    "milk": "leche",
-
-    "pan": "bread",
-    "bread": "pan",
-
-    "cerveza": "beer",
-    "beer": "cerveza",
-
-    "bistec": "steak",
-    "steak": "bistec",
-
-    "papas fritas": "french fries",
-    "french fries": "papas fritas",
-
-    "huevo": "egg",
-    "egg": "huevo",
-
-    "fruta": "fruit",
-    "fruit": "fruta",
-
-    "manzana": "apple",
-    "apple": "manzana",
-
-    "naranja": "orange",
-    "orange": "naranja",
-
-    "plátano": "banana",
-    "banana": "plátano",
-
-    "pollo": "chicken",
-    "chicken": "pollo",
-
-    "pescado": "fish",
-    "fish": "pescado",
-
-    "sopa": "soup",
-    "soup": "sopa",
-
-    "ensalada": "salad",
-    "salad": "ensalada",
-
-    "arroz": "rice",
-    "rice": "arroz",
-
-    "frijoles": "beans",
-    "beans": "frijoles",
-
-    "queso": "cheese",
-    "cheese": "queso",
-
-    "sal": "salt",
-    "salt": "sal",
-
-    // A2 additions
-    "desayuno": "breakfast",
-    "breakfast": "desayuno",
-
-    "almuerzo": "lunch",
-    "lunch": "almuerzo",
-
-    "cena": "dinner",
-    "dinner": "cena",
-
-    // B1 additions
-    "restaurante": "restaurant",
-    "restaurant": "restaurante",
-
-    "menú": "menu",
-    "menu": "menú",
-
-    "cuenta": "bill",
-    "bill": "cuenta",
-
-    // B2 advanced food-related verbs
-    "preparar": "to prepare",
-    "to prepare": "preparar",
-    "preparando": "preparing",
-    "preparing": "preparando",
-    "preparado": "prepared",
-    "prepared": "preparado",
-
-    "servir": "to serve",
-    "to serve": "servir",
-    "sirviendo": "serving",
-    "serving": "sirviendo",
-    "servido": "served",
-    "served": "servido",
-
-    "mezclar": "to mix",
-    "to mix": "mezclar",
-    "mezclando": "mixing",
-    "mixing": "mezclando",
-    "mezclado": "mixed",
-    "mixed": "mezclado",
-
-    "cortar": "to cut",
-    "to cut": "cortar",
-    "cortando": "cutting",
-    "cutting": "cortando",
-    "cortado": "cut",
-    "cut": "cortado",
-
-    "probar": "to taste",
-    "to taste": "probar",
-    "probando": "tasting",
-    "tasting": "probando",
-    "probado": "tasted",
-    "tasted": "probado",
-
-    // B2 abstract food-related nouns
-    "nutrición": "nutrition",
-    "nutrition": "nutrición",
-
-    "ingredientes": "ingredients",
-    "ingredients": "ingredientes",
-
-    "calorías": "calories",
-    "calories": "calorías",
-
-    "receta": "recipe",
-    "recipe": "receta",
-
-    "preferencias": "preferences",
-    "preferences": "preferencias"
-},
-
-"Travel": {
-    // A1 core travel nouns
-    "autobus": "bus",
-    "bus": "autobus",
-
-    "tren": "train",
-    "train": "tren",
-
-    "boleto": "ticket",
-    "ticket": "boleto",
-
-    "estacion": "station",
-    "station": "estacion",
-
-    "aeropuerto": "airport",
-    "airport": "aeropuerto",
-
-    "casa": "house",
-    "house": "casa",
-
-    "escuela": "school",
-    "school": "escuela",
-
-    "hotel": "hotel",
-    "hotel": "hotel",
-
-    "bano": "bathroom",
-    "bathroom": "bano",
-
-    "lugar": "place",
-    "place": "lugar",
-
-    // A2 additions
-    "avión": "airplane",
-    "airplane": "avión",
-
-    "visitar": "to visit",
-    "to visit": "visitar",
-    "visitando": "visiting",
-    "visiting": "visitando",
-    "visitado": "visited",
-    "visited": "visitado",
-
-    "transporte": "transportation",
-    "transportation": "transporte",
-
-    // B1 travel verbs
-    "encontrar": "to find",
-    "to find": "encontrar",
-    "encontrando": "finding",
-    "finding": "encontrando",
-    "encontrado": "found",
-    "found": "encontrado",
-
-    "cancelar": "to cancel",
-    "to cancel": "cancelar",
-    "cancelando": "cancelling",
-    "cancelling": "cancelando",
-    "cancelado": "cancelled",
-    "cancelled": "cancelado",
-
-    "traer": "to bring",
-    "to bring": "traer",
-    "trayendo": "bringing",
-    "bringing": "trayendo",
-    "traído": "brought",
-    "brought": "traído",
-
-    "planear": "to plan",
-    "to plan": "planear",
-    "planeando": "planning",
-    "planning": "planeando",
-    "planeado": "planned",
-    "planned": "planeado",
-
-    "mudarse": "to move (houses)",
-    "to move (houses)": "mudarse",
-    "mudándose": "moving",
-    "moving": "mudándose",
-    "mudado": "moved",
-    "moved": "mudado",
-
-    "unirse": "to join",
-    "to join": "unirse",
-    "uniéndose": "joining",
-    "joining": "uniéndose",
-    "unido": "joined",
-    "joined": "unido",
-
-    // B2 travel adjectives / abstract nouns
-    "remoto": "remote",
-    "remote": "remoto",
-
-    "futuro": "future",
-    "future": "futuro",
-
-    "largo plazo": "long term",
-    "long term": "largo plazo",
-
-    // B2 advanced travel verbs
-    "coordinar": "to coordinate",
-    "to coordinate": "coordinar",
-    "coordinando": "coordinating",
-    "coordinating": "coordinando",
-    "coordinado": "coordinated",
-    "coordinated": "coordinado",
-
-    "organizar": "to organize",
-    "to organize": "organizar",
-    "organizando": "organizing",
-    "organizing": "organizando",
-    "organizado": "organized",
-    "organized": "organizado",
-
-    "reservar": "to reserve",
-    "to reserve": "reservar",
-    "reservando": "reserving",
-    "reserving": "reservando",
-    "reservado": "reserved",
-    "reserved": "reservado",
-
-    "explorar": "to explore",
-    "to explore": "explorar",
-    "explorando": "exploring",
-    "exploring": "explorando",
-    "explorado": "explored",
-    "explored": "explorado"
-},
-
-"Connectors": {
-    // A1 basic connectors
-    "y": "and",
-    "and": "y",
-
-    "o": "or",
-    "or": "o",
-
-    "con": "with",
-    "with": "con",
-
-    "sin": "without",
-    "without": "sin",
-
-    "más": "more",
-    "more": "más",
-
-    "poco": "little",
-    "little": "poco",
-
-    "solo": "only",
-    "only": "solo",
-
-    "muy": "very",
-    "very": "muy",
-
-    "cerca": "near",
-    "near": "cerca",
-
-    "para": "for",
-    "for": "para",
-
-    "a": "to",
-    "to": "a",
-
-    "en": "in",
-    "in": "en",
-
-    "ella": "she",
-    "she": "ella",
-
-    "el": "he",
-    "he": "el",
-
-    "rápido": "fast",
-    "fast": "rápido",
-
-    // A1 question words
-    "qué": "what",
-    "what": "qué",
-
-    "quién": "who",
-    "who": "quién",
-
-    "cuándo": "when",
-    "when": "cuándo",
-
-    "cómo": "how",
-    "how": "cómo",
-
-    "cuál": "which",
-    "which": "cuál",
-
-    "dónde": "where",
-    "where": "dónde",
-
-    // A1 misc connectors
-    "no": "no",
-    "hay": "there is",
-    "there is": "hay",
-
-    "otra": "other",
-    "other": "otra",
-
-    "por favor": "please",
-    "please": "por favor",
-    "ellos": "they",
-    "they": "ellos",
-
-    "su": "their",
-    "their": "su",
-
-    // A1 verbs used as connectors
-    "es": "is",
-    "is": "es",
-
-    "gusta": "likes",
-    "likes": "gusta",
-
-    "gustan": "like (plural)",
-    "like (plural)": "gustan",
-
-    "gustaría": "would like",
-    "would like": "gustaría",
-
-    "aprendiendo": "learning",
-    "learning": "aprendiendo",
-
-    "arreglando": "fixing",
-    "fixing": "arreglando",
-
-    // A1 adjectives used as connectors
-    "bueno": "good",
-    "good": "bueno",
-
-    "difícil": "difficult",
-    "difficult": "difícil",
-
-    "clara": "clear",
-    "clear": "clara",
-
-    "fácil": "easy",
-    "easy": "fácil",
-
-    "malo": "bad",
-    "bad": "malo",
-
-    "pequeño": "small",
-    "small": "pequeño",
-
-    // A2 connectors
-    "a menudo": "often",
-    "often": "a menudo",
-
-    "antes": "before",
-    "before": "antes",
-
-    "ya": "already",
-    "already": "ya",
-
-    "todavía": "still",
-    "still": "todavía",
-
-    "normalmente": "normally",
-    "normally": "normalmente",
-
-    "argumentó": "argued",
-    "argued": "argumentó",
-
-    // B1 connectors
-    "mientras": "while",
-    "while": "mientras",
-
-    "sin embargo": "however",
-    "however": "sin embargo",
-
-    "sobre": "about",
-    "about": "sobre",
-
-    "cuando": "when",
-    "when": "cuando",
-
-    "después": "after",
-    "after": "después",
-
-    "durante": "during",
-    "during": "durante",
-
-    // B2 connectors
-    "además": "besides",
-    "besides": "además",
-
-    "por lo tanto": "therefore",
-    "therefore": "por lo tanto",
-
-    "a pesar de": "despite",
-    "despite": "a pesar de",
-
-    "aunque": "although",
-    "although": "aunque",
-
-    "incluso": "even",
-    "even": "incluso",
-
-    "otra vez": "again",
-    "again": "otra vez",
-
-    "cuidadosamente": "carefully",
-    "carefully": "cuidadosamente",
-
-    // B2 participles used as connectors
-    "analizado": "analyzed",
-    "analyzed": "analizado",
-
-    "evaluado": "evaluated",
-    "evaluated": "evaluado",
-
-    "argumentado": "argued",
-    "argued": "argumentado",
-
-    "ampliado": "expanded",
-    "expanded": "ampliado",
-
-    "adaptado": "adapted",
-    "adapted": "adaptado",
-
-    "reducido": "reduced",
-    "reduced": "reducido",
-
-    "insistido": "insisted",
-    "insisted": "insistido",
-
-    "explorado": "explored",
-    "explored": "explorado",
-
-    "aclarado": "clarified",
-    "clarified": "aclarado",
-
-    "fortalecido": "strengthened",
-    "strengthened": "fortalecido",
-
-    "discutido": "discussed",
-    "discussed": "discutido",
-
-    "actualizado": "updated",
-    "updated": "actualizado",
-
-    "optimizado": "optimized",
-    "optimized": "optimizado"
-},
-
-"Numbers": {
-    // A1 numbers
-    "uno": "one",
-    "one": "uno",
-
-    "dos": "two",
-    "two": "dos",
-
-    "tres": "three",
-    "three": "tres",
-
-    "cuatro": "four",
-    "four": "cuatro",
-
-    "cinco": "five",
-    "five": "cinco",
-
-    "seis": "six",
-    "six": "seis",
-
-    "siete": "seven",
-    "seven": "siete",
-
-    "ocho": "eight",
-    "eight": "ocho",
-
-    "nueve": "nine",
-    "nine": "nueve",
-
-    "diez": "ten",
-    "ten": "diez",
-
-    // A2 numbers
-    "once": "eleven",
-    "eleven": "once",
-
-    "doce": "twelve",
-    "twelve": "doce",
-
-    "trece": "thirteen",
-    "thirteen": "trece",
-
-    "catorce": "fourteen",
-    "fourteen": "catorce",
-
-    "quince": "fifteen",
-    "fifteen": "quince",
-
-    "dieciséis": "sixteen",
-    "sixteen": "dieciséis",
-
-    "diecisiete": "seventeen",
-    "seventeen": "diecisiete",
-
-    "dieciocho": "eighteen",
-    "eighteen": "dieciocho",
-
-    "diecinueve": "nineteen",
-    "nineteen": "diecinueve",
-
-    "veinte": "twenty",
-    "twenty": "veinte",
-
-    // B1 time‑related count nouns
-    "mes": "month",
-    "month": "mes",
-
-    "años": "years",
-    "years": "años"
-},
-
-"English": {
-    // Basic greetings
-    "hello": "hola",
-    "hi": "hola",
-    "goodbye": "adiós",
-    "bye": "adiós",
-    "thanks": "gracias",
-    "thank you": "gracias",
-    "please": "por favor",
-
-    // Daily Life verbs (all forms)
-    "to live": "vivir",
-    "living": "viviendo",
-    "lived": "vivido",
-
-    "to work": "trabajar",
-    "working": "trabajando",
-    "worked": "trabajado",
-
-    "to study": "estudiar",
-    "studying": "estudiando",
-    "studied": "estudiado",
-
-    "to read": "leer",
-    "reading": "leyendo",
-    "read": "leído",
-
-    "to write": "escribir",
-    "writing": "escribiendo",
-    "written": "escrito",
-
-    "to learn": "aprender",
-    "learning": "aprendiendo",
-    "learned": "aprendido",
-
-    "to cook": "cocinar",
-    "cooking": "cocinando",
-    "cooked": "cocinado",
-
-    "to clean": "limpiar",
-    "cleaning": "limpiando",
-    "cleaned": "limpiado",
-
-    "to open": "abrir",
-    "opening": "abriendo",
-    "opened": "abierto",
-
-    "to finish": "terminar",
-    "finishing": "terminando",
-    "finished": "terminado",
-
-    "to go out": "salir",
-    "going out": "saliendo",
-    "went out": "salió",
-
-    "to rest": "descansar",
-    "resting": "descansando",
-    "rested": "descansado",
-
-    // Daily Life nouns
-    "books": "libros",
-    "hour": "hora",
-    "music": "música",
-    "television": "televisión",
-    "window": "ventana",
-    "kitchen": "cocina",
-    "shoes": "zapatos",
-    "trip": "viaje",
-
-    // Daily Life adjectives
-    "hot": "caliente",
-    "cold": "frío",
-    "happy": "feliz",
-    "new": "nuevo",
-
-    // A2 Daily Life
-    "breakfast": "desayuno",
-    "lunch": "almuerzo",
-    "dinner": "cena",
-    "early": "temprano",
-    "late": "tarde",
-    "last night": "anoche",
-    "now": "ahora",
-    "minutes": "minutos",
-    "homework": "tarea",
-    "message": "mensaje",
-    "information": "información",
-    "movie": "película",
-
-    // Family
-    "family": "familia",
-    "mother": "madre",
-    "father": "padre",
-    "son": "hijo",
-    "daughter": "hija",
-    "friend": "amigo",
-    "sister": "hermana",
-    "brothers": "hermanos",
-    "sisters": "hermanas",
-    "grandmother": "abuela",
-    "parents": "padres",
-    "hunger": "hambre",
-
-    // Food & Drink
-    "water": "agua",
-    "food": "comida",
-    "coffee": "cafe",
-    "sugar": "azucar",
-    "tea": "té",
-    "milk": "leche",
-    "bread": "pan",
-    "beer": "cerveza",
-    "steak": "bistec",
-    "french fries": "papas fritas",
-    "egg": "huevo",
-    "fruit": "fruta",
-    "apple": "manzana",
-    "orange": "naranja",
-    "banana": "plátano",
-    "chicken": "pollo",
-    "fish": "pescado",
-    "soup": "sopa",
-    "salad": "ensalada",
-    "rice": "arroz",
-    "beans": "frijoles",
-    "cheese": "queso",
-    "salt": "sal",
-    "restaurant": "restaurante",
-    "menu": "menú",
-    "bill": "cuenta",
-
-    // Travel
-    "bus": "autobus",
-    "train": "tren",
-    "ticket": "boleto",
-    "station": "estacion",
-    "airport": "aeropuerto",
-    "house": "casa",
-    "school": "escuela",
-    "hotel": "hotel",
-    "bathroom": "bano",
-    "place": "lugar",
-    "airplane": "avión",
-    "transportation": "transporte",
-
-    // Travel verbs (all forms)
-    "to visit": "visitar",
-    "visiting": "visitando",
-    "visited": "visitado",
-
-    "to find": "encontrar",
-    "finding": "encontrando",
-    "found": "encontrado",
-
-    "to cancel": "cancelar",
-    "cancelling": "cancelando",
-    "cancelled": "cancelado",
-
-    "to bring": "traer",
-    "bringing": "trayendo",
-    "brought": "traído",
-
-    "to plan": "planear",
-    "planning": "planeando",
-    "planned": "planeado",
-
-    "to move": "mudarse",
-    "moving": "mudándose",
-    "moved": "mudado",
-
-    "to join": "unirse",
-    "joining": "uniéndose",
-    "joined": "unido",
-
-    // Connectors
-    "and": "y",
-    "or": "o",
-    "with": "con",
-    "without": "sin",
-    "more": "más",
-    "little": "poco",
-    "only": "solo",
-    "very": "muy",
-    "near": "cerca",
-    "for": "para",
-    "to": "a",
-    "in": "en",
-    "she": "ella",
-    "he": "el",
-    "fast": "rápido",
-    "what": "qué",
-    "who": "quién",
-    "when": "cuándo",
-    "how": "cómo",
-    "which": "cuál",
-    "where": "dónde",
-    "other": "otra",
-    "they": "ellos",
-    "their": "su",
-    "is": "es",
-    "likes": "gusta",
-    "like (plural)": "gustan",
-    "would like": "gustaría",
-    "good": "bueno",
-    "difficult": "difícil",
-    "clear": "clara",
-    "easy": "fácil",
-    "bad": "malo",
-    "small": "pequeño",
-    "often": "a menudo",
-    "before": "antes",
-    "already": "ya",
-    "still": "todavía",
-    "normally": "normalmente",
-    "argued": "argumentó",
-    "while": "mientras",
-    "however": "sin embargo",
-    "about": "sobre",
-    "after": "después",
-    "during": "durante",
-    "besides": "además",
-    "therefore": "por lo tanto",
-    "despite": "a pesar de",
-    "although": "aunque",
-    "even": "incluso",
-    "again": "otra vez",
-    "carefully": "cuidadosamente",
+    /* ============================
+       A1 — Connectors
+       ============================ */
+
+
+"y": "and",
+"o": "or",
+"con": "with",
+"sin": "without",
+"más": "more",
+"poco": "little",
+"solo": "only / alone",
+"muy": "very",
+"cerca": "near",
+"para": "for",
+"a": "to",
+"en": "in",
+"por": "for/by",
+"de": "of/from",
+"al": "to the",
+"del": "of the",
+"pero": "but",
+"porque": "because",
+"también": "also",
+"entonces": "then",
+"qué": "what",
+"quién": "who",
+"cuándo": "when",
+"cómo": "how",
+"cuál": "which",
+"dónde": "where",
+"no": "no / not",
+"hay": "there is / there are",
+"otra": "other / another",
+"pesar": "despite",
+"favor": "favor (por favor)",
+
+    /* ============================
+       A1 — Numbers
+       ============================ */
+
+"uno": "one",
+"dos": "two",
+"diez": "ten",
+"nueve": "nine",
+
+
+ /* ============================
+       A1 — Articles
+   ============================ */
+
+"el": "the",
+"la": "the",
+"los": "the",
+"las": "the",
+"un": "a",
+"una": "a",
+
+
+/* ============================
+       A1 — Pronouns
+   ============================ */
+
+"me": "me",
+"te": "you",
+"le": "to him/her",
+"nos": "us",
+"les": "to them",
+"lo": "it (masc.)",
+"la": "it (fem.)",
+"los": "them (masc.)",
+"las": "them (fem.)",
+"que": "that/which",
+"él": "he",
+"mi": "my",
+"mis": "my (plural)",
+"sus": "his/her/their",
+"tú": "you (informal)",
+"yo": "I",
+
+
+/* ============================
+       A1 — Daily Life
+   ============================ */
+
+"vivir": "to live",
+"trabajar": "to work",
+"estudiar": "to study",
+"leer": "to read",
+"libros": "books",
+"hora": "hour",
+"levantarse": "to get up",
+"música": "music",
+"televisión": "television",
+"limpiar": "to clean",
+"cocinar": "to cook",
+"abrir": "to open",
+"terminar": "to finish",
+"escribir": "to write",
+"aprender": "to learn",
+"ir": "to go",
+"hacer": "to do",
+"ver": "to see",
+"escuchar": "to listen",
+"salir": "to go out",
+"descansar": "to rest",
+"caliente": "hot",
+"frío": "cold",
+"feliz": "happy",
+"nuevo": "new",
+"nueva": "new (fem.)",
+"nuevos": "new (plural)",
+"nuevas": "new (fem. plural)",
+"necesito": "I need",
+"necesita": "he/she needs",
+"necesitan": "they need",
+"quiero": "I want",
+"quiere": "he/she wants",
+"queremos": "we want",
+"quieren": "they want",
+"vivo": "I live",
+"trabaja": "he/she works",
+"estoy": "I am",
+"está": "he/she is",
+"están": "they are",
+"somos": "we are",
+"soy": "I am",
+"eres": "you are",
+"son": "they are",
+"tengo": "I have",
+"tiene": "he/she has",
+"estamos": "we are",
+"ayuda": "help",
+"cansado": "tired",
+"alto": "tall",
+"hola": "hello",
+"adiós": "goodbye",
+"gracias": "thank you",
+"siento": "sorry / I feel",
+"estás": "you are",
+"listos": "ready",
+"despierto": "awake",
+"tiempo": "time",
+"problemas": "problems",
+"cambio": "change",
+"es": "is",
+"gusta": "likes",
+"gustan": "they like",
+"gustaría": "would like",
+"aprendiendo": "learning",
+"arreglando": "fixing",
+"bueno": "good",
+"difícil": "difficult",
+"clara": "clear",
+"fácil": "easy",
+"malo": "bad",
+"pequeño": "small",
+"ellos": "they",
+"su": "his / her / their",
+
+
+/* ============================
+       A1 — Family
+   ============================ */
+
+"familia": "family",
+"madre": "mother",
+"padre": "father",
+"hijo": "son",
+"hija": "daughter",
+"amigo": "friend",
+"amiga": "friend (female)",
+"hermana": "sister",
+"hermanos": "brothers",
+"hermanas": "sisters",
+"abuela": "grandmother",
+"hambre": "hunger",
+"tenemos": "we have",
+"tienen": "they have",
+"ellas": "they (fem.)",
+"nosotros": "we",
+"ustedes": "you all",
+
+
+/* ============================
+       A1 — Food
+   ============================ */
+
+"agua": "water",
+"comida": "food",
+"café": "coffee",
+"té": "tea",
+"leche": "milk",
+"pan": "bread",
+"cerveza": "beer",
+"huevo": "egg",
+"fruta": "fruit",
+"filete": "steak",
+"papas fritas": "french fries",
+"manzana": "apple",
+"naranja": "orange",
+"plátano": "banana",
+"pollo": "chicken",
+"pescado": "fish",
+"sopa": "soup",
+"ensalada": "salad",
+"arroz": "rice",
+"frijoles": "beans",
+"queso": "cheese",
+"sal": "salt",
+
+/* ============================
+       A1 — Travel
+   ============================ */
+
+"autobús": "bus",
+"tren": "train",
+"boleto": "ticket",
+"estación": "station",
+"aeropuerto": "airport",
+"casa": "house",
+"escuela": "school",
+"hotel": "hotel",
+"baño": "bathroom",
+"lugar": "place",
+"llega": "arrives",
+"llegamos": "we arrived",
+
+
+/* ============================
+       A1 — Extra from CEFR_SENTENCES
+   ============================ */
+
+"tienda": "store",
+"abre": "opens",
+"pequeña": "small (fem.)",
+"fría": "cold (fem.)",
+"grande": "big",
+"amable": "kind",
+"deliciosa": "delicious (fem.)",
+"limpia": "clean (fem.)",
+"roja": "red (fem.)",
+"retrasado": "delayed",
+"coche": "car",
+"bolsa": "bag",
+"clima": "weather",
+"habitación": "room",
+"médico": "doctor",
+"deportes": "sports",
+"hoy": "today",
+"mesa": "table",
+"libro": "book",
+"bolígrafo": "pen",
+"calle": "street",
+"ciudad": "city",
+"noche": "night",
+"algo": "something",
+"vez": "time / occurrence",
+
+
+
+/* ============================
+       A2 — Daily Life
+   ============================ */
+
+"desayuno": "breakfast",
+"almuerzo": "lunch",
+"cena": "dinner",
+"temprano": "early",
+"tarde": "late",
+"anoche": "last night",
+"ahora": "now",
+"minutos": "minutes",
+"tarea": "homework",
+"mensaje": "message",
+"información": "information",
+"película": "movie",
+"ventana": "window",
+"cocina": "kitchen",
+"zapatos": "shoes",
+"viaje": "trip",
+"probar": "to try",
+"olvidar": "to forget",
+"esperar": "to wait",
+"conducir": "to drive",
+"arreglar": "to fix",
+"irse": "to leave",
+"llegar": "to arrive",
+"llegamos": "we arrived",
+"llegarán": "they will arrive",
+"comeremos": "we will eat",
+"irnos": "to leave",
+"escuchando": "listening",
+"planeando": "planning",
+"cocinando": "cooking",
+"conduciendo": "driving",
+"necesitamos": "we need",
+"necesitan": "they need",
+"compré": "I bought",
+"limpié": "I cleaned",
+"escribí": "I wrote",
+
+ 
+/* ============================
+       A2 — Extra from Sentences
+   ============================ */
+
+"mercado": "market",
+"reunión": "meeting",
+"llaves": "keys",
+"teléfono": "phone",
+"afuera": "outside",
+"noche": "night",
+"algo": "something",
+"vez": "time / occurrence",
+"sus": "their",
+"mis": "my (plural)",
+"esta": "this (fem.)",
+"ese": "that",
+"este": "this",
+"próximo": "next",
+"horario": "schedule",
+
+/* ============================
+       A2 — Verbs from Sentences
+   ============================ */
+
+"compró": "bought",
+"comprar": "to buy",
+"visitó": "visited",
+"estudiaré": "I will study",
+"olvidó": "forgot",
+"esperando": "waiting",
+"viendo": "watching",
+"hablando": "talking",
+"desayunando": "eating breakfast",
+"quiere": "he/she wants",
+"quieren": "they want",
+"prefiero": "I prefer",
+"puedes": "you can",
+"vamos": "we go / let's go",
+"planeando": "planning",
+"llamó": "he/she called",
+"trabaja": "he/she works",
+"está": "he/she is",
+"están": "they are",
+"creo": "I believe",
+"debemos": "we must",
+"podemos": "we can",
+"hablamos": "we speak",
+
+
+/* ============================
+       A2 — Connectors
+   ============================ */
+
+"a menudo": "often",
+"antes": "before",
+"ya": "already",
+"todavía": "still",
+"normalmente": "normally",
+"pero": "but",
+"porque": "because",
+"también": "also",
+"entonces": "then",
+"si": "if",
+"argumentó": "argued",
+
+
+/* ============================
+       A2 — Multi-word Phrases
+   ============================ */
+
+"por favor": "please",
+"más tarde": "later",
+"esta noche": "tonight",
+"a las nueve": "at nine",
+"otra vez": "again",
+"en detalle": "in detail",
+
+
+
+/* ============================
+       B1 — Verbs
+   ============================ */
+
+"organizar": "to organize",
+"mejorar": "to improve",
+"espera": "hopes",
+"encontrar": "to find",
+"decidieron": "decided",
+"cancelar": "to cancel",
+"hablar": "to talk",
+"traer": "to bring",
+"llamaré": "I will call",
+"llegue": "I arrive (subj.)",
+"viajar": "to travel",
+"terminar": "to finish",
+"explicó": "explained",
+"resolver": "to solve",
+"pidió": "asked",
+"ayudara": "help (subj.)",
+"planean": "they plan",
+"mudarse": "to move",
+"seguir": "to follow",
+"deberíamos": "we should",
+"continuaremos": "we will continue",
+"conseguir": "to get",
+"ayudaré": "I will help",
+"creo": "I believe",
+"debemos": "we must",
+"podemos": "we can",
+"hablamos": "we speak",
+"parece": "it seems",
+"cree": "he/she believes",
+"esperan": "they wait",
+"discutieron": "they discussed",
+"completó": "completed",
+"fue": "was",
+"era": "was",
+
+
+/* ============================
+       B1 — Nouns
+   ============================ */
+
+"español": "Spanish",
+"trabajo": "job",
+"problema": "problem",
+"documentos": "documents",
+"año": "year",
+"proyecto": "project",
+"situación": "situation",
+"reglas": "rules",
+"informe": "report",
+"metas": "goals",
+"plan": "plan",
+"ropa": "clothes",
+"detalles": "details",
+"problemas": "problems",
+"detalle": "detail",
+"horas": "hours",
+"esfuerzos": "efforts",
+"éxito": "success",
+"noche": "night",
+"vez": "time / occurrence",
+
+
+/* ============================
+       B1 — Adverbs
+   ============================ */
+
+"claramente": "clearly",
+"pronto": "soon",
+"mañana": "tomorrow",
+"ahora": "now",
+"lentamente": "slowly",
+"ayer": "yesterday",
+"rápido": "fast",
+"lento": "slow",
+"siempre": "always",
+"nunca": "never",
+
+
+/* ============================
+       B1 — Determiners
+   ============================ */
+
+"nuestras": "our (fem. plural)",
+"todo": "everything",
+"todas": "all (fem.)",
+"este": "this",
+"ese": "that",
+"esto": "this (neutral)",
+
+
+/* ============================
+       B1 — Extra B1 Words
+   ============================ */
+
+"mejor": "better",
+"excelente": "excellent",
+"importante": "important",
+"diferente": "different",
+"posibles": "possible",
+"nuestros": "our",
+"próximo": "next",
+"horario": "schedule",
+
+
+
+/* ============================
+       B2 — Verbs
+   ============================ */
+
+"analizar": "to analyze",
+"considerar": "to consider",
+"sugirió": "suggested",
+"completar": "to complete",
+"evaluar": "to evaluate",
+"argumentaron": "argued",
+"ampliar": "to expand",
+"continuar": "to continue",
+"terminaron": "they finished",
+"adaptarnos": "to adapt",
+"reducir": "to reduce",
+"insistió": "insisted",
+"lograr": "to achieve",
+"explorar": "to explore",
+"aclarar": "to clarify",
+"fortalecer": "to strengthen",
+"actualizar": "to update",
+"aumentar": "to increase",
+"preparar": "to prepare",
+"expandir": "to expand",
+"coordinar": "to coordinate",
+"optimizar": "to optimize",
+"tendrá": "he/she will have",
+"serán": "they will be",
+"prepararnos": "to prepare ourselves",
+
+
+/* ============================
+       B2 — Nouns
+   ============================ */
+
+"posibilidades": "possibilities",
+"comunicación": "communication",
+"proceso": "process",
+"tarea": "task",
+"riesgos": "risks",
+"problemas": "problems",
+"experiencia": "experience",
+"desafíos": "challenges",
+"concepto": "concept",
+"manera": "way",
+"instrucciones": "instructions",
+"idea": "idea",
+"gastos": "expenses",
+"datos": "data",
+"habilidades": "skills",
+"rendimiento": "performance",
+"tema": "topic",
+"enfoque": "approach",
+"sistema": "system",
+"cambios": "changes",
+"negocio": "business",
+"flujo": "flow",
+"equipo": "team",
+"oportunidades": "opportunities",
+"productividad": "productivity",
+"estrategia": "strategy",
+"esfuerzos": "efforts",
+"horas": "hours",
+"detalle": "detail",
+"mejores": "better / best",
+"posibles": "possible",
+"próximo": "next",
+"horario": "schedule",
+"éxito": "success",
+
+
+/* ============================
+       B2 — Adjectives
+   ============================ */
+
+"difícil": "difficult",
+"realista": "realistic",
+"profesional": "professional",
+"innovadora": "innovative",
+"innecesarios": "unnecessary",
+"posible": "possible",
+"arriesgada": "risky",
+"capaz": "capable",
+"efectivo": "effective",
+"positivo": "positive",
+"complicado": "complicated",
+"importante": "important",
+"diferente": "different",
+"mejor": "better",
+"excelente": "excellent",
+"todas": "all (fem.)",
+"nuestros": "our",
+"positivos": "positive",
+
+
+/* ============================
+       B2 — Adverbs / Connectors
+   ============================ */
+
+"cuidadosamente": "carefully",
+"incluso": "even",
+"otra vez": "again",
+"en detalle": "in detail",
+"lentamente": "slowly",
+"ayer": "yesterday",
+"rápido": "fast",
+"lento": "slow",
+"siempre": "always",
+"nunca": "never",
+"porque": "because",
+"pero": "but",
+"también": "also",
+"entonces": "then"
+}
+
+
+/* ============================================================
+   AUTO‑EXPAND DICTIONARY FROM CEFR LEVELS
+   ============================================================ */
+
+function autoExpandDictionary() {
+    const allWords = Object.values(CEFR_LEVELS).flat();
+
+    allWords.forEach(item => {
+        const key = item.spanish.toLowerCase().trim();
+        const value = item.english.trim();
+        WORD_DICT[key] = value;   // real translation
+    });
+}
+
+autoExpandDictionary();
+
+  
+/* ============================================================
+   MULTI-WORD PHRASES (CEFR-aligned)
+   ============================================================ */
+const CEFR_PHRASES = {
+    // A1
+    "cómo estás": "how are you",
+    "dónde vives": "where do you live",
+    "qué hora es": "what time is it",
+    "te gusta el café": "you like coffee",
+    "me gusta la música": "I like music",
+    "vivo en la ciudad": "I live in the city",
+    "trabajo en un hotel": "I work in a hotel",
+    "quiero comer": "I want to eat",
+    "quiero beber": "I want to drink",
+    "dónde está el baño": "where is the bathroom",
+    "ella corre rápido": "she runs fast",
+    "ella es rápida": "she is fast",
+    "ella va rápido": "she goes fast",
+
+    // A2
+    "qué hiciste ayer": "what did you do yesterday",
+    "fuiste al supermercado": "did you go to the supermarket",
+    "viajas a menudo": "you travel often",
+    "qué compraste": "what did you buy",
+    "qué estás haciendo": "what are you doing",
+    "sueles comer temprano": "you usually eat early",
+    "necesito ayuda": "I need help",
+    "quiero hacer una reserva": "I want to make a reservation",
+    "dónde está la estación": "where is the station",
+
+    // B1
+    "he estado aprendiendo español": "I have been learning Spanish",
+    "disfruto viajar": "I enjoy traveling",
+    "quiero mejorar mis habilidades": "I want to improve my skills",
+    "qué piensas de la ciudad": "what do you think of the city",
+    "cómo mantienes una vida saludable": "how do you maintain a healthy life",
+    "qué aprendiste recientemente": "what did you learn recently",
+    "cuáles son tus metas": "what are your goals",
+    "qué experiencias pasadas tienes": "what past experiences do you have",
+
+    // B2
+    "cómo manejas situaciones estresantes": "how do you handle stressful situations",
+    "cuál es tu opinión sobre la tecnología": "what is your opinion on technology",
+    "cómo ha cambiado tu vida": "how has your life changed",
+    "qué desafíos enfrentas": "what challenges do you face",
+    "qué esperas lograr": "what do you hope to achieve",
+    "qué piensas del futuro": "what do you think about the future",
+    "cómo ves la sociedad actual": "how do you see modern society",
+    "cuál es tu perspectiva": "what is your perspective"
+};
+
+/* ============================================================
+   TRANSLATION ENGINE — CEFR Phrases + Word Dictionary
+   ============================================================ */
+function translateToEnglish(spanishText) {
+    const normalized = spanishText.toLowerCase().trim();
+
+    // 1. Phrase detection
+    if (CEFR_PHRASES[normalized]) {
+        return CEFR_PHRASES[normalized];
+    }
+
+    // 2. Word-by-word fallback
+    return normalized
+        .split(/\s+/)
+        .map(w => WORD_DICT[w] || `[${w}]`)
+        .join(" ");
+}
+
+/* ============================================================
+   CLEAN MISSING WORD VALIDATOR — NO AUTO-TRANSLATION
+   ============================================================ */
+
+function validateMissingWords() {
+    const missing = new Set();
+
+    function scan(sentence) {
+        sentence.toLowerCase()
+            .split(/\s+/)
+            .forEach(tok => {
+                if (!WORD_DICT[tok]) missing.add(tok);
+            });
+    }
+
+    // 1. CEFR sentences
+    Object.values(CEFR_SENTENCES).forEach(levelArr => {
+        levelArr.forEach(item => scan(item.spanish));
+    });
+
+    // 2. Build disruptors
+    [
+        "rápido","lento","siempre","nunca","ayer","mañana",
+        "porque","pero","muy","también","solo","entonces"
+    ].forEach(tok => {
+        if (!WORD_DICT[tok]) missing.add(tok);
+    });
+
+    // 3. Grammar helpers
+    [
+        "yo","tú","él","ella","ellos","ellas","nosotros","ustedes",
+        "soy","eres","es","somos","son",
+        "estoy","estás","está","estamos","están"
+    ].forEach(tok => {
+        if (!WORD_DICT[tok]) missing.add(tok);
+    });
+
+    // 4. Conversation fillers
+    [
+        "hola","adiós","gracias","por","favor","lo","siento",
+        "qué","quién","dónde","cuándo","cómo","cuál",
+        "porque","pero","también","entonces"
+    ].forEach(tok => {
+        if (!WORD_DICT[tok]) missing.add(tok);
+    });
+
+    // 5. Quiz distractors
+    [
+        "bueno","malo","grande","pequeño","fácil","difícil",
+        "coche","calle","ciudad"
+    ].forEach(tok => {
+        if (!WORD_DICT[tok]) missing.add(tok);
+    });
+
+    console.group("=== CLEAN MISSING WORD REPORT ===");
+
+    if (missing.size === 0) {
+        console.log("✔ No missing words! Dictionary is complete.");
+    } else {
+        console.log("❌ Missing words (" + missing.size + "):");
+        missing.forEach(w => console.log(" - " + w));
+    }
+
+    console.groupEnd();
+}
+
+/* ============================================================
+   SUPER VALIDATOR — AUTO-TRANSLATE + AUTO-CATEGORIZE + AUTO-FIX
+   ============================================================ */
+
+function validateAndEnhanceDictionary() {
+
+    const missing = new Set();
+    const added = [];
+
+    // === CATEGORY DETECTORS ===
+    const isArticle = w => ["el","la","los","las","un","una"].includes(w);
+    const isPronoun = w => ["me","te","le","nos","les","lo","la","los","las"].includes(w);
+    const isPreposition = w => ["a","de","por","para","con","sin","al","del","en"].includes(w);
+    const isConnector = w => ["y","o","pero","porque","también","entonces"].includes(w);
+    const isAdverb = w => ["hoy","ayer","mañana","ahora","pronto","temprano","tarde","claramente"].includes(w);
+    const isMultiWord = w => w.includes(" ");
+
+    // === SMART TRANSLATION RULES ===
+    function inferTranslation(word) {
+        if (isArticle(word)) return "the";
+        if (isPronoun(word)) return "it / him / her / them";
+        if (isPreposition(word)) return "to / from / for / by / with";
+        if (isConnector(word)) return "and / or / but / because / also / then";
+        if (isAdverb(word)) return "time-related adverb";
+
+        if (isMultiWord(word)) return "multi-word phrase";
+
+        if (word.endsWith("ar")) return "to " + word.slice(0, -2);
+        if (word.endsWith("er")) return "to " + word.slice(0, -2);
+        if (word.endsWith("ir")) return "to " + word.slice(0, -2);
+
+        if (word.endsWith("ó")) return word + " (past tense)";
+        if (word.endsWith("aron")) return word + " (they past tense)";
+        if (word.endsWith("ieron")) return word + " (they past tense)";
+        if (word.endsWith("aba")) return word + " (imperfect)";
+        if (word.endsWith("ía")) return word + " (imperfect)";
+
+        if (word.match(/(o|a|os|as)$/)) return word + " (adjective)";
+
+        return word + " (unclassified)";
+    }
+
+    // === TOKEN SCANNER ===
+    function scanSentence(sentence) {
+        sentence.toLowerCase()
+            .split(/\s+/)
+            .forEach(tok => {
+                if (!WORD_DICT[tok]) missing.add(tok);
+            });
+    }
+
+    // === 1. Scan CEFR sentences ===
+    Object.values(CEFR_SENTENCES).forEach(levelArr => {
+        levelArr.forEach(item => scanSentence(item.spanish));
+    });
+
+    // === 2. Scan disruptors ===
+    const BUILD_DISRUPTORS = [
+        "rápido","lento","siempre","nunca","ayer","mañana",
+        "porque","pero","muy","también","solo","entonces"
+    ];
+    BUILD_DISRUPTORS.forEach(tok => {
+        if (!WORD_DICT[tok]) missing.add(tok);
+    });
+
+    // === 3. Scan grammar helpers ===
+    const SENTENCE_GRAMMAR = [
+        "yo","tú","él","ella","ellos","ellas","nosotros","ustedes",
+        "soy","eres","es","somos","son",
+        "estoy","estás","está","estamos","están"
+    ];
+    SENTENCE_GRAMMAR.forEach(tok => {
+        if (!WORD_DICT[tok]) missing.add(tok);
+    });
+
+    // === 4. Scan conversation fillers ===
+    const CONVERSATION_FILLERS = [
+        "hola","adiós","gracias","por","favor","lo","siento",
+        "qué","quién","dónde","cuándo","cómo","cuál",
+        "porque","pero","también","entonces"
+    ];
+    CONVERSATION_FILLERS.forEach(tok => {
+        if (!WORD_DICT[tok]) missing.add(tok);
+    });
+
+    // === 5. Scan quiz distractors ===
+    const QUIZ_DISTRACTORS = [
+        "bueno","malo","grande","pequeño","fácil","difícil",
+        "coche","calle","ciudad"
+    ];
+    QUIZ_DISTRACTORS.forEach(tok => {
+        if (!WORD_DICT[tok]) missing.add(tok);
+    });
+
+    // === 6. Auto-add missing words with inferred translations ===
+    missing.forEach(w => {
+        if (!WORD_DICT[w]) {
+            WORD_DICT[w] = inferTranslation(w);
+            added.push({ word: w, translation: WORD_DICT[w] });
+        }
+    });
+
+    // === 7. Diagnostic report ===
+    console.group("=== SUPER VALIDATOR REPORT ===");
+
+    console.log("Missing words found:", missing.size);
+    console.log("Auto-added:", added.length);
+
+    if (added.length > 0) {
+        console.log("=== Added Entries ===");
+        added.forEach(entry => {
+            console.log(`+ ${entry.word} → ${entry.translation}`);
+        });
+    }
+
+    console.log("New dictionary size:", Object.keys(WORD_DICT).length);
+
+    console.groupEnd();
+}
+
+
+/* ============================================================
+   GRAMMAR ERROR EXPLAINER
+   ============================================================ */
+function explainGrammarError(user, correct) {
+    const u = user.toLowerCase().trim();
+    const c = correct.toLowerCase().trim();
+
+    // Missing pronoun "te"
+    if (c.includes("te gusta") && !u.includes("te") && u.includes("gusta")) {
+        return "You forgot the pronoun “te”. Spanish requires “Te gusta…” to mean “You like…”.";
+    }
+
+    // Missing article
+    if ((c.includes("el ") || c.includes("la ")) &&
+        !u.includes("el ") && !u.includes("la ")) {
+        return "You missed the article (el/la). Spanish usually needs an article before nouns.";
+    }
+
+    // Wrong adverb vs frequency
+    if (c.includes("a menudo") && u.includes("lento")) {
+        return "You used “lento” (slow) instead of a frequency word like “a menudo” (often).";
+    }
+
+    // Wrong verb form
+    if (c.split(" ")[0] !== u.split(" ")[0]) {
+        return "Your verb form doesn’t match the target sentence. Check the conjugation.";
+    }
+
+    return "Your sentence is understandable, but the grammar or word choice doesn’t match the target answer.";
+}
+
+function getCEFRGrammarHint(level, user, correct) {
+    const u = user.toLowerCase().trim();
+    const c = correct.toLowerCase().trim();
+
+    /* ============================
+       A1 HINTS
+       ============================ */
+    if (level === "A1") {
+        if (!u.includes("el") && !u.includes("la") && (c.includes("el") || c.includes("la"))) {
+            return "A1 hint: Remember to include articles (el/la) before nouns.";
+        }
+        if (!u.includes("te") && c.includes("te gusta")) {
+            return "A1 hint: Use “te gusta” to say “you like”.";
+        }
+        return "A1 hint: Focus on simple present tense and basic sentence structure.";
+    }
+
+    /* ============================
+       A2 HINTS
+       ============================ */
+    if (level === "A2") {
+        if (u.includes("lento") && c.includes("a menudo")) {
+            return "A2 hint: Use frequency words like “a menudo” instead of speed words like “lento”.";
+        }
+        if (!u.includes("ayer") && c.includes("ayer")) {
+            return "A2 hint: Practice past-time markers like “ayer”.";
+        }
+        return "A2 hint: Practice common past tense verbs and daily routine vocabulary.";
+    }
+
+    /* ============================
+       B1 HINTS
+       ============================ */
+    if (level === "B1") {
+        if (!u.includes("porque") && c.includes("porque")) {
+            return "B1 hint: Use connectors like “porque” to explain reasons.";
+        }
+        if (!u.includes("que") && c.includes("que")) {
+            return "B1 hint: Multi‑clause sentences often require “que”.";
+        }
+        return "B1 hint: Try adding connectors (porque, aunque, cuando) to build longer sentences.";
+    }
+
+    /* ============================
+       B2 HINTS
+       ============================ */
+    if (level === "B2") {
+        if (!u.includes("aunque") && c.includes("aunque")) {
+            return "B2 hint: Use contrast connectors like “aunque” for complex ideas.";
+        }
+        if (!u.includes("para") && c.includes("para")) {
+            return "B2 hint: Use “para” to express purpose or intention.";
+        }
+        return "B2 hint: Aim for abstract vocabulary and multi‑clause structures.";
+    }
+
+    return "";
+}
+
+
+
+
+/* ============================================================
+   CEFR TRAINER — CLEAN APP.JS (PART 1)
+   ============================================================ */
+
+function groupByCategory(words) {
+    const out = {};
+    words.forEach(w => {
+        if (!out[w.category]) out[w.category] = [];
+        out[w.category].push(w);
+    });
+    return out;
+}
+ 
+    
+const STORAGE_KEY = "cefr_trainer_state_v2";
+
+let appState = {
+    currentLevel: "A1",
+    speechRate: 1.0,
+    studentName: "",
+    badges: [],
+    levelStats: {
+        A1: { listens: 0, flashSeen: 0, quizScore: null, quizCompleted: 0, buildCompleted: 0, sentenceCompleted: 0, conversationCompleted: 0 },
+        A2: { listens: 0, flashSeen: 0, quizScore: null, quizCompleted: 0, buildCompleted: 0, sentenceCompleted: 0, conversationCompleted: 0 },
+        B1: { listens: 0, flashSeen: 0, quizScore: null, quizCompleted: 0, buildCompleted: 0, sentenceCompleted: 0, conversationCompleted: 0 },
+        B2: { listens: 0, flashSeen: 0, quizScore: null, quizCompleted: 0, buildCompleted: 0, sentenceCompleted: 0, conversationCompleted: 0 }
+    }
+};
+
+/* ============================================================
+   CATEGORY AUTO‑ASSIGNER — PLACE HERE
+   ============================================================ */
+
+function autoAssignCategory(word) {
+    const w = word.spanish.toLowerCase();
+
+    // Verbs (infinitives)
+    if (w.endsWith("ar") || w.endsWith("er") || w.endsWith("ir"))
+        return "verbs";
+
+    // Adjectives
+    if (w.endsWith("o") || w.endsWith("a") || w.endsWith("os") || w.endsWith("as"))
+        return "adjectives";
 
     // Numbers
-    "one": "uno",
-    "two": "dos",
-    "three": "tres",
-    "four": "cuatro",
-    "five": "cinco",
-    "six": "seis",
-    "seven": "siete",
-    "eight": "ocho",
-    "nine": "nueve",
-    "ten": "diez",
-    "eleven": "once",
-    "twelve": "doce",
-    "thirteen": "trece",
-    "fourteen": "catorce",
-    "fifteen": "quince",
-    "sixteen": "dieciséis",
-    "seventeen": "diecisiete",
-    "eighteen": "dieciocho",
-    "nineteen": "diecinueve",
-    "twenty": "veinte",
-    "month": "mes",
-    "years": "años"
-}
-};
+    if (!isNaN(parseInt(w)))
+        return "numbers";
 
-   
+    // Food & drink
+    if (["manzana","pan","agua","carne","café","té","huevo","cerveza","vino","arroz","pollo","pescado","ensalada","verdura","fruta"].includes(w))
+        return "food-drink";
 
-/* ============================================================
-   CORE STATE
-   ============================================================ */
+    // Travel
+    if (["aeropuerto","hotel","taxi","tren","avión","billete","mapa","ciudad","país","viaje","turista"].includes(w))
+        return "travel";
 
-const APP_STATE = {
-    currentLevel: "A1",
-    currentCategory: null,
-    currentWord: null,
-    currentSentence: null,
-    listenIndex: 0,
-    flashIndex: 0,
-    quizIndex: 0,
-    buildTokens: [],
-    userSentence: [],
-    conversationHistory: [],
-    reviewQueue: [],
-    audioEnabled: true,
-    speechRate: 1
-};
+    // Daily life
+    if (["mañana","tarde","noche","casa","trabajo","escuela","día","semana","mes"].includes(w))
+        return "daily-life";
 
-/* ============================================================
-   RANDOM HELPERS
-   ============================================================ */
+    // Family
+    if (["madre","padre","hermano","hermana","abuelo","abuela","tío","tía","primo","prima","familia"].includes(w))
+        return "family";
 
-function rand(arr) {
-    return arr[Math.floor(Math.random() * arr.length)];
-}
+    // Shopping
+    if (["dinero","precio","tienda","comprar","vender","mercado","producto"].includes(w))
+        return "shopping";
 
-function shuffle(arr) {
-    return [...arr].sort(() => Math.random() - 0.5);
+    // Emergency
+    if (["ayuda","policía","hospital","ambulancia","fuego","emergencia"].includes(w))
+        return "emergency";
+
+    // Work
+    if (["trabajo","oficina","jefe","empleado","empresa","reunión"].includes(w))
+        return "work";
+
+    // Places / objects
+    if (["casa","escuela","parque","calle","puerta","mesa","silla","coche","habitacion","baño"].includes(w))
+        return "places-objects";
+
+    // Connectors
+    if (["y","pero","porque","aunque","cuando","si","o","entonces","luego","después","antes"].includes(w))
+        return "connectors";
+
+    // Grammar words
+    if (["el","la","los","las","un","una","unos","unas","yo","tú","él","ella","nosotros","vosotros","ellos"].includes(w))
+        return "grammar";
+
+    return "daily-life";
 }
 
 /* ============================================================
-   LEVEL + CATEGORY HELPERS
+   APPLY CATEGORIES TO ALL CEFR LEVELS — PLACE HERE
    ============================================================ */
 
-function getLevelWords(level) {
-    return CEFR_LEVELS[level] || [];
+Object.keys(CEFR_LEVELS).forEach(level => {
+    CEFR_LEVELS[level] = CEFR_LEVELS[level].map(w => ({
+        ...w,
+        category: w.category || autoAssignCategory(w)
+    }));
+});
+
+/* ============================================================
+   STATE LOAD / SAVE
+   ============================================================ */
+function loadState() {
+    try {
+        const raw = localStorage.getItem(STORAGE_KEY);
+        if (raw) Object.assign(appState, JSON.parse(raw));
+    } catch (e) {
+        console.error("State load error:", e);
+    }
 }
 
-function getListenWords(level, category) {
-    return LISTEN_VOCAB[level]?.[category] || [];
-}
 
-function getSentence(level) {
-    return rand(CEFR_SENTENCES[level]);
-}
-
-function getWordMeaning(word) {
-    return WORD_DICT[word] || null;
+function saveState() {
+    try {
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(appState));
+    } catch (e) {
+        console.error("State save error:", e);
+    }
 }
 
 /* ============================================================
-   LISTEN ENGINE — Topic-based
+   SABINA VOICE (Spanish TTS for explanations)
+   ============================================================ */
+function speak(text) {
+    if (!("speechSynthesis" in window)) return;
+    window.speechSynthesis.cancel();
+
+    const u = new SpeechSynthesisUtterance(text);
+    u.lang = "es-ES";        // Sabina Spanish voice
+    u.rate = appState.speechRate;
+    u.pitch = 1.0;
+
+    window.speechSynthesis.speak(u);
+}
+
+/* ============================================================
+   SPEECH SYNTHESIS — Spanish word pronunciation
+   ============================================================ */
+function speakSpanish(text) {
+    if (!("speechSynthesis" in window)) return;
+    window.speechSynthesis.cancel();
+
+    const u = new SpeechSynthesisUtterance(text);
+    u.lang = "es-ES";
+    u.rate = appState.speechRate;
+
+    window.speechSynthesis.speak(u);
+}
+
+
+/* ============================================================
+   QUIZ AUDIO — Sabina (correct + incorrect)
+   ============================================================ */
+function speakQuiz(correctAnswer) {
+    const message = `La respuesta correcta es: ${correctAnswer}`;
+    speak(message); // Sabina voice
+}
+
+
+
+/* ============================================================
+   LEVEL SELECTOR
+   ============================================================ */
+function setLevel(level) {
+    if (!CEFR_LEVELS[level]) return;
+
+    appState.currentLevel = level;
+    saveState();
+
+    document.querySelectorAll(".level-btn").forEach(btn => {
+        btn.classList.toggle("active", btn.dataset.level === level);
+    });
+
+    activateTab(currentTab);
+}
+
+/* ============================================================
+   TAB SYSTEM — FINAL CLEAN VERSION
    ============================================================ */
 
-// ❌ This global stub was useless and conflicts with ListenEngine.render.
-// Remove it entirely.
-// function renderListenTab(level) {
-//     level = level.trim().toUpperCase();
-// }
+const TABS = [
+    "dashboard",
+    "listen",
+    "flash",
+    "quiz",
+    "build",
+    "sentence",
+    "conversation",
+    "grammar"
+];
 
-const ListenEngine = {
-    list: [],
+let currentTab = "dashboard";
+
+/* ============================================================
+   ACTIVATE TAB
+   ============================================================ */
+function activateTab(tabName) {
+    if (!TABS.includes(tabName)) return;
+    currentTab = tabName;
+
+    // Hide all tabs
+    TABS.forEach(id => {
+        const panel = document.getElementById(id);
+        if (panel) panel.classList.add("hidden");
+    });
+
+    // Show active tab
+    const activePanel = document.getElementById(tabName);
+    if (activePanel) activePanel.classList.remove("hidden");
+
+    // Update nav button highlight
+    document.querySelectorAll(".tab-btn").forEach(btn => {
+        btn.classList.toggle("active", btn.dataset.tab === tabName);
+    });
+
+    // Load dynamic content
+    switch (tabName) {
+        case "listen":
+            renderListenTab();
+            break;
+
+        case "flash":
+            renderFlashcardsTab();
+            break;
+
+        case "quiz":
+            renderQuizTab();
+            break;
+
+        case "build":
+            renderBuildTab();
+            break;
+
+        case "sentence":
+            renderSentenceTab();
+            break;
+
+        case "conversation":
+            renderConversationTab();
+            break;
+
+        case "grammar":
+            renderGrammarTab();
+            break;
+
+        case "dashboard":
+            // static
+            break;
+    }
+}
+
+/* ============================================================
+   TAB NAVIGATION WIRING
+   ============================================================ */
+function initTabNavigation() {
+    const buttons = document.querySelectorAll(".tab-btn");
+
+    buttons.forEach(btn => {
+        btn.addEventListener("click", () => {
+            const tab = btn.dataset.tab;
+            activateTab(tab);
+        });
+    });
+}
+
+// Initialize navigation + default tab
+initTabNavigation();
+activateTab("dashboard");
+
+/* ============================================================
+   LISTEN TAB — CATEGORY + AUDIO PLAYER + CLEAN UI
+   ============================================================ */
+
+let listenAutoPlay = {
+    active: false,
+    paused: false,
     index: 0,
-    auto: false,
-    timer: null,
+    list: []
+};
 
-    setLevel(level) {
-        APP_STATE.currentLevel = level;
-        this.load();
-    },
+function renderListenTab() {
+    const container = document.getElementById("listen-content");
+    if (!container) return;
 
-    setCategory(category) {
-        APP_STATE.currentCategory = category;
-        this.load();
-    },
+    // Pull the correct CEFR level vocabulary (already categorized)
+    const levelData = LISTEN_VOCAB[appState.currentLevel];
 
-    load() {
-        const level = APP_STATE.currentLevel;
-        const category = APP_STATE.currentCategory;
+    let html = `
+        <div class="glass-panel quiz-card">
+            <h2>Listen — Level ${appState.currentLevel}</h2>
+            <p>Tap a category, then click a word pill to hear it.</p>
 
-        // HARD GUARD: never throw if CEFR_LISTENING_TOPICS is missing
-        const hasTopics =
-            (typeof CEFR_LISTENING_TOPICS !== "undefined") &&
-            CEFR_LISTENING_TOPICS &&
-            CEFR_LISTENING_TOPICS[category] &&
-            CEFR_LISTENING_TOPICS[category][level];
-
-        this.list = hasTopics ? CEFR_LISTENING_TOPICS[category][level] : [];
-        this.index = 0;
-        this.render();
-    },
-
-    render() {
-        const container = document.getElementById("listenList");
-        if (!container) return;
-
-        if (!this.list.length) {
-            container.innerHTML = `<div class="empty-msg glass-panel">
-                No listening items found for ${APP_STATE.currentLevel} / ${APP_STATE.currentCategory}.
-            </div>`;
-            return;
-        }
-
-        // ✅ Word pills restored: clickable, highlight current, show ES + EN
-        container.innerHTML = `
-            <div class="listen-grid">
-                ${this.list.map((item, i) => `
-                    <button class="pill listen-pill ${i === this.index ? "active-listen" : ""}"
-                            onclick="ListenEngine.jumpTo(${i})">
-                        <span class="listen-es">${item.spanish}</span>
-                        <span class="listen-en">${item.english}</span>
-                    </button>
-                `).join("")}
+            <div class="listen-player-controls" style="
+                display:flex;
+                gap:6px;
+                flex-wrap:wrap;
+                margin-top:6px;
+                justify-content:flex-start;
+            ">
+                <button class="pill" id="listen-playall">Play All</button>
+                <button class="pill" id="listen-pause">Pause</button>
+                <button class="pill" id="listen-resume">Resume</button>
+                <button class="pill" id="listen-stop">Stop</button>
             </div>
-        `;
-    },
+        </div>
+    `;
 
-    jumpTo(i) {
-        this.index = i;
-        this.render();
-        this.playCurrent();
-    },
+    /* ============================================================
+       CATEGORY LIST (already grouped in LISTEN_VOCAB)
+       ============================================================ */
+    Object.keys(levelData).forEach(categoryName => {
+        const words = levelData[categoryName];
 
-    playCurrent() {
-        const item = this.list[this.index];
-        if (!item) return;
-
-        const utter = new SpeechSynthesisUtterance(item.spanish);
-        utter.lang = "es-ES";
-        utter.rate = APP_STATE.speechRate || 1;
-
-        speechSynthesis.cancel();
-        speechSynthesis.speak(utter);
-    },
-
-    next() {
-        if (!this.list.length) return;
-        this.index = (this.index + 1) % this.list.length;
-        this.render();
-        this.playCurrent();
-    },
-
-    previous() {
-        if (!this.list.length) return;
-        this.index = (this.index - 1 + this.list.length) % this.list.length;
-        this.render();
-        this.playCurrent();
-    },
-
-    startAutoPlay() {
-        if (!this.list.length) return;
-        this.auto = true;
-
-        const step = () => {
-            if (!this.auto) return;
-            this.playCurrent();
-            this.next();
-            this.timer = setTimeout(step, 3500);
-        };
-
-        step();
-    },
-
-    stopAutoPlay() {
-        this.auto = false;
-        clearTimeout(this.timer);
-    },
-
-    getCurrentList() {
-        return this.list.map(item => item.spanish);
-    },
-
-    playWord(word) {
-        if (!APP_STATE.audioEnabled || !word) return;
-
-        const utter = new SpeechSynthesisUtterance(word);
-        utter.lang = "es-ES";
-        speechSynthesis.cancel();
-        speechSynthesis.speak(utter);
-    }
-};
+       html += `
+<div class="glass-panel">
+    <div class="listen-category-header" data-cat="${categoryName}">
+       <span class="listen-category-title">${categoryName}</span>
+       <span class="listen-arrow">▶</span>
+    </div>
 
 
-/* ============================================================
-   FLASHCARDS ENGINE
-   ============================================================ */
+            <div class="listen-category-content" data-cat="${categoryName}">
+                <div class="listen-grid" style="
+                    display:grid;
+                    grid-template-columns:repeat(auto-fill, minmax(120px, 1fr));
+                    gap:6px;
+                    margin-top:8px;
+                ">
+                    ${words.map(spanish => {
+                         const entry = CEFR_LEVELS[appState.currentLevel].find(w => w.spanish === spanish);
+                         const english = entry ? entry.english : "";
+                         return `
+                           <button class="pill listen-pill" data-spanish="${spanish}">
+                             <div class="listen-pill-en">${english}</div>
+                             <div class="listen-pill-es">${spanish}</div>
+                           </button>
+                       `;
+                   }).join("")}
 
-const FlashcardsEngine = {
-    setLevel(level) {
-        APP_STATE.currentLevel = level;
-        APP_STATE.flashIndex = 0;
-    },
-
-    setCategory(category) {
-        APP_STATE.currentCategory = category;
-        APP_STATE.flashIndex = 0;
-    },
-
-    getFlashcards() {
-        const level = APP_STATE.currentLevel;
-        const category = APP_STATE.currentCategory;
-
-        const vocab = CEFR_LEVELS[level] || [];
-        const filtered = vocab.filter(v => v.category === category);
-
-        return filtered.map(v => ({
-            spanish: v.spanish,
-            english: v.english,
-            flipped: false
-        }));
-    },
-
-    flipCard(card) {
-        if (!card.flipped) {
-            card.flipped = true;
-
-            if (APP_STATE.audioEnabled) {
-                const utter = new SpeechSynthesisUtterance(card.spanish);
-                utter.lang = "es-ES";
-                speechSynthesis.cancel();
-                speechSynthesis.speak(utter);
-            }
-        } else {
-            card.flipped = false;
-        }
-    },
-
-    markForReview(card) {
-        APP_STATE.reviewQueue.push({
-            spanish: card.spanish,
-            english: card.english,
-            category: APP_STATE.currentCategory,
-            level: APP_STATE.currentLevel
-        });
-    },
-
-    shuffleCards(cards) {
-        return shuffle(cards);
-    },
-
-    render() {
-        const container = document.getElementById("flashcardsList");
-        if (!container) return;
-
-        const cards = this.getFlashcards();
-
-        if (!cards.length) {
-            container.innerHTML = `<div class="empty-msg glass-panel">
-                No flashcards found for ${APP_STATE.currentLevel} / ${APP_STATE.currentCategory}.
-            </div>`;
-            return;
-        }
-
-        container.innerHTML = cards.map((card, i) => `
-            <div class="flashcard glass-panel" onclick="FlashcardsEngine.flipCard(FlashcardsEngine.getFlashcards()[${i}]); FlashcardsEngine.render();">
-                <div class="flashcard-front">${card.spanish}</div>
-                <div class="flashcard-back">${card.english}</div>
+                </div>
             </div>
-        `).join("");
-    }
-};
+        </div>`;
+    });
 
+    container.innerHTML = html;
 
-/* ============================================================
-   QUIZ ENGINE — Vocab-based
-   ============================================================ */
-
-const QuizEngine = {
-    setLevel(level) {
-        APP_STATE.currentLevel = level;
-        APP_STATE.quizIndex = 0;
-    },
-
-    setCategory(category) {
-        APP_STATE.currentCategory = category;
-        APP_STATE.quizIndex = 0;
-    },
-
-    getQuizItems() {
-        const level = APP_STATE.currentLevel;
-        const category = APP_STATE.currentCategory;
-
-        const vocab = CEFR_LEVELS[level] || [];
-        return vocab.filter(v => v.category === category);
-    },
-
-    getDistractors(correctEnglish) {
-        const allWords = Object.values(WORD_DICT);
-        const pool = allWords.filter(w => w !== correctEnglish);
-        return shuffle(pool).slice(0, 3);
-    },
-
-    buildQuestion() {
-        const items = this.getQuizItems();
-        if (!items.length) return null;
-
-        const item = items[APP_STATE.quizIndex];
-        const correct = item.english;
-        const distractors = this.getDistractors(correct);
-        const options = shuffle([correct, ...distractors]);
-
-        return {
-            spanish: item.spanish,
-            correct,
-            options
-        };
-    },
-
-    playPrompt(spanishWord) {
-        if (!APP_STATE.audioEnabled) return;
-
-        const utter = new SpeechSynthesisUtterance(spanishWord);
-        utter.lang = "es-ES";
-        speechSynthesis.cancel();
-        speechSynthesis.speak(utter);
-    },
-
-    checkAnswer(selected, question) {
-        const isCorrect = selected === question.correct;
-
-        if (!isCorrect) {
-            APP_STATE.reviewQueue.push({
-                spanish: question.spanish,
-                english: question.correct,
-                category: APP_STATE.currentCategory,
-                level: APP_STATE.currentLevel
-            });
-        }
-
-        return isCorrect;
-    },
-
-    next() {
-        const items = this.getQuizItems();
-        APP_STATE.quizIndex++;
-
-        if (APP_STATE.quizIndex >= items.length) {
-            APP_STATE.quizIndex = 0;
-        }
-
-        return this.buildQuestion();
-    },
-
-    reset() {
-        APP_STATE.quizIndex = 0;
-    }
-};
-
-/* ============================================================
-   BUILD ENGINE — Sentence Builder (token-based)
-   ============================================================ */
-
-const BuildEngine = {
-    setLevel(level) {
-        APP_STATE.currentLevel = level;
-    },
-
-    pickSentence() {
-        const level = APP_STATE.currentLevel;
-        const item = rand(CEFR_SENTENCES[level]);
-        APP_STATE.currentSentence = item.spanish;
-        return item.spanish;
-    },
-
-    tokenize(sentence) {
-        return sentence.split(" ").map(w => w.trim());
-    },
-
-    generateDistractors(count = 6) {
-        const keys = Object.keys(WORD_DICT);
-        const picks = [];
-
-        while (picks.length < count) {
-            const w = rand(keys);
-            if (!picks.includes(w)) picks.push(w);
-        }
-
-        return picks;
-    },
-
-    buildGrid() {
-        const sentence = APP_STATE.currentSentence || this.pickSentence();
-        const tokens = this.tokenize(sentence);
-        const distractors = this.generateDistractors(6);
-
-        const mixed = shuffle([...tokens, ...distractors]);
-
-        APP_STATE.buildTokens = mixed;
-        return mixed;
-    },
-
-    renderGrid() {
-        const grid = document.getElementById("buildGrid");
-        if (!grid) return;
-
-        grid.innerHTML = "";
-
-        APP_STATE.buildTokens.forEach(word => {
-            const btn = document.createElement("button");
-            btn.className = "builder-word-btn";
-            btn.textContent = word;
-
-            btn.addEventListener("click", () => {
-                APP_STATE.currentWord = word;
-                this.addWord(word);
-            });
-
-            grid.appendChild(btn);
+    /* ============================================================
+       CATEGORY COLLAPSE
+       ============================================================ */
+    container.querySelectorAll(".listen-category-header").forEach(header => {
+        header.addEventListener("click", () => {
+            const cat = header.dataset.cat;
+            const content = container.querySelector(
+                `.listen-category-content[data-cat="${cat}"]`
+            );
+            const arrow = header.querySelector(".listen-arrow");
+            const open = content.classList.toggle("open");
+            arrow.classList.toggle("open", open);
         });
-    },
+    });
 
-    addWord(word) {
-        const out = document.getElementById("buildOutput");
-        if (!out) return;
-
-        if (!APP_STATE.userSentence) APP_STATE.userSentence = [];
-
-        APP_STATE.userSentence.push(word);
-        out.textContent = APP_STATE.userSentence.join(" ");
-    },
-
-    checkSentence() {
-        const result = document.getElementById("buildResult");
-        if (!result) return;
-
-        const userSentence = APP_STATE.userSentence.join(" ");
-        const correctSentence = APP_STATE.currentSentence;
-
-        if (userSentence === correctSentence) {
-            result.textContent = "Correct!";
-            result.style.color = "#7fd0ff";
-            return { correct: true, score: 10 };
-        }
-
-        const userWords = APP_STATE.userSentence;
-        const correctWords = correctSentence.split(" ");
-
-        let score = 0;
-        for (let i = 0; i < userWords.length; i++) {
-            if (userWords[i] === correctWords[i]) score += 3;
-        }
-
-        result.textContent = `Almost! +${score} points`;
-        result.style.color = "#ffb27f";
-
-        return { correct: false, score };
-    },
-
-    newChallenge() {
-        APP_STATE.userSentence = [];
-        const out = document.getElementById("buildOutput");
-        if (out) out.textContent = "";
-
-        this.pickSentence();
-        this.buildGrid();
-        this.renderGrid();
-
-        const result = document.getElementById("buildResult");
-        if (result) result.textContent = "";
-    },
-
-    init() {
-        const checkBtn = document.getElementById("buildCheckBtn");
-        const newBtn = document.getElementById("buildNewBtn");
-
-        if (checkBtn) {
-            checkBtn.addEventListener("click", () => this.checkSentence());
-        }
-
-        if (newBtn) {
-            newBtn.addEventListener("click", () => this.newChallenge());
-        }
-
-        this.newChallenge();
-    }
-};
-
-/* ============================================================
-   SENTENCE ENGINE — Grammar-based generation
-   ============================================================ */
-
-const SentenceEngine = {
-    setLevel(level) {
-        APP_STATE.currentLevel = level;
-    },
-
-    subjects: {
-        A1: ["yo", "tú", "él", "ella", "nosotros", "ellos"],
-        A2: ["mi amigo", "mi familia", "la gente", "nosotros dos"],
-        B1: ["el equipo", "los estudiantes", "mi grupo", "la empresa"],
-        B2: ["la organización", "el sistema", "el proyecto", "la estrategia"]
-    },
-
-    verbs: {
-        A1: ["trabaja", "vive", "estudia", "come", "quiere", "necesita"],
-        A2: ["espera", "olvida", "conduce", "planea", "llega"],
-        B1: ["mejora", "organiza", "resuelve", "continúa", "encuentra"],
-        B2: ["analiza", "evalúa", "optimiza", "fortalece", "coordina"]
-    },
-
-    objects: {
-        A1: ["la comida", "el libro", "la casa", "la música"],
-        A2: ["el mensaje", "la reunión", "el viaje", "la ventana"],
-        B1: ["el proyecto", "las metas", "los detalles", "la situación"],
-        B2: ["la estrategia", "el proceso", "el sistema", "los resultados"]
-    },
-
-    modifiers: {
-        A1: ["hoy", "ahora", "rápido"],
-        A2: ["más tarde", "esta noche", "normalmente"],
-        B1: ["claramente", "pronto", "lentamente"],
-        B2: ["cuidadosamente", "en detalle", "efectivamente"]
-    },
-
-    pick(level, pool) {
-        return rand(pool[level]);
-    },
-
-    generate() {
-        const lvl = APP_STATE.currentLevel;
-
-        const subj = this.pick(lvl, this.subjects);
-        const verb = this.pick(lvl, this.verbs);
-        const obj  = this.pick(lvl, this.objects);
-        const mod  = this.pick(lvl, this.modifiers);
-
-        const sentence = `${subj} ${verb} ${obj} ${mod}`;
-        APP_STATE.currentSentence = sentence;
-
-        return sentence;
-    },
-
-    play(sentence) {
-        if (!APP_STATE.audioEnabled) return;
-
-        const utter = new SpeechSynthesisUtterance(sentence);
-        utter.lang = "es-ES";
-        speechSynthesis.cancel();
-        speechSynthesis.speak(utter);
-    },
-
-    addToReview(sentence) {
-        const words = sentence.split(" ");
-
-        words.forEach(w => {
-            APP_STATE.reviewQueue.push({
-                spanish: w,
-                english: WORD_DICT[w] || "(unknown)",
-                level: APP_STATE.currentLevel,
-                category: "SentenceEngine"
-            });
+    /* ============================================================
+       SINGLE WORD PLAYBACK
+       ============================================================ */
+    container.querySelectorAll(".pill[data-spanish]").forEach(btn => {
+        btn.addEventListener("click", () => {
+            speakSpanish(btn.dataset.spanish);
+            appState.levelStats[appState.currentLevel].listens++;
+            saveState();
+            updateBadges();
+            updateProgressMeters();
         });
-    },
-
-    newSentence() {
-        const s = this.generate();
-        this.play(s);
-        return s;
-    }
-};
-
-/* ============================================================
-   CONVERSATION ENGINE
-   ============================================================ */
-
-const ConversationEngine = {
-    setLevel(level) {
-        APP_STATE.currentLevel = level;
-    },
-
-    reset() {
-        APP_STATE.conversationHistory = [];
-    },
-
-    addTurn(role, text) {
-        APP_STATE.conversationHistory.push({ role, text });
-    },
-
-    play(text) {
-        if (!APP_STATE.audioEnabled) return;
-
-        const utter = new SpeechSynthesisUtterance(text);
-        utter.lang = "es-ES";
-        speechSynthesis.cancel();
-        speechSynthesis.speak(utter);
-    },
-
-    templates: {
-        A1: [
-            (u) => `Hola, ¿cómo estás?`,
-            (u) => `¿Dónde vives?`,
-            (u) => `¿Qué haces hoy?`,
-            (u) => `¿Te gusta la comida?`
-        ],
-        A2: [
-            (u) => `¿Qué planes tienes para esta noche?`,
-            (u) => `¿A qué hora llegaste ayer?`,
-            (u) => `¿Puedes esperar un momento?`,
-            (u) => `¿Qué información necesitas?`
-        ],
-        B1: [
-            (u) => `¿Cómo podemos mejorar esta situación?`,
-            (u) => `¿Has revisado los detalles del proyecto?`,
-            (u) => `¿Qué opinas sobre continuar mañana?`,
-            (u) => `¿Puedes explicar tu idea más claramente?`
-        ],
-        B2: [
-            (u) => `¿Cuál es tu enfoque para resolver este problema?`,
-            (u) => `¿Has evaluado los riesgos del proceso?`,
-            (u) => `¿Cómo podríamos optimizar la estrategia actual?`,
-            (u) => `¿Puedes aclarar los resultados que mencionaste?`
-        ]
-    },
-
-    generateResponse(userInput) {
-        const lvl = APP_STATE.currentLevel;
-        const template = rand(this.templates[lvl]);
-        const response = template(userInput);
-
-        this.addTurn("assistant", response);
-        this.play(response);
-
-        return response;
-    },
-
-    userTurn(text) {
-        this.addTurn("user", text);
-
-        const words = text.split(" ");
-        words.forEach(w => {
-            APP_STATE.reviewQueue.push({
-                spanish: w,
-                english: WORD_DICT[w] || "(unknown)",
-                level: APP_STATE.currentLevel,
-                category: "ConversationEngine"
-            });
-        });
-
-        return this.generateResponse(text);
-    },
-
-    getHistory() {
-        return APP_STATE.conversationHistory;
-    }
-};
-
-/* ============================================================
-   FREE PRACTICE ENGINE
-   ============================================================ */
-
-const FreePracticeEngine = {
-    setLevel(level) {
-        APP_STATE.currentLevel = level;
-    },
-
-    tokenize(text) {
-        return text
-            .trim()
-            .toLowerCase()
-            .split(" ")
-            .map(w => w.trim());
-    },
-
-    play(text) {
-        if (!APP_STATE.audioEnabled) return;
-
-        const utter = new SpeechSynthesisUtterance(text);
-        utter.lang = "es-ES";
-        speechSynthesis.cancel();
-        speechSynthesis.speak(utter);
-    },
-
-    scoreInput(words) {
-        let score = 0;
-        let unknown = [];
-        let known = [];
-
-        words.forEach(w => {
-            if (WORD_DICT[w]) {
-                score += 2;
-                known.push(w);
-            } else {
-                score -= 1;
-                unknown.push(w);
-            }
-        });
-
-        return { score, known, unknown };
-    },
-
-    getHint(level) {
-        const hints = {
-            A1: "Try simple verbs like vivir, trabajar, estudiar.",
-            A2: "Use connectors like antes, ya, todavía.",
-            B1: "Try adding details: proyecto, situación, mejorar.",
-            B2: "Use abstract nouns: estrategia, proceso, rendimiento."
-        };
-        return hints[level];
-    },
-
-    addToReview(words) {
-        words.forEach(w => {
-            APP_STATE.reviewQueue.push({
-                spanish: w,
-                english: WORD_DICT[w] || "(unknown)",
-                level: APP_STATE.currentLevel,
-                category: "FreePractice"
-            });
-        });
-    },
-
-    process(text) {
-        const lvl = APP_STATE.currentLevel;
-        const words = this.tokenize(text);
-
-        const { score, known, unknown } = this.scoreInput(words);
-
-        this.addToReview(words);
-        this.play(text);
-
-        return {
-            input: text,
-            score,
-            known,
-            unknown,
-            hint: this.getHint(lvl)
-        };
-    }
-};
-
-/* ============================================================
-   REVIEW ENGINE
-   ============================================================ */
-
-const ReviewEngine = {
-    add(item) {
-        APP_STATE.reviewQueue.push({
-            spanish: item.spanish,
-            english: item.english || WORD_DICT[item.spanish] || "(unknown)",
-            level: item.level || APP_STATE.currentLevel,
-            category: item.category || "Review"
-        });
-    },
-
-    addMany(items) {
-        items.forEach(i => this.add(i));
-    },
-
-    next() {
-        if (!APP_STATE.reviewQueue.length) return null;
-        return APP_STATE.reviewQueue[0];
-    },
-
-    markMastered() {
-        if (!APP_STATE.reviewQueue.length) return;
-        APP_STATE.reviewQueue.shift();
-    },
-
-    play(item) {
-        if (!APP_STATE.audioEnabled || !item) return;
-
-        const utter = new SpeechSynthesisUtterance(item.spanish);
-        utter.lang = "es-ES";
-        speechSynthesis.cancel();
-        speechSynthesis.speak(utter);
-    },
-
-    step() {
-        const item = this.next();
-        if (!item) return null;
-
-        this.play(item);
-        return item;
-    },
-
-    reset() {
-        APP_STATE.reviewQueue = [];
-    }
-};
-
-/* ============================================================
-   SEARCH ENGINE
-   ============================================================ */
-
-const SearchEngine = {
-    normalize(q) {
-        return q.trim().toLowerCase();
-    },
-
-    lookupSpanish(word) {
-        const w = this.normalize(word);
-        return WORD_DICT[w] || null;
-    },
-
-    lookupEnglish(word) {
-        const q = this.normalize(word);
-
-        const entries = Object.entries(WORD_DICT);
-        for (const [spanish, english] of entries) {
-            if (english.toLowerCase() === q) return spanish;
-        }
-        return null;
-    },
-
-    fuzzySpanish(query) {
-        const q = this.normalize(query);
-        const keys = Object.keys(WORD_DICT);
-
-        return keys.filter(k => k.includes(q));
-    },
-
-    fuzzyEnglish(query) {
-        const q = this.normalize(query);
-        const entries = Object.entries(WORD_DICT);
-
-        return entries
-            .filter(([spanish, english]) => english.toLowerCase().includes(q))
-            .map(([spanish]) => spanish);
-    },
-
-    filterByCategory(level, category) {
-        const list = CEFR_LEVELS[level] || [];
-        return list.filter(item => item.category === category);
-    },
-
-    play(word) {
-        if (!APP_STATE.audioEnabled || !word) return;
-
-        const utter = new SpeechSynthesisUtterance(word);
-        utter.lang = "es-ES";
-        speechSynthesis.cancel();
-        speechSynthesis.speak(utter);
-    },
-
-    addToReview(spanish) {
-        APP_STATE.reviewQueue.push({
-            spanish,
-            english: WORD_DICT[spanish] || "(unknown)",
-            level: APP_STATE.currentLevel,
-            category: "SearchEngine"
-        });
-    },
-
-    search(query) {
-        const q = this.normalize(query);
-
-        const directES = this.lookupSpanish(q);
-        if (directES) {
-            this.play(q);
-            this.addToReview(q);
-            return {
-                type: "spanish",
-                spanish: q,
-                english: directES,
-                matches: []
-            };
-        }
-
-        const directEN = this.lookupEnglish(q);
-        if (directEN) {
-            this.play(directEN);
-            this.addToReview(directEN);
-            return {
-                type: "english",
-                spanish: directEN,
-                english: q,
-                matches: []
-            };
-        }
-
-        const fuzzyES = this.fuzzySpanish(q);
-        const fuzzyEN = this.fuzzyEnglish(q);
-
-        const combined = [...new Set([...fuzzyES, ...fuzzyEN])];
-
-        return {
-            type: "fuzzy",
-            query: q,
-            matches: combined.map(s => ({
-                spanish: s,
-                english: WORD_DICT[s] || "(unknown)"
-            }))
-        };
-    }
-};
-
-/* ============================================================
-   AUDIO SYSTEM
-   ============================================================ */
-
-const AudioSystem = {
-    enable() {
-        APP_STATE.audioEnabled = true;
-    },
-
-    disable() {
-        APP_STATE.audioEnabled = false;
-        speechSynthesis.cancel();
-    },
-
-    toggle() {
-        APP_STATE.audioEnabled = !APP_STATE.audioEnabled;
-        if (!APP_STATE.audioEnabled) speechSynthesis.cancel();
-    },
-
-    spanishVoice: null,
-
-    loadVoice() {
-        const voices = speechSynthesis.getVoices();
-
-        this.spanishVoice =
-            voices.find(v => v.lang.startsWith("es") && /female|mujer/i.test(v.name)) ||
-            voices.find(v => v.lang.startsWith("es")) ||
-            voices[0] ||
-            null;
-    }
-};
-
-speechSynthesis.onvoiceschanged = () => AudioSystem.loadVoice();
-AudioSystem.loadVoice();
-
-const speak = (text, rate = 1.0, pitch = 1.0) => {
-    if (!APP_STATE.audioEnabled || !text) return;
-
-    const utter = new SpeechSynthesisUtterance(text);
-    utter.lang = "es-ES";
-    utter.rate = rate;
-    utter.pitch = pitch;
-
-    if (AudioSystem.spanishVoice) {
-        utter.voice = AudioSystem.spanishVoice;
-    }
-
-    speechSynthesis.cancel();
-    speechSynthesis.speak(utter);
-};
-
-
-/* ============================================================
-   ACHIEVEMENTS ENGINE
-   ============================================================ */
-
-function getLevelStats() {
-    // Placeholder: should be wired to real stats.
-    return {
-        A1: { avg: 0 },
-        A2: { avg: 0 },
-        B1: { avg: 0 },
-        B2: { avg: 0 }
+    });
+
+    /* ============================================================
+       AUTO PLAY — PLAY ALL WORDS
+       ============================================================ */
+
+    // Flatten all categories into one list
+    listenAutoPlay.list = Object.values(levelData).flat();
+
+    document.getElementById("listen-playall").onclick = () => {
+        listenAutoPlay.active = true;
+        listenAutoPlay.paused = false;
+        listenAutoPlay.index = 0;
+        playNextListenWord();
+    };
+
+    document.getElementById("listen-pause").onclick = () => {
+        listenAutoPlay.paused = true;
+        if (speechSynthesis.pause) speechSynthesis.pause();
+    };
+
+    document.getElementById("listen-resume").onclick = () => {
+        listenAutoPlay.paused = false;
+        if (speechSynthesis.resume) speechSynthesis.resume();
+        playNextListenWord();
+    };
+
+    document.getElementById("listen-stop").onclick = () => {
+        listenAutoPlay.active = false;
+        listenAutoPlay.paused = false;
+        listenAutoPlay.index = 0;
+        if (speechSynthesis.cancel) speechSynthesis.cancel();
     };
 }
 
-const AchievementsEngine = {
-    KEY: "cefr_achievements_v3",
-    unlocked: [],
 
-    badges: {
-        A1_master: {
-            title: "A1 Master",
-            desc: "Score 90%+ across all A1 categories.",
-            icon: "🥇"
-        },
-        A2_master: {
-            title: "A2 Master",
-            desc: "Score 90%+ across all A2 categories.",
-            icon: "🥈"
-        },
-        B1_master: {
-            title: "B1 Master",
-            desc: "Score 90%+ across all B1 categories.",
-            icon: "🏅"
-        },
-        B2_master: {
-            title: "B2 Master",
-            desc: "Score 90%+ across all B2 categories.",
-            icon: "🏆"
-        },
-        full_progress: {
-            title: "200‑Word Explorer",
-            desc: "Reach 90% average across A1 → B2.",
-            icon: "🚀"
+/* ============================================================
+   AUTO PLAY ENGINE
+   ============================================================ */
+function playNextListenWord() {
+    if (!listenAutoPlay.active || listenAutoPlay.paused) return;
+
+    const list = listenAutoPlay.list;
+    if (listenAutoPlay.index >= list.length) {
+        listenAutoPlay.active = false;
+        return;
+    }
+
+    const word = list[listenAutoPlay.index];
+    const utter = new SpeechSynthesisUtterance(word);
+    utter.lang = "es-ES";
+    utter.rate = appState.speechRate;
+
+    utter.onend = () => {
+        if (!listenAutoPlay.paused) {
+            listenAutoPlay.index++;
+            setTimeout(playNextListenWord, 500);
         }
-    },
+    };
 
-    load() {
-        try {
-            const raw = localStorage.getItem(this.KEY);
-            if (raw) this.unlocked = JSON.parse(raw);
-        } catch {
-            this.unlocked = [];
-        }
-    },
+    speechSynthesis.cancel();
+    speechSynthesis.speak(utter);
+}
 
-    save() {
-        localStorage.setItem(this.KEY, JSON.stringify(this.unlocked));
-    },
+/* ============================================================
+   FLASHCARDS — CATEGORY GROUPED + FLIP + AUDIO (STABLE VERSION)
+   ============================================================ */
 
-    evaluate() {
-        const stats = getLevelStats();
 
-        const ACHIEVEMENTS = [
-            { id: "A1_master", condition: () => stats.A1.avg >= 90 },
-            { id: "A2_master", condition: () => stats.A2.avg >= 90 },
-            { id: "B1_master", condition: () => stats.B1.avg >= 90 },
-            { id: "B2_master", condition: () => stats.B2.avg >= 90 },
-            {
-                id: "full_progress",
-                condition: () => {
-                    const totalAvg = Math.round(
-                        (stats.A1.avg + stats.A2.avg + stats.B1.avg + stats.B2.avg) / 4
-                    );
-                    return totalAvg >= 90;
-                }
+function renderFlashcardsTab() {
+    const container = document.getElementById("flash-content");
+    const words = CEFR_LEVELS[appState.currentLevel];
+    const grouped = groupByCategory(words);
+
+    let html = `
+        <div class="glass-panel">
+            <h2>Flashcards — Level ${appState.currentLevel}</h2>
+            <p>Tap a card to flip. Spanish side plays audio.</p>
+        </div>
+    `;
+
+    Object.keys(grouped).forEach(cat => {
+        html += `
+        <div class="glass-panel">
+        <div class="flash-category-header" data-cat="${cat}">
+           <span class="listen-category-title">${cat.toUpperCase()}</span>
+           <span class="listen-arrow">▶</span>
+        </div>
+
+            <div class="flash-category-content" data-cat="${cat}">
+                <div class="fc-grid">
+                    ${grouped[cat].map(item => `
+                        <div class="fc-card">
+                            <div class="fc-inner">
+                                <div class="fc-front pill">${item.english}</div>
+                                <div class="fc-back pill">${item.spanish}</div>
+                            </div>
+                        </div>
+                    `).join("")}
+                </div>
+            </div>
+        </div>`;
+    });
+
+    container.innerHTML = html;
+
+    container.querySelectorAll(".flash-category-header").forEach(header => {
+        header.addEventListener("click", () => {
+            const cat = header.dataset.cat;
+            const content = container.querySelector(`.flash-category-content[data-cat="${cat}"]`);
+            const arrow = header.querySelector(".listen-arrow");
+            const open = content.classList.toggle("open");
+            arrow.classList.toggle("open", open);
+        });
+    });
+
+    container.querySelectorAll(".fc-card").forEach(card => {
+        card.addEventListener("click", () => {
+            const inner = card.querySelector(".fc-inner");
+            const flipped = inner.classList.toggle("fc-flipped");
+            const spanish = inner.querySelector(".fc-back").textContent.trim();
+
+            if (flipped) {
+                speakSpanish(spanish);
+                appState.levelStats[appState.currentLevel].flashSeen++;
+                saveState();
+                updateBadges();
+                updateProgressMeters();
+            } else {
+                speechSynthesis.cancel();
             }
-        ];
+        });
+    });
+}
 
-        ACHIEVEMENTS.forEach(a => {
-            if (!this.unlocked.includes(a.id) && a.condition()) {
-                this.unlocked.push(a.id);
-                this.save();
+
+/* ============================================================
+   SHARED QUIZ / BUILD / SENTENCE / CONVERSATION STATE
+   ============================================================ */
+
+let quizState = {
+    currentWord: null,
+    options: [],
+    harderMode: false,
+    selected: null
+};
+
+let buildState = {
+    currentWord: null,
+    tokens: []
+};
+
+let sentenceState = {
+    currentSentence: null,
+    tokens: []
+};
+
+let convoState = {
+    currentPrompt: null,
+    tokens: []
+};
+
+function generateQuizOptions(words, correctWord) {
+    let opts = [correctWord.spanish];
+    const count = quizState.harderMode ? 5 : 3;
+
+    while (opts.length < count) {
+        const w = words[Math.floor(Math.random() * words.length)];
+        if (!opts.includes(w.spanish)) opts.push(w.spanish);
+    }
+
+    return opts.sort(() => Math.random() - 0.5);
+}
+
+/* ============================================================
+   QUIZ TAB — RENDER + EVENTS
+   ============================================================ */
+
+function renderQuizTab() {
+    const container = document.getElementById("quiz-content");
+    const words = CEFR_LEVELS[appState.currentLevel];
+
+    if (!words || !words.length) {
+        container.innerHTML = `<div class="glass-panel quiz-card">
+            <p>No words found for level ${appState.currentLevel}.</p>
+        </div>`;
+        return;
+    }
+
+    quizState.currentWord = words[Math.floor(Math.random() * words.length)];
+    quizState.options = generateQuizOptions(words, quizState.currentWord);
+    quizState.selected = null;
+
+container.innerHTML = `
+<div class="glass-panel quiz-card">
+    <h2>Quiz — Level ${appState.currentLevel}</h2>
+    <p>Select the correct Spanish for the English word.</p>
+
+    <div id="qb-meta"><strong>English:</strong> ${quizState.currentWord.english}</div>
+
+    <div id="qb-grid" class="sb-grid">
+        ${quizState.options.map(opt => `
+            <button class="pill" data-spanish="${opt}">${opt}</button>
+        `).join("")}
+    </div>
+
+    <!-- ⭐ ANSWER FIELD MOVED UP -->
+    <div id="qb-answer" class="qb-answer"></div>
+
+    <!-- ⭐ BUTTONS MOVED CLOSER TO ANSWER -->
+    <div class="sb-controls quiz-controls-tight">
+        <button id="qb-submit">Check</button>
+        <button id="qb-next">Next</button>
+        <button id="qb-harder" class="${quizState.harderMode ? "active" : ""}">Harder</button>
+    </div>
+
+    <!-- ⭐ FEEDBACK MOVED BELOW BUTTONS -->
+    <div id="qb-feedback" class="qb-feedback"></div>
+</div>
+`;
+
+
+    setupQuizEvents();
+}
+
+function setupQuizEvents() {
+    const grid = document.getElementById("qb-grid");
+    const submitBtn = document.getElementById("qb-submit");
+    const nextBtn = document.getElementById("qb-next");
+    const harderBtn = document.getElementById("qb-harder");
+    const feedback = document.getElementById("qb-feedback");
+    const answerBox = document.getElementById("qb-answer");
+
+    quizState.selected = null;
+
+    // Pill selection
+    grid.querySelectorAll(".pill").forEach(btn => {
+        btn.addEventListener("click", () => {
+            grid.querySelectorAll(".pill").forEach(b => b.classList.remove("active"));
+            btn.classList.add("active");
+            quizState.selected = btn.dataset.spanish;
+            answerBox.textContent = quizState.selected;
+        });
+    });
+
+    // Check button
+    submitBtn.addEventListener("click", () => {
+    if (!quizState.selected) {
+        feedback.textContent = "Choose an answer first.";
+        return;
+    }
+
+    const correct = quizState.currentWord.spanish;
+
+    // ⭐ Ensure quizScore is not null before incrementing
+    if (appState.levelStats[appState.currentLevel].quizScore === null) {
+        appState.levelStats[appState.currentLevel].quizScore = 0;
+    }
+
+   if (quizState.selected === correct) {
+    feedback.textContent = "Correct! 🎉";
+
+    if (appState.levelStats[appState.currentLevel].quizScore === null) {
+        appState.levelStats[appState.currentLevel].quizScore = 0;
+    }
+
+    appState.levelStats[appState.currentLevel].quizScore++;
+    appState.levelStats[appState.currentLevel].quizCompleted++;   // ⭐ ADD THIS LINE
+
+    updateBadges();
+    updateProgressMeters();
+}
+ else {
+        feedback.textContent = `Incorrect — correct answer: ${correct}`;
+    }
+
+    // Sabina audio
+    setTimeout(() => speakQuiz(correct), 300);
+
+    saveState();
+});
+
+
+    // Next button
+    nextBtn.addEventListener("click", () => {
+        renderQuizTab();
+    });
+
+    // Harder mode toggle
+    harderBtn.addEventListener("click", () => {
+        quizState.harderMode = !quizState.harderMode;
+        harderBtn.classList.toggle("active");
+        renderQuizTab();
+    });
+}
+
+
+/* ============================================================
+   BUILD TAB — English → Spanish Builder (with disruptors + feedback)
+   ============================================================ */
+function renderBuildTab() {
+    const container = document.getElementById("build-content");
+
+    const pool = CEFR_SENTENCES[appState.currentLevel];
+    const sentence = pool[Math.floor(Math.random() * pool.length)];
+
+    const english = sentence.english;
+    const spanish = sentence.spanish;
+
+    const coreTokens = spanish.split(" ");
+
+    const disruptors = [
+        "rápido","lento","siempre","nunca","ayer","mañana",
+        "porque","pero","muy","también","solo","entonces"
+    ];
+
+    let bank = [...coreTokens];
+
+    while (bank.length < coreTokens.length + 5) {
+        const d = disruptors[Math.floor(Math.random() * disruptors.length)];
+        if (!bank.includes(d)) bank.push(d);
+    }
+
+    bank = bank.sort(() => Math.random() - 0.5);
+
+    buildState.tokens = bank;
+    buildState.answer = [];
+
+    container.innerHTML = `
+        <div class="glass-panel build-card">
+            <h2>Duplicate this sentence in Spanish</h2>
+            <p class="build-english"><strong>English:</strong> ${english}</p>
+
+            <div id="build-selected" class="build-selected"></div>
+
+            <div id="build-words" class="sb-grid">
+                ${bank.map(w => `<button class="pill build-opt" data-token="${w}">${w}</button>`).join("")}
+            </div>
+
+            <input id="build-input" class="input-field" placeholder="Or type the Spanish sentence…">
+
+            <div id="build-feedback"></div>
+
+            <div class="sb-controls">
+                <button id="build-undo">Undo</button>
+                <button id="build-reset">Reset</button>
+                <button id="build-check">Check</button>
+                <button id="build-next">Next</button>
+            </div>
+        </div>
+    `;
+
+    setupBuildEvents(sentence);
+}
+
+function setupBuildEvents(sentence) {
+    const selectedArea = document.getElementById("build-selected");
+    const grid = document.getElementById("build-words");
+    const input = document.getElementById("build-input");
+    const feedback = document.getElementById("build-feedback");
+
+    const undoBtn = document.getElementById("build-undo");
+    const resetBtn = document.getElementById("build-reset");
+    const checkBtn = document.getElementById("build-check");
+    const nextBtn = document.getElementById("build-next");
+
+    buildState.answer = [];
+
+    grid.querySelectorAll(".build-opt").forEach(btn => {
+        btn.addEventListener("click", () => {
+            buildState.answer.push(btn.dataset.token);
+            btn.classList.add("used");
+            btn.disabled = true;
+            selectedArea.textContent = buildState.answer.join(" ");
+        });
+    });
+
+    input.addEventListener("input", () => {
+        buildState.answer = input.value.trim().split(" ");
+        selectedArea.textContent = buildState.answer.join(" ");
+    });
+
+    undoBtn.addEventListener("click", () => {
+        buildState.answer.pop();
+        selectedArea.textContent = buildState.answer.join(" ");
+
+        grid.querySelectorAll(".build-opt").forEach(btn => {
+            if (!buildState.answer.includes(btn.dataset.token)) {
+                btn.classList.remove("used");
+                btn.disabled = false;
             }
         });
-    },
+    });
 
-    getUnlocked() {
-        return this.unlocked.map(id => this.badges[id]);
-    },
+    resetBtn.addEventListener("click", () => {
+        buildState.answer = [];
+        selectedArea.textContent = "";
+        input.value = "";
+        grid.querySelectorAll(".build-opt").forEach(btn => {
+            btn.classList.remove("used");
+            btn.disabled = false;
+        });
+    });
 
-    getFeed() {
-        return this.unlocked.map(id => ({
-            id,
-            ...this.badges[id]
-        }));
-    },
+    checkBtn.addEventListener("click", () => {
+    const correct = sentence.spanish.trim();
+    const user = buildState.answer.join(" ").trim();
 
-    reset() {
-        this.unlocked = [];
-        this.save();
+    // NEW: translate learner answer to English
+    const learnerEnglish = translateToEnglish(user);
+
+    if (user === correct) {
+        feedback.innerHTML = `
+            <span style="color:#4ade80;font-weight:600;">Correct! 🎉</span><br><br>
+            <strong>Your Translated Response is:</strong><br>${learnerEnglish}
+        `;
+        appState.levelStats[appState.currentLevel].buildCompleted++;
+        updateBadges();
+        updateProgressMeters();
+        setTimeout(() => speakQuiz(correct), 300);
+    } else {
+        const correctTokens = correct.split(" ");
+        const userTokens = buildState.answer;
+
+        let html = `<strong>Correct Answer:</strong><br>${correct}<br><br>`;
+        html += `<strong>Your Answer:</strong><br>${user}<br><br>`;
+        html += `<strong>Your Translated Response is:</strong><br>${learnerEnglish}<br><br>`;
+        html += `<strong>Word-by-word feedback:</strong><br>`;
+
+        userTokens.forEach((t, i) => {
+            if (correctTokens[i] === t) {
+                html += `<span style="color:#4ade80;">${t} ✔</span> `;
+            } else {
+                html += `<span style="color:#f87171;">${t} ✖</span> `;
+            }
+        });
+
+        feedback.innerHTML = html;
+        setTimeout(() => speakQuiz(correct), 300);
     }
-};
 
-AchievementsEngine.load();
+    saveState();
+});
+
+
+    nextBtn.addEventListener("click", () => {
+        renderBuildTab();
+    });
+}
 
 /* ============================================================
-   ROUTER
+   SENTENCE TAB — CEFR MULTIPLE‑CHOICE (FINAL MASTER VERSION)
    ============================================================ */
 
-const Router = {
-    currentTab: "dashboard",
+function generateSentenceForLevel(level) {
+    const pool = CEFR_SENTENCE_CHOICES[level];
+    const item = pool[Math.floor(Math.random() * pool.length)];
 
-    switch(tabName) {
-        this.currentTab = tabName;
+    const shuffled = [...item.options]
+    .filter(Boolean)
+    .sort(() => Math.random() - 0.5);
 
-        document.querySelectorAll(".tab-page").forEach(el => {
-            el.style.display = "none";
+
+    return {
+        english: item.english,
+        correct: item.correct,
+        options: shuffled
+    };
+}
+
+function renderSentenceTab() {
+    const container = document.getElementById("sentence-content");
+    const level = appState.currentLevel;
+
+    // SAFETY CHECK — prevents crashes if level has no sentences
+    if (!CEFR_SENTENCE_CHOICES[level]) {
+        container.innerHTML = "<p>No sentences available for this level.</p>";
+        return;
+    }
+
+    const q = generateSentenceForLevel(level);
+
+
+    container.innerHTML = `
+        <div class="glass-panel sentence-card">
+            <h2>Sentence — Level ${level}</h2>
+            <p>Select the correct Spanish translation.</p>
+
+            <div class="sentence-english">
+                <strong>English:</strong> ${q.english}
+            </div>
+
+            <div id="sentence-options" class="sentence-options">
+                ${q.options.map(opt => `
+                    <button class="pill" data-opt="${opt}">
+                        ${opt}
+                    </button>
+                `).join("")}
+            </div>
+
+            <div id="sentence-feedback"></div>
+
+            <div class="sentence-controls">
+                <button id="sentence-next" class="pill">Next</button>
+            </div>
+        </div>
+    `;
+
+    setupSentenceEvents(q);
+}
+
+function setupSentenceEvents(q) {
+    const buttons = document.querySelectorAll(".pill");
+    const feedback = document.getElementById("sentence-feedback");
+    const nextBtn = document.getElementById("sentence-next");
+
+    buttons.forEach(btn => {
+        btn.addEventListener("click", () => {
+            const chosen = btn.dataset.opt;
+
+            if (chosen === q.correct) {
+                feedback.innerHTML = `
+                    <span style="color:#4ade80;font-weight:600;">
+                        Correct! 🎉
+                    </span>
+                `;
+
+                appState.levelStats[appState.currentLevel].sentenceCompleted++;
+                updateBadges();
+                updateProgressMeters();
+
+                speakQuiz(q.correct);
+
+            } else {
+                feedback.innerHTML = `
+                    <span style="color:#f87171;font-weight:600;">
+                        Incorrect.</span><br>
+                    Correct answer: <strong>${q.correct}</strong>
+                `;
+
+                speakQuiz(q.correct);
+            }
+
+            buttons.forEach(b => b.disabled = true);
         });
+    });
 
-        const activePage = document.getElementById(`tab-${tabName}`);
-        if (activePage) activePage.style.display = "block";
+    nextBtn.addEventListener("click", () => {
+        renderSentenceTab();
+    });
+}
 
-        document.querySelectorAll(".tab-btn").forEach(btn => {
-            btn.classList.remove("active-tab");
-        });
-        const activeBtn = document.getElementById(`btn-${tabName}`);
-        if (activeBtn) activeBtn.classList.add("active-tab");
+/* ============================================================
+   CEFR SENTENCE CHOICES — FULL PACK (A1 → B2)
+   ============================================================ */
 
-        speechSynthesis.cancel();
+const CEFR_SENTENCE_CHOICES = {
 
-        this.initTab(tabName);
-    },
-
-    initTab(tabName) {
-    switch (tabName) {
-        case "listen":
-            ListenEngine.setLevel(APP_STATE.currentLevel);
-            ListenEngine.setCategory(APP_STATE.currentCategory);
-            ListenUI.renderList();
-            break;
-
-
-            case "flashcards":
-                FlashcardsEngine.setLevel(APP_STATE.currentLevel);
-                FlashcardsEngine.setCategory(APP_STATE.currentCategory);
-                FlashcardsUI.render();
-                break;
-
-            case "quiz":
-                QuizEngine.setLevel(APP_STATE.currentLevel);
-                QuizEngine.setCategory(APP_STATE.currentCategory);
-                QuizUI.render();
-                break;
-
-            case "build":
-                BuildEngine.setLevel(APP_STATE.currentLevel);
-                BuildEngine.init();
-                break;
-
-            case "sentence":
-                SentenceEngine.setLevel(APP_STATE.currentLevel);
-                SentenceEngine.newSentence();
-                break;
-
-            case "conversation":
-                ConversationEngine.setLevel(APP_STATE.currentLevel);
-                ConversationEngine.reset();
-                ConversationUI.render();
-                break;
-
-            case "practice":
-                FreePracticeEngine.setLevel(APP_STATE.currentLevel);
-                break;
-
-            case "review":
-                ReviewEngine.step();
-                ReviewUI.render();
-                break;
-
-            case "achievements":
-                AchievementsEngine.evaluate();
-                break;
-
-            case "dashboard":
-            default:
-                break;
+    /* ============================
+       A1 — Beginner
+       ============================ */
+    A1: [
+        {
+            english: "I want a coffee.",
+            correct: "quiero un café",
+            options: ["quiero un café", "necesito agua", "tengo hambre"]
+        },
+        {
+            english: "Where is the bathroom?",
+            correct: "dónde está el baño",
+            options: ["dónde está el baño", "dónde está la mesa", "dónde está mi amigo"]
+        },
+        {
+            english: "I need help.",
+            correct: "necesito ayuda",
+            options: ["necesito ayuda", "necesito comida", "necesito descansar"]
+        },
+        {
+            english: "The room is clean.",
+            correct: "la habitación está limpia",
+            options: ["la habitación está limpia", "la habitación está sucia", "la habitación está lejos"]
+        },
+        {
+            english: "He likes cold water.",
+            correct: "a él le gusta el agua fría",
+            options: ["a él le gusta el agua fría", "a él le gusta el café caliente", "a él le gusta la comida"]
+        },
+        {
+            english: "We are at home.",
+            correct: "estamos en casa",
+            options: ["estamos en casa", "estamos en el hotel", "estamos en la tienda"]
+        },
+        {
+            english: "She is my sister.",
+            correct: "ella es mi hermana",
+            options: ["ella es mi hermana", "ella es mi madre", "ella es mi amiga"]
+        },
+        {
+            english: "The bus is late.",
+            correct: "el autobús está retrasado",
+            options: ["el autobús está retrasado", "el autobús está aquí", "el autobús está limpio"]
+        },
+        {
+            english: "I am tired today.",
+            correct: "estoy cansado hoy",
+            options: ["estoy cansado hoy", "estoy feliz hoy", "estoy en casa hoy"]
+        },
+        {
+            english: "The food is delicious.",
+            correct: "la comida es deliciosa",
+            options: ["la comida es deliciosa", "la comida es fría", "la comida es nueva"]
+        },
+        {
+            english: "I want to go home.",
+            correct: "quiero ir a casa",
+            options: ["quiero ir a casa", "quiero ir al hotel", "quiero ir a la tienda"]
+        },
+        {
+            english: "He has a big car.",
+            correct: "él tiene un coche grande",
+            options: ["él tiene un coche grande", "él tiene un coche pequeño", "él tiene una casa grande"]
+        },
+        {
+            english: "My friend is very nice.",
+            correct: "mi amigo es muy amable",
+            options: ["mi amigo es muy amable", "mi amigo es muy alto", "mi amigo es muy cansado"]
+        },
+        {
+            english: "The hotel is near.",
+            correct: "el hotel está cerca",
+            options: ["el hotel está cerca", "el hotel está lejos", "el hotel está limpio"]
+        },
+        {
+            english: "I have two brothers.",
+            correct: "tengo dos hermanos",
+            options: ["tengo dos hermanos", "tengo dos casas", "tengo dos cafés"]
         }
-    }
+    ],
+
+    /* ============================
+       A2 — Elementary
+       ============================ */
+    A2: [
+        {
+            english: "We are going to visit my parents.",
+            correct: "vamos a visitar a mis padres",
+            options: ["vamos a visitar a mis padres", "vamos a comprar comida", "vamos a limpiar la casa"]
+        },
+        {
+            english: "She bought fruit at the market.",
+            correct: "ella compró fruta en el mercado",
+            options: ["ella compró fruta en el mercado", "ella compró ropa nueva", "ella compró un teléfono"]
+        },
+        {
+            english: "I cleaned the kitchen yesterday.",
+            correct: "limpié la cocina ayer",
+            options: ["limpié la cocina ayer", "cociné la cena ayer", "compré comida ayer"]
+        },
+        {
+            english: "He called me last night.",
+            correct: "él me llamó anoche",
+            options: ["él me llamó anoche", "él me visitó anoche", "él me vio anoche"]
+        },
+        {
+            english: "She is cooking dinner now.",
+            correct: "ella está cocinando la cena ahora",
+            options: ["ella está cocinando la cena ahora", "ella está limpiando ahora", "ella está leyendo ahora"]
+        },
+        {
+            english: "We arrived early.",
+            correct: "llegamos temprano",
+            options: ["llegamos temprano", "llegamos tarde", "llegamos mañana"]
+        },
+        {
+            english: "I want to try something new.",
+            correct: "quiero probar algo nuevo",
+            options: ["quiero probar algo nuevo", "quiero comprar algo nuevo", "quiero comer algo nuevo"]
+        },
+        {
+            english: "He forgot his keys.",
+            correct: "él olvidó sus llaves",
+            options: ["él olvidó sus llaves", "él perdió su teléfono", "él rompió su bolsa"]
+        },
+        {
+            english: "I usually wake up early.",
+            correct: "normalmente me despierto temprano",
+            options: ["normalmente me despierto temprano", "normalmente me duermo temprano", "normalmente como temprano"]
+        },
+        {
+            english: "She likes to read at night.",
+            correct: "a ella le gusta leer por la noche",
+            options: ["a ella le gusta leer por la noche", "a ella le gusta caminar por la noche", "a ella le gusta cocinar por la noche"]
+        }
+    ],
+
+    /* ============================
+       B1 — Intermediate
+       ============================ */
+    B1: [
+        {
+            english: "We need to organize the meeting.",
+            correct: "necesitamos organizar la reunión",
+            options: ["necesitamos organizar la reunión", "necesitamos limpiar la oficina", "necesitamos terminar el informe"]
+        },
+        {
+            english: "I think this restaurant is excellent.",
+            correct: "creo que este restaurante es excelente",
+            options: ["creo que este restaurante es excelente", "creo que este restaurante es nuevo", "creo que este restaurante es pequeño"]
+        },
+        {
+            english: "She asked me to help her.",
+            correct: "ella me pidió que la ayudara",
+            options: ["ella me pidió que la ayudara", "ella me pidió que la llamara", "ella me pidió que la visitara"]
+        },
+        {
+            english: "They plan to move next month.",
+            correct: "ellos planean mudarse el próximo mes",
+            options: ["ellos planean mudarse el próximo mes", "ellos planean viajar el próximo mes", "ellos planean trabajar el próximo mes"]
+        },
+        {
+            english: "We must follow the instructions.",
+            correct: "debemos seguir las instrucciones",
+            options: ["debemos seguir las instrucciones", "debemos cambiar las instrucciones", "debemos leer las instrucciones"]
+        },
+        {
+            english: "He wants to change his schedule.",
+            correct: "él quiere cambiar su horario",
+            options: ["él quiere cambiar su horario", "él quiere cambiar su casa", "él quiere cambiar su comida"]
+        },
+        {
+            english: "Although it was difficult, she completed the task.",
+            correct: "aunque fue difícil, ella completó la tarea",
+            options: ["aunque fue difícil, ella completó la tarea", "aunque fue fácil, ella completó la tarea", "aunque fue difícil, ella canceló la tarea"]
+        },
+        {
+            english: "We talked for an hour.",
+            correct: "hablamos durante una hora",
+            options: ["hablamos durante una hora", "hablamos durante un día", "hablamos durante un minuto"]
+        }
+    ],
+
+    /* ============================
+       B2 — Upper Intermediate
+       ============================ */
+    B2: [
+        {
+            english: "We must consider all possibilities.",
+            correct: "debemos considerar todas las posibilidades",
+            options: ["debemos considerar todas las posibilidades", "debemos cancelar todas las posibilidades", "debemos ignorar todas las posibilidades"]
+        },
+        {
+            english: "They want to analyze the situation.",
+            correct: "ellos quieren analizar la situación",
+            options: ["ellos quieren analizar la situación", "ellos quieren cambiar la situación", "ellos quieren evitar la situación"]
+        },
+        {
+            english: "We need to evaluate the risks carefully.",
+            correct: "necesitamos evaluar los riesgos cuidadosamente",
+            options: ["necesitamos evaluar los riesgos cuidadosamente", "necesitamos evitar los riesgos cuidadosamente", "necesitamos reducir los riesgos cuidadosamente"]
+        },
+        {
+            english: "She believes the idea is innovative.",
+            correct: "ella cree que la idea es innovadora",
+            options: ["ella cree que la idea es innovadora", "ella cree que la idea es complicada", "ella cree que la idea es pequeña"]
+        },
+        {
+            english: "Despite the problems, they finished the project.",
+            correct: "a pesar de los problemas, terminaron el proyecto",
+            options: ["a pesar de los problemas, terminaron el proyecto", "a pesar de los problemas, cancelaron el proyecto", "a pesar de los problemas, ignoraron el proyecto"]
+        },
+        {
+            english: "They want to optimize the process.",
+            correct: "ellos quieren optimizar el proceso",
+            options: ["ellos quieren optimizar el proceso", "ellos quieren cancelar el proceso", "ellos quieren dividir el proceso"]
+        }
+    ]
 };
 
+
+
 /* ============================================================
-   UI HELPERS
+   CONVERSATION TAB — RENDER + EVENTS (EVERYDAY DIALOGUE)
    ============================================================ */
 
-const UI = {
-    glass(el) {
-        if (!el) return;
-        el.classList.add("glass-panel");
-    },
+const CONVO_PROMPTS = [
+    { english: "How are you today?", spanishTarget: "¿Cómo estás hoy?" },
+    { english: "Where do you live?", spanishTarget: "¿Dónde vives?" },
+    { english: "What do you like to do on weekends?", spanishTarget: "¿Qué te gusta hacer los fines de semana?" },
+    { english: "Do you work or study?", spanishTarget: "¿Trabajas o estudias?" },
+    { english: "What is your favorite food?", spanishTarget: "¿Cuál es tu comida favorita?" },
+    { english: "What time do you usually get up?", spanishTarget: "¿A qué hora sueles levantarte?" }
+];
 
-    pill(el) {
-        if (!el) return;
-        el.classList.add("pill-btn");
-    },
+function renderConversationTab() {
+    const container = document.getElementById("conversation-content");
+    const words = CEFR_LEVELS[appState.currentLevel];
 
-    setText(id, text) {
-        const el = document.getElementById(id);
-        if (el) el.textContent = text;
-    },
-
-    setHTML(id, html) {
-        const el = document.getElementById(id);
-        if (el) el.innerHTML = html;
-    },
-
-    clear(id) {
-        const el = document.getElementById(id);
-        if (el) el.innerHTML = "";
-    },
-
-    button(label, onClick) {
-        const btn = document.createElement("button");
-        btn.textContent = label;
-        btn.className = "pill-btn";
-        btn.addEventListener("click", onClick);
-        return btn;
-    },
-
-    card(content) {
-        const div = document.createElement("div");
-        div.className = "glass-card";
-        div.innerHTML = content;
-        return div;
+    if (!words || !words.length) {
+        container.innerHTML = `<div class="glass-panel convo-card">
+            <p>No words found for level ${appState.currentLevel}.</p>
+        </div>`;
+        return;
     }
-};
 
-/* ============================================================
-   LISTEN UI
-   ============================================================ */
+    // Pick random prompt
+    convoState.currentPrompt = CONVO_PROMPTS[Math.floor(Math.random() * CONVO_PROMPTS.length)];
+    const target = convoState.currentPrompt.spanishTarget;
 
-const ListenUI = {
-    renderList() {
-        const container = document.getElementById("listenList");
-        if (!container) return;
+    // Build wordbank from level words + disruptors
+    const coreTokens = target.replace(/[¿?]/g, "").split(" ");
+    const levelTokens = words.map(w => w.spanish.split(" ")).flat();
+    const disruptors = ["rápido", "lento", "siempre", "nunca", "ayer", "mañana", "porque", "pero"];
 
-        container.innerHTML = "";
+    let bank = [...coreTokens];
 
-        const list = ListenEngine.getCurrentList();
+    // Add some level words
+    while (bank.length < coreTokens.length + 4) {
+        const t = levelTokens[Math.floor(Math.random() * levelTokens.length)];
+        if (t && !bank.includes(t)) bank.push(t);
+    }
 
-        list.forEach(word => {
-            const card = UI.card(`<div class="listen-word">${word}</div>`);
-            card.addEventListener("click", () => ListenEngine.playWord(word));
-            container.appendChild(card);
+    // Add disruptors
+    disruptors.forEach(d => {
+        if (!bank.includes(d)) bank.push(d);
+    });
+
+    // Shuffle bank
+    bank = bank.sort(() => Math.random() - 0.5);
+
+    convoState.tokens = bank;
+    convoState.answer = [];
+
+    container.innerHTML = `
+        <div class="glass-panel convo-card">
+            <h2>Conversation — Level ${appState.currentLevel}</h2>
+            <p>Respond in Spanish by selecting the correct words from the wordbank.</p>
+
+            <div id="convo-prompt"><strong>Prompt (English):</strong> ${convoState.currentPrompt.english}</div>
+
+            <div id="convo-grid" class="sb-grid">
+                ${convoState.tokens.map(t => `
+                    <button class="pill convo-opt" data-token="${t}">${t}</button>
+                `).join("")}
+            </div>
+
+            <div id="convo-answer"></div>
+
+            <input id="convo-type" class="convo-type" placeholder="Or type your response in Spanish…" />
+
+            <div id="convo-feedback"></div>
+
+            <div class="sb-controls">
+                <button id="convo-undo">Undo</button>
+                <button id="convo-reset">Reset</button>
+                <button id="convo-check">Check</button>
+                <button id="convo-next">Next</button>
+            </div>
+        </div>
+    `;
+
+    setupConversationEvents();
+}
+
+
+
+function setupConversationEvents() {
+    const grid = document.getElementById("convo-grid");
+    const answerBox = document.getElementById("convo-answer");
+    const typeBox = document.getElementById("convo-type");
+    const feedback = document.getElementById("convo-feedback");
+
+    const undoBtn = document.getElementById("convo-undo");
+    const resetBtn = document.getElementById("convo-reset");
+    const checkBtn = document.getElementById("convo-check");
+    const nextBtn = document.getElementById("convo-next");
+
+    convoState.answer = [];
+
+    // Word-pill selection
+    grid.querySelectorAll(".convo-opt").forEach(btn => {
+        btn.addEventListener("click", () => {
+            convoState.answer.push(btn.dataset.token);
+            btn.classList.add("used");
+            btn.disabled = true;
+            answerBox.textContent = convoState.answer.join(" ");
         });
-    },
+    });
 
-    init() {
-        this.renderList();
-    }
-};
+    // Typing mode
+    typeBox.addEventListener("input", () => {
+        convoState.answer = typeBox.value.trim().split(" ");
+        answerBox.textContent = convoState.answer.join(" ");
+    });
 
-/* ============================================================
-   FLASHCARDS UI
-   ============================================================ */
+    // Undo
+    undoBtn.addEventListener("click", () => {
+        convoState.answer.pop();
+        answerBox.textContent = convoState.answer.join(" ");
 
-const FlashcardsUI = {
-    render() {
-        const container = document.getElementById("flashcardsGrid");
-        if (!container) return;
-
-        container.innerHTML = "";
-
-        const cards = FlashcardsEngine.getFlashcards();
-
-        cards.forEach(card => {
-            const div = document.createElement("div");
-            div.className = "flashcard glass-card";
-
-            const front = `<div class="flash-front">${card.spanish}</div>`;
-            const back = `<div class="flash-back">${card.english}</div>`;
-
-            div.innerHTML = front + back;
-
-            div.addEventListener("click", () => {
-                FlashcardsEngine.flipCard(card);
-                div.classList.toggle("flipped");
-            });
-
-            container.appendChild(div);
+        grid.querySelectorAll(".convo-opt").forEach(btn => {
+            if (!convoState.answer.includes(btn.dataset.token)) {
+                btn.classList.remove("used");
+                btn.disabled = false;
+            }
         });
-    },
+    });
 
-    init() {
-        this.render();
-    }
-};
-
-/* ============================================================
-   QUIZ UI
-   ============================================================ */
-
-const QuizUI = {
-    render() {
-        const q = QuizEngine.buildQuestion();
-        if (!q) return;
-
-        UI.setText("quizPrompt", q.spanish);
-
-        const container = document.getElementById("quizOptions");
-        container.innerHTML = "";
-
-        q.options.forEach(opt => {
-            const btn = UI.button(opt, () => {
-                const correct = QuizEngine.checkAnswer(opt, q);
-                UI.setText("quizFeedback", correct ? "Correct!" : "Incorrect");
-                setTimeout(() => {
-                    QuizEngine.next();
-                    this.render();
-                }, 600);
-            });
-            container.appendChild(btn);
+    // Reset
+    resetBtn.addEventListener("click", () => {
+        convoState.answer = [];
+        answerBox.textContent = "";
+        typeBox.value = "";
+        grid.querySelectorAll(".convo-opt").forEach(btn => {
+            btn.classList.remove("used");
+            btn.disabled = false;
         });
-    },
+    });
 
-    init() {
-        this.render();
+    // Check
+    checkBtn.addEventListener("click", () => {
+        const correct = convoState.currentPrompt.spanishTarget.replace(/[¿?]/g, "").trim();
+        const user = convoState.answer.join(" ").trim();
+
+       if (user === correct) {
+    feedback.textContent = "Nice! That’s a natural response. 🎉";
+
+    if (appState.levelStats[appState.currentLevel].conversationCompleted == null) {
+        appState.levelStats[appState.currentLevel].conversationCompleted = 0;
     }
-};
+    appState.levelStats[appState.currentLevel].conversationCompleted++;
+
+    updateBadges();
+    updateProgressMeters();
+    setTimeout(() => speakQuiz(correct), 300);
+
+} else {
+    feedback.textContent = `Not quite. A natural response would be: ${convoState.currentPrompt.spanishTarget}`;
+    setTimeout(() => speakQuiz(correct), 300);
+}
+
+saveState();
+
+    });
+
+    // Next
+    nextBtn.addEventListener("click", () => {
+        renderConversationTab();
+    });
+}
+
 
 /* ============================================================
-   BUILD UI
+   GRAMMAR TAB
    ============================================================ */
 
-const BuildUI = {
-    renderGrid() {
-        const grid = document.getElementById("buildGrid");
-        if (!grid) return;
+function renderGrammarTab() {
+    const container = document.getElementById("grammar-content");
+    const words = CEFR_LEVELS[appState.currentLevel];
+    const grouped = groupByCategory(words);
 
-        grid.innerHTML = "";
+    container.innerHTML = `
+        <div class="glass-panel quiz-card">
+            <h2>Grammar — Level ${appState.currentLevel}</h2>
+            <p>Breakdown of word types you're training.</p>
+        </div>
 
-        APP_STATE.buildTokens.forEach(word => {
-            const btn = UI.button(word, () => BuildEngine.addWord(word));
-            btn.classList.add("word-pill");
-            grid.appendChild(btn);
-        });
-    },
-
-    renderOutput() {
-        const out = document.getElementById("buildOutput");
-        if (!out) return;
-
-        out.textContent = APP_STATE.userSentence.join(" ");
-    },
-
-    init() {
-        BuildEngine.newChallenge();
-        this.renderGrid();
-        this.renderOutput();
-    }
-};
+        <div class="glass-panel quiz-card">
+            <ul>
+                ${Object.keys(grouped).map(cat => `
+                    <li><strong>${cat}</strong>: ${grouped[cat].length} items</li>
+                `).join("")}
+            </ul>
+            <p style="margin-top:10px;opacity:0.8;">
+                Notice how connectors, verbs, adjectives and nouns combine.
+            </p>
+        </div>
+    `;
+}
 
 /* ============================================================
-   CONVERSATION UI
+   BADGES
    ============================================================ */
 
-const ConversationUI = {
-    render() {
-        const container = document.getElementById("conversationFeed");
-        if (!container) return;
+function updateBadges() {
+    const list = document.getElementById("badge-list");
+    const badges = new Set(appState.badges);
 
-        container.innerHTML = "";
+   Object.keys(appState.levelStats).forEach(level => {
+    const s = appState.levelStats[level];
+    if (s.listens >= 20) badges.add(`${level} Listener`);
+    if (s.flashSeen >= 30) badges.add(`${level} Flash Master`);
+    if (s.quizScore !== null && s.quizScore >= 80) badges.add(`${level} Quiz Ace`);
+    if (s.buildCompleted >= 10) badges.add(`${level} Builder`);
 
-        ConversationEngine.getHistory().forEach(turn => {
-            const bubble = document.createElement("div");
-            bubble.className = turn.role === "user" ? "bubble-user" : "bubble-ai";
-            bubble.textContent = turn.text;
-            container.appendChild(bubble);
-        });
+    // ⭐ NEW BADGES — paste here
+    if (s.sentenceCompleted >= 10) badges.add(`${level} Sentence Pro`);
+    if (s.conversationCompleted >= 10) badges.add(`${level} Conversationalist`);
+});
 
-        container.scrollTop = container.scrollHeight;
-    },
 
-    send(text) {
-        const reply = ConversationEngine.userTurn(text);
-        this.render();
-        return reply;
-    },
+    appState.badges = Array.from(badges);
+    saveState();
 
-    init() {
-        this.render();
+    if (appState.badges.length === 0) {
+        list.innerHTML = "<li>No badges yet. Keep training!</li>";
+        return;
     }
-};
+
+    list.innerHTML = appState.badges.map(b => `<li>${b}</li>`).join("");
+}
 
 /* ============================================================
-   REVIEW UI
+   STUDENT NAME BOX
    ============================================================ */
 
-const ReviewUI = {
-    render() {
-        const item = ReviewEngine.next();
-        const container = document.getElementById("reviewCard");
-        if (!container) return;
+function initNameBox() {
+    const input = document.getElementById("student-name");
+    const btn = document.getElementById("save-name-btn");
+    const status = document.getElementById("name-status");
 
-        if (!item) {
-            container.innerHTML = "<div class='glass-card'>No items to review.</div>";
+    input.value = appState.studentName || "";
+
+    btn.onclick = () => {
+        const name = input.value.trim();
+        if (!name) {
+            status.textContent = "Please enter a name.";
             return;
         }
-
-        container.innerHTML = `
-            <div class="glass-card review-item">
-                <div class="review-spanish">${item.spanish}</div>
-                <div class="review-english">${item.english}</div>
-            </div>
-        `;
-    },
-
-    markMastered() {
-        ReviewEngine.markMastered();
-        this.render();
-    },
-
-    init() {
-        this.render();
-    }
-};
+        appState.studentName = name;
+        saveState();
+        status.textContent = `Saved as "${name}".`;
+    };
+}
 
 /* ============================================================
-   APP INIT
+   SPEECH RATE CONTROL
    ============================================================ */
 
-const App = {
-    initLevelSelector() {
-        const levelSelect = document.getElementById("levelSelect");
-        if (!levelSelect) return;
+function initRateControl() {
+    const slider = document.getElementById("rate");
+    slider.value = appState.speechRate;
 
-        levelSelect.addEventListener("change", (e) => {
-            APP_STATE.currentLevel = e.target.value;
-            AchievementsEngine.evaluate();
-        });
-    },
-
-    initCategorySelector() {
-        const catSelect = document.getElementById("categorySelect");
-        if (!catSelect) return;
-
-        catSelect.addEventListener("change", (e) => {
-            APP_STATE.currentCategory = e.target.value;
-        });
-    },
-
-    initListenControls() {
-        const playBtn = document.getElementById("listenPlay");
-        const nextBtn = document.getElementById("listenNext");
-        const prevBtn = document.getElementById("listenPrev");
-        const autoBtn = document.getElementById("listenAuto");
-
-        if (playBtn) playBtn.addEventListener("click", () => ListenEngine.playCurrent());
-        if (nextBtn) nextBtn.addEventListener("click", () => ListenEngine.next());
-        if (prevBtn) prevBtn.addEventListener("click", () => ListenEngine.previous());
-        if (autoBtn) autoBtn.addEventListener("click", () => ListenEngine.startAutoPlay());
-    },
-
-    initSearchControls() {
-        const input = document.getElementById("searchInput");
-        const btn = document.getElementById("searchBtn");
-        const out = document.getElementById("searchResult");
-
-        if (!btn || !input || !out) return;
-
-        btn.addEventListener("click", () => {
-            const res = SearchEngine.search(input.value);
-            out.innerHTML = JSON.stringify(res, null, 2);
-        });
-    },
-
-    initAudioToggle() {
-        const toggle = document.getElementById("audioToggle");
-        if (!toggle) return;
-
-        toggle.addEventListener("click", () => {
-            AudioSystem.toggle();
-            toggle.textContent = APP_STATE.audioEnabled ? "Audio: ON" : "Audio: OFF";
-        });
-    },
-
-    init() {
-        this.initLevelSelector();
-        this.initCategorySelector();
-        this.initListenControls();
-        this.initSearchControls();
-        this.initAudioToggle();
-
-        document.querySelectorAll(".tab-btn").forEach(btn => {
-            btn.addEventListener("click", () => {
-                const tab = btn.id.replace("btn-", "");
-                Router.switch(tab);
-            });
-        });
-
-        // set a sane default category if none
-        if (!APP_STATE.currentCategory) {
-            const catSelect = document.getElementById("categorySelect");
-            if (catSelect && catSelect.options.length > 0) {
-                APP_STATE.currentCategory = catSelect.options[0].value;
-            }
-        }
-
-        if (document.getElementById("tab-listen")) {
-            ListenEngine.setLevel(APP_STATE.currentLevel);
-            ListenEngine.setCategory(APP_STATE.currentCategory);
-            ListenEngine.render();
-        }
-
-        if (document.getElementById("tab-flashcards")) {
-            FlashcardsEngine.setLevel(APP_STATE.currentLevel);
-            FlashcardsEngine.render();
-        }
-    }
-};
+    slider.oninput = () => {
+        appState.speechRate = parseFloat(slider.value);
+        saveState();
+    };
+}
 
 /* ============================================================
-   GLOBAL
+   PROGRESS METER CONTROLLER
    ============================================================ */
 
-const Global = {
-    resetAll() {
-        speechSynthesis.cancel();
+function animateNumber(id, target) {
+    let current = 0;
+    const step = target / 40;
 
-        APP_STATE.listenIndex = 0;
-        APP_STATE.flashIndex = 0;
-        APP_STATE.quizIndex = 0;
-        APP_STATE.currentWord = null;
-        APP_STATE.currentSentence = null;
-        APP_STATE.userSentence = [];
-        APP_STATE.buildTokens = [];
-        APP_STATE.conversationHistory = [];
-        APP_STATE.reviewQueue = [];
+    const interval = setInterval(() => {
+        current += step;
+        if (current >= target) {
+            current = target;
+            clearInterval(interval);
+        }
+        document.getElementById(id).textContent = Math.round(current) + "%";
+    }, 20);
+}
 
-        ReviewEngine.reset();
-        ConversationEngine.reset();
+function updateProgressMeters() {
 
-        const out = document.getElementById("buildOutput");
-        if (out) out.textContent = "";
+    // Bar widths
+    document.getElementById("quiz-progress").style.width = "60%";
+    document.getElementById("build-progress").style.width = "45%";
+    document.getElementById("sentence-progress").style.width = "30%";
 
-        const res = document.getElementById("buildResult");
-        if (res) res.textContent = "";
-    },
+    document.getElementById("xp-progress").style.width = "70%";
+    document.getElementById("streak-progress").style.width = "40%";
+    document.getElementById("score-progress").style.width = "85%";
+    document.getElementById("review-progress").style.width = "20%";
 
-    shutdown() {
-        speechSynthesis.cancel();
-        console.log("App shutdown complete.");
-    },
+    // Animated numbers
+    animateNumber("quiz-number", 60);
+    animateNumber("build-number", 45);
+    animateNumber("sentence-number", 30);
 
-    exports() {
-        return {
-            APP_STATE,
-            ListenEngine,
-            FlashcardsEngine,
-            QuizEngine,
-            BuildEngine,
-            SentenceEngine,
-            ConversationEngine,
-            FreePracticeEngine,
-            ReviewEngine,
-            AchievementsEngine,
-            AudioSystem,
-            Router,
-            App
-        };
-    }
-};
+    animateNumber("xp-number", 70);
+    animateNumber("streak-number", 40);
+    animateNumber("score-number", 85);
+    animateNumber("review-number", 20);
+
+    // Pulse animations
+    pulseTile("quiz-tile");
+    pulseTile("build-tile");
+    pulseTile("sentence-tile");
+    pulseTile("xp-tile");
+    pulseTile("streak-tile");
+    pulseTile("score-tile");
+    pulseTile("review-tile");
+}
+
+/* ============================================================
+   TILE PULSE ANIMATION
+   ============================================================ */
+
+function pulseTile(id) {
+    const tile = document.getElementById(id);
+    if (!tile) return;
+
+    tile.classList.remove("pulse");
+    void tile.offsetWidth;
+    tile.classList.add("pulse");
+}
 
 /* ============================================================
    STARTUP
    ============================================================ */
 
 document.addEventListener("DOMContentLoaded", () => {
+    loadState();
 
-    // Build the UI
-    App.init();
+    initTabNavigation();     // tab buttons now exist
+    activateTab("dashboard"); // show dashboard first
 
-    // Set a default category (no selector needed)
-    if (!APP_STATE.currentCategory) {
-        APP_STATE.currentCategory = "Daily Life";   // or any category you prefer
-    }
+    initRateControl();       // slider exists now
+    initNameBox();           // name box exists now
 
-    // Load engines that depend on category
-    ListenEngine.setCategory(APP_STATE.currentCategory);
-    FlashcardsEngine.setCategory(APP_STATE.currentCategory);
-    QuizEngine.setCategory(APP_STATE.currentCategory);
-
-    console.log("CEFR Learning Platform Initialized.");
+    updateBadges();
+    updateProgressMeters();
 });
+
