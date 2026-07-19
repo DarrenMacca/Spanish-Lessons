@@ -1889,7 +1889,7 @@ function getWordMeaning(word) {
    ============================================================ */
 function renderListenTab(level) {
     level = level.trim().toUpperCase();
-
+}
 const ListenEngine = {
     list: [],
     index: 0,
