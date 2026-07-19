@@ -2631,7 +2631,7 @@ function setupSentenceEvents(q) {
                 updateBadges();
                 updateProgressMeters();
 
-                speakQuiz(q.correct);
+                speakQuiz(q.correct.es);
 
             } else {
                 feedback.innerHTML = `
