@@ -4296,61 +4296,794 @@ function setupConversationEvents(convo) {
 const CEFR_CONVERSATION_PROMPTS = {
 
     A1: [
-        {
-            prompt_es: "¿Qué te gustaría beber?",
-            prompt_en: "What would you like to drink?",
-            expected_responses: [
-                { es: "me gustaría una cerveza por favor", en: "I would like a beer please" },
-                { es: "quiero agua por favor", en: "I want water please" },
-                { es: "me gustaría un jugo", en: "I would like a juice" }
-            ]
-        },
-        {
-            prompt_es: "¿Cómo estás hoy?",
-            prompt_en: "How are you today?",
-            expected_responses: [
-                { es: "estoy bien gracias", en: "I'm good, thank you" },
-                { es: "estoy cansado", en: "I'm tired" },
-                { es: "estoy feliz", en: "I'm happy" }
-            ]
-        }
-    ],
+    {
+        prompt_es: "¿Qué te gustaría beber?",
+        prompt_en: "What would you like to drink?",
+        expected_responses: [
+            { es: "quiero agua por favor", en: "I want water please" },
+            { es: "me gustaría una cerveza", en: "I would like a beer" },
+            { es: "quiero café", en: "I want coffee" }
+        ]
+    },
+    {
+        prompt_es: "¿Cómo estás hoy?",
+        prompt_en: "How are you today?",
+        expected_responses: [
+            { es: "estoy feliz", en: "I am happy" },
+            { es: "estoy bien gracias", en: "I am good, thank you" },
+            { es: "estoy cansado", en: "I am tired" }
+        ]
+    },
+    {
+        prompt_es: "¿Dónde vives?",
+        prompt_en: "Where do you live?",
+        expected_responses: [
+            { es: "vivo en la ciudad", en: "I live in the city" },
+            { es: "vivo cerca del centro", en: "I live near downtown" },
+            { es: "vivo con mi familia", en: "I live with my family" }
+        ]
+    },
+    {
+        prompt_es: "¿Qué quieres comer?",
+        prompt_en: "What do you want to eat?",
+        expected_responses: [
+            { es: "quiero pollo", en: "I want chicken" },
+            { es: "quiero una ensalada", en: "I want a salad" },
+            { es: "quiero sopa", en: "I want soup" }
+        ]
+    },
+    {
+        prompt_es: "¿Tienes hambre?",
+        prompt_en: "Are you hungry?",
+        expected_responses: [
+            { es: "sí tengo hambre", en: "Yes, I'm hungry" },
+            { es: "no tengo hambre", en: "I'm not hungry" },
+            { es: "tengo un poco de hambre", en: "I'm a little hungry" }
+        ]
+    },
+    {
+        prompt_es: "¿Qué te gusta hacer?",
+        prompt_en: "What do you like to do?",
+        expected_responses: [
+            { es: "me gusta leer libros", en: "I like reading books" },
+            { es: "me gusta escuchar música", en: "I like listening to music" },
+            { es: "me gusta cocinar", en: "I like cooking" }
+        ]
+    },
+    {
+        prompt_es: "¿A qué hora te levantas?",
+        prompt_en: "What time do you get up?",
+        expected_responses: [
+            { es: "me levanto temprano", en: "I get up early" },
+            { es: "me levanto tarde", en: "I get up late" },
+            { es: "me levanto a las siete", en: "I get up at seven" }
+        ]
+    },
+    {
+        prompt_es: "¿Quieres salir hoy?",
+        prompt_en: "Do you want to go out today?",
+        expected_responses: [
+            { es: "sí quiero salir", en: "Yes, I want to go out" },
+            { es: "no quiero salir", en: "I don't want to go out" },
+            { es: "quiero salir más tarde", en: "I want to go out later" }
+        ]
+    },
+    {
+        prompt_es: "¿Qué estás haciendo?",
+        prompt_en: "What are you doing?",
+        expected_responses: [
+            { es: "estoy aprendiendo español", en: "I am learning Spanish" },
+            { es: "estoy cocinando", en: "I am cooking" },
+            { es: "estoy viendo televisión", en: "I am watching TV" }
+        ]
+    },
+    {
+        prompt_es: "¿Quieres ver una película?",
+        prompt_en: "Do you want to watch a movie?",
+        expected_responses: [
+            { es: "sí quiero ver una película", en: "Yes, I want to watch a movie" },
+            { es: "no quiero ver televisión", en: "I don't want to watch TV" },
+            { es: "quiero ver una película nueva", en: "I want to watch a new movie" }
+        ]
+    },
+    {
+        prompt_es: "¿Dónde está el baño?",
+        prompt_en: "Where is the bathroom?",
+        expected_responses: [
+            { es: "está cerca", en: "It is near" },
+            { es: "está lejos", en: "It is far" },
+            { es: "está en la casa", en: "It is in the house" }
+        ]
+    },
+    {
+        prompt_es: "¿Qué música te gusta?",
+        prompt_en: "What music do you like?",
+        expected_responses: [
+            { es: "me gusta la música", en: "I like music" },
+            { es: "me gusta escuchar música", en: "I like listening to music" },
+            { es: "me gusta la música nueva", en: "I like new music" }
+        ]
+    },
+    {
+        prompt_es: "¿Quieres descansar?",
+        prompt_en: "Do you want to rest?",
+        expected_responses: [
+            { es: "sí quiero descansar", en: "Yes, I want to rest" },
+            { es: "no quiero descansar", en: "I don't want to rest" },
+            { es: "quiero descansar un poco", en: "I want to rest a little" }
+        ]
+    },
+    {
+        prompt_es: "¿Qué hay en la cocina?",
+        prompt_en: "What is in the kitchen?",
+        expected_responses: [
+            { es: "hay pan", en: "There is bread" },
+            { es: "hay arroz", en: "There is rice" },
+            { es: "hay pollo", en: "There is chicken" }
+        ]
+    },
+    {
+        prompt_es: "¿Quieres ir al hotel?",
+        prompt_en: "Do you want to go to the hotel?",
+        expected_responses: [
+            { es: "sí quiero ir al hotel", en: "Yes, I want to go to the hotel" },
+            { es: "no quiero ir", en: "I don't want to go" },
+            { es: "quiero ir más tarde", en: "I want to go later" }
+        ]
+    },
+    {
+        prompt_es: "¿Qué fruta te gusta?",
+        prompt_en: "What fruit do you like?",
+        expected_responses: [
+            { es: "me gusta la manzana", en: "I like apple" },
+            { es: "me gusta la naranja", en: "I like orange" },
+            { es: "me gusta el plátano", en: "I like banana" }
+        ]
+    },
+    {
+        prompt_es: "¿Quieres aprender más español?",
+        prompt_en: "Do you want to learn more Spanish?",
+        expected_responses: [
+            { es: "sí quiero aprender más", en: "Yes, I want to learn more" },
+            { es: "quiero aprender rápido", en: "I want to learn fast" },
+            { es: "quiero aprender con música", en: "I want to learn with music" }
+        ]
+    },
+    {
+        prompt_es: "¿Qué ves en la televisión?",
+        prompt_en: "What do you watch on TV?",
+        expected_responses: [
+            { es: "veo películas", en: "I watch movies" },
+            { es: "veo programas", en: "I watch shows" },
+            { es: "veo noticias", en: "I watch news" }
+        ]
+    },
+    {
+        prompt_es: "¿Quieres pan con queso?",
+        prompt_en: "Do you want bread with cheese?",
+        expected_responses: [
+            { es: "sí quiero pan con queso", en: "Yes, I want bread with cheese" },
+            { es: "no quiero pan", en: "I don't want bread" },
+            { es: "quiero queso", en: "I want cheese" }
+        ]
+    },
+    {
+        prompt_es: "¿Dónde está tu familia?",
+        prompt_en: "Where is your family?",
+        expected_responses: [
+            { es: "está en la casa", en: "They are at home" },
+            { es: "está cerca", en: "They are near" },
+            { es: "está lejos", en: "They are far" }
+        ]
+    },
+    {
+        prompt_es: "¿Quieres ir en autobús?",
+        prompt_en: "Do you want to go by bus?",
+        expected_responses: [
+            { es: "sí quiero ir en autobús", en: "Yes, I want to go by bus" },
+            { es: "no quiero ir en autobús", en: "I don't want to go by bus" },
+            { es: "quiero ir en tren", en: "I want to go by train" }
+        ]
+    },
+    {
+        prompt_es: "¿Qué haces en casa?",
+        prompt_en: "What do you do at home?",
+        expected_responses: [
+            { es: "cocino", en: "I cook" },
+            { es: "leo libros", en: "I read books" },
+            { es: "veo televisión", en: "I watch TV" }
+        ]
+    }
+],
+
 
     A2: [
-        {
-            prompt_es: "¿Dónde vives?",
-            prompt_en: "Where do you live?",
-            expected_responses: [
-                { es: "vivo en la ciudad", en: "I live in the city" },
-                { es: "vivo cerca del centro", en: "I live near downtown" },
-                { es: "vivo con mi familia", en: "I live with my family" }
-            ]
-        }
-    ],
+    {
+        prompt_es: "¿Qué haces normalmente por la mañana?",
+        prompt_en: "What do you normally do in the morning?",
+        expected_responses: [
+            { es: "normalmente preparo el desayuno", en: "I normally prepare breakfast" },
+            { es: "me levanto temprano y hago café", en: "I get up early and make coffee" },
+            { es: "leo un mensaje y empiezo mi día", en: "I read a message and start my day" }
+        ]
+    },
+    {
+        prompt_es: "¿Qué te gustaría probar hoy?",
+        prompt_en: "What would you like to try today?",
+        expected_responses: [
+            { es: "me gustaría probar una nueva película", en: "I would like to try a new movie" },
+            { es: "quiero probar un desayuno diferente", en: "I want to try a different breakfast" },
+            { es: "quiero probar cocinar algo nuevo", en: "I want to try cooking something new" }
+        ]
+    },
+    {
+        prompt_es: "¿A qué hora llegaste anoche?",
+        prompt_en: "What time did you arrive last night?",
+        expected_responses: [
+            { es: "llegué tarde", en: "I arrived late" },
+            { es: "llegué temprano", en: "I arrived early" },
+            { es: "llegué a las diez", en: "I arrived at ten" }
+        ]
+    },
+    {
+        prompt_es: "¿Qué almuerzas normalmente?",
+        prompt_en: "What do you normally have for lunch?",
+        expected_responses: [
+            { es: "normalmente almuerzo arroz y pollo", en: "I normally have rice and chicken" },
+            { es: "almuerzo ensalada", en: "I have salad" },
+            { es: "almuerzo sopa", en: "I have soup" }
+        ]
+    },
+    {
+        prompt_es: "¿Qué película quieres ver?",
+        prompt_en: "What movie do you want to watch?",
+        expected_responses: [
+            { es: "quiero ver una película nueva", en: "I want to watch a new movie" },
+            { es: "quiero ver una película de la noche", en: "I want to watch a movie tonight" },
+            { es: "quiero ver una película en casa", en: "I want to watch a movie at home" }
+        ]
+    },
+    {
+        prompt_es: "¿Qué mensaje recibiste?",
+        prompt_en: "What message did you receive?",
+        expected_responses: [
+            { es: "recibí un mensaje de mi amiga", en: "I received a message from my friend" },
+            { es: "recibí información importante", en: "I received important information" },
+            { es: "recibí un mensaje de mis padres", en: "I received a message from my parents" }
+        ]
+    },
+    {
+        prompt_es: "¿Qué vas a cocinar esta noche?",
+        prompt_en: "What are you going to cook tonight?",
+        expected_responses: [
+            { es: "voy a cocinar pollo", en: "I am going to cook chicken" },
+            { es: "voy a cocinar arroz", en: "I am going to cook rice" },
+            { es: "voy a cocinar una cena simple", en: "I am going to cook a simple dinner" }
+        ]
+    },
+    {
+        prompt_es: "¿Qué tarea tienes hoy?",
+        prompt_en: "What homework do you have today?",
+        expected_responses: [
+            { es: "tengo tarea de español", en: "I have Spanish homework" },
+            { es: "tengo tarea de la escuela", en: "I have school homework" },
+            { es: "tengo que revisar información", en: "I have to review information" }
+        ]
+    },
+    {
+        prompt_es: "¿Qué quieres visitar en tu próximo viaje?",
+        prompt_en: "What do you want to visit on your next trip?",
+        expected_responses: [
+            { es: "quiero visitar a mi familia", en: "I want to visit my family" },
+            { es: "quiero visitar un lugar nuevo", en: "I want to visit a new place" },
+            { es: "quiero visitar la ciudad", en: "I want to visit the city" }
+        ]
+    },
+    {
+        prompt_es: "¿Conduces a menudo?",
+        prompt_en: "Do you drive often?",
+        expected_responses: [
+            { es: "sí conduzco a menudo", en: "Yes, I drive often" },
+            { es: "no conduzco mucho", en: "I don't drive much" },
+            { es: "conduzco cuando es necesario", en: "I drive when necessary" }
+        ]
+    },
+    {
+        prompt_es: "¿Qué esperas hoy?",
+        prompt_en: "What are you waiting for today?",
+        expected_responses: [
+            { es: "espero un mensaje", en: "I am waiting for a message" },
+            { es: "espero información", en: "I am waiting for information" },
+            { es: "espero a mi amiga", en: "I am waiting for my friend" }
+        ]
+    },
+    {
+        prompt_es: "¿Qué te gustaría olvidar?",
+        prompt_en: "What would you like to forget?",
+        expected_responses: [
+            { es: "me gustaría olvidar los problemas", en: "I would like to forget the problems" },
+            { es: "quiero olvidar el viaje largo", en: "I want to forget the long trip" },
+            { es: "quiero olvidar la tarea difícil", en: "I want to forget the difficult homework" }
+        ]
+    },
+    {
+        prompt_es: "¿Qué haces antes de dormir?",
+        prompt_en: "What do you do before sleeping?",
+        expected_responses: [
+            { es: "leo un mensaje", en: "I read a message" },
+            { es: "veo una película", en: "I watch a movie" },
+            { es: "preparo la cocina", en: "I prepare the kitchen" }
+        ]
+    },
+    {
+        prompt_es: "¿Qué haces después del almuerzo?",
+        prompt_en: "What do you do after lunch?",
+        expected_responses: [
+            { es: "descanso un poco", en: "I rest a little" },
+            { es: "veo una película", en: "I watch a movie" },
+            { es: "leo información", en: "I read information" }
+        ]
+    },
+    {
+        prompt_es: "¿Qué transporte usas normalmente?",
+        prompt_en: "What transport do you normally use?",
+        expected_responses: [
+            { es: "uso el autobús", en: "I use the bus" },
+            { es: "uso el tren", en: "I use the train" },
+            { es: "uso el avión para viajes largos", en: "I use the plane for long trips" }
+        ]
+    },
+    {
+        prompt_es: "¿Qué cocina te gusta más?",
+        prompt_en: "Which kitchen do you like more?",
+        expected_responses: [
+            { es: "me gusta la cocina grande", en: "I like the big kitchen" },
+            { es: "me gusta la cocina nueva", en: "I like the new kitchen" },
+            { es: "me gusta la cocina cerca de la ventana", en: "I like the kitchen near the window" }
+        ]
+    },
+    {
+        prompt_es: "¿Qué haces ahora?",
+        prompt_en: "What are you doing now?",
+        expected_responses: [
+            { es: "estoy preparando el almuerzo", en: "I am preparing lunch" },
+            { es: "estoy viendo una película", en: "I am watching a movie" },
+            { es: "estoy leyendo información", en: "I am reading information" }
+        ]
+    },
+    {
+        prompt_es: "¿Qué zapatos usas hoy?",
+        prompt_en: "What shoes are you wearing today?",
+        expected_responses: [
+            { es: "uso zapatos nuevos", en: "I am wearing new shoes" },
+            { es: "uso zapatos cómodos", en: "I am wearing comfortable shoes" },
+            { es: "uso zapatos para caminar", en: "I am wearing walking shoes" }
+        ]
+    },
+    {
+        prompt_es: "¿Qué te gustaría cocinar mañana?",
+        prompt_en: "What would you like to cook tomorrow?",
+        expected_responses: [
+            { es: "me gustaría cocinar pollo", en: "I would like to cook chicken" },
+            { es: "quiero cocinar arroz", en: "I want to cook rice" },
+            { es: "quiero cocinar una cena nueva", en: "I want to cook a new dinner" }
+        ]
+    },
+    {
+        prompt_es: "¿Qué información necesitas?",
+        prompt_en: "What information do you need?",
+        expected_responses: [
+            { es: "necesito información del viaje", en: "I need information about the trip" },
+            { es: "necesito información de la escuela", en: "I need school information" },
+            { es: "necesito información de mis padres", en: "I need information from my parents" }
+        ]
+    },
+    {
+        prompt_es: "¿Qué haces cuando llegas a casa?",
+        prompt_en: "What do you do when you arrive home?",
+        expected_responses: [
+            { es: "preparo la cena", en: "I prepare dinner" },
+            { es: "veo una película", en: "I watch a movie" },
+            { es: "leo un mensaje", en: "I read a message" }
+        ]
+    },
+    {
+        prompt_es: "¿Qué te gustaría visitar este año?",
+        prompt_en: "What would you like to visit this year?",
+        expected_responses: [
+            { es: "me gustaría visitar un lugar nuevo", en: "I would like to visit a new place" },
+            { es: "quiero visitar a mi familia", en: "I want to visit my family" },
+            { es: "quiero visitar la ciudad", en: "I want to visit the city" }
+        ]
+    }
+],
+
 
     B1: [
-        {
-            prompt_es: "¿Qué haces en tu tiempo libre?",
-            prompt_en: "What do you do in your free time?",
-            expected_responses: [
-                { es: "me gusta leer libros", en: "I like reading books" },
-                { es: "salgo a caminar", en: "I go for walks" },
-                { es: "practico deportes", en: "I practice sports" }
-            ]
-        }
-    ],
+    {
+        prompt_es: "¿Qué has aprendido recientemente?",
+        prompt_en: "What have you learned recently?",
+        expected_responses: [
+            { es: "he aprendido nuevas habilidades", en: "I have learned new skills" },
+            { es: "he aprendido comunicación diaria", en: "I have learned daily communication" },
+            { es: "he aprendido a revisar información", en: "I have learned to review information" }
+        ]
+    },
+    {
+        prompt_es: "¿Qué estás estudiando ahora?",
+        prompt_en: "What are you studying now?",
+        expected_responses: [
+            { es: "estoy estudiando español", en: "I am studying Spanish" },
+            { es: "estoy estudiando comunicación", en: "I am studying communication" },
+            { es: "estoy estudiando habilidades nuevas", en: "I am studying new skills" }
+        ]
+    },
+    {
+        prompt_es: "¿Qué tipo de experiencias pasadas recuerdas más?",
+        prompt_en: "What kind of past experiences do you remember most?",
+        expected_responses: [
+            { es: "recuerdo experiencias con mi familia", en: "I remember experiences with my family" },
+            { es: "recuerdo experiencias de trabajo", en: "I remember work experiences" },
+            { es: "recuerdo experiencias de viajes", en: "I remember travel experiences" }
+        ]
+    },
+    {
+        prompt_es: "¿Qué habilidades quieres mejorar?",
+        prompt_en: "What skills do you want to improve?",
+        expected_responses: [
+            { es: "quiero mejorar mi comunicación", en: "I want to improve my communication" },
+            { es: "quiero mejorar mis habilidades diarias", en: "I want to improve my daily skills" },
+            { es: "quiero mejorar mi español", en: "I want to improve my Spanish" }
+        ]
+    },
+    {
+        prompt_es: "¿Qué estás trabajando esta semana?",
+        prompt_en: "What are you working on this week?",
+        expected_responses: [
+            { es: "estoy trabajando en un proyecto", en: "I am working on a project" },
+            { es: "estoy trabajando en comunicación", en: "I am working on communication" },
+            { es: "estoy trabajando en mejorar mis habilidades", en: "I am working on improving my skills" }
+        ]
+    },
+    {
+        prompt_es: "¿Qué conversaciones tienes a menudo?",
+        prompt_en: "What conversations do you often have?",
+        expected_responses: [
+            { es: "tengo conversaciones con mis padres", en: "I have conversations with my parents" },
+            { es: "tengo conversaciones de trabajo", en: "I have work conversations" },
+            { es: "tengo conversaciones sobre viajes", en: "I have conversations about trips" }
+        ]
+    },
+    {
+        prompt_es: "¿Qué has estado haciendo últimamente?",
+        prompt_en: "What have you been doing lately?",
+        expected_responses: [
+            { es: "he estado trabajando mucho", en: "I have been working a lot" },
+            { es: "he estado estudiando español", en: "I have been studying Spanish" },
+            { es: "he estado revisando información", en: "I have been reviewing information" }
+        ]
+    },
+    {
+        prompt_es: "¿Qué quieres conseguir este mes?",
+        prompt_en: "What do you want to achieve this month?",
+        expected_responses: [
+            { es: "quiero conseguir nuevas habilidades", en: "I want to gain new skills" },
+            { es: "quiero conseguir mejor comunicación", en: "I want to achieve better communication" },
+            { es: "quiero conseguir más experiencia", en: "I want to gain more experience" }
+        ]
+    },
+    {
+        prompt_es: "¿Qué te gustaría continuar aprendiendo?",
+        prompt_en: "What would you like to continue learning?",
+        expected_responses: [
+            { es: "me gustaría continuar aprendiendo español", en: "I would like to continue learning Spanish" },
+            { es: "quiero continuar aprendiendo comunicación", en: "I want to continue learning communication" },
+            { es: "quiero continuar aprendiendo habilidades nuevas", en: "I want to continue learning new skills" }
+        ]
+    },
+    {
+        prompt_es: "¿Qué tipo de comunicación es importante para ti?",
+        prompt_en: "What type of communication is important to you?",
+        expected_responses: [
+            { es: "la comunicación diaria es importante", en: "Daily communication is important" },
+            { es: "la comunicación con mi familia es importante", en: "Communication with my family is important" },
+            { es: "la comunicación en el trabajo es importante", en: "Communication at work is important" }
+        ]
+    },
+    {
+        prompt_es: "¿Qué has estado leyendo últimamente?",
+        prompt_en: "What have you been reading lately?",
+        expected_responses: [
+            { es: "he estado leyendo libros", en: "I have been reading books" },
+            { es: "he estado leyendo información", en: "I have been reading information" },
+            { es: "he estado leyendo mensajes", en: "I have been reading messages" }
+        ]
+    },
+    {
+        prompt_es: "¿Qué te gustaría preparar mañana?",
+        prompt_en: "What would you like to prepare tomorrow?",
+        expected_responses: [
+            { es: "me gustaría preparar el almuerzo", en: "I would like to prepare lunch" },
+            { es: "quiero preparar una cena nueva", en: "I want to prepare a new dinner" },
+            { es: "quiero preparar información para mi trabajo", en: "I want to prepare information for my work" }
+        ]
+    },
+    {
+        prompt_es: "¿Qué te gustaría cambiar este año?",
+        prompt_en: "What would you like to change this year?",
+        expected_responses: [
+            { es: "me gustaría cambiar mi comunicación", en: "I would like to change my communication" },
+            { es: "quiero cambiar mis hábitos diarios", en: "I want to change my daily habits" },
+            { es: "quiero cambiar mi enfoque de trabajo", en: "I want to change my work approach" }
+        ]
+    },
+    {
+        prompt_es: "¿Qué te gustaría seguir haciendo?",
+        prompt_en: "What would you like to keep doing?",
+        expected_responses: [
+            { es: "me gustaría seguir estudiando español", en: "I would like to keep studying Spanish" },
+            { es: "quiero seguir trabajando", en: "I want to keep working" },
+            { es: "quiero seguir mejorando mis habilidades", en: "I want to keep improving my skills" }
+        ]
+    },
+    {
+        prompt_es: "¿Qué tipo de tareas tienes esta semana?",
+        prompt_en: "What tasks do you have this week?",
+        expected_responses: [
+            { es: "tengo tareas de comunicación", en: "I have communication tasks" },
+            { es: "tengo tareas de trabajo", en: "I have work tasks" },
+            { es: "tengo tareas diarias", en: "I have daily tasks" }
+        ]
+    },
+    {
+        prompt_es: "¿Qué te gustaría encontrar hoy?",
+        prompt_en: "What would you like to find today?",
+        expected_responses: [
+            { es: "me gustaría encontrar información", en: "I would like to find information" },
+            { es: "quiero encontrar una solución", en: "I want to find a solution" },
+            { es: "quiero encontrar tiempo para estudiar", en: "I want to find time to study" }
+        ]
+    },
+    {
+        prompt_es: "¿Qué te gustaría cancelar este mes?",
+        prompt_en: "What would you like to cancel this month?",
+        expected_responses: [
+            { es: "me gustaría cancelar un viaje", en: "I would like to cancel a trip" },
+            { es: "quiero cancelar una tarea", en: "I want to cancel a task" },
+            { es: "quiero cancelar un plan", en: "I want to cancel a plan" }
+        ]
+    },
+    {
+        prompt_es: "¿Qué te gustaría traer a la reunión?",
+        prompt_en: "What would you like to bring to the meeting?",
+        expected_responses: [
+            { es: "me gustaría traer información", en: "I would like to bring information" },
+            { es: "quiero traer mis habilidades", en: "I want to bring my skills" },
+            { es: "quiero traer comunicación clara", en: "I want to bring clear communication" }
+        ]
+    },
+    {
+        prompt_es: "¿Qué planeas hacer mañana?",
+        prompt_en: "What do you plan to do tomorrow?",
+        expected_responses: [
+            { es: "planeo estudiar español", en: "I plan to study Spanish" },
+            { es: "planeo trabajar en un proyecto", en: "I plan to work on a project" },
+            { es: "planeo revisar información", en: "I plan to review information" }
+        ]
+    },
+    {
+        prompt_es: "¿Qué te gustaría entender mejor?",
+        prompt_en: "What would you like to understand better?",
+        expected_responses: [
+            { es: "me gustaría entender comunicación", en: "I would like to understand communication" },
+            { es: "quiero entender mis habilidades", en: "I want to understand my skills" },
+            { es: "quiero entender información nueva", en: "I want to understand new information" }
+        ]
+    },
+    {
+        prompt_es: "¿Qué te gustaría seguir revisando?",
+        prompt_en: "What would you like to keep reviewing?",
+        expected_responses: [
+            { es: "me gustaría seguir revisando español", en: "I would like to keep reviewing Spanish" },
+            { es: "quiero seguir revisando información", en: "I want to keep reviewing information" },
+            { es: "quiero seguir revisando mis habilidades", en: "I want to keep reviewing my skills" }
+        ]
+    }
+],
 
-    B2: [
-        {
-            prompt_es: "¿Qué opinas del trabajo remoto?",
-            prompt_en: "What do you think about remote work?",
-            expected_responses: [
-                { es: "creo que es muy conveniente", en: "I think it's very convenient" },
-                { es: "me gusta porque ahorro tiempo", en: "I like it because I save time" },
-                { es: "prefiero trabajar en la oficina", en: "I prefer working at the office" }
-            ]
-        }
-    ]
+
+   B2: [
+    {
+        prompt_es: "¿Qué estrategia usas para aprender mejor?",
+        prompt_en: "What strategy do you use to learn better?",
+        expected_responses: [
+            { es: "uso una estrategia efectiva para estudiar", en: "I use an effective strategy to study" },
+            { es: "analizo mi proceso de aprendizaje", en: "I analyze my learning process" },
+            { es: "actualizo mi enfoque cada semana", en: "I update my approach every week" }
+        ]
+    },
+    {
+        prompt_es: "¿Cómo evalúas tu rendimiento en el trabajo?",
+        prompt_en: "How do you evaluate your performance at work?",
+        expected_responses: [
+            { es: "evalúo mis resultados cada mes", en: "I evaluate my results every month" },
+            { es: "analizo mi rendimiento cuidadosamente", en: "I analyze my performance carefully" },
+            { es: "actualizo mis tareas para mejorar", en: "I update my tasks to improve" }
+        ]
+    },
+    {
+        prompt_es: "¿Qué concepto te parece complicado últimamente?",
+        prompt_en: "What concept seems complicated to you lately?",
+        expected_responses: [
+            { es: "el concepto es complicado pero posible", en: "The concept is complicated but possible" },
+            { es: "analizo el concepto para entenderlo mejor", en: "I analyze the concept to understand it better" },
+            { es: "necesito aclarar el concepto", en: "I need to clarify the concept" }
+        ]
+    },
+    {
+        prompt_es: "¿Qué riesgo consideras importante en tu trabajo?",
+        prompt_en: "What risk do you consider important in your work?",
+        expected_responses: [
+            { es: "el riesgo es alto en algunas tareas", en: "The risk is high in some tasks" },
+            { es: "analizo el riesgo antes de decidir", en: "I analyze the risk before deciding" },
+            { es: "es necesario reducir el riesgo", en: "It is necessary to reduce the risk" }
+        ]
+    },
+    {
+        prompt_es: "¿Qué posibilidad te gustaría explorar?",
+        prompt_en: "What possibility would you like to explore?",
+        expected_responses: [
+            { es: "me gustaría explorar una estrategia nueva", en: "I would like to explore a new strategy" },
+            { es: "quiero explorar un enfoque diferente", en: "I want to explore a different approach" },
+            { es: "quiero explorar una posibilidad positiva", en: "I want to explore a positive possibility" }
+        ]
+    },
+    {
+        prompt_es: "¿Qué situación te ha afectado recientemente?",
+        prompt_en: "What situation has affected you recently?",
+        expected_responses: [
+            { es: "la situación ha sido complicada", en: "The situation has been complicated" },
+            { es: "he analizado la situación cuidadosamente", en: "I have analyzed the situation carefully" },
+            { es: "la situación ha cambiado mi enfoque", en: "The situation has changed my approach" }
+        ]
+    },
+    {
+        prompt_es: "¿Cómo optimizas tu tiempo cada día?",
+        prompt_en: "How do you optimize your time each day?",
+        expected_responses: [
+            { es: "optimizo mi tiempo con una estrategia clara", en: "I optimize my time with a clear strategy" },
+            { es: "actualizo mis tareas para ser más efectivo", en: "I update my tasks to be more effective" },
+            { es: "coordino mis actividades cuidadosamente", en: "I coordinate my activities carefully" }
+        ]
+    },
+    {
+        prompt_es: "¿Qué enfoque profesional te funciona mejor?",
+        prompt_en: "What professional approach works best for you?",
+        expected_responses: [
+            { es: "uso un enfoque profesional y claro", en: "I use a professional and clear approach" },
+            { es: "mi enfoque es analizar primero", en: "My approach is to analyze first" },
+            { es: "mi enfoque es coordinar tareas", en: "My approach is to coordinate tasks" }
+        ]
+    },
+    {
+        prompt_es: "¿Qué tarea te gustaría actualizar?",
+        prompt_en: "What task would you like to update?",
+        expected_responses: [
+            { es: "me gustaría actualizar mi proceso", en: "I would like to update my process" },
+            { es: "quiero actualizar mis resultados", en: "I want to update my results" },
+            { es: "quiero actualizar mi estrategia", en: "I want to update my strategy" }
+        ]
+    },
+    {
+        prompt_es: "¿Qué has analizado esta semana?",
+        prompt_en: "What have you analyzed this week?",
+        expected_responses: [
+            { es: "he analizado mi rendimiento", en: "I have analyzed my performance" },
+            { es: "he analizado mi enfoque", en: "I have analyzed my approach" },
+            { es: "he analizado información importante", en: "I have analyzed important information" }
+        ]
+    },
+    {
+        prompt_es: "¿Qué te gustaría discutir con tu equipo?",
+        prompt_en: "What would you like to discuss with your team?",
+        expected_responses: [
+            { es: "me gustaría discutir una estrategia nueva", en: "I would like to discuss a new strategy" },
+            { es: "quiero discutir resultados recientes", en: "I want to discuss recent results" },
+            { es: "quiero discutir un concepto importante", en: "I want to discuss an important concept" }
+        ]
+    },
+    {
+        prompt_es: "¿Qué has logrado este mes?",
+        prompt_en: "What have you achieved this month?",
+        expected_responses: [
+            { es: "he logrado mejorar mi rendimiento", en: "I have achieved better performance" },
+            { es: "he logrado nuevas habilidades", en: "I have achieved new skills" },
+            { es: "he logrado actualizar mi proceso", en: "I have achieved updating my process" }
+        ]
+    },
+    {
+        prompt_es: "¿Qué cultura te interesa explorar?",
+        prompt_en: "What culture are you interested in exploring?",
+        expected_responses: [
+            { es: "me interesa explorar una cultura nueva", en: "I am interested in exploring a new culture" },
+            { es: "quiero explorar la cultura de otro país", en: "I want to explore the culture of another country" },
+            { es: "quiero explorar una cultura diferente", en: "I want to explore a different culture" }
+        ]
+    },
+    {
+        prompt_es: "¿Qué desafíos has enfrentado recientemente?",
+        prompt_en: "What challenges have you faced recently?",
+        expected_responses: [
+            { es: "he enfrentado desafíos complicados", en: "I have faced complicated challenges" },
+            { es: "he enfrentado desafíos en mi trabajo", en: "I have faced challenges at work" },
+            { es: "he enfrentado desafíos en mi proceso", en: "I have faced challenges in my process" }
+        ]
+    },
+    {
+        prompt_es: "¿Qué expectativas tienes para este año?",
+        prompt_en: "What expectations do you have for this year?",
+        expected_responses: [
+            { es: "tengo expectativas positivas", en: "I have positive expectations" },
+            { es: "tengo expectativas profesionales", en: "I have professional expectations" },
+            { es: "tengo expectativas realistas", en: "I have realistic expectations" }
+        ]
+    },
+    {
+        prompt_es: "¿Qué situación te gustaría aclarar?",
+        prompt_en: "What situation would you like to clarify?",
+        expected_responses: [
+            { es: "me gustaría aclarar una situación complicada", en: "I would like to clarify a complicated situation" },
+            { es: "quiero aclarar un concepto", en: "I want to clarify a concept" },
+            { es: "quiero aclarar información importante", en: "I want to clarify important information" }
+        ]
+    },
+    {
+        prompt_es: "¿Qué proceso te gustaría optimizar?",
+        prompt_en: "What process would you like to optimize?",
+        expected_responses: [
+            { es: "me gustaría optimizar mi rendimiento", en: "I would like to optimize my performance" },
+            { es: "quiero optimizar mi estrategia", en: "I want to optimize my strategy" },
+            { es: "quiero optimizar mi enfoque", en: "I want to optimize my approach" }
+        ]
+    },
+    {
+        prompt_es: "¿Qué información has evaluado recientemente?",
+        prompt_en: "What information have you evaluated recently?",
+        expected_responses: [
+            { es: "he evaluado información importante", en: "I have evaluated important information" },
+            { es: "he evaluado resultados recientes", en: "I have evaluated recent results" },
+            { es: "he evaluado mi proceso", en: "I have evaluated my process" }
+        ]
+    },
+    {
+        prompt_es: "¿Qué idea te gustaría fortalecer?",
+        prompt_en: "What idea would you like to strengthen?",
+        expected_responses: [
+            { es: "me gustaría fortalecer mi estrategia", en: "I would like to strengthen my strategy" },
+            { es: "quiero fortalecer mi enfoque", en: "I want to strengthen my approach" },
+            { es: "quiero fortalecer mis habilidades", en: "I want to strengthen my skills" }
+        ]
+    },
+    {
+        prompt_es: "¿Qué tema te gustaría discutir más profundamente?",
+        prompt_en: "What topic would you like to discuss more deeply?",
+        expected_responses: [
+            { es: "me gustaría discutir un concepto importante", en: "I would like to discuss an important concept" },
+            { es: "quiero discutir una estrategia profesional", en: "I want to discuss a professional strategy" },
+            { es: "quiero discutir un proceso complicado", en: "I want to discuss a complicated process" }
+        ]
+    },
+    {
+        prompt_es: "¿Qué enfoque te gustaría adaptar este año?",
+        prompt_en: "What approach would you like to adapt this year?",
+        expected_responses: [
+            { es: "me gustaría adaptar un enfoque nuevo", en: "I would like to adapt a new approach" },
+            { es: "quiero adaptar una estrategia efectiva", en: "I want to adapt an effective strategy" },
+            { es: "quiero adaptar un proceso profesional", en: "I want to adapt a professional process" }
+        ]
+    }
+]
+
 };
 
 
