@@ -529,10 +529,10 @@ B2: [
     { spanish: "aunque", english: "although", category: "Connectors" },
     { spanish: "incluso", english: "even", category: "Connectors" },
     { spanish: "otra vez", english: "again", category: "Connectors" },
-    { spanish: "cuidadosamente", english: "carefully", category: "Connectors" },
+    { spanish: "cuidadosamente", english: "carefully", category: "Connectors" }
 
-    // Numbers — B2 has no new number vocabulary
-];   // ✔ closes B2 array
+  
+]   // ✔ closes B2 array
 
 };   // ✔ closes CEFR_LEVELS object
 
