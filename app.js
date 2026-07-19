@@ -2757,22 +2757,22 @@ const AchievementsEngine = {
     unlocked: [],
 
     badges: {
-        a1_master: {
+        A1_master: {
             title: "A1 Master",
             desc: "Score 90%+ across all A1 categories.",
             icon: "🥇"
         },
-        a2_master: {
+        A2_master: {
             title: "A2 Master",
             desc: "Score 90%+ across all A2 categories.",
             icon: "🥈"
         },
-        b1_master: {
+        B1_master: {
             title: "B1 Master",
             desc: "Score 90%+ across all B1 categories.",
             icon: "🏅"
         },
-        b2_master: {
+        B2_master: {
             title: "B2 Master",
             desc: "Score 90%+ across all B2 categories.",
             icon: "🏆"
@@ -2801,10 +2801,10 @@ const AchievementsEngine = {
         const stats = getLevelStats();
 
         const ACHIEVEMENTS = [
-            { id: "a1_master", condition: () => stats.A1.avg >= 90 },
-            { id: "a2_master", condition: () => stats.A2.avg >= 90 },
-            { id: "b1_master", condition: () => stats.B1.avg >= 90 },
-            { id: "b2_master", condition: () => stats.B2.avg >= 90 },
+            { id: "A1_master", condition: () => stats.A1.avg >= 90 },
+            { id: "A2_master", condition: () => stats.A2.avg >= 90 },
+            { id: "B1_master", condition: () => stats.B1.avg >= 90 },
+            { id: "B2_master", condition: () => stats.B2.avg >= 90 },
             {
                 id: "full_progress",
                 condition: () => {
