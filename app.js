@@ -524,7 +524,7 @@ B2: [
     { spanish: "remoto", english: "remote", category: "Travel" },
     { spanish: "futuro", english: "future", category: "Travel" },
 
-   // Connectors — B2 logical connectors
+   // Connectors — B2 logical Connectors
 { spanish: "además", english: "in addition", category: "Connectors" },
 { spanish: "por lo tanto", english: "therefore", category: "Connectors" },
 { spanish: "a pesar de", english: "despite", category: "Connectors" },
