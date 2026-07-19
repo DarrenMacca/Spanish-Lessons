@@ -532,7 +532,7 @@ B2: [
 { spanish: "cuidadosamente", english: "carefully", category: "Connectors" },
 
 // Numbers — B2 has no new number vocabulary
-];
+]
 };   // ✔ closes CEFR_LEVELS object
 
 /* ============================================================
