@@ -2268,37 +2268,37 @@ function renderQuizTab() {
     quizState.options = generateQuizOptions(words, quizState.currentWord);
     quizState.selected = null;
 
-container.innerHTML = `
-<div class="glass-panel quiz-card">
-    <h2>Quiz — Level ${appState.currentLevel}</h2>
-    <p>Select the correct Spanish for the English word.</p>
+    container.innerHTML = `
+    <div class="glass-panel quiz-card">
+        <h2>Quiz — Level ${appState.currentLevel}</h2>
+        <p>Select the correct Spanish for the English word.</p>
 
-    <div id="qb-meta"><strong>English:</strong> ${quizState.currentWord.english}</div>
+        <div id="qb-meta"><strong>English:</strong> ${quizState.currentWord.english}</div>
 
-    <div id="qb-grid" class="sb-grid">
-        ${quizState.options.map(opt => `
-            <button class="pill" data-spanish="${opt}">${opt}</button>
-        `).join("")}
+        <div id="qb-grid" class="sb-grid">
+            ${quizState.options.map(opt => `
+                <button class="pill" data-spanish="${opt}">${opt}</button>
+            `).join("")}
+        </div>
+
+        <div id="qb-answer" class="qb-answer"></div>
+
+        <div class="sb-controls quiz-controls-tight">
+            <button id="qb-submit">Check</button>
+            <button id="qb-next">Next</button>
+            <button id="qb-harder" class="${quizState.harderMode ? "active" : ""}">Harder</button>
+        </div>
+
+        <div id="qb-feedback" class="qb-feedback"></div>
     </div>
-
-    <!-- ⭐ ANSWER FIELD MOVED UP -->
-    <div id="qb-answer" class="qb-answer"></div>
-
-    <!-- ⭐ BUTTONS MOVED CLOSER TO ANSWER -->
-    <div class="sb-controls quiz-controls-tight">
-        <button id="qb-submit">Check</button>
-        <button id="qb-next">Next</button>
-        <button id="qb-harder" class="${quizState.harderMode ? "active" : ""}">Harder</button>
-    </div>
-
-    <!-- ⭐ FEEDBACK MOVED BELOW BUTTONS -->
-    <div id="qb-feedback" class="qb-feedback"></div>
-</div>
-`;
-
+    `;
 
     setupQuizEvents();
 }
+
+/* ============================================================
+   QUIZ EVENTS
+   ============================================================ */
 
 function setupQuizEvents() {
     const grid = document.getElementById("qb-grid");
@@ -2320,43 +2320,53 @@ function setupQuizEvents() {
         });
     });
 
+    // Helper: translate Spanish → English
+    function getEnglishForSpanish(spanishWord) {
+        const levelWords = CEFR_LEVELS[appState.currentLevel];
+        const match = levelWords.find(w => w.spanish === spanishWord);
+        return match ? match.english : "[no match]";
+    }
+
     // Check button
     submitBtn.addEventListener("click", () => {
-    if (!quizState.selected) {
-        feedback.textContent = "Choose an answer first.";
-        return;
-    }
+        if (!quizState.selected) {
+            feedback.textContent = "Choose an answer first.";
+            return;
+        }
 
-    const correct = quizState.currentWord.spanish;
+        const correct = quizState.currentWord.spanish;
+        const learnerSpanish = quizState.selected;
+        const learnerEnglish = getEnglishForSpanish(learnerSpanish);
 
-    // ⭐ Ensure quizScore is not null before incrementing
-    if (appState.levelStats[appState.currentLevel].quizScore === null) {
-        appState.levelStats[appState.currentLevel].quizScore = 0;
-    }
+        // Ensure quizScore is not null before incrementing
+        if (appState.levelStats[appState.currentLevel].quizScore === null) {
+            appState.levelStats[appState.currentLevel].quizScore = 0;
+        }
 
-   if (quizState.selected === correct) {
-    feedback.textContent = "Correct! 🎉";
+        // Correct / Incorrect feedback + NEW "You selected:"
+        if (learnerSpanish === correct) {
+            feedback.innerHTML = `
+                <div class="quiz-correct">Correct! 🎉</div>
+                <div class="quiz-selected"><strong>You selected:</strong> ${learnerSpanish} (${learnerEnglish})</div>
+            `;
 
-    if (appState.levelStats[appState.currentLevel].quizScore === null) {
-        appState.levelStats[appState.currentLevel].quizScore = 0;
-    }
+            appState.levelStats[appState.currentLevel].quizScore++;
+            appState.levelStats[appState.currentLevel].quizCompleted++;
+            updateBadges();
+            updateProgressMeters();
 
-    appState.levelStats[appState.currentLevel].quizScore++;
-    appState.levelStats[appState.currentLevel].quizCompleted++;   // ⭐ ADD THIS LINE
+        } else {
+            feedback.innerHTML = `
+                <div class="quiz-incorrect">Incorrect — correct answer: ${correct}</div>
+                <div class="quiz-selected"><strong>You selected:</strong> ${learnerSpanish} (${learnerEnglish})</div>
+            `;
+        }
 
-    updateBadges();
-    updateProgressMeters();
-}
- else {
-        feedback.textContent = `Incorrect — correct answer: ${correct}`;
-    }
+        // Sabina audio
+        setTimeout(() => speakQuiz(correct), 300);
 
-    // Sabina audio
-    setTimeout(() => speakQuiz(correct), 300);
-
-    saveState();
-});
-
+        saveState();
+    });
 
     // Next button
     nextBtn.addEventListener("click", () => {
@@ -2370,6 +2380,7 @@ function setupQuizEvents() {
         renderQuizTab();
     });
 }
+
 
 
 /* ============================================================
