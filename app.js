@@ -542,160 +542,117 @@ B2: [
    ============================================================ */
 const LISTEN_VOCAB = {
     A1: {
-        "Daily Life": [
-            "vivir","trabajar","estudiar","leer","libros","hora",
-            "levantarse","música","televisión","limpiar","cocinar",
-            "abrir","terminar","escribir","aprender","ir","hacer",
-            "ver","escuchar","salir","descansar","caliente","frío",
-            "feliz","nuevo", "hola",
-    "adiós",
-    "gracias",
-    "siento",
-    "estás",
-    "listos",
-    "despierto",
-    "tiempo",
-    "problemas",
-    "cambio"
-        ],
-        "Family": [
-            "familia","madre","padre","hijo","hija","amigo","amiga",
-            "hermana","hermanos","hermanas","abuela","hambre",
-            "tenemos","tienen"
-        ],
-        "Food & Drink": [
-            "agua","comida","café","té","leche","pan","cerveza",
-            "huevo","fruta","manzana","naranja","plátano","pollo","bistec","papas fritas",
-            "pescado","sopa","azucar","ensalada","arroz","frijoles","queso","sal"
-        ],
-        "Travel": [
-            "autobús","tren","boleto","estación","aeropuerto",
-            "casa","escuela","hotel","baño","lugar"
-        ],
-        "Connectors": [
-            "y","o","con","sin","más","poco","solo","muy",
-            "cerca","para","a","en",  "qué",
-    "quién",
-    "cuándo",
-    "cómo",
-    "cuál",
-    "dónde",
-    "no",
-    "hay",
-    "otra",
-    "pesar",
-    "favor",  "es",
-    "gusta",
-    "gustan",
-    "gustaría",
-    "aprendiendo",
-    "arreglando",  "bueno",
-    "difícil",
-    "clara",
-    "fácil",
-    "malo",
-    "pequeño", "ellos",
-    "su"
-        ],
-        
-       "Numbers": [
-    "uno",   "dos", "tres", "cuatro", "cinco", "seis", "siete", "ocho",
-    "nueve", "diez"
+       "Daily Life": [
+    "vivir", "trabajar", "estudiar", "leer", "libros", "hora", "levantarse",
+    "música", "televisión", "limpiar", "cocinar", "abrir", "terminar",
+    "escribir", "aprender", "ir", "hacer", "ver", "escuchar", "salir",
+    "descansar", "caliente", "frío", "feliz", "nuevo",
+
+    // A2 additions
+    "desayuno", "almuerzo", "cena", "temprano", "tarde", "anoche", "ahora",
+    "minutos", "tarea", "mensaje", "información", "película", "ventana",
+    "cocina", "zapatos", "viaje", "probar", "olvidar", "esperar", "conducir",
+    "arreglar", "irse", "llegar",
+
+    // B1 additions
+    "he", "has", "ha", "hemos", "habéis", "han",
+    "estado", "aprendido", "trabajando", "estudiando", "leyendo", "viviendo",
+    "diarias", "comunicación", "conversaciones", "mejorar", "habilidades",
+    "revisar", "continuar", "cambiar", "seguir", "preparar", "conseguir",
+    "entender",
+
+    // B2 additions
+    "proceso", "tarea", "resultados", "rendimiento", "estrategia", "sistema",
+    "enfoque", "concepto", "riesgo", "posibilidad", "situación",
+    "optimizar", "coordinar", "aumentar", "actualizar", "analizar",
+    "evaluar", "discutir", "aclarar", "fortalecer", "adaptarse", "lograr",
+    "complicado", "necesario", "posible", "efectivo", "realista",
+    "innovadora", "profesional", "positivo",
+    "analizado", "evaluado", "argumentado", "ampliado", "adaptado",
+    "reducido", "insistido", "explorado", "aclarado", "fortalecido",
+    "discutido", "actualizado", "optimizado"
+],
+
+      "Family": [
+    "familia", "madre", "padre", "hijo", "hija", "amigo", "amiga",
+    "hermana", "hermanos", "hermanas", "abuela", "hambre",
+    "tenemos", "tienen",
+
+    // A2 additions
+    "padres",
+
+    // B1 additions
+    "experiencias", "pasadas",
+
+    // B2 additions
+    "sociedad", "cultura", "motivación", "desafíos", "expectativas"
+],
+
+     "Food & Drink": [
+    "agua", "comida", "cafe", "azucar", "té", "leche", "pan", "cerveza",
+    "bistec", "papas fritas", "huevo", "fruta", "manzana", "naranja",
+    "plátano", "pollo", "pescado", "sopa", "ensalada", "arroz",
+    "frijoles", "queso", "sal",
+
+    // A2 additions
+    "desayuno", "almuerzo", "cena",
+
+    // B1 additions
+    "restaurante", "menú", "cuenta"
+],
+
+       "Travel": [
+    "autobus", "tren", "boleto", "estacion", "aeropuerto", "casa",
+    "escuela", "hotel", "bano", "lugar",
+
+    // A2 additions
+    "avión", "visitar", "transporte",
+
+    // B1 additions
+    "encontrar", "cancelar", "traer", "planear", "mudarse", "unirse",
+
+    // B2 additions
+    "remoto", "futuro", "largo plazo"
+],
+
+      "Connectors": [
+    "y", "o", "con", "sin", "más", "poco", "solo", "muy", "cerca",
+    "para", "a", "en", "ella", "el", "rapido",
+
+    // question words
+    "qué", "quién", "cuándo", "cómo", "cuál", "dónde",
+
+    // misc
+    "no", "hay", "otra", "pesar", "favor", "ellos", "su",
+
+    // verbs
+    "es", "gusta", "gustan", "gustaría", "aprendiendo", "arreglando",
+
+    // adjectives
+    "bueno", "difícil", "clara", "fácil", "malo", "pequeño",
+
+    // A2 additions
+    "a menudo", "antes", "ya", "todavía", "normalmente", "argumentó",
+
+    // B1 additions
+    "mientras", "sin embargo", "sobre", "cuando", "después", "durante",
+
+    // B2 additions
+    "además", "por lo tanto", "a pesar de", "aunque", "incluso",
+    "otra vez", "cuidadosamente"
+],
+
+   "Numbers": [
+    "uno", "dos", "tres", "cuatro", "cinco",
+    "seis", "siete", "ocho", "nueve", "diez",
+
+    // A2 additions
+    "once", "doce", "trece", "catorce", "quince",
+    "dieciséis", "diecisiete", "dieciocho", "diecinueve", "veinte",
+
+    // B1 additions
+    "mes", "años"
 ]
-
-    },
-
-    A2: {
-        "Daily Life": [
-            "desayuno","almuerzo","cena","temprano","tarde","anoche",
-            "ahora","minutos","tarea","mensaje","información",
-            "película","ventana","cocina","zapatos","viaje","probar",
-            "olvidar","esperar","conducir","arreglar","irse","llegar"
-        ],
-        "Family": [
-            "padres","abuela","amiga"
-        ],
-        "Food & Drink": [
-            "desayuno","almuerzo","cena"
-        ],
-        "Travel": [
-            "avión","visitar","transporte"
-        ],
-        "Connectors": [
-            "a menudo","antes","ya","todavía","normalmente", "argumentó"
-        ],
-        "Numbers": [
-    "once",
-    "doce",
-    "trece",
-    "catorce",
-    "quince",
-    "dieciséis",
-    "diecisiete",
-    "dieciocho",
-    "diecinueve",
-    "veinte"
-]
-
-    },
-
-    B1: {
-        "Daily Life": [
-            "he","has","ha","hemos","habéis","han",
-            "estado","aprendido","trabajando","estudiando",
-            "leyendo","viviendo","diarias",
-            "comunicación","conversaciones","mejorar",
-            "habilidades","revisar","continuar","cambiar",
-            "seguir","preparar","conseguir","entender"
-        ],
-        "Family": [
-            "experiencias","pasadas"
-        ],
-        "Food & Drink": [
-            "restaurante","menú","cuenta"
-        ],
-        "Travel": [
-            "encontrar","cancelar","traer","planear",
-            "mudarse","unirse"
-        ],
-        "Connectors": [
-            "mientras","sin embargo","sobre","cuando",
-            "después","durante"
-        ],
-        "Numbers": [
-            "mes","años"
-        ]
-    },
-
-    B2: {
-        "Daily Life": [
-            "proceso","tarea","resultados","rendimiento",
-            "estrategia","sistema","enfoque","concepto",
-            "riesgo","posibilidad","situación",
-            "optimizar","coordinar","aumentar","actualizar",
-            "analizar","evaluar","discutir","aclarar",
-            "fortalecer","adaptarse","lograr",
-            "complicado","necesario","posible","efectivo",
-            "realista","innovadora","profesional","positivo",
-            "analizado","evaluado","argumentado","ampliado",
-            "adaptado","reducido","insistido","explorado",
-            "aclarado","fortalecido","discutido","actualizado",
-            "optimizado"
-        ],
-        "Family": [
-            "sociedad","cultura","motivación",
-            "desafíos","expectativas"
-        ],
-        "Food & Drink": [],
-        "Travel": [
-            "remoto","futuro","largo plazo"
-        ],
-        "Connectors": [
-            "además","por lo tanto","a pesar de",
-            "aunque","incluso","otra vez","cuidadosamente"
-        ],
-        "Numbers": []
-    }
 };
 
 /* ============================================================
@@ -704,6 +661,1174 @@ const LISTEN_VOCAB = {
 
 const WORD_DICT = {
 
+"Daily Life": {
+    // A1 core verbs
+    "vivir": "to live",
+    "to live": "vivir",
+    "viviendo": "living",
+    "living": "viviendo",
+    "vivido": "lived",
+    "lived": "vivido",
+
+    "trabajar": "to work",
+    "to work": "trabajar",
+    "trabajando": "working",
+    "working": "trabajando",
+    "trabajado": "worked",
+    "worked": "trabajado",
+
+    "estudiar": "to study",
+    "to study": "estudiar",
+    "estudiando": "studying",
+    "studying": "estudiando",
+    "estudiado": "studied",
+    "studied": "estudiado",
+
+    "leer": "to read",
+    "to read": "leer",
+    "leyendo": "reading",
+    "reading": "leyendo",
+    "leído": "read",
+    "read": "leído",
+
+    "escribir": "to write",
+    "to write": "escribir",
+    "escribiendo": "writing",
+    "writing": "escribiendo",
+    "escrito": "written",
+    "written": "escrito",
+
+    // A1 daily life nouns/adjectives
+    "libros": "books",
+    "books": "libros",
+    "hora": "hour",
+    "hour": "hora",
+    "levantarse": "to get up",
+    "to get up": "levantarse",
+    "música": "music",
+    "music": "música",
+    "televisión": "television",
+    "television": "televisión",
+    "limpiar": "to clean",
+    "to clean": "limpiar",
+    "cocinar": "to cook",
+    "to cook": "cocinar",
+    "abrir": "to open",
+    "to open": "abrir",
+    "terminar": "to finish",
+    "to finish": "terminar",
+    "aprender": "to learn",
+    "to learn": "aprender",
+    "aprender": "to learn",
+    "salir": "to go out",
+    "to go out": "salir",
+    "descansar": "to rest",
+    "to rest": "descansar",
+    "caliente": "hot",
+    "hot": "caliente",
+    "frío": "cold",
+    "cold": "frío",
+    "feliz": "happy",
+    "happy": "feliz",
+    "nuevo": "new",
+    "new": "nuevo",
+
+    // A2 additions
+    "desayuno": "breakfast",
+    "breakfast": "desayuno",
+    "almuerzo": "lunch",
+    "lunch": "almuerzo",
+    "cena": "dinner",
+    "dinner": "cena",
+    "temprano": "early",
+    "early": "temprano",
+    "tarde": "late",
+    "late": "tarde",
+    "anoche": "last night",
+    "last night": "anoche",
+    "ahora": "now",
+    "now": "ahora",
+    "minutos": "minutes",
+    "minutes": "minutos",
+    "tarea": "homework",
+    "homework": "tarea",
+    "mensaje": "message",
+    "message": "mensaje",
+    "información": "information",
+    "information": "información",
+    "película": "movie",
+    "movie": "película",
+    "ventana": "window",
+    "window": "ventana",
+    "cocina": "kitchen",
+    "kitchen": "cocina",
+    "zapatos": "shoes",
+    "shoes": "zapatos",
+    "viaje": "trip",
+    "trip": "viaje",
+
+    "probar": "to try",
+    "to try": "probar",
+    "olvidar": "to forget",
+    "to forget": "olvidar",
+    "esperar": "to wait",
+    "to wait": "esperar",
+    "conducir": "to drive",
+    "to drive": "conducir",
+    "arreglar": "to fix",
+    "to fix": "arreglar",
+    "arreglando": "fixing",
+    "fixing": "arreglando",
+    "arreglado": "fixed",
+    "fixed": "arreglado",
+
+    "irse": "to leave",
+    "to leave": "irse",
+    "llegar": "to arrive",
+    "to arrive": "llegar",
+
+    // B1 auxiliary verbs
+    "he": "I have",
+    "I have": "he",
+    "has": "you have",
+    "you have": "has",
+    "ha": "he/she has",
+    "he/she has": "ha",
+    "hemos": "we have",
+    "we have": "hemos",
+    "habéis": "you (plural) have",
+    "you (plural) have": "habéis",
+    "han": "they have",
+    "they have": "han",
+
+    // B1 participles
+    "estado": "been",
+    "been": "estado",
+    "aprendido": "learned",
+    "learned": "aprendido",
+    "trabajando": "working",
+    "working": "trabajando",
+    "estudiando": "studying",
+    "studying": "estudiando",
+    "leyendo": "reading",
+    "reading": "leyendo",
+    "viviendo": "living",
+    "living": "viviendo",
+
+    // B1 abstract daily life
+    "diarias": "daily",
+    "daily": "diarias",
+    "comunicación": "communication",
+    "communication": "comunicación",
+    "conversaciones": "conversations",
+    "conversations": "conversaciones",
+    "mejorar": "to improve",
+    "to improve": "mejorar",
+    "habilidades": "skills",
+    "skills": "habilidades",
+    "revisar": "to review",
+    "to review": "revisar",
+    "continuar": "to continue",
+    "to continue": "continuar",
+    "cambiar": "to change",
+    "to change": "cambiar",
+    "seguir": "to follow",
+    "to follow": "seguir",
+    "preparar": "to prepare",
+    "to prepare": "preparar",
+    "conseguir": "to get",
+    "to get": "conseguir",
+    "entender": "to understand",
+    "to understand": "entender",
+
+    // B2 advanced daily life
+    "proceso": "process",
+    "process": "proceso",
+    "tarea": "task",
+    "task": "tarea",
+    "resultados": "results",
+    "results": "resultados",
+    "rendimiento": "performance",
+    "performance": "rendimiento",
+    "estrategia": "strategy",
+    "strategy": "estrategia",
+    "sistema": "system",
+    "system": "sistema",
+    "enfoque": "approach",
+    "approach": "enfoque",
+    "concepto": "concept",
+    "concept": "concepto",
+    "riesgo": "risk",
+    "risk": "riesgo",
+    "posibilidad": "possibility",
+    "possibility": "posibilidad",
+    "situación": "situation",
+    "situation": "situación",
+
+    // B2 advanced verbs
+    "optimizar": "to optimize",
+    "to optimize": "optimizar",
+    "coordinar": "to coordinate",
+    "to coordinate": "coordinar",
+    "aumentar": "to increase",
+    "to increase": "aumentar",
+    "actualizar": "to update",
+    "to update": "actualizar",
+    "analizar": "to analyze",
+    "to analyze": "analizar",
+    "evaluar": "to evaluate",
+    "to evaluate": "evaluar",
+    "discutir": "to discuss",
+    "to discuss": "discutir",
+    "aclarar": "to clarify",
+    "to clarify": "aclarar",
+    "fortalecer": "to strengthen",
+    "to strengthen": "fortalecer",
+    "adaptarse": "to adapt",
+    "to adapt": "adaptarse",
+    "lograr": "to achieve",
+    "to achieve": "lograr",
+
+    // B2 adjectives
+    "complicado": "complicated",
+    "complicated": "complicado",
+    "necesario": "necessary",
+    "necessary": "necesario",
+    "posible": "possible",
+    "possible": "posible",
+    "efectivo": "effective",
+    "effective": "efectivo",
+    "realista": "realistic",
+    "realistic": "realista",
+    "innovadora": "innovative",
+    "innovative": "innovadora",
+    "profesional": "professional",
+    "professional": "profesional",
+    "positivo": "positive",
+    "positive": "positivo",
+
+    // B2 participles
+    "analizado": "analyzed",
+    "analyzed": "analizado",
+    "evaluado": "evaluated",
+    "evaluated": "evaluado",
+    "argumentado": "argued",
+    "argued": "argumentado",
+    "ampliado": "expanded",
+    "expanded": "ampliado",
+    "adaptado": "adapted",
+    "adapted": "adaptado",
+    "reducido": "reduced",
+    "reduced": "reducido",
+    "insistido": "insisted",
+    "insisted": "insistido",
+    "explorado": "explored",
+    "explored": "explorado",
+    "aclarado": "clarified",
+    "clarified": "aclarado",
+    "fortalecido": "strengthened",
+    "strengthened": "fortalecido",
+    "discutido": "discussed",
+    "discussed": "discutido",
+    "actualizado": "updated",
+    "updated": "actualizado",
+    "optimizado": "optimized",
+    "optimized": "optimizado"
+},
+
+"Family": {
+    // A1 core family nouns
+    "familia": "family",
+    "family": "familia",
+
+    "madre": "mother",
+    "mother": "madre",
+
+    "padre": "father",
+    "father": "padre",
+
+    "hijo": "son",
+    "son": "hijo",
+
+    "hija": "daughter",
+    "daughter": "hija",
+
+    "amigo": "friend",
+    "friend": "amigo",
+
+    "amiga": "friend (female)",
+    "friend (female)": "amiga",
+
+    "hermana": "sister",
+    "sister": "hermana",
+
+    "hermanos": "brothers",
+    "brothers": "hermanos",
+
+    "hermanas": "sisters",
+    "sisters": "hermanas",
+
+    "abuela": "grandmother",
+    "grandmother": "abuela",
+
+    "hambre": "hunger",
+    "hunger": "hambre",
+
+    "tenemos": "we have",
+    "we have": "tenemos",
+
+    "tienen": "they have",
+    "they have": "tienen",
+
+    // A2 additions
+    "padres": "parents",
+    "parents": "padres",
+
+    // B1 additions (family context)
+    "experiencias": "experiences",
+    "experiences": "experiencias",
+
+    "pasadas": "past",
+    "past": "pasadas",
+
+    // B2 abstract family/social nouns
+    "sociedad": "society",
+    "society": "sociedad",
+
+    "cultura": "culture",
+    "culture": "cultura",
+
+    "motivación": "motivation",
+    "motivation": "motivación",
+
+    "desafíos": "challenges",
+    "challenges": "desafíos",
+
+    "expectativas": "expectations",
+    "expectations": "expectativas"
+},
+
+"Food & Drink": {
+    // A1 core food nouns
+    "agua": "water",
+    "water": "agua",
+
+    "comida": "food",
+    "food": "comida",
+
+    "cafe": "coffee",
+    "coffee": "cafe",
+
+    "azucar": "sugar",
+    "sugar": "azucar",
+
+    "té": "tea",
+    "tea": "té",
+
+    "leche": "milk",
+    "milk": "leche",
+
+    "pan": "bread",
+    "bread": "pan",
+
+    "cerveza": "beer",
+    "beer": "cerveza",
+
+    "bistec": "steak",
+    "steak": "bistec",
+
+    "papas fritas": "french fries",
+    "french fries": "papas fritas",
+
+    "huevo": "egg",
+    "egg": "huevo",
+
+    "fruta": "fruit",
+    "fruit": "fruta",
+
+    "manzana": "apple",
+    "apple": "manzana",
+
+    "naranja": "orange",
+    "orange": "naranja",
+
+    "plátano": "banana",
+    "banana": "plátano",
+
+    "pollo": "chicken",
+    "chicken": "pollo",
+
+    "pescado": "fish",
+    "fish": "pescado",
+
+    "sopa": "soup",
+    "soup": "sopa",
+
+    "ensalada": "salad",
+    "salad": "ensalada",
+
+    "arroz": "rice",
+    "rice": "arroz",
+
+    "frijoles": "beans",
+    "beans": "frijoles",
+
+    "queso": "cheese",
+    "cheese": "queso",
+
+    "sal": "salt",
+    "salt": "sal",
+
+    // A2 additions
+    "desayuno": "breakfast",
+    "breakfast": "desayuno",
+
+    "almuerzo": "lunch",
+    "lunch": "almuerzo",
+
+    "cena": "dinner",
+    "dinner": "cena",
+
+    // B1 additions
+    "restaurante": "restaurant",
+    "restaurant": "restaurante",
+
+    "menú": "menu",
+    "menu": "menú",
+
+    "cuenta": "bill",
+    "bill": "cuenta",
+
+    // B2 advanced food-related verbs
+    "preparar": "to prepare",
+    "to prepare": "preparar",
+    "preparando": "preparing",
+    "preparing": "preparando",
+    "preparado": "prepared",
+    "prepared": "preparado",
+
+    "servir": "to serve",
+    "to serve": "servir",
+    "sirviendo": "serving",
+    "serving": "sirviendo",
+    "servido": "served",
+    "served": "servido",
+
+    "mezclar": "to mix",
+    "to mix": "mezclar",
+    "mezclando": "mixing",
+    "mixing": "mezclando",
+    "mezclado": "mixed",
+    "mixed": "mezclado",
+
+    "cortar": "to cut",
+    "to cut": "cortar",
+    "cortando": "cutting",
+    "cutting": "cortando",
+    "cortado": "cut",
+    "cut": "cortado",
+
+    "probar": "to taste",
+    "to taste": "probar",
+    "probando": "tasting",
+    "tasting": "probando",
+    "probado": "tasted",
+    "tasted": "probado",
+
+    // B2 abstract food-related nouns
+    "nutrición": "nutrition",
+    "nutrition": "nutrición",
+
+    "ingredientes": "ingredients",
+    "ingredients": "ingredientes",
+
+    "calorías": "calories",
+    "calories": "calorías",
+
+    "receta": "recipe",
+    "recipe": "receta",
+
+    "preferencias": "preferences",
+    "preferences": "preferencias"
+},
+
+"Travel": {
+    // A1 core travel nouns
+    "autobus": "bus",
+    "bus": "autobus",
+
+    "tren": "train",
+    "train": "tren",
+
+    "boleto": "ticket",
+    "ticket": "boleto",
+
+    "estacion": "station",
+    "station": "estacion",
+
+    "aeropuerto": "airport",
+    "airport": "aeropuerto",
+
+    "casa": "house",
+    "house": "casa",
+
+    "escuela": "school",
+    "school": "escuela",
+
+    "hotel": "hotel",
+    "hotel": "hotel",
+
+    "bano": "bathroom",
+    "bathroom": "bano",
+
+    "lugar": "place",
+    "place": "lugar",
+
+    // A2 additions
+    "avión": "airplane",
+    "airplane": "avión",
+
+    "visitar": "to visit",
+    "to visit": "visitar",
+    "visitando": "visiting",
+    "visiting": "visitando",
+    "visitado": "visited",
+    "visited": "visitado",
+
+    "transporte": "transportation",
+    "transportation": "transporte",
+
+    // B1 travel verbs
+    "encontrar": "to find",
+    "to find": "encontrar",
+    "encontrando": "finding",
+    "finding": "encontrando",
+    "encontrado": "found",
+    "found": "encontrado",
+
+    "cancelar": "to cancel",
+    "to cancel": "cancelar",
+    "cancelando": "cancelling",
+    "cancelling": "cancelando",
+    "cancelado": "cancelled",
+    "cancelled": "cancelado",
+
+    "traer": "to bring",
+    "to bring": "traer",
+    "trayendo": "bringing",
+    "bringing": "trayendo",
+    "traído": "brought",
+    "brought": "traído",
+
+    "planear": "to plan",
+    "to plan": "planear",
+    "planeando": "planning",
+    "planning": "planeando",
+    "planeado": "planned",
+    "planned": "planeado",
+
+    "mudarse": "to move (houses)",
+    "to move (houses)": "mudarse",
+    "mudándose": "moving",
+    "moving": "mudándose",
+    "mudado": "moved",
+    "moved": "mudado",
+
+    "unirse": "to join",
+    "to join": "unirse",
+    "uniéndose": "joining",
+    "joining": "uniéndose",
+    "unido": "joined",
+    "joined": "unido",
+
+    // B2 travel adjectives / abstract nouns
+    "remoto": "remote",
+    "remote": "remoto",
+
+    "futuro": "future",
+    "future": "futuro",
+
+    "largo plazo": "long term",
+    "long term": "largo plazo",
+
+    // B2 advanced travel verbs
+    "coordinar": "to coordinate",
+    "to coordinate": "coordinar",
+    "coordinando": "coordinating",
+    "coordinating": "coordinando",
+    "coordinado": "coordinated",
+    "coordinated": "coordinado",
+
+    "organizar": "to organize",
+    "to organize": "organizar",
+    "organizando": "organizing",
+    "organizing": "organizando",
+    "organizado": "organized",
+    "organized": "organizado",
+
+    "reservar": "to reserve",
+    "to reserve": "reservar",
+    "reservando": "reserving",
+    "reserving": "reservando",
+    "reservado": "reserved",
+    "reserved": "reservado",
+
+    "explorar": "to explore",
+    "to explore": "explorar",
+    "explorando": "exploring",
+    "exploring": "explorando",
+    "explorado": "explored",
+    "explored": "explorado"
+},
+
+"Connectors": {
+    // A1 basic connectors
+    "y": "and",
+    "and": "y",
+
+    "o": "or",
+    "or": "o",
+
+    "con": "with",
+    "with": "con",
+
+    "sin": "without",
+    "without": "sin",
+
+    "más": "more",
+    "more": "más",
+
+    "poco": "little",
+    "little": "poco",
+
+    "solo": "only",
+    "only": "solo",
+
+    "muy": "very",
+    "very": "muy",
+
+    "cerca": "near",
+    "near": "cerca",
+
+    "para": "for",
+    "for": "para",
+
+    "a": "to",
+    "to": "a",
+
+    "en": "in",
+    "in": "en",
+
+    "ella": "she",
+    "she": "ella",
+
+    "el": "he",
+    "he": "el",
+
+    "rápido": "fast",
+    "fast": "rápido",
+
+    // A1 question words
+    "qué": "what",
+    "what": "qué",
+
+    "quién": "who",
+    "who": "quién",
+
+    "cuándo": "when",
+    "when": "cuándo",
+
+    "cómo": "how",
+    "how": "cómo",
+
+    "cuál": "which",
+    "which": "cuál",
+
+    "dónde": "where",
+    "where": "dónde",
+
+    // A1 misc connectors
+    "no": "no",
+    "hay": "there is",
+    "there is": "hay",
+
+    "otra": "other",
+    "other": "otra",
+
+    "favor": "favor",
+    "ellos": "they",
+    "they": "ellos",
+
+    "su": "their",
+    "their": "su",
+
+    // A1 verbs used as connectors
+    "es": "is",
+    "is": "es",
+
+    "gusta": "likes",
+    "likes": "gusta",
+
+    "gustan": "like (plural)",
+    "like (plural)": "gustan",
+
+    "gustaría": "would like",
+    "would like": "gustaría",
+
+    "aprendiendo": "learning",
+    "learning": "aprendiendo",
+
+    "arreglando": "fixing",
+    "fixing": "arreglando",
+
+    // A1 adjectives used as connectors
+    "bueno": "good",
+    "good": "bueno",
+
+    "difícil": "difficult",
+    "difficult": "difícil",
+
+    "clara": "clear",
+    "clear": "clara",
+
+    "fácil": "easy",
+    "easy": "fácil",
+
+    "malo": "bad",
+    "bad": "malo",
+
+    "pequeño": "small",
+    "small": "pequeño",
+
+    // A2 connectors
+    "a menudo": "often",
+    "often": "a menudo",
+
+    "antes": "before",
+    "before": "antes",
+
+    "ya": "already",
+    "already": "ya",
+
+    "todavía": "still",
+    "still": "todavía",
+
+    "normalmente": "normally",
+    "normally": "normalmente",
+
+    "argumentó": "argued",
+    "argued": "argumentó",
+
+    // B1 connectors
+    "mientras": "while",
+    "while": "mientras",
+
+    "sin embargo": "however",
+    "however": "sin embargo",
+
+    "sobre": "about",
+    "about": "sobre",
+
+    "cuando": "when",
+    "when": "cuando",
+
+    "después": "after",
+    "after": "después",
+
+    "durante": "during",
+    "during": "durante",
+
+    // B2 connectors
+    "además": "besides",
+    "besides": "además",
+
+    "por lo tanto": "therefore",
+    "therefore": "por lo tanto",
+
+    "a pesar de": "despite",
+    "despite": "a pesar de",
+
+    "aunque": "although",
+    "although": "aunque",
+
+    "incluso": "even",
+    "even": "incluso",
+
+    "otra vez": "again",
+    "again": "otra vez",
+
+    "cuidadosamente": "carefully",
+    "carefully": "cuidadosamente",
+
+    // B2 participles used as connectors
+    "analizado": "analyzed",
+    "analyzed": "analizado",
+
+    "evaluado": "evaluated",
+    "evaluated": "evaluado",
+
+    "argumentado": "argued",
+    "argued": "argumentado",
+
+    "ampliado": "expanded",
+    "expanded": "ampliado",
+
+    "adaptado": "adapted",
+    "adapted": "adaptado",
+
+    "reducido": "reduced",
+    "reduced": "reducido",
+
+    "insistido": "insisted",
+    "insisted": "insistido",
+
+    "explorado": "explored",
+    "explored": "explorado",
+
+    "aclarado": "clarified",
+    "clarified": "aclarado",
+
+    "fortalecido": "strengthened",
+    "strengthened": "fortalecido",
+
+    "discutido": "discussed",
+    "discussed": "discutido",
+
+    "actualizado": "updated",
+    "updated": "actualizado",
+
+    "optimizado": "optimized",
+    "optimized": "optimizado"
+},
+
+   "Numbers": {
+    // A1 numbers
+    "uno": "one",
+    "one": "uno",
+
+    "dos": "two",
+    "two": "dos",
+
+    "tres": "three",
+    "three": "tres",
+
+    "cuatro": "four",
+    "four": "cuatro",
+
+    "cinco": "five",
+    "five": "cinco",
+
+    "seis": "six",
+    "six": "seis",
+
+    "siete": "seven",
+    "seven": "siete",
+
+    "ocho": "eight",
+    "eight": "ocho",
+
+    "nueve": "nine",
+    "nine": "nueve",
+
+    "diez": "ten",
+    "ten": "diez",
+
+    // A2 numbers
+    "once": "eleven",
+    "eleven": "once",
+
+    "doce": "twelve",
+    "twelve": "doce",
+
+    "trece": "thirteen",
+    "thirteen": "trece",
+
+    "catorce": "fourteen",
+    "fourteen": "catorce",
+
+    "quince": "fifteen",
+    "fifteen": "quince",
+
+    "dieciséis": "sixteen",
+    "sixteen": "dieciséis",
+
+    "diecisiete": "seventeen",
+    "seventeen": "diecisiete",
+
+    "dieciocho": "eighteen",
+    "eighteen": "dieciocho",
+
+    "diecinueve": "nineteen",
+    "nineteen": "diecinueve",
+
+    "veinte": "twenty",
+    "twenty": "veinte",
+
+    // B1 time‑related count nouns
+    "mes": "month",
+    "month": "mes",
+
+    "años": "years",
+    "years": "años"
+},
+
+"English": {
+    // Basic greetings
+    "hello": "hola",
+    "hi": "hola",
+    "goodbye": "adiós",
+    "bye": "adiós",
+    "thanks": "gracias",
+    "thank you": "gracias",
+    "please": "por favor",
+
+    // Daily Life verbs (all forms)
+    "to live": "vivir",
+    "living": "viviendo",
+    "lived": "vivido",
+
+    "to work": "trabajar",
+    "working": "trabajando",
+    "worked": "trabajado",
+
+    "to study": "estudiar",
+    "studying": "estudiando",
+    "studied": "estudiado",
+
+    "to read": "leer",
+    "reading": "leyendo",
+    "read": "leído",
+
+    "to write": "escribir",
+    "writing": "escribiendo",
+    "written": "escrito",
+
+    "to learn": "aprender",
+    "learning": "aprendiendo",
+    "learned": "aprendido",
+
+    "to cook": "cocinar",
+    "cooking": "cocinando",
+    "cooked": "cocinado",
+
+    "to clean": "limpiar",
+    "cleaning": "limpiando",
+    "cleaned": "limpiado",
+
+    "to open": "abrir",
+    "opening": "abriendo",
+    "opened": "abierto",
+
+    "to finish": "terminar",
+    "finishing": "terminando",
+    "finished": "terminado",
+
+    "to go out": "salir",
+    "going out": "saliendo",
+    "went out": "salió",
+
+    "to rest": "descansar",
+    "resting": "descansando",
+    "rested": "descansado",
+
+    // Daily Life nouns
+    "books": "libros",
+    "hour": "hora",
+    "music": "música",
+    "television": "televisión",
+    "window": "ventana",
+    "kitchen": "cocina",
+    "shoes": "zapatos",
+    "trip": "viaje",
+
+    // Daily Life adjectives
+    "hot": "caliente",
+    "cold": "frío",
+    "happy": "feliz",
+    "new": "nuevo",
+
+    // A2 Daily Life
+    "breakfast": "desayuno",
+    "lunch": "almuerzo",
+    "dinner": "cena",
+    "early": "temprano",
+    "late": "tarde",
+    "last night": "anoche",
+    "now": "ahora",
+    "minutes": "minutos",
+    "homework": "tarea",
+    "message": "mensaje",
+    "information": "información",
+    "movie": "película",
+
+    // Family
+    "family": "familia",
+    "mother": "madre",
+    "father": "padre",
+    "son": "hijo",
+    "daughter": "hija",
+    "friend": "amigo",
+    "sister": "hermana",
+    "brothers": "hermanos",
+    "sisters": "hermanas",
+    "grandmother": "abuela",
+    "parents": "padres",
+    "hunger": "hambre",
+
+    // Food & Drink
+    "water": "agua",
+    "food": "comida",
+    "coffee": "cafe",
+    "sugar": "azucar",
+    "tea": "té",
+    "milk": "leche",
+    "bread": "pan",
+    "beer": "cerveza",
+    "steak": "bistec",
+    "french fries": "papas fritas",
+    "egg": "huevo",
+    "fruit": "fruta",
+    "apple": "manzana",
+    "orange": "naranja",
+    "banana": "plátano",
+    "chicken": "pollo",
+    "fish": "pescado",
+    "soup": "sopa",
+    "salad": "ensalada",
+    "rice": "arroz",
+    "beans": "frijoles",
+    "cheese": "queso",
+    "salt": "sal",
+    "restaurant": "restaurante",
+    "menu": "menú",
+    "bill": "cuenta",
+
+    // Travel
+    "bus": "autobus",
+    "train": "tren",
+    "ticket": "boleto",
+    "station": "estacion",
+    "airport": "aeropuerto",
+    "house": "casa",
+    "school": "escuela",
+    "hotel": "hotel",
+    "bathroom": "bano",
+    "place": "lugar",
+    "airplane": "avión",
+    "transportation": "transporte",
+
+    // Travel verbs (all forms)
+    "to visit": "visitar",
+    "visiting": "visitando",
+    "visited": "visitado",
+
+    "to find": "encontrar",
+    "finding": "encontrando",
+    "found": "encontrado",
+
+    "to cancel": "cancelar",
+    "cancelling": "cancelando",
+    "cancelled": "cancelado",
+
+    "to bring": "traer",
+    "bringing": "trayendo",
+    "brought": "traído",
+
+    "to plan": "planear",
+    "planning": "planeando",
+    "planned": "planeado",
+
+    "to move": "mudarse",
+    "moving": "mudándose",
+    "moved": "mudado",
+
+    "to join": "unirse",
+    "joining": "uniéndose",
+    "joined": "unido",
+
+    // Connectors
+    "and": "y",
+    "or": "o",
+    "with": "con",
+    "without": "sin",
+    "more": "más",
+    "little": "poco",
+    "only": "solo",
+    "very": "muy",
+    "near": "cerca",
+    "for": "para",
+    "to": "a",
+    "in": "en",
+    "she": "ella",
+    "he": "el",
+    "fast": "rápido",
+    "what": "qué",
+    "who": "quién",
+    "when": "cuándo",
+    "how": "cómo",
+    "which": "cuál",
+    "where": "dónde",
+    "other": "otra",
+    "they": "ellos",
+    "their": "su",
+    "is": "es",
+    "likes": "gusta",
+    "like (plural)": "gustan",
+    "would like": "gustaría",
+    "good": "bueno",
+    "difficult": "difícil",
+    "clear": "clara",
+    "easy": "fácil",
+    "bad": "malo",
+    "small": "pequeño",
+    "often": "a menudo",
+    "before": "antes",
+    "already": "ya",
+    "still": "todavía",
+    "normally": "normalmente",
+    "argued": "argumentó",
+    "while": "mientras",
+    "however": "sin embargo",
+    "about": "sobre",
+    "after": "después",
+    "during": "durante",
+    "besides": "además",
+    "therefore": "por lo tanto",
+    "despite": "a pesar de",
+    "although": "aunque",
+    "even": "incluso",
+    "again": "otra vez",
+    "carefully": "cuidadosamente",
+
+    // Numbers
+    "one": "uno",
+    "two": "dos",
+    "three": "tres",
+    "four": "cuatro",
+    "five": "cinco",
+    "six": "seis",
+    "seven": "siete",
+    "eight": "ocho",
+    "nine": "nueve",
+    "ten": "diez",
+    "eleven": "once",
+    "twelve": "doce",
+    "thirteen": "trece",
+    "fourteen": "catorce",
+    "fifteen": "quince",
+    "sixteen": "dieciséis",
+    "seventeen": "diecisiete",
+    "eighteen": "dieciocho",
+    "nineteen": "diecinueve",
+    "twenty": "veinte",
+    "month": "mes",
+    "years": "años"
+},
+
+
+
+
+   
     /* ============================
        A1 — Connectors
        ============================ */
