@@ -456,6 +456,13 @@ body {
     font-weight: 600;
 }
 
+.dash-reset-btn.danger {
+    background: rgba(255, 50, 50, 0.35);
+    border: 1px solid rgba(255, 80, 80, 0.45);
+    color: #fff;
+}
+
+
 /* CEFR gradient styles */
 .gradient-a1 {
     background: linear-gradient(135deg, #3b82f6, #06b6d4);
