@@ -4274,7 +4274,7 @@ function setupConversationEvents(convo) {
     const nextBtn = document.getElementById("convo-next");
     const feedback = document.getElementById("convo-feedback");
 
-    // Make preset responses clickable
+    // ✔ Bind AFTER HTML is rendered
     document.querySelectorAll(".preset-response").forEach(btn => {
         btn.addEventListener("click", () => {
             document.getElementById("convo-input").value = btn.dataset.response;
@@ -4311,6 +4311,7 @@ function setupConversationEvents(convo) {
         renderConversationTab();
     });
 }
+
 
 
 const CEFR_CONVERSATION_PROMPTS = {
