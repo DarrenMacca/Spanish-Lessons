@@ -851,6 +851,32 @@ body {
 }
 
 /* ============================================================
+   CONVERSATION TEXT INPUT (Expanded + Glassmorphism)
+   ============================================================ */
+
+.convo-input {
+    width: 100%;
+    min-height: 90px;          /* Larger default height */
+    max-height: 260px;         /* Comfortable upper limit */
+    padding: 14px;
+    border-radius: 14px;
+    border: none;
+    background: rgba(255, 255, 255, 0.14);
+    backdrop-filter: blur(12px);
+    color: #fff;
+    font-size: 1rem;
+    line-height: 1.5;
+    resize: none;              /* Prevent ugly drag handle */
+    overflow-y: auto;          /* Scroll when long */
+}
+.convo-input:focus {
+    outline: none;
+    box-shadow: 0 0 0 2px rgba(0, 200, 255, 0.35);
+}
+
+
+
+/* ============================================================
    GRAMMAR TAB
    ============================================================ */
 
