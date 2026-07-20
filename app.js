@@ -4153,7 +4153,7 @@ B2: [
    ============================================================ */
 function getDisruptorResponses(level) {
     const disruptors = DISRUPTOR_WORDS[level] || [];
-    return disruptors.slice(0, 3).map(d => ({ es: d, en: "Disruptor" }));
+    return disruptors.slice(0, 3).map(d => ({ es: d, en: "Incorrect response" }));
 }
 
 const DISRUPTORS_A1 = ["Bueno, te digo algo.", "Pues mira.", "La verdad es que."];
@@ -4245,17 +4245,14 @@ function renderConversationTab() {
     setupConversationEvents(convo);
 }
 
-
-
-
-function scoreConversationResponse(userText, expectedList) {
+function scoreConversationResponse(userText, allResponses) {
     const normalizedUser = userText.toLowerCase().trim();
     const wordsUser = normalizedUser.split(" ");
 
     let bestScore = 0;
     let bestMatch = null;
 
-    expectedList.forEach(exp => {
+    allResponses.forEach(exp => {
         const wordsExp = exp.es.toLowerCase().split(" ");
         const matches = wordsUser.filter(w => wordsExp.includes(w)).length;
         const score = Math.round((matches / wordsExp.length) * 100);
@@ -4268,6 +4265,7 @@ function scoreConversationResponse(userText, expectedList) {
 
     return { score: bestScore, match: bestMatch };
 }
+
 
 function setupConversationEvents(convo) {
     const submitBtn = document.getElementById("convo-submit");
@@ -4294,16 +4292,17 @@ const allResponses = [
     ...getDisruptorResponses(appState.currentLevel)
 ];
 
-const result = scoreConversationResponse(userText, allResponses);
+const expectedCorrect = convo.expected[0]; // or best correct match
 
-        feedback.innerHTML = `
-            <div class="convo-result">
-                <strong>Your response:</strong> ${userText}<br>
-                <strong>Score:</strong> ${result.score}%<br>
-                <strong>Closest meaning:</strong> ${result.match.en}<br>
-                <strong>Expected Spanish:</strong> ${result.match.es}
-            </div>
-        `;
+feedback.innerHTML = `
+    <div class="convo-result">
+        <strong>Your response:</strong> ${userText}<br>
+        <strong>Score:</strong> ${result.score}%<br>
+        <strong>Closest meaning:</strong> ${result.match.en}<br>
+        <strong>Expected Spanish:</strong> ${expectedCorrect.es}
+    </div>
+`;
+
 
         speakQuiz(result.match.es);
 
