@@ -4225,11 +4225,12 @@ function renderConversationTab() {
 
             <div class="preset-box">
                 <h3>Correct Options</h3>
-                ${correctButtons}
+                ${presetButtons}
 
                 <h3>Disruptor Options</h3>
                 ${disruptorButtons}
             </div>
+
 
             <textarea id="convo-input" class="convo-input"
                 placeholder="Type your Spanish response here..."></textarea>
