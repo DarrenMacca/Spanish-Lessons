@@ -1774,23 +1774,45 @@ Object.keys(CEFR_LEVELS).forEach(level => {
 /* ============================================================
    STATE LOAD / SAVE
    ============================================================ */
-function loadState() {
+function getLearnerStorageKey(name) {
+    return `CEFR_LEARNER_${name.trim().toLowerCase()}`;
+}
+
+function loadState(name) {
     try {
-        const raw = localStorage.getItem(STORAGE_KEY);
-        if (raw) Object.assign(appState, JSON.parse(raw));
+        const key = getLearnerStorageKey(name);
+        const raw = localStorage.getItem(key);
+
+        if (raw) {
+            Object.assign(appState, JSON.parse(raw));
+        } else {
+            resetAllProgress(); // new learner
+        }
     } catch (e) {
         console.error("State load error:", e);
     }
 }
 
+function setLearnerName(name) {
+
+    if (appState.learnerName !== name) {
+        appState.learnerName = name;
+        loadState(name);   // load or reset
+    }
+
+    saveState();
+    renderDashboard();
+}
 
 function saveState() {
     try {
-        localStorage.setItem(STORAGE_KEY, JSON.stringify(appState));
+        const key = getLearnerStorageKey(appState.learnerName);
+        localStorage.setItem(key, JSON.stringify(appState));
     } catch (e) {
         console.error("State save error:", e);
     }
 }
+
 
 /* ============================================================
    SABINA VOICE (Spanish TTS for explanations)
