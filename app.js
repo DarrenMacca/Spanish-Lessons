@@ -1826,6 +1826,7 @@ function resetAllProgress() {
     appState.currentLevel = "A1";
 }
 
+
 /* ============================================================
    SABINA VOICE (Spanish TTS for explanations)
    ============================================================ */
@@ -5433,6 +5434,7 @@ function updateProgressMeters() {
     pulseTile("score-tile");
     pulseTile("review-tile");
 }
+
 
 
 /* ============================================================
