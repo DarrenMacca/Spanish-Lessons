@@ -1690,13 +1690,56 @@ let appState = {
     speechRate: 1.0,
     studentName: "",
     badges: [],
+    totalXP: 0,
+    globalScore: 0,
     levelStats: {
-        A1: { listens: 0, flashSeen: 0, quizScore: null, quizCompleted: 0, buildCompleted: 0, sentenceCompleted: 0, conversationCompleted: 0 },
-        A2: { listens: 0, flashSeen: 0, quizScore: null, quizCompleted: 0, buildCompleted: 0, sentenceCompleted: 0, conversationCompleted: 0 },
-        B1: { listens: 0, flashSeen: 0, quizScore: null, quizCompleted: 0, buildCompleted: 0, sentenceCompleted: 0, conversationCompleted: 0 },
-        B2: { listens: 0, flashSeen: 0, quizScore: null, quizCompleted: 0, buildCompleted: 0, sentenceCompleted: 0, conversationCompleted: 0 }
+        A1: { 
+            listens: 0, 
+            flashSeen: 0, 
+            quizScore: 0, 
+            quizCompleted: 0, 
+            buildCompleted: 0, 
+            sentenceCompleted: 0, 
+            conversationCompleted: 0,
+            streak: 0,
+            reviewDue: 0
+        },
+        A2: { 
+            listens: 0, 
+            flashSeen: 0, 
+            quizScore: 0, 
+            quizCompleted: 0, 
+            buildCompleted: 0, 
+            sentenceCompleted: 0, 
+            conversationCompleted: 0,
+            streak: 0,
+            reviewDue: 0
+        },
+        B1: { 
+            listens: 0, 
+            flashSeen: 0, 
+            quizScore: 0, 
+            quizCompleted: 0, 
+            buildCompleted: 0, 
+            sentenceCompleted: 0, 
+            conversationCompleted: 0,
+            streak: 0,
+            reviewDue: 0
+        },
+        B2: { 
+            listens: 0, 
+            flashSeen: 0, 
+            quizScore: 0, 
+            quizCompleted: 0, 
+            buildCompleted: 0, 
+            sentenceCompleted: 0, 
+            conversationCompleted: 0,
+            streak: 0,
+            reviewDue: 0
+        }
     }
 };
+
 
 /* ============================================================
    CATEGORY AUTO‑ASSIGNER — PLACE HERE
