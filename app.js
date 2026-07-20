@@ -4289,7 +4289,12 @@ function setupConversationEvents(convo) {
             return;
         }
 
-        const result = scoreConversationResponse(userText, convo.expected);
+const allResponses = [
+    ...convo.expected,
+    ...getDisruptorResponses(appState.currentLevel)
+];
+
+const result = scoreConversationResponse(userText, allResponses);
 
         feedback.innerHTML = `
             <div class="convo-result">
