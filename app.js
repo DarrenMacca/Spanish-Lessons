@@ -4223,13 +4223,14 @@ function renderConversationTab() {
                 <strong>English:</strong> ${convo.prompt_en}
             </div>
 
-            <div class="preset-box">
+       <div class="preset-box">
                 <h3>Correct Options</h3>
-                ${presetButtons}
+                ${correctButtons}
 
                 <h3>Disruptor Options</h3>
                 ${disruptorButtons}
-            </div>
+      </div>
+
 
 
             <textarea id="convo-input" class="convo-input"
