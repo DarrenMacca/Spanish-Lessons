@@ -4153,14 +4153,20 @@ B2: [
    ============================================================ */
 function injectDisruptors(baseResponses, level) {
     const disruptors = DISRUPTOR_WORDS[level] || [];
-    const selected = disruptors.slice(0, 3); // up to 3 disruptors
+    const selected = disruptors.slice(0, 3);
 
     return baseResponses.map(exp => {
         const words = exp.es.split(" ");
-        const injected = [...selected, ...words].join(" ");
-        return { es: injected, en: exp.en };
+
+        selected.forEach(d => {
+            const pos = Math.floor(Math.random() * (words.length + 1));
+            words.splice(pos, 0, d);
+        });
+
+        return { es: words.join(" "), en: exp.en };
     });
 }
+
 
 const DISRUPTORS_A1 = ["y", "pero", "también", "muy", "no"];
 const DISRUPTORS_A2 = ["a menudo", "antes", "ya", "todavía", "normalmente"];
