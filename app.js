@@ -4154,21 +4154,28 @@ B2: [
 function injectDisruptors(baseResponses, level) {
     const disruptors = DISRUPTOR_WORDS[level] || [];
 
-    // Up to 3 disruptor SENTENCES
-    const selected = disruptors.slice(0, 3);
+    // Up to 3 disruptor sentences BEFORE
+    const before = disruptors.slice(0, 3);
+
+    // Up to 3 disruptor sentences AFTER
+    const after = disruptors.slice(0, 3);
 
     return baseResponses.map(exp => {
         if (!exp.es || typeof exp.es !== "string") {
             return exp;
         }
 
-        // Insert disruptor sentences BEFORE the expected response
-        const injected = [...selected, exp.es].join(" ");
+        // Build final sentence:
+        // [before disruptors] + expected response + [after disruptors]
+        const injected = [
+            ...before,
+            exp.es,
+            ...after
+        ].join(" ");
 
         return { es: injected, en: exp.en };
     });
 }
-
 
 
 const DISRUPTORS_A1 = ["Bueno, te digo algo.", "Pues mira.", "La verdad es que."];
