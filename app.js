@@ -1827,6 +1827,7 @@ function resetAllProgress() {
 }
 
 
+
 /* ============================================================
    SABINA VOICE (Spanish TTS for explanations)
    ============================================================ */
@@ -5434,7 +5435,6 @@ function updateProgressMeters() {
     pulseTile("score-tile");
     pulseTile("review-tile");
 }
-
 
 
 /* ============================================================
