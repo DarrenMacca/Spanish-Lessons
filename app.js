@@ -4151,6 +4151,16 @@ B2: [
 /* ============================================================
    REDUCED DISRUPTOR SET — 5 PER LEVEL
    ============================================================ */
+function injectDisruptors(baseResponses, level) {
+    const disruptors = DISRUPTOR_WORDS[level] || [];
+    const selected = disruptors.slice(0, 3); // up to 3 disruptors
+
+    return baseResponses.map(exp => {
+        const words = exp.es.split(" ");
+        const injected = [...selected, ...words].join(" ");
+        return { es: injected, en: exp.en };
+    });
+}
 
 const DISRUPTORS_A1 = ["y", "pero", "también", "muy", "no"];
 const DISRUPTORS_A2 = ["a menudo", "antes", "ya", "todavía", "normalmente"];
@@ -4190,7 +4200,10 @@ function renderConversationTab() {
 
     const convo = generateConversationPrompt(level);
 
-    const presetButtons = convo.expected.map((exp, idx) => `
+    // Inject up to 3 disruptors into preset responses
+    const enhancedResponses = injectDisruptors(convo.expected, level);
+
+    const presetButtons = enhancedResponses.map(exp => `
         <button class="pill preset-response" data-response="${exp.es}">
             ${exp.es}
         </button>
@@ -4210,9 +4223,6 @@ function renderConversationTab() {
                 ${presetButtons}
             </div>
 
-            <!-- RESTORED PILL BOX -->
-            <div id="convo-pill-box" class="convo-pill-box"></div>
-
             <textarea id="convo-input" class="convo-input"
                 placeholder="Type your Spanish response here..."></textarea>
 
@@ -4225,13 +4235,11 @@ function renderConversationTab() {
         </div>
     `;
 
-    // RENDER PILLS AFTER HTML IS IN PLACE
-    renderConversationPills(level);
-
     setupConversationEvents(convo);
 }
 
 
+
 function scoreConversationResponse(userText, expectedList) {
     const normalizedUser = userText.toLowerCase().trim();
     const wordsUser = normalizedUser.split(" ");
@@ -4258,124 +4266,12 @@ function setupConversationEvents(convo) {
     const nextBtn = document.getElementById("convo-next");
     const feedback = document.getElementById("convo-feedback");
 
-    // Attach listeners AFTER DOM is fully rendered
-    setTimeout(() => {
-        document.querySelectorAll(".preset-response").forEach(btn => {
-            btn.addEventListener("click", () => {
-                document.getElementById("convo-input").value = btn.dataset.response;
-            });
-        });
-    }, 0);
-
-    submitBtn.addEventListener("click", () => {
-        const userText = document.getElementById("convo-input").value.trim();
-
-        if (!userText) {
-            feedback.innerHTML = `<span style="color:#f87171;">Please enter a response.</span>`;
-            return;
-        }
-
-        const result = scoreConversationResponse(userText, convo.expected);
-
-        feedback.innerHTML = `
-            <div class="convo-result">
-                <strong>Your response:</strong> ${userText}<br>
-                <strong>Score:</strong> ${result.score}%<br>
-                <strong>Closest meaning:</strong> ${result.match.en}<br>
-                <strong>Expected Spanish:</strong> ${result.match.es}
-            </div>
-        `;
-
-        speakQuiz(result.match.es);
-
-        appState.levelStats[appState.currentLevel].conversationCompleted++;
-        updateBadges();
-        updateProgressMeters();
-    });
-
-    nextBtn.addEventListener("click", () => {
-        renderConversationTab();
-    });
-}
-
-
-
-
-/* ============================================================
-   RENDER VOCAB + DISRUPTOR PILLS
-   ============================================================ */
-
-function renderConversationPills(level) {
-    const box = document.getElementById("convo-pill-box");
-
-    // Collect all vocabulary from A1 → current level
-    let vocab = [];
-    const levels = ["A1", "A2", "B1", "B2"];
-    const currentIndex = levels.indexOf(level);
-
-    for (let i = 0; i <= currentIndex; i++) {
-        const lvl = levels[i];
-        if (CEFR_LEVELS[lvl]) {
-            vocab = vocab.concat(CEFR_LEVELS[lvl]);
-        }
-    }
-
-    // Add reduced disruptors
-    const disruptors = DISRUPTOR_WORDS[level].map(d => ({ spanish: d }));
-
-    const finalPills = vocab.concat(disruptors);
-
-    box.innerHTML = finalPills.map(w => `
-        <button class="pill convo-pill" data-word="${w.spanish}">
-            ${w.spanish}
-        </button>
-    `).join("");
-
-    let builtSentence = [];
-    const pills = document.querySelectorAll(".convo-pill");
-
-    pills.forEach(p => {
-        p.addEventListener("click", () => {
-            builtSentence.push(p.dataset.word);
-            document.getElementById("convo-input").value = builtSentence.join(" ");
+    // Make preset responses clickable
+    document.querySelectorAll(".preset-response").forEach(btn => {
+        btn.addEventListener("click", () => {
+            document.getElementById("convo-input").value = btn.dataset.response;
         });
     });
-}
-
-/* ============================================================
-   SCORING ENGINE
-   ============================================================ */
-
-function scoreConversationResponse(userText, expectedList) {
-    const normalizedUser = userText.toLowerCase().trim();
-    const wordsUser = normalizedUser.split(" ");
-
-    let bestScore = 0;
-    let bestMatch = null;
-
-    expectedList.forEach(exp => {
-        const wordsExp = exp.es.toLowerCase().split(" ");
-
-        const matches = wordsUser.filter(w => wordsExp.includes(w)).length;
-        const score = Math.round((matches / wordsExp.length) * 100);
-
-        if (score > bestScore) {
-            bestScore = score;
-            bestMatch = exp;
-        }
-    });
-
-    return { score: bestScore, match: bestMatch };
-}
-
-/* ============================================================
-   EVENT HANDLERS
-   ============================================================ */
-
-function setupConversationEvents(convo) {
-    const submitBtn = document.getElementById("convo-submit");
-    const nextBtn = document.getElementById("convo-next");
-    const feedback = document.getElementById("convo-feedback");
 
     submitBtn.addEventListener("click", () => {
         const userText = document.getElementById("convo-input").value.trim();
