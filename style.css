@@ -465,13 +465,13 @@ body {
 
     /* ⭐ Make glow visible above glass panels */
     position: relative;
-    z-index: 2;
+    z-index: 10;
 
     /* ⭐ Stronger red neon edge */
     box-shadow:
-        0 0 12px rgba(255, 60, 60, 0.75),
-        0 0 18px rgba(255, 60, 60, 0.55),
-        inset 0 0 6px rgba(255, 100, 100, 0.55);
+        0 0 14px rgba(255, 60, 60, 0.85),
+        0 0 22px rgba(255, 60, 60, 0.55),
+        inset 0 0 8px rgba(255, 120, 120, 0.65);
 
     transition: background 0.25s ease, transform 0.25s ease, box-shadow 0.25s ease;
 }
