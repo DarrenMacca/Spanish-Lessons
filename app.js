@@ -4171,9 +4171,9 @@ function injectDisruptors(baseResponses, level) {
 
 
 
-const DISRUPTORS_A1 = ["y", "pero", "también", "muy", "no"];
-const DISRUPTORS_A2 = ["a menudo", "antes", "ya", "todavía", "normalmente"];
-const DISRUPTORS_B1 = ["mientras", "sin embargo", "sobre", "después", "durante"];
+const DISRUPTORS_A1 = ["Bueno, te digo algo.", "Pues mira.", "La verdad es que."];
+const DISRUPTORS_A2 = ["A menudo pienso en esto.", "Antes de responder, te cuento.", "Ya sabes cómo es."];
+const DISRUPTORS_B1 = ["Mientras lo pienso, te digo algo.", "Sin embargo, hay más que decir.", "Sobre esto, tengo una opinión."];
 const DISRUPTORS_B2 = ["además", "por lo tanto", "a pesar de", "aunque", "incluso"];
 
 const DISRUPTOR_WORDS = {
