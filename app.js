@@ -1814,7 +1814,9 @@ function resetAllProgress() {
             quizScore: 0,
             buildCompleted: 0,
             sentenceCompleted: 0,
-            conversationCompleted: 0
+            conversationCompleted: 0,
+            streak: 0,
+            reviewDue: 0
         };
     });
 
@@ -1823,8 +1825,6 @@ function resetAllProgress() {
     appState.badges = [];
     appState.currentLevel = "A1";
 }
-
-
 
 /* ============================================================
    SABINA VOICE (Spanish TTS for explanations)
@@ -5390,34 +5390,40 @@ function animateNumber(id, target) {
 }
 
 function updateProgressMeters() {
+    const stats = appState.levelStats[appState.currentLevel];
 
     // Bar widths
     document.getElementById("quiz-progress").style.width =
-       appState.levelStats[appState.currentLevel].quizScore + "%";
+        stats.quizScore + "%";
 
     document.getElementById("build-progress").style.width =
-       appState.levelStats[appState.currentLevel].buildCompleted + "%";
-    document.getElementById("sentence-progress").style.width =
-       appState.levelStats[appState.currentLevel].sentenceCompleted + "%";
+        stats.buildCompleted + "%";
 
-   document.getElementById("xp-progress").style.width =
-       appState.levelStats[appState.currentLevel].sentenceCompleted + "%";
-   document.getElementById("streak-progress").style.width =
-       appState.levelStats[appState.currentLevel].sentenceCompleted + "%";
-   document.getElementById("score-progress").style.width =
-       appState.levelStats[appState.currentLevel].sentenceCompleted + "%";
-   document.getElementById("review-progress").style.width =
-       appState.levelStats[appState.currentLevel].sentenceCompleted + "%";
+    document.getElementById("sentence-progress").style.width =
+        stats.sentenceCompleted + "%";
+
+    document.getElementById("xp-progress").style.width =
+        appState.totalXP + "%";
+
+    document.getElementById("streak-progress").style.width =
+        stats.streak + "%";
+
+    document.getElementById("score-progress").style.width =
+        appState.globalScore + "%";
+
+    document.getElementById("review-progress").style.width =
+        stats.reviewDue + "%";
 
     // Animated numbers
-    animateNumber("quiz-number", appState.levelStats[appState.currentLevel].quizScore);
-    animateNumber("build-number", appState.levelStats[appState.currentLevel].quizScore);
-    animateNumber("sentence-number", appState.levelStats[appState.currentLevel].quizScore);
-    animateNumber("xp-number", appState.levelStats[appState.currentLevel].quizScore);
-    animateNumber("streak-number", appState.levelStats[appState.currentLevel].quizScore);
-    animateNumber("score-number", appState.levelStats[appState.currentLevel].quizScore);
-    animateNumber("review-number", appState.levelStats[appState.currentLevel].quizScore);
-    
+    animateNumber("quiz-number", stats.quizScore);
+    animateNumber("build-number", stats.buildCompleted);
+    animateNumber("sentence-number", stats.sentenceCompleted);
+
+    animateNumber("xp-number", appState.totalXP);
+    animateNumber("streak-number", stats.streak);
+    animateNumber("score-number", appState.globalScore);
+    animateNumber("review-number", stats.reviewDue);
+
     // Pulse animations
     pulseTile("quiz-tile");
     pulseTile("build-tile");
@@ -5427,6 +5433,7 @@ function updateProgressMeters() {
     pulseTile("score-tile");
     pulseTile("review-tile");
 }
+
 
 /* ============================================================
    TILE PULSE ANIMATION
