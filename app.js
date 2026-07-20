@@ -4210,6 +4210,9 @@ function renderConversationTab() {
                 ${presetButtons}
             </div>
 
+            <!-- RESTORED PILL BOX -->
+            <div id="convo-pill-box" class="convo-pill-box"></div>
+
             <textarea id="convo-input" class="convo-input"
                 placeholder="Type your Spanish response here..."></textarea>
 
@@ -4222,8 +4225,12 @@ function renderConversationTab() {
         </div>
     `;
 
+    // RENDER PILLS AFTER HTML IS IN PLACE
+    renderConversationPills(level);
+
     setupConversationEvents(convo);
 }
+
 
 function scoreConversationResponse(userText, expectedList) {
     const normalizedUser = userText.toLowerCase().trim();
