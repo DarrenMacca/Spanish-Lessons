@@ -1774,20 +1774,10 @@ Object.keys(CEFR_LEVELS).forEach(level => {
 /* ============================================================
    STATE LOAD / SAVE
    ============================================================ */
-function getLearnerStorageKey(name) {
-    return `CEFR_LEARNER_${name.trim().toLowerCase()}`;
-}
-
-function loadState(name) {
+function loadState() {
     try {
-        const key = getLearnerStorageKey(name);
-        const raw = localStorage.getItem(key);
-
-        if (raw) {
-            Object.assign(appState, JSON.parse(raw));
-        } else {
-            resetAllProgress(); // new learner
-        }
+        const raw = localStorage.getItem(STORAGE_KEY);
+        if (raw) Object.assign(appState, JSON.parse(raw));
     } catch (e) {
         console.error("State load error:", e);
     }
@@ -1795,22 +1785,46 @@ function loadState(name) {
 
 function setLearnerName(name) {
 
+    // If this is a different learner, reset everything
     if (appState.learnerName !== name) {
-        appState.learnerName = name;
-        loadState(name);   // load or reset
+        resetAllProgress();
     }
 
+    appState.learnerName = name;
     saveState();
     renderDashboard();
 }
 
 function saveState() {
     try {
-        const key = getLearnerStorageKey(appState.learnerName);
-        localStorage.setItem(key, JSON.stringify(appState));
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(appState));
     } catch (e) {
         console.error("State save error:", e);
     }
+}
+
+/* ============================================================
+   FULL RESET — ALL LEVELS, ALL SCORES, ALL XP
+   ============================================================ */
+function resetAllProgress() {
+
+    // Reset per-level stats
+    Object.keys(appState.levelStats).forEach(level => {
+        appState.levelStats[level] = {
+            listens: 0,
+            flashSeen: 0,
+            quizScore: 0,
+            buildCompleted: 0,
+            sentenceCompleted: 0,
+            conversationCompleted: 0
+        };
+    });
+
+    // Reset global stats
+    appState.totalXP = 0;
+    appState.globalScore = 0;
+    appState.badges = [];
+    appState.currentLevel = "A1"; // back to beginning
 }
 
 
@@ -1962,6 +1976,25 @@ function initTabNavigation() {
 // Initialize navigation + default tab
 initTabNavigation();
 activateTab("dashboard");
+
+function initDashboardResetButtons() {
+    const resetAllBtn = document.getElementById("resetAllLevelsBtn");
+
+    if (resetAllBtn) {
+        resetAllBtn.addEventListener("click", () => {
+
+            if (!confirm("Reset ALL levels and scores? This cannot be undone.")) return;
+
+            resetAllProgress();
+            saveState();
+            updateProgressMeters();
+            updateBadges();
+            renderDashboard();
+
+            alert("All levels reset. You are back to A1!");
+        });
+    }
+}
 
 /* ============================================================
    LISTEN TAB — CATEGORY + AUDIO PLAYER + CLEAN UI
