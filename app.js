@@ -4153,19 +4153,22 @@ B2: [
    ============================================================ */
 function injectDisruptors(baseResponses, level) {
     const disruptors = DISRUPTOR_WORDS[level] || [];
+
+    // Up to 3 disruptor SENTENCES
     const selected = disruptors.slice(0, 3);
 
     return baseResponses.map(exp => {
-        const words = exp.es.split(" ");
+        if (!exp.es || typeof exp.es !== "string") {
+            return exp;
+        }
 
-        selected.forEach(d => {
-            const pos = Math.floor(Math.random() * (words.length + 1));
-            words.splice(pos, 0, d);
-        });
+        // Insert disruptor sentences BEFORE the expected response
+        const injected = [...selected, exp.es].join(" ");
 
-        return { es: words.join(" "), en: exp.en };
+        return { es: injected, en: exp.en };
     });
 }
+
 
 
 const DISRUPTORS_A1 = ["y", "pero", "también", "muy", "no"];
