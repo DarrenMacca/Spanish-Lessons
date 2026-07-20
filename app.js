@@ -4289,40 +4289,39 @@ function setupConversationEvents(convo) {
         });
     });
 
-   submitBtn.addEventListener("click", () => {
-    const userText = document.getElementById("convo-input").value.trim();
+    submitBtn.addEventListener("click", () => {
+        const userText = document.getElementById("convo-input").value.trim();
 
-    if (!userText) {
-        feedback.innerHTML = `<span style="color:#f87171;">Please enter a response.</span>`;
-        return;
-    }
+        if (!userText) {
+            feedback.innerHTML = `<span style="color:#f87171;">Please enter a response.</span>`;
+            return;
+        }
 
-    const allResponses = [
-        ...convo.expected,
-        ...getDisruptorResponses(appState.currentLevel)
-    ];
+        const allResponses = [
+            ...convo.expected,
+            ...getDisruptorResponses(appState.currentLevel)
+        ];
 
-    // ⭐ THIS WAS MISSING — without it, everything breaks
-    const result = scoreConversationResponse(userText, allResponses);
+        const result = scoreConversationResponse(userText, allResponses);
 
-    const expectedCorrect = convo.expected[0];
+        // Always show the first correct answer
+        const expectedCorrect = convo.expected[0];
 
-    feedback.innerHTML = `
-        <div class="convo-result">
-            <strong>Your response:</strong> ${userText}<br>
-            <strong>Score:</strong> ${result.score}%<br>
-            <strong>Closest meaning:</strong> ${result.match.en}<br>
-            <strong>Expected Spanish:</strong> ${expectedCorrect.es}
-        </div>
-    `;
+        feedback.innerHTML = `
+            <div class="convo-result">
+                <strong>Your response:</strong> ${userText}<br>
+                <strong>Score:</strong> ${result.score}%<br>
+                <strong>Closest meaning:</strong> ${result.match.en}<br>
+                <strong>Expected Spanish:</strong> ${expectedCorrect.es}
+            </div>
+        `;
 
-    speakQuiz(result.match.es);
+        speakQuiz(result.match.es);
 
-    appState.levelStats[appState.currentLevel].conversationCompleted++;
-    updateBadges();
-    updateProgressMeters();
-});
-
+        appState.levelStats[appState.currentLevel].conversationCompleted++;
+        updateBadges();
+        updateProgressMeters();
+    });
 
     nextBtn.addEventListener("click", () => {
         renderConversationTab();
