@@ -4151,32 +4151,10 @@ B2: [
 /* ============================================================
    REDUCED DISRUPTOR SET — 5 PER LEVEL
    ============================================================ */
-function injectDisruptors(baseResponses, level) {
+function getDisruptorResponses(level) {
     const disruptors = DISRUPTOR_WORDS[level] || [];
-
-    // Up to 3 disruptor sentences BEFORE
-    const before = disruptors.slice(0, 3);
-
-    // Up to 3 disruptor sentences AFTER
-    const after = disruptors.slice(0, 3);
-
-    return baseResponses.map(exp => {
-        if (!exp.es || typeof exp.es !== "string") {
-            return exp;
-        }
-
-        // Build final sentence:
-        // [before disruptors] + expected response + [after disruptors]
-        const injected = [
-            ...before,
-            exp.es,
-            ...after
-        ].join(" ");
-
-        return { es: injected, en: exp.en };
-    });
+    return disruptors.slice(0, 3).map(d => ({ es: d, en: "Disruptor" }));
 }
-
 
 const DISRUPTORS_A1 = ["Bueno, te digo algo.", "Pues mira.", "La verdad es que."];
 const DISRUPTORS_A2 = ["A menudo pienso en esto.", "Antes de responder, te cuento.", "Ya sabes cómo es."];
@@ -4216,11 +4194,21 @@ function renderConversationTab() {
 
     const convo = generateConversationPrompt(level);
 
-    // Inject up to 3 disruptors into preset responses
-    const enhancedResponses = injectDisruptors(convo.expected, level);
+    // ❌ REMOVE THIS — no more injection
+    // const enhancedResponses = injectDisruptors(convo.expected, level);
 
-    const presetButtons = enhancedResponses.map(exp => `
-        <button class="pill preset-response" data-response="${exp.es}">
+    // ✔ Correct answers
+    const correctButtons = convo.expected.map(exp => `
+        <button class="pill preset-response correct" data-response="${exp.es}">
+            ${exp.es}
+        </button>
+    `).join("");
+
+    // ✔ Disruptor answers
+    const disruptorResponses = getDisruptorResponses(level);
+
+    const disruptorButtons = disruptorResponses.map(exp => `
+        <button class="pill preset-response disruptor" data-response="${exp.es}">
             ${exp.es}
         </button>
     `).join("");
@@ -4236,7 +4224,11 @@ function renderConversationTab() {
             </div>
 
             <div class="preset-box">
-                ${presetButtons}
+                <h3>Correct Options</h3>
+                ${correctButtons}
+
+                <h3>Disruptor Options</h3>
+                ${disruptorButtons}
             </div>
 
             <textarea id="convo-input" class="convo-input"
@@ -4253,6 +4245,7 @@ function renderConversationTab() {
 
     setupConversationEvents(convo);
 }
+
 
 
 
