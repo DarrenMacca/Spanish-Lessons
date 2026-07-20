@@ -4172,6 +4172,12 @@ const DISRUPTOR_WORDS = {
    CONVERSATION TAB — CEFR INTERACTIVE RESPONSE ENGINE (REMODELLED)
    ============================================================ */
 
+function shuffle(array) {
+    return array
+        .map(x => ({ x, r: Math.random() }))
+        .sort((a, b) => a.r - b.r)
+        .map(o => o.x);
+}
 function generateConversationPrompt(level) {
     const pool = CEFR_CONVERSATION_PROMPTS[level];
     const item = pool[Math.floor(Math.random() * pool.length)];
@@ -4194,24 +4200,23 @@ function renderConversationTab() {
 
     const convo = generateConversationPrompt(level);
 
-    // ❌ REMOVE THIS — no more injection
-    // const enhancedResponses = injectDisruptors(convo.expected, level);
+    // Build correct buttons
+    const correct = convo.expected.map(exp => ({
+        html: `<button class="pill preset-response correct" data-response="${exp.es}">${exp.es}</button>`,
+        type: "correct"
+    }));
 
-    // ✔ Correct answers
-    const correctButtons = convo.expected.map(exp => `
-        <button class="pill preset-response correct" data-response="${exp.es}">
-            ${exp.es}
-        </button>
-    `).join("");
+    // Build disruptor buttons
+    const disruptors = getDisruptorResponses(level).map(exp => ({
+        html: `<button class="pill preset-response disruptor" data-response="${exp.es}">${exp.es}</button>`,
+        type: "disruptor"
+    }));
 
-    // ✔ Disruptor answers
-    const disruptorResponses = getDisruptorResponses(level);
+    // Shuffle all buttons together
+    const allButtons = shuffle([...correct, ...disruptors]);
 
-    const disruptorButtons = disruptorResponses.map(exp => `
-        <button class="pill preset-response disruptor" data-response="${exp.es}">
-            ${exp.es}
-        </button>
-    `).join("");
+    // Build final HTML string
+    const presetButtons = allButtons.map(b => b.html).join("");
 
     container.innerHTML = `
         <div class="glass-panel convo-card">
@@ -4223,12 +4228,9 @@ function renderConversationTab() {
                 <strong>English:</strong> ${convo.prompt_en}
             </div>
 
-       <div class="preset-box">
-                
-                ${correctButtons} ${disruptorButtons}
-      </div>
-
-
+            <div class="preset-box">
+                ${presetButtons}
+            </div>
 
             <textarea id="convo-input" class="convo-input"
                 placeholder="Type your Spanish response here..."></textarea>
@@ -4245,6 +4247,7 @@ function renderConversationTab() {
     setupConversationEvents(convo);
 }
 
+
 function scoreConversationResponse(userText, allResponses) {
     const normalizedUser = userText.toLowerCase().trim();
     const wordsUser = normalizedUser.split(" ");
@@ -4253,9 +4256,17 @@ function scoreConversationResponse(userText, allResponses) {
     let bestMatch = null;
 
     allResponses.forEach(exp => {
-        const wordsExp = exp.es.toLowerCase().split(" ");
-        const matches = wordsUser.filter(w => wordsExp.includes(w)).length;
-        const score = Math.round((matches / wordsExp.length) * 100);
+
+        let score;
+
+        // Disruptors always score 0%
+        if (exp.en === "Incorrect response") {
+            score = 0;
+        } else {
+            const wordsExp = exp.es.toLowerCase().split(" ");
+            const matches = wordsUser.filter(w => wordsExp.includes(w)).length;
+            score = Math.round((matches / wordsExp.length) * 100);
+        }
 
         if (score > bestScore) {
             bestScore = score;
@@ -4265,6 +4276,7 @@ function scoreConversationResponse(userText, allResponses) {
 
     return { score: bestScore, match: bestMatch };
 }
+
 
 
 function setupConversationEvents(convo) {
