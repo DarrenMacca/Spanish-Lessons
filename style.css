@@ -469,7 +469,6 @@ body {
 
     /* ⭐ Stronger red neon edge */
     box-shadow:
-       box-shadow:
         0 0 14px rgba(255, 60, 60, 0.85) !important,
         0 0 22px rgba(255, 60, 60, 0.55) !important,
         inset 0 0 8px rgba(255, 120, 120, 0.65) !important;
