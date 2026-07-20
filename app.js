@@ -4256,7 +4256,6 @@ function scoreConversationResponse(userText, allResponses) {
     let bestMatch = null;
 
     allResponses.forEach(exp => {
-
         let score;
 
         // Disruptors always score 0%
@@ -4278,13 +4277,12 @@ function scoreConversationResponse(userText, allResponses) {
 }
 
 
-
 function setupConversationEvents(convo) {
     const submitBtn = document.getElementById("convo-submit");
     const nextBtn = document.getElementById("convo-next");
     const feedback = document.getElementById("convo-feedback");
 
-    // ✔ Bind AFTER HTML is rendered
+    // Bind pill clicks
     document.querySelectorAll(".preset-response").forEach(btn => {
         btn.addEventListener("click", () => {
             document.getElementById("convo-input").value = btn.dataset.response;
@@ -4292,39 +4290,41 @@ function setupConversationEvents(convo) {
     });
 
     submitBtn.addEventListener("click", () => {
-    const userText = document.getElementById("convo-input").value.trim();
+        const userText = document.getElementById("convo-input").value.trim();
 
-    if (!userText) {
-        feedback.innerHTML = `<span style="color:#f87171;">Please enter a response.</span>`;
-        return;
-    }
+        if (!userText) {
+            feedback.innerHTML = `<span style="color:#f87171;">Please enter a response.</span>`;
+            return;
+        }
 
-    const allResponses = [
-        ...convo.expected,
-        ...getDisruptorResponses(appState.currentLevel)
-    ];
+        const allResponses = [
+            ...convo.expected,
+            ...getDisruptorResponses(appState.currentLevel)
+        ];
 
-    const result = scoreConversationResponse(userText, allResponses);
-    const expectedCorrect = convo.expected[0];
+        const result = scoreConversationResponse(userText, allResponses);
+        const expectedCorrect = convo.expected[0];
 
-    feedback.innerHTML = `
-        <div class="convo-result">
-            <strong>Your response:</strong> ${userText}<br>
-            <strong>Score:</strong> ${result.score}%<br>
-            <strong>Closest meaning:</strong> ${result.match.en}<br>
-            <strong>Expected Spanish:</strong> ${expectedCorrect.es}
-        </div>
-    `;
+        feedback.innerHTML = `
+            <div class="convo-result">
+                <strong>Your response:</strong> ${userText}<br>
+                <strong>Score:</strong> ${result.score}%<br>
+                <strong>Closest meaning:</strong> ${result.match.en}<br>
+                <strong>Expected Spanish:</strong> ${expectedCorrect.es}
+            </div>
+        `;
 
-    speakQuiz(result.match.es);
+        speakQuiz(result.match.es);
 
-    appState.levelStats[appState.currentLevel].conversationCompleted++;
-    updateBadges();
-    updateProgressMeters();
-});
+        appState.levelStats[appState.currentLevel].conversationCompleted++;
+        updateBadges();
+        updateProgressMeters();
+    });
 
+    nextBtn.addEventListener("click", () => {
+        renderConversationTab();
+    });
 }
-
 
 
 const CEFR_CONVERSATION_PROMPTS = {
