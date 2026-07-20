@@ -5437,6 +5437,10 @@ function animateNumber(id, target) {
 function updateProgressMeters() {
     const stats = appState.levelStats[appState.currentLevel];
 
+    // Defensive defaults so undefined never becomes NaN
+    const streak = typeof stats.streak === "number" ? stats.streak : 0;
+    const reviewDue = typeof stats.reviewDue === "number" ? stats.reviewDue : 0;
+
     // Bar widths
     document.getElementById("quiz-progress").style.width =
         stats.quizScore + "%";
@@ -5451,13 +5455,13 @@ function updateProgressMeters() {
         appState.totalXP + "%";
 
     document.getElementById("streak-progress").style.width =
-        stats.streak + "%";
+        streak + "%";
 
     document.getElementById("score-progress").style.width =
         appState.globalScore + "%";
 
     document.getElementById("review-progress").style.width =
-        stats.reviewDue + "%";
+        reviewDue + "%";
 
     // Animated numbers
     animateNumber("quiz-number", stats.quizScore);
@@ -5465,9 +5469,9 @@ function updateProgressMeters() {
     animateNumber("sentence-number", stats.sentenceCompleted);
 
     animateNumber("xp-number", appState.totalXP);
-    animateNumber("streak-number", stats.streak);
+    animateNumber("streak-number", streak);
     animateNumber("score-number", appState.globalScore);
-    animateNumber("review-number", stats.reviewDue);
+    animateNumber("review-number", reviewDue);
 
     // Pulse animations
     pulseTile("quiz-tile");
@@ -5478,6 +5482,7 @@ function updateProgressMeters() {
     pulseTile("score-tile");
     pulseTile("review-tile");
 }
+
 
 
 /* ============================================================
