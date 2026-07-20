@@ -4224,11 +4224,8 @@ function renderConversationTab() {
             </div>
 
        <div class="preset-box">
-                <h3>Correct Options</h3>
-                ${correctButtons}
-
-                <h3>Disruptor Options</h3>
-                ${disruptorButtons}
+                
+                ${correctButtons} ${disruptorButtons}
       </div>
 
 
