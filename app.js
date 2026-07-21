@@ -5815,7 +5815,7 @@ function renderReviewList() {
 }
 
 /* ============================================================
-   GLOBAL ENGLISH-TO-SPANISH DICTIONARY SEARCH (FIXED)
+   GLOBAL ENGLISH-TO-SPANISH DICTIONARY SEARCH (CLEAN AUDIO)
    ============================================================ */
 function initDictionarySearch() {
     const searchInput = document.getElementById("dict-search-input");
@@ -5826,7 +5826,6 @@ function initDictionarySearch() {
     searchInput.addEventListener("input", () => {
         const query = searchInput.value.trim().toLowerCase();
 
-        // Clear out results if input field is empty
         if (!query) {
             resultBox.innerHTML = "";
             return;
@@ -5835,7 +5834,6 @@ function initDictionarySearch() {
         let matchFound = null;
         let foundInLevel = "";
 
-        // 1. STRICT SEARCH: Look for a 100% exact full phrase match first
         if (typeof CEFR_LEVELS !== "undefined") {
             for (const level of Object.keys(CEFR_LEVELS)) {
                 const wordMatch = CEFR_LEVELS[level].find(
@@ -5850,10 +5848,7 @@ function initDictionarySearch() {
             }
         }
 
-        // 2. SMART BOUNDARY SEARCH: If no exact match, look for standalone words 
-        // Using \\b ensures "the" matches "the boy" but NEVER matches "mother"
         if (!matchFound && typeof CEFR_LEVELS !== "undefined") {
-            // Escape special regex characters safely
             const escapedQuery = query.replace(/[-\/\\^$*+?.()|[\]{}]/g, '\\$&');
             const boundaryRegex = new RegExp(`\\b${escapedQuery}\\b`, 'i');
 
@@ -5870,7 +5865,6 @@ function initDictionarySearch() {
             }
         }
 
-        // Render response messaging to screen
         if (matchFound) {
             resultBox.innerHTML = `
                 <div style="padding: 10px; background: rgba(74, 222, 128, 0.1); border: 1px solid rgba(74, 222, 128, 0.3); border-radius: 10px; margin-top: 5px;">
@@ -5878,7 +5872,15 @@ function initDictionarySearch() {
                     <span style="color: #4ade80; font-size: 1.1rem; font-weight: 600; text-shadow: 0 0 6px rgba(74,222,128,0.45); margin-right: 8px;">
                         ${matchFound.spanish}
                     </span>
-                    <button class="pill" onclick="speakQuiz('${matchFound.spanish}')" style="padding: 4px 10px; font-size: 11px; max-width: 50px;">🔊</button>
+                    <!-- ⭐ FIXED: Isolated inline browser TTS engine that speaks ONLY the raw word string, avoiding global app speech rules -->
+                    <button class="pill" onclick="(() => {
+                        window.speechSynthesis.cancel();
+                        const utterance = new SpeechSynthesisUtterance('${matchFound.spanish.replace(/'/g, "\\'")}');
+                        utterance.lang = 'es-ES';
+                        const speedSlider = document.getElementById('rate');
+                        if (speedSlider) utterance.rate = parseFloat(speedSlider.value);
+                        window.speechSynthesis.speak(utterance);
+                    })()" style="padding: 4px 10px; font-size: 11px; max-width: 50px;">🔊</button>
                     <div style="font-size: 11px; color: rgba(255,255,255,0.4); margin-top: 4px;">Found in Vocabulary Level: ${foundInLevel}</div>
                 </div>
             `;
@@ -5891,6 +5893,7 @@ function initDictionarySearch() {
         }
     });
 }
+
 
 /* ============================================================
    GLOBAL FREE PRACTICE SANDBOX (UNSCORED)
@@ -5958,7 +5961,7 @@ function evaluatePracticeAnswer() {
         return;
     }
 
-    // ⭐ KEYBOARD PROTECTOR: Cleans both text arrays using your helper utility
+    // KEYBOARD PROTECTOR: Cleans both text arrays using your helper utility
     const cleanUser = cleanStringForKeyboard(userTyped);
     const cleanCorrect = cleanStringForKeyboard(currentPracticeWord.spanish);
 
@@ -5972,11 +5975,39 @@ function evaluatePracticeAnswer() {
         // Speak audio automatically on success
         setTimeout(() => speakQuiz(currentPracticeWord.spanish), 200);
     } else {
-        feedbackBox.innerHTML = `
-            <div style="color: #f87171; font-weight: 500; padding: 6px; background: rgba(248,113,113,0.1); border-radius: 8px;">
-                Not quite! Try again, or click Skip.
-            </div>
-        `;
+        // ⭐ NEW ENGINE: Find the English meaning of what the learner typed
+        let typedMeaning = "";
+        
+        if (typeof CEFR_LEVELS !== "undefined") {
+            for (const level of Object.keys(CEFR_LEVELS)) {
+                // Normalize the level words for an accurate comparison check
+                const foundWord = CEFR_LEVELS[level].find(
+                    w => w.spanish && cleanStringForKeyboard(w.spanish) === cleanUser
+                );
+                if (foundWord) {
+                    typedMeaning = foundWord.english;
+                    break; // Stop searching once we find a match
+                }
+            }
+        }
+
+        // Build the error message depending on whether the word meaning was found
+        let feedbackHTML = "";
+        if (typedMeaning) {
+            feedbackHTML = `
+                <div style="color: #f87171; font-weight: 500; padding: 6px; background: rgba(248,113,113,0.1); border-radius: 8px;">
+                    Not quite! You typed "<strong>${userTyped}</strong>" (${typedMeaning}). Try again, or click Skip.
+                </div>
+            `;
+        } else {
+            feedbackHTML = `
+                <div style="color: #f87171; font-weight: 500; padding: 6px; background: rgba(248,113,113,0.1); border-radius: 8px;">
+                    Not quite! Try again, or click Skip.
+                </div>
+            `;
+        }
+
+        feedbackBox.innerHTML = feedbackHTML;
     }
 }
 
