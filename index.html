@@ -89,6 +89,30 @@
     <div id="dict-search-result" style="margin-top: 5px; min-height: 24px; font-size: 14px; text-align: center;"></div>
 </div>
 
+    <!-- FREE PRACTICE SANDBOX -->
+<div class="student-name-box glass-panel free-practice-box" style="margin-top: 24px;">
+    <label class="section-title" style="color: #a5f3fc; text-shadow: 0 0 6px rgba(14,165,233,0.45);">
+        🎯 Free Practice Sandbox
+    </label>
+    <p style="font-size: 12px; margin: -5px 0 10px 0; color: rgba(255,255,255,0.6);">
+        No scoring, no rules. Translate the word below from any level!
+    </p>
+    
+    <!-- Dynamic prompt word placeholder -->
+    <div id="practice-prompt-row" style="font-size: 16px; margin-bottom: 12px; font-weight: 500;">
+        Translate: <span id="practice-english-word" style="color: #0ea5e9; font-weight: bold;">Loading...</span>
+    </div>
+
+    <input id="practice-user-input" class="input-field" type="text" placeholder="Type the Spanish translation...">
+    
+    <div id="practice-feedback" style="margin-top: 10px; min-height: 24px; font-size: 14px; text-align: center;"></div>
+
+    <div style="display: flex; gap: 10px; justify-content: center; margin-top: 12px;">
+        <button id="practice-check-btn" class="pill" style="max-width: 100px;">Check</button>
+        <button id="practice-next-btn" class="pill" style="max-width: 100px; background: rgba(255,255,255,0.1); color: #fff;">Skip</button>
+    </div>
+</div>
+
     <!-- PROGRESS METERS -->
     <div class="progress-section">
         <!-- QUIZ -->
