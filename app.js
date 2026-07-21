@@ -4530,7 +4530,10 @@ function globalLookupSpanish(spanishText) {
         ...CEFR_LEVELS.A2,
         ...CEFR_LEVELS.B1,
         ...CEFR_LEVELS.B2,
-        ...CEFR_PHRASES,
+
+        // ⭐ CEFR_PHRASES may NOT be an array — fix here
+        ...(Array.isArray(CEFR_PHRASES) ? CEFR_PHRASES : []),
+
         ...LISTEN_VOCAB,
         ...CEFR_CONVERSATION_AUDIO_A1,
         ...CEFR_CONVERSATION_AUDIO_A2,
@@ -4557,6 +4560,7 @@ function globalLookupSpanish(spanishText) {
 
     return "[Unknown translation]";
 }
+
 
 /* ============================================================
    CONVERSATION TAB — CEFR INTERACTIVE RESPONSE ENGINE (REMODELLED)
