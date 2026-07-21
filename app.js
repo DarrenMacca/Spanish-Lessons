@@ -4408,6 +4408,157 @@ const DISRUPTOR_WORDS = {
 };
 
 /* ============================================================
+   GLOBAL ALL-BANKS DICTIONARY & CONVERSATIONAL PHRASE SEARCH
+   ============================================================ */
+
+function globalLookup(word) {
+    const w = word.toLowerCase();
+    const levelsList = ["A1", "A2", "B1", "B2"];
+
+    // 1. CEFR Vocabulary (A1–B2) — CEFR_LEVELS
+    for (const level of levelsList) {
+        const vocab = CEFR_LEVELS[level];
+        if (!vocab) continue;
+
+        const match = vocab.find(item =>
+            item.english && item.english.toLowerCase() === w
+        );
+        if (match) {
+            return { spanish: match.spanish, source: "CEFR Vocabulary", level };
+        }
+    }
+
+    // 2. CEFR Sentences — CEFR_SENTENCES
+    for (const level of levelsList) {
+        const bank = CEFR_SENTENCES[level];
+        if (!bank) continue;
+
+        const match = bank.find(item =>
+            item.english && item.english.toLowerCase() === w
+        );
+        if (match) {
+            return { spanish: match.spanish, source: "CEFR Sentences", level };
+        }
+    }
+
+    // 3. CEFR Sentence Choices — CEFR_SENTENCE_CHOICES
+    for (const level of levelsList) {
+        const bank = CEFR_SENTENCE_CHOICES[level];
+        if (!bank) continue;
+
+        const match = bank.find(item =>
+            item.english && item.english.toLowerCase() === w
+        );
+        if (match) {
+            return { spanish: match.correct.es, source: "Dialogue Choices", level };
+        }
+    }
+
+    // 4. CEFR Phrases — CEFR_PHRASES
+    if (typeof CEFR_PHRASES !== "undefined") {
+        const phraseMatch = CEFR_PHRASES.find(p =>
+            p.english && p.english.toLowerCase() === w
+        );
+        if (phraseMatch) {
+            return { spanish: phraseMatch.spanish, source: "CEFR Phrases", level: phraseMatch.level || "GLOBAL" };
+        }
+    }
+
+    // 5. Listen Vocab — LISTEN_VOCAB
+    if (typeof LISTEN_VOCAB !== "undefined") {
+        const lvMatch = LISTEN_VOCAB.find(item =>
+            item.english && item.english.toLowerCase() === w
+        );
+        if (lvMatch) {
+            return { spanish: lvMatch.spanish, source: "Listen Vocab", level: lvMatch.level || "GLOBAL" };
+        }
+    }
+
+    // 6. Word-by-word dictionary — WORD_DICT
+    if (typeof WORD_DICT !== "undefined" && WORD_DICT[w]) {
+        return { spanish: WORD_DICT[w], source: "Word Dictionary", level: "GLOBAL" };
+    }
+
+    // 7. Conversation Prompts — CEFR_CONVERSATION_PROMPTS
+    if (typeof CEFR_CONVERSATION_PROMPTS !== "undefined") {
+        // CEFR_CONVERSATION_PROMPTS is an object keyed by level
+        for (const levelKey of Object.keys(CEFR_CONVERSATION_PROMPTS)) {
+            const prompts = CEFR_CONVERSATION_PROMPTS[levelKey];
+            const convoMatch = prompts.find(p =>
+                p.english && p.english.toLowerCase() === w
+            );
+            if (convoMatch) {
+                return {
+                    spanish: convoMatch.spanish,
+                    source: "Conversation Prompt",
+                    level: convoMatch.level || levelKey
+                };
+            }
+        }
+    }
+
+    // 8. Conversation Audio — A1–B2
+    const convoAudioBanks = [
+        CEFR_CONVERSATION_AUDIO_A1,
+        CEFR_CONVERSATION_AUDIO_A2,
+        CEFR_CONVERSATION_AUDIO_B1,
+        CEFR_CONVERSATION_AUDIO_B2
+    ];
+
+    for (const bank of convoAudioBanks) {
+        if (!bank) continue;
+        const audioMatch = bank.find(a =>
+            a.english && a.english.toLowerCase() === w
+        );
+        if (audioMatch) {
+            return {
+                spanish: audioMatch.spanish,
+                source: "Conversation Audio",
+                level: audioMatch.level || "GLOBAL"
+            };
+        }
+    }
+
+    return null;
+}
+
+function globalLookupSpanish(spanishText) {
+    const s = cleanStringForKeyboard(spanishText.toLowerCase().trim());
+
+    const banks = [
+        ...CEFR_LEVELS.A1,
+        ...CEFR_LEVELS.A2,
+        ...CEFR_LEVELS.B1,
+        ...CEFR_LEVELS.B2,
+        ...CEFR_PHRASES,
+        ...LISTEN_VOCAB,
+        ...CEFR_CONVERSATION_AUDIO_A1,
+        ...CEFR_CONVERSATION_AUDIO_A2,
+        ...CEFR_CONVERSATION_AUDIO_B1,
+        ...CEFR_CONVERSATION_AUDIO_B2
+    ];
+
+    // Add expected responses from CEFR_CONVERSATION_PROMPTS (object keyed by level)
+    Object.values(CEFR_CONVERSATION_PROMPTS).forEach(levelArray => {
+        levelArray.forEach(prompt => {
+            if (prompt.expected_responses) {
+                banks.push(...prompt.expected_responses);
+            }
+        });
+    });
+
+    for (const item of banks) {
+        if (!item || !item.es) continue;
+
+        if (cleanStringForKeyboard(item.es.toLowerCase()) === s) {
+            return item.en || "[Unknown translation]";
+        }
+    }
+
+    return "[Unknown translation]";
+}
+
+/* ============================================================
    CONVERSATION TAB — CEFR INTERACTIVE RESPONSE ENGINE (REMODELLED)
    ============================================================ */
 
@@ -4440,22 +4591,17 @@ function renderConversationTab() {
 
     const convo = generateConversationPrompt(level);
 
-    // Build correct buttons
     const correct = convo.expected.map(exp => ({
         html: `<button class="pill preset-response correct" data-response="${exp.es}">${exp.es}</button>`,
         type: "correct"
     }));
 
-    // Build disruptor buttons
     const disruptors = getDisruptorResponses(level).map(exp => ({
         html: `<button class="pill preset-response disruptor" data-response="${exp.es}">${exp.es}</button>`,
         type: "disruptor"
     }));
 
-    // Shuffle all buttons together
     const allButtons = shuffle([...correct, ...disruptors]);
-
-    // Build final HTML string
     const presetButtons = allButtons.map(b => b.html).join("");
 
     container.innerHTML = `
@@ -4475,11 +4621,11 @@ function renderConversationTab() {
             <textarea id="convo-input" class="convo-input"
                 placeholder="Type your Spanish response here..."></textarea>
 
-           <div class="convo-controls">
+            <div class="convo-controls">
                 <button id="convo-submit" class="pill">Submit</button>
                 <button id="convo-reset" class="pill">Reset</button>
                 <button id="convo-next" class="pill">Next</button>
-           </div>
+            </div>
 
             <div id="convo-feedback"></div>
         </div>
@@ -4488,6 +4634,33 @@ function renderConversationTab() {
     setupConversationEvents(convo);
 }
 
+/* ============================================================
+   RELOAD SAME CONVERSATION (RESET BEHAVIOUR)
+   ============================================================ */
+function reloadSameConversation(convo) {
+    const container = document.getElementById("conversation-content");
+
+    const correct = convo.expected.map(exp => ({
+        html: `<button class="pill preset-response correct" data-response="${exp.es}">${exp.es}</button>`
+    }));
+
+    const disruptors = getDisruptorResponses(appState.currentLevel).map(exp => ({
+        html: `<button class="pill preset-response disruptor" data-response="${exp.es}">${exp.es}</button>`
+    }));
+
+    const allButtons = shuffle([...correct, ...disruptors]);
+    const presetButtons = allButtons.map(b => b.html).join("");
+
+    container.querySelector(".preset-box").innerHTML = presetButtons;
+    container.querySelector("#convo-input").value = "";
+    container.querySelector("#convo-feedback").innerHTML = "";
+
+    setupConversationEvents(convo);
+}
+
+/* ============================================================
+   SCORING ENGINE
+   ============================================================ */
 function scoreConversationResponse(userText, allResponses) {
     const normalizedUser = userText.toLowerCase().trim();
     const wordsUser = normalizedUser.split(" ");
@@ -4498,7 +4671,6 @@ function scoreConversationResponse(userText, allResponses) {
     allResponses.forEach(exp => {
         let score;
 
-        // Disruptors always score 0%
         if (exp.en === "Incorrect response") {
             score = 0;
         } else {
@@ -4513,7 +4685,6 @@ function scoreConversationResponse(userText, allResponses) {
         }
     });
 
-    // Fallback if no keywords matched at all
     if (bestMatch === null && allResponses.length > 0) {
         bestMatch = allResponses[0];
     }
@@ -4524,58 +4695,22 @@ function scoreConversationResponse(userText, allResponses) {
 /* ============================================================
    CONVERSATION EVENTS (WITH VERDICT + ENGLISH TRANSLATION)
    ============================================================ */
-
-function reloadSameConversation(convo) {
-    const container = document.getElementById("conversation-content");
-
-    // Build correct buttons
-    const correct = convo.expected.map(exp => ({
-        html: `<button class="pill preset-response correct" data-response="${exp.es}">${exp.es}</button>`,
-        type: "correct"
-    }));
-
-    // Build disruptor buttons
-    const disruptors = getDisruptorResponses(appState.currentLevel).map(exp => ({
-        html: `<button class="pill preset-response disruptor" data-response="${exp.es}">${exp.es}</button>`,
-        type: "disruptor"
-    }));
-
-    const allButtons = shuffle([...correct, ...disruptors]);
-    const presetButtons = allButtons.map(b => b.html).join("");
-
-    container.querySelector(".preset-box").innerHTML = presetButtons;
-    container.querySelector("#convo-input").value = "";
-    container.querySelector("#convo-feedback").innerHTML = "";
-
-    // Re-bind events
-    setupConversationEvents(convo);
-}
-
-
 function setupConversationEvents(convo) {
     const submitBtn = document.getElementById("convo-submit");
     const nextBtn = document.getElementById("convo-next");
     const resetBtn = document.getElementById("convo-reset");
     const feedback = document.getElementById("convo-feedback");
 
-    // Bind pill clicks
     document.querySelectorAll(".preset-response").forEach(btn => {
         btn.addEventListener("click", () => {
             document.getElementById("convo-input").value = btn.dataset.response;
         });
     });
 
-    /* ============================================================
-       RESET BUTTON — clears input + feedback + reloads SAME prompt
-    ============================================================ */
     resetBtn.addEventListener("click", () => {
-    reloadSameConversation(convo);
-});
+        reloadSameConversation(convo);
+    });
 
-
-    /* ============================================================
-       SUBMIT BUTTON — scoring + feedback
-    ============================================================ */
     submitBtn.addEventListener("click", () => {
         const userText = document.getElementById("convo-input").value.trim();
 
@@ -4592,18 +4727,9 @@ function setupConversationEvents(convo) {
         const result = scoreConversationResponse(userText, allResponses);
         const expectedCorrect = convo.expected[0];
 
-        let learnerEnglishTranslation = "[Unknown phrase]";
-        const exactPhraseMatch = allResponses.find(
-            resp => resp.es && cleanStringForKeyboard(resp.es) === cleanStringForKeyboard(userText)
-        );
+        const learnerEnglishTranslation = globalLookupSpanish(userText);
 
-        if (exactPhraseMatch && exactPhraseMatch.en && exactPhraseMatch.en !== "Incorrect response") {
-            learnerEnglishTranslation = exactPhraseMatch.en;
-        } else if (result.match && result.match.en) {
-            learnerEnglishTranslation = result.match.en;
-        }
-
-        const isPassing = result.score >= 70 || (exactPhraseMatch && exactPhraseMatch.en !== "Incorrect response");
+        const isPassing = result.score >= 70 && learnerEnglishTranslation !== "[Unknown translation]";
         const finalScore = isPassing && result.score < 70 ? 100 : result.score;
 
         feedback.innerHTML = `
@@ -4640,13 +4766,11 @@ function setupConversationEvents(convo) {
         saveState();
     });
 
-    /* ============================================================
-       NEXT BUTTON — new prompt
-    ============================================================ */
     nextBtn.addEventListener("click", () => {
         renderConversationTab();
     });
 }
+
 
 const CEFR_CONVERSATION_PROMPTS = {
 
