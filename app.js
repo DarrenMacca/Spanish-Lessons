@@ -5474,19 +5474,29 @@ function renderGrammarTab() {
 function updateBadges() {
     const list = document.getElementById("badge-list");
     const badges = new Set(appState.badges);
+    const currentReviewCount = typeof reviewList !== "undefined" ? reviewList.length : 0;
 
-   Object.keys(appState.levelStats).forEach(level => {
-    const s = appState.levelStats[level];
-    if (s.listens >= 20) badges.add(`${level} Listener`);
-    if (s.flashSeen >= 30) badges.add(`${level} Flash Master`);
-    if (s.quizScore !== null && s.quizScore >= 80) badges.add(`${level} Quiz Ace`);
-    if (s.buildCompleted >= 10) badges.add(`${level} Builder`);
+    Object.keys(appState.levelStats).forEach(level => {
+        const s = appState.levelStats[level];
+        if (s.listens >= 20) badges.add(`${level} Listener`);
+        if (s.flashSeen >= 30) badges.add(`${level} Flash Master`);
+        if (s.quizScore !== null && s.quizScore >= 80) badges.add(`${level} Quiz Ace`);
+        if (s.buildCompleted >= 10) badges.add(`${level} Builder`);
 
-    // ⭐ NEW BADGES — paste here
-    if (s.sentenceCompleted >= 10) badges.add(`${level} Sentence Pro`);
-    if (s.conversationCompleted >= 10) badges.add(`${level} Conversationalist`);
-});
+        // ⭐ NEW BADGES — paste here
+        if (s.sentenceCompleted >= 10) badges.add(`${level} Sentence Pro`);
+        if (s.conversationCompleted >= 10) badges.add(`${level} Conversationalist`);
+        
+        // 🔥 STREAK MILESTONES — Level Specific
+        if (s.streak >= 3) badges.add(`${level} 🔥 Consistent Start`);
+        if (s.streak >= 7) badges.add(`${level} 👑 Habitual Hero`);
+        if (s.streak >= 14) badges.add(`${level} 🔮 Unstoppable Force`);
 
+        // 🧹 COMBINED TRACKING (5-Day Streak + Clean Review Slate)
+        if (s.streak >= 5 && currentReviewCount === 0) {
+            badges.add(`${level} 🧹 Clean Slate Savvy`);
+        }
+    });
 
     appState.badges = Array.from(badges);
     saveState();
@@ -5496,12 +5506,14 @@ function updateBadges() {
         return;
     }
 
+    // Displays the badge strings cleanly using your template system layout loop
     list.innerHTML = appState.badges.map(b => `<li>${b}</li>`).join("");
 }
 
 /* ============================================================
    STUDENT NAME BOX
    ============================================================ */
+
 
 function initNameBox() {
     const input = document.getElementById("student-name");
