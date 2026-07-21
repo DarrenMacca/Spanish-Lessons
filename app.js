@@ -1912,6 +1912,7 @@ function resetAllProgress() {
             listens: 0,
             flashSeen: 0,
             quizScore: 0,
+            quizCompleted: 0, // Zeroes completion fields alongside standard rating stats
             buildCompleted: 0,
             sentenceCompleted: 0,
             conversationCompleted: 0,
@@ -1920,17 +1921,31 @@ function resetAllProgress() {
         };
     });
 
-    // ⭐ FIXED: Completely wipes active streak date memory alongside scores
-    appState.lastActiveDate = null; 
-
+    // ⭐ FIXED: Completely zeroes global metrics memory data structures
     appState.totalXP = 0;
     appState.globalScore = 0;
     appState.badges = [];
     appState.currentLevel = "A1";
-    
-    // Save structural change
+    appState.lastActiveDate = null; 
+
+    // ⭐ FIXED: Clears your live review list array and local tracking storage
+    reviewList = [];
+    localStorage.removeItem('reviewList');
+
+    // Save changes to disk memory
     saveState();
+
+    // ⭐ FIXED: Instantly redraws the entire interface so everything clicks down to 0% right away
+    updateBadges();
+    updateProgressMeters();
+    renderReviewList();
+    
+    // Optional: Take the user back to the clean dashboard overview tab
+    activateTab("dashboard");
+    
+    console.log("🧼 Application data successfully cleared back to baseline!");
 }
+
 
 /* ============================================================
    SABINA VOICE (Spanish TTS for explanations)
@@ -5642,7 +5657,7 @@ function pulseTile(id) {
 }
 
 /* ============================================================
-   STARTUP
+   STARTUP & EVENT INITIALIZATION
    ============================================================ */
 
 document.addEventListener("DOMContentLoaded", () => {
@@ -5654,9 +5669,23 @@ document.addEventListener("DOMContentLoaded", () => {
     initRateControl();       // slider exists now
     initNameBox();           // name box exists now
 
+    // ⭐ INTEGRATION: Binds the reset button click event cleanly
+    const resetBtn = document.getElementById("resetAllLevelsBtn");
+    if (resetBtn) {
+        resetBtn.addEventListener("click", () => {
+            // Displays a safe, native confirmation prompt to avoid accidents
+            const confirmReset = confirm("Are you completely sure you want to delete everything? This will permanently wipe your scores, XP, streaks, and review list tracking.");
+            
+            if (confirmReset) {
+                resetAllProgress();
+            }
+        });
+    }
+
     updateBadges();
     updateProgressMeters();
 });
+
 
 
 /* ============================================================
