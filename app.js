@@ -4640,10 +4640,12 @@ function renderConversationTab() {
 function reloadSameConversation(convo) {
     const container = document.getElementById("conversation-content");
 
+    // Rebuild correct buttons
     const correct = convo.expected.map(exp => ({
         html: `<button class="pill preset-response correct" data-response="${exp.es}">${exp.es}</button>`
     }));
 
+    // Rebuild disruptors
     const disruptors = getDisruptorResponses(appState.currentLevel).map(exp => ({
         html: `<button class="pill preset-response disruptor" data-response="${exp.es}">${exp.es}</button>`
     }));
@@ -4651,12 +4653,19 @@ function reloadSameConversation(convo) {
     const allButtons = shuffle([...correct, ...disruptors]);
     const presetButtons = allButtons.map(b => b.html).join("");
 
-    container.querySelector(".preset-box").innerHTML = presetButtons;
-    container.querySelector("#convo-input").value = "";
-    container.querySelector("#convo-feedback").innerHTML = "";
+    // ⭐ Only update the preset-box, input, and feedback — never touch controls
+    const presetBox = container.querySelector(".preset-box");
+    const inputBox = container.querySelector("#convo-input");
+    const feedbackBox = container.querySelector("#convo-feedback");
 
+    if (presetBox) presetBox.innerHTML = presetButtons;
+    if (inputBox) inputBox.value = "";
+    if (feedbackBox) feedbackBox.innerHTML = "";
+
+    // ⭐ Re-bind events safely
     setupConversationEvents(convo);
 }
+
 
 /* ============================================================
    SCORING ENGINE
@@ -4695,6 +4704,18 @@ function scoreConversationResponse(userText, allResponses) {
 /* ============================================================
    CONVERSATION EVENTS (WITH VERDICT + ENGLISH TRANSLATION)
    ============================================================ */
+
+const submitBtn = document.getElementById("convo-submit");
+const nextBtn = document.getElementById("convo-next");
+const resetBtn = document.getElementById("convo-reset");
+const feedback = document.getElementById("convo-feedback");
+
+if (!submitBtn || !nextBtn || !resetBtn) {
+    console.warn("Conversation controls missing — re-rendering tab.");
+    renderConversationTab();
+    return;
+}
+
 function setupConversationEvents(convo) {
     const submitBtn = document.getElementById("convo-submit");
     const nextBtn = document.getElementById("convo-next");
@@ -4707,8 +4728,8 @@ function setupConversationEvents(convo) {
         });
     });
 
-    resetBtn.addEventListener("click", () => {
-        reloadSameConversation(convo);
+    resetBtn.onclick = () => reloadSameConversation(convo);
+
     });
 
     submitBtn.addEventListener("click", () => {
