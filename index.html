@@ -70,17 +70,20 @@
 
 </div>
 
-<div class="student-name-box glass-panel">
-    <label class="section-title">Your name for certificates</label>
-    <input id="student-name" class="input-field" type="text" placeholder="Enter your name">
-    <button id="save-name-btn" class="pill">Save Name</button>
-    <div id="name-status" class="name-status"></div>
-</div>
+<div class="student-name-box glass-panel" style="display: flex; align-items: center; gap: 12px; flex-wrap: wrap;">
+    <label class="section-title" style="margin-right: 10px;">Your name for certificates</label>
 
-<!-- CERTIFICATE BUTTON (Dashboard) -->
-<button class="pill" onclick="activateTab('certificates'); renderCertificates();" style="margin-top: 10px;">
-    View Certificates
-</button>
+    <input id="student-name" class="input-field" type="text" placeholder="Enter your name" style="max-width: 180px;">
+
+    <button id="save-name-btn" class="pill">Save Name</button>
+
+    <!-- ⭐ Relocated button: now sits to the right of the name field -->
+    <button class="pill" onclick="activateTab('certificates'); renderCertificates();">
+        View Certificates
+    </button>
+
+    <div id="name-status" class="name-status" style="width: 100%;"></div>
+</div>
 
     
   <!-- RESPONSIVE ROW FOR UTILITIES -->
