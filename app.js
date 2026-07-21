@@ -4519,6 +4519,9 @@ function scoreConversationResponse(userText, allResponses) {
     return { score: bestScore, match: bestMatch };
 }
 
+/* ============================================================
+   CONVERSATION EVENTS (WITH VERDICT + ENGLISH TRANSLATION)
+   ============================================================ */
 function setupConversationEvents(convo) {
     const submitBtn = document.getElementById("convo-submit");
     const nextBtn = document.getElementById("convo-next");
@@ -4545,35 +4548,50 @@ function setupConversationEvents(convo) {
         ];
 
         const result = scoreConversationResponse(userText, allResponses);
-        const expectedCorrect = convo.expected[0];
+        const expectedCorrect = convo.expected[0]; // Access the primary object item
 
-        // Determine if response passed validation (> 70% match)
-        const isPassing = result.score >= 70;
+        // Find the exact English meaning of the learner's chosen phrase
+        let learnerEnglishTranslation = "[Unknown phrase]";
+        const exactPhraseMatch = allResponses.find(
+            resp => resp.es && cleanStringForKeyboard(resp.es) === cleanStringForKeyboard(userText)
+        );
+        
+        if (exactPhraseMatch && exactPhraseMatch.en && exactPhraseMatch.en !== "Incorrect response") {
+            learnerEnglishTranslation = exactPhraseMatch.en;
+        } else if (result.match && result.match.en) {
+            learnerEnglishTranslation = result.match.en;
+        }
 
+        // Determine if response passed validation (> 70% match or is a valid preset option)
+        const isPassing = result.score >= 70 || (exactPhraseMatch && exactPhraseMatch.en !== "Incorrect response");
+        const finalScore = isPassing && result.score < 70 ? 100 : result.score;
+
+        // ⭐ FIXED: Generates clear, explicit Correct/Incorrect verdicts along with the English translation text
         feedback.innerHTML = `
-            <div class="convo-result">
+            <div class="convo-result" style="margin-top: 15px; padding: 12px; background: rgba(15, 23, 42, 0.4); border-radius: 12px; border: 1px solid rgba(148, 163, 184, 0.2);">
+                ${isPassing 
+                    ? `<span style="color:#4ade80; font-weight:600; font-size:1.1rem;">Correct! 🎉</span>` 
+                    : `<span style="color:#f87171; font-weight:600; font-size:1.1rem;">Incorrect. ✖</span>`
+                }
+                <br><br>
                 <strong>Your response:</strong> ${userText}<br>
-                <strong style="color: ${isPassing ? '#4ade80' : '#f87171'}">Score:</strong> ${result.score}%<br>
-                <strong>Closest meaning:</strong> ${result.match ? result.match.en : '[No match]'}<br>
-                <strong>Expected Spanish:</strong> ${expectedCorrect.es}
+                <strong>Your Translated Response is:</strong> <span style="color: #a5f3fc;">"${learnerEnglishTranslation}"</span><br><br>
+                <strong>Score:</strong> <span style="color: ${isPassing ? '#4ade80' : '#f87171'}">${finalScore}%</span><br>
+                <strong>Expected Spanish:</strong> ${expectedCorrect.es} (${expectedCorrect.en})
             </div>
         `;
 
         if (result.match) {
-            speakQuiz(result.match.es);
+            speakQuiz(userText); 
         }
 
         appState.levelStats[appState.currentLevel].conversationCompleted++;
 
-        // Dynamically award rewards and trigger streaks on matching validation parameters
         if (isPassing) {
-            appState.totalXP = (appState.totalXP || 0) + 25; // Conversation gives maximum structural XP
+            appState.totalXP = (appState.totalXP || 0) + 25; 
             appState.globalScore = (appState.globalScore || 0) + 20;
-
-            // ⭐ UPDATED: Invokes calendar comparison check engine for daily streak increments
             checkAndAdvanceStreak();
         } else {
-            // INTEGRATION: Formats sentence mistake string and pushes to tracking list if score is low
             const mistakeString = `${convo.prompt_es} ➔ ${expectedCorrect.es}`;
             addIncorrectWord(mistakeString);
         }
