@@ -5969,29 +5969,41 @@ function evaluatePracticeAnswer() {
         feedbackBox.innerHTML = `
             <div style="color: #4ade80; font-weight: 600; padding: 6px; background: rgba(74,222,128,0.1); border-radius: 8px;">
                 Correct! 🎉 (${currentPracticeWord.spanish})
-                <button class="pill" onclick="speakQuiz('${currentPracticeWord.spanish}')" style="padding: 2px 8px; font-size: 10px; margin-left: 5px; max-width: 40px;">🔊</button>
+                <button class="pill" onclick="(() => {
+                    window.speechSynthesis.cancel();
+                    const utterance = new SpeechSynthesisUtterance('${currentPracticeWord.spanish.replace(/'/g, "\\'")}');
+                    utterance.lang = 'es-ES';
+                    const speedSlider = document.getElementById('rate');
+                    if (speedSlider) utterance.rate = parseFloat(speedSlider.value);
+                    window.speechSynthesis.speak(utterance);
+                })()" style="padding: 2px 8px; font-size: 10px; margin-left: 5px; max-width: 40px;">🔊</button>
             </div>
         `;
-        // Speak audio automatically on success
-        setTimeout(() => speakQuiz(currentPracticeWord.spanish), 200);
+        
+        window.speechSynthesis.cancel();
+        const utterance = new SpeechSynthesisUtterance(currentPracticeWord.spanish);
+        utterance.lang = 'es-ES';
+        const speedSlider = document.getElementById('rate');
+        if (speedSlider) utterance.rate = parseFloat(speedSlider.value);
+        window.speechSynthesis.speak(utterance);
+        
     } else {
-        // ⭐ NEW ENGINE: Find the English meaning of what the learner typed
+        // ⭐ FIXED ENGINE: Normalizes the dictionary entry (w.spanish) during look-up 
+        // This guarantees that "si" safely matches "sí" or any other accented wordbank entry!
         let typedMeaning = "";
         
         if (typeof CEFR_LEVELS !== "undefined") {
             for (const level of Object.keys(CEFR_LEVELS)) {
-                // Normalize the level words for an accurate comparison check
                 const foundWord = CEFR_LEVELS[level].find(
                     w => w.spanish && cleanStringForKeyboard(w.spanish) === cleanUser
                 );
                 if (foundWord) {
                     typedMeaning = foundWord.english;
-                    break; // Stop searching once we find a match
+                    break;
                 }
             }
         }
 
-        // Build the error message depending on whether the word meaning was found
         let feedbackHTML = "";
         if (typedMeaning) {
             feedbackHTML = `
@@ -6010,7 +6022,6 @@ function evaluatePracticeAnswer() {
         feedbackBox.innerHTML = feedbackHTML;
     }
 }
-
 
 
 
