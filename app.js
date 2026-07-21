@@ -5659,23 +5659,22 @@ function pulseTile(id) {
 /* ============================================================
    STARTUP & EVENT INITIALIZATION
    ============================================================ */
-
 document.addEventListener("DOMContentLoaded", () => {
     loadState();
 
-    initTabNavigation();     // tab buttons now exist
-    activateTab("dashboard"); // show dashboard first
+    initTabNavigation();     
+    activateTab("dashboard"); 
 
-    initRateControl();       // slider exists now
-    initNameBox();           // name box exists now
+    initRateControl();       
+    initNameBox();           
+    
+    // ⭐ INTEGRATION: Starts tracking text input on your search bar
+    initDictionarySearch();  
 
-    // ⭐ INTEGRATION: Binds the reset button click event cleanly
     const resetBtn = document.getElementById("resetAllLevelsBtn");
     if (resetBtn) {
         resetBtn.addEventListener("click", () => {
-            // Displays a safe, native confirmation prompt to avoid accidents
             const confirmReset = confirm("Are you completely sure you want to delete everything? This will permanently wipe your scores, XP, streaks, and review list tracking.");
-            
             if (confirmReset) {
                 resetAllProgress();
             }
@@ -5685,7 +5684,6 @@ document.addEventListener("DOMContentLoaded", () => {
     updateBadges();
     updateProgressMeters();
 });
-
 
 
 /* ============================================================
@@ -5756,4 +5754,79 @@ function renderReviewList() {
         listContainer.appendChild(card);
     });
 }
+
+/* ============================================================
+   GLOBAL ENGLISH-TO-SPANISH DICTIONARY SEARCH
+   ============================================================ */
+function initDictionarySearch() {
+    const searchInput = document.getElementById("dict-search-input");
+    const resultBox = document.getElementById("dict-search-result");
+
+    if (!searchInput || !resultBox) return;
+
+    searchInput.addEventListener("input", () => {
+        const query = searchInput.value.trim().toLowerCase();
+
+        // If the text field is completely empty, clear out the feedback results window
+        if (!query) {
+            resultBox.innerHTML = "";
+            return;
+        }
+
+        let matchFound = null;
+        let foundInLevel = "";
+
+        // Loop through all data arrays loaded from wordbanks/ scripts
+        // Expecting CEFR_LEVELS layout object mapping (e.g. CEFR_LEVELS.A1 = [{english: '...', spanish: '...'}])
+        if (typeof CEFR_LEVELS !== "undefined") {
+            for (const level of Object.keys(CEFR_LEVELS)) {
+                const wordMatch = CEFR_LEVELS[level].find(
+                    w => w.english && w.english.toLowerCase() === query
+                );
+                
+                if (wordMatch) {
+                    matchFound = wordMatch;
+                    foundInLevel = level;
+                    break; // Exit loops immediately upon finding an exact string match
+                }
+            }
+        }
+
+        // If an exact full-word match wasn't found, try a partial "includes" fuzzy search
+        if (!matchFound && typeof CEFR_LEVELS !== "undefined") {
+            for (const level of Object.keys(CEFR_LEVELS)) {
+                const wordMatch = CEFR_LEVELS[level].find(
+                    w => w.english && w.english.toLowerCase().includes(query)
+                );
+                
+                if (wordMatch) {
+                    matchFound = wordMatch;
+                    foundInLevel = level;
+                    break;
+                }
+            }
+        }
+
+        // Render response messaging to screen inside the dashboard container box
+        if (matchFound) {
+            resultBox.innerHTML = `
+                <div style="padding: 10px; background: rgba(74, 222, 128, 0.1); border: 1px solid rgba(74, 222, 128, 0.3); border-radius: 10px; margin-top: 5px;">
+                    <span style="color: #a5f3fc; font-weight: bold;">Spanish:</span> 
+                    <span style="color: #4ade80; font-size: 1.1rem; font-weight: 600; text-shadow: 0 0 6px rgba(74,222,128,0.45); margin-right: 8px;">
+                        ${matchFound.spanish}
+                    </span>
+                    <button class="pill" onclick="speakQuiz('${matchFound.spanish}')" style="padding: 4px 10px; font-size: 11px; max-width: 50px;">🔊</button>
+                    <div style="font-size: 11px; color: rgba(255,255,255,0.4); margin-top: 4px;">Found in Vocabulary Level: ${foundInLevel}</div>
+                </div>
+            `;
+        } else {
+            resultBox.innerHTML = `
+                <div style="color: #f87171; font-style: italic; font-size: 13px; margin-top: 8px;">
+                    Word not found in A1-B2 wordbanks.
+                </div>
+            `;
+        }
+    });
+}
+
 
