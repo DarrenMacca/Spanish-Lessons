@@ -5725,9 +5725,10 @@ document.addEventListener("DOMContentLoaded", () => {
 
     initRateControl();       
     initNameBox();           
-    
-    // ⭐ INTEGRATION: Starts tracking text input on your search bar
     initDictionarySearch();  
+    
+    // ⭐ INTEGRATION: Spawns the sandbox setup calculations
+    initFreePracticeSandbox();  
 
     const resetBtn = document.getElementById("resetAllLevelsBtn");
     if (resetBtn) {
@@ -5890,6 +5891,95 @@ function initDictionarySearch() {
         }
     });
 }
+
+/* ============================================================
+   GLOBAL FREE PRACTICE SANDBOX (UNSCORED)
+   ============================================================ */
+let currentPracticeWord = null;
+
+function initFreePracticeSandbox() {
+    const checkBtn = document.getElementById("practice-check-btn");
+    const nextBtn = document.getElementById("practice-next-btn");
+    const inputField = document.getElementById("practice-user-input");
+
+    if (!checkBtn || !nextBtn || !inputField) return;
+
+    // Load the first random word right away
+    getNewPracticeWord();
+
+    // Trigger check on click
+    checkBtn.addEventListener("click", evaluatePracticeAnswer);
+
+    // Trigger check if user hits "Enter" key inside input field
+    inputField.addEventListener("keypress", (e) => {
+        if (e.key === "Enter") evaluatePracticeAnswer();
+    });
+
+    // Skip/Next button action
+    nextBtn.addEventListener("click", () => {
+        getNewPracticeWord();
+    });
+}
+
+function getNewPracticeWord() {
+    const inputField = document.getElementById("practice-user-input");
+    const feedbackBox = document.getElementById("practice-feedback");
+    const wordPlaceholder = document.getElementById("practice-english-word");
+
+    if (!wordPlaceholder || !inputField || !feedbackBox) return;
+
+    inputField.value = "";
+    feedbackBox.innerHTML = "";
+
+    // 1. Gather all unique levels present in the active dictionaries
+    if (typeof CEFR_LEVELS === "undefined") return;
+    const levels = Object.keys(CEFR_LEVELS);
+    
+    // 2. Pick a completely random level, then a random word inside it
+    const randomLevel = levels[Math.floor(Math.random() * levels.length)];
+    const wordPool = CEFR_LEVELS[randomLevel];
+    
+    currentPracticeWord = wordPool[Math.floor(Math.random() * wordPool.length)];
+
+    // 3. Render prompt label onto dashboard layout view
+    wordPlaceholder.textContent = `${currentPracticeWord.english} (${randomLevel})`;
+}
+
+function evaluatePracticeAnswer() {
+    const inputField = document.getElementById("practice-user-input");
+    const feedbackBox = document.getElementById("practice-feedback");
+
+    if (!inputField || !feedbackBox || !currentPracticeWord) return;
+
+    const userTyped = inputField.value.trim();
+    
+    if (!userTyped) {
+        feedbackBox.innerHTML = `<span style="color: #f87171;">Type an answer first!</span>`;
+        return;
+    }
+
+    // ⭐ KEYBOARD PROTECTOR: Cleans both text arrays using your helper utility
+    const cleanUser = cleanStringForKeyboard(userTyped);
+    const cleanCorrect = cleanStringForKeyboard(currentPracticeWord.spanish);
+
+    if (cleanUser === cleanCorrect) {
+        feedbackBox.innerHTML = `
+            <div style="color: #4ade80; font-weight: 600; padding: 6px; background: rgba(74,222,128,0.1); border-radius: 8px;">
+                Correct! 🎉 (${currentPracticeWord.spanish})
+                <button class="pill" onclick="speakQuiz('${currentPracticeWord.spanish}')" style="padding: 2px 8px; font-size: 10px; margin-left: 5px; max-width: 40px;">🔊</button>
+            </div>
+        `;
+        // Speak audio automatically on success
+        setTimeout(() => speakQuiz(currentPracticeWord.spanish), 200);
+    } else {
+        feedbackBox.innerHTML = `
+            <div style="color: #f87171; font-weight: 500; padding: 6px; background: rgba(248,113,113,0.1); border-radius: 8px;">
+                Not quite! Try again, or click Skip.
+            </div>
+        `;
+    }
+}
+
 
 
 
