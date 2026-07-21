@@ -5837,7 +5837,7 @@ function renderReviewList() {
 
 
 /* ============================================================
-   GLOBAL ALL-BANKS DICTIONARY & CONVERSATIONAL PHRASE SEARCH (REPAIR)
+   GLOBAL ALL-BANKS DICTIONARY & CONVERSATIONAL PHRASE SEARCH
    ============================================================ */
 function initDictionarySearch() {
     const searchInput = document.getElementById("dict-search-input");
@@ -5853,14 +5853,69 @@ function initDictionarySearch() {
             return;
         }
 
+        const levelsList = ["A1", "A2", "B1", "B2"];
+        const words = query.split(/\s+/).filter(w => w.length > 0);
+
+        /* ============================================================
+           SENTENCE MODE — translate each word individually
+        ============================================================ */
+        if (words.length > 1) {
+            const translatedWords = [];
+            const unknownWords = [];
+
+            for (const word of words) {
+                let found = null;
+
+                for (const level of levelsList) {
+                    const vocab = CEFR_LEVELS[level];
+                    if (!vocab) continue;
+
+                    const match = vocab.find(item =>
+                        item.english && item.english.toLowerCase() === word
+                    );
+
+                    if (match) {
+                        translatedWords.push(match.spanish);
+                        found = true;
+                        break;
+                    }
+                }
+
+                if (!found) {
+                    unknownWords.push(word);
+                    translatedWords.push(`[${word}]`);
+                }
+            }
+
+            const spanishSentence = translatedWords.join(" ");
+
+            resultBox.innerHTML = `
+                <div style="padding: 10px; background: rgba(74, 222, 128, 0.1);
+                            border: 1px solid rgba(74, 222, 128, 0.3);
+                            border-radius: 10px; margin-top: 5px;">
+                    <span style="color: #a5f3fc; font-weight: bold;">Spanish:</span>
+                    <span style="color: #4ade80; font-size: 1.1rem; font-weight: 600;
+                                 text-shadow: 0 0 6px rgba(74,222,128,0.45); margin-right: 8px;">
+                        ${spanishSentence}
+                    </span>
+
+                    <div style="font-size: 11px; color: rgba(255,255,255,0.4); margin-top: 4px;">
+                        Sentence mode — ${unknownWords.length === 0 ? "all words found" : "missing: " + unknownWords.join(", ")}
+                    </div>
+                </div>
+            `;
+            return;
+        }
+
+        /* ============================================================
+           SINGLE WORD MODE — your original logic
+        ============================================================ */
         let matchFound = null;
         let foundInLevel = "";
         let sourceBankName = "";
-
-        const levelsList = ["A1", "A2", "B1", "B2"];
         const cleanQuery = cleanStringForKeyboard(query).toLowerCase();
 
-        // 1. ALL-BANKS EXACT MATCH SEARCH (Matches English phrases exactly as typed)
+        // 1. EXACT MATCH SEARCH
         for (const level of levelsList) {
             if (typeof CEFR_LEVELS !== "undefined" && CEFR_LEVELS[level]) {
                 const match = CEFR_LEVELS[level].find(w => w.english && w.english.toLowerCase() === query);
@@ -5881,15 +5936,12 @@ function initDictionarySearch() {
             }
         }
 
-        // 2. FIXED SMART BOUNDARY MATCH FALLBACK (Prevents "yes" from matching "yesterday")
+        // 2. SMART BOUNDARY MATCH
         if (!matchFound) {
-            // Escapes special regex characters safely
             const escapedQuery = cleanQuery.replace(/[-\/\\^$*+?.()|[\]{}]/g, '\\$&');
-            // Using standard word boundaries (\b) on the cleaned keyboard text strings
             const boundaryRegex = new RegExp(`\\b${escapedQuery}\\b`, 'i');
 
             for (const level of levelsList) {
-                // Check Vocabulary Wordbank
                 if (typeof CEFR_LEVELS !== "undefined" && CEFR_LEVELS[level]) {
                     const match = CEFR_LEVELS[level].find(w => {
                         if (!w.english) return false;
@@ -5898,7 +5950,6 @@ function initDictionarySearch() {
                     });
                     if (match) { matchFound = match; foundInLevel = level; sourceBankName = "Vocabulary Wordbank"; break; }
                 }
-                // Check Build Sentences
                 if (typeof CEFR_SENTENCES !== "undefined" && CEFR_SENTENCES[level]) {
                     const match = CEFR_SENTENCES[level].find(s => {
                         if (!s.english) return false;
@@ -5907,7 +5958,6 @@ function initDictionarySearch() {
                     });
                     if (match) { matchFound = match; foundInLevel = level; sourceBankName = "Sentence Bank"; break; }
                 }
-                // Check Phrases & Dialogue Choices
                 if (typeof CEFR_SENTENCE_CHOICES !== "undefined" && CEFR_SENTENCE_CHOICES[level]) {
                     const match = CEFR_SENTENCE_CHOICES[level].find(c => {
                         if (!c.english) return false;
@@ -5924,7 +5974,7 @@ function initDictionarySearch() {
             }
         }
 
-        // 3. MULTI-WORD FRAGMENT MATCH FALLBACK (For long sentences like "hello how are you")
+        // 3. MULTI-WORD FRAGMENT MATCH (original behaviour)
         if (!matchFound && query.split(/\s+/).length > 1) {
             const queryWords = cleanStringForKeyboard(query).toLowerCase().split(/\s+/).filter(w => w.length > 1);
             let bestScore = 0;
@@ -5940,7 +5990,7 @@ function initDictionarySearch() {
                             const exactWordRegex = new RegExp(`\\b${word}\\b`, 'i');
                             return exactWordRegex.test(englishField);
                         }).length;
-                        
+
                         if (matchCount > bestScore && matchCount >= Math.ceil(queryWords.length * 0.6)) {
                             bestScore = matchCount;
                             foundInLevel = level;
@@ -5956,12 +6006,15 @@ function initDictionarySearch() {
             }
         }
 
-        // Render response messaging to screen
+        // Render single-word result
         if (matchFound) {
             resultBox.innerHTML = `
-                <div style="padding: 10px; background: rgba(74, 222, 128, 0.1); border: 1px solid rgba(74, 222, 128, 0.3); border-radius: 10px; margin-top: 5px;">
-                    <span style="color: #a5f3fc; font-weight: bold;">Spanish:</span> 
-                    <span style="color: #4ade80; font-size: 1.1rem; font-weight: 600; text-shadow: 0 0 6px rgba(74,222,128,0.45); margin-right: 8px;">
+                <div style="padding: 10px; background: rgba(74, 222, 128, 0.1);
+                            border: 1px solid rgba(74, 222, 128, 0.3);
+                            border-radius: 10px; margin-top: 5px;">
+                    <span style="color: #a5f3fc; font-weight: bold;">Spanish:</span>
+                    <span style="color: #4ade80; font-size: 1.1rem; font-weight: 600;
+                                 text-shadow: 0 0 6px rgba(74,222,128,0.45); margin-right: 8px;">
                         ${matchFound.spanish}
                     </span>
                     <button class="pill" onclick="(() => {
@@ -5972,7 +6025,9 @@ function initDictionarySearch() {
                         if (speedSlider) utterance.rate = parseFloat(speedSlider.value);
                         window.speechSynthesis.speak(utterance);
                     })()" style="padding: 4px 10px; font-size: 11px; max-width: 50px;">🔊</button>
-                    <div style="font-size: 11px; color: rgba(255,255,255,0.4); margin-top: 4px;">Found in ${foundInLevel} (${sourceBankName})</div>
+                    <div style="font-size: 11px; color: rgba(255,255,255,0.4); margin-top: 4px;">
+                        Found in ${foundInLevel} (${sourceBankName})
+                    </div>
                 </div>
             `;
         } else {
@@ -5984,6 +6039,7 @@ function initDictionarySearch() {
         }
     });
 }
+
 
 
 /* ============================================================
