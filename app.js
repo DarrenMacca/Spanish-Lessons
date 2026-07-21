@@ -5523,3 +5523,50 @@ document.addEventListener("DOMContentLoaded", () => {
     updateProgressMeters();
 });
 
+
+/* ============================================================
+   MISTAKEN AREAS — REVIEW SYSTEM ENGINE
+   ============================================================ */
+
+// Initialize the incorrect words list from localStorage, or start empty
+let reviewList = JSON.parse(localStorage.getItem('reviewList')) || [];
+
+// Function to add a word when a user makes a mistake in Quizzes/Games
+function addIncorrectWord(word) {
+    if (!reviewList.includes(word)) {
+        reviewList.push(word);
+        localStorage.setItem('reviewList', JSON.stringify(reviewList));
+        renderReviewList(); // Refresh the UI view instantly
+    }
+}
+
+// Function to remove a word once the learner clicks "Got it!"
+function clearWordFromReview(word) {
+    reviewList = reviewList.filter(item => item !== word);
+    localStorage.setItem('reviewList', JSON.stringify(reviewList));
+    renderReviewList(); // Refresh the UI view instantly
+}
+
+// Function to build and update the review interface cards dynamically
+function renderReviewList() {
+    const listContainer = document.getElementById('review-words-list');
+    if (!listContainer) return;
+    listContainer.innerHTML = '';
+
+    if (reviewList.length === 0) {
+        listContainer.innerHTML = '<p class="review-empty-msg">🎉 Great job! No words to review.</p>';
+        return;
+    }
+
+    reviewList.forEach(word => {
+        const card = document.createElement('div');
+        card.className = 'review-card';
+        card.innerHTML = `
+            <span class="review-word-text">${word}</span>
+            <button class="pill" onclick="clearWordFromReview('${word}')">Got it!</button>
+        `;
+        listContainer.appendChild(card);
+    });
+}
+
+
