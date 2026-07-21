@@ -16,14 +16,14 @@ const A1_WORDS = [
     { english: "to", spanish: "a", audio: "a.mp3", category: "connector" },
 
     // CORE SURVIVAL
-    { english: "Hello", spanish: "Hola", audio: "hola.mp3", category: "core" },
-    { english: "Goodbye", spanish: "Adiós", audio: "adios.mp3", category: "core" },
-    { english: "Please", spanish: "Por favor", audio: "por-favor.mp3", category: "core" },
-    { english: "Thank you", spanish: "Gracias", audio: "gracias.mp3", category: "core" },
-    { english: "Yes", spanish: "Sí", audio: "si.mp3", category: "core" },
-    { english: "No", spanish: "No", audio: "no.mp3", category: "core" },
-    { english: "Sorry", spanish: "Lo siento", audio: "lo-siento.mp3", category: "core" },
-    { english: "Help", spanish: "Ayuda", audio: "ayuda.mp3", category: "core" },
+    { english: "hello", spanish: "hola", audio: "hola.mp3", category: "core" },
+    { english: "goodbye", spanish: "adiós", audio: "adios.mp3", category: "core" },
+    { english: "please", spanish: "por favor", audio: "por-favor.mp3", category: "core" },
+    { english: "thank you", spanish: "gracias", audio: "gracias.mp3", category: "core" },
+    { english: "yes", spanish: "sí", audio: "si.mp3", category: "core" },
+    { english: "no", spanish: "no", audio: "no.mp3", category: "core" },
+    { english: "sorry", spanish: "lo siento", audio: "lo-siento.mp3", category: "core" },
+    { english: "help", spanish: "ayuda", audio: "ayuda.mp3", category: "core" },
 
     // DAILY LIFE (NEW A1)
     { english: "morning", spanish: "mañana", audio: "manana.mp3", category: "daily-life" },
