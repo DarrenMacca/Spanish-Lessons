@@ -4653,7 +4653,7 @@ function reloadSameConversation(convo) {
     const allButtons = shuffle([...correct, ...disruptors]);
     const presetButtons = allButtons.map(b => b.html).join("");
 
-    // ⭐ Only update the preset-box, input, and feedback — never touch controls
+    // ⭐ Only update preset-box, input, and feedback — never touch controls
     const presetBox = container.querySelector(".preset-box");
     const inputBox = container.querySelector("#convo-input");
     const feedbackBox = container.querySelector("#convo-feedback");
@@ -4662,9 +4662,12 @@ function reloadSameConversation(convo) {
     if (inputBox) inputBox.value = "";
     if (feedbackBox) feedbackBox.innerHTML = "";
 
-    // ⭐ Re-bind events safely
-    setupConversationEvents(convo);
+    // ⭐ Re-bind events AFTER DOM updates
+    setTimeout(() => {
+        setupConversationEvents(convo);
+    }, 0);
 }
+
 
 
 /* ============================================================
@@ -4709,12 +4712,6 @@ const submitBtn = document.getElementById("convo-submit");
 const nextBtn = document.getElementById("convo-next");
 const resetBtn = document.getElementById("convo-reset");
 const feedback = document.getElementById("convo-feedback");
-
-if (!submitBtn || !nextBtn || !resetBtn) {
-    console.warn("Conversation controls missing — re-rendering tab.");
-    renderConversationTab();
-    return;
-}
 
 function setupConversationEvents(convo) {
     const submitBtn = document.getElementById("convo-submit");
