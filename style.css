@@ -1328,3 +1328,13 @@ html, body {
     gap: 20px; 
 }
 
+/* Custom spacing tweaks for your dashboard global dictionary search layout */
+.dictionary-search-box {
+    margin: 24px auto !important;
+    max-width: 400px !important; /* Slightly wider to easily support typing full words */
+    box-shadow: 0 0 10px rgba(0,255,255,0.05);
+}
+
+.dictionary-search-box .input-field {
+    max-width: 320px !important;
+}
