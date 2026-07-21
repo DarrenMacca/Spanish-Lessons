@@ -1319,3 +1319,12 @@ html, body {
     overflow-x: hidden;
     max-width: 100%;
 }
+
+/* Keeps the text on the left, action items tightly grouped on the right */
+.review-card {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 20px; 
+}
+
