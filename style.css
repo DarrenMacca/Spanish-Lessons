@@ -1338,3 +1338,13 @@ html, body {
 .dictionary-search-box .input-field {
     max-width: 320px !important;
 }
+
+/* Erases old default margins and bullet points from the badge container listing */
+#badge-list {
+    padding: 0;
+    margin: 12px 0 0 0;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
