@@ -2457,6 +2457,16 @@ function setupQuizEvents() {
 
             appState.levelStats[appState.currentLevel].quizScore++;
             appState.levelStats[appState.currentLevel].quizCompleted++;
+
+            // ⭐ FIXED: Increments global state stats when answers match perfectly
+            appState.totalXP = (appState.totalXP || 0) + 10; 
+            appState.globalScore = (appState.globalScore || 0) + 5;
+            
+            // ⭐ FIXED: Sets active streak level tracking initialization state
+            if (!appState.levelStats[appState.currentLevel].streak) {
+                appState.levelStats[appState.currentLevel].streak = 1;
+            }
+
             updateBadges();
             updateProgressMeters();
 
@@ -2489,7 +2499,6 @@ function setupQuizEvents() {
         renderQuizTab();
     });
 }
-
 
 
 /* ============================================================
@@ -2612,6 +2621,16 @@ function setupBuildEvents(sentence) {
                 <strong>Your Translated Response is:</strong><br>${learnerEnglish}
             `;
             appState.levelStats[appState.currentLevel].buildCompleted++;
+
+            // ⭐ FIXED: Increments global points state when full sentence builder matches perfectly
+            appState.totalXP = (appState.totalXP || 0) + 20; // Full constructions yield more XP
+            appState.globalScore = (appState.globalScore || 0) + 15;
+
+            // ⭐ FIXED: Sets active streak level tracking validation
+            if (!appState.levelStats[appState.currentLevel].streak) {
+                appState.levelStats[appState.currentLevel].streak = 1;
+            }
+
             updateBadges();
             updateProgressMeters();
             setTimeout(() => speakQuiz(correct), 300);
@@ -2652,7 +2671,6 @@ function setupBuildEvents(sentence) {
    SENTENCE TAB — CEFR MULTIPLE‑CHOICE (FINAL MASTER VERSION)
    ============================================================ */
 
-
 function generateSentenceForLevel(level) {
     const pool = CEFR_SENTENCE_CHOICES[level];
     const item = pool[Math.floor(Math.random() * pool.length)];
@@ -2660,7 +2678,6 @@ function generateSentenceForLevel(level) {
     const shuffled = [...item.options]
     .filter(Boolean)
     .sort(() => Math.random() - 0.5);
-
 
     return {
         english: item.english,
@@ -2680,7 +2697,6 @@ function renderSentenceTab() {
     }
 
     const q = generateSentenceForLevel(level);
-
 
     container.innerHTML = `
         <div class="glass-panel sentence-card">
@@ -2716,13 +2732,11 @@ function setupSentenceEvents(q) {
     const feedback = document.getElementById("sentence-feedback");
     const nextBtn = document.getElementById("sentence-next");
 
-   // Translate Spanish → English using the current sentence item
-  function getEnglishForSpanish(spanishWord) {
-    const match = q.options.find(opt => opt.es === spanishWord);
-    return match ? match.en : "[no match]";
-}
-
-
+    // Translate Spanish → English using the current sentence item
+    function getEnglishForSpanish(spanishWord) {
+        const match = q.options.find(opt => opt.es === spanishWord);
+        return match ? match.en : "[no match]";
+    }
 
     buttons.forEach(btn => {
         btn.addEventListener("click", () => {
@@ -2740,9 +2754,18 @@ function setupSentenceEvents(q) {
                 `;
 
                 appState.levelStats[appState.currentLevel].sentenceCompleted++;
+
+                // ⭐ FIXED: Increments global progress metrics on success
+                appState.totalXP = (appState.totalXP || 0) + 15; 
+                appState.globalScore = (appState.globalScore || 0) + 10;
+                
+                // ⭐ FIXED: Updates streak parameters dynamically
+                if (!appState.levelStats[appState.currentLevel].streak) {
+                    appState.levelStats[appState.currentLevel].streak = 1;
+                }
+
                 updateBadges();
                 updateProgressMeters();
-
                 speakQuiz(q.correct.es);
 
             } else {
@@ -2756,11 +2779,16 @@ function setupSentenceEvents(q) {
                     </div>
                 `;
 
+                // ⭐ INTEGRATION: Formats sentence mistake path and updates tracking engine
+                const mistakeSentenceString = `${q.english} ➔ ${q.correct.es}`;
+                addIncorrectWord(mistakeSentenceString);
+
                 speakQuiz(q.correct.es);
             }
 
             // Disable only answer buttons
             buttons.forEach(b => b.disabled = true);
+            saveState();
         });
     });
 
@@ -2768,7 +2796,6 @@ function setupSentenceEvents(q) {
         renderSentenceTab();
     });
 }
-
 
 /* ============================================================
    CEFR SENTENCE CHOICES — FULL PACK (A1 → B2)
@@ -4291,6 +4318,7 @@ function shuffle(array) {
         .sort((a, b) => a.r - b.r)
         .map(o => o.x);
 }
+
 function generateConversationPrompt(level) {
     const pool = CEFR_CONVERSATION_PROMPTS[level];
     const item = pool[Math.floor(Math.random() * pool.length)];
@@ -4360,7 +4388,6 @@ function renderConversationTab() {
     setupConversationEvents(convo);
 }
 
-
 function scoreConversationResponse(userText, allResponses) {
     const normalizedUser = userText.toLowerCase().trim();
     const wordsUser = normalizedUser.split(" ");
@@ -4386,9 +4413,13 @@ function scoreConversationResponse(userText, allResponses) {
         }
     });
 
+    // Fallback if no keywords matched at all
+    if (bestMatch === null && allResponses.length > 0) {
+        bestMatch = allResponses[0];
+    }
+
     return { score: bestScore, match: bestMatch };
 }
-
 
 function setupConversationEvents(convo) {
     const submitBtn = document.getElementById("convo-submit");
@@ -4416,24 +4447,43 @@ function setupConversationEvents(convo) {
         ];
 
         const result = scoreConversationResponse(userText, allResponses);
-
-        // Always show the first correct answer
         const expectedCorrect = convo.expected[0];
+
+        // Determine if response passed validation (> 70% match)
+        const isPassing = result.score >= 70;
 
         feedback.innerHTML = `
             <div class="convo-result">
                 <strong>Your response:</strong> ${userText}<br>
-                <strong>Score:</strong> ${result.score}%<br>
-                <strong>Closest meaning:</strong> ${result.match.en}<br>
+                <strong style="color: ${isPassing ? '#4ade80' : '#f87171'}">Score:</strong> ${result.score}%<br>
+                <strong>Closest meaning:</strong> ${result.match ? result.match.en : '[No match]'}<br>
                 <strong>Expected Spanish:</strong> ${expectedCorrect.es}
             </div>
         `;
 
-        speakQuiz(result.match.es);
+        if (result.match) {
+            speakQuiz(result.match.es);
+        }
 
         appState.levelStats[appState.currentLevel].conversationCompleted++;
+
+        // ⭐ FIXED: Dynamically award rewards and trigger streaks on matching validation parameters
+        if (isPassing) {
+            appState.totalXP = (appState.totalXP || 0) + 25; // Conversation gives maximum structural XP
+            appState.globalScore = (appState.globalScore || 0) + 20;
+
+            if (!appState.levelStats[appState.currentLevel].streak) {
+                appState.levelStats[appState.currentLevel].streak = 1;
+            }
+        } else {
+            // ⭐ INTEGRATION: Formats sentence mistake string and pushes to tracking list if score is low
+            const mistakeString = `${convo.prompt_es} ➔ ${expectedCorrect.es}`;
+            addIncorrectWord(mistakeString);
+        }
+
         updateBadges();
         updateProgressMeters();
+        saveState();
     });
 
     nextBtn.addEventListener("click", () => {
@@ -5463,7 +5513,7 @@ function updateProgressMeters() {
     // Pulls from live review list array size
     const reviewDue = reviewList.length;
 
-    // Bar widths
+    // Bar widths (percentages based on level completions)
     document.getElementById("quiz-progress").style.width =
         stats.quizScore + "%";
 
@@ -5473,30 +5523,31 @@ function updateProgressMeters() {
     document.getElementById("sentence-progress").style.width =
         stats.sentenceCompleted + "%";
 
-    document.getElementById("xp-progress").style.width =
-        (appState.totalXP || 0) + "%";
+    // ⭐ FIXED: Converts totals into relative visual widths out of realistic milestones
+    const xpPercent = Math.min(((appState.totalXP || 0) / 1000) * 100, 100); 
+    document.getElementById("xp-progress").style.width = xpPercent + "%";
 
-    document.getElementById("streak-progress").style.width =
-        streak + "%";
+    const streakPercent = Math.min((streak / 7) * 100, 100); 
+    document.getElementById("streak-progress").style.width = streakPercent + "%";
 
-    document.getElementById("score-progress").style.width =
-        (appState.globalScore || 0) + "%";
+    const scorePercent = Math.min(((appState.globalScore || 0) / 500) * 100, 100); 
+    document.getElementById("score-progress").style.width = scorePercent + "%";
 
     // Fills the review bar based on density (caps full layout visualization at 10 items)
     const reviewBarPercentage = Math.min((reviewDue / 10) * 100, 100);
     document.getElementById("review-progress").style.width =
         reviewBarPercentage + "%";
 
-    // Animated numbers (standard percent metrics)
+    // Animated numbers (Passing specific suffix units to match format goals)
     animateNumber("quiz-number", stats.quizScore);
     animateNumber("build-number", stats.buildCompleted);
     animateNumber("sentence-number", stats.sentenceCompleted);
 
-    animateNumber("xp-number", appState.totalXP || 0);
-    animateNumber("streak-number", streak);
-    animateNumber("score-number", appState.globalScore || 0);
+    // ⭐ FIXED: Displays clear point trackers instead of confusing percentage markers
+    animateNumber("xp-number", appState.totalXP || 0, " XP");
+    animateNumber("streak-number", streak, streak === 1 ? " day" : " days");
+    animateNumber("score-number", appState.globalScore || 0, " Pts");
     
-    // ⭐ FIXED: Overrides percentage symbol so it displays clean word numbers (e.g. "9 words")
     animateNumber("review-number", reviewDue, reviewDue === 1 ? " word" : " words");
 
     // Pulse animations
@@ -5512,6 +5563,7 @@ function updateProgressMeters() {
 /* ============================================================
    TILE PULSE ANIMATION
    ============================================================ */
+
 
 function pulseTile(id) {
     const tile = document.getElementById(id);
