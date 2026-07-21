@@ -5816,8 +5816,9 @@ function renderReviewList() {
     });
 }
 
+
 /* ============================================================
-   GLOBAL ENGLISH-TO-SPANISH DICTIONARY SEARCH (CASE & ACCENT INSENSITIVE)
+   GLOBAL ALL-BANKS DICTIONARY & SENTENCE SEARCH
    ============================================================ */
 function initDictionarySearch() {
     const searchInput = document.getElementById("dict-search-input");
@@ -5835,48 +5836,66 @@ function initDictionarySearch() {
 
         let matchFound = null;
         let foundInLevel = "";
+        let sourceBankName = "";
 
-        // 1. STRICT SEARCH: Match the English phrase exactly as typed (Works for single/multiple words)
-        if (typeof CEFR_LEVELS !== "undefined") {
-            for (const level of Object.keys(CEFR_LEVELS)) {
-                const wordMatch = CEFR_LEVELS[level].find(
-                    w => w.english && w.english.toLowerCase() === query
-                );
-                
-                if (wordMatch) {
-                    matchFound = wordMatch;
-                    foundInLevel = level;
-                    break; 
-                }
+        // Collect all potential source banks dynamically
+        const levelsList = ["A1", "A2", "B1", "B2"];
+
+        // 1. ALL-BANKS EXACT MATCH SEARCH
+        for (const level of levelsList) {
+            // Check vocabulary wordbanks
+            if (typeof CEFR_LEVELS !== "undefined" && CEFR_LEVELS[level]) {
+                const match = CEFR_LEVELS[level].find(w => w.english && w.english.toLowerCase() === query);
+                if (match) { matchFound = match; foundInLevel = level; sourceBankName = "Vocabulary Wordbank"; break; }
             }
-        }
-
-        // 2. SMART MULTI-WORD BOUNDARY SEARCH: Safely targets standalone words and full expressions
-        if (!matchFound && typeof CEFR_LEVELS !== "undefined") {
-            // Escape special regex characters safely
-            const escapedQuery = query.replace(/[-\/\\^$*+?.()|[\]{}]/g, '\\$&');
-            
-            // Uses an advanced regex barrier that accepts spaces between multiple typed words
-            const boundaryRegex = new RegExp(`(^|\\s)${escapedQuery}($|\\s)`, 'i');
-
-            for (const level of Object.keys(CEFR_LEVELS)) {
-                const wordMatch = CEFR_LEVELS[level].find(w => {
-                    if (!w.english) return false;
-                    
-                    // ⭐ FIXED: Forces the scanned dictionary string to drop down to a lowercase text format
-                    // This ensures capitalized inputs (like "Yes") successfully match lowercase keys behind the scenes
-                    const cleanEnglishWord = cleanStringForKeyboard(w.english).toLowerCase();
-                    return boundaryRegex.test(cleanEnglishWord);
-                });
-                
-                if (wordMatch) {
-                    matchFound = wordMatch;
+            // Check build tab sentences
+            if (typeof CEFR_SENTENCES !== "undefined" && CEFR_SENTENCES[level]) {
+                const match = CEFR_SENTENCES[level].find(s => s.english && s.english.toLowerCase() === query);
+                if (match) { matchFound = match; foundInLevel = level; sourceBankName = "Sentence Bank"; break; }
+            }
+            // Check multiple choice sentence choices
+            if (typeof CEFR_SENTENCE_CHOICES !== "undefined" && CEFR_SENTENCE_CHOICES[level]) {
+                const match = CEFR_SENTENCE_CHOICES[level].find(c => c.english && c.english.toLowerCase() === query);
+                if (match) {
+                    // Normalize standard structure format mapping
+                    matchFound = { english: match.english, spanish: match.correct.es };
                     foundInLevel = level;
+                    sourceBankName = "Phrases & Dialogue Bank";
                     break;
                 }
             }
         }
 
+        // 2. ALL-BANKS FUZZY SMART BOUNDARY MATCH FALLBACK
+        if (!matchFound) {
+            const escapedQuery = query.replace(/[-\/\\^$*+?.()|[\]{}]/g, '\\$&');
+            const boundaryRegex = new RegExp(`(^|\\s)${escapedQuery}($|\\s)`, 'i');
+
+            for (const level of levelsList) {
+                // Check Vocabulary Wordbank
+                if (typeof CEFR_LEVELS !== "undefined" && CEFR_LEVELS[level]) {
+                    const match = CEFR_LEVELS[level].find(w => w.english && boundaryRegex.test(cleanStringForKeyboard(w.english).toLowerCase()));
+                    if (match) { matchFound = match; foundInLevel = level; sourceBankName = "Vocabulary Wordbank"; break; }
+                }
+                // Check Build Sentences
+                if (typeof CEFR_SENTENCES !== "undefined" && CEFR_SENTENCES[level]) {
+                    const match = CEFR_SENTENCES[level].find(s => s.english && boundaryRegex.test(cleanStringForKeyboard(s.english).toLowerCase()));
+                    if (match) { matchFound = match; foundInLevel = level; sourceBankName = "Sentence Bank"; break; }
+                }
+                // Check Phrases & Dialogue Choices
+                if (typeof CEFR_SENTENCE_CHOICES !== "undefined" && CEFR_SENTENCE_CHOICES[level]) {
+                    const match = CEFR_SENTENCE_CHOICES[level].find(c => c.english && boundaryRegex.test(cleanStringForKeyboard(c.english).toLowerCase()));
+                    if (match) {
+                        matchFound = { english: match.english, spanish: match.correct.es };
+                        foundInLevel = level;
+                        sourceBankName = "Phrases & Dialogue Bank";
+                        break;
+                    }
+                }
+            }
+        }
+
+        // Render response messaging to screen
         if (matchFound) {
             resultBox.innerHTML = `
                 <div style="padding: 10px; background: rgba(74, 222, 128, 0.1); border: 1px solid rgba(74, 222, 128, 0.3); border-radius: 10px; margin-top: 5px;">
@@ -5892,19 +5911,18 @@ function initDictionarySearch() {
                         if (speedSlider) utterance.rate = parseFloat(speedSlider.value);
                         window.speechSynthesis.speak(utterance);
                     })()" style="padding: 4px 10px; font-size: 11px; max-width: 50px;">🔊</button>
-                    <div style="font-size: 11px; color: rgba(255,255,255,0.4); margin-top: 4px;">Found in Vocabulary Level: ${foundInLevel}</div>
+                    <div style="font-size: 11px; color: rgba(255,255,255,0.4); margin-top: 4px;">Found in ${foundInLevel} (${sourceBankName})</div>
                 </div>
             `;
         } else {
             resultBox.innerHTML = `
                 <div style="color: #f87171; font-style: italic; font-size: 13px; margin-top: 8px;">
-                    Word or phrase not found in A1-B2 wordbanks.
+                    Phrase not found in any level resource banks.
                 </div>
             `;
         }
     });
 }
-
 
 
 /* ============================================================
@@ -5972,7 +5990,7 @@ function evaluatePracticeAnswer() {
         return;
     }
 
-    // KEYBOARD PROTECTOR: Cleans both text arrays using your helper utility
+    // KEYBOARD PROTECTOR: Cleans both text entries using your normalization utility
     const cleanUser = cleanStringForKeyboard(userTyped);
     const cleanCorrect = cleanStringForKeyboard(currentPracticeWord.spanish);
 
@@ -5999,40 +6017,12 @@ function evaluatePracticeAnswer() {
         window.speechSynthesis.speak(utterance);
         
     } else {
-        // ⭐ FIXED ENGINE: Normalizes the dictionary entry (w.spanish) during look-up 
-        // This guarantees that "si" safely matches "sí" or any other accented wordbank entry!
-        let typedMeaning = "";
-        
-        if (typeof CEFR_LEVELS !== "undefined") {
-            for (const level of Object.keys(CEFR_LEVELS)) {
-                const foundWord = CEFR_LEVELS[level].find(
-                    w => w.spanish && cleanStringForKeyboard(w.spanish) === cleanUser
-                );
-                if (foundWord) {
-                    typedMeaning = foundWord.english;
-                    break;
-                }
-            }
-        }
-
-        let feedbackHTML = "";
-        if (typedMeaning) {
-            feedbackHTML = `
-                <div style="color: #f87171; font-weight: 500; padding: 6px; background: rgba(248,113,113,0.1); border-radius: 8px;">
-                    Not quite! You typed "<strong>${userTyped}</strong>" (${typedMeaning}). Try again, or click Skip.
-                </div>
-            `;
-        } else {
-            feedbackHTML = `
-                <div style="color: #f87171; font-weight: 500; padding: 6px; background: rgba(248,113,113,0.1); border-radius: 8px;">
-                    Not quite! Try again, or click Skip.
-                </div>
-            `;
-        }
-
-        feedbackBox.innerHTML = feedbackHTML;
+        // ⭐ PERMANENT FIX: Instantly reveals exactly what the English clue translates to in correct Spanish
+        feedbackBox.innerHTML = `
+            <div style="color: #f87171; font-weight: 500; padding: 6px; background: rgba(248,113,113,0.1); border-radius: 8px;">
+                Not quite! "<strong>${currentPracticeWord.english}</strong>" translates to "<strong>${currentPracticeWord.spanish}</strong>". Try again, or click Skip.
+            </div>
+        `;
     }
 }
-
-
 
