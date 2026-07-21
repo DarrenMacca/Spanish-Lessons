@@ -2577,7 +2577,7 @@ function setupQuizEvents() {
 }
 
 /* ============================================================
-   KEYBOARD NORMALIZATION UTILITY
+   KEYBOARD NORMALIZATION UTILITY (MULTI-WORD VERSION)
    ============================================================ */
 function cleanStringForKeyboard(text) {
     if (!text) return "";
@@ -2593,9 +2593,10 @@ function cleanStringForKeyboard(text) {
         .replace(/[\u0300-\u036f]/g, "")
         // 4. Erases Spanish punctuation marks like ¿ and ¡
         .replace(/[¿¡!?.–—,;:]/g, "")
-        // 5. Converts multiple consecutive spaces into a single clean space
+        // ⭐ FIXED: Keeps spaces normal so multi-word queries remain split words
         .replace(/\s+/g, " ");
 }
+
 
 
 /* ============================================================
@@ -5816,10 +5817,7 @@ function renderReviewList() {
 }
 
 /* ============================================================
-   GLOBAL ENGLISH-TO-SPANISH DICTIONARY SEARCH (CLEAN AUDIO)
-   ============================================================ */
-/* ============================================================
-   GLOBAL ENGLISH-TO-SPANISH DICTIONARY SEARCH (ACCENT FIX)
+   GLOBAL ENGLISH-TO-SPANISH DICTIONARY SEARCH (MULTI-WORD SUPPORT)
    ============================================================ */
 function initDictionarySearch() {
     const searchInput = document.getElementById("dict-search-input");
@@ -5838,7 +5836,7 @@ function initDictionarySearch() {
         let matchFound = null;
         let foundInLevel = "";
 
-        // 1. STRICT SEARCH: Match the English phrase exactly as typed
+        // 1. STRICT SEARCH: Match the English phrase exactly as typed (Works for single/multiple words)
         if (typeof CEFR_LEVELS !== "undefined") {
             for (const level of Object.keys(CEFR_LEVELS)) {
                 const wordMatch = CEFR_LEVELS[level].find(
@@ -5853,17 +5851,19 @@ function initDictionarySearch() {
             }
         }
 
-        // 2. SMART BOUNDARY SEARCH: Accent-Insensitive Word Boundary Fallback
+        // 2. SMART MULTI-WORD BOUNDARY SEARCH: Safely targets standalone words and full expressions
         if (!matchFound && typeof CEFR_LEVELS !== "undefined") {
+            // Escape special regex characters safely
             const escapedQuery = query.replace(/[-\/\\^$*+?.()|[\]{}]/g, '\\$&');
-            const boundaryRegex = new RegExp(`\\b${escapedQuery}\\b`, 'i');
+            
+            // ⭐ FIXED: Uses an advanced regex barrier that accepts spaces between multiple typed words
+            const boundaryRegex = new RegExp(`(^|\\s)${escapedQuery}($|\\s)`, 'i');
 
             for (const level of Object.keys(CEFR_LEVELS)) {
                 const wordMatch = CEFR_LEVELS[level].find(w => {
                     if (!w.english) return false;
                     
-                    // ⭐ FIXED: Clean the wordbank dictionary's text properties before running regex test
-                    // This prevents Spanish accents from breaking the standard word break barriers (\b)
+                    // Clean the English dictionary target using the updated space utility
                     const cleanEnglishWord = cleanStringForKeyboard(w.english);
                     return boundaryRegex.test(cleanEnglishWord);
                 });
@@ -5897,12 +5897,13 @@ function initDictionarySearch() {
         } else {
             resultBox.innerHTML = `
                 <div style="color: #f87171; font-style: italic; font-size: 13px; margin-top: 8px;">
-                    Word not found in A1-B2 wordbanks.
+                    Word or phrase not found in A1-B2 wordbanks.
                 </div>
             `;
         }
     });
 }
+
 
 
 /* ============================================================
@@ -5944,19 +5945,18 @@ function getNewPracticeWord() {
     inputField.value = "";
     feedbackBox.innerHTML = "";
 
-    // 1. Gather all unique levels present in the active dictionaries
     if (typeof CEFR_LEVELS === "undefined") return;
     const levels = Object.keys(CEFR_LEVELS);
     
-    // 2. Pick a completely random level, then a random word inside it
     const randomLevel = levels[Math.floor(Math.random() * levels.length)];
     const wordPool = CEFR_LEVELS[randomLevel];
     
     currentPracticeWord = wordPool[Math.floor(Math.random() * wordPool.length)];
 
-    // 3. Render prompt label onto dashboard layout view
+    // ⭐ FIXED: Changed from printing spanish components to explicitly outputting currentPracticeWord.english
     wordPlaceholder.textContent = `${currentPracticeWord.english} (${randomLevel})`;
 }
+
 
 function evaluatePracticeAnswer() {
     const inputField = document.getElementById("practice-user-input");
