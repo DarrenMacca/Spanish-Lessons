@@ -5699,15 +5699,18 @@ function renderReviewList() {
         const card = document.createElement('div');
         card.className = 'review-card';
         
-        // Extract the Spanish text safely by splitting at the arrow separator
-        // This handles both " ➔ " and " → " formats seamlessly
-        const parts = word.includes('➔') ? word.split('➔') : word.split('→');
-        const spanishText = parts[1] ? parts[1].trim() : word;
+        // ⭐ SAFELY EXTRACT SPANISH ONLY: Splits the string at your formatting arrow marker " ➔ "
+        let spanishText = word;
+        if (word.includes('➔')) {
+            spanishText = word.split('➔')[1].trim();
+        } else if (word.includes('→')) {
+            spanishText = word.split('→')[1].trim();
+        }
 
         card.innerHTML = `
             <span class="review-word-text">${word}</span>
             <div class="review-card-actions" style="display: flex; align-items: center; gap: 12px; margin-left: auto;">
-                <!-- New Play Audio Button Element -->
+                <!-- ⭐ NEW: Play Audio Button Icon Element -->
                 <button class="pill review-play-btn" style="min-width: 45px; padding: 10px 14px;">
                     🔊 Play
                 </button>
@@ -5715,7 +5718,7 @@ function renderReviewList() {
             </div>
         `;
 
-        // Bind the audio function click handler cleanly to the newly created play button
+        // ⭐ AUDIO BINDING: Safely passes the extracted Spanish phrase straight into Sabina's voice engine
         const playBtn = card.querySelector('.review-play-btn');
         playBtn.addEventListener('click', () => {
             speakQuiz(spanishText);
@@ -5724,3 +5727,4 @@ function renderReviewList() {
         listContainer.appendChild(card);
     });
 }
+
