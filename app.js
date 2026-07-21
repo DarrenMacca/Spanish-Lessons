@@ -6093,31 +6093,72 @@ document.addEventListener("DOMContentLoaded", () => {
 
 
 /* ============================================================
-   MISTAKEN AREAS — REVIEW SYSTEM ENGINE
+   MISTAKEN AREAS — REVIEW SYSTEM ENGINE (UPDATED: PURE AUDIO)
    ============================================================ */
 
 // Initialize the incorrect words list from localStorage, or start empty
 let reviewList = JSON.parse(localStorage.getItem('reviewList')) || [];
 
-// Function to add a word when a user makes a mistake in Quizzes/Games
+/* ============================================================
+   FIND AUDIO FOR SPANISH PHRASE (NO COMMENTARY)
+   ============================================================ */
+function findAudioForSpanish(spanishText) {
+    const clean = cleanStringForKeyboard(spanishText.toLowerCase());
+
+    const banks = [
+        ...CEFR_CONVERSATION_AUDIO_A1,
+        ...CEFR_CONVERSATION_AUDIO_A2,
+        ...CEFR_CONVERSATION_AUDIO_B1,
+        ...CEFR_CONVERSATION_AUDIO_B2
+    ];
+
+    for (const item of banks) {
+        if (!item || !item.es || !item.audio) continue;
+
+        if (cleanStringForKeyboard(item.es.toLowerCase()) === clean) {
+            return item.audio;
+        }
+    }
+
+    return null;
+}
+
+/* ============================================================
+   PURE REVIEW AUDIO PLAYER (NO COMMENTARY, NO TTS)
+   ============================================================ */
+function playReviewAudio(spanishText) {
+    const audioFile = findAudioForSpanish(spanishText);
+    if (!audioFile) return;
+
+    const audio = new Audio(`audio/${audioFile}`);
+    audio.play();
+}
+
+/* ============================================================
+   ADD WORD TO REVIEW LIST
+   ============================================================ */
 function addIncorrectWord(word) {
     if (!reviewList.includes(word)) {
         reviewList.push(word);
         localStorage.setItem('reviewList', JSON.stringify(reviewList));
-        renderReviewList(); // Refresh the UI view instantly
-        updateProgressMeters(); // ⭐ FIXED: Updates dashboard tile stats immediately
+        renderReviewList();
+        updateProgressMeters();
     }
 }
 
-// Function to remove a word once the learner clicks "Got it!"
+/* ============================================================
+   REMOVE WORD FROM REVIEW LIST
+   ============================================================ */
 function clearWordFromReview(word) {
     reviewList = reviewList.filter(item => item !== word);
     localStorage.setItem('reviewList', JSON.stringify(reviewList));
-    renderReviewList(); // Refresh the UI view instantly
-    updateProgressMeters(); // ⭐ FIXED: Updates dashboard tile stats immediately
+    renderReviewList();
+    updateProgressMeters();
 }
 
-// Function to build and update the review interface cards dynamically
+/* ============================================================
+   RENDER REVIEW LIST UI
+   ============================================================ */
 function renderReviewList() {
     const listContainer = document.getElementById('review-words-list');
     if (!listContainer) return;
@@ -6132,7 +6173,7 @@ function renderReviewList() {
         const card = document.createElement('div');
         card.className = 'review-card';
         
-        // ⭐ SAFELY EXTRACT SPANISH ONLY: Splits the string at your formatting arrow marker " ➔ "
+        // Extract Spanish part after "➔" or "→"
         let spanishText = word;
         if (word.includes('➔')) {
             spanishText = word.split('➔')[1].trim();
@@ -6143,7 +6184,6 @@ function renderReviewList() {
         card.innerHTML = `
             <span class="review-word-text">${word}</span>
             <div class="review-card-actions" style="display: flex; align-items: center; gap: 12px; margin-left: auto;">
-                <!-- ⭐ NEW: Play Audio Button Icon Element -->
                 <button class="pill review-play-btn" style="min-width: 45px; padding: 10px 14px;">
                     🔊 Play
                 </button>
@@ -6151,16 +6191,15 @@ function renderReviewList() {
             </div>
         `;
 
-        // ⭐ AUDIO BINDING: Safely passes the extracted Spanish phrase straight into Sabina's voice engine
+        // Bind pure audio (no commentary)
         const playBtn = card.querySelector('.review-play-btn');
         playBtn.addEventListener('click', () => {
-            speakQuiz(spanishText);
+            playReviewAudio(spanishText);
         });
 
         listContainer.appendChild(card);
     });
 }
-
 
 /* ============================================================
    GLOBAL ALL-BANKS DICTIONARY & CONVERSATIONAL PHRASE SEARCH
