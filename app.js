@@ -5818,7 +5818,7 @@ function renderReviewList() {
 
 
 /* ============================================================
-   GLOBAL ALL-BANKS DICTIONARY & SENTENCE SEARCH
+   GLOBAL ALL-BANKS DICTIONARY & CONVERSATIONAL PHRASE SEARCH
    ============================================================ */
 function initDictionarySearch() {
     const searchInput = document.getElementById("dict-search-input");
@@ -5838,26 +5838,21 @@ function initDictionarySearch() {
         let foundInLevel = "";
         let sourceBankName = "";
 
-        // Collect all potential source banks dynamically
         const levelsList = ["A1", "A2", "B1", "B2"];
 
         // 1. ALL-BANKS EXACT MATCH SEARCH
         for (const level of levelsList) {
-            // Check vocabulary wordbanks
             if (typeof CEFR_LEVELS !== "undefined" && CEFR_LEVELS[level]) {
                 const match = CEFR_LEVELS[level].find(w => w.english && w.english.toLowerCase() === query);
                 if (match) { matchFound = match; foundInLevel = level; sourceBankName = "Vocabulary Wordbank"; break; }
             }
-            // Check build tab sentences
             if (typeof CEFR_SENTENCES !== "undefined" && CEFR_SENTENCES[level]) {
                 const match = CEFR_SENTENCES[level].find(s => s.english && s.english.toLowerCase() === query);
                 if (match) { matchFound = match; foundInLevel = level; sourceBankName = "Sentence Bank"; break; }
             }
-            // Check multiple choice sentence choices
             if (typeof CEFR_SENTENCE_CHOICES !== "undefined" && CEFR_SENTENCE_CHOICES[level]) {
                 const match = CEFR_SENTENCE_CHOICES[level].find(c => c.english && c.english.toLowerCase() === query);
                 if (match) {
-                    // Normalize standard structure format mapping
                     matchFound = { english: match.english, spanish: match.correct.es };
                     foundInLevel = level;
                     sourceBankName = "Phrases & Dialogue Bank";
@@ -5866,25 +5861,33 @@ function initDictionarySearch() {
             }
         }
 
-        // 2. ALL-BANKS FUZZY SMART BOUNDARY MATCH FALLBACK
+        // 2. ALL-BANKS INCLUDES MATCH FALLBACK
         if (!matchFound) {
-            const escapedQuery = query.replace(/[-\/\\^$*+?.()|[\]{}]/g, '\\$&');
-            const boundaryRegex = new RegExp(`(^|\\s)${escapedQuery}($|\\s)`, 'i');
+            const cleanQuery = cleanStringForKeyboard(query).toLowerCase();
 
             for (const level of levelsList) {
-                // Check Vocabulary Wordbank
                 if (typeof CEFR_LEVELS !== "undefined" && CEFR_LEVELS[level]) {
-                    const match = CEFR_LEVELS[level].find(w => w.english && boundaryRegex.test(cleanStringForKeyboard(w.english).toLowerCase()));
+                    const match = CEFR_LEVELS[level].find(w => {
+                        if (!w.english) return false;
+                        const target = cleanStringForKeyboard(w.english).toLowerCase();
+                        return target.includes(cleanQuery) || cleanQuery.includes(target);
+                    });
                     if (match) { matchFound = match; foundInLevel = level; sourceBankName = "Vocabulary Wordbank"; break; }
                 }
-                // Check Build Sentences
                 if (typeof CEFR_SENTENCES !== "undefined" && CEFR_SENTENCES[level]) {
-                    const match = CEFR_SENTENCES[level].find(s => s.english && boundaryRegex.test(cleanStringForKeyboard(s.english).toLowerCase()));
+                    const match = CEFR_SENTENCES[level].find(s => {
+                        if (!s.english) return false;
+                        const target = cleanStringForKeyboard(s.english).toLowerCase();
+                        return target.includes(cleanQuery) || cleanQuery.includes(target);
+                    });
                     if (match) { matchFound = match; foundInLevel = level; sourceBankName = "Sentence Bank"; break; }
                 }
-                // Check Phrases & Dialogue Choices
                 if (typeof CEFR_SENTENCE_CHOICES !== "undefined" && CEFR_SENTENCE_CHOICES[level]) {
-                    const match = CEFR_SENTENCE_CHOICES[level].find(c => c.english && boundaryRegex.test(cleanStringForKeyboard(c.english).toLowerCase()));
+                    const match = CEFR_SENTENCE_CHOICES[level].find(c => {
+                        if (!c.english) return false;
+                        const target = cleanStringForKeyboard(c.english).toLowerCase();
+                        return target.includes(cleanQuery) || cleanQuery.includes(target);
+                    });
                     if (match) {
                         matchFound = { english: match.english, spanish: match.correct.es };
                         foundInLevel = level;
@@ -5892,6 +5895,35 @@ function initDictionarySearch() {
                         break;
                     }
                 }
+            }
+        }
+
+        // 3. MULTI-WORD FRAGMENT / CONVERSATIONAL TOKEN INTERSECT SEARCH
+        if (!matchFound && query.split(/\s+/).length > 1) {
+            const queryWords = cleanStringForKeyboard(query).toLowerCase().split(/\s+/).filter(w => w.length > 1);
+            let bestScore = 0;
+
+            for (const level of levelsList) {
+                const scanBank = (bankData, name, isChoice = false) => {
+                    if (!bankData) return;
+                    bankData.forEach(item => {
+                        const englishField = item.english ? cleanStringForKeyboard(item.english).toLowerCase() : "";
+                        if (!englishField) return;
+
+                        const matchCount = queryWords.filter(word => englishField.includes(word)).length;
+                        
+                        if (matchCount > bestScore && matchCount >= Math.ceil(queryWords.length * 0.6)) {
+                            bestScore = matchCount;
+                            foundInLevel = level;
+                            sourceBankName = name;
+                            matchFound = isChoice ? { english: item.english, spanish: item.correct.es } : item;
+                        }
+                    });
+                };
+
+                scanBank(CEFR_LEVELS[level], "Vocabulary Wordbank");
+                scanBank(CEFR_SENTENCES[level], "Sentence Bank");
+                scanBank(CEFR_SENTENCE_CHOICES[level], "Phrases & Dialogue Bank", true);
             }
         }
 
@@ -5924,7 +5956,6 @@ function initDictionarySearch() {
     });
 }
 
-
 /* ============================================================
    GLOBAL FREE PRACTICE SANDBOX (UNSCORED)
    ============================================================ */
@@ -5937,18 +5968,15 @@ function initFreePracticeSandbox() {
 
     if (!checkBtn || !nextBtn || !inputField) return;
 
-    // Load the first random word right away
+    // Load initial prompt
     getNewPracticeWord();
 
-    // Trigger check on click
     checkBtn.addEventListener("click", evaluatePracticeAnswer);
 
-    // Trigger check if user hits "Enter" key inside input field
     inputField.addEventListener("keypress", (e) => {
         if (e.key === "Enter") evaluatePracticeAnswer();
     });
 
-    // Skip/Next button action
     nextBtn.addEventListener("click", () => {
         getNewPracticeWord();
     });
@@ -5972,10 +6000,9 @@ function getNewPracticeWord() {
     
     currentPracticeWord = wordPool[Math.floor(Math.random() * wordPool.length)];
 
-    // ⭐ FIXED: Changed from printing spanish components to explicitly outputting currentPracticeWord.english
+    // Always display the English translation word as prompt clue question
     wordPlaceholder.textContent = `${currentPracticeWord.english} (${randomLevel})`;
 }
-
 
 function evaluatePracticeAnswer() {
     const inputField = document.getElementById("practice-user-input");
@@ -5990,7 +6017,7 @@ function evaluatePracticeAnswer() {
         return;
     }
 
-    // KEYBOARD PROTECTOR: Cleans both text entries using your normalization utility
+    // KEYBOARD PROTECTOR: Clean entries using our helper utility
     const cleanUser = cleanStringForKeyboard(userTyped);
     const cleanCorrect = cleanStringForKeyboard(currentPracticeWord.spanish);
 
@@ -6017,7 +6044,7 @@ function evaluatePracticeAnswer() {
         window.speechSynthesis.speak(utterance);
         
     } else {
-        // ⭐ PERMANENT FIX: Instantly reveals exactly what the English clue translates to in correct Spanish
+        // Revealed answer engine correction block
         feedbackBox.innerHTML = `
             <div style="color: #f87171; font-weight: 500; padding: 6px; background: rgba(248,113,113,0.1); border-radius: 8px;">
                 Not quite! "<strong>${currentPracticeWord.english}</strong>" translates to "<strong>${currentPracticeWord.spanish}</strong>". Try again, or click Skip.
@@ -6025,4 +6052,7 @@ function evaluatePracticeAnswer() {
         `;
     }
 }
+
+
+
 
