@@ -69,13 +69,24 @@
     </div>
 
     <div class="student-name-box glass-panel">
-        <label class="section-title">Your name for certificates</label>
-        <input id="student-name" class="input-field" type="text" placeholder="Enter your name">
-        <button id="save-name-btn" class="pill">Save Name</button>
-        <div id="name-status" class="name-status"></div>
-    </div>
+    <label class="section-title">Your name for certificates</label>
+    <input id="student-name" class="input-field" type="text" placeholder="Enter your name">
+    <button id="save-name-btn" class="pill">Save Name</button>
+    <div id="name-status" class="name-status"></div>
+</div>
 
-    <button class="pill" onclick="renderCertificates()">View Certificates</button>
+<!-- ⭐ Correct placement: button is visible on dashboard -->
+<button class="pill" onclick="activateTab('certificates'); renderCertificates();">
+    View Certificates
+</button>
+
+<!-- ⭐ Certificates tab (hidden until activated) -->
+<div id="certificates" class="hidden">
+    <div id="certificates-container">
+        <!-- Certificates will appear here -->
+    </div>
+</div>
+
 
     
   <!-- RESPONSIVE ROW FOR UTILITIES -->
