@@ -1,4 +1,4 @@
-/* ============================================================
+   /* ============================================================
    CEFR SENTENCE BANKS (for Build tab)
    ============================================================ */
 
@@ -4475,10 +4475,11 @@ function renderConversationTab() {
             <textarea id="convo-input" class="convo-input"
                 placeholder="Type your Spanish response here..."></textarea>
 
-            <div class="convo-controls">
+           <div class="convo-controls">
                 <button id="convo-submit" class="pill">Submit</button>
+                <button id="convo-reset" class="pill">Reset</button>
                 <button id="convo-next" class="pill">Next</button>
-            </div>
+           </div>
 
             <div id="convo-feedback"></div>
         </div>
@@ -4526,6 +4527,7 @@ function scoreConversationResponse(userText, allResponses) {
 function setupConversationEvents(convo) {
     const submitBtn = document.getElementById("convo-submit");
     const nextBtn = document.getElementById("convo-next");
+    const resetBtn = document.getElementById("convo-reset");
     const feedback = document.getElementById("convo-feedback");
 
     // Bind pill clicks
@@ -4535,6 +4537,25 @@ function setupConversationEvents(convo) {
         });
     });
 
+    /* ============================================================
+       RESET BUTTON — clears input + feedback + reloads SAME prompt
+    ============================================================ */
+    resetBtn.addEventListener("click", () => {
+
+        // Clear learner input
+        const input = document.getElementById("convo-input");
+        if (input) input.value = "";
+
+        // Clear feedback
+        feedback.innerHTML = "";
+
+        // Reload SAME prompt with updated expected responses
+        renderConversationTab();
+    });
+
+    /* ============================================================
+       SUBMIT BUTTON — scoring + feedback
+    ============================================================ */
     submitBtn.addEventListener("click", () => {
         const userText = document.getElementById("convo-input").value.trim();
 
@@ -4549,25 +4570,22 @@ function setupConversationEvents(convo) {
         ];
 
         const result = scoreConversationResponse(userText, allResponses);
-        const expectedCorrect = convo.expected[0]; // Access the primary object item
+        const expectedCorrect = convo.expected[0];
 
-        // Find the exact English meaning of the learner's chosen phrase
         let learnerEnglishTranslation = "[Unknown phrase]";
         const exactPhraseMatch = allResponses.find(
             resp => resp.es && cleanStringForKeyboard(resp.es) === cleanStringForKeyboard(userText)
         );
-        
+
         if (exactPhraseMatch && exactPhraseMatch.en && exactPhraseMatch.en !== "Incorrect response") {
             learnerEnglishTranslation = exactPhraseMatch.en;
         } else if (result.match && result.match.en) {
             learnerEnglishTranslation = result.match.en;
         }
 
-        // Determine if response passed validation (> 70% match or is a valid preset option)
         const isPassing = result.score >= 70 || (exactPhraseMatch && exactPhraseMatch.en !== "Incorrect response");
         const finalScore = isPassing && result.score < 70 ? 100 : result.score;
 
-        // ⭐ FIXED: Generates clear, explicit Correct/Incorrect verdicts along with the English translation text
         feedback.innerHTML = `
             <div class="convo-result" style="margin-top: 15px; padding: 12px; background: rgba(15, 23, 42, 0.4); border-radius: 12px; border: 1px solid rgba(148, 163, 184, 0.2);">
                 ${isPassing 
@@ -4583,13 +4601,13 @@ function setupConversationEvents(convo) {
         `;
 
         if (result.match) {
-            speakQuiz(userText); 
+            speakQuiz(userText);
         }
 
         appState.levelStats[appState.currentLevel].conversationCompleted++;
 
         if (isPassing) {
-            appState.totalXP = (appState.totalXP || 0) + 25; 
+            appState.totalXP = (appState.totalXP || 0) + 25;
             appState.globalScore = (appState.globalScore || 0) + 20;
             checkAndAdvanceStreak();
         } else {
@@ -4602,11 +4620,13 @@ function setupConversationEvents(convo) {
         saveState();
     });
 
+    /* ============================================================
+       NEXT BUTTON — new prompt
+    ============================================================ */
     nextBtn.addEventListener("click", () => {
         renderConversationTab();
     });
 }
-
 
 const CEFR_CONVERSATION_PROMPTS = {
 
