@@ -2576,6 +2576,28 @@ function setupQuizEvents() {
 }
 
 /* ============================================================
+   KEYBOARD NORMALIZATION UTILITY
+   ============================================================ */
+function cleanStringForKeyboard(text) {
+    if (!text) return "";
+    return text
+        .trim()
+        .toLowerCase()
+        // 1. Convert explicit character variants first to protect all browser engines
+        .replace(/ñ/g, "n")
+        .replace(/ü/g, "u")
+        // 2. Splits remaining accented characters into base letters + standalone accents
+        .normalize("NFD")
+        // 3. Erases all those standalone accent marks cleanly
+        .replace(/[\u0300-\u036f]/g, "")
+        // 4. Erases Spanish punctuation marks like ¿ and ¡
+        .replace(/[¿¡!?.–—,;:]/g, "")
+        // 5. Converts multiple consecutive spaces into a single clean space
+        .replace(/\s+/g, " ");
+}
+
+
+/* ============================================================
    BUILD TAB — English → Spanish Builder (with disruptors + feedback)
    ============================================================ */
 function renderBuildTab() {
@@ -2682,25 +2704,28 @@ function setupBuildEvents(sentence) {
         });
     });
 
-    checkBtn.addEventListener("click", () => {
+       checkBtn.addEventListener("click", () => {
         const correct = sentence.spanish.trim();
         const user = buildState.answer.join(" ").trim();
 
-        // NEW: translate learner answer to English
+        // Translate learner answer to English
         const learnerEnglish = translateToEnglish(user);
 
-        if (user === correct) {
+        // ⭐ INTEGRATION: Normalize both strings to bypass accent/punctuation keyboard mismatches
+        const cleanCorrect = cleanStringForKeyboard(correct);
+        const cleanUser = cleanStringForKeyboard(user);
+
+        // Check against the cleaned, keyboard-forgiving values
+        if (cleanUser === cleanCorrect) {
             feedback.innerHTML = `
                 <span style="color:#4ade80;font-weight:600;">Correct! 🎉</span><br><br>
                 <strong>Your Translated Response is:</strong><br>${learnerEnglish}
             `;
             appState.levelStats[appState.currentLevel].buildCompleted++;
 
-            // Increments global points state when full sentence builder matches perfectly
             appState.totalXP = (appState.totalXP || 0) + 20; 
             appState.globalScore = (appState.globalScore || 0) + 15;
 
-            // ⭐ UPDATED: Invokes calendar comparison check engine for daily streak increments
             checkAndAdvanceStreak();
 
             updateBadges();
@@ -2716,7 +2741,8 @@ function setupBuildEvents(sentence) {
             html += `<strong>Word-by-word feedback:</strong><br>`;
 
             userTokens.forEach((t, i) => {
-                if (correctTokens[i] === t) {
+                // Fuzzy check each single token for individual word correctness indicators
+                if (cleanStringForKeyboard(correctTokens[i]) === cleanStringForKeyboard(t)) {
                     html += `<span style="color:#4ade80;">${t} ✔</span> `;
                 } else {
                     html += `<span style="color:#f87171;">${t} ✖</span> `;
@@ -2726,7 +2752,6 @@ function setupBuildEvents(sentence) {
             feedback.innerHTML = html;
             setTimeout(() => speakQuiz(correct), 300);
 
-            // INTEGRATION: Formats sentence mistake string and pushes to tracking database
             const mistakeSentenceString = `${sentence.english} ➔ ${correct}`;
             addIncorrectWord(mistakeSentenceString);
         }
