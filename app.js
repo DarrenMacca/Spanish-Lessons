@@ -4638,14 +4638,20 @@ function renderConversationTab() {
    RELOAD SAME CONVERSATION (RESET BEHAVIOUR)
    ============================================================ */
 function reloadSameConversation(convo) {
-    const container = document.getElementById("conversation-content");
 
-    // Rebuild correct buttons
+    const presetBox = document.querySelector("#conversation-content .preset-box");
+    const inputBox = document.querySelector("#conversation-content #convo-input");
+    const feedbackBox = document.querySelector("#conversation-content #convo-feedback");
+
+    if (!presetBox || !inputBox || !feedbackBox) {
+        console.warn("Conversation elements missing — aborting reset.");
+        return;
+    }
+
     const correct = convo.expected.map(exp => ({
         html: `<button class="pill preset-response correct" data-response="${exp.es}">${exp.es}</button>`
     }));
 
-    // Rebuild disruptors
     const disruptors = getDisruptorResponses(appState.currentLevel).map(exp => ({
         html: `<button class="pill preset-response disruptor" data-response="${exp.es}">${exp.es}</button>`
     }));
@@ -4653,21 +4659,19 @@ function reloadSameConversation(convo) {
     const allButtons = shuffle([...correct, ...disruptors]);
     const presetButtons = allButtons.map(b => b.html).join("");
 
-    // ⭐ Only update preset-box, input, and feedback — never touch controls
-    const presetBox = container.querySelector(".preset-box");
-    const inputBox = container.querySelector("#convo-input");
-    const feedbackBox = container.querySelector("#convo-feedback");
+    presetBox.innerHTML = presetButtons;
+    inputBox.value = "";
+    feedbackBox.innerHTML = "";
 
-    if (presetBox) presetBox.innerHTML = presetButtons;
-    if (inputBox) inputBox.value = "";
-    if (feedbackBox) feedbackBox.innerHTML = "";
-
-    // ⭐ Re-bind events AFTER DOM updates
+    // Re-bind ONLY preset buttons
     setTimeout(() => {
-        setupConversationEvents(convo);
+        document.querySelectorAll("#conversation-content .preset-response").forEach(btn => {
+            btn.onclick = () => {
+                inputBox.value = btn.dataset.response;
+            };
+        });
     }, 0);
 }
-
 
 
 /* ============================================================
@@ -4707,29 +4711,25 @@ function scoreConversationResponse(userText, allResponses) {
 /* ============================================================
    CONVERSATION EVENTS (WITH VERDICT + ENGLISH TRANSLATION)
    ============================================================ */
-
-const submitBtn = document.getElementById("convo-submit");
-const nextBtn = document.getElementById("convo-next");
-const resetBtn = document.getElementById("convo-reset");
-const feedback = document.getElementById("convo-feedback");
-
 function setupConversationEvents(convo) {
+
     const submitBtn = document.getElementById("convo-submit");
     const nextBtn = document.getElementById("convo-next");
     const resetBtn = document.getElementById("convo-reset");
     const feedback = document.getElementById("convo-feedback");
 
-    document.querySelectorAll(".preset-response").forEach(btn => {
-        btn.addEventListener("click", () => {
+    // Bind preset buttons
+    document.querySelectorAll("#conversation-content .preset-response").forEach(btn => {
+        btn.onclick = () => {
             document.getElementById("convo-input").value = btn.dataset.response;
-        });
+        };
     });
 
+    // RESET — reload same prompt
     resetBtn.onclick = () => reloadSameConversation(convo);
 
-    });
-
-    submitBtn.addEventListener("click", () => {
+    // SUBMIT — scoring + translation
+    submitBtn.onclick = () => {
         const userText = document.getElementById("convo-input").value.trim();
 
         if (!userText) {
@@ -4764,9 +4764,7 @@ function setupConversationEvents(convo) {
             </div>
         `;
 
-        if (result.match) {
-            speakQuiz(userText);
-        }
+        if (result.match) speakQuiz(userText);
 
         appState.levelStats[appState.currentLevel].conversationCompleted++;
 
@@ -4782,12 +4780,12 @@ function setupConversationEvents(convo) {
         updateBadges();
         updateProgressMeters();
         saveState();
-    });
+    };
 
-    nextBtn.addEventListener("click", () => {
-        renderConversationTab();
-    });
+    // NEXT — new prompt
+    nextBtn.onclick = () => renderConversationTab();
 }
+
 
 
 const CEFR_CONVERSATION_PROMPTS = {
