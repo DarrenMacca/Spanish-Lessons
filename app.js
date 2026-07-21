@@ -5698,10 +5698,29 @@ function renderReviewList() {
     reviewList.forEach(word => {
         const card = document.createElement('div');
         card.className = 'review-card';
+        
+        // Extract the Spanish text safely by splitting at the arrow separator
+        // This handles both " ➔ " and " → " formats seamlessly
+        const parts = word.includes('➔') ? word.split('➔') : word.split('→');
+        const spanishText = parts[1] ? parts[1].trim() : word;
+
         card.innerHTML = `
             <span class="review-word-text">${word}</span>
-            <button class="pill" onclick="clearWordFromReview('${word}')">Got it!</button>
+            <div class="review-card-actions" style="display: flex; align-items: center; gap: 12px; margin-left: auto;">
+                <!-- New Play Audio Button Element -->
+                <button class="pill review-play-btn" style="min-width: 45px; padding: 10px 14px;">
+                    🔊 Play
+                </button>
+                <button class="pill" onclick="clearWordFromReview('${word}')">Got it!</button>
+            </div>
         `;
+
+        // Bind the audio function click handler cleanly to the newly created play button
+        const playBtn = card.querySelector('.review-play-btn');
+        playBtn.addEventListener('click', () => {
+            speakQuiz(spanishText);
+        });
+
         listContainer.appendChild(card);
     });
 }
