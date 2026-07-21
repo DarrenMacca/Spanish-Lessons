@@ -1328,17 +1328,6 @@ html, body {
     gap: 20px; 
 }
 
-/* Custom spacing tweaks for your dashboard global dictionary search layout */
-.dictionary-search-box {
-    margin: 24px auto !important;
-    max-width: 400px !important; /* Slightly wider to easily support typing full words */
-    box-shadow: 0 0 10px rgba(0,255,255,0.05);
-}
-
-.dictionary-search-box .input-field {
-    max-width: 320px !important;
-}
-
 /* Erases old default margins and bullet points from the badge container listing */
 #badge-list {
     padding: 0;
@@ -1348,13 +1337,53 @@ html, body {
     gap: 10px;
 }
 
-/* Custom spacing profiles for the free practice module sandbox view */
+/* ============================================================
+   RESPONSIVE UTILITY ROW (SIDE-BY-SIDE ON DESKTOP)
+   ============================================================ */
+
+/* Handles layout alignment for the new dashboard tool row */
+.utility-row {
+    display: flex;
+    justify-content: center;
+    align-items: stretch; /* Keeps both boxes at equal heights */
+    gap: 20px;
+    max-width: 700px; /* Aligns perfectly with your dashboard-row dimensions */
+    margin: 20px auto;
+}
+
+/* Force both utility boxes to occupy uniform width profiles */
+.dictionary-search-box,
 .free-practice-box {
-    margin: 24px auto !important;
-    max-width: 400px !important;
+    flex: 1;
+    min-width: 280px;
+    max-width: 340px;
+    padding: 16px;
+    margin: 0 !important; /* Clears old individual centering margins */
     box-shadow: 0 0 10px rgba(0,255,255,0.05);
 }
 
+/* Ensure child input fields stretch uniformly inside the panels */
+.dictionary-search-box .input-field,
 .free-practice-box .input-field {
-    max-width: 320px !important;
+    width: 100%;
+    max-width: 100% !important;
 }
+
+/* ============================================================
+   MOBILE RESPONSIVE BREAKPOINT
+   ============================================================ */
+@media (max-width: 700px) {
+    .utility-row {
+        flex-direction: column; /* Stacks vertically on phone screens */
+        align-items: center;
+        gap: 16px;
+    }
+    
+    .dictionary-search-box,
+    .free-practice-box {
+        width: 100%;
+        max-width: 350px; /* Reverts cleanly back to normal size on mobile layouts */
+    }
+}
+
+
