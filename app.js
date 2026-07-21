@@ -291,6 +291,7 @@ A1: [
     { english: "which", spanish: "cuál", category: "connectors" },
     { english: "where", spanish: "dónde", category: "connectors" },
     { english: "no / not", spanish: "no", category: "connectors" },
+    { english: "yes", spanish: "si", category: "connectors" },
     { english: "there is / there are", spanish: "hay", category: "connectors" },
     { english: "other / another", spanish: "otra", category: "connectors" },
     { english: "despite", spanish: "pesar", category: "connectors" },
