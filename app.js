@@ -5919,6 +5919,123 @@ function pulseTile(id) {
 }
 
 /* ============================================================
+   CERTIFICATE SYSTEM — CEFR LEVEL COMPLETION
+   ============================================================ */
+
+// Persistent certificate unlock state
+let certificates = {
+    a1: false,
+    a2: false,
+    b1: false,
+    b2: false
+};
+
+// Save certificate state
+function saveCertificates() {
+    localStorage.setItem("certificates", JSON.stringify(certificates));
+}
+
+// Load certificate state
+function loadCertificates() {
+    const saved = localStorage.getItem("certificates");
+    if (saved) certificates = JSON.parse(saved);
+}
+loadCertificates();
+
+/* ============================================================
+   UNLOCK CERTIFICATE WHEN LEVEL COMPLETED
+   ============================================================ */
+function unlockCertificate(levelKey) {
+    certificates[levelKey] = true;
+    saveCertificates();
+}
+
+/* ============================================================
+   RENDER CERTIFICATES WITH NAME + DATE
+   ============================================================ */
+function renderCertificates() {
+    const container = document.getElementById("certificates-container");
+    if (!container) return;
+
+    container.style.display = "block";
+
+    const name =
+        appState.userName ||
+        document.getElementById("student-name").value ||
+        "Learner";
+
+    const today = new Date().toLocaleDateString();
+
+    if (certificates.a1) {
+        document.getElementById("cert-a1-name").innerText = name;
+        document.getElementById("cert-a1-date").innerText = today;
+    }
+    if (certificates.a2) {
+        document.getElementById("cert-a2-name").innerText = name;
+        document.getElementById("cert-a2-date").innerText = today;
+    }
+    if (certificates.b1) {
+        document.getElementById("cert-b1-name").innerText = name;
+        document.getElementById("cert-b1-date").innerText = today;
+    }
+    if (certificates.b2) {
+        document.getElementById("cert-b2-name").innerText = name;
+        document.getElementById("cert-b2-date").innerText = today;
+    }
+}
+
+/* ============================================================
+   LOAD PDF LIBRARIES (html2canvas + jsPDF)
+   ============================================================ */
+function loadPDFLibraries(callback) {
+    const html2canvasScript = document.createElement("script");
+    html2canvasScript.src =
+        "https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js";
+
+    const jsPDFScript = document.createElement("script");
+    jsPDFScript.src =
+        "https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js";
+
+    let loaded = 0;
+    function checkLoaded() {
+        loaded++;
+        if (loaded === 2) callback();
+    }
+
+    html2canvasScript.onload = checkLoaded;
+    jsPDFScript.onload = checkLoaded;
+
+    document.body.appendChild(html2canvasScript);
+    document.body.appendChild(jsPDFScript);
+}
+
+/* ============================================================
+   DOWNLOAD CERTIFICATE AS PDF
+   ============================================================ */
+function downloadCertificate(certId) {
+    const element = document.getElementById(certId);
+    if (!element) {
+        alert("Certificate not found.");
+        return;
+    }
+
+    loadPDFLibraries(() => {
+        html2canvas(element, { scale: 2 }).then(canvas => {
+            const imgData = canvas.toDataURL("image/png");
+            const pdf = new jspdf.jsPDF("p", "mm", "a4");
+
+            const pageWidth = pdf.internal.pageSize.getWidth();
+            const imgWidth = pageWidth - 20;
+            const imgHeight = (canvas.height * imgWidth) / canvas.width;
+
+            pdf.addImage(imgData, "PNG", 10, 10, imgWidth, imgHeight);
+            pdf.save(certId + ".pdf");
+        });
+    });
+}
+
+
+/* ============================================================
    STARTUP & EVENT INITIALIZATION
    ============================================================ */
 document.addEventListener("DOMContentLoaded", () => {
