@@ -1348,3 +1348,13 @@ html, body {
     gap: 10px;
 }
 
+/* Custom spacing profiles for the free practice module sandbox view */
+.free-practice-box {
+    margin: 24px auto !important;
+    max-width: 400px !important;
+    box-shadow: 0 0 10px rgba(0,255,255,0.05);
+}
+
+.free-practice-box .input-field {
+    max-width: 320px !important;
+}
