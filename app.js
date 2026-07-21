@@ -5756,7 +5756,7 @@ function renderReviewList() {
 }
 
 /* ============================================================
-   GLOBAL ENGLISH-TO-SPANISH DICTIONARY SEARCH
+   GLOBAL ENGLISH-TO-SPANISH DICTIONARY SEARCH (FIXED)
    ============================================================ */
 function initDictionarySearch() {
     const searchInput = document.getElementById("dict-search-input");
@@ -5767,7 +5767,7 @@ function initDictionarySearch() {
     searchInput.addEventListener("input", () => {
         const query = searchInput.value.trim().toLowerCase();
 
-        // If the text field is completely empty, clear out the feedback results window
+        // Clear out results if input field is empty
         if (!query) {
             resultBox.innerHTML = "";
             return;
@@ -5776,8 +5776,7 @@ function initDictionarySearch() {
         let matchFound = null;
         let foundInLevel = "";
 
-        // Loop through all data arrays loaded from wordbanks/ scripts
-        // Expecting CEFR_LEVELS layout object mapping (e.g. CEFR_LEVELS.A1 = [{english: '...', spanish: '...'}])
+        // 1. STRICT SEARCH: Look for a 100% exact full phrase match first
         if (typeof CEFR_LEVELS !== "undefined") {
             for (const level of Object.keys(CEFR_LEVELS)) {
                 const wordMatch = CEFR_LEVELS[level].find(
@@ -5787,16 +5786,21 @@ function initDictionarySearch() {
                 if (wordMatch) {
                     matchFound = wordMatch;
                     foundInLevel = level;
-                    break; // Exit loops immediately upon finding an exact string match
+                    break; 
                 }
             }
         }
 
-        // If an exact full-word match wasn't found, try a partial "includes" fuzzy search
+        // 2. SMART BOUNDARY SEARCH: If no exact match, look for standalone words 
+        // Using \\b ensures "the" matches "the boy" but NEVER matches "mother"
         if (!matchFound && typeof CEFR_LEVELS !== "undefined") {
+            // Escape special regex characters safely
+            const escapedQuery = query.replace(/[-\/\\^$*+?.()|[\]{}]/g, '\\$&');
+            const boundaryRegex = new RegExp(`\\b${escapedQuery}\\b`, 'i');
+
             for (const level of Object.keys(CEFR_LEVELS)) {
                 const wordMatch = CEFR_LEVELS[level].find(
-                    w => w.english && w.english.toLowerCase().includes(query)
+                    w => w.english && boundaryRegex.test(w.english)
                 );
                 
                 if (wordMatch) {
@@ -5807,7 +5811,7 @@ function initDictionarySearch() {
             }
         }
 
-        // Render response messaging to screen inside the dashboard container box
+        // Render response messaging to screen
         if (matchFound) {
             resultBox.innerHTML = `
                 <div style="padding: 10px; background: rgba(74, 222, 128, 0.1); border: 1px solid rgba(74, 222, 128, 0.3); border-radius: 10px; margin-top: 5px;">
@@ -5828,5 +5832,6 @@ function initDictionarySearch() {
         }
     });
 }
+
 
 
