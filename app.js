@@ -5817,7 +5817,7 @@ function renderReviewList() {
 }
 
 /* ============================================================
-   GLOBAL ENGLISH-TO-SPANISH DICTIONARY SEARCH (MULTI-WORD SUPPORT)
+   GLOBAL ENGLISH-TO-SPANISH DICTIONARY SEARCH (CASE & ACCENT INSENSITIVE)
    ============================================================ */
 function initDictionarySearch() {
     const searchInput = document.getElementById("dict-search-input");
@@ -5856,15 +5856,16 @@ function initDictionarySearch() {
             // Escape special regex characters safely
             const escapedQuery = query.replace(/[-\/\\^$*+?.()|[\]{}]/g, '\\$&');
             
-            // ⭐ FIXED: Uses an advanced regex barrier that accepts spaces between multiple typed words
+            // Uses an advanced regex barrier that accepts spaces between multiple typed words
             const boundaryRegex = new RegExp(`(^|\\s)${escapedQuery}($|\\s)`, 'i');
 
             for (const level of Object.keys(CEFR_LEVELS)) {
                 const wordMatch = CEFR_LEVELS[level].find(w => {
                     if (!w.english) return false;
                     
-                    // Clean the English dictionary target using the updated space utility
-                    const cleanEnglishWord = cleanStringForKeyboard(w.english);
+                    // ⭐ FIXED: Forces the scanned dictionary string to drop down to a lowercase text format
+                    // This ensures capitalized inputs (like "Yes") successfully match lowercase keys behind the scenes
+                    const cleanEnglishWord = cleanStringForKeyboard(w.english).toLowerCase();
                     return boundaryRegex.test(cleanEnglishWord);
                 });
                 
