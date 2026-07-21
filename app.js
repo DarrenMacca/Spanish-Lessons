@@ -1849,6 +1849,63 @@ function saveState() {
 /* ============================================================
    FULL RESET — ALL LEVELS, ALL SCORES, ALL XP
    ============================================================ */
+
+// Ensure this property exists on your global appState object
+appState.lastActiveDate = appState.lastActiveDate || null;
+
+/* ============================================================
+   CALENDAR DAY STREAK ENGINE
+   ============================================================ */
+
+// Safely ensure this property exists on your global state when app initializes
+if (typeof appState !== "undefined" && !appState.hasOwnProperty("lastActiveDate")) {
+    appState.lastActiveDate = null;
+}
+
+function checkAndAdvanceStreak() {
+    const todayStr = new Date().toLocaleDateString('en-CA'); // Formats cleanly as YYYY-MM-DD
+    const lastActive = appState.lastActiveDate;
+    
+    // Fallback: Ensure active level stats object has a numeric streak parameter initialized
+    if (typeof appState.levelStats[appState.currentLevel].streak !== "number") {
+        appState.levelStats[appState.currentLevel].streak = 0;
+    }
+
+    // Case 1: First time playing, or progress was just reset
+    if (!lastActive) {
+        appState.levelStats[appState.currentLevel].streak = 1;
+        appState.lastActiveDate = todayStr;
+        saveState();
+        return;
+    }
+
+    // Case 2: Already played today, do nothing to the count
+    if (lastActive === todayStr) {
+        return;
+    }
+
+    // Calculate the difference in calendar days
+    const lastDateObj = new Date(lastActive);
+    const todayDateObj = new Date(todayStr);
+    const timeDiff = todayDateObj.getTime() - lastDateObj.getTime();
+    const dayDiff = Math.floor(timeDiff / (1000 * 60 * 60 * 24));
+
+    if (dayDiff === 1) {
+        // Case 3: Played yesterday! Increment the consecutive day count
+        appState.levelStats[appState.currentLevel].streak++;
+    } else if (dayDiff > 1) {
+        // Case 4: Skipped a day or more. Reset streak back to 1
+        appState.levelStats[appState.currentLevel].streak = 1;
+    }
+
+    // Update the last active date milestone to today
+    appState.lastActiveDate = todayStr;
+    saveState();
+}
+
+/* ============================================================
+   FULL RESET — ALL LEVELS, ALL SCORES, ALL XP
+   ============================================================ */
 function resetAllProgress() {
     Object.keys(appState.levelStats).forEach(level => {
         appState.levelStats[level] = {
@@ -1863,17 +1920,22 @@ function resetAllProgress() {
         };
     });
 
+    // ⭐ FIXED: Completely wipes active streak date memory alongside scores
+    appState.lastActiveDate = null; 
+
     appState.totalXP = 0;
     appState.globalScore = 0;
     appState.badges = [];
     appState.currentLevel = "A1";
+    
+    // Save structural change
+    saveState();
 }
-
-
 
 /* ============================================================
    SABINA VOICE (Spanish TTS for explanations)
    ============================================================ */
+
 function speak(text) {
     if (!("speechSynthesis" in window)) return;
     window.speechSynthesis.cancel();
@@ -2458,14 +2520,12 @@ function setupQuizEvents() {
             appState.levelStats[appState.currentLevel].quizScore++;
             appState.levelStats[appState.currentLevel].quizCompleted++;
 
-            // ⭐ FIXED: Increments global state stats when answers match perfectly
+            // Increments global state stats when answers match perfectly
             appState.totalXP = (appState.totalXP || 0) + 10; 
             appState.globalScore = (appState.globalScore || 0) + 5;
             
-            // ⭐ FIXED: Sets active streak level tracking initialization state
-            if (!appState.levelStats[appState.currentLevel].streak) {
-                appState.levelStats[appState.currentLevel].streak = 1;
-            }
+            // ⭐ UPDATED: Invokes calendar comparison check engine for daily streak increments
+            checkAndAdvanceStreak();
 
             updateBadges();
             updateProgressMeters();
@@ -2476,7 +2536,7 @@ function setupQuizEvents() {
                 <div class="quiz-selected"><strong>You selected:</strong> ${learnerSpanish} (${learnerEnglish})</div>
             `;
 
-            // ⭐ INTEGRATION: Formats the phrase "English ➔ Spanish" and adds it to your review tracking list
+            // INTEGRATION: Formats the phrase "English ➔ Spanish" and adds it to your review tracking list
             const mistakeString = `${quizState.currentWord.english} ➔ ${correct}`;
             addIncorrectWord(mistakeString);
         }
@@ -2499,7 +2559,6 @@ function setupQuizEvents() {
         renderQuizTab();
     });
 }
-
 
 /* ============================================================
    BUILD TAB — English → Spanish Builder (with disruptors + feedback)
@@ -2622,14 +2681,12 @@ function setupBuildEvents(sentence) {
             `;
             appState.levelStats[appState.currentLevel].buildCompleted++;
 
-            // ⭐ FIXED: Increments global points state when full sentence builder matches perfectly
-            appState.totalXP = (appState.totalXP || 0) + 20; // Full constructions yield more XP
+            // Increments global points state when full sentence builder matches perfectly
+            appState.totalXP = (appState.totalXP || 0) + 20; 
             appState.globalScore = (appState.globalScore || 0) + 15;
 
-            // ⭐ FIXED: Sets active streak level tracking validation
-            if (!appState.levelStats[appState.currentLevel].streak) {
-                appState.levelStats[appState.currentLevel].streak = 1;
-            }
+            // ⭐ UPDATED: Invokes calendar comparison check engine for daily streak increments
+            checkAndAdvanceStreak();
 
             updateBadges();
             updateProgressMeters();
@@ -2654,7 +2711,7 @@ function setupBuildEvents(sentence) {
             feedback.innerHTML = html;
             setTimeout(() => speakQuiz(correct), 300);
 
-            // ⭐ INTEGRATION: Formats sentence mistake string and pushes to tracking database
+            // INTEGRATION: Formats sentence mistake string and pushes to tracking database
             const mistakeSentenceString = `${sentence.english} ➔ ${correct}`;
             addIncorrectWord(mistakeSentenceString);
         }
@@ -2755,14 +2812,12 @@ function setupSentenceEvents(q) {
 
                 appState.levelStats[appState.currentLevel].sentenceCompleted++;
 
-                // ⭐ FIXED: Increments global progress metrics on success
+                // Increments global progress metrics on success
                 appState.totalXP = (appState.totalXP || 0) + 15; 
                 appState.globalScore = (appState.globalScore || 0) + 10;
                 
-                // ⭐ FIXED: Updates streak parameters dynamically
-                if (!appState.levelStats[appState.currentLevel].streak) {
-                    appState.levelStats[appState.currentLevel].streak = 1;
-                }
+                // ⭐ UPDATED: Invokes calendar comparison check engine for daily streak increments
+                checkAndAdvanceStreak();
 
                 updateBadges();
                 updateProgressMeters();
@@ -2779,7 +2834,7 @@ function setupSentenceEvents(q) {
                     </div>
                 `;
 
-                // ⭐ INTEGRATION: Formats sentence mistake path and updates tracking engine
+                // INTEGRATION: Formats sentence mistake path and updates tracking engine
                 const mistakeSentenceString = `${q.english} ➔ ${q.correct.es}`;
                 addIncorrectWord(mistakeSentenceString);
 
@@ -2796,6 +2851,7 @@ function setupSentenceEvents(q) {
         renderSentenceTab();
     });
 }
+
 
 /* ============================================================
    CEFR SENTENCE CHOICES — FULL PACK (A1 → B2)
@@ -4467,16 +4523,15 @@ function setupConversationEvents(convo) {
 
         appState.levelStats[appState.currentLevel].conversationCompleted++;
 
-        // ⭐ FIXED: Dynamically award rewards and trigger streaks on matching validation parameters
+        // Dynamically award rewards and trigger streaks on matching validation parameters
         if (isPassing) {
             appState.totalXP = (appState.totalXP || 0) + 25; // Conversation gives maximum structural XP
             appState.globalScore = (appState.globalScore || 0) + 20;
 
-            if (!appState.levelStats[appState.currentLevel].streak) {
-                appState.levelStats[appState.currentLevel].streak = 1;
-            }
+            // ⭐ UPDATED: Invokes calendar comparison check engine for daily streak increments
+            checkAndAdvanceStreak();
         } else {
-            // ⭐ INTEGRATION: Formats sentence mistake string and pushes to tracking list if score is low
+            // INTEGRATION: Formats sentence mistake string and pushes to tracking list if score is low
             const mistakeString = `${convo.prompt_es} ➔ ${expectedCorrect.es}`;
             addIncorrectWord(mistakeString);
         }
