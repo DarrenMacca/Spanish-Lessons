@@ -5818,6 +5818,9 @@ function renderReviewList() {
 /* ============================================================
    GLOBAL ENGLISH-TO-SPANISH DICTIONARY SEARCH (CLEAN AUDIO)
    ============================================================ */
+/* ============================================================
+   GLOBAL ENGLISH-TO-SPANISH DICTIONARY SEARCH (ACCENT FIX)
+   ============================================================ */
 function initDictionarySearch() {
     const searchInput = document.getElementById("dict-search-input");
     const resultBox = document.getElementById("dict-search-result");
@@ -5835,6 +5838,7 @@ function initDictionarySearch() {
         let matchFound = null;
         let foundInLevel = "";
 
+        // 1. STRICT SEARCH: Match the English phrase exactly as typed
         if (typeof CEFR_LEVELS !== "undefined") {
             for (const level of Object.keys(CEFR_LEVELS)) {
                 const wordMatch = CEFR_LEVELS[level].find(
@@ -5849,14 +5853,20 @@ function initDictionarySearch() {
             }
         }
 
+        // 2. SMART BOUNDARY SEARCH: Accent-Insensitive Word Boundary Fallback
         if (!matchFound && typeof CEFR_LEVELS !== "undefined") {
             const escapedQuery = query.replace(/[-\/\\^$*+?.()|[\]{}]/g, '\\$&');
             const boundaryRegex = new RegExp(`\\b${escapedQuery}\\b`, 'i');
 
             for (const level of Object.keys(CEFR_LEVELS)) {
-                const wordMatch = CEFR_LEVELS[level].find(
-                    w => w.english && boundaryRegex.test(w.english)
-                );
+                const wordMatch = CEFR_LEVELS[level].find(w => {
+                    if (!w.english) return false;
+                    
+                    // ⭐ FIXED: Clean the wordbank dictionary's text properties before running regex test
+                    // This prevents Spanish accents from breaking the standard word break barriers (\b)
+                    const cleanEnglishWord = cleanStringForKeyboard(w.english);
+                    return boundaryRegex.test(cleanEnglishWord);
+                });
                 
                 if (wordMatch) {
                     matchFound = wordMatch;
@@ -5873,7 +5883,6 @@ function initDictionarySearch() {
                     <span style="color: #4ade80; font-size: 1.1rem; font-weight: 600; text-shadow: 0 0 6px rgba(74,222,128,0.45); margin-right: 8px;">
                         ${matchFound.spanish}
                     </span>
-                    <!-- ⭐ FIXED: Isolated inline browser TTS engine that speaks ONLY the raw word string, avoiding global app speech rules -->
                     <button class="pill" onclick="(() => {
                         window.speechSynthesis.cancel();
                         const utterance = new SpeechSynthesisUtterance('${matchFound.spanish.replace(/'/g, "\\'")}');
