@@ -4525,26 +4525,30 @@ function globalLookup(word) {
 function globalLookupSpanish(spanishText) {
     const s = cleanStringForKeyboard(spanishText.toLowerCase().trim());
 
-    const banks = [
-        ...CEFR_LEVELS.A1,
-        ...CEFR_LEVELS.A2,
-        ...CEFR_LEVELS.B1,
-        ...CEFR_LEVELS.B2,
+    const banks = [];
 
-        // ⭐ CEFR_PHRASES may NOT be an array — fix here
-        ...(Array.isArray(CEFR_PHRASES) ? CEFR_PHRASES : []),
+    // CEFR Levels
+    if (CEFR_LEVELS?.A1) banks.push(...CEFR_LEVELS.A1);
+    if (CEFR_LEVELS?.A2) banks.push(...CEFR_LEVELS.A2);
+    if (CEFR_LEVELS?.B1) banks.push(...CEFR_LEVELS.B1);
+    if (CEFR_LEVELS?.B2) banks.push(...CEFR_LEVELS.B2);
 
-        ...LISTEN_VOCAB,
-        ...CEFR_CONVERSATION_AUDIO_A1,
-        ...CEFR_CONVERSATION_AUDIO_A2,
-        ...CEFR_CONVERSATION_AUDIO_B1,
-        ...CEFR_CONVERSATION_AUDIO_B2
-    ];
+    // CEFR Phrases
+    if (Array.isArray(CEFR_PHRASES)) banks.push(...CEFR_PHRASES);
 
-    // Add expected responses from CEFR_CONVERSATION_PROMPTS (object keyed by level)
-    Object.values(CEFR_CONVERSATION_PROMPTS).forEach(levelArray => {
+    // Listen vocab
+    if (Array.isArray(LISTEN_VOCAB)) banks.push(...LISTEN_VOCAB);
+
+    // Conversation audio banks
+    if (Array.isArray(CEFR_CONVERSATION_AUDIO_A1)) banks.push(...CEFR_CONVERSATION_AUDIO_A1);
+    if (Array.isArray(CEFR_CONVERSATION_AUDIO_A2)) banks.push(...CEFR_CONVERSATION_AUDIO_A2);
+    if (Array.isArray(CEFR_CONVERSATION_AUDIO_B1)) banks.push(...CEFR_CONVERSATION_AUDIO_B1);
+    if (Array.isArray(CEFR_CONVERSATION_AUDIO_B2)) banks.push(...CEFR_CONVERSATION_AUDIO_B2);
+
+    // Expected responses from conversation prompts
+    Object.values(CEFR_CONVERSATION_PROMPTS || {}).forEach(levelArray => {
         levelArray.forEach(prompt => {
-            if (prompt.expected_responses) {
+            if (Array.isArray(prompt.expected_responses)) {
                 banks.push(...prompt.expected_responses);
             }
         });
