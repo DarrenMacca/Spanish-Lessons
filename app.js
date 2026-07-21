@@ -4524,6 +4524,34 @@ function scoreConversationResponse(userText, allResponses) {
 /* ============================================================
    CONVERSATION EVENTS (WITH VERDICT + ENGLISH TRANSLATION)
    ============================================================ */
+
+function reloadSameConversation(convo) {
+    const container = document.getElementById("conversation-content");
+
+    // Build correct buttons
+    const correct = convo.expected.map(exp => ({
+        html: `<button class="pill preset-response correct" data-response="${exp.es}">${exp.es}</button>`,
+        type: "correct"
+    }));
+
+    // Build disruptor buttons
+    const disruptors = getDisruptorResponses(appState.currentLevel).map(exp => ({
+        html: `<button class="pill preset-response disruptor" data-response="${exp.es}">${exp.es}</button>`,
+        type: "disruptor"
+    }));
+
+    const allButtons = shuffle([...correct, ...disruptors]);
+    const presetButtons = allButtons.map(b => b.html).join("");
+
+    container.querySelector(".preset-box").innerHTML = presetButtons;
+    container.querySelector("#convo-input").value = "";
+    container.querySelector("#convo-feedback").innerHTML = "";
+
+    // Re-bind events
+    setupConversationEvents(convo);
+}
+
+
 function setupConversationEvents(convo) {
     const submitBtn = document.getElementById("convo-submit");
     const nextBtn = document.getElementById("convo-next");
@@ -4541,17 +4569,9 @@ function setupConversationEvents(convo) {
        RESET BUTTON — clears input + feedback + reloads SAME prompt
     ============================================================ */
     resetBtn.addEventListener("click", () => {
+    reloadSameConversation(convo);
+});
 
-        // Clear learner input
-        const input = document.getElementById("convo-input");
-        if (input) input.value = "";
-
-        // Clear feedback
-        feedback.innerHTML = "";
-
-        // Reload SAME prompt with updated expected responses
-        renderConversationTab();
-    });
 
     /* ============================================================
        SUBMIT BUTTON — scoring + feedback
