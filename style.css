@@ -452,6 +452,64 @@ body {
 }
 
 /* ------------------------------------------------------------
+   MISTAKEN AREAS REVIEW TAB
+------------------------------------------------------------ */
+
+/* Container layout for the review content view */
+#review-content {
+    max-width: 800px;
+    margin: 20px auto;
+    padding: 24px;
+}
+
+/* Vertical layout holding the generated word rows */
+#review-words-list {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    margin-top: 20px;
+}
+
+/* Individual card row matching your dashboard styles */
+.review-card {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 12px 20px;
+    background: rgba(15, 23, 42, 0.55);
+    border: 1px solid rgba(148, 163, 184, 0.35);
+    border-radius: 14px;
+    backdrop-filter: blur(14px);
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+/* Gives the review items the same neon style glow on hover as your tiles */
+.review-card:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 0 10px rgba(0, 255, 255, 0.15);
+}
+
+/* Word typography matching your theme */
+.review-word-text {
+    font-size: 16px;
+    font-weight: 500;
+    color: #e2e8f0;
+    text-shadow: 0 0 6px rgba(14, 165, 233, 0.45);
+}
+
+/* Informational / empty state styling */
+.review-empty-msg {
+    text-align: center;
+    padding: 40px 20px;
+    color: #a5f3fc;
+    font-size: 14px;
+    font-style: italic;
+}
+
+
+
+
+/* ------------------------------------------------------------
    RESET BUTTON (DANGER STYLE)
 ------------------------------------------------------------ */
 .dash-reset-btn.danger {
