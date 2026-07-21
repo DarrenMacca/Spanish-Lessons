@@ -5508,11 +5508,12 @@ function renderGrammarTab() {
 }
 
 /* ============================================================
-   BADGES
+   BADGES (UPGRADED VISUAL EDITION)
    ============================================================ */
-
 function updateBadges() {
     const list = document.getElementById("badge-list");
+    if (!list) return;
+    
     const badges = new Set(appState.badges);
     const currentReviewCount = typeof reviewList !== "undefined" ? reviewList.length : 0;
 
@@ -5523,16 +5524,16 @@ function updateBadges() {
         if (s.quizScore !== null && s.quizScore >= 80) badges.add(`${level} Quiz Ace`);
         if (s.buildCompleted >= 10) badges.add(`${level} Builder`);
 
-        // ⭐ NEW BADGES — paste here
+        // NEW BADGES
         if (s.sentenceCompleted >= 10) badges.add(`${level} Sentence Pro`);
         if (s.conversationCompleted >= 10) badges.add(`${level} Conversationalist`);
         
-        // 🔥 STREAK MILESTONES — Level Specific
+        // STREAK MILESTONES — Level Specific
         if (s.streak >= 3) badges.add(`${level} 🔥 Consistent Start`);
         if (s.streak >= 7) badges.add(`${level} 👑 Habitual Hero`);
         if (s.streak >= 14) badges.add(`${level} 🔮 Unstoppable Force`);
 
-        // 🧹 COMBINED TRACKING (5-Day Streak + Clean Review Slate)
+        // COMBINED TRACKING (5-Day Streak + Clean Review Slate)
         if (s.streak >= 5 && currentReviewCount === 0) {
             badges.add(`${level} 🧹 Clean Slate Savvy`);
         }
@@ -5542,13 +5543,45 @@ function updateBadges() {
     saveState();
 
     if (appState.badges.length === 0) {
-        list.innerHTML = "<li>No badges yet. Keep training!</li>";
+        list.innerHTML = `<li style="list-style: none; text-align: center; color: rgba(255,255,255,0.4); padding: 10px;">No badges yet. Keep training!</li>`;
         return;
     }
 
-    // Displays the badge strings cleanly using your template system layout loop
-    list.innerHTML = appState.badges.map(b => `<li>${b}</li>`).join("");
+    // ⭐ NEW ENGINE: Maps text strings into highly visual glass cards
+    list.innerHTML = appState.badges.map(badgeText => {
+        // 1. Assign dynamic visual anchors (icons) depending on the badge text contents
+        let icon = "🎖️"; // Default fallback badge icon
+        let desc = "Completed a major training target.";
+
+        if (badgeText.includes("Listener")) { icon = "🎧"; desc = "Listened to over 20 core level items."; }
+        else if (badgeText.includes("Flash Master")) { icon = "🎴"; desc = "Reviewed over 30 interactive cards."; }
+        else if (badgeText.includes("Quiz Ace")) { icon = "🎯"; desc = "Scored an amazing 80%+ on vocabulary checks."; }
+        else if (badgeText.includes("Builder")) { icon = "🧱"; desc = "Successfully constructed 10 full translations."; }
+        else if (badgeText.includes("Sentence Pro")) { icon = "📝"; desc = "Passed 10 complex grammatical sentences."; }
+        else if (badgeText.includes("Conversationalist")) { icon = "💬"; desc = "Maintained a conversation score above 70%."; }
+        else if (badgeText.includes("Consistent Start")) { icon = "🔥"; desc = "Logged in and completed lessons 3 days in a row!"; }
+        else if (badgeText.includes("Habitual Hero")) { icon = "👑"; desc = "Built an incredible 7-day learning routine!"; }
+        else if (badgeText.includes("Unstoppable Force")) { icon = "🔮"; desc = "Two whole weeks of language study consistency!"; }
+        else if (badgeText.includes("Clean Slate Savvy")) { icon = "🧹"; desc = "Kept a 5-day streak alive with zero review errors."; }
+
+        // Clean out any extra emojis present inside raw text titles
+        const cleanTitle = badgeText.replace(/[🔥👑🔮🧹]/g, '').trim();
+
+        // 2. Returns an elegant HTML card template reusing your dashboard theme variables
+        return `
+            <li class="review-card" style="display: flex; align-items: center; gap: 16px; margin: 10px 0; list-style: none;">
+                <div style="font-size: 2rem; min-width: 45px; text-align: center; filter: drop-shadow(0 0 8px rgba(0,255,255,0.4));">
+                    ${icon}
+                </div>
+                <div>
+                    <strong class="review-word-text" style="font-size: 15px;">${cleanTitle}</strong>
+                    <div style="font-size: 12px; color: #a5f3fc; margin-top: 2px; opacity: 0.85;">${desc}</div>
+                </div>
+            </div>
+        `;
+    }).join("");
 }
+
 
 /* ============================================================
    STUDENT NAME BOX
