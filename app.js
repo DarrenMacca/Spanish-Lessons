@@ -1939,7 +1939,8 @@ const TABS = [
     "build",
     "sentence",
     "conversation",
-    "grammar"
+    "grammar",
+    "review" // ⭐ ADDED: Tells the routing loop your review panel exists
 ];
 
 let currentTab = "dashboard";
@@ -1996,11 +1997,17 @@ function activateTab(tabName) {
             renderGrammarTab();
             break;
 
+        // ⭐ INTEGRATION: Populates your mistake cards list whenever this tab is opened
+        case "review":
+            renderReviewList();
+            break;
+
         case "dashboard":
             // static
             break;
     }
 }
+
 
 /* ============================================================
    TAB NAVIGATION WIRING
