@@ -728,6 +728,7 @@ const WORD_DICT = {
 "cuál": "which",
 "dónde": "where",
 "no": "no / not",
+"si": "yes",
 "hay": "there is / there are",
 "otra": "other / another",
 "pesar": "despite",
