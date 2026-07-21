@@ -195,45 +195,6 @@
 </div>
 
 
-<!-- FIXED: Wrapped review tracking engine logic in standard script tags -->
-<script>
-let reviewList = JSON.parse(localStorage.getItem('reviewList')) || [];
-
-function addIncorrectWord(word) {
-    if (!reviewList.includes(word)) {
-        reviewList.push(word);
-        localStorage.setItem('reviewList', JSON.stringify(reviewList));
-        renderReviewList();
-    }
-}
-
-function clearWordFromReview(word) {
-    reviewList = reviewList.filter(item => item !== word);
-    localStorage.setItem('reviewList', JSON.stringify(reviewList));
-    renderReviewList();
-}
-
-function renderReviewList() {
-    const listContainer = document.getElementById('review-words-list');
-    if (!listContainer) return;
-    listContainer.innerHTML = '';
-
-    if (reviewList.length === 0) {
-        listContainer.innerHTML = '<p>Great job! No words to review.</p>';
-        return;
-    }
-
-    reviewList.forEach(word => {
-        const item = document.createElement('div');
-        item.style.margin = '10px 0';
-        item.innerHTML = `
-            <span style="font-size: 1.2rem; margin-right: 15px;">${word}</span>
-            <button class="pill" onclick="clearWordFromReview('${word}')">Got it!</button>
-        `;
-        listContainer.appendChild(item);
-    });
-}
-</script>
 
 <script src="app.js"></script>
 
