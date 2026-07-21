@@ -2458,6 +2458,10 @@ function setupQuizEvents() {
                 <div class="quiz-incorrect">Incorrect — correct answer: ${correct}</div>
                 <div class="quiz-selected"><strong>You selected:</strong> ${learnerSpanish} (${learnerEnglish})</div>
             `;
+
+            // ⭐ INTEGRATION: Formats the phrase "English ➔ Spanish" and adds it to your review tracking list
+            const mistakeString = `${quizState.currentWord.english} ➔ ${correct}`;
+            addIncorrectWord(mistakeString);
         }
 
         // Sabina audio
@@ -2589,45 +2593,48 @@ function setupBuildEvents(sentence) {
     });
 
     checkBtn.addEventListener("click", () => {
-    const correct = sentence.spanish.trim();
-    const user = buildState.answer.join(" ").trim();
+        const correct = sentence.spanish.trim();
+        const user = buildState.answer.join(" ").trim();
 
-    // NEW: translate learner answer to English
-    const learnerEnglish = translateToEnglish(user);
+        // NEW: translate learner answer to English
+        const learnerEnglish = translateToEnglish(user);
 
-    if (user === correct) {
-        feedback.innerHTML = `
-            <span style="color:#4ade80;font-weight:600;">Correct! 🎉</span><br><br>
-            <strong>Your Translated Response is:</strong><br>${learnerEnglish}
-        `;
-        appState.levelStats[appState.currentLevel].buildCompleted++;
-        updateBadges();
-        updateProgressMeters();
-        setTimeout(() => speakQuiz(correct), 300);
-    } else {
-        const correctTokens = correct.split(" ");
-        const userTokens = buildState.answer;
+        if (user === correct) {
+            feedback.innerHTML = `
+                <span style="color:#4ade80;font-weight:600;">Correct! 🎉</span><br><br>
+                <strong>Your Translated Response is:</strong><br>${learnerEnglish}
+            `;
+            appState.levelStats[appState.currentLevel].buildCompleted++;
+            updateBadges();
+            updateProgressMeters();
+            setTimeout(() => speakQuiz(correct), 300);
+        } else {
+            const correctTokens = correct.split(" ");
+            const userTokens = buildState.answer;
 
-        let html = `<strong>Correct Answer:</strong><br>${correct}<br><br>`;
-        html += `<strong>Your Answer:</strong><br>${user}<br><br>`;
-        html += `<strong>Your Translated Response is:</strong><br>${learnerEnglish}<br><br>`;
-        html += `<strong>Word-by-word feedback:</strong><br>`;
+            let html = `<strong>Correct Answer:</strong><br>${correct}<br><br>`;
+            html += `<strong>Your Answer:</strong><br>${user}<br><br>`;
+            html += `<strong>Your Translated Response is:</strong><br>${learnerEnglish}<br><br>`;
+            html += `<strong>Word-by-word feedback:</strong><br>`;
 
-        userTokens.forEach((t, i) => {
-            if (correctTokens[i] === t) {
-                html += `<span style="color:#4ade80;">${t} ✔</span> `;
-            } else {
-                html += `<span style="color:#f87171;">${t} ✖</span> `;
-            }
-        });
+            userTokens.forEach((t, i) => {
+                if (correctTokens[i] === t) {
+                    html += `<span style="color:#4ade80;">${t} ✔</span> `;
+                } else {
+                    html += `<span style="color:#f87171;">${t} ✖</span> `;
+                }
+            });
 
-        feedback.innerHTML = html;
-        setTimeout(() => speakQuiz(correct), 300);
-    }
+            feedback.innerHTML = html;
+            setTimeout(() => speakQuiz(correct), 300);
 
-    saveState();
-});
+            // ⭐ INTEGRATION: Formats sentence mistake string and pushes to tracking database
+            const mistakeSentenceString = `${sentence.english} ➔ ${correct}`;
+            addIncorrectWord(mistakeSentenceString);
+        }
 
+        saveState();
+    });
 
     nextBtn.addEventListener("click", () => {
         renderBuildTab();
@@ -2637,6 +2644,7 @@ function setupBuildEvents(sentence) {
 /* ============================================================
    SENTENCE TAB — CEFR MULTIPLE‑CHOICE (FINAL MASTER VERSION)
    ============================================================ */
+
 
 function generateSentenceForLevel(level) {
     const pool = CEFR_SENTENCE_CHOICES[level];
