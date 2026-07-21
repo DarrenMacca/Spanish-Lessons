@@ -5839,6 +5839,111 @@ function renderReviewList() {
 /* ============================================================
    GLOBAL ALL-BANKS DICTIONARY & CONVERSATIONAL PHRASE SEARCH
    ============================================================ */
+
+function globalLookup(word) {
+    const w = word.toLowerCase();
+    const levelsList = ["A1", "A2", "B1", "B2"];
+
+    // 1. CEFR Vocabulary (A1–B2) — CEFR_LEVELS
+    for (const level of levelsList) {
+        const vocab = CEFR_LEVELS[level];
+        if (!vocab) continue;
+
+        const match = vocab.find(item =>
+            item.english && item.english.toLowerCase() === w
+        );
+        if (match) {
+            return { spanish: match.spanish, source: "CEFR Vocabulary", level };
+        }
+    }
+
+    // 2. CEFR Sentences — CEFR_SENTENCES
+    for (const level of levelsList) {
+        const bank = CEFR_SENTENCES[level];
+        if (!bank) continue;
+
+        const match = bank.find(item =>
+            item.english && item.english.toLowerCase() === w
+        );
+        if (match) {
+            return { spanish: match.spanish, source: "CEFR Sentences", level };
+        }
+    }
+
+    // 3. CEFR Sentence Choices — CEFR_SENTENCE_CHOICES
+    for (const level of levelsList) {
+        const bank = CEFR_SENTENCE_CHOICES[level];
+        if (!bank) continue;
+
+        const match = bank.find(item =>
+            item.english && item.english.toLowerCase() === w
+        );
+        if (match) {
+            return { spanish: match.correct.es, source: "Dialogue Choices", level };
+        }
+    }
+
+    // 4. CEFR Phrases — CEFR_PHRASES
+    if (typeof CEFR_PHRASES !== "undefined") {
+        const phraseMatch = CEFR_PHRASES.find(p =>
+            p.english && p.english.toLowerCase() === w
+        );
+        if (phraseMatch) {
+            return { spanish: phraseMatch.spanish, source: "CEFR Phrases", level: phraseMatch.level || "GLOBAL" };
+        }
+    }
+
+    // 5. Listen Vocab — LISTEN_VOCAB
+    if (typeof LISTEN_VOCAB !== "undefined") {
+        const lvMatch = LISTEN_VOCAB.find(item =>
+            item.english && item.english.toLowerCase() === w
+        );
+        if (lvMatch) {
+            return { spanish: lvMatch.spanish, source: "Listen Vocab", level: lvMatch.level || "GLOBAL" };
+        }
+    }
+
+    // 6. Word-by-word dictionary — WORD_DICT
+    if (typeof WORD_DICT !== "undefined" && WORD_DICT[w]) {
+        return { spanish: WORD_DICT[w], source: "Word Dictionary", level: "GLOBAL" };
+    }
+
+    // 7. Conversation Prompts — CEFR_CONVERSATION_PROMPTS
+    if (typeof CEFR_CONVERSATION_PROMPTS !== "undefined") {
+        const convoMatch = CEFR_CONVERSATION_PROMPTS.find(p =>
+            p.english && p.english.toLowerCase() === w
+        );
+        if (convoMatch) {
+            return { spanish: convoMatch.spanish, source: "Conversation Prompt", level: convoMatch.level || "GLOBAL" };
+        }
+    }
+
+    // 8. Conversation Audio — A1–B2
+    const convoAudioBanks = [
+        CEFR_CONVERSATION_AUDIO_A1,
+        CEFR_CONVERSATION_AUDIO_A2,
+        CEFR_CONVERSATION_AUDIO_B1,
+        CEFR_CONVERSATION_AUDIO_B2
+    ];
+
+    for (const bank of convoAudioBanks) {
+        if (!bank) continue;
+        const audioMatch = bank.find(a =>
+            a.english && a.english.toLowerCase() === w
+        );
+        if (audioMatch) {
+            return {
+                spanish: audioMatch.spanish,
+                source: "Conversation Audio",
+                level: audioMatch.level || "GLOBAL"
+            };
+        }
+    }
+
+    return null;
+}
+
+
 function initDictionarySearch() {
     const searchInput = document.getElementById("dict-search-input");
     const resultBox = document.getElementById("dict-search-result");
@@ -5855,33 +5960,20 @@ function initDictionarySearch() {
 
         const levelsList = ["A1", "A2", "B1", "B2"];
         const words = query.split(/\s+/).filter(w => w.length > 0);
+        const cleanQuery = cleanStringForKeyboard(query).toLowerCase();
 
         /* ============================================================
-           SENTENCE MODE — translate each word individually
+           SENTENCE MODE — translate each word via globalLookup
         ============================================================ */
         if (words.length > 1) {
             const translatedWords = [];
             const unknownWords = [];
 
             for (const word of words) {
-                let found = null;
-
-                for (const level of levelsList) {
-                    const vocab = CEFR_LEVELS[level];
-                    if (!vocab) continue;
-
-                    const match = vocab.find(item =>
-                        item.english && item.english.toLowerCase() === word
-                    );
-
-                    if (match) {
-                        translatedWords.push(match.spanish);
-                        found = true;
-                        break;
-                    }
-                }
-
-                if (!found) {
+                const result = globalLookup(word);
+                if (result) {
+                    translatedWords.push(result.spanish);
+                } else {
                     unknownWords.push(word);
                     translatedWords.push(`[${word}]`);
                 }
@@ -5908,106 +6000,11 @@ function initDictionarySearch() {
         }
 
         /* ============================================================
-           SINGLE WORD MODE — your original logic
+           SINGLE WORD MODE — now using globalLookup()
         ============================================================ */
-        let matchFound = null;
-        let foundInLevel = "";
-        let sourceBankName = "";
-        const cleanQuery = cleanStringForKeyboard(query).toLowerCase();
+        const singleResult = globalLookup(query);
 
-        // 1. EXACT MATCH SEARCH
-        for (const level of levelsList) {
-            if (typeof CEFR_LEVELS !== "undefined" && CEFR_LEVELS[level]) {
-                const match = CEFR_LEVELS[level].find(w => w.english && w.english.toLowerCase() === query);
-                if (match) { matchFound = match; foundInLevel = level; sourceBankName = "Vocabulary Wordbank"; break; }
-            }
-            if (typeof CEFR_SENTENCES !== "undefined" && CEFR_SENTENCES[level]) {
-                const match = CEFR_SENTENCES[level].find(s => s.english && s.english.toLowerCase() === query);
-                if (match) { matchFound = match; foundInLevel = level; sourceBankName = "Sentence Bank"; break; }
-            }
-            if (typeof CEFR_SENTENCE_CHOICES !== "undefined" && CEFR_SENTENCE_CHOICES[level]) {
-                const match = CEFR_SENTENCE_CHOICES[level].find(c => c.english && c.english.toLowerCase() === query);
-                if (match) {
-                    matchFound = { english: match.english, spanish: match.correct.es };
-                    foundInLevel = level;
-                    sourceBankName = "Phrases & Dialogue Bank";
-                    break;
-                }
-            }
-        }
-
-        // 2. SMART BOUNDARY MATCH
-        if (!matchFound) {
-            const escapedQuery = cleanQuery.replace(/[-\/\\^$*+?.()|[\]{}]/g, '\\$&');
-            const boundaryRegex = new RegExp(`\\b${escapedQuery}\\b`, 'i');
-
-            for (const level of levelsList) {
-                if (typeof CEFR_LEVELS !== "undefined" && CEFR_LEVELS[level]) {
-                    const match = CEFR_LEVELS[level].find(w => {
-                        if (!w.english) return false;
-                        const target = cleanStringForKeyboard(w.english).toLowerCase();
-                        return boundaryRegex.test(target);
-                    });
-                    if (match) { matchFound = match; foundInLevel = level; sourceBankName = "Vocabulary Wordbank"; break; }
-                }
-                if (typeof CEFR_SENTENCES !== "undefined" && CEFR_SENTENCES[level]) {
-                    const match = CEFR_SENTENCES[level].find(s => {
-                        if (!s.english) return false;
-                        const target = cleanStringForKeyboard(s.english).toLowerCase();
-                        return boundaryRegex.test(target);
-                    });
-                    if (match) { matchFound = match; foundInLevel = level; sourceBankName = "Sentence Bank"; break; }
-                }
-                if (typeof CEFR_SENTENCE_CHOICES !== "undefined" && CEFR_SENTENCE_CHOICES[level]) {
-                    const match = CEFR_SENTENCE_CHOICES[level].find(c => {
-                        if (!c.english) return false;
-                        const target = cleanStringForKeyboard(c.english).toLowerCase();
-                        return boundaryRegex.test(target);
-                    });
-                    if (match) {
-                        matchFound = { english: match.english, spanish: match.correct.es };
-                        foundInLevel = level;
-                        sourceBankName = "Phrases & Dialogue Bank";
-                        break;
-                    }
-                }
-            }
-        }
-
-        // 3. MULTI-WORD FRAGMENT MATCH (original behaviour)
-        if (!matchFound && query.split(/\s+/).length > 1) {
-            const queryWords = cleanStringForKeyboard(query).toLowerCase().split(/\s+/).filter(w => w.length > 1);
-            let bestScore = 0;
-
-            for (const level of levelsList) {
-                const scanBank = (bankData, name, isChoice = false) => {
-                    if (!bankData) return;
-                    bankData.forEach(item => {
-                        const englishField = item.english ? cleanStringForKeyboard(item.english).toLowerCase() : "";
-                        if (!englishField) return;
-
-                        const matchCount = queryWords.filter(word => {
-                            const exactWordRegex = new RegExp(`\\b${word}\\b`, 'i');
-                            return exactWordRegex.test(englishField);
-                        }).length;
-
-                        if (matchCount > bestScore && matchCount >= Math.ceil(queryWords.length * 0.6)) {
-                            bestScore = matchCount;
-                            foundInLevel = level;
-                            sourceBankName = name;
-                            matchFound = isChoice ? { english: item.english, spanish: item.correct.es } : item;
-                        }
-                    });
-                };
-
-                scanBank(CEFR_LEVELS[level], "Vocabulary Wordbank");
-                scanBank(CEFR_SENTENCES[level], "Sentence Bank");
-                scanBank(CEFR_SENTENCE_CHOICES[level], "Phrases & Dialogue Bank", true);
-            }
-        }
-
-        // Render single-word result
-        if (matchFound) {
+        if (singleResult) {
             resultBox.innerHTML = `
                 <div style="padding: 10px; background: rgba(74, 222, 128, 0.1);
                             border: 1px solid rgba(74, 222, 128, 0.3);
@@ -6015,31 +6012,34 @@ function initDictionarySearch() {
                     <span style="color: #a5f3fc; font-weight: bold;">Spanish:</span>
                     <span style="color: #4ade80; font-size: 1.1rem; font-weight: 600;
                                  text-shadow: 0 0 6px rgba(74,222,128,0.45); margin-right: 8px;">
-                        ${matchFound.spanish}
+                        ${singleResult.spanish}
                     </span>
+
                     <button class="pill" onclick="(() => {
                         window.speechSynthesis.cancel();
-                        const utterance = new SpeechSynthesisUtterance('${matchFound.spanish.replace(/'/g, "\\'")}');
+                        const utterance = new SpeechSynthesisUtterance('${singleResult.spanish.replace(/'/g, "\\'")}');
                         utterance.lang = 'es-ES';
                         const speedSlider = document.getElementById('rate');
                         if (speedSlider) utterance.rate = parseFloat(speedSlider.value);
                         window.speechSynthesis.speak(utterance);
                     })()" style="padding: 4px 10px; font-size: 11px; max-width: 50px;">🔊</button>
+
                     <div style="font-size: 11px; color: rgba(255,255,255,0.4); margin-top: 4px;">
-                        Found in ${foundInLevel} (${sourceBankName})
+                        Found in ${singleResult.level} (${singleResult.source})
                     </div>
                 </div>
             `;
-        } else {
-            resultBox.innerHTML = `
-                <div style="color: #f87171; font-style: italic; font-size: 13px; margin-top: 8px;">
-                    Phrase not found in any level resource banks.
-                </div>
-            `;
+            return;
         }
+
+        // No match anywhere
+        resultBox.innerHTML = `
+            <div style="color: #f87171; font-style: italic; font-size: 13px; margin-top: 8px;">
+                Phrase not found in any level resource banks.
+            </div>
+        `;
     });
 }
-
 
 
 /* ============================================================
