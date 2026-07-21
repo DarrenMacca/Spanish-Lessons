@@ -5818,7 +5818,7 @@ function renderReviewList() {
 
 
 /* ============================================================
-   GLOBAL ALL-BANKS DICTIONARY & CONVERSATIONAL PHRASE SEARCH
+   GLOBAL ALL-BANKS DICTIONARY & CONVERSATIONAL PHRASE SEARCH (REPAIR)
    ============================================================ */
 function initDictionarySearch() {
     const searchInput = document.getElementById("dict-search-input");
@@ -5839,8 +5839,9 @@ function initDictionarySearch() {
         let sourceBankName = "";
 
         const levelsList = ["A1", "A2", "B1", "B2"];
+        const cleanQuery = cleanStringForKeyboard(query).toLowerCase();
 
-        // 1. ALL-BANKS EXACT MATCH SEARCH
+        // 1. ALL-BANKS EXACT MATCH SEARCH (Matches English phrases exactly as typed)
         for (const level of levelsList) {
             if (typeof CEFR_LEVELS !== "undefined" && CEFR_LEVELS[level]) {
                 const match = CEFR_LEVELS[level].find(w => w.english && w.english.toLowerCase() === query);
@@ -5861,32 +5862,38 @@ function initDictionarySearch() {
             }
         }
 
-        // 2. ALL-BANKS INCLUDES MATCH FALLBACK
+        // 2. FIXED SMART BOUNDARY MATCH FALLBACK (Prevents "yes" from matching "yesterday")
         if (!matchFound) {
-            const cleanQuery = cleanStringForKeyboard(query).toLowerCase();
+            // Escapes special regex characters safely
+            const escapedQuery = cleanQuery.replace(/[-\/\\^$*+?.()|[\]{}]/g, '\\$&');
+            // Using standard word boundaries (\b) on the cleaned keyboard text strings
+            const boundaryRegex = new RegExp(`\\b${escapedQuery}\\b`, 'i');
 
             for (const level of levelsList) {
+                // Check Vocabulary Wordbank
                 if (typeof CEFR_LEVELS !== "undefined" && CEFR_LEVELS[level]) {
                     const match = CEFR_LEVELS[level].find(w => {
                         if (!w.english) return false;
                         const target = cleanStringForKeyboard(w.english).toLowerCase();
-                        return target.includes(cleanQuery) || cleanQuery.includes(target);
+                        return boundaryRegex.test(target);
                     });
                     if (match) { matchFound = match; foundInLevel = level; sourceBankName = "Vocabulary Wordbank"; break; }
                 }
+                // Check Build Sentences
                 if (typeof CEFR_SENTENCES !== "undefined" && CEFR_SENTENCES[level]) {
                     const match = CEFR_SENTENCES[level].find(s => {
                         if (!s.english) return false;
                         const target = cleanStringForKeyboard(s.english).toLowerCase();
-                        return target.includes(cleanQuery) || cleanQuery.includes(target);
+                        return boundaryRegex.test(target);
                     });
                     if (match) { matchFound = match; foundInLevel = level; sourceBankName = "Sentence Bank"; break; }
                 }
+                // Check Phrases & Dialogue Choices
                 if (typeof CEFR_SENTENCE_CHOICES !== "undefined" && CEFR_SENTENCE_CHOICES[level]) {
                     const match = CEFR_SENTENCE_CHOICES[level].find(c => {
                         if (!c.english) return false;
                         const target = cleanStringForKeyboard(c.english).toLowerCase();
-                        return target.includes(cleanQuery) || cleanQuery.includes(target);
+                        return boundaryRegex.test(target);
                     });
                     if (match) {
                         matchFound = { english: match.english, spanish: match.correct.es };
@@ -5898,7 +5905,7 @@ function initDictionarySearch() {
             }
         }
 
-        // 3. MULTI-WORD FRAGMENT / CONVERSATIONAL TOKEN INTERSECT SEARCH
+        // 3. MULTI-WORD FRAGMENT MATCH FALLBACK (For long sentences like "hello how are you")
         if (!matchFound && query.split(/\s+/).length > 1) {
             const queryWords = cleanStringForKeyboard(query).toLowerCase().split(/\s+/).filter(w => w.length > 1);
             let bestScore = 0;
@@ -5910,7 +5917,10 @@ function initDictionarySearch() {
                         const englishField = item.english ? cleanStringForKeyboard(item.english).toLowerCase() : "";
                         if (!englishField) return;
 
-                        const matchCount = queryWords.filter(word => englishField.includes(word)).length;
+                        const matchCount = queryWords.filter(word => {
+                            const exactWordRegex = new RegExp(`\\b${word}\\b`, 'i');
+                            return exactWordRegex.test(englishField);
+                        }).length;
                         
                         if (matchCount > bestScore && matchCount >= Math.ceil(queryWords.length * 0.6)) {
                             bestScore = matchCount;
@@ -5955,6 +5965,7 @@ function initDictionarySearch() {
         }
     });
 }
+
 
 /* ============================================================
    GLOBAL FREE PRACTICE SANDBOX (UNSCORED)
