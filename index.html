@@ -52,10 +52,23 @@
 <!-- DASHBOARD TAB CONTENT -->
 <div id="dashboard">
     <div class="dashboard-row">
-        <div class="dash-left glass-panel">
-            <label class="section-title">Audio Speed</label>
-            <input type="range" id="rate" min="0.6" max="1.4" step="0.1" value="1">
+
+    <div class="dash-left glass-panel">
+        <label class="section-title">Audio Speed</label>
+        <input type="range" id="rate" min="0.6" max="1.4" step="0.1" value="1">
+    </div>
+
+    <div class="dash-right glass-panel">
+        <label class="section-title">Skill Level</label>
+        <div class="level-buttons">
+            <button class="pill" data-level="A1">A1</button>
+            <button class="pill" data-level="A2">A2</button>
+            <button class="pill" data-level="B1">B1</button>
+            <button class="pill" data-level="B2">B2</button>
         </div>
+    </div>
+
+</div>
 
 <div class="student-name-box glass-panel">
     <label class="section-title">Your name for certificates</label>
@@ -64,8 +77,10 @@
     <div id="name-status" class="name-status"></div>
 </div>
 
-
-
+<!-- CERTIFICATE BUTTON (Dashboard) -->
+<button class="pill" onclick="activateTab('certificates'); renderCertificates();" style="margin-top: 10px;">
+    View Certificates
+</button>
 
     
   <!-- RESPONSIVE ROW FOR UTILITIES -->
@@ -216,7 +231,7 @@
 <div id="conversation" class="hidden"><div id="conversation-content"></div></div>
 <div id="grammar" class="hidden"><div id="grammar-content"></div></div>
 
-<!-- FIXED: Added missing Review container view -->
+<!-- REVIEW TAB -->
 <div id="review" class="hidden">
     <div id="review-content" class="glass-panel" style="padding: 20px; margin-top: 20px;">
         <h2>Mistaken Areas Review</h2>
@@ -224,56 +239,54 @@
     </div>
 </div>
 
+<!-- CERTIFICATES TAB -->
+<div id="certificates" class="hidden">
+    <div id="certificates-container" class="glass-panel" style="padding: 20px; margin-top: 20px;">
+        <h2>Your Certificates</h2>
+        <p style="opacity: 0.7;">Certificates unlock automatically when you complete each CEFR level.</p>
 
-<div id="certificates-container" style="display:none;">
+        <div id="cert-a1" class="certificate">
+            <h1>Certificate of Achievement</h1>
+            <h2>CEFR Level A1</h2>
+            <p>This certifies that</p>
+            <h3 id="cert-a1-name"></h3>
+            <p>has successfully completed Level A1</p>
+            <p id="cert-a1-date"></p>
+            <button class="pill" onclick="downloadCertificate('cert-a1')">Download PDF</button>
+        </div>
 
-    <div id="cert-a1" class="certificate">
-        <h1>Certificate of Achievement</h1>
-        <h2>CEFR Level A1</h2>
-        <p>This certifies that</p>
-        <h3 id="cert-a1-name"></h3>
-        <p>has successfully completed Level A1</p>
-        <p id="cert-a1-date"></p>
-        <button class="pill" onclick="downloadCertificate('cert-a1')">Download PDF</button>
+        <div id="cert-a2" class="certificate">
+            <h1>Certificate of Achievement</h1>
+            <h2>CEFR Level A2</h2>
+            <p>This certifies that</p>
+            <h3 id="cert-a2-name"></h3>
+            <p>has successfully completed Level A2</p>
+            <p id="cert-a2-date"></p>
+            <button class="pill" onclick="downloadCertificate('cert-a2')">Download PDF</button>
+        </div>
+
+        <div id="cert-b1" class="certificate">
+            <h1>Certificate of Achievement</h1>
+            <h2>CEFR Level B1</h2>
+            <p>This certifies that</p>
+            <h3 id="cert-b1-name"></h3>
+            <p>has successfully completed Level B1</p>
+            <p id="cert-b1-date"></p>
+            <button class="pill" onclick="downloadCertificate('cert-b1')">Download PDF</button>
+        </div>
+
+        <div id="cert-b2" class="certificate">
+            <h1>Certificate of Achievement</h1>
+            <h2>CEFR Level B2</h2>
+            <p>This certifies that</p>
+            <h3 id="cert-b2-name"></h3>
+            <p>has successfully completed Level B2</p>
+            <p id="cert-b2-date"></p>
+            <button class="pill" onclick="downloadCertificate('cert-b2')">Download PDF</button>
+        </div>
 
     </div>
-
-    <div id="cert-a2" class="certificate">
-        <h1>Certificate of Achievement</h1>
-        <h2>CEFR Level A2</h2>
-        <p>This certifies that</p>
-        <h3 id="cert-a2-name"></h3>
-        <p>has successfully completed Level A2</p>
-        <p id="cert-a2-date"></p>
-        <button class="pill" onclick="downloadCertificate('cert-a2')">Download PDF</button>
-
-    </div>
-
-    <div id="cert-b1" class="certificate">
-        <h1>Certificate of Achievement</h1>
-        <h2>CEFR Level B1</h2>
-        <p>This certifies that</p>
-        <h3 id="cert-b1-name"></h3>
-        <p>has successfully completed Level B1</p>
-        <p id="cert-b1-date"></p>
-        <button class="pill" onclick="downloadCertificate('cert-b1')">Download PDF</button>
-
-    </div>
-
-    <div id="cert-b2" class="certificate">
-        <h1>Certificate of Achievement</h1>
-        <h2>CEFR Level B2</h2>
-        <p>This certifies that</p>
-        <h3 id="cert-b2-name"></h3>
-        <p>has successfully completed Level B2</p>
-        <p id="cert-b2-date"></p>
-        <button class="pill" onclick="downloadCertificate('cert-b2')">Download PDF</button>
-
-    </div>
-
 </div>
-
-    
 
 <script src="app.js"></script>
 
