@@ -5435,8 +5435,13 @@ function initRateControl() {
    PROGRESS METER CONTROLLER
    ============================================================ */
 
-function animateNumber(id, target) {
+// ⭐ FIXED: Added an optional 'suffix' parameter so review items display as a count, not a percentage
+function animateNumber(id, target, suffix = "%") {
     let current = 0;
+    if (target === 0) {
+        document.getElementById(id).textContent = "0" + suffix;
+        return;
+    }
     const step = target / 40;
 
     const interval = setInterval(() => {
@@ -5445,7 +5450,7 @@ function animateNumber(id, target) {
             current = target;
             clearInterval(interval);
         }
-        document.getElementById(id).textContent = Math.round(current) + "%";
+        document.getElementById(id).textContent = Math.round(current) + suffix;
     }, 20);
 }
 
@@ -5454,7 +5459,9 @@ function updateProgressMeters() {
 
     // Defensive defaults so undefined never becomes NaN
     const streak = typeof stats.streak === "number" ? stats.streak : 0;
-    const reviewDue = typeof stats.reviewDue === "number" ? stats.reviewDue : 0;
+    
+    // Pulls from live review list array size
+    const reviewDue = reviewList.length;
 
     // Bar widths
     document.getElementById("quiz-progress").style.width =
@@ -5467,26 +5474,30 @@ function updateProgressMeters() {
         stats.sentenceCompleted + "%";
 
     document.getElementById("xp-progress").style.width =
-        appState.totalXP + "%";
+        (appState.totalXP || 0) + "%";
 
     document.getElementById("streak-progress").style.width =
         streak + "%";
 
     document.getElementById("score-progress").style.width =
-        appState.globalScore + "%";
+        (appState.globalScore || 0) + "%";
 
+    // Fills the review bar based on density (caps full layout visualization at 10 items)
+    const reviewBarPercentage = Math.min((reviewDue / 10) * 100, 100);
     document.getElementById("review-progress").style.width =
-        reviewDue + "%";
+        reviewBarPercentage + "%";
 
-    // Animated numbers
+    // Animated numbers (standard percent metrics)
     animateNumber("quiz-number", stats.quizScore);
     animateNumber("build-number", stats.buildCompleted);
     animateNumber("sentence-number", stats.sentenceCompleted);
 
-    animateNumber("xp-number", appState.totalXP);
+    animateNumber("xp-number", appState.totalXP || 0);
     animateNumber("streak-number", streak);
-    animateNumber("score-number", appState.globalScore);
-    animateNumber("review-number", reviewDue);
+    animateNumber("score-number", appState.globalScore || 0);
+    
+    // ⭐ FIXED: Overrides percentage symbol so it displays clean word numbers (e.g. "9 words")
+    animateNumber("review-number", reviewDue, reviewDue === 1 ? " word" : " words");
 
     // Pulse animations
     pulseTile("quiz-tile");
@@ -5497,8 +5508,6 @@ function updateProgressMeters() {
     pulseTile("score-tile");
     pulseTile("review-tile");
 }
-
-
 
 /* ============================================================
    TILE PULSE ANIMATION
@@ -5544,6 +5553,7 @@ function addIncorrectWord(word) {
         reviewList.push(word);
         localStorage.setItem('reviewList', JSON.stringify(reviewList));
         renderReviewList(); // Refresh the UI view instantly
+        updateProgressMeters(); // ⭐ FIXED: Updates dashboard tile stats immediately
     }
 }
 
@@ -5552,6 +5562,7 @@ function clearWordFromReview(word) {
     reviewList = reviewList.filter(item => item !== word);
     localStorage.setItem('reviewList', JSON.stringify(reviewList));
     renderReviewList(); // Refresh the UI view instantly
+    updateProgressMeters(); // ⭐ FIXED: Updates dashboard tile stats immediately
 }
 
 // Function to build and update the review interface cards dynamically
@@ -5575,5 +5586,3 @@ function renderReviewList() {
         listContainer.appendChild(card);
     });
 }
-
-
