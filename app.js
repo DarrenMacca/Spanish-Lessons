@@ -6391,7 +6391,7 @@ function pulseTile(id) {
    CEFR SCORING + CERTIFICATE + ACHIEVEMENT ENGINE (Unified)
    ============================================================ */
 
-const PASS_THRESHOLD = 90;   // ← change to 1 for testing
+const PASS_THRESHOLD = 1;   // ← change to 1 for testing
 
 function calculateLevelScores() {
     const stats = {
