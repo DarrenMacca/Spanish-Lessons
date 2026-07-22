@@ -6387,6 +6387,101 @@ function pulseTile(id) {
     tile.classList.add("pulse");
 }
 
+/* ============================================================
+   CEFR SCORING + CERTIFICATE + ACHIEVEMENT ENGINE (Unified)
+   ============================================================ */
+
+const PASS_THRESHOLD = 90;   // ← change to 1 for testing
+
+function calculateLevelScores() {
+    const stats = {
+        A1: { quiz: 0, builder: 0, sentence: 0, conversation: 0, smart: 0, avg: 0 },
+        A2: { quiz: 0, builder: 0, sentence: 0, conversation: 0, smart: 0, avg: 0 },
+        B1: { quiz: 0, builder: 0, sentence: 0, conversation: 0, smart: 0, avg: 0 },
+        B2: { quiz: 0, builder: 0, sentence: 0, conversation: 0, smart: 0, avg: 0 }
+    };
+
+    const level = currentLevel;
+
+    stats[level].quiz =
+        quizTotal === 0 ? 0 : Math.round((quizCorrect / quizTotal) * 100);
+
+    stats[level].builder =
+        Math.round((builderScore / builderMax) * 100);
+
+    stats[level].sentence =
+        Math.round((sentenceScore / sentenceMax) * 100);
+
+    stats[level].conversation =
+        Math.round((conversationScore / conversationMax) * 100);
+
+    stats[level].smart =
+        Math.round((smartScore / smartMax) * 100);
+
+    stats[level].avg = Math.round(
+        (
+            stats[level].quiz +
+            stats[level].builder +
+            stats[level].sentence +
+            stats[level].conversation +
+            stats[level].smart
+        ) / 5
+    );
+
+    return stats;
+}
+
+/* ============================================================
+   CERTIFICATE UNLOCK LOGIC
+   ============================================================ */
+
+function checkLevelCertificates(stats) {
+    if (stats.A1.avg >= PASS_THRESHOLD) unlockCertificate("a1");
+    if (stats.A2.avg >= PASS_THRESHOLD) unlockCertificate("a2");
+    if (stats.B1.avg >= PASS_THRESHOLD) unlockCertificate("b1");
+    if (stats.B2.avg >= PASS_THRESHOLD) unlockCertificate("b2");
+}
+
+/* ============================================================
+   ACHIEVEMENT / BADGE SYSTEM
+   ============================================================ */
+
+const ACHIEVEMENTS = [
+    { id: "a1_master", label: "A1 Master", condition: s => s.A1.avg >= PASS_THRESHOLD },
+    { id: "a2_master", label: "A2 Master", condition: s => s.A2.avg >= PASS_THRESHOLD },
+    { id: "b1_master", label: "B1 Master", condition: s => s.B1.avg >= PASS_THRESHOLD },
+    { id: "b2_master", label: "B2 Master", condition: s => s.B2.avg >= PASS_THRESHOLD },
+
+    {
+        id: "full_progress",
+        label: "200‑Word Explorer",
+        condition: s => {
+            const totalAvg = Math.round(
+                (s.A1.avg + s.A2.avg + s.B1.avg + s.B2.avg) / 4
+            );
+            return totalAvg >= PASS_THRESHOLD;
+        }
+    }
+];
+
+function evaluateAchievements(stats) {
+    ACHIEVEMENTS.forEach(a => {
+        if (a.condition(stats)) {
+            unlockCertificate(a.id); // uses same unlock system
+        }
+    });
+}
+
+/* ============================================================
+   MASTER SCORING RUNNER
+   ============================================================ */
+
+function runCEFRScoringEngine() {
+    const stats = calculateLevelScores();
+    checkLevelCertificates(stats);
+    evaluateAchievements(stats);
+    return stats;
+}
 
 /* ============================================================
    CERTIFICATE SYSTEM — CEFR LEVEL COMPLETION
