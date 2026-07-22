@@ -4599,15 +4599,19 @@ const DISRUPTOR_WORDS = {
 
 /* ============================================================
    GLOBAL ALL-BANKS DICTIONARY & CONVERSATIONAL PHRASE SEARCH
+   (Patched with cleanStringForKeyboard normalization)
    ============================================================ */
 
 function globalLookup(word) {
     if (!word) return null;
+
     const w = word.toLowerCase();
-    const cw = cleanStringForKeyboard(w);
+    const cw = cleanStringForKeyboard(w);   // normalized input
     const levelsList = ["A1", "A2", "B1", "B2"];
 
-    /* 1. CEFR Vocabulary */
+    /* ============================================================
+       1. CEFR Vocabulary
+    ============================================================ */
     for (const level of levelsList) {
         const vocab = CEFR_LEVELS?.[level];
         if (!vocab) continue;
@@ -4620,7 +4624,9 @@ function globalLookup(word) {
         }
     }
 
-    /* 2. CEFR Sentences */
+    /* ============================================================
+       2. CEFR Sentences
+    ============================================================ */
     for (const level of levelsList) {
         const bank = CEFR_SENTENCES?.[level];
         if (!bank) continue;
@@ -4633,7 +4639,9 @@ function globalLookup(word) {
         }
     }
 
-    /* 3. CEFR Dialogue Choices */
+    /* ============================================================
+       3. CEFR Dialogue Choices
+    ============================================================ */
     for (const level of levelsList) {
         const bank = CEFR_SENTENCE_CHOICES?.[level];
         if (!bank) continue;
@@ -4646,7 +4654,9 @@ function globalLookup(word) {
         }
     }
 
-    /* 4. CEFR Phrases */
+    /* ============================================================
+       4. CEFR Phrases (A1–B2 merged)
+    ============================================================ */
     if (Array.isArray(CEFR_PHRASES)) {
         const phraseMatch = CEFR_PHRASES.find(p =>
             cleanStringForKeyboard(p?.english || "").toLowerCase() === cw
@@ -4660,7 +4670,9 @@ function globalLookup(word) {
         }
     }
 
-    /* 5. Listening Vocabulary */
+    /* ============================================================
+       5. Listening Vocabulary
+    ============================================================ */
     if (Array.isArray(LISTEN_VOCAB)) {
         const lvMatch = LISTEN_VOCAB.find(item =>
             cleanStringForKeyboard(item?.english || "").toLowerCase() === cw
@@ -4674,12 +4686,16 @@ function globalLookup(word) {
         }
     }
 
-    /* 6. Word Dictionary */
+    /* ============================================================
+       6. Word Dictionary (custom)
+    ============================================================ */
     if (WORD_DICT?.[w]) {
         return { spanish: WORD_DICT[w], source: "Word Dictionary", level: "GLOBAL" };
     }
 
-    /* 7. Conversation Prompts */
+    /* ============================================================
+       7. Conversation Prompts
+    ============================================================ */
     if (CEFR_CONVERSATION_PROMPTS) {
         for (const levelKey of Object.keys(CEFR_CONVERSATION_PROMPTS)) {
             const prompts = CEFR_CONVERSATION_PROMPTS[levelKey];
@@ -4696,7 +4712,9 @@ function globalLookup(word) {
         }
     }
 
-    /* 8. Conversation Audio */
+    /* ============================================================
+       8. Conversation Audio Banks
+    ============================================================ */
     const convoAudioBanks = [
         CEFR_CONVERSATION_AUDIO_A1,
         CEFR_CONVERSATION_AUDIO_A2,
@@ -4721,6 +4739,7 @@ function globalLookup(word) {
 
     return null;
 }
+
 
 
 /* ============================================================
