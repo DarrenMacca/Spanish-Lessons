@@ -4702,7 +4702,7 @@ function renderConversationTab() {
 }
 
 /* ============================================================
-   CONVERSATION EVENTS — INTEGRATED GRADING & FEEDBACK ENGINE (PART 2B - A)
+   CONVERSATION EVENTS — INPUT SUBMISSION & GRADING (PART 2B - A)
    ============================================================ */
 function setupConversationEvents(convo) {
     const submitBtn = document.getElementById("convo-submit");
@@ -4739,18 +4739,21 @@ function setupConversationEvents(convo) {
         const userText = textarea.value.trim();
 
         if (!userText) {
-            feedback.innerHTML = `<span style="color:#f87171; display:block; margin-top:10px;">Please select or type a response first.</span>`;
+            feedback.innerHTML = `<span style="color:#f87171; display:block; margin-top:10px;">Please enter a response.</span>`;
             return;
         }
 
-        // Align dimensions natively by handling array constraints directly
+        // Standardize input lookup dimensions explicitly to guard scoring mechanics
         const correctResponsesOnly = Array.isArray(convo.expected) ? convo.expected : [convo.expected];
         const result = scoreConversationResponse(userText, correctResponsesOnly);
         
-        // Extract primary data object elements defensively to isolate properties cleanly
+        // FIXED: Explicitly target the first element [0] within the wrapper array to pull fields correctly
         const primaryTargetObj = Array.isArray(convo.expected) ? convo.expected[0] : convo.expected;
+        
         const expectedEs = extractSpanishText(primaryTargetObj);
-        const expectedEn = primaryTargetObj && typeof primaryTargetObj === 'object' ? primaryTargetObj.en || primaryTargetObj.english || "Translation unavailable" : "Translation unavailable";
+        const expectedEn = primaryTargetObj && typeof primaryTargetObj === 'object' 
+            ? primaryTargetObj.en || primaryTargetObj.english || "Translation unavailable" 
+            : "Translation unavailable";
 
         // Query global database sheets to fetch target english text meanings
         const learnerEnglishTranslation = globalLookupSpanish(userText);
@@ -4792,7 +4795,7 @@ function setupConversationEvents(convo) {
             // Invoke native audio speech synthesis engine text readings
             if (result.match) {
                 const vocalizedText = extractSpanishText(result.match);
-                if (typeof speakSpanish === "function") speakSpanish(vocalizedText);
+                if (typeof speakQuiz === "function") speakQuiz(vocalizedText);
             }
         } else if (finalScore >= 40 && finalScore < 70) {
             matchStatus = "partial";
@@ -4816,7 +4819,7 @@ function setupConversationEvents(convo) {
             btn.style.opacity = "0.6";
         });
 
-        // FIXED: Live-inject completely compiled layout blueprints straight to DOM elements
+        // Live-inject completely compiled layout blueprints straight to HTML elements
         feedback.innerHTML = `
             <div class="convo-result" style="margin-top: 15px; padding: 12px; background: rgba(15, 23, 42, 0.4); border-radius: 12px; border: 1px solid ${borderGradientColor}; transition: border 0.3s ease-out;">
                 ${verdictHTML}
@@ -4828,7 +4831,7 @@ function setupConversationEvents(convo) {
             </div>
         `;
 
-        // Direct state forwarding down to Part 2B (B) to ensure calculations register smoothly
+        // Pass control to storage router block in Part 2B (B)
         if (typeof processConversationRewards === "function") {
             processConversationRewards(matchStatus, baseXP, baseScore, expectedEs, convo.prompt_es);
         }
@@ -4836,6 +4839,7 @@ function setupConversationEvents(convo) {
 
     nextBtn.onclick = () => renderConversationTab();
 }
+
 
 /* ============================================================
    CONVERSATION RUNTIME — STORAGE MANAGEMENT & SCENE RELOADS (PART 2B - B)
@@ -4909,7 +4913,7 @@ function reloadSameConversation(convo) {
     });
 }
 
-// Low-level synthesizer fallback anchor to power chimes if dynamic Audio files aren't pre-rendered
+// Low-level synthesizer fallback note generation anchor node
 function audioContextPlayback(type) {
     try {
         const AudioCtx = window.AudioContext || window.webkitAudioContext;
@@ -4923,14 +4927,14 @@ function audioContextPlayback(type) {
         
         if (type === "partial") {
             osc.type = "triangle";
-            osc.frequency.setValueAtTime(330, ctx.currentTime); // Note E4
+            osc.frequency.setValueAtTime(330, ctx.currentTime);
             gain.gain.setValueAtTime(0.1, ctx.currentTime);
             osc.start();
             gain.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + 0.3);
             osc.stop(ctx.currentTime + 0.3);
         } else {
             osc.type = "sawtooth";
-            osc.frequency.setValueAtTime(120, ctx.currentTime); // Deep buzz bass note
+            osc.frequency.setValueAtTime(120, ctx.currentTime);
             gain.gain.setValueAtTime(0.15, ctx.currentTime);
             osc.start();
             gain.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + 0.4);
@@ -4940,6 +4944,7 @@ function audioContextPlayback(type) {
         console.warn("WebAudio player stalled:", e);
     }
 }
+
 
 
 const CEFR_CONVERSATION_PROMPTS = {
