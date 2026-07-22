@@ -4758,11 +4758,13 @@ function globalLookup(word) {
    ============================================================ */
 
 function splitPhraseLookup(query) {
-    const rawWords = query.toLowerCase().split(/\s+/);
-    if (rawWords.length <= 1) return null;
+    if (!query) return null;
 
-    // Normalize all words (remove punctuation, accents, spacing)
+    // Normalize input words (remove accents, punctuation, spacing)
+    const rawWords = query.toLowerCase().split(/\s+/);
     const words = rawWords.map(w => cleanStringForKeyboard(w));
+
+    if (words.length <= 1) return null;
 
     for (let start = 0; start < words.length; start++) {
         for (let end = words.length; end > start; end--) {
@@ -4800,6 +4802,7 @@ function splitPhraseLookup(query) {
 
     return null;
 }
+
 
 
 /* ============================================================
@@ -6816,7 +6819,14 @@ function globalLookup(word) {
    DICTIONARY SEARCH INITIALIZER SYSTEM (BILINGUAL MODE)
    ============================================================ */
 function multiPhraseStitch(query) {
-    const words = query.split(/\s+/);
+    if (!query) return { spanish: "", matched: [] };
+
+    // Normalize English input
+    const words = query
+        .toLowerCase()
+        .split(/\s+/)
+        .map(w => cleanStringForKeyboard(w));
+
     const results = [];
     const matches = [];
 
@@ -6828,7 +6838,23 @@ function multiPhraseStitch(query) {
         // Try longest possible phrase first
         for (let end = words.length; end > i; end--) {
             const subPhrase = words.slice(i, end).join(" ");
-            const hit = globalLookup(subPhrase);
+
+            // CEFR phrase priority (normalized)
+            let hit = null;
+
+            if (Array.isArray(CEFR_PHRASES)) {
+                const phraseHit = CEFR_PHRASES.find(p =>
+                    cleanStringForKeyboard(p?.english || "").toLowerCase() === subPhrase
+                );
+                if (phraseHit) {
+                    hit = { spanish: phraseHit.spanish };
+                }
+            }
+
+            // Fallback: globalLookup
+            if (!hit) {
+                hit = globalLookup(subPhrase);
+            }
 
             if (hit) {
                 results.push(hit.spanish);
@@ -6852,7 +6878,34 @@ function multiPhraseStitch(query) {
 
     return {
         spanish: results.join(" "),
-        matches
+        matched: matches
+    };
+}
+
+function multiPhraseStitchSpanish(spanishText) {
+    if (!spanishText) return { english: "", matched: [] };
+
+    const words = spanishText
+        .split(/\s+/)
+        .map(w => cleanStringForKeyboard(w.toLowerCase()));
+
+    const matched = [];
+    const englishParts = [];
+
+    for (const w of words) {
+        const english = globalLookupSpanish(w);
+
+        if (english && english !== "[Unknown translation]") {
+            matched.push(w);
+            englishParts.push(english);
+        } else {
+            englishParts.push(`[${w}]`);
+        }
+    }
+
+    return {
+        english: englishParts.join(" "),
+        matched
     };
 }
 
