@@ -6551,11 +6551,53 @@ function initDictionarySearch() {
             return;
         }
 
-        const words = query.split(/\s+/).filter(w => w.length > 0);
+        /* ============================================================
+           1. FULL PHRASE LAYER — Scan the entire sentence string first
+        ============================================================ */
+        const phraseResult = globalLookup(query);
+
+        if (phraseResult) {
+            const cleanSpeechText = phraseResult.spanish.replace(/'/g, "\\'");
+            
+            resultBox.innerHTML = `
+                <div style="padding: 10px; background: rgba(74, 222, 128, 0.1);
+                            border: 1px solid rgba(74, 222, 128, 0.3);
+                            border-radius: 10px; margin-top: 5px; display: flex; flex-direction: column; gap: 4px;">
+                    <div style="display: flex; align-items: center; gap: 8px; flex-wrap: wrap;">
+                        <span style="color: #a5f3fc; font-weight: bold;">Spanish:</span>
+                        <span style="color: #4ade80; font-size: 1.1rem; font-weight: 600;
+                                     text-shadow: 0 0 6px rgba(74,222,128,0.45);">
+                            ${phraseResult.spanish}
+                        </span>
+
+                        <button id="dict-speak-btn" class="pill" style="padding: 4px 10px; font-size: 11px; max-width: 50px; cursor: pointer;">🔊</button>
+                    </div>
+
+                    <div style="font-size: 11px; color: rgba(255,255,255,0.4); margin-top: 2px;">
+                        Phrase mode — Found in ${phraseResult.level || "GLOBAL"} (${phraseResult.source})
+                    </div>
+                </div>
+            `;
+
+            const speakBtn = document.getElementById("dict-speak-btn");
+            if (speakBtn) {
+                speakBtn.onclick = () => {
+                    window.speechSynthesis.cancel();
+                    const utterance = new SpeechSynthesisUtterance(cleanSpeechText);
+                    utterance.lang = 'es-ES';
+                    const speedSlider = document.getElementById('rate');
+                    if (speedSlider) utterance.rate = parseFloat(speedSlider.value);
+                    window.speechSynthesis.speak(utterance);
+                };
+            }
+            return;
+        }
 
         /* ============================================================
-           SENTENCE MODE — translate each word via globalLookup
+           2. WORD-BY-WORD FALLBACK — Executes only if full phrase fails
         ============================================================ */
+        const words = query.split(/\s+/).filter(w => w.length > 0);
+
         if (words.length > 1) {
             const translatedWords = [];
             const unknownWords = [];
@@ -6590,51 +6632,7 @@ function initDictionarySearch() {
             return;
         }
 
-        /* ============================================================
-           SINGLE WORD MODE — using updated globalLookup()
-        ============================================================ */
-        const singleResult = globalLookup(query);
-
-        if (singleResult) {
-            // Escape apostrophes to clean out dynamic inline injection failures
-            const cleanSpeechText = singleResult.spanish.replace(/'/g, "\\'");
-            
-            resultBox.innerHTML = `
-                <div style="padding: 10px; background: rgba(74, 222, 128, 0.1);
-                            border: 1px solid rgba(74, 222, 128, 0.3);
-                            border-radius: 10px; margin-top: 5px; display: flex; flex-direction: column; gap: 4px;">
-                    <div style="display: flex; align-items: center; gap: 8px; flex-wrap: wrap;">
-                        <span style="color: #a5f3fc; font-weight: bold;">Spanish:</span>
-                        <span style="color: #4ade80; font-size: 1.1rem; font-weight: 600;
-                                     text-shadow: 0 0 6px rgba(74,222,128,0.45);">
-                            ${singleResult.spanish}
-                        </span>
-
-                        <button id="dict-speak-btn" class="pill" style="padding: 4px 10px; font-size: 11px; max-width: 50px; cursor: pointer;">🔊</button>
-                    </div>
-
-                    <div style="font-size: 11px; color: rgba(255,255,255,0.4); margin-top: 2px;">
-                        Found in ${singleResult.level || "GLOBAL"} (${singleResult.source})
-                    </div>
-                </div>
-            `;
-
-            // Explicit event attachment protects handler contexts across frameworks
-            const speakBtn = document.getElementById("dict-speak-btn");
-            if (speakBtn) {
-                speakBtn.onclick = () => {
-                    window.speechSynthesis.cancel();
-                    const utterance = new SpeechSynthesisUtterance(cleanSpeechText);
-                    utterance.lang = 'es-ES';
-                    const speedSlider = document.getElementById('rate');
-                    if (speedSlider) utterance.rate = parseFloat(speedSlider.value);
-                    window.speechSynthesis.speak(utterance);
-                };
-            }
-            return;
-        }
-
-        // No match anywhere
+        // No match found anywhere
         resultBox.innerHTML = `
             <div style="color: #f87171; font-style: italic; font-size: 13px; margin-top: 8px;">
                 Phrase not found in any level resource banks.
@@ -6642,6 +6640,7 @@ function initDictionarySearch() {
         `;
     });
 }
+
 
 
 /* ============================================================
