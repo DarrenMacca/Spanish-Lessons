@@ -4702,7 +4702,7 @@ function renderConversationTab() {
 }
 
 /* ============================================================
-   CONVERSATION EVENTS — EVALUATOR PIPELINE (PART 2B - A)
+   CONVERSATION EVENTS — INPUT SUBMISSION & GRADING (PART 2B - A)
    ============================================================ */
 function setupConversationEvents(convo) {
     const submitBtn = document.getElementById("convo-submit");
@@ -4779,7 +4779,7 @@ function setupConversationEvents(convo) {
                 baseScore = 20;
             }
             
-            verdictHTML = `<span style="color:#4ade80; font-weight:600; font-size:1.1rem;">Correct! 🎉 (+${baseXP} XP)${bonusText}</span>`;
+            verdictHTML = `<span class="convo-verdict-title" style="color:#4ade80; font-weight:600; font-size:1.1rem;">Correct! 🎉 (+${baseXP} XP)${bonusText}</span>`;
             
             // Play audio confirmation
             if (result.match) {
@@ -4791,19 +4791,26 @@ function setupConversationEvents(convo) {
             borderGradientColor = "rgba(251, 146, 60, 0.5)";
             baseXP = 10;
             baseScore = 5;
-            verdictHTML = `<span style="color:#fb923c; font-weight:600; font-size:1.1rem;">Partial Match! ⚠️ (+10 XP)</span>`;
+            verdictHTML = `<span class="convo-verdict-title" style="color:#fb923c; font-weight:600; font-size:1.1rem;">Partial Match! ⚠️ (+10 XP)</span>`;
             
             // AUDIO CHIME: Play a mild notification warning note context trigger
             if (typeof audioContextPlayback === "function") audioContextPlayback("partial");
         } else {
             matchStatus = "incorrect";
             borderGradientColor = "rgba(248, 113, 113, 0.4)";
-            verdictHTML = `<span style="color:#f87171; font-weight:600; font-size:1.1rem;">Incorrect. ✖ (0 XP)</span>`;
+            verdictHTML = `<span class="convo-verdict-title" style="color:#f87171; font-weight:600; font-size:1.1rem;">Incorrect. ✖ (0 XP)</span>`;
             
             // AUDIO CHIME: Play an error warning tone
             if (typeof audioContextPlayback === "function") audioContextPlayback("incorrect");
         }
 
+        // Freeze pill interaction post-submission
+        document.querySelectorAll("#conversation-content .preset-response").forEach(btn => {
+            btn.disabled = true;
+            btn.style.opacity = "0.6";
+        });
+
+        // Write template cards directly to DOM without passing parameters to unlinked child modules
         feedback.innerHTML = `
             <div class="convo-result" style="margin-top: 15px; padding: 12px; background: rgba(15, 23, 42, 0.4); border-radius: 12px; border: 1px solid ${borderGradientColor}; transition: border 0.3s ease;">
                 ${verdictHTML}
@@ -4815,12 +4822,37 @@ function setupConversationEvents(convo) {
             </div>
         `;
 
-        // Pass execution control details securely down to Part 2B (B)
-        processConversationRewards(matchStatus, baseXP, baseScore, expectedEs, convo.prompt_es);
+        // Update database tallies inside core appState object models
+        appState.levelStats[appState.currentLevel].conversationCompleted++;
+
+        if (matchStatus === "correct") {
+            appState.totalXP = (appState.totalXP || 0) + baseXP;
+            appState.globalScore = (appState.globalScore || 0) + baseScore;
+            if (typeof checkAndAdvanceStreak === "function") checkAndAdvanceStreak();
+        } else if (matchStatus === "partial") {
+            appState.totalXP = (appState.totalXP || 0) + baseXP;
+            appState.globalScore = (appState.globalScore || 0) + baseScore;
+        } else {
+            const promptEsClean = convo.prompt_es || "Conversation Prompt";
+            const mistakeString = `${promptEsClean} ➔ ${expectedEs}`;
+            
+            // DEDUPLICATION FILTER: Verifies mistake is completely unique before writing data
+            const cleanMistakeEntry = mistakeString.trim();
+            const alreadyLogged = Array.isArray(window.reviewList) && window.reviewList.some(item => item.trim() === cleanMistakeEntry);
+            
+            if (!alreadyLogged && typeof addIncorrectWord === "function") {
+                addIncorrectWord(cleanMistakeEntry);
+            }
+        }
+
+        if (typeof updateBadges === "function") updateBadges();
+        if (typeof updateProgressMeters === "function") updateProgressMeters();
+        saveState();
     };
 
     nextBtn.onclick = () => renderConversationTab();
 }
+
 
 /* ============================================================
    CONVERSATION TRACKING — ACCOUNTING & CACHE RELOADS (PART 2B - B)
@@ -4860,6 +4892,10 @@ function processConversationRewards(matchStatus, baseXP, baseScore, expectedEs, 
     if (typeof updateProgressMeters === "function") updateProgressMeters();
     saveState();
 }
+
+/* ============================================================
+   CONVERSATION RUNTIME — SCENE RELOADS & AUDIO CHIMES (PART 2B - B)
+   ============================================================ */
 
 function reloadSameConversation(convo) {
     const presetBox = document.querySelector("#conversation-content .preset-box");
@@ -4927,6 +4963,7 @@ function audioContextPlayback(type) {
         console.warn("WebAudio player stalled:", e);
     }
 }
+
 
 
 const CEFR_CONVERSATION_PROMPTS = {
