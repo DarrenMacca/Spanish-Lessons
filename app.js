@@ -4702,7 +4702,7 @@ function renderConversationTab() {
 }
 
 /* ============================================================
-   CONVERSATION EVENTS — INPUT SUBMISSION & GRADING (PART 2B - A)
+   CONVERSATION EVENTS — INTEGRATED GRADING & FEEDBACK ENGINE (PART 2B - A)
    ============================================================ */
 function setupConversationEvents(convo) {
     const submitBtn = document.getElementById("convo-submit");
@@ -4711,15 +4711,21 @@ function setupConversationEvents(convo) {
     const feedback = document.getElementById("convo-feedback");
     const textarea = document.getElementById("convo-input");
 
-    // Dynamic pill input injection
+    if (!submitBtn || !nextBtn || !resetBtn || !feedback || !textarea) {
+        console.warn("Required conversation layout DOM wrappers are missing. Halting event attachments.");
+        return;
+    }
+
+    // Dynamic pill user response injection
     document.querySelectorAll("#conversation-content .preset-response").forEach(btn => {
         btn.onclick = () => {
             if (btn.disabled) return;
             textarea.value = btn.getAttribute("data-response") || btn.dataset.response;
+            feedback.innerHTML = ""; // Clear out previous alert rows on fresh button toggles
         };
     });
 
-    // RESET — Reload current question container state
+    // RESET — Wipe text entries and re-enable active pill items
     resetBtn.onclick = () => {
         document.querySelectorAll("#conversation-content .preset-response").forEach(btn => {
             btn.disabled = false;
@@ -4728,26 +4734,28 @@ function setupConversationEvents(convo) {
         reloadSameConversation(convo);
     };
 
-    // SUBMIT — Target evaluation, border grading gradients, and point distribution
+    // SUBMIT — Computes target scores, injects translations, and appends gradient borders
     submitBtn.onclick = () => {
         const userText = textarea.value.trim();
 
         if (!userText) {
-            feedback.innerHTML = `<span style="color:#f87171; display:block; margin-top:10px;">Please enter a response.</span>`;
+            feedback.innerHTML = `<span style="color:#f87171; display:block; margin-top:10px;">Please select or type a response first.</span>`;
             return;
         }
 
-        // Pass convo.expected array directly without surrounding brackets to keep dimensions aligned
+        // Align dimensions natively by handling array constraints directly
         const correctResponsesOnly = Array.isArray(convo.expected) ? convo.expected : [convo.expected];
         const result = scoreConversationResponse(userText, correctResponsesOnly);
         
-        const expectedCorrectRaw = Array.isArray(convo.expected) ? convo.expected : convo.expected;
-        const expectedEs = extractSpanishText(expectedCorrectRaw);
-        const expectedEn = expectedCorrectRaw && typeof expectedCorrectRaw === 'object' ? expectedCorrectRaw.en || "Translation unavailable" : "Translation unavailable";
+        // Extract primary data object elements defensively to isolate properties cleanly
+        const primaryTargetObj = Array.isArray(convo.expected) ? convo.expected[0] : convo.expected;
+        const expectedEs = extractSpanishText(primaryTargetObj);
+        const expectedEn = primaryTargetObj && typeof primaryTargetObj === 'object' ? primaryTargetObj.en || primaryTargetObj.english || "Translation unavailable" : "Translation unavailable";
 
+        // Query global database sheets to fetch target english text meanings
         const learnerEnglishTranslation = globalLookupSpanish(userText);
         
-        // SAFE CONVERTER: If choice exists inside the level's active disruptor array, manually force score to 0%
+        // INTERCEPTOR OVERRIDE: Automatically drops final score to 0% if input matches a level disruptor
         let finalScore = result.score;
         const activeLevelDisruptors = typeof getDisruptorResponses === 'function' ? getDisruptorResponses(appState.currentLevel) : [];
         const isDisruptorPhrase = activeLevelDisruptors.some(d => extractSpanishText(d).toLowerCase().trim() === userText.toLowerCase().trim());
@@ -4760,16 +4768,16 @@ function setupConversationEvents(convo) {
         let borderGradientColor = "rgba(148, 163, 184, 0.2)";
         let matchStatus = "incorrect";
 
-        // Dynamic points calculation based on final accuracy markers
+        // Dynamic points calculation based on final accuracy benchmarks
         let baseXP = 0;
         let baseScore = 0;
         let bonusText = "";
 
         if (finalScore >= 70 && learnerEnglishTranslation !== "[Unknown translation]") {
             matchStatus = "correct";
-            borderGradientColor = "rgba(74, 222, 128, 0.4)";
+            borderGradientColor = "rgba(74, 222, 128, 0.4)"; // Green border highlight
             
-            // FLAWLESS BONUS MULTIPLIER: Boost rewards if user lands a perfect score line match
+            // FLAWLESS BONUS MULTIPLIER: Reward precise string alignments extra points
             if (finalScore === 100) {
                 baseXP = 40; 
                 baseScore = 30; 
@@ -4781,38 +4789,36 @@ function setupConversationEvents(convo) {
             
             verdictHTML = `<span class="convo-verdict-title" style="color:#4ade80; font-weight:600; font-size:1.1rem;">Correct! 🎉 (+${baseXP} XP)${bonusText}</span>`;
             
-            // Play audio confirmation
+            // Invoke native audio speech synthesis engine text readings
             if (result.match) {
                 const vocalizedText = extractSpanishText(result.match);
-                if (typeof speakQuiz === "function") speakQuiz(vocalizedText);
+                if (typeof speakSpanish === "function") speakSpanish(vocalizedText);
             }
         } else if (finalScore >= 40 && finalScore < 70) {
             matchStatus = "partial";
-            borderGradientColor = "rgba(251, 146, 60, 0.5)";
+            borderGradientColor = "rgba(251, 146, 60, 0.5)"; // Orange partial border accent
             baseXP = 10;
             baseScore = 5;
             verdictHTML = `<span class="convo-verdict-title" style="color:#fb923c; font-weight:600; font-size:1.1rem;">Partial Match! ⚠️ (+10 XP)</span>`;
             
-            // AUDIO CHIME: Play a mild notification warning note context trigger
             if (typeof audioContextPlayback === "function") audioContextPlayback("partial");
         } else {
             matchStatus = "incorrect";
-            borderGradientColor = "rgba(248, 113, 113, 0.4)";
+            borderGradientColor = "rgba(248, 113, 113, 0.4)"; // Red mismatch error accent
             verdictHTML = `<span class="convo-verdict-title" style="color:#f87171; font-weight:600; font-size:1.1rem;">Incorrect. ✖ (0 XP)</span>`;
             
-            // AUDIO CHIME: Play an error warning tone
             if (typeof audioContextPlayback === "function") audioContextPlayback("incorrect");
         }
 
-        // Freeze pill interaction post-submission
+        // Freeze option choices immediately post-submission
         document.querySelectorAll("#conversation-content .preset-response").forEach(btn => {
             btn.disabled = true;
             btn.style.opacity = "0.6";
         });
 
-        // Write template cards directly to DOM without passing parameters to unlinked child modules
+        // FIXED: Live-inject completely compiled layout blueprints straight to DOM elements
         feedback.innerHTML = `
-            <div class="convo-result" style="margin-top: 15px; padding: 12px; background: rgba(15, 23, 42, 0.4); border-radius: 12px; border: 1px solid ${borderGradientColor}; transition: border 0.3s ease;">
+            <div class="convo-result" style="margin-top: 15px; padding: 12px; background: rgba(15, 23, 42, 0.4); border-radius: 12px; border: 1px solid ${borderGradientColor}; transition: border 0.3s ease-out;">
                 ${verdictHTML}
                 <br><br>
                 <strong>Your response:</strong> ${userText}<br>
@@ -4822,52 +4828,27 @@ function setupConversationEvents(convo) {
             </div>
         `;
 
-        // Update database tallies inside core appState object models
-        appState.levelStats[appState.currentLevel].conversationCompleted++;
-
-        if (matchStatus === "correct") {
-            appState.totalXP = (appState.totalXP || 0) + baseXP;
-            appState.globalScore = (appState.globalScore || 0) + baseScore;
-            if (typeof checkAndAdvanceStreak === "function") checkAndAdvanceStreak();
-        } else if (matchStatus === "partial") {
-            appState.totalXP = (appState.totalXP || 0) + baseXP;
-            appState.globalScore = (appState.globalScore || 0) + baseScore;
-        } else {
-            const promptEsClean = convo.prompt_es || "Conversation Prompt";
-            const mistakeString = `${promptEsClean} ➔ ${expectedEs}`;
-            
-            // DEDUPLICATION FILTER: Verifies mistake is completely unique before writing data
-            const cleanMistakeEntry = mistakeString.trim();
-            const alreadyLogged = Array.isArray(window.reviewList) && window.reviewList.some(item => item.trim() === cleanMistakeEntry);
-            
-            if (!alreadyLogged && typeof addIncorrectWord === "function") {
-                addIncorrectWord(cleanMistakeEntry);
-            }
+        // Direct state forwarding down to Part 2B (B) to ensure calculations register smoothly
+        if (typeof processConversationRewards === "function") {
+            processConversationRewards(matchStatus, baseXP, baseScore, expectedEs, convo.prompt_es);
         }
-
-        if (typeof updateBadges === "function") updateBadges();
-        if (typeof updateProgressMeters === "function") updateProgressMeters();
-        saveState();
     };
 
     nextBtn.onclick = () => renderConversationTab();
 }
 
-
 /* ============================================================
-   CONVERSATION TRACKING — ACCOUNTING & CACHE RELOADS (PART 2B - B)
+   CONVERSATION RUNTIME — STORAGE MANAGEMENT & SCENE RELOADS (PART 2B - B)
    ============================================================ */
 
 function processConversationRewards(matchStatus, baseXP, baseScore, expectedEs, promptEsRaw) {
-    // Freeze pill interaction post-submission
-    document.querySelectorAll("#conversation-content .preset-response").forEach(btn => {
-        btn.disabled = true;
-        btn.style.opacity = "0.6";
-    });
-
+    if (!appState.levelStats[appState.currentLevel]) {
+        appState.levelStats[appState.currentLevel] = { conversationCompleted: 0 };
+    }
+    
     appState.levelStats[appState.currentLevel].conversationCompleted++;
 
-    // Process final calculations into database models
+    // Process metric awards safely inside application memory blocks
     if (matchStatus === "correct") {
         appState.totalXP = (appState.totalXP || 0) + baseXP;
         appState.globalScore = (appState.globalScore || 0) + baseScore;
@@ -4879,7 +4860,7 @@ function processConversationRewards(matchStatus, baseXP, baseScore, expectedEs, 
         const promptEsClean = promptEsRaw || "Conversation Prompt";
         const mistakeString = `${promptEsClean} ➔ ${expectedEs}`;
         
-        // DEDUPLICATION FILTER: Verifies mistake is completely unique before writing data
+        // DEDUPLICATION FILTER: Verifies mistake is completely unique before writing to review lists
         const cleanMistakeEntry = mistakeString.trim();
         const alreadyLogged = Array.isArray(window.reviewList) && window.reviewList.some(item => item.trim() === cleanMistakeEntry);
         
@@ -4893,17 +4874,13 @@ function processConversationRewards(matchStatus, baseXP, baseScore, expectedEs, 
     saveState();
 }
 
-/* ============================================================
-   CONVERSATION RUNTIME — SCENE RELOADS & AUDIO CHIMES (PART 2B - B)
-   ============================================================ */
-
 function reloadSameConversation(convo) {
     const presetBox = document.querySelector("#conversation-content .preset-box");
     const inputBox = document.querySelector("#conversation-content #convo-input");
     const feedbackBox = document.querySelector("#conversation-content #convo-feedback");
 
     if (!presetBox || !inputBox || !feedbackBox) {
-        console.warn("Conversation elements missing — aborting reset.");
+        console.warn("Conversation UI elements missing — aborting scene reset.");
         return;
     }
 
@@ -4963,7 +4940,6 @@ function audioContextPlayback(type) {
         console.warn("WebAudio player stalled:", e);
     }
 }
-
 
 
 const CEFR_CONVERSATION_PROMPTS = {
