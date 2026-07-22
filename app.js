@@ -7283,61 +7283,52 @@ function initDictionarySearch() {
             return;
         }
 
-        /* ============================================================
-           2. SPANISH → ENGLISH
-        ============================================================ */
-        if (lang === "spanish") {
+/* ============================================================
+   2. SPANISH → ENGLISH
+============================================================ */
+if (lang === "spanish") {
 
-            const englishResult = globalLookupSpanish(query);
+    const lowerQuery = cleanStringForKeyboard(query.toLowerCase());
 
-            if (englishResult && englishResult !== "[Unknown translation]") {
-                resultBox.innerHTML = `
-                    <div style="padding: 10px; background: rgba(74, 222, 128, 0.1);
-                                border: 1px solid rgba(74, 222, 128, 0.3);
-                                border-radius: 10px; margin-top: 5px;">
-                        <span style="color: #a5f3fc; font-weight: bold;">English:</span>
-                        <span style="color: #4ade80; font-size: 1.1rem; font-weight: 600;">
-                            ${englishResult}
-                        </span>
-                        <div style="font-size: 11px; color: rgba(255,255,255,0.4);">
-                            Spanish → English mode
-                        </div>
-                    </div>
-                `;
-                return;
-            }
+    // MULTI‑PHRASE MODE
+    if (lowerQuery.includes(" ")) {
+        const stitched = multiPhraseStitchSpanish(lowerQuery);
 
-            const spanishWords = query.split(/\s+/);
-            const translatedWords = [];
-            const unknownWords = [];
-
-            for (const word of spanishWords) {
-                const result = globalLookupSpanish(word);
-                if (result && result !== "[Unknown translation]") {
-                    translatedWords.push(result);
-                } else {
-                    unknownWords.push(word);
-                    translatedWords.push(`[${word}]`);
-                }
-            }
-
-            const englishSentence = translatedWords.join(" ");
-
-            resultBox.innerHTML = `
-                <div style="padding: 10px; background: rgba(74, 222, 128, 0.1);
-                            border: 1px solid rgba(74, 222, 128, 0.3);
-                            border-radius: 10px; margin-top: 5px;">
-                    <span style="color: #a5f3fc; font-weight: bold;">English:</span>
-                    <span style="color: #4ade80; font-size: 1.1rem; font-weight: 600;">
-                        ${englishSentence}
-                    </span>
-                    <div style="font-size: 11px; color: rgba(255,255,255,0.4);">
-                        Sentence mode — ${unknownWords.length === 0 ? "all words found" : "missing: " + unknownWords.join(", ")}
-                    </div>
+        resultBox.innerHTML = `
+            <div style="padding: 10px; background: rgba(74, 222, 128, 0.1);
+                        border: 1px solid rgba(74, 222, 128, 0.3);
+                        border-radius: 10px; margin-top: 5px;">
+                <span style="color: #a5f3fc; font-weight: bold;">English:</span>
+                <span style="color: #4ade80; font-size: 1.1rem; font-weight: 600;">
+                    ${stitched.english}
+                </span>
+                <div style="font-size: 11px; color: rgba(255,255,255,0.4);">
+                    Multi‑phrase mode — matched: ${stitched.matched.join(", ")}
                 </div>
-            `;
-            return;
-        }
+            </div>
+        `;
+        return;
+    }
+
+    // SINGLE WORD MODE
+    const englishResult = globalLookupSpanish(lowerQuery);
+
+    resultBox.innerHTML = `
+        <div style="padding: 10px; background: rgba(74, 222, 128, 0.1);
+                    border: 1px solid rgba(74, 222, 128, 0.3);
+                    border-radius: 10px; margin-top: 5px;">
+            <span style="color: #a5f3fc; font-weight: bold;">English:</span>
+            <span style="color: #4ade80; font-size: 1.1rem; font-weight: 600;">
+                ${englishResult}
+            </span>
+            <div style="font-size: 11px; color: rgba(255,255,255,0.4);">
+                Spanish → English mode
+            </div>
+        </div>
+    `;
+    return;
+}
+
 
         /* ============================================================
            3. UNKNOWN INPUT
