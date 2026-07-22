@@ -4604,59 +4604,52 @@ const DISRUPTOR_WORDS = {
 function globalLookup(word) {
     if (!word) return null;
     const w = word.toLowerCase();
+    const cw = cleanStringForKeyboard(w);
     const levelsList = ["A1", "A2", "B1", "B2"];
 
-    /* ============================================================
-       1. CEFR Vocabulary
-    ============================================================ */
+    /* 1. CEFR Vocabulary */
     for (const level of levelsList) {
         const vocab = CEFR_LEVELS?.[level];
         if (!vocab) continue;
 
         const match = vocab.find(item =>
-            item?.english?.toLowerCase() === w
+            cleanStringForKeyboard(item?.english || "").toLowerCase() === cw
         );
         if (match) {
             return { spanish: match.spanish, source: "CEFR Vocabulary", level };
         }
     }
 
-    /* ============================================================
-       2. CEFR Sentences
-    ============================================================ */
+    /* 2. CEFR Sentences */
     for (const level of levelsList) {
         const bank = CEFR_SENTENCES?.[level];
         if (!bank) continue;
 
         const match = bank.find(item =>
-            item?.english?.toLowerCase() === w
+            cleanStringForKeyboard(item?.english || "").toLowerCase() === cw
         );
         if (match) {
             return { spanish: match.spanish, source: "CEFR Sentences", level };
         }
     }
 
-    /* ============================================================
-       3. CEFR Dialogue Choices
-    ============================================================ */
+    /* 3. CEFR Dialogue Choices */
     for (const level of levelsList) {
         const bank = CEFR_SENTENCE_CHOICES?.[level];
         if (!bank) continue;
 
         const match = bank.find(item =>
-            item?.english?.toLowerCase() === w
+            cleanStringForKeyboard(item?.english || "").toLowerCase() === cw
         );
         if (match) {
             return { spanish: match.correct?.es, source: "Dialogue Choices", level };
         }
     }
 
-    /* ============================================================
-       4. CEFR Phrases (A1–B2 merged)
-    ============================================================ */
+    /* 4. CEFR Phrases */
     if (Array.isArray(CEFR_PHRASES)) {
         const phraseMatch = CEFR_PHRASES.find(p =>
-            p?.english?.toLowerCase() === w
+            cleanStringForKeyboard(p?.english || "").toLowerCase() === cw
         );
         if (phraseMatch) {
             return {
@@ -4667,12 +4660,10 @@ function globalLookup(word) {
         }
     }
 
-    /* ============================================================
-       5. Listening Vocabulary
-    ============================================================ */
+    /* 5. Listening Vocabulary */
     if (Array.isArray(LISTEN_VOCAB)) {
         const lvMatch = LISTEN_VOCAB.find(item =>
-            item?.english?.toLowerCase() === w
+            cleanStringForKeyboard(item?.english || "").toLowerCase() === cw
         );
         if (lvMatch) {
             return {
@@ -4683,21 +4674,17 @@ function globalLookup(word) {
         }
     }
 
-    /* ============================================================
-       6. Word Dictionary (custom)
-    ============================================================ */
+    /* 6. Word Dictionary */
     if (WORD_DICT?.[w]) {
         return { spanish: WORD_DICT[w], source: "Word Dictionary", level: "GLOBAL" };
     }
 
-    /* ============================================================
-       7. Conversation Prompts
-    ============================================================ */
+    /* 7. Conversation Prompts */
     if (CEFR_CONVERSATION_PROMPTS) {
         for (const levelKey of Object.keys(CEFR_CONVERSATION_PROMPTS)) {
             const prompts = CEFR_CONVERSATION_PROMPTS[levelKey];
             const convoMatch = prompts.find(p =>
-                p?.english?.toLowerCase() === w
+                cleanStringForKeyboard(p?.english || "").toLowerCase() === cw
             );
             if (convoMatch) {
                 return {
@@ -4709,9 +4696,7 @@ function globalLookup(word) {
         }
     }
 
-    /* ============================================================
-       8. Conversation Audio Banks
-    ============================================================ */
+    /* 8. Conversation Audio */
     const convoAudioBanks = [
         CEFR_CONVERSATION_AUDIO_A1,
         CEFR_CONVERSATION_AUDIO_A2,
@@ -4723,7 +4708,7 @@ function globalLookup(word) {
         if (!Array.isArray(bank)) continue;
 
         const audioMatch = bank.find(a =>
-            a?.english?.toLowerCase() === w
+            cleanStringForKeyboard(a?.english || "").toLowerCase() === cw
         );
         if (audioMatch) {
             return {
@@ -4736,6 +4721,7 @@ function globalLookup(word) {
 
     return null;
 }
+
 
 /* ============================================================
    SMART PHRASE SPLITTING (ENGLISH → SPANISH)
