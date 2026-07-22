@@ -6836,6 +6836,71 @@ function multiPhraseStitch(query) {
     };
 }
 
+/* ============================================================
+   LANGUAGE DETECTOR (Bulletproof)
+   ============================================================ */
+function detectLanguage(text) {
+    const t = text.toLowerCase();
+
+    // Spanish accents or special characters
+    if (/[áéíóúñü]/.test(t)) return "spanish";
+
+    // Spanish structure markers
+    if (/\b(el|la|los|las|un|una|yo|tú|usted|nosotros|vosotros|ellos)\b/.test(t)) {
+        return "spanish";
+    }
+
+    // Default to English
+    return "english";
+}
+
+/* ============================================================
+   MULTI‑PHRASE STITCHING ENGINE
+   ============================================================ */
+function multiPhraseStitch(query) {
+    const words = query.split(/\s+/);
+    const results = [];
+    const matches = [];
+
+    let i = 0;
+
+    while (i < words.length) {
+        let found = false;
+
+        // Try longest possible phrase first
+        for (let end = words.length; end > i; end--) {
+            const subPhrase = words.slice(i, end).join(" ");
+            const hit = globalLookup(subPhrase);
+
+            if (hit) {
+                results.push(hit.spanish);
+                matches.push(subPhrase);
+                i = end;
+                found = true;
+                break;
+            }
+        }
+
+        if (!found) {
+            const single = globalLookup(words[i]);
+            if (single) {
+                results.push(single.spanish);
+            } else {
+                results.push(`[${words[i]}]`);
+            }
+            i++;
+        }
+    }
+
+    return {
+        spanish: results.join(" "),
+        matches
+    };
+}
+
+/* ============================================================
+   DICTIONARY SEARCH INITIALIZER SYSTEM (BILINGUAL MODE)
+   ============================================================ */
 function initDictionarySearch() {
     const searchInput = document.getElementById("dict-search-input");
     const resultBox = document.getElementById("dict-search-result");
@@ -6851,7 +6916,7 @@ function initDictionarySearch() {
             return;
         }
 
-        const lang = detectLanguage(query);   // ← your current line
+        const lang = detectLanguage(query);
 
         /* ============================================================
            1. ENGLISH → SPANISH
@@ -6859,7 +6924,7 @@ function initDictionarySearch() {
         if (lang === "english") {
 
             /* ============================================================
-               A. MULTI‑PHRASE STITCHING (always returns something)
+               A. MULTI‑PHRASE STITCHING
             ============================================================ */
             const stitched = multiPhraseStitch(lowerQuery);
 
