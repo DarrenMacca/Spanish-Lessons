@@ -6572,21 +6572,6 @@ function detectLanguage(input) {
 }
 
 /* ============================================================
-   DICTIONARY SEARCH INITIALIZER SYSTEM
-   ============================================================ */
-function detectLanguage(input) {
-    const englishPattern = /^[a-zA-Z\s]+$/;
-    const spanishPattern = /^[a-zA-ZáéíóúñüÁÉÍÓÚÑÜ\s]+$/;
-
-    const clean = input.trim();
-
-    if (englishPattern.test(clean)) return "english";
-    if (spanishPattern.test(clean)) return "spanish";
-
-    return "unknown";
-}
-
-/* ============================================================
    DICTIONARY SEARCH INITIALIZER SYSTEM (BILINGUAL MODE)
    ============================================================ */
 
@@ -6734,43 +6719,6 @@ function initDictionarySearch() {
         `;
     });
 }
-
-
-    const words = query.split(/\s+/);
-    if (words.length > 1) {
-        const translatedWords = [];
-        const unknownWords = [];
-
-        for (const word of words) {
-            const result = globalLookupSpanish(word);
-            if (result && result !== "[Unknown translation]") {
-                translatedWords.push(result);
-            } else {
-                unknownWords.push(word);
-                translatedWords.push(`[${word}]`);
-            }
-        }
-
-        const englishSentence = translatedWords.join(" ");
-
-        resultBox.innerHTML = `
-            <div style="padding: 10px; background: rgba(74, 222, 128, 0.1);
-                        border: 1px solid rgba(74, 222, 128, 0.3);
-                        border-radius: 10px; margin-top: 5px;">
-                <span style="color: #a5f3fc; font-weight: bold;">English:</span>
-                <span style="color: #4ade80; font-size: 1.1rem; font-weight: 600;">
-                    ${englishSentence}
-                </span>
-                <div style="font-size: 11px; color: rgba(255,255,255,0.4);">
-                    Sentence mode — ${unknownWords.length === 0 ? "all words found" : "missing: " + unknownWords.join(", ")}
-                </div>
-            </div>
-        `;
-        return;
-    }
-}
-
-
 
 /* ============================================================
    GLOBAL FREE PRACTICE SANDBOX (UNSCORED)
