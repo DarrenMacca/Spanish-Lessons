@@ -4650,13 +4650,18 @@ function globalLookup(word) {
     }
 
     if (typeof CEFR_PHRASES !== "undefined") {
-        const phraseMatch = CEFR_PHRASES.find(p =>
-            p.english && p.english.toLowerCase() === w
-        );
-        if (phraseMatch) {
-            return { spanish: phraseMatch.spanish, source: "CEFR Phrases", level: phraseMatch.level || "GLOBAL" };
-        }
+    const phraseMatch = CEFR_PHRASES.find(p =>
+        p.english && p.english.toLowerCase() === w
+    );
+    if (phraseMatch) {
+        return {
+            spanish: normalizeSpanish(phraseMatch.spanish),
+            source: "CEFR Phrases",
+            level: phraseMatch.level || "GLOBAL"
+        };
     }
+}
+
 
     if (typeof LISTEN_VOCAB !== "undefined") {
         const lvMatch = LISTEN_VOCAB.find(item =>
@@ -6786,9 +6791,51 @@ function initDictionarySearch() {
                 return;
             }
 
-            // Word-by-word fallback
+            /* ============================================================
+               SMART PHRASE SPLITTING — detect sub‑phrases inside sentences
+            ============================================================ */
             const words = query.toLowerCase().split(/\s+/);
+
             if (words.length > 1) {
+
+                // Try all possible sub‑phrases (sliding window)
+                for (let start = 0; start < words.length; start++) {
+                    for (let end = words.length; end > start; end--) {
+
+                        const subPhrase = words.slice(start, end).join(" ");
+                        const subResult = globalLookup(subPhrase);
+
+                        if (subResult) {
+                            const before = words.slice(0, start).join(" ");
+                            const after  = words.slice(end).join(" ");
+
+                            const finalSpanish = [
+                                before,
+                                normalizeSpanish(subResult.spanish),
+                                after
+                            ].join(" ").trim();
+
+                            resultBox.innerHTML = `
+                                <div style="padding: 10px; background: rgba(74, 222, 128, 0.1);
+                                            border: 1px solid rgba(74, 222, 128, 0.3);
+                                            border-radius: 10px; margin-top: 5px;">
+                                    <span style="color: #a5f3fc; font-weight: bold;">Spanish:</span>
+                                    <span style="color: #4ade80; font-size: 1.1rem; font-weight: 600;">
+                                        ${finalSpanish}
+                                    </span>
+                                    <div style="font-size: 11px; color: rgba(255,255,255,0.4);">
+                                        Smart phrase mode — matched: "${subPhrase}"
+                                    </div>
+                                </div>
+                            `;
+                            return;
+                        }
+                    }
+                }
+
+                /* ============================================================
+                   FALLBACK — word‑by‑word translation
+                ============================================================ */
                 const translatedWords = [];
                 const unknownWords = [];
 
@@ -6824,6 +6871,9 @@ function initDictionarySearch() {
         /* ============================================================
            2. SPANISH → ENGLISH
         ============================================================ */
+        // (Your Spanish → English block continues here)
+
+       
         if (lang === "spanish") {
 
             // Full phrase lookup
