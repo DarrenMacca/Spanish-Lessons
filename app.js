@@ -4602,72 +4602,102 @@ const DISRUPTOR_WORDS = {
    ============================================================ */
 
 function globalLookup(word) {
+    if (!word) return null;
     const w = word.toLowerCase();
     const levelsList = ["A1", "A2", "B1", "B2"];
 
+    /* ============================================================
+       1. CEFR Vocabulary
+    ============================================================ */
     for (const level of levelsList) {
-        const vocab = CEFR_LEVELS[level];
+        const vocab = CEFR_LEVELS?.[level];
         if (!vocab) continue;
 
         const match = vocab.find(item =>
-            item.english && item.english.toLowerCase() === w
+            item?.english?.toLowerCase() === w
         );
         if (match) {
             return { spanish: match.spanish, source: "CEFR Vocabulary", level };
         }
     }
 
+    /* ============================================================
+       2. CEFR Sentences
+    ============================================================ */
     for (const level of levelsList) {
-        const bank = CEFR_SENTENCES[level];
+        const bank = CEFR_SENTENCES?.[level];
         if (!bank) continue;
 
         const match = bank.find(item =>
-            item.english && item.english.toLowerCase() === w
+            item?.english?.toLowerCase() === w
         );
         if (match) {
             return { spanish: match.spanish, source: "CEFR Sentences", level };
         }
     }
 
+    /* ============================================================
+       3. CEFR Dialogue Choices
+    ============================================================ */
     for (const level of levelsList) {
-        const bank = CEFR_SENTENCE_CHOICES[level];
+        const bank = CEFR_SENTENCE_CHOICES?.[level];
         if (!bank) continue;
 
         const match = bank.find(item =>
-            item.english && item.english.toLowerCase() === w
+            item?.english?.toLowerCase() === w
         );
         if (match) {
-            return { spanish: match.correct.es, source: "Dialogue Choices", level };
+            return { spanish: match.correct?.es, source: "Dialogue Choices", level };
         }
     }
 
-    if (typeof CEFR_PHRASES !== "undefined") {
+    /* ============================================================
+       4. CEFR Phrases (A1–B2 merged)
+    ============================================================ */
+    if (Array.isArray(CEFR_PHRASES)) {
         const phraseMatch = CEFR_PHRASES.find(p =>
-            p.english && p.english.toLowerCase() === w
+            p?.english?.toLowerCase() === w
         );
         if (phraseMatch) {
-            return { spanish: phraseMatch.spanish, source: "CEFR Phrases", level: phraseMatch.level || "GLOBAL" };
+            return {
+                spanish: phraseMatch.spanish,
+                source: "CEFR Phrases",
+                level: phraseMatch.level || "GLOBAL"
+            };
         }
     }
 
-    if (typeof LISTEN_VOCAB !== "undefined") {
+    /* ============================================================
+       5. Listening Vocabulary
+    ============================================================ */
+    if (Array.isArray(LISTEN_VOCAB)) {
         const lvMatch = LISTEN_VOCAB.find(item =>
-            item.english && item.english.toLowerCase() === w
+            item?.english?.toLowerCase() === w
         );
         if (lvMatch) {
-            return { spanish: lvMatch.spanish, source: "Listen Vocab", level: lvMatch.level || "GLOBAL" };
+            return {
+                spanish: lvMatch.spanish,
+                source: "Listen Vocab",
+                level: lvMatch.level || "GLOBAL"
+            };
         }
     }
 
-    if (typeof WORD_DICT !== "undefined" && WORD_DICT[w]) {
+    /* ============================================================
+       6. Word Dictionary (custom)
+    ============================================================ */
+    if (WORD_DICT?.[w]) {
         return { spanish: WORD_DICT[w], source: "Word Dictionary", level: "GLOBAL" };
     }
 
-    if (typeof CEFR_CONVERSATION_PROMPTS !== "undefined") {
+    /* ============================================================
+       7. Conversation Prompts
+    ============================================================ */
+    if (CEFR_CONVERSATION_PROMPTS) {
         for (const levelKey of Object.keys(CEFR_CONVERSATION_PROMPTS)) {
             const prompts = CEFR_CONVERSATION_PROMPTS[levelKey];
             const convoMatch = prompts.find(p =>
-                p.english && p.english.toLowerCase() === w
+                p?.english?.toLowerCase() === w
             );
             if (convoMatch) {
                 return {
@@ -4679,6 +4709,9 @@ function globalLookup(word) {
         }
     }
 
+    /* ============================================================
+       8. Conversation Audio Banks
+    ============================================================ */
     const convoAudioBanks = [
         CEFR_CONVERSATION_AUDIO_A1,
         CEFR_CONVERSATION_AUDIO_A2,
@@ -4687,9 +4720,10 @@ function globalLookup(word) {
     ];
 
     for (const bank of convoAudioBanks) {
-        if (!bank) continue;
+        if (!Array.isArray(bank)) continue;
+
         const audioMatch = bank.find(a =>
-            a.english && a.english.toLowerCase() === w
+            a?.english?.toLowerCase() === w
         );
         if (audioMatch) {
             return {
@@ -4703,7 +4737,58 @@ function globalLookup(word) {
     return null;
 }
 
+/* ============================================================
+   SMART PHRASE SPLITTING (ENGLISH → SPANISH)
+   ============================================================ */
+
+function splitPhraseLookup(query) {
+    const words = query.toLowerCase().split(/\s+/);
+    if (words.length <= 1) return null;
+
+    for (let start = 0; start < words.length; start++) {
+        for (let end = words.length; end > start; end--) {
+
+            const subPhrase = words.slice(start, end).join(" ");
+
+            /* Priority: CEFR_PHRASES first */
+            let subResult = null;
+
+            if (Array.isArray(CEFR_PHRASES)) {
+                const phraseHit = CEFR_PHRASES.find(p =>
+                    p?.english?.toLowerCase() === subPhrase
+                );
+                if (phraseHit) {
+                    subResult = { spanish: phraseHit.spanish };
+                }
+            }
+
+            /* Fallback: globalLookup */
+            if (!subResult) {
+                subResult = globalLookup(subPhrase);
+            }
+
+            if (subResult) {
+                const before = words.slice(0, start).join(" ");
+                const after = words.slice(end).join(" ");
+
+                return {
+                    spanish: [before, subResult.spanish, after].join(" ").trim(),
+                    matched: subPhrase
+                };
+            }
+        }
+    }
+
+    return null;
+}
+
+/* ============================================================
+   SPANISH → ENGLISH LOOKUP
+   ============================================================ */
+
 function globalLookupSpanish(spanishText) {
+    if (!spanishText) return "[Unknown translation]";
+
     const s = cleanStringForKeyboard(spanishText.toLowerCase().trim());
     const banks = [];
 
@@ -4720,65 +4805,66 @@ function globalLookupSpanish(spanishText) {
     if (Array.isArray(CEFR_CONVERSATION_AUDIO_B1)) banks.push(...CEFR_CONVERSATION_AUDIO_B1);
     if (Array.isArray(CEFR_CONVERSATION_AUDIO_B2)) banks.push(...CEFR_CONVERSATION_AUDIO_B2);
 
-    // 1. Gather all standard expected responses
     Object.values(CEFR_CONVERSATION_PROMPTS || {}).forEach(levelArray => {
-        if (Array.isArray(levelArray)) {
-            levelArray.forEach(prompt => {
-                if (Array.isArray(prompt.expected_responses)) {
-                    banks.push(...prompt.expected_responses);
-                }
-            });
-        }
+        if (!Array.isArray(levelArray)) return;
+        levelArray.forEach(prompt => {
+            if (Array.isArray(prompt.expected_responses)) {
+                banks.push(...prompt.expected_responses);
+            }
+        });
     });
 
-    // 2. FIXED: Inject disruptor bank entries so incorrect pill selections resolve their English translation values cleanly
     const levelsList = ["A1", "A2", "B1", "B2"];
     levelsList.forEach(level => {
-        if (typeof getDisruptorResponses === 'function') {
-            const levelDisruptors = getDisruptorResponses(level);
-            if (Array.isArray(levelDisruptors)) {
-                banks.push(...levelDisruptors);
-            }
+        if (typeof getDisruptorResponses === "function") {
+            const disruptors = getDisruptorResponses(level);
+            if (Array.isArray(disruptors)) banks.push(...disruptors);
         }
     });
 
     for (const item of banks) {
         if (!item) continue;
-        const spanishString = typeof item === 'object' ? item.es || item.spanish : item;
+
+        const spanishString =
+            typeof item === "object"
+                ? item.es || item.spanish
+                : item;
+
         if (!spanishString) continue;
 
         if (cleanStringForKeyboard(spanishString.toLowerCase()) === s) {
             return item.en || item.english || "[Unknown translation]";
         }
     }
+
     return "[Unknown translation]";
 }
 
+/* ============================================================
+   UNIVERSAL TEXT EXTRACTOR
+   ============================================================ */
 
-/**
- * Universal Text Extractor Helper
- * Safely removes multi-nested tracking array patterns to clear all pill errors.
- */
 function extractSpanishText(item) {
     if (!item) return "";
-    if (typeof item === 'string') return item;
-    if (typeof item === 'object') {
-        if (item.es && typeof item.es === 'object') return extractSpanishText(item.es);
-        if (item.spanish && typeof item.spanish === 'object') return extractSpanishText(item.spanish);
-        
+    if (typeof item === "string") return item;
+
+    if (typeof item === "object") {
+        if (typeof item.es === "object") return extractSpanishText(item.es);
+        if (typeof item.spanish === "object") return extractSpanishText(item.spanish);
+
         if (item.es) return item.es;
         if (item.spanish) return item.spanish;
         if (item.text) return item.text;
-        
-        const properties = Object.values(item);
-        for (const value of properties) {
-            if (typeof value === 'string' && !value.includes('[object')) return value;
-            if (typeof value === 'object' && value !== null) {
-                const nestedString = extractSpanishText(value);
-                if (nestedString) return nestedString;
+
+        for (const value of Object.values(item)) {
+            if (typeof value === "string" && !value.includes("[object")) return value;
+            if (typeof value === "object" && value !== null) {
+                const nested = extractSpanishText(value);
+                if (nested) return nested;
             }
         }
     }
+
     return String(item);
 }
 
