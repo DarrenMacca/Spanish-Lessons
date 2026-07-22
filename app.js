@@ -4557,12 +4557,26 @@ function globalLookupSpanish(spanishText) {
     if (Array.isArray(CEFR_CONVERSATION_AUDIO_B1)) banks.push(...CEFR_CONVERSATION_AUDIO_B1);
     if (Array.isArray(CEFR_CONVERSATION_AUDIO_B2)) banks.push(...CEFR_CONVERSATION_AUDIO_B2);
 
+    // 1. Gather all standard expected responses
     Object.values(CEFR_CONVERSATION_PROMPTS || {}).forEach(levelArray => {
-        levelArray.forEach(prompt => {
-            if (Array.isArray(prompt.expected_responses)) {
-                banks.push(...prompt.expected_responses);
+        if (Array.isArray(levelArray)) {
+            levelArray.forEach(prompt => {
+                if (Array.isArray(prompt.expected_responses)) {
+                    banks.push(...prompt.expected_responses);
+                }
+            });
+        }
+    });
+
+    // 2. FIXED: Inject disruptor bank entries so incorrect pill selections resolve their English translation values cleanly
+    const levelsList = ["A1", "A2", "B1", "B2"];
+    levelsList.forEach(level => {
+        if (typeof getDisruptorResponses === 'function') {
+            const levelDisruptors = getDisruptorResponses(level);
+            if (Array.isArray(levelDisruptors)) {
+                banks.push(...levelDisruptors);
             }
-        });
+        }
     });
 
     for (const item of banks) {
@@ -4576,6 +4590,7 @@ function globalLookupSpanish(spanishText) {
     }
     return "[Unknown translation]";
 }
+
 
 /**
  * Universal Text Extractor Helper
