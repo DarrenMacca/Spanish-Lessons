@@ -4503,7 +4503,6 @@ function globalLookup(word) {
 
     // 7. Conversation Prompts — CEFR_CONVERSATION_PROMPTS
     if (typeof CEFR_CONVERSATION_PROMPTS !== "undefined") {
-        // CEFR_CONVERSATION_PROMPTS is an object keyed by level
         for (const levelKey of Object.keys(CEFR_CONVERSATION_PROMPTS)) {
             const prompts = CEFR_CONVERSATION_PROMPTS[levelKey];
             const convoMatch = prompts.find(p =>
@@ -4546,28 +4545,21 @@ function globalLookup(word) {
 
 function globalLookupSpanish(spanishText) {
     const s = cleanStringForKeyboard(spanishText.toLowerCase().trim());
-
     const banks = [];
 
-    // CEFR Levels
     if (CEFR_LEVELS?.A1) banks.push(...CEFR_LEVELS.A1);
     if (CEFR_LEVELS?.A2) banks.push(...CEFR_LEVELS.A2);
     if (CEFR_LEVELS?.B1) banks.push(...CEFR_LEVELS.B1);
     if (CEFR_LEVELS?.B2) banks.push(...CEFR_LEVELS.B2);
 
-    // CEFR Phrases
     if (Array.isArray(CEFR_PHRASES)) banks.push(...CEFR_PHRASES);
-
-    // Listen vocab
     if (Array.isArray(LISTEN_VOCAB)) banks.push(...LISTEN_VOCAB);
 
-    // Conversation audio banks
     if (Array.isArray(CEFR_CONVERSATION_AUDIO_A1)) banks.push(...CEFR_CONVERSATION_AUDIO_A1);
     if (Array.isArray(CEFR_CONVERSATION_AUDIO_A2)) banks.push(...CEFR_CONVERSATION_AUDIO_A2);
     if (Array.isArray(CEFR_CONVERSATION_AUDIO_B1)) banks.push(...CEFR_CONVERSATION_AUDIO_B1);
     if (Array.isArray(CEFR_CONVERSATION_AUDIO_B2)) banks.push(...CEFR_CONVERSATION_AUDIO_B2);
 
-    // Expected responses from conversation prompts
     Object.values(CEFR_CONVERSATION_PROMPTS || {}).forEach(levelArray => {
         levelArray.forEach(prompt => {
             if (Array.isArray(prompt.expected_responses)) {
@@ -4578,13 +4570,32 @@ function globalLookupSpanish(spanishText) {
 
     for (const item of banks) {
         if (!item || !item.es) continue;
-
         if (cleanStringForKeyboard(item.es.toLowerCase()) === s) {
             return item.en || "[Unknown translation]";
         }
     }
-
     return "[Unknown translation]";
+}
+
+/**
+ * Universal text extraction helper to prevent [object Object] rendering bugs.
+ * Safely parses explicit properties, fallback names, or nested properties.
+ */
+function extractSpanishText(item) {
+    if (!item) return "";
+    if (typeof item === 'string') return item;
+    if (typeof item === 'object') {
+        if (item.es) return item.es;
+        if (item.spanish) return item.spanish;
+        if (item.text) return item.text;
+        
+        // Deep search check for object values if custom keys are encountered
+        const objectValues = Object.values(item);
+        for (const val of objectValues) {
+            if (typeof val === 'string') return val;
+        }
+    }
+    return String(item);
 }
 
 
@@ -4621,18 +4632,16 @@ function renderConversationTab() {
 
     const convo = generateConversationPrompt(level);
 
-    // Defensive mapping for correct responses
     const correct = convo.expected.map(exp => {
-        const text = typeof exp === 'object' && exp !== null ? exp.es : exp;
+        const text = extractSpanishText(exp);
         return {
             html: `<button class="pill preset-response correct" data-response="${text}">${text}</button>`,
             type: "correct"
         };
     });
 
-    // Defensive mapping for disruptor responses to catch [object Object] errors
     const disruptors = getDisruptorResponses(level).map(exp => {
-        const text = typeof exp === 'object' && exp !== null ? exp.es : exp;
+        const text = extractSpanishText(exp);
         return {
             html: `<button class="pill preset-response disruptor" data-response="${text}">${text}</button>`,
             type: "disruptor"
@@ -4671,12 +4680,17 @@ function setupConversationEventListeners() {
     const textarea = document.getElementById("convo-input");
     const feedbackBox = document.getElementById("convo-feedback");
 
-    document.querySelectorAll(".preset-response").forEach(button => {
-        button.addEventListener("click", (e) => {
-            textarea.value = e.target.getAttribute("data-response");
-            feedbackBox.classList.add("hidden");
+    // Event delegation on the parent tab container to fix dropping pill clicks
+    const container = document.getElementById("conversation-content");
+    if (container) {
+        container.addEventListener("click", (e) => {
+            const btn = e.target.closest(".preset-response");
+            if (btn) {
+                textarea.value = btn.getAttribute("data-response");
+                feedbackBox.classList.add("hidden");
+            }
         });
-    });
+    }
 
     document.getElementById("submit-convo-btn").addEventListener("click", () => {
         const userResponse = textarea.value.trim();
@@ -4687,12 +4701,10 @@ function setupConversationEventListeners() {
     });
 }
 
-
 /* ============================================================
    RELOAD SAME CONVERSATION (RESET BEHAVIOUR)
    ============================================================ */
 function reloadSameConversation(convo) {
-
     const presetBox = document.querySelector("#conversation-content .preset-box");
     const inputBox = document.querySelector("#conversation-content #convo-input");
     const feedbackBox = document.querySelector("#conversation-content #convo-feedback");
@@ -4702,13 +4714,19 @@ function reloadSameConversation(convo) {
         return;
     }
 
-    const correct = convo.expected.map(exp => ({
-        html: `<button class="pill preset-response correct" data-response="${exp.es}">${exp.es}</button>`
-    }));
+    const correct = convo.expected.map(exp => {
+        const text = extractSpanishText(exp);
+        return {
+            html: `<button class="pill preset-response correct" data-response="${text}">${text}</button>`
+        };
+    });
 
-    const disruptors = getDisruptorResponses(appState.currentLevel).map(exp => ({
-        html: `<button class="pill preset-response disruptor" data-response="${exp.es}">${exp.es}</button>`
-    }));
+    const disruptors = getDisruptorResponses(appState.currentLevel).map(exp => {
+        const text = extractSpanishText(exp);
+        return {
+            html: `<button class="pill preset-response disruptor" data-response="${text}">${text}</button>`
+        };
+    });
 
     const allButtons = shuffle([...correct, ...disruptors]);
     const presetButtons = allButtons.map(b => b.html).join("");
@@ -4717,11 +4735,11 @@ function reloadSameConversation(convo) {
     inputBox.value = "";
     feedbackBox.innerHTML = "";
 
-    // Re-bind ONLY preset buttons
+    // Safely rebind listeners for manual overwrite setups
     setTimeout(() => {
         document.querySelectorAll("#conversation-content .preset-response").forEach(btn => {
             btn.onclick = () => {
-                inputBox.value = btn.dataset.response;
+                inputBox.value = btn.getAttribute("data-response") || btn.dataset.response;
             };
         });
     }, 0);
