@@ -6791,22 +6791,18 @@ function initDictionarySearch() {
                 return;
             }
 
-            /* ============================================================
+  /* ============================================================
    SMART PHRASE SPLITTING — detect sub‑phrases inside sentences
-   ============================================================ */
+============================================================ */
 const words = query.toLowerCase().split(/\s+/);
 
 if (words.length > 1) {
 
-    // Try all possible sub‑phrases (sliding window)
     for (let start = 0; start < words.length; start++) {
         for (let end = words.length; end > start; end--) {
 
             const subPhrase = words.slice(start, end).join(" ");
 
-            /* ============================================================
-               PRIORITY: CEFR_PHRASES FIRST (longest meaningful phrases)
-               ============================================================ */
             let subResult = null;
 
             if (Array.isArray(CEFR_PHRASES)) {
@@ -6818,16 +6814,10 @@ if (words.length > 1) {
                 }
             }
 
-            /* ============================================================
-               FALLBACK: globalLookup (single words, vocab, sentences)
-               ============================================================ */
             if (!subResult) {
                 subResult = globalLookup(subPhrase);
             }
 
-            /* ============================================================
-               If ANY match found, build final Spanish output
-               ============================================================ */
             if (subResult) {
                 const before = words.slice(0, start).join(" ");
                 const after  = words.slice(end).join(" ");
@@ -6856,9 +6846,6 @@ if (words.length > 1) {
         }
     }
 
-    /* ============================================================
-       FALLBACK — word‑by‑word translation
-       ============================================================ */
     const translatedWords = [];
     const unknownWords = [];
 
@@ -6890,6 +6877,8 @@ if (words.length > 1) {
     return;
 }
 
+/* CLOSE ENGLISH BLOCK */
+} 
 
         /* ============================================================
            2. SPANISH → ENGLISH
