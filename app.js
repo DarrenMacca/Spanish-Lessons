@@ -4651,7 +4651,7 @@ function renderConversationTab() {
         return;
     }
 
-    // Force strict instance state assignment before initializing UI elements
+    // Isolate conversation variables cleanly inside state
     convoState.currentPrompt = generateConversationPrompt(level);
 
     const correctButtons = (convoState.currentPrompt.expected || []).map(exp => {
@@ -4698,12 +4698,11 @@ function renderConversationTab() {
         </div>
     `;
 
-    // Forward interaction properties safely to the evaluation systems in Part 2B
     setupConversationEvents(convoState.currentPrompt);
 }
 
 /* ============================================================
-   CONVERSATION EVENTS — SCORING & SCALED REWARDS (PART 2B)
+   CONVERSATION EVENTS — EVALUATOR PIPELINE (PART 2B - A)
    ============================================================ */
 function setupConversationEvents(convo) {
     const submitBtn = document.getElementById("convo-submit");
@@ -4738,34 +4737,71 @@ function setupConversationEvents(convo) {
             return;
         }
 
-        // Isolate evaluation strictly to primary expected responses to prevent fake disruptor passes
-        const primaryTargetAnswers = Array.isArray(convo.expected) ? [convo.expected] : [];
-        const result = scoreConversationResponse(userText, primaryTargetAnswers);
+        // Pass convo.expected array directly without surrounding brackets to keep dimensions aligned
+        const correctResponsesOnly = Array.isArray(convo.expected) ? convo.expected : [convo.expected];
+        const result = scoreConversationResponse(userText, correctResponsesOnly);
         
-        const expectedCorrectRaw = convo.expected ? convo.expected : null;
+        const expectedCorrectRaw = Array.isArray(convo.expected) ? convo.expected : convo.expected;
         const expectedEs = extractSpanishText(expectedCorrectRaw);
         const expectedEn = expectedCorrectRaw && typeof expectedCorrectRaw === 'object' ? expectedCorrectRaw.en || "Translation unavailable" : "Translation unavailable";
 
         const learnerEnglishTranslation = globalLookupSpanish(userText);
-        const finalScore = result.score;
+        
+        // SAFE CONVERTER: If choice exists inside the level's active disruptor array, manually force score to 0%
+        let finalScore = result.score;
+        const activeLevelDisruptors = typeof getDisruptorResponses === 'function' ? getDisruptorResponses(appState.currentLevel) : [];
+        const isDisruptorPhrase = activeLevelDisruptors.some(d => extractSpanishText(d).toLowerCase().trim() === userText.toLowerCase().trim());
+        
+        if (isDisruptorPhrase) {
+            finalScore = 0;
+        }
 
         let verdictHTML = "";
         let borderGradientColor = "rgba(148, 163, 184, 0.2)";
         let matchStatus = "incorrect";
 
-        // Assign adaptive layout alerts and gradient highlights based on accuracy markers
+        // Dynamic points calculation based on final accuracy markers
+        let baseXP = 0;
+        let baseScore = 0;
+        let bonusText = "";
+
         if (finalScore >= 70 && learnerEnglishTranslation !== "[Unknown translation]") {
             matchStatus = "correct";
             borderGradientColor = "rgba(74, 222, 128, 0.4)";
-            verdictHTML = `<span style="color:#4ade80; font-weight:600; font-size:1.1rem;">Correct! 🎉 (+25 XP)</span>`;
+            
+            // FLAWLESS BONUS MULTIPLIER: Boost rewards if user lands a perfect score line match
+            if (finalScore === 100) {
+                baseXP = 40; 
+                baseScore = 30; 
+                bonusText = " — 💎 100% Perfect Match Multiplier! ⚡";
+            } else {
+                baseXP = 25;
+                baseScore = 20;
+            }
+            
+            verdictHTML = `<span style="color:#4ade80; font-weight:600; font-size:1.1rem;">Correct! 🎉 (+${baseXP} XP)${bonusText}</span>`;
+            
+            // Play audio confirmation
+            if (result.match) {
+                const vocalizedText = extractSpanishText(result.match);
+                if (typeof speakQuiz === "function") speakQuiz(vocalizedText);
+            }
         } else if (finalScore >= 40 && finalScore < 70) {
             matchStatus = "partial";
             borderGradientColor = "rgba(251, 146, 60, 0.5)";
+            baseXP = 10;
+            baseScore = 5;
             verdictHTML = `<span style="color:#fb923c; font-weight:600; font-size:1.1rem;">Partial Match! ⚠️ (+10 XP)</span>`;
+            
+            // AUDIO CHIME: Play a mild notification warning note context trigger
+            if (typeof audioContextPlayback === "function") audioContextPlayback("partial");
         } else {
             matchStatus = "incorrect";
             borderGradientColor = "rgba(248, 113, 113, 0.4)";
             verdictHTML = `<span style="color:#f87171; font-weight:600; font-size:1.1rem;">Incorrect. ✖ (0 XP)</span>`;
+            
+            // AUDIO CHIME: Play an error warning tone
+            if (typeof audioContextPlayback === "function") audioContextPlayback("incorrect");
         }
 
         feedback.innerHTML = `
@@ -4779,39 +4815,50 @@ function setupConversationEvents(convo) {
             </div>
         `;
 
-        // Freeze pill interaction post-submission
-        document.querySelectorAll("#conversation-content .preset-response").forEach(btn => {
-            btn.disabled = true;
-            btn.style.opacity = "0.6";
-        });
-
-        if (matchStatus === "correct" && result.match) {
-            const vocalizedText = extractSpanishText(result.match);
-            if (typeof speakQuiz === "function") speakQuiz(vocalizedText);
-        }
-
-        appState.levelStats[appState.currentLevel].conversationCompleted++;
-
-        // Process XP rewards and review logging penalties
-        if (matchStatus === "correct") {
-            appState.totalXP = (appState.totalXP || 0) + 25;
-            appState.globalScore = (appState.globalScore || 0) + 20;
-            if (typeof checkAndAdvanceStreak === "function") checkAndAdvanceStreak();
-        } else if (matchStatus === "partial") {
-            appState.totalXP = (appState.totalXP || 0) + 10;
-            appState.globalScore = (appState.globalScore || 0) + 5;
-        } else {
-            const promptEsClean = convo.prompt_es || "Conversation Prompt";
-            const mistakeString = `${promptEsClean} ➔ ${expectedEs}`;
-            if (typeof addIncorrectWord === "function") addIncorrectWord(mistakeString);
-        }
-
-        if (typeof updateBadges === "function") updateBadges();
-        if (typeof updateProgressMeters === "function") updateProgressMeters();
-        saveState();
+        // Pass execution control details securely down to Part 2B (B)
+        processConversationRewards(matchStatus, baseXP, baseScore, expectedEs, convo.prompt_es);
     };
 
     nextBtn.onclick = () => renderConversationTab();
+}
+
+/* ============================================================
+   CONVERSATION TRACKING — ACCOUNTING & CACHE RELOADS (PART 2B - B)
+   ============================================================ */
+
+function processConversationRewards(matchStatus, baseXP, baseScore, expectedEs, promptEsRaw) {
+    // Freeze pill interaction post-submission
+    document.querySelectorAll("#conversation-content .preset-response").forEach(btn => {
+        btn.disabled = true;
+        btn.style.opacity = "0.6";
+    });
+
+    appState.levelStats[appState.currentLevel].conversationCompleted++;
+
+    // Process final calculations into database models
+    if (matchStatus === "correct") {
+        appState.totalXP = (appState.totalXP || 0) + baseXP;
+        appState.globalScore = (appState.globalScore || 0) + baseScore;
+        if (typeof checkAndAdvanceStreak === "function") checkAndAdvanceStreak();
+    } else if (matchStatus === "partial") {
+        appState.totalXP = (appState.totalXP || 0) + baseXP;
+        appState.globalScore = (appState.globalScore || 0) + baseScore;
+    } else {
+        const promptEsClean = promptEsRaw || "Conversation Prompt";
+        const mistakeString = `${promptEsClean} ➔ ${expectedEs}`;
+        
+        // DEDUPLICATION FILTER: Verifies mistake is completely unique before writing data
+        const cleanMistakeEntry = mistakeString.trim();
+        const alreadyLogged = Array.isArray(window.reviewList) && window.reviewList.some(item => item.trim() === cleanMistakeEntry);
+        
+        if (!alreadyLogged && typeof addIncorrectWord === "function") {
+            addIncorrectWord(cleanMistakeEntry);
+        }
+    }
+
+    if (typeof updateBadges === "function") updateBadges();
+    if (typeof updateProgressMeters === "function") updateProgressMeters();
+    saveState();
 }
 
 function reloadSameConversation(convo) {
@@ -4849,119 +4896,36 @@ function reloadSameConversation(convo) {
     });
 }
 
-
-/* ============================================================
-   SCORING ENGINE
-   ============================================================ */
-function scoreConversationResponse(userText, allResponses) {
-    const normalizedUser = userText.toLowerCase().trim();
-    const wordsUser = normalizedUser.split(" ");
-
-    let bestScore = 0;
-    let bestMatch = null;
-
-    allResponses.forEach(exp => {
-        let score = 0;
-        const spanishString = extractSpanishText(exp);
-
-        if (exp && exp.en === "Incorrect response") {
-            score = 0;
+// Low-level synthesizer fallback anchor to power chimes if dynamic Audio files aren't pre-rendered
+function audioContextPlayback(type) {
+    try {
+        const AudioCtx = window.AudioContext || window.webkitAudioContext;
+        if (!AudioCtx) return;
+        const ctx = new AudioCtx();
+        const osc = ctx.createOscillator();
+        const gain = ctx.createGain();
+        
+        osc.connect(gain);
+        gain.connect(ctx.destination);
+        
+        if (type === "partial") {
+            osc.type = "triangle";
+            osc.frequency.setValueAtTime(330, ctx.currentTime); // Note E4
+            gain.gain.setValueAtTime(0.1, ctx.currentTime);
+            osc.start();
+            gain.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + 0.3);
+            osc.stop(ctx.currentTime + 0.3);
         } else {
-            const wordsExp = spanishString.toLowerCase().split(" ");
-            const matches = wordsUser.filter(w => wordsExp.includes(w)).length;
-            score = Math.round((matches / wordsExp.length) * 100);
+            osc.type = "sawtooth";
+            osc.frequency.setValueAtTime(120, ctx.currentTime); // Deep buzz bass note
+            gain.gain.setValueAtTime(0.15, ctx.currentTime);
+            osc.start();
+            gain.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + 0.4);
+            osc.stop(ctx.currentTime + 0.4);
         }
-
-        if (score > bestScore) {
-            bestScore = score;
-            bestMatch = exp;
-        }
-    });
-
-    if (bestMatch === null && allResponses.length > 0) {
-        bestMatch = allResponses[0];
+    } catch (e) {
+        console.warn("WebAudio player stalled:", e);
     }
-
-    return { score: bestScore, match: bestMatch };
-}
-
-
-/* ============================================================
-   CONVERSATION EVENTS (WITH VERDICT + ENGLISH TRANSLATION)
-   ============================================================ */
-function setupConversationEvents(convo) {
-
-    const submitBtn = document.getElementById("convo-submit");
-    const nextBtn = document.getElementById("convo-next");
-    const resetBtn = document.getElementById("convo-reset");
-    const feedback = document.getElementById("convo-feedback");
-
-    // Bind preset buttons
-    document.querySelectorAll("#conversation-content .preset-response").forEach(btn => {
-        btn.onclick = () => {
-            document.getElementById("convo-input").value = btn.dataset.response;
-        };
-    });
-
-    // RESET — reload same prompt
-    resetBtn.onclick = () => reloadSameConversation(convo);
-
-    // SUBMIT — scoring + translation
-    submitBtn.onclick = () => {
-        const userText = document.getElementById("convo-input").value.trim();
-
-        if (!userText) {
-            feedback.innerHTML = `<span style="color:#f87171;">Please enter a response.</span>`;
-            return;
-        }
-
-        const allResponses = [
-            ...convo.expected,
-            ...getDisruptorResponses(appState.currentLevel)
-        ];
-
-        const result = scoreConversationResponse(userText, allResponses);
-        const expectedCorrect = convo.expected[0];
-
-        const learnerEnglishTranslation = globalLookupSpanish(userText);
-
-        const isPassing = result.score >= 70 && learnerEnglishTranslation !== "[Unknown translation]";
-        const finalScore = isPassing && result.score < 70 ? 100 : result.score;
-
-        feedback.innerHTML = `
-            <div class="convo-result" style="margin-top: 15px; padding: 12px; background: rgba(15, 23, 42, 0.4); border-radius: 12px; border: 1px solid rgba(148, 163, 184, 0.2);">
-                ${isPassing 
-                    ? `<span style="color:#4ade80; font-weight:600; font-size:1.1rem;">Correct! 🎉</span>` 
-                    : `<span style="color:#f87171; font-weight:600; font-size:1.1rem;">Incorrect. ✖</span>`
-                }
-                <br><br>
-                <strong>Your response:</strong> ${userText}<br>
-                <strong>Your Translated Response is:</strong> <span style="color: #a5f3fc;">"${learnerEnglishTranslation}"</span><br><br>
-                <strong>Score:</strong> <span style="color: ${isPassing ? '#4ade80' : '#f87171'}">${finalScore}%</span><br>
-                <strong>Expected Spanish:</strong> ${expectedCorrect.es} (${expectedCorrect.en})
-            </div>
-        `;
-
-        if (result.match) speakQuiz(userText);
-
-        appState.levelStats[appState.currentLevel].conversationCompleted++;
-
-        if (isPassing) {
-            appState.totalXP = (appState.totalXP || 0) + 25;
-            appState.globalScore = (appState.globalScore || 0) + 20;
-            checkAndAdvanceStreak();
-        } else {
-            const mistakeString = `${convo.prompt_es} ➔ ${expectedCorrect.es}`;
-            addIncorrectWord(mistakeString);
-        }
-
-        updateBadges();
-        updateProgressMeters();
-        saveState();
-    };
-
-    // NEXT — new prompt
-    nextBtn.onclick = () => renderConversationTab();
 }
 
 
