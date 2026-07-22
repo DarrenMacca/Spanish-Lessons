@@ -4596,6 +4596,21 @@ const DISRUPTOR_WORDS = {
     B2: DISRUPTORS_B2
 };
 
+/* ============================================================
+   MERGED CEFR PHRASES (A1–B2)
+   ============================================================ */
+
+const CEFR_PHRASES_A1 = CEFR_PHRASES_A1 || [];
+const CEFR_PHRASES_A2 = CEFR_PHRASES_A2 || [];
+const CEFR_PHRASES_B1 = CEFR_PHRASES_B1 || [];
+const CEFR_PHRASES_B2 = CEFR_PHRASES_B2 || [];
+
+const CEFR_PHRASES = [
+    ...CEFR_PHRASES_A1,
+    ...CEFR_PHRASES_A2,
+    ...CEFR_PHRASES_B1,
+    ...CEFR_PHRASES_B2
+];
 
 /* ============================================================
    GLOBAL ALL-BANKS DICTIONARY & CONVERSATIONAL PHRASE SEARCH
