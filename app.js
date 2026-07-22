@@ -6420,6 +6420,16 @@ function renderReviewList() {
 /* ============================================================
    GLOBAL ALL-BANKS DICTIONARY & CONVERSATIONAL PHRASE SEARCH
    ============================================================ */
+function normalizeSpanish(str) {
+    return str
+        .normalize("NFD")
+        .replace(/[\u0300-\u036f]/g, "") // remove accents
+        .replace(/-/g, "")               // remove hyphens
+        .replace(/\s+/g, " ")            // normalize spaces
+        .trim()
+        .toLowerCase();
+}
+
 
 function globalLookup(word) {
     const w = word.toLowerCase();
@@ -6605,7 +6615,7 @@ function initDictionarySearch() {
             for (const word of words) {
                 const result = globalLookup(word);
                 if (result) {
-                    translatedWords.push(result.spanish);
+                    translatedWords.push(normalizeSpanish(result.spanish));
                 } else {
                     unknownWords.push(word);
                     translatedWords.push(`[${word}]`);
