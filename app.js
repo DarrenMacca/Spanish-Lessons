@@ -6893,7 +6893,8 @@ function globalLookup(word) {
         if (!vocab) continue;
 
         const match = vocab.find(item =>
-            item?.english?.toLowerCase() === w
+            cleanStringForKeyboard(item?.english || "").toLowerCase() === cleanStringForKeyboard(w).toLowerCase()
+
         );
         if (match) {
             return { spanish: match.spanish, source: "CEFR Vocabulary", level };
@@ -6905,7 +6906,8 @@ function globalLookup(word) {
         if (!bank) continue;
 
         const match = bank.find(item =>
-            item?.english?.toLowerCase() === w
+            cleanStringForKeyboard(item?.english || "").toLowerCase() === cleanStringForKeyboard(w).toLowerCase()
+
         );
         if (match) {
             return { spanish: match.spanish, source: "CEFR Sentences", level };
@@ -6917,7 +6919,8 @@ function globalLookup(word) {
         if (!bank) continue;
 
         const match = bank.find(item =>
-            item?.english?.toLowerCase() === w
+            cleanStringForKeyboard(item?.english || "").toLowerCase() === cleanStringForKeyboard(w).toLowerCase()
+
         );
         if (match) {
             return { spanish: match.correct?.es, source: "Dialogue Choices", level };
@@ -6939,7 +6942,8 @@ function globalLookup(word) {
 
     if (Array.isArray(LISTEN_VOCAB)) {
         const lvMatch = LISTEN_VOCAB.find(item =>
-            item?.english?.toLowerCase() === w
+            cleanStringForKeyboard(item?.english || "").toLowerCase() === cleanStringForKeyboard(w).toLowerCase()
+
         );
         if (lvMatch) {
             return {
