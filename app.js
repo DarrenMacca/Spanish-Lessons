@@ -4758,34 +4758,37 @@ function globalLookup(word) {
    ============================================================ */
 
 function splitPhraseLookup(query) {
-    const words = query.toLowerCase().split(/\s+/);
-    if (words.length <= 1) return null;
+    const rawWords = query.toLowerCase().split(/\s+/);
+    if (rawWords.length <= 1) return null;
+
+    // Normalize all words (remove punctuation, accents, spacing)
+    const words = rawWords.map(w => cleanStringForKeyboard(w));
 
     for (let start = 0; start < words.length; start++) {
         for (let end = words.length; end > start; end--) {
 
             const subPhrase = words.slice(start, end).join(" ");
 
-            /* Priority: CEFR_PHRASES first */
+            /* Priority: CEFR_PHRASES first (normalized comparison) */
             let subResult = null;
 
             if (Array.isArray(CEFR_PHRASES)) {
                 const phraseHit = CEFR_PHRASES.find(p =>
-                    p?.english?.toLowerCase() === subPhrase
+                    cleanStringForKeyboard(p?.english || "").toLowerCase() === subPhrase
                 );
                 if (phraseHit) {
                     subResult = { spanish: phraseHit.spanish };
                 }
             }
 
-            /* Fallback: globalLookup */
+            /* Fallback: globalLookup (already normalized) */
             if (!subResult) {
                 subResult = globalLookup(subPhrase);
             }
 
             if (subResult) {
                 const before = words.slice(0, start).join(" ");
-                const after = words.slice(end).join(" ");
+                const after  = words.slice(end).join(" ");
 
                 return {
                     spanish: [before, subResult.spanish, after].join(" ").trim(),
@@ -4797,6 +4800,7 @@ function splitPhraseLookup(query) {
 
     return null;
 }
+
 
 /* ============================================================
    SPANISH → ENGLISH LOOKUP
