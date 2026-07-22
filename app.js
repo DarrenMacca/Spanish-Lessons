@@ -2284,7 +2284,7 @@ function playNextListenWord() {
     utter.onend = () => {
         if (!listenAutoPlay.paused) {
             listenAutoPlay.index++;
-            setTimeout(playNextListenWord, 100);
+            setTimeout(playNextListenWord, 50);
         }
     };
 
@@ -2559,7 +2559,7 @@ function setupQuizEvents() {
         }
 
         // Sabina audio
-        setTimeout(() => speakQuiz(correct), 100);
+        setTimeout(() => speakQuiz(correct), 50);
 
         saveState();
     });
@@ -2733,7 +2733,7 @@ function setupBuildEvents(sentence) {
 
             updateBadges();
             updateProgressMeters();
-            setTimeout(() => speakQuiz(correct), 100);
+            setTimeout(() => speakQuiz(correct), 50);
         } else {
             const correctTokens = correct.split(" ");
             const userTokens = buildState.answer;
@@ -2753,7 +2753,7 @@ function setupBuildEvents(sentence) {
             });
 
             feedback.innerHTML = html;
-            setTimeout(() => speakQuiz(correct), 100);
+            setTimeout(() => speakQuiz(correct), 50);
 
             const mistakeSentenceString = `${sentence.english} ➔ ${correct}`;
             addIncorrectWord(mistakeSentenceString);
