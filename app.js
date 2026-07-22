@@ -4632,24 +4632,44 @@ function renderConversationTab() {
 
     const convo = generateConversationPrompt(level);
 
-    const correct = convo.expected.map(exp => {
-        const text = extractSpanishText(exp);
+    // Localized string extractor to guarantee no [object Object] bypasses
+    const extractText = (item) => {
+        if (!item) return "";
+        if (typeof item === 'string') return item;
+        if (typeof item === 'object') {
+            if (item.es) return item.es;
+            if (item.spanish) return item.spanish;
+            if (item.text) return item.text;
+            
+            // Loop properties to capture any valid raw string values
+            const values = Object.values(item);
+            for (const val of values) {
+                if (typeof val === 'string' && !val.includes('[object')) return val;
+            }
+        }
+        return String(item);
+    };
+
+    // Safely parse correct items into pure html button strings
+    const correctButtons = (convo.expected || []).map(exp => {
+        const text = extractText(exp);
         return {
-            html: `<button class="pill preset-response correct" data-response="${text}">${text}</button>`,
-            type: "correct"
+            html: `<button class="pill preset-response correct" data-response="${text}">${text}</button>`
         };
     });
 
-    const disruptors = getDisruptorResponses(level).map(exp => {
-        const text = extractSpanishText(exp);
+    // Safely parse disruptor items into pure html button strings
+    const rawDisruptors = typeof getDisruptorResponses === 'function' ? getDisruptorResponses(level) : [];
+    const disruptorButtons = (Array.isArray(rawDisruptors) ? rawDisruptors : []).map(exp => {
+        const text = extractText(exp);
         return {
-            html: `<button class="pill preset-response disruptor" data-response="${text}">${text}</button>`,
-            type: "disruptor"
+            html: `<button class="pill preset-response disruptor" data-response="${text}">${text}</button>`
         };
     });
 
-    const allButtons = shuffle([...correct, ...disruptors]);
-    const presetButtons = allButtons.map(b => b.html).join("");
+    // Combine, shuffle, and explicitly isolate the .html string field property
+    const allButtons = shuffle([...correctButtons, ...disruptorButtons]);
+    const presetButtons = allButtons.map(b => b && b.html ? b.html : "").join("");
 
     container.innerHTML = `
         <div class="glass-panel convo-card">
@@ -4675,6 +4695,7 @@ function renderConversationTab() {
 
     setupConversationEventListeners();
 }
+
 
 function setupConversationEventListeners() {
     const textarea = document.getElementById("convo-input");
