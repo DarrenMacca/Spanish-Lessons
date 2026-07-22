@@ -6842,15 +6842,12 @@ function multiPhraseStitch(query) {
 function detectLanguage(text) {
     const t = text.toLowerCase();
 
-    // Spanish accents or special characters
     if (/[áéíóúñü]/.test(t)) return "spanish";
 
-    // Spanish structure markers
     if (/\b(el|la|los|las|un|una|yo|tú|usted|nosotros|vosotros|ellos)\b/.test(t)) {
         return "spanish";
     }
 
-    // Default to English
     return "english";
 }
 
@@ -6867,7 +6864,6 @@ function multiPhraseStitch(query) {
     while (i < words.length) {
         let found = false;
 
-        // Try longest possible phrase first
         for (let end = words.length; end > i; end--) {
             const subPhrase = words.slice(i, end).join(" ");
             const hit = globalLookup(subPhrase);
@@ -6897,6 +6893,206 @@ function multiPhraseStitch(query) {
         matches
     };
 }
+
+/* ============================================================
+   GLOBAL ALL-BANKS DICTIONARY & CONVERSATIONAL PHRASE SEARCH
+   ============================================================ */
+function globalLookup(word) {
+    if (!word) return null;
+    const w = word.toLowerCase();
+    const levelsList = ["A1", "A2", "B1", "B2"];
+
+    for (const level of levelsList) {
+        const vocab = CEFR_LEVELS?.[level];
+        if (!vocab) continue;
+
+        const match = vocab.find(item =>
+            item?.english?.toLowerCase() === w
+        );
+        if (match) {
+            return { spanish: match.spanish, source: "CEFR Vocabulary", level };
+        }
+    }
+
+    for (const level of levelsList) {
+        const bank = CEFR_SENTENCES?.[level];
+        if (!bank) continue;
+
+        const match = bank.find(item =>
+            item?.english?.toLowerCase() === w
+        );
+        if (match) {
+            return { spanish: match.spanish, source: "CEFR Sentences", level };
+        }
+    }
+
+    for (const level of levelsList) {
+        const bank = CEFR_SENTENCE_CHOICES?.[level];
+        if (!bank) continue;
+
+        const match = bank.find(item =>
+            item?.english?.toLowerCase() === w
+        );
+        if (match) {
+            return { spanish: match.correct?.es, source: "Dialogue Choices", level };
+        }
+    }
+
+    if (Array.isArray(CEFR_PHRASES)) {
+        const phraseMatch = CEFR_PHRASES.find(p =>
+            p?.english?.toLowerCase() === w
+        );
+        if (phraseMatch) {
+            return {
+                spanish: phraseMatch.spanish,
+                source: "CEFR Phrases",
+                level: phraseMatch.level || "GLOBAL"
+            };
+        }
+    }
+
+    if (Array.isArray(LISTEN_VOCAB)) {
+        const lvMatch = LISTEN_VOCAB.find(item =>
+            item?.english?.toLowerCase() === w
+        );
+        if (lvMatch) {
+            return {
+                spanish: lvMatch.spanish,
+                source: "Listen Vocab",
+                level: lvMatch.level || "GLOBAL"
+            };
+        }
+    }
+
+    if (WORD_DICT?.[w]) {
+        return { spanish: WORD_DICT[w], source: "Word Dictionary", level: "GLOBAL" };
+    }
+
+    if (CEFR_CONVERSATION_PROMPTS) {
+        for (const levelKey of Object.keys(CEFR_CONVERSATION_PROMPTS)) {
+            const prompts = CEFR_CONVERSATION_PROMPTS[levelKey];
+            const convoMatch = prompts.find(p =>
+                p?.english?.toLowerCase() === w
+            );
+            if (convoMatch) {
+                return {
+                    spanish: convoMatch.spanish,
+                    source: "Conversation Prompt",
+                    level: convoMatch.level || levelKey
+                };
+            }
+        }
+    }
+
+    const convoAudioBanks = [
+        CEFR_CONVERSATION_AUDIO_A1,
+        CEFR_CONVERSATION_AUDIO_A2,
+        CEFR_CONVERSATION_AUDIO_B1,
+        CEFR_CONVERSATION_AUDIO_B2
+    ];
+
+    for (const bank of convoAudioBanks) {
+        if (!Array.isArray(bank)) continue;
+
+        const audioMatch = bank.find(a =>
+            a?.english?.toLowerCase() === w
+        );
+        if (audioMatch) {
+            return {
+                spanish: audioMatch.spanish,
+                source: "Conversation Audio",
+                level: audioMatch.level || "GLOBAL"
+            };
+        }
+    }
+
+    return null;
+}
+
+/* ============================================================
+   SPANISH → ENGLISH LOOKUP
+   ============================================================ */
+function globalLookupSpanish(spanishText) {
+    if (!spanishText) return "[Unknown translation]";
+
+    const s = cleanStringForKeyboard(spanishText.toLowerCase().trim());
+    const banks = [];
+
+    if (CEFR_LEVELS?.A1) banks.push(...CEFR_LEVELS.A1);
+    if (CEFR_LEVELS?.A2) banks.push(...CEFR_LEVELS.A2);
+    if (CEFR_LEVELS?.B1) banks.push(...CEFR_LEVELS.B1);
+    if (CEFR_LEVELS?.B2) banks.push(...CEFR_LEVELS.B2);
+
+    if (Array.isArray(CEFR_PHRASES)) banks.push(...CEFR_PHRASES);
+    if (Array.isArray(LISTEN_VOCAB)) banks.push(...LISTEN_VOCAB);
+
+    if (Array.isArray(CEFR_CONVERSATION_AUDIO_A1)) banks.push(...CEFR_CONVERSATION_AUDIO_A1);
+    if (Array.isArray(CEFR_CONVERSATION_AUDIO_A2)) banks.push(...CEFR_CONVERSATION_AUDIO_A2);
+    if (Array.isArray(CEFR_CONVERSATION_AUDIO_B1)) banks.push(...CEFR_CONVERSATION_AUDIO_B1);
+    if (Array.isArray(CEFR_CONVERSATION_AUDIO_B2)) banks.push(...CEFR_CONVERSATION_AUDIO_B2);
+
+    Object.values(CEFR_CONVERSATION_PROMPTS || {}).forEach(levelArray => {
+        if (!Array.isArray(levelArray)) return;
+        levelArray.forEach(prompt => {
+            if (Array.isArray(prompt.expected_responses)) {
+                banks.push(...prompt.expected_responses);
+            }
+        });
+    });
+
+    const levelsList = ["A1", "A2", "B1", "B2"];
+    levelsList.forEach(level => {
+        if (typeof getDisruptorResponses === "function") {
+            const disruptors = getDisruptorResponses(level);
+            if (Array.isArray(disruptors)) banks.push(...disruptors);
+        }
+    });
+
+    for (const item of banks) {
+        if (!item) continue;
+
+        const spanishString =
+            typeof item === "object"
+                ? item.es || item.spanish
+                : item;
+
+        if (!spanishString) continue;
+
+        if (cleanStringForKeyboard(spanishString.toLowerCase()) === s) {
+            return item.en || item.english || "[Unknown translation]";
+        }
+    }
+
+    return "[Unknown translation]";
+}
+
+/* ============================================================
+   UNIVERSAL TEXT EXTRACTOR
+   ============================================================ */
+function extractSpanishText(item) {
+    if (!item) return "";
+    if (typeof item === "string") return item;
+
+    if (typeof item === "object") {
+        if (typeof item.es === "object") return extractSpanishText(item.es);
+        if (typeof item.spanish === "object") return extractSpanishText(item.spanish);
+
+        if (item.es) return item.es;
+        if (item.spanish) return item.spanish;
+        if (item.text) return item.text;
+
+        for (const value of Object.values(item)) {
+            if (typeof value === "string" && !value.includes("[object")) return value;
+            if (typeof value === "object" && value !== null) {
+                const nested = extractSpanishText(value);
+                if (nested) return nested;
+            }
+        }
+    }
+
+    return String(item);
+}
+
 
 /* ============================================================
    DICTIONARY SEARCH INITIALIZER SYSTEM (BILINGUAL MODE)
