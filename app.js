@@ -4450,7 +4450,7 @@ function globalLookup(word) {
             item.english && item.english.toLowerCase() === w
         );
         if (match) {
-            return { spanish: match.spanish, source: "CEFR Vocabulary", level };
+            return { spanish: normalizeSpanish(match.spanish), source: "CEFR Vocabulary", level };
         }
     }
 
@@ -4462,7 +4462,7 @@ function globalLookup(word) {
             item.english && item.english.toLowerCase() === w
         );
         if (match) {
-            return { spanish: match.spanish, source: "CEFR Sentences", level };
+            return { spanish: normalizeSpanish(match.spanish), source: "CEFR Sentences", level };
         }
     }
 
@@ -6420,6 +6420,19 @@ function renderReviewList() {
 /* ============================================================
    GLOBAL ALL-BANKS DICTIONARY & CONVERSATIONAL PHRASE SEARCH
    ============================================================ */
+
+function detectLanguage(input) {
+    const englishPattern = /^[a-zA-Z\s]+$/;   // English letters only
+    const spanishPattern = /^[a-zA-ZáéíóúñüÁÉÍÓÚÑÜ\s]+$/; // Spanish letters + accents
+
+    const clean = input.trim();
+
+    if (englishPattern.test(clean)) return "english";
+    if (spanishPattern.test(clean)) return "spanish";
+
+    return "unknown";
+}
+
 function normalizeSpanish(str) {
     return str
         .normalize("NFD")
@@ -6444,7 +6457,7 @@ function globalLookup(word) {
             item.english && item.english.toLowerCase() === w
         );
         if (match) {
-            return { spanish: match.spanish, source: "CEFR Vocabulary", level };
+            return { spanish: normalizeSpanish(match.spanish), source: "CEFR Vocabulary", level };
         }
     }
 
@@ -6457,7 +6470,7 @@ function globalLookup(word) {
             item.english && item.english.toLowerCase() === w
         );
         if (match) {
-            return { spanish: match.spanish, source: "CEFR Sentences", level };
+            return { spanish: normalizeSpanish(match.spanish), source: "CEFR Sentences", level };
         }
     }
 
@@ -6546,6 +6559,36 @@ function globalLookup(word) {
 /* ============================================================
    DICTIONARY SEARCH INITIALIZER SYSTEM
    ============================================================ */
+function detectLanguage(input) {
+    const englishPattern = /^[a-zA-Z\s]+$/;
+    const spanishPattern = /^[a-zA-ZáéíóúñüÁÉÍÓÚÑÜ\s]+$/;
+
+    const clean = input.trim();
+
+    if (englishPattern.test(clean)) return "english";
+    if (spanishPattern.test(clean)) return "spanish";
+
+    return "unknown";
+}
+
+/* ============================================================
+   DICTIONARY SEARCH INITIALIZER SYSTEM
+   ============================================================ */
+function detectLanguage(input) {
+    const englishPattern = /^[a-zA-Z\s]+$/;
+    const spanishPattern = /^[a-zA-ZáéíóúñüÁÉÍÓÚÑÜ\s]+$/;
+
+    const clean = input.trim();
+
+    if (englishPattern.test(clean)) return "english";
+    if (spanishPattern.test(clean)) return "spanish";
+
+    return "unknown";
+}
+
+/* ============================================================
+   DICTIONARY SEARCH INITIALIZER SYSTEM (BILINGUAL MODE)
+   ============================================================ */
 
 function initDictionarySearch() {
     const searchInput = document.getElementById("dict-search-input");
@@ -6554,101 +6597,177 @@ function initDictionarySearch() {
     if (!searchInput || !resultBox) return;
 
     searchInput.addEventListener("input", () => {
-        const query = searchInput.value.trim().toLowerCase();
-
+        const query = searchInput.value.trim();
         if (!query) {
             resultBox.innerHTML = "";
             return;
         }
 
-        /* ============================================================
-           1. FULL PHRASE LAYER — Scan the entire sentence string first
-        ============================================================ */
-        const phraseResult = globalLookup(query);
+        const lang = detectLanguage(query);
 
-        if (phraseResult) {
-            const cleanSpeechText = phraseResult.spanish.replace(/'/g, "\\'");
-            
-            resultBox.innerHTML = `
-                <div style="padding: 10px; background: rgba(74, 222, 128, 0.1);
-                            border: 1px solid rgba(74, 222, 128, 0.3);
-                            border-radius: 10px; margin-top: 5px; display: flex; flex-direction: column; gap: 4px;">
-                    <div style="display: flex; align-items: center; gap: 8px; flex-wrap: wrap;">
+        /* ============================================================
+           1. ENGLISH → SPANISH
+        ============================================================ */
+        if (lang === "english") {
+
+            // Full phrase lookup
+            const phraseResult = globalLookup(query.toLowerCase());
+            if (phraseResult) {
+                const cleanSpeechText = phraseResult.spanish.replace(/'/g, "\\'");
+                resultBox.innerHTML = `
+                    <div style="padding: 10px; background: rgba(74, 222, 128, 0.1);
+                                border: 1px solid rgba(74, 222, 128, 0.3);
+                                border-radius: 10px; margin-top: 5px;">
                         <span style="color: #a5f3fc; font-weight: bold;">Spanish:</span>
-                        <span style="color: #4ade80; font-size: 1.1rem; font-weight: 600;
-                                     text-shadow: 0 0 6px rgba(74,222,128,0.45);">
+                        <span style="color: #4ade80; font-size: 1.1rem; font-weight: 600;">
                             ${phraseResult.spanish}
                         </span>
-
-                        <button id="dict-speak-btn" class="pill" style="padding: 4px 10px; font-size: 11px; max-width: 50px; cursor: pointer;">🔊</button>
+                        <div style="font-size: 11px; color: rgba(255,255,255,0.4);">
+                            Phrase mode — Found in ${phraseResult.level} (${phraseResult.source})
+                        </div>
                     </div>
-
-                    <div style="font-size: 11px; color: rgba(255,255,255,0.4); margin-top: 2px;">
-                        Phrase mode — Found in ${phraseResult.level || "GLOBAL"} (${phraseResult.source})
-                    </div>
-                </div>
-            `;
-
-            const speakBtn = document.getElementById("dict-speak-btn");
-            if (speakBtn) {
-                speakBtn.onclick = () => {
-                    window.speechSynthesis.cancel();
-                    const utterance = new SpeechSynthesisUtterance(cleanSpeechText);
-                    utterance.lang = 'es-ES';
-                    const speedSlider = document.getElementById('rate');
-                    if (speedSlider) utterance.rate = parseFloat(speedSlider.value);
-                    window.speechSynthesis.speak(utterance);
-                };
+                `;
+                return;
             }
-            return;
+
+            // Word-by-word fallback
+            const words = query.toLowerCase().split(/\s+/);
+            if (words.length > 1) {
+                const translatedWords = [];
+                const unknownWords = [];
+
+                for (const word of words) {
+                    const result = globalLookup(word);
+                    if (result) {
+                        translatedWords.push(normalizeSpanish(result.spanish));
+                    } else {
+                        unknownWords.push(word);
+                        translatedWords.push(`[${word}]`);
+                    }
+                }
+
+                const spanishSentence = translatedWords.join(" ");
+
+                resultBox.innerHTML = `
+                    <div style="padding: 10px; background: rgba(74, 222, 128, 0.1);
+                                border: 1px solid rgba(74, 222, 128, 0.3);
+                                border-radius: 10px; margin-top: 5px;">
+                        <span style="color: #a5f3fc; font-weight: bold;">Spanish:</span>
+                        <span style="color: #4ade80; font-size: 1.1rem; font-weight: 600;">
+                            ${spanishSentence}
+                        </span>
+                        <div style="font-size: 11px; color: rgba(255,255,255,0.4);">
+                            Sentence mode — ${unknownWords.length === 0 ? "all words found" : "missing: " + unknownWords.join(", ")}
+                        </div>
+                    </div>
+                `;
+                return;
+            }
         }
 
         /* ============================================================
-           2. WORD-BY-WORD FALLBACK — Executes only if full phrase fails
+           2. SPANISH → ENGLISH
         ============================================================ */
-        const words = query.split(/\s+/).filter(w => w.length > 0);
+        if (lang === "spanish") {
 
-        if (words.length > 1) {
-            const translatedWords = [];
-            const unknownWords = [];
-
-            for (const word of words) {
-                const result = globalLookup(word);
-                if (result) {
-                    translatedWords.push(normalizeSpanish(result.spanish));
-                } else {
-                    unknownWords.push(word);
-                    translatedWords.push(`[${word}]`);
-                }
+            // Full phrase lookup
+            const englishResult = globalLookupSpanish(query);
+            if (englishResult && englishResult !== "[Unknown translation]") {
+                resultBox.innerHTML = `
+                    <div style="padding: 10px; background: rgba(74, 222, 128, 0.1);
+                                border: 1px solid rgba(74, 222, 128, 0.3);
+                                border-radius: 10px; margin-top: 5px;">
+                        <span style="color: #a5f3fc; font-weight: bold;">English:</span>
+                        <span style="color: #4ade80; font-size: 1.1rem; font-weight: 600;">
+                            ${englishResult}
+                        </span>
+                        <div style="font-size: 11px; color: rgba(255,255,255,0.4);">
+                            Spanish → English mode
+                        </div>
+                    </div>
+                `;
+                return;
             }
 
-            const spanishSentence = translatedWords.join(" ");
+            // Word-by-word fallback
+            const words = query.split(/\s+/);
+            if (words.length > 1) {
+                const translatedWords = [];
+                const unknownWords = [];
 
-            resultBox.innerHTML = `
-                <div style="padding: 10px; background: rgba(74, 222, 128, 0.1);
-                            border: 1px solid rgba(74, 222, 128, 0.3);
-                            border-radius: 10px; margin-top: 5px;">
-                    <span style="color: #a5f3fc; font-weight: bold;">Spanish:</span>
-                    <span style="color: #4ade80; font-size: 1.1rem; font-weight: 600;
-                                 text-shadow: 0 0 6px rgba(74,222,128,0.45); margin-right: 8px;">
-                        ${spanishSentence}
-                    </span>
+                for (const word of words) {
+                    const result = globalLookupSpanish(word);
+                    if (result && result !== "[Unknown translation]") {
+                        translatedWords.push(result);
+                    } else {
+                        unknownWords.push(word);
+                        translatedWords.push(`[${word}]`);
+                    }
+                }
 
-                    <div style="font-size: 11px; color: rgba(255,255,255,0.4); margin-top: 4px;">
-                        Sentence mode — ${unknownWords.length === 0 ? "all words found" : "missing: " + unknownWords.join(", ")}
+                const englishSentence = translatedWords.join(" ");
+
+                resultBox.innerHTML = `
+                    <div style="padding: 10px; background: rgba(74, 222, 128, 0.1);
+                                border: 1px solid rgba(74, 222, 128, 0.3);
+                                border-radius: 10px; margin-top: 5px;">
+                        <span style="color: #a5f3fc; font-weight: bold;">English:</span>
+                        <span style="color: #4ade80; font-size: 1.1rem; font-weight: 600;">
+                            ${englishSentence}
+                        </span>
+                        <div style="font-size: 11px; color: rgba(255,255,255,0.4);">
+                            Sentence mode — ${unknownWords.length === 0 ? "all words found" : "missing: " + unknownWords.join(", ")}
+                        </div>
                     </div>
-                </div>
-            `;
-            return;
+                `;
+                return;
+            }
         }
 
-        // No match found anywhere
+        /* ============================================================
+           3. UNKNOWN INPUT
+        ============================================================ */
         resultBox.innerHTML = `
             <div style="color: #f87171; font-style: italic; font-size: 13px; margin-top: 8px;">
-                Phrase not found in any level resource banks.
+                Unable to detect language. Please type English or Spanish only.
             </div>
         `;
     });
+}
+
+
+    const words = query.split(/\s+/);
+    if (words.length > 1) {
+        const translatedWords = [];
+        const unknownWords = [];
+
+        for (const word of words) {
+            const result = globalLookupSpanish(word);
+            if (result && result !== "[Unknown translation]") {
+                translatedWords.push(result);
+            } else {
+                unknownWords.push(word);
+                translatedWords.push(`[${word}]`);
+            }
+        }
+
+        const englishSentence = translatedWords.join(" ");
+
+        resultBox.innerHTML = `
+            <div style="padding: 10px; background: rgba(74, 222, 128, 0.1);
+                        border: 1px solid rgba(74, 222, 128, 0.3);
+                        border-radius: 10px; margin-top: 5px;">
+                <span style="color: #a5f3fc; font-weight: bold;">English:</span>
+                <span style="color: #4ade80; font-size: 1.1rem; font-weight: 600;">
+                    ${englishSentence}
+                </span>
+                <div style="font-size: 11px; color: rgba(255,255,255,0.4);">
+                    Sentence mode — ${unknownWords.length === 0 ? "all words found" : "missing: " + unknownWords.join(", ")}
+                </div>
+            </div>
+        `;
+        return;
+    }
 }
 
 
