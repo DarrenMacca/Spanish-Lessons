@@ -4702,7 +4702,7 @@ function renderConversationTab() {
 }
 
 /* ============================================================
-   CONVERSATION EVENTS — INPUT SUBMISSION & GRADING (PART 2B - A)
+   CONVERSATION EVENTS — SAFETY INSULATED GRADING ENGINE (PART 2B - A)
    ============================================================ */
 function setupConversationEvents(convo) {
     const submitBtn = document.getElementById("convo-submit");
@@ -4712,20 +4712,20 @@ function setupConversationEvents(convo) {
     const textarea = document.getElementById("convo-input");
 
     if (!submitBtn || !nextBtn || !resetBtn || !feedback || !textarea) {
-        console.warn("Required conversation layout DOM wrappers are missing. Halting event attachments.");
+        console.warn("Required conversation elements are missing from the DOM.");
         return;
     }
 
-    // Dynamic pill user response injection
+    // Bind selection pills
     document.querySelectorAll("#conversation-content .preset-response").forEach(btn => {
         btn.onclick = () => {
             if (btn.disabled) return;
             textarea.value = btn.getAttribute("data-response") || btn.dataset.response;
-            feedback.innerHTML = ""; // Clear out previous alert rows on fresh button toggles
+            feedback.innerHTML = ""; 
         };
     });
 
-    // RESET — Wipe text entries and re-enable active pill items
+    // RESET — Reload current prompt
     resetBtn.onclick = () => {
         document.querySelectorAll("#conversation-content .preset-response").forEach(btn => {
             btn.disabled = false;
@@ -4734,94 +4734,126 @@ function setupConversationEvents(convo) {
         reloadSameConversation(convo);
     };
 
-    // SUBMIT — Computes target scores, injects translations, and appends gradient borders
+    // SUBMIT — Insulated from all potential data-bank crashes
     submitBtn.onclick = () => {
         const userText = textarea.value.trim();
 
         if (!userText) {
-            feedback.innerHTML = `<span style="color:#f87171; display:block; margin-top:10px;">Please enter a response.</span>`;
+            feedback.innerHTML = `<span style="color:#f87171; display:block; margin-top:10px;">Please enter or select a response first.</span>`;
             return;
         }
 
-        // Standardize input lookup dimensions explicitly to guard scoring mechanics
-        const correctResponsesOnly = Array.isArray(convo.expected) ? convo.expected : [convo.expected];
-        const result = scoreConversationResponse(userText, correctResponsesOnly);
-        
-        // FIXED: Explicitly target the first element [0] within the wrapper array to pull fields correctly
-        const primaryTargetObj = Array.isArray(convo.expected) ? convo.expected[0] : convo.expected;
-        
-        const expectedEs = extractSpanishText(primaryTargetObj);
-        const expectedEn = primaryTargetObj && typeof primaryTargetObj === 'object' 
-            ? primaryTargetObj.en || primaryTargetObj.english || "Translation unavailable" 
-            : "Translation unavailable";
+        // Initialize defensive fallbacks
+        let finalScore = 0;
+        let expectedEs = "No reference text found";
+        let expectedEn = "Translation unavailable";
+        let learnerEnglishTranslation = "[Unknown translation]";
 
-        // Query global database sheets to fetch target english text meanings
-        const learnerEnglishTranslation = globalLookupSpanish(userText);
-        
-        // INTERCEPTOR OVERRIDE: Automatically drops final score to 0% if input matches a level disruptor
-        let finalScore = result.score;
-        const activeLevelDisruptors = typeof getDisruptorResponses === 'function' ? getDisruptorResponses(appState.currentLevel) : [];
-        const isDisruptorPhrase = activeLevelDisruptors.some(d => extractSpanishText(d).toLowerCase().trim() === userText.toLowerCase().trim());
-        
-        if (isDisruptorPhrase) {
-            finalScore = 0;
+        /* ------------------------------------------------------------
+           CRASH-PROOF EVALUATION ENGINE (TRY-CATCH BUNKER)
+           ------------------------------------------------------------ */
+        try {
+            // Safe extraction of the correct answers object
+            let targetSource = convo.expected;
+            if (Array.isArray(targetSource) && targetSource.length > 0) {
+                targetSource = targetSource[0];
+            }
+
+            if (targetSource) {
+                expectedEs = typeof targetSource === 'object' ? (targetSource.es || targetSource.spanish || "") : String(targetSource);
+                expectedEn = typeof targetSource === 'object' ? (targetSource.en || targetSource.english || "Translation unavailable") : "Translation unavailable";
+            }
+
+            // Attempt translation using global lookup
+            if (typeof globalLookupSpanish === "function") {
+                learnerEnglishTranslation = globalLookupSpanish(userText);
+            }
+
+            // Short-circuit: Force 0% immediately if user picked an active disruptor
+            let isDisruptor = false;
+            if (typeof getDisruptorResponses === 'function') {
+                const disruptors = getDisruptorResponses(appState.currentLevel || "A1");
+                isDisruptor = disruptors.some(d => {
+                    const dText = typeof d === 'object' ? (d.es || d.spanish || "") : String(d);
+                    return dText.toLowerCase().trim() === userText.toLowerCase().trim();
+                });
+            }
+
+            if (isDisruptor) {
+                finalScore = 0;
+            } else {
+                // Safely evaluate score using core engine
+                if (typeof scoreConversationResponse === "function") {
+                    const correctResponsesOnly = Array.isArray(convo.expected) ? convo.expected : [convo.expected];
+                    const result = scoreConversationResponse(userText, correctResponsesOnly);
+                    finalScore = result && typeof result.score === "number" ? result.score : 0;
+                } else {
+                    // EMERGENCY FALLBACK SCORER: If the external engine is broken or missing, evaluate keywords manually
+                    const userWords = userText.toLowerCase().split(/\s+/);
+                    const matchWords = expectedEs.toLowerCase().split(/\s+/);
+                    const matches = userWords.filter(w => matchWords.includes(w)).length;
+                    finalScore = matchWords.length > 0 ? Math.round((matches / matchWords.length) * 100) : 0;
+                }
+            }
+
+        } catch (error) {
+            console.error("The evaluation loop caught a crash, deploying emergency fallbacks:", error);
+            // Emergency fallback logic on calculation crash to guarantee execution completes
+            const userWords = userText.toLowerCase().split(/\s+/);
+            const matches = userWords.filter(w => expectedEs.toLowerCase().includes(w)).length;
+            finalScore = userWords.length > 0 ? Math.min(Math.round((matches / userWords.length) * 100), 100) : 0;
         }
 
+        /* ------------------------------------------------------------
+           RENDER ENGINE — GUARANTEED VISUAL INJECTION
+           ------------------------------------------------------------ */
         let verdictHTML = "";
         let borderGradientColor = "rgba(148, 163, 184, 0.2)";
         let matchStatus = "incorrect";
-
-        // Dynamic points calculation based on final accuracy benchmarks
         let baseXP = 0;
         let baseScore = 0;
         let bonusText = "";
 
         if (finalScore >= 70 && learnerEnglishTranslation !== "[Unknown translation]") {
             matchStatus = "correct";
-            borderGradientColor = "rgba(74, 222, 128, 0.4)"; // Green border highlight
+            borderGradientColor = "rgba(74, 222, 128, 0.4)"; // Green outline
             
-            // FLAWLESS BONUS MULTIPLIER: Reward precise string alignments extra points
             if (finalScore === 100) {
                 baseXP = 40; 
                 baseScore = 30; 
-                bonusText = " — 💎 100% Perfect Match Multiplier! ⚡";
+                bonusText = " — 💎 100% Perfect Match! ⚡";
             } else {
                 baseXP = 25;
                 baseScore = 20;
             }
+            verdictHTML = `<span style="color:#4ade80; font-weight:600; font-size:1.1rem;">Correct! 🎉 (+${baseXP} XP)${bonusText}</span>`;
             
-            verdictHTML = `<span class="convo-verdict-title" style="color:#4ade80; font-weight:600; font-size:1.1rem;">Correct! 🎉 (+${baseXP} XP)${bonusText}</span>`;
-            
-            // Invoke native audio speech synthesis engine text readings
-            if (result.match) {
-                const vocalizedText = extractSpanishText(result.match);
-                if (typeof speakQuiz === "function") speakQuiz(vocalizedText);
-            }
+            if (typeof speakSpanish === "function") speakSpanish(userText);
         } else if (finalScore >= 40 && finalScore < 70) {
             matchStatus = "partial";
-            borderGradientColor = "rgba(251, 146, 60, 0.5)"; // Orange partial border accent
+            borderGradientColor = "rgba(251, 146, 60, 0.5)"; // Orange outline
             baseXP = 10;
             baseScore = 5;
-            verdictHTML = `<span class="convo-verdict-title" style="color:#fb923c; font-weight:600; font-size:1.1rem;">Partial Match! ⚠️ (+10 XP)</span>`;
+            verdictHTML = `<span style="color:#fb923c; font-weight:600; font-size:1.1rem;">Partial Match! ⚠️ (+10 XP)</span>`;
             
             if (typeof audioContextPlayback === "function") audioContextPlayback("partial");
         } else {
             matchStatus = "incorrect";
-            borderGradientColor = "rgba(248, 113, 113, 0.4)"; // Red mismatch error accent
-            verdictHTML = `<span class="convo-verdict-title" style="color:#f87171; font-weight:600; font-size:1.1rem;">Incorrect. ✖ (0 XP)</span>`;
+            borderGradientColor = "rgba(248, 113, 113, 0.4)"; // Red outline
+            verdictHTML = `<span style="color:#f87171; font-weight:600; font-size:1.1rem;">Incorrect. ✖ (0 XP)</span>`;
             
             if (typeof audioContextPlayback === "function") audioContextPlayback("incorrect");
         }
 
-        // Freeze option choices immediately post-submission
+        // Lock options post submission
         document.querySelectorAll("#conversation-content .preset-response").forEach(btn => {
             btn.disabled = true;
             btn.style.opacity = "0.6";
         });
 
-        // Live-inject completely compiled layout blueprints straight to HTML elements
+        // Safe HTML print command 
         feedback.innerHTML = `
-            <div class="convo-result" style="margin-top: 15px; padding: 12px; background: rgba(15, 23, 42, 0.4); border-radius: 12px; border: 1px solid ${borderGradientColor}; transition: border 0.3s ease-out;">
+            <div class="convo-result" style="margin-top: 15px; padding: 12px; background: rgba(15, 23, 42, 0.4); border-radius: 12px; border: 1px solid ${borderGradientColor};">
                 ${verdictHTML}
                 <br><br>
                 <strong>Your response:</strong> ${userText}<br>
@@ -4831,14 +4863,19 @@ function setupConversationEvents(convo) {
             </div>
         `;
 
-        // Pass control to storage router block in Part 2B (B)
+        // Safe accounting execution forwarding
         if (typeof processConversationRewards === "function") {
-            processConversationRewards(matchStatus, baseXP, baseScore, expectedEs, convo.prompt_es);
+            try {
+                processConversationRewards(matchStatus, baseXP, baseScore, expectedEs, convo.prompt_es);
+            } catch (e) {
+                console.error("Error updating scores/badges storage counters:", e);
+            }
         }
     };
 
     nextBtn.onclick = () => renderConversationTab();
 }
+
 
 
 /* ============================================================
