@@ -6795,6 +6795,46 @@ function globalLookup(word) {
 /* ============================================================
    DICTIONARY SEARCH INITIALIZER SYSTEM (BILINGUAL MODE)
    ============================================================ */
+function multiPhraseStitch(query) {
+    const words = query.split(/\s+/);
+    const results = [];
+    const matches = [];
+
+    let i = 0;
+
+    while (i < words.length) {
+        let found = false;
+
+        // Try longest possible phrase first
+        for (let end = words.length; end > i; end--) {
+            const subPhrase = words.slice(i, end).join(" ");
+            const hit = globalLookup(subPhrase);
+
+            if (hit) {
+                results.push(hit.spanish);
+                matches.push(subPhrase);
+                i = end;
+                found = true;
+                break;
+            }
+        }
+
+        if (!found) {
+            const single = globalLookup(words[i]);
+            if (single) {
+                results.push(single.spanish);
+            } else {
+                results.push(`[${words[i]}]`);
+            }
+            i++;
+        }
+    }
+
+    return {
+        spanish: results.join(" "),
+        matches
+    };
+}
 
 function initDictionarySearch() {
     const searchInput = document.getElementById("dict-search-input");
@@ -6806,13 +6846,12 @@ function initDictionarySearch() {
         const query = searchInput.value.trim();
         const lowerQuery = query.toLowerCase();
 
-        // Allow UI to load even when empty
         if (!query) {
             resultBox.innerHTML = "";
             return;
         }
 
-        const lang = detectLanguage(query);
+        const lang = detectLanguage(query);   // ← your current line
 
         /* ============================================================
            1. ENGLISH → SPANISH
@@ -6820,21 +6859,21 @@ function initDictionarySearch() {
         if (lang === "english") {
 
             /* ============================================================
-               A. SMART PHRASE SPLITTING FIRST
+               A. MULTI‑PHRASE STITCHING (always returns something)
             ============================================================ */
-            const phraseSplit = splitPhraseLookup(lowerQuery);
+            const stitched = multiPhraseStitch(lowerQuery);
 
-            if (phraseSplit) {
+            if (stitched) {
                 resultBox.innerHTML = `
                     <div style="padding: 10px; background: rgba(74, 222, 128, 0.1);
                                 border: 1px solid rgba(74, 222, 128, 0.3);
                                 border-radius: 10px; margin-top: 5px;">
                         <span style="color: #a5f3fc; font-weight: bold;">Spanish:</span>
                         <span style="color: #4ade80; font-size: 1.1rem; font-weight: 600;">
-                            ${phraseSplit.spanish}
+                            ${stitched.spanish}
                         </span>
                         <div style="font-size: 11px; color: rgba(255,255,255,0.4);">
-                            Smart phrase mode — matched: "${phraseSplit.matched}"
+                            Multi‑phrase mode — matched: ${stitched.matches.join(", ")}
                         </div>
                     </div>
                 `;
