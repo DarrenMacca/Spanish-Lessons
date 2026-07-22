@@ -4621,7 +4621,7 @@ function extractSpanishText(item) {
 
 
 /* ============================================================
-   CONVERSATION TAB — CEFR INTERACTIVE RESPONSE ENGINE (REMODELLED)
+   CONVERSATION TAB — MAIN RENDER PIPELINE (PART 2A)
    ============================================================ */
 
 function shuffle(array) {
@@ -4651,7 +4651,7 @@ function renderConversationTab() {
         return;
     }
 
-    // Sync instance state safely to prevent out-of-bounds mapping errors
+    // Force strict instance state assignment before initializing UI elements
     convoState.currentPrompt = generateConversationPrompt(level);
 
     const correctButtons = (convoState.currentPrompt.expected || []).map(exp => {
@@ -4698,11 +4698,12 @@ function renderConversationTab() {
         </div>
     `;
 
+    // Forward interaction properties safely to the evaluation systems in Part 2B
     setupConversationEvents(convoState.currentPrompt);
 }
 
 /* ============================================================
-   CONVERSATION EVENTS (FIXED EVALUATION PIPELINE)
+   CONVERSATION EVENTS — SCORING & SCALED REWARDS (PART 2B)
    ============================================================ */
 function setupConversationEvents(convo) {
     const submitBtn = document.getElementById("convo-submit");
@@ -4711,17 +4712,24 @@ function setupConversationEvents(convo) {
     const feedback = document.getElementById("convo-feedback");
     const textarea = document.getElementById("convo-input");
 
-    // Dynamic pill assignments
+    // Dynamic pill input injection
     document.querySelectorAll("#conversation-content .preset-response").forEach(btn => {
         btn.onclick = () => {
+            if (btn.disabled) return;
             textarea.value = btn.getAttribute("data-response") || btn.dataset.response;
         };
     });
 
-    // RESET — reload same prompt cleanly
-    resetBtn.onclick = () => reloadSameConversation(convo);
+    // RESET — Reload current question container state
+    resetBtn.onclick = () => {
+        document.querySelectorAll("#conversation-content .preset-response").forEach(btn => {
+            btn.disabled = false;
+            btn.style.opacity = "1";
+        });
+        reloadSameConversation(convo);
+    };
 
-    // SUBMIT — scoring + translation engine
+    // SUBMIT — Target evaluation, border grading gradients, and point distribution
     submitBtn.onclick = () => {
         const userText = textarea.value.trim();
 
@@ -4730,45 +4738,68 @@ function setupConversationEvents(convo) {
             return;
         }
 
-        // FIXED: Only score against expected correct answers. Disruptors should never contribute to a passing grade.
-        const correctResponsesOnly = convo.expected || [];
-        const result = scoreConversationResponse(userText, correctResponsesOnly);
+        // Isolate evaluation strictly to primary expected responses to prevent fake disruptor passes
+        const primaryTargetAnswers = Array.isArray(convo.expected) ? [convo.expected] : [];
+        const result = scoreConversationResponse(userText, primaryTargetAnswers);
         
-        const expectedCorrectRaw = convo.expected[0];
+        const expectedCorrectRaw = convo.expected ? convo.expected : null;
         const expectedEs = extractSpanishText(expectedCorrectRaw);
         const expectedEn = expectedCorrectRaw && typeof expectedCorrectRaw === 'object' ? expectedCorrectRaw.en || "Translation unavailable" : "Translation unavailable";
 
         const learnerEnglishTranslation = globalLookupSpanish(userText);
+        const finalScore = result.score;
 
-        // FIXED: Clean pass rule checks that do not evaluate corrupt fallback condition layers
-        const isPassing = result.score >= 70 && learnerEnglishTranslation !== "[Unknown translation]";
-        const finalScore = result.score; // Output the actual accuracy percentage natively
+        let verdictHTML = "";
+        let borderGradientColor = "rgba(148, 163, 184, 0.2)";
+        let matchStatus = "incorrect";
+
+        // Assign adaptive layout alerts and gradient highlights based on accuracy markers
+        if (finalScore >= 70 && learnerEnglishTranslation !== "[Unknown translation]") {
+            matchStatus = "correct";
+            borderGradientColor = "rgba(74, 222, 128, 0.4)";
+            verdictHTML = `<span style="color:#4ade80; font-weight:600; font-size:1.1rem;">Correct! 🎉 (+25 XP)</span>`;
+        } else if (finalScore >= 40 && finalScore < 70) {
+            matchStatus = "partial";
+            borderGradientColor = "rgba(251, 146, 60, 0.5)";
+            verdictHTML = `<span style="color:#fb923c; font-weight:600; font-size:1.1rem;">Partial Match! ⚠️ (+10 XP)</span>`;
+        } else {
+            matchStatus = "incorrect";
+            borderGradientColor = "rgba(248, 113, 113, 0.4)";
+            verdictHTML = `<span style="color:#f87171; font-weight:600; font-size:1.1rem;">Incorrect. ✖ (0 XP)</span>`;
+        }
 
         feedback.innerHTML = `
-            <div class="convo-result" style="margin-top: 15px; padding: 12px; background: rgba(15, 23, 42, 0.4); border-radius: 12px; border: 1px solid rgba(148, 163, 184, 0.2);">
-                ${isPassing 
-                    ? `<span style="color:#4ade80; font-weight:600; font-size:1.1rem;">Correct! 🎉</span>` 
-                    : `<span style="color:#f87171; font-weight:600; font-size:1.1rem;">Incorrect. ✖</span>`
-                }
+            <div class="convo-result" style="margin-top: 15px; padding: 12px; background: rgba(15, 23, 42, 0.4); border-radius: 12px; border: 1px solid ${borderGradientColor}; transition: border 0.3s ease;">
+                ${verdictHTML}
                 <br><br>
                 <strong>Your response:</strong> ${userText}<br>
                 <strong>Your Translated Response is:</strong> <span style="color: #a5f3fc;">"${learnerEnglishTranslation}"</span><br><br>
-                <strong>Score:</strong> <span style="color: ${isPassing ? '#4ade80' : '#f87171'}">${finalScore}%</span><br>
+                <strong>Score:</strong> <span style="color: ${matchStatus === 'correct' ? '#4ade80' : (matchStatus === 'partial' ? '#fb923c' : '#f87171')}">${finalScore}%</span><br>
                 <strong>Expected Spanish:</strong> ${expectedEs} (${expectedEn})
             </div>
         `;
 
-        if (isPassing && result.match) {
+        // Freeze pill interaction post-submission
+        document.querySelectorAll("#conversation-content .preset-response").forEach(btn => {
+            btn.disabled = true;
+            btn.style.opacity = "0.6";
+        });
+
+        if (matchStatus === "correct" && result.match) {
             const vocalizedText = extractSpanishText(result.match);
             if (typeof speakQuiz === "function") speakQuiz(vocalizedText);
         }
 
         appState.levelStats[appState.currentLevel].conversationCompleted++;
 
-        if (isPassing) {
+        // Process XP rewards and review logging penalties
+        if (matchStatus === "correct") {
             appState.totalXP = (appState.totalXP || 0) + 25;
             appState.globalScore = (appState.globalScore || 0) + 20;
             if (typeof checkAndAdvanceStreak === "function") checkAndAdvanceStreak();
+        } else if (matchStatus === "partial") {
+            appState.totalXP = (appState.totalXP || 0) + 10;
+            appState.globalScore = (appState.globalScore || 0) + 5;
         } else {
             const promptEsClean = convo.prompt_es || "Conversation Prompt";
             const mistakeString = `${promptEsClean} ➔ ${expectedEs}`;
@@ -4780,13 +4811,9 @@ function setupConversationEvents(convo) {
         saveState();
     };
 
-    // NEXT — load a new prompt
     nextBtn.onclick = () => renderConversationTab();
 }
 
-/* ============================================================
-   RELOAD SAME CONVERSATION (RESET BEHAVIOUR)
-   ============================================================ */
 function reloadSameConversation(convo) {
     const presetBox = document.querySelector("#conversation-content .preset-box");
     const inputBox = document.querySelector("#conversation-content #convo-input");
@@ -4799,16 +4826,12 @@ function reloadSameConversation(convo) {
 
     const correct = convo.expected.map(exp => {
         const text = extractSpanishText(exp);
-        return {
-            html: `<button class="pill preset-response correct" data-response="${text}">${text}</button>`
-        };
+        return { html: `<button class="pill preset-response correct" data-response="${text}">${text}</button>` };
     });
 
     const disruptors = getDisruptorResponses(appState.currentLevel).map(exp => {
         const text = extractSpanishText(exp);
-        return {
-            html: `<button class="pill preset-response disruptor" data-response="${text}">${text}</button>`
-        };
+        return { html: `<button class="pill preset-response disruptor" data-response="${text}">${text}</button>` };
     });
 
     const allButtons = shuffle([...correct, ...disruptors]);
@@ -4818,13 +4841,14 @@ function reloadSameConversation(convo) {
     inputBox.value = "";
     feedbackBox.innerHTML = "";
 
-    // Safely rebind interaction dynamics onto newly loaded components
     document.querySelectorAll("#conversation-content .preset-response").forEach(btn => {
         btn.onclick = () => {
+            if (btn.disabled) return;
             inputBox.value = btn.getAttribute("data-response") || btn.dataset.response;
         };
     });
 }
+
 
 /* ============================================================
    SCORING ENGINE
