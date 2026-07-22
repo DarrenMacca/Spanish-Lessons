@@ -6526,7 +6526,7 @@ function unlockCertificate(levelKey) {
 }
 
 /* ============================================================
-   RENDER CERTIFICATES WITH NAME + DATE
+   RENDER CERTIFICATES WITH NAME + DATE (Updated CEFR Edition)
    ============================================================ */
 function renderCertificates() {
     const container = document.getElementById("certificates-container");
@@ -6534,26 +6534,63 @@ function renderCertificates() {
 
     container.style.display = "block";
 
-    // FIXED: Correctly synchronized state references against studentName instead of missing userName property
     const studentInputField = document.getElementById("student-name");
     const name = appState.studentName || (studentInputField ? studentInputField.value : "") || "Learner";
 
     const today = new Date().toLocaleDateString();
 
     const setCertFields = (prefix, isActive) => {
+        const certEl = document.getElementById(`cert-${prefix}`);
         const nameEl = document.getElementById(`cert-${prefix}-name`);
         const dateEl = document.getElementById(`cert-${prefix}-date`);
+        const sealEl = certEl ? certEl.querySelector(".seal") : null;
+
+        if (certEl) {
+            certEl.style.display = isActive ? "block" : "none";
+        }
+
         if (isActive && nameEl && dateEl) {
             nameEl.innerText = name;
             dateEl.innerText = today;
         }
+
+        if (sealEl) {
+            sealEl.src = "images/seal-gold.png";
+        }
     };
 
+    // Standard CEFR certificates
     setCertFields("a1", certificates.a1);
     setCertFields("a2", certificates.a2);
     setCertFields("b1", certificates.b1);
     setCertFields("b2", certificates.b2);
+
+    // Mastery Diploma unlock (A1–B2 complete)
+    const masteryUnlocked =
+        certificates.a1 &&
+        certificates.a2 &&
+        certificates.b1 &&
+        certificates.b2;
+
+    const masteryEl = document.getElementById("cert-mastery");
+    const masteryNameEl = document.getElementById("cert-mastery-name");
+    const masteryDateEl = document.getElementById("cert-mastery-date");
+    const masterySealEl = masteryEl ? masteryEl.querySelector(".seal") : null;
+
+    if (masteryEl) {
+        masteryEl.style.display = masteryUnlocked ? "block" : "none";
+    }
+
+    if (masteryUnlocked && masteryNameEl && masteryDateEl) {
+        masteryNameEl.innerText = name;
+        masteryDateEl.innerText = today;
+    }
+
+    if (masterySealEl) {
+        masterySealEl.src = "images/seal-gold.png";
+    }
 }
+
 
 /* ============================================================
    LOAD PDF LIBRARIES (html2canvas + jsPDF)
