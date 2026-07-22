@@ -7030,7 +7030,7 @@ function globalLookup(word) {
 }
 
 /* ============================================================
-   SPANISH → ENGLISH LOOKUP
+   SPANISH → ENGLISH LOOKUP (ACCENT-SAFE)
    ============================================================ */
 function globalLookupSpanish(spanishText) {
     if (!spanishText) return "[Unknown translation]";
@@ -7038,19 +7038,25 @@ function globalLookupSpanish(spanishText) {
     const s = cleanStringForKeyboard(spanishText.toLowerCase().trim());
     const banks = [];
 
+    // CEFR Vocabulary
     if (CEFR_LEVELS?.A1) banks.push(...CEFR_LEVELS.A1);
     if (CEFR_LEVELS?.A2) banks.push(...CEFR_LEVELS.A2);
     if (CEFR_LEVELS?.B1) banks.push(...CEFR_LEVELS.B1);
     if (CEFR_LEVELS?.B2) banks.push(...CEFR_LEVELS.B2);
 
+    // CEFR Phrases
     if (Array.isArray(CEFR_PHRASES)) banks.push(...CEFR_PHRASES);
+
+    // Listening Vocabulary
     if (Array.isArray(LISTEN_VOCAB)) banks.push(...LISTEN_VOCAB);
 
+    // Conversation Audio Banks
     if (Array.isArray(CEFR_CONVERSATION_AUDIO_A1)) banks.push(...CEFR_CONVERSATION_AUDIO_A1);
     if (Array.isArray(CEFR_CONVERSATION_AUDIO_A2)) banks.push(...CEFR_CONVERSATION_AUDIO_A2);
     if (Array.isArray(CEFR_CONVERSATION_AUDIO_B1)) banks.push(...CEFR_CONVERSATION_AUDIO_B1);
     if (Array.isArray(CEFR_CONVERSATION_AUDIO_B2)) banks.push(...CEFR_CONVERSATION_AUDIO_B2);
 
+    // Conversation Prompts (expected responses)
     Object.values(CEFR_CONVERSATION_PROMPTS || {}).forEach(levelArray => {
         if (!Array.isArray(levelArray)) return;
         levelArray.forEach(prompt => {
@@ -7060,6 +7066,7 @@ function globalLookupSpanish(spanishText) {
         });
     });
 
+    // Disruptors
     const levelsList = ["A1", "A2", "B1", "B2"];
     levelsList.forEach(level => {
         if (typeof getDisruptorResponses === "function") {
@@ -7068,6 +7075,7 @@ function globalLookupSpanish(spanishText) {
         }
     });
 
+    // FINAL MATCHING (accent-safe)
     for (const item of banks) {
         if (!item) continue;
 
@@ -7085,6 +7093,7 @@ function globalLookupSpanish(spanishText) {
 
     return "[Unknown translation]";
 }
+
 
 /* ============================================================
    UNIVERSAL TEXT EXTRACTOR
