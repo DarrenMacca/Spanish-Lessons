@@ -4621,15 +4621,23 @@ function renderConversationTab() {
 
     const convo = generateConversationPrompt(level);
 
-    const correct = convo.expected.map(exp => ({
-        html: `<button class="pill preset-response correct" data-response="${exp.es}">${exp.es}</button>`,
-        type: "correct"
-    }));
+    // Defensive mapping for correct responses
+    const correct = convo.expected.map(exp => {
+        const text = typeof exp === 'object' && exp !== null ? exp.es : exp;
+        return {
+            html: `<button class="pill preset-response correct" data-response="${text}">${text}</button>`,
+            type: "correct"
+        };
+    });
 
-    const disruptors = getDisruptorResponses(level).map(exp => ({
-        html: `<button class="pill preset-response disruptor" data-response="${exp.es}">${exp.es}</button>`,
-        type: "disruptor"
-    }));
+    // Defensive mapping for disruptor responses to catch [object Object] errors
+    const disruptors = getDisruptorResponses(level).map(exp => {
+        const text = typeof exp === 'object' && exp !== null ? exp.es : exp;
+        return {
+            html: `<button class="pill preset-response disruptor" data-response="${text}">${text}</button>`,
+            type: "disruptor"
+        };
+    });
 
     const allButtons = shuffle([...correct, ...disruptors]);
     const presetButtons = allButtons.map(b => b.html).join("");
@@ -4648,21 +4656,37 @@ function renderConversationTab() {
                 ${presetButtons}
             </div>
 
-            <textarea id="convo-input" class="convo-input"
-                placeholder="Type your Spanish response here..."></textarea>
-
-            <div class="convo-controls">
-                <button id="convo-submit" class="pill">Submit</button>
-                <button id="convo-reset" class="pill">Reset</button>
-                <button id="convo-next" class="pill">Next</button>
+            <textarea id="convo-input" class="convo-input" placeholder="Type your response here..."></textarea>
+            <div class="convo-actions">
+                <button id="submit-convo-btn" class="btn btn-primary">Submit Response</button>
             </div>
-
-            <div id="convo-feedback"></div>
+            <div id="convo-feedback" class="convo-feedback-box hidden"></div>
         </div>
     `;
 
-    setupConversationEvents(convo);
+    setupConversationEventListeners();
 }
+
+function setupConversationEventListeners() {
+    const textarea = document.getElementById("convo-input");
+    const feedbackBox = document.getElementById("convo-feedback");
+
+    document.querySelectorAll(".preset-response").forEach(button => {
+        button.addEventListener("click", (e) => {
+            textarea.value = e.target.getAttribute("data-response");
+            feedbackBox.classList.add("hidden");
+        });
+    });
+
+    document.getElementById("submit-convo-btn").addEventListener("click", () => {
+        const userResponse = textarea.value.trim();
+        if (!userResponse) return;
+
+        feedbackBox.classList.remove("hidden");
+        feedbackBox.innerHTML = `<p>Response submitted successfully!</p>`;
+    });
+}
+
 
 /* ============================================================
    RELOAD SAME CONVERSATION (RESET BEHAVIOUR)
