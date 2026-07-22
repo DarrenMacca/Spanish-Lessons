@@ -4702,7 +4702,7 @@ function renderConversationTab() {
 }
 
 /* ============================================================
-   CONVERSATION EVENTS (WITH VERDICT + ENGLISH TRANSLATION)
+   CONVERSATION EVENTS (FIXED EVALUATION PIPELINE)
    ============================================================ */
 function setupConversationEvents(convo) {
     const submitBtn = document.getElementById("convo-submit");
@@ -4730,22 +4730,19 @@ function setupConversationEvents(convo) {
             return;
         }
 
-        const allResponses = [
-            ...convo.expected,
-            ...getDisruptorResponses(appState.currentLevel)
-        ];
-
-        const result = scoreConversationResponse(userText, allResponses);
+        // FIXED: Only score against expected correct answers. Disruptors should never contribute to a passing grade.
+        const correctResponsesOnly = convo.expected || [];
+        const result = scoreConversationResponse(userText, correctResponsesOnly);
         
-        // Defensive mapping to ensure expected fields print safely
         const expectedCorrectRaw = convo.expected[0];
         const expectedEs = extractSpanishText(expectedCorrectRaw);
         const expectedEn = expectedCorrectRaw && typeof expectedCorrectRaw === 'object' ? expectedCorrectRaw.en || "Translation unavailable" : "Translation unavailable";
 
         const learnerEnglishTranslation = globalLookupSpanish(userText);
 
+        // FIXED: Clean pass rule checks that do not evaluate corrupt fallback condition layers
         const isPassing = result.score >= 70 && learnerEnglishTranslation !== "[Unknown translation]";
-        const finalScore = isPassing && result.score < 70 ? 100 : result.score;
+        const finalScore = result.score; // Output the actual accuracy percentage natively
 
         feedback.innerHTML = `
             <div class="convo-result" style="margin-top: 15px; padding: 12px; background: rgba(15, 23, 42, 0.4); border-radius: 12px; border: 1px solid rgba(148, 163, 184, 0.2);">
@@ -4761,7 +4758,7 @@ function setupConversationEvents(convo) {
             </div>
         `;
 
-        if (result.match) {
+        if (isPassing && result.match) {
             const vocalizedText = extractSpanishText(result.match);
             if (typeof speakQuiz === "function") speakQuiz(vocalizedText);
         }
