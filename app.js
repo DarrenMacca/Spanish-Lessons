@@ -1,4 +1,23 @@
-   /* ============================================================
+/* ============================================================
+   CEFR SCORING VARIABLES (GLOBAL)
+   ============================================================ */
+
+let quizCorrect = 0;
+let quizTotal = 0;
+
+let builderScore = 0;
+let builderMax = 0;
+
+let sentenceScore = 0;
+let sentenceMax = 0;
+
+let conversationScore = 0;
+let conversationMax = 0;
+
+let smartScore = 0;
+let smartMax = 0;
+
+/* ============================================================
    CEFR SENTENCE BANKS (for Build tab)
    ============================================================ */
 
@@ -2700,11 +2719,12 @@ function setupQuizEvents() {
        appState.levelStats[appState.currentLevel].quizScore++;
       appState.levelStats[appState.currentLevel].quizCompleted++;
 
-      /* ⭐ CEFR ENGINE SCORING ⭐ */
+    /* ⭐ CEFR ENGINE SCORING ⭐ */
       quizCorrect++;
       quizTotal++;
       runCEFRScoringEngine();
-      /* ⭐ END ⭐ */
+      renderCertificates();
+   /* ⭐ END ⭐ */
 
 
     appState.totalXP = (appState.totalXP || 0) + 10; 
