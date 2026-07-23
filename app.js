@@ -6411,13 +6411,13 @@ function safePercent(score, max) {
    ============================================================ */
 function calculateLevelScores() {
     const stats = {
-        A1: { quiz: 0, builder: 0, sentence: 0, conversation: 0, smart: 0, avg: 0 },
-        A2: { quiz: 0, builder: 0, sentence: 0, conversation: 0, smart: 0, avg: 0 },
-        B1: { quiz: 0, builder: 0, sentence: 0, conversation: 0, smart: 0, avg: 0 },
-        B2: { quiz: 0, builder: 0, sentence: 0, conversation: 0, smart: 0, avg: 0 }
+        a1: { quiz: 0, builder: 0, sentence: 0, conversation: 0, smart: 0, avg: 0 },
+        a2: { quiz: 0, builder: 0, sentence: 0, conversation: 0, smart: 0, avg: 0 },
+        b1: { quiz: 0, builder: 0, sentence: 0, conversation: 0, smart: 0, avg: 0 },
+        b2: { quiz: 0, builder: 0, sentence: 0, conversation: 0, smart: 0, avg: 0 }
     };
 
-    const level = currentLevel; // assumes currentLevel is "A1" | "A2" | "B1" | "B2"
+    const level = currentLevel.toLowerCase(); // ⭐ FIXED
 
     stats[level].quiz = safePercent(quizCorrect, quizTotal);
     stats[level].builder = safePercent(builderScore, builderMax);
@@ -6437,6 +6437,7 @@ function calculateLevelScores() {
 
     return stats;
 }
+
 
 /* ============================================================
    CERTIFICATE STATE
