@@ -6391,8 +6391,19 @@ function pulseTile(id) {
    CEFR SCORING + CERTIFICATE + ACHIEVEMENT ENGINE (Unified)
    ============================================================ */
 
-const PASS_THRESHOLD = 1;   // ← change to 1 for testing
+const PASS_THRESHOLD = 1;   // ← 1 for testing, e.g. 90 for production
 
+/* ============================================================
+   SAFE PERCENT (avoids NaN)
+   ============================================================ */
+function safePercent(score, max) {
+    if (!max || max === 0) return 0;
+    return Math.round((score / max) * 100);
+}
+
+/* ============================================================
+   CALCULATE LEVEL SCORES
+   ============================================================ */
 function calculateLevelScores() {
     const stats = {
         A1: { quiz: 0, builder: 0, sentence: 0, conversation: 0, smart: 0, avg: 0 },
@@ -6401,22 +6412,13 @@ function calculateLevelScores() {
         B2: { quiz: 0, builder: 0, sentence: 0, conversation: 0, smart: 0, avg: 0 }
     };
 
-    const level = currentLevel;
+    const level = currentLevel; // assumes currentLevel is "A1" | "A2" | "B1" | "B2"
 
-    stats[level].quiz =
-        quizTotal === 0 ? 0 : Math.round((quizCorrect / quizTotal) * 100);
-
-    stats[level].builder =
-        Math.round((builderScore / builderMax) * 100);
-
-    stats[level].sentence =
-        Math.round((sentenceScore / sentenceMax) * 100);
-
-    stats[level].conversation =
-        Math.round((conversationScore / conversationMax) * 100);
-
-    stats[level].smart =
-        Math.round((smartScore / smartMax) * 100);
+    stats[level].quiz = safePercent(quizCorrect, quizTotal);
+    stats[level].builder = safePercent(builderScore, builderMax);
+    stats[level].sentence = safePercent(sentenceScore, sentenceMax);
+    stats[level].conversation = safePercent(conversationScore, conversationMax);
+    stats[level].smart = safePercent(smartScore, smartMax);
 
     stats[level].avg = Math.round(
         (
@@ -6432,20 +6434,71 @@ function calculateLevelScores() {
 }
 
 /* ============================================================
+   CERTIFICATE STATE
+   ============================================================ */
+let certificates = {
+    a1: false,
+    a2: false,
+    b1: false,
+    b2: false,
+    mastery: false
+};
+
+/* ============================================================
+   SAVE / LOAD CERTIFICATES
+   ============================================================ */
+function saveCertificates() {
+    localStorage.setItem("certificates", JSON.stringify(certificates));
+}
+
+function loadCertificates() {
+    const saved = localStorage.getItem("certificates");
+    if (saved) {
+        try {
+            certificates = JSON.parse(saved);
+        } catch (e) {
+            console.error("Error reading certificate collection state flags:", e);
+        }
+    }
+}
+loadCertificates();
+
+/* ============================================================
+   UNLOCK CERTIFICATE / ACHIEVEMENT
+   ============================================================ */
+function unlockCertificate(levelKey) {
+    if (!levelKey) return;
+    const lowerKey = levelKey.toLowerCase();
+    if (lowerKey in certificates) {
+        certificates[lowerKey] = true;
+        saveCertificates();
+    }
+}
+
+/* ============================================================
    CERTIFICATE UNLOCK LOGIC
    ============================================================ */
-
 function checkLevelCertificates(stats) {
     if (stats.A1.avg >= PASS_THRESHOLD) unlockCertificate("a1");
     if (stats.A2.avg >= PASS_THRESHOLD) unlockCertificate("a2");
     if (stats.B1.avg >= PASS_THRESHOLD) unlockCertificate("b1");
     if (stats.B2.avg >= PASS_THRESHOLD) unlockCertificate("b2");
+
+    // Mastery unlock when all CEFR levels are complete
+    if (
+        certificates.a1 &&
+        certificates.a2 &&
+        certificates.b1 &&
+        certificates.b2
+    ) {
+        certificates.mastery = true;
+        saveCertificates();
+    }
 }
 
 /* ============================================================
    ACHIEVEMENT / BADGE SYSTEM
    ============================================================ */
-
 const ACHIEVEMENTS = [
     { id: "a1_master", label: "A1 Master", condition: s => s.A1.avg >= PASS_THRESHOLD },
     { id: "a2_master", label: "A2 Master", condition: s => s.A2.avg >= PASS_THRESHOLD },
@@ -6475,54 +6528,11 @@ function evaluateAchievements(stats) {
 /* ============================================================
    MASTER SCORING RUNNER
    ============================================================ */
-
 function runCEFRScoringEngine() {
     const stats = calculateLevelScores();
     checkLevelCertificates(stats);
     evaluateAchievements(stats);
     return stats;
-}
-
-/* ============================================================
-   CERTIFICATE SYSTEM — CEFR LEVEL COMPLETION
-   ============================================================ */
-
-// Persistent certificate unlock state
-let certificates = {
-    a1: false,
-    a2: false,
-    b1: false,
-    b2: false
-};
-
-// Save certificate state
-function saveCertificates() {
-    localStorage.setItem("certificates", JSON.stringify(certificates));
-}
-
-// Load certificate state
-function loadCertificates() {
-    const saved = localStorage.getItem("certificates");
-    if (saved) {
-        try {
-            certificates = JSON.parse(saved);
-        } catch (e) {
-            console.error("Error reading certificate collection state flags:", e);
-        }
-    }
-}
-loadCertificates();
-
-/* ============================================================
-   UNLOCK CERTIFICATE WHEN LEVEL COMPLETED
-   ============================================================ */
-function unlockCertificate(levelKey) {
-    if (!levelKey) return;
-    const lowerKey = levelKey.toLowerCase();
-    if (lowerKey in certificates) {
-        certificates[lowerKey] = true;
-        saveCertificates();
-    }
 }
 
 /* ============================================================
@@ -6565,23 +6575,17 @@ function renderCertificates() {
     setCertFields("b1", certificates.b1);
     setCertFields("b2", certificates.b2);
 
-    // Mastery Diploma unlock (A1–B2 complete)
-    const masteryUnlocked =
-        certificates.a1 &&
-        certificates.a2 &&
-        certificates.b1 &&
-        certificates.b2;
-
+    // Mastery Diploma
     const masteryEl = document.getElementById("cert-mastery");
     const masteryNameEl = document.getElementById("cert-mastery-name");
     const masteryDateEl = document.getElementById("cert-mastery-date");
     const masterySealEl = masteryEl ? masteryEl.querySelector(".seal") : null;
 
     if (masteryEl) {
-        masteryEl.style.display = masteryUnlocked ? "block" : "none";
+        masteryEl.style.display = certificates.mastery ? "block" : "none";
     }
 
-    if (masteryUnlocked && masteryNameEl && masteryDateEl) {
+    if (certificates.mastery && masteryNameEl && masteryDateEl) {
         masteryNameEl.innerText = name;
         masteryDateEl.innerText = today;
     }
@@ -6590,7 +6594,6 @@ function renderCertificates() {
         masterySealEl.src = "images/seal-gold.png";
     }
 }
-
 
 /* ============================================================
    LOAD PDF LIBRARIES (html2canvas + jsPDF)
@@ -6633,8 +6636,7 @@ function downloadCertificate(certId) {
     loadPDFLibraries(() => {
         html2canvas(element, { scale: 2 }).then(canvas => {
             const imgData = canvas.toDataURL("image/png");
-            
-            // Safe assignment fallbacks to capture CDN instances across browser contexts
+
             const { jsPDF } = window.jspdf || jspdf;
             const pdf = new jsPDF("p", "mm", "a4");
 
@@ -6650,7 +6652,6 @@ function downloadCertificate(certId) {
         });
     });
 }
-
 
 /* ============================================================
    STARTUP & EVENT INITIALIZATION
