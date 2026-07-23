@@ -1,4 +1,44 @@
 /* ============================================================
+   CERTIFICATE STATE
+   ============================================================ */
+let certificates = {
+    a1: false,
+    a2: false,
+    b1: false,
+    b2: false,
+    mastery: false
+};
+
+/* ============================================================
+   UNLOCK CERTIFICATE
+   ============================================================ */
+function unlockCertificate(key) {
+    if (!certificates[key]) {
+        certificates[key] = true;
+        saveCertificates();
+        renderCertificates();
+    }
+}
+
+function runCEFRScoringEngine() {
+    const stats = calculateLevelScores();
+
+    if (stats.a1.avg >= PASS_THRESHOLD) unlockCertificate("a1");
+    if (stats.a2.avg >= PASS_THRESHOLD) unlockCertificate("a2");
+    if (stats.b1.avg >= PASS_THRESHOLD) unlockCertificate("b1");
+    if (stats.b2.avg >= PASS_THRESHOLD) unlockCertificate("b2");
+
+    if (
+        certificates.a1 &&
+        certificates.a2 &&
+        certificates.b1 &&
+        certificates.b2
+    ) {
+        unlockCertificate("mastery");
+    }
+}
+
+/* ============================================================
    CEFR SCORING VARIABLES (GLOBAL)
    ============================================================ */
 
@@ -6505,10 +6545,11 @@ function unlockCertificate(levelKey) {
    CERTIFICATE UNLOCK LOGIC
    ============================================================ */
 function checkLevelCertificates(stats) {
-    if (stats.A1.avg >= PASS_THRESHOLD) unlockCertificate("a1");
-    if (stats.A2.avg >= PASS_THRESHOLD) unlockCertificate("a2");
-    if (stats.B1.avg >= PASS_THRESHOLD) unlockCertificate("b1");
-    if (stats.B2.avg >= PASS_THRESHOLD) unlockCertificate("b2");
+   if (stats.a1.avg >= PASS_THRESHOLD) unlockCertificate("a1");
+if (stats.a2.avg >= PASS_THRESHOLD) unlockCertificate("a2");
+if (stats.b1.avg >= PASS_THRESHOLD) unlockCertificate("b1");
+if (stats.b2.avg >= PASS_THRESHOLD) unlockCertificate("b2");
+
 
     // Mastery unlock when all CEFR levels are complete
     if (
@@ -6526,10 +6567,10 @@ function checkLevelCertificates(stats) {
    ACHIEVEMENT / BADGE SYSTEM
    ============================================================ */
 const ACHIEVEMENTS = [
-    { id: "a1_master", label: "A1 Master", condition: s => s.A1.avg >= PASS_THRESHOLD },
-    { id: "a2_master", label: "A2 Master", condition: s => s.A2.avg >= PASS_THRESHOLD },
-    { id: "b1_master", label: "B1 Master", condition: s => s.B1.avg >= PASS_THRESHOLD },
-    { id: "b2_master", label: "B2 Master", condition: s => s.B2.avg >= PASS_THRESHOLD },
+    { id: "a1_master", label: "A1 Master", condition: s => s.a1.avg >= PASS_THRESHOLD },
+    { id: "a2_master", label: "A2 Master", condition: s => s.a2.avg >= PASS_THRESHOLD },
+    { id: "b1_master", label: "B1 Master", condition: s => s.b1.avg >= PASS_THRESHOLD },
+    { id: "b2_master", label: "B2 Master", condition: s => s.b2.avg >= PASS_THRESHOLD },
 
     {
         id: "full_progress",
