@@ -2699,7 +2699,7 @@ function setupQuizEvents() {
 
             appState.levelStats[appState.currentLevel].quizScore++;
             appState.levelStats[appState.currentLevel].quizCompleted++;
-
+            
             // Increments global state stats when answers match perfectly
             appState.totalXP = (appState.totalXP || 0) + 10; 
             appState.globalScore = (appState.globalScore || 0) + 5;
@@ -2710,6 +2710,7 @@ function setupQuizEvents() {
             updateBadges();
             updateProgressMeters();
 
+           runCEFRScoringEngine();
         } else {
             feedback.innerHTML = `
                 <div class="quiz-incorrect">Incorrect — correct answer: ${correct}</div>
