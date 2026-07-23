@@ -2697,14 +2697,15 @@ function setupQuizEvents() {
         <div class="quiz-selected"><strong>You selected:</strong> ${learnerSpanish} (${learnerEnglish})</div>
     `;
 
-    appState.levelStats[appState.currentLevel].quizScore++;
-    appState.levelStats[appState.currentLevel].quizCompleted++;
+       appState.levelStats[appState.currentLevel].quizScore++;
+      appState.levelStats[appState.currentLevel].quizCompleted++;
 
-    // ⭐ CEFR ENGINE SCORING ⭐
-    quizCorrect++;
-    quizTotal++;
-    runCEFRScoringEngine();
-    // ⭐ END ⭐
+      /* ⭐ CEFR ENGINE SCORING ⭐ */
+      quizCorrect++;
+      quizTotal++;
+      runCEFRScoringEngine();
+      /* ⭐ END ⭐ */
+
 
     appState.totalXP = (appState.totalXP || 0) + 10; 
     appState.globalScore = (appState.globalScore || 0) + 5;
