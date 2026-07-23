@@ -2712,7 +2712,7 @@ function setupQuizEvents() {
     checkAndAdvanceStreak();
     updateBadges();
     updateProgressMeters();
-}
+
 
         } else {
             feedback.innerHTML = `
