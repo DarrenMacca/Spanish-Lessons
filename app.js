@@ -2691,26 +2691,29 @@ function setupQuizEvents() {
         }
 
         // Correct / Incorrect feedback + NEW "You selected:"
-        if (learnerSpanish === correct) {
-            feedback.innerHTML = `
-                <div class="quiz-correct">Correct! 🎉</div>
-                <div class="quiz-selected"><strong>You selected:</strong> ${learnerSpanish} (${learnerEnglish})</div>
-            `;
+       if (learnerSpanish === correct) {
+    feedback.innerHTML = `
+        <div class="quiz-correct">Correct! 🎉</div>
+        <div class="quiz-selected"><strong>You selected:</strong> ${learnerSpanish} (${learnerEnglish})</div>
+    `;
 
-            appState.levelStats[appState.currentLevel].quizScore++;
-            appState.levelStats[appState.currentLevel].quizCompleted++;
-            
-            // Increments global state stats when answers match perfectly
-            appState.totalXP = (appState.totalXP || 0) + 10; 
-            appState.globalScore = (appState.globalScore || 0) + 5;
-            
-            // ⭐ UPDATED: Invokes calendar comparison check engine for daily streak increments
-            checkAndAdvanceStreak();
+    appState.levelStats[appState.currentLevel].quizScore++;
+    appState.levelStats[appState.currentLevel].quizCompleted++;
 
-            updateBadges();
-            updateProgressMeters();
+    // ⭐ CEFR ENGINE SCORING ⭐
+    quizCorrect++;
+    quizTotal++;
+    runCEFRScoringEngine();
+    // ⭐ END ⭐
 
-           runCEFRScoringEngine();
+    appState.totalXP = (appState.totalXP || 0) + 10; 
+    appState.globalScore = (appState.globalScore || 0) + 5;
+
+    checkAndAdvanceStreak();
+    updateBadges();
+    updateProgressMeters();
+}
+
         } else {
             feedback.innerHTML = `
                 <div class="quiz-incorrect">Incorrect — correct answer: ${correct}</div>
