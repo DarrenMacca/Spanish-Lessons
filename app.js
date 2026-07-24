@@ -6678,6 +6678,7 @@ html2canvasScript.src =2"https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.
     document.body.appendChild(jsPDFScript);
 }
 
+
 /* ============================================================
    DOWNLOAD CERTIFICATE AS PDF
    ============================================================ */
