@@ -7562,7 +7562,10 @@ function initDictionarySearch() {
         }
 
         const lang = detectLanguage(query);
-
+/* ============================================================
+   1. ENGLISH → SPANISH
+============================================================ */
+if (lang === "english") {
     /* ============================================================
        A. MULTI‑PHRASE STITCHING
     ============================================================ */
@@ -7643,15 +7646,15 @@ function initDictionarySearch() {
 
 
         /* ============================================================
-           2. SPANISH → ENGLISH
-        ============================================================ */
-       if (lang === "spanish") {
+   2. SPANISH → ENGLISH
+============================================================ */
+if (lang === "spanish") {
 
-    const lowerQuery = cleanStringForKeyboard(query.toLowerCase());
+    const lowerSpanishQuery = cleanStringForKeyboard(lowerQuery);
 
     // MULTI‑PHRASE MODE
-    if (lowerQuery.includes(" ")) {
-        const stitched = multiPhraseStitchSpanish(lowerQuery);
+    if (lowerSpanishQuery.includes(" ")) {
+        const stitched = multiPhraseStitchSpanish(lowerSpanishQuery);
 
         if (stitched) {
             resultBox.innerHTML = `
@@ -7672,7 +7675,7 @@ function initDictionarySearch() {
     }
 
     // SINGLE WORD MODE
-    const englishResult = globalLookupSpanish(lowerQuery);
+    const englishResult = globalLookupSpanish(lowerSpanishQuery);
 
     resultBox.innerHTML = `
         <div style="padding: 10px; background: rgba(74, 222, 128, 0.1);
