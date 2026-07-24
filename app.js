@@ -4895,8 +4895,8 @@ function globalLookupSpanish(spanishText) {
 
     if (CEFR_LEVELS?.a1) banks.push(...CEFR_LEVELS.a1);
     if (CEFR_LEVELS?.a2) banks.push(...CEFR_LEVELS.a2);
-    if (CEFR_LEVELS?.B1) banks.push(...CEFR_LEVELS.b1);
-    if (CEFR_LEVELS?.B2) banks.push(...CEFR_LEVELS.b2);
+    if (CEFR_LEVELS?.b1) banks.push(...CEFR_LEVELS.b1);
+    if (CEFR_LEVELS?.b2) banks.push(...CEFR_LEVELS.b2);
 
     if (Array.isArray(CEFR_PHRASES)) banks.push(...CEFR_PHRASES);
     if (Array.isArray(LISTEN_VOCAB)) banks.push(...LISTEN_VOCAB);
