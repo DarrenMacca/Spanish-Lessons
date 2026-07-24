@@ -2101,7 +2101,7 @@ function saveState() {
 appState.lastActiveDate = appState.lastActiveDate || null;
 
 /* ============================================================
-   CALENDAR DAY STREAK ENGINE
+   CALENDAR DAY STREAK ENGINE (FIXED VERSION)
    ============================================================ */
 
 // Safely ensure this property exists on your global state when app initializes
@@ -2110,56 +2110,64 @@ if (typeof appState !== "undefined" && !appState.hasOwnProperty("lastActiveDate"
 }
 
 function checkAndAdvanceStreak() {
-    const todayStr = new Date().toLocaleDateString('en-CA'); // Formats cleanly as YYYY-MM-DD
+    const todayStr = new Date().toLocaleDateString('en-CA'); // YYYY-MM-DD
     const lastActive = appState.lastActiveDate;
-    
-    // Fallback: Ensure active level stats object has a numeric streak parameter initialized
-    if (typeof appState.levelStats[appState.currentLevel].streak !== "number") {
-        appState.levelStats[appState.currentLevel].streak = 0;
+
+    // Normalize level key so "A1" → "a1"
+    const levelKey = (appState.currentLevel || "a1").toLowerCase();
+
+    // Ensure streak exists
+    if (typeof appState.levelStats[levelKey].streak !== "number") {
+        appState.levelStats[levelKey].streak = 0;
     }
 
-    // Case 1: First time playing, or progress was just reset
+    // Case 1: First time playing
     if (!lastActive) {
-        appState.levelStats[appState.currentLevel].streak = 1;
+        appState.levelStats[levelKey].streak = 1;
         appState.lastActiveDate = todayStr;
         saveState();
         return;
     }
 
-    // Case 2: Already played today, do nothing to the count
+    // Case 2: Already played today
     if (lastActive === todayStr) {
         return;
     }
 
-    // Calculate the difference in calendar days
+    // Calculate day difference
     const lastDateObj = new Date(lastActive);
     const todayDateObj = new Date(todayStr);
     const timeDiff = todayDateObj.getTime() - lastDateObj.getTime();
     const dayDiff = Math.floor(timeDiff / (1000 * 60 * 60 * 24));
 
     if (dayDiff === 1) {
-        // Case 3: Played yesterday! Increment the consecutive day count
-        appState.levelStats[appState.currentLevel].streak++;
+        // Played yesterday → increment streak
+        appState.levelStats[levelKey].streak++;
     } else if (dayDiff > 1) {
-        // Case 4: Skipped a day or more. Reset streak back to 1
-        appState.levelStats[appState.currentLevel].streak = 1;
+        // Skipped → reset streak
+        appState.levelStats[levelKey].streak = 1;
     }
 
-    // Update the last active date milestone to today
+    // Update last active date
     appState.lastActiveDate = todayStr;
     saveState();
 }
 
+
 /* ============================================================
-   FULL RESET — ALL LEVELS, ALL SCORES, ALL XP
+   FULL RESET — ALL LEVELS, ALL SCORES, ALL XP (FIXED VERSION)
    ============================================================ */
 function resetAllProgress() {
+
+    // Normalize all level keys to lowercase
     Object.keys(appState.levelStats).forEach(level => {
-        appState.levelStats[level] = {
+        const levelKey = level.toLowerCase();
+
+        appState.levelStats[levelKey] = {
             listens: 0,
             flashSeen: 0,
             quizScore: 0,
-            quizCompleted: 0, // Zeroes completion fields alongside standard rating stats
+            quizCompleted: 0,
             buildCompleted: 0,
             sentenceCompleted: 0,
             conversationCompleted: 0,
@@ -2168,30 +2176,35 @@ function resetAllProgress() {
         };
     });
 
-    // ⭐ FIXED: Completely zeroes global metrics memory data structures
+    // Reset global metrics
     appState.totalXP = 0;
     appState.globalScore = 0;
     appState.badges = [];
+
+    // Force current level to lowercase
     appState.currentLevel = "a1";
-    appState.lastActiveDate = null; 
 
-    // ⭐ FIXED: Clears your live review list array and local tracking storage
+    // Reset streak date
+    appState.lastActiveDate = null;
+
+    // Reset review list
     reviewList = [];
-    localStorage.removeItem('reviewList');
+    localStorage.removeItem("reviewList");
 
-    // Save changes to disk memory
+    // Save changes
     saveState();
 
-    // ⭐ FIXED: Instantly redraws the entire interface so everything clicks down to 0% right away
+    // Redraw UI
     updateBadges();
     updateProgressMeters();
     renderReviewList();
-    
-    // Optional: Take the user back to the clean dashboard overview tab
+
+    // Return user to dashboard
     activateTab("dashboard");
-    
+
     console.log("🧼 Application data successfully cleared back to baseline!");
 }
+
 
 
 /* ============================================================
@@ -2236,19 +2249,26 @@ function speakQuiz(correctAnswer) {
 
 
 /* ============================================================
-   LEVEL SELECTOR
+   LEVEL SELECTOR (FIXED VERSION)
    ============================================================ */
 function setLevel(level) {
-    if (!CEFR_LEVELS[level]) return;
+    // Normalize level key so "A1" → "a1"
+    const levelKey = (level || "a1").toLowerCase();
 
-    appState.currentLevel = level;
+    if (!CEFR_LEVELS[levelKey]) return;
+
+    appState.currentLevel = levelKey;
     saveState();
 
+    // Update button highlight
     document.querySelectorAll(".level-btn").forEach(btn => {
-        btn.classList.toggle("active", btn.dataset.level === level);
+        btn.classList.toggle("active", btn.dataset.level.toLowerCase() === levelKey);
     });
 
+    // Re-render the currently active tab
     activateTab(currentTab);
+}
+
 }
 
 /* ============================================================
@@ -2371,7 +2391,7 @@ function initDashboardResetButtons() {
 }
 
 /* ============================================================
-   LISTEN TAB — CATEGORY + AUDIO PLAYER + CLEAN UI
+   LISTEN TAB — CATEGORY + AUDIO PLAYER + CLEAN UI (FIXED)
    ============================================================ */
 
 let listenAutoPlay = {
@@ -2385,12 +2405,15 @@ function renderListenTab() {
     const container = document.getElementById("listen-content");
     if (!container) return;
 
+    // Normalize level key so "A1" → "a1"
+    const levelKey = (appState.currentLevel || "a1").toLowerCase();
+
     // Pull the correct CEFR level vocabulary (already categorized)
-    const levelData = LISTEN_VOCAB[appState.currentLevel];
+    const levelData = LISTEN_VOCAB[levelKey] || {};
 
     let html = `
         <div class="glass-panel quiz-card">
-            <h2>Listen — Level ${appState.currentLevel}</h2>
+            <h2>Listen — Level ${levelKey}</h2>
             <p>Tap a category, then click a word pill to hear it.</p>
 
             <div class="listen-player-controls" style="
@@ -2407,6 +2430,7 @@ function renderListenTab() {
             </div>
         </div>
     `;
+
 
   /* ============================================================
    CATEGORY LIST (already grouped in LISTEN_VOCAB)
@@ -2469,18 +2493,23 @@ container.innerHTML = html;
         });
     });
 
-    /* ============================================================
-       SINGLE WORD PLAYBACK
-       ============================================================ */
-    container.querySelectorAll(".pill[data-spanish]").forEach(btn => {
-        btn.addEventListener("click", () => {
-            speakSpanish(btn.dataset.spanish);
-            appState.levelStats[appState.currentLevel].listens++;
-            saveState();
-            updateBadges();
-            updateProgressMeters();
-        });
+   /* ============================================================
+   SINGLE WORD PLAYBACK (FIXED VERSION)
+   ============================================================ */
+container.querySelectorAll(".pill[data-spanish]").forEach(btn => {
+    btn.addEventListener("click", () => {
+        speakSpanish(btn.dataset.spanish);
+
+        // Normalize level key so "A1" → "a1"
+        const levelKey = (appState.currentLevel || "a1").toLowerCase();
+
+        appState.levelStats[levelKey].listens++;
+        saveState();
+        updateBadges();
+        updateProgressMeters();
     });
+});
+
 
     /* ============================================================
        AUTO PLAY — PLAY ALL WORDS
@@ -2895,8 +2924,24 @@ function cleanStringForKeyboard(text) {
    ============================================================ */
 function renderBuildTab() {
     const container = document.getElementById("build-content");
+    if (!container) return;
 
-    const pool = CEFR_SENTENCES[appState.currentLevel];
+    // Normalize level key so "A1" → "a1"
+    const levelKey = (appState.currentLevel || "a1").toLowerCase();
+
+    // Safely pull sentence pool
+    const pool = CEFR_SENTENCES[levelKey] || [];
+
+    if (!Array.isArray(pool) || pool.length === 0) {
+        container.innerHTML = `
+            <div class="glass-panel build-card">
+                <h2>Build — Level ${levelKey}</h2>
+                <p>No build sentences available for this level.</p>
+            </div>
+        `;
+        return;
+    }
+
     const sentence = pool[Math.floor(Math.random() * pool.length)];
 
     const english = sentence.english;
@@ -2997,65 +3042,69 @@ function setupBuildEvents(sentence) {
         });
     });
 
-       checkBtn.addEventListener("click", () => {
-        const correct = sentence.spanish.trim();
-        const user = buildState.answer.join(" ").trim();
+     checkBtn.addEventListener("click", () => {
+    const correct = sentence.spanish.trim();
+    const user = buildState.answer.join(" ").trim();
 
-        // Translate learner answer to English
-        const learnerEnglish = translateToEnglish(user);
+    // Translate learner answer to English
+    const learnerEnglish = translateToEnglish(user);
 
-        // ⭐ INTEGRATION: Normalize both strings to bypass accent/punctuation keyboard mismatches
-        const cleanCorrect = cleanStringForKeyboard(correct);
-        const cleanUser = cleanStringForKeyboard(user);
+    // Normalize both strings to bypass accent/punctuation keyboard mismatches
+    const cleanCorrect = cleanStringForKeyboard(correct);
+    const cleanUser = cleanStringForKeyboard(user);
 
-        // Check against the cleaned, keyboard-forgiving values
-        if (cleanUser === cleanCorrect) {
-            feedback.innerHTML = `
-                <span style="color:#4ade80;font-weight:600;">Correct! 🎉</span><br><br>
-                <strong>Your Translated Response is:</strong><br>${learnerEnglish}
-            `;
-            appState.levelStats[appState.currentLevel].buildCompleted++;
+    // ⭐ Normalize level key so "A1" → "a1"
+    const levelKey = (appState.currentLevel || "a1").toLowerCase();
 
-            appState.totalXP = (appState.totalXP || 0) + 20; 
-            appState.globalScore = (appState.globalScore || 0) + 15;
+    // Check against the cleaned, keyboard-forgiving values
+    if (cleanUser === cleanCorrect) {
+        feedback.innerHTML = `
+            <span style="color:#4ade80;font-weight:600;">Correct! 🎉</span><br><br>
+            <strong>Your Translated Response is:</strong><br>${learnerEnglish}
+        `;
 
-            checkAndAdvanceStreak();
+        // ⭐ FIXED: update correct lowercase stats object
+        appState.levelStats[levelKey].buildCompleted++;
 
-            updateBadges();
-            updateProgressMeters();
-            setTimeout(() => speakQuiz(correct), 50);
-        } else {
-            const correctTokens = correct.split(" ");
-            const userTokens = buildState.answer;
+        appState.totalXP = (appState.totalXP || 0) + 20; 
+        appState.globalScore = (appState.globalScore || 0) + 15;
 
-            let html = `<strong>Correct Answer:</strong><br>${correct}<br><br>`;
-            html += `<strong>Your Answer:</strong><br>${user}<br><br>`;
-            html += `<strong>Your Translated Response is:</strong><br>${learnerEnglish}<br><br>`;
-            html += `<strong>Word-by-word feedback:</strong><br>`;
+        checkAndAdvanceStreak();
+        updateBadges();
+        updateProgressMeters();
+        setTimeout(() => speakQuiz(correct), 50);
 
-            userTokens.forEach((t, i) => {
-                // Fuzzy check each single token for individual word correctness indicators
-                if (cleanStringForKeyboard(correctTokens[i]) === cleanStringForKeyboard(t)) {
-                    html += `<span style="color:#4ade80;">${t} ✔</span> `;
-                } else {
-                    html += `<span style="color:#f87171;">${t} ✖</span> `;
-                }
-            });
+    } else {
+        const correctTokens = correct.split(" ");
+        const userTokens = buildState.answer;
 
-            feedback.innerHTML = html;
-            setTimeout(() => speakQuiz(correct), 50);
+        let html = `<strong>Correct Answer:</strong><br>${correct}<br><br>`;
+        html += `<strong>Your Answer:</strong><br>${user}<br><br>`;
+        html += `<strong>Your Translated Response is:</strong><br>${learnerEnglish}<br><br>`;
+        html += `<strong>Word-by-word feedback:</strong><br>`;
 
-            const mistakeSentenceString = `${sentence.english} ➔ ${correct}`;
-            addIncorrectWord(mistakeSentenceString);
-        }
+        userTokens.forEach((t, i) => {
+            if (cleanStringForKeyboard(correctTokens[i]) === cleanStringForKeyboard(t)) {
+                html += `<span style="color:#4ade80;">${t} ✔</span> `;
+            } else {
+                html += `<span style="color:#f87171;">${t} ✖</span> `;
+            }
+        });
 
-        saveState();
-    });
+        feedback.innerHTML = html;
+        setTimeout(() => speakQuiz(correct), 50);
 
-    nextBtn.addEventListener("click", () => {
-        renderBuildTab();
-    });
-}
+        const mistakeSentenceString = `${sentence.english} ➔ ${correct}`;
+        addIncorrectWord(mistakeSentenceString);
+    }
+
+    saveState();
+});
+
+nextBtn.addEventListener("click", () => {
+    renderBuildTab();
+});
+
 
 /* ============================================================
    SENTENCE TAB — CEFR MULTIPLE‑CHOICE (FINAL MASTER VERSION)
@@ -3078,13 +3127,16 @@ function generateSentenceForLevel(level) {
 
 function renderSentenceTab() {
     const container = document.getElementById("sentence-content");
-    const level = appState.currentLevel;
+
+    // Normalize level key so "A1" → "a1"
+    const levelKey = (appState.currentLevel || "a1").toLowerCase();
 
     // SAFETY CHECK — prevents crashes if level has no sentences
-    if (!CEFR_SENTENCE_CHOICES[level]) {
+    if (!CEFR_SENTENCE_CHOICES[levelKey]) {
         container.innerHTML = "<p>No sentences available for this level.</p>";
         return;
     }
+
 
     const q = generateSentenceForLevel(level);
 
@@ -3128,62 +3180,61 @@ function setupSentenceEvents(q) {
         return match ? match.en : "[no match]";
     }
 
-    buttons.forEach(btn => {
-        btn.addEventListener("click", () => {
-            const chosen = btn.dataset.opt;
-            const chosenEnglish = getEnglishForSpanish(chosen);
+   buttons.forEach(btn => {
+    btn.addEventListener("click", () => {
+        const chosen = btn.dataset.opt;
+        const chosenEnglish = getEnglishForSpanish(chosen);
 
-            if (chosen === q.correct.es) {
-                feedback.innerHTML = `
-                    <span style="color:#4ade80;font-weight:600;">
-                        Correct! 🎉
-                    </span><br>
-                    <div class="sentence-selected">
-                        <strong>You selected:</strong> ${chosen} (${chosenEnglish})
-                    </div>
-                `;
+        // Normalize level key so "A1" → "a1"
+        const levelKey = (appState.currentLevel || "a1").toLowerCase();
 
-                appState.levelStats[appState.currentLevel].sentenceCompleted++;
+        if (chosen === q.correct.es) {
+            feedback.innerHTML = `
+                <span style="color:#4ade80;font-weight:600;">
+                    Correct! 🎉
+                </span><br>
+                <div class="sentence-selected">
+                    <strong>You selected:</strong> ${chosen} (${chosenEnglish})
+                </div>
+            `;
 
-                // Increments global progress metrics on success
-                appState.totalXP = (appState.totalXP || 0) + 15; 
-                appState.globalScore = (appState.globalScore || 0) + 10;
-                
-                // ⭐ UPDATED: Invokes calendar comparison check engine for daily streak increments
-                checkAndAdvanceStreak();
+            // ⭐ FIXED: update correct lowercase stats object
+            appState.levelStats[levelKey].sentenceCompleted++;
 
-                updateBadges();
-                updateProgressMeters();
-                speakQuiz(q.correct.es);
+            appState.totalXP = (appState.totalXP || 0) + 15; 
+            appState.globalScore = (appState.globalScore || 0) + 10;
 
-            } else {
-                feedback.innerHTML = `
-                    <span style="color:#f87171;font-weight:600;">
-                        Incorrect.
-                    </span><br>
-                    Correct answer: <strong>${q.correct.es}</strong><br>
-                    <div class="sentence-selected">
-                        <strong>You selected:</strong> ${chosen} (${chosenEnglish})
-                    </div>
-                `;
+            checkAndAdvanceStreak();
+            updateBadges();
+            updateProgressMeters();
+            speakQuiz(q.correct.es);
 
-                // INTEGRATION: Formats sentence mistake path and updates tracking engine
-                const mistakeSentenceString = `${q.english} ➔ ${q.correct.es}`;
-                addIncorrectWord(mistakeSentenceString);
+        } else {
+            feedback.innerHTML = `
+                <span style="color:#f87171;font-weight:600;">
+                    Incorrect.
+                </span><br>
+                Correct answer: <strong>${q.correct.es}</strong><br>
+                <div class="sentence-selected">
+                    <strong>You selected:</strong> ${chosen} (${chosenEnglish})
+                </div>
+            `;
 
-                speakQuiz(q.correct.es);
-            }
+            const mistakeSentenceString = `${q.english} ➔ ${q.correct.es}`;
+            addIncorrectWord(mistakeSentenceString);
 
-            // Disable only answer buttons
-            buttons.forEach(b => b.disabled = true);
-            saveState();
-        });
+            speakQuiz(q.correct.es);
+        }
+
+        buttons.forEach(b => b.disabled = true);
+        saveState();
     });
+});
 
-    nextBtn.addEventListener("click", () => {
-        renderSentenceTab();
-    });
-}
+nextBtn.addEventListener("click", () => {
+    renderSentenceTab();
+});
+
 
 
 /* ============================================================
@@ -5009,7 +5060,7 @@ function extractSpanishText(item) {
 
 
 /* ============================================================
-   CONVERSATION TAB — MAIN RENDER PIPELINE (PART 2A)
+   CONVERSATION TAB — MAIN RENDER PIPELINE (FIXED VERSION)
    ============================================================ */
 
 function shuffle(array) {
@@ -5020,7 +5071,10 @@ function shuffle(array) {
 }
 
 function generateConversationPrompt(level) {
-    const pool = CEFR_CONVERSATION_PROMPTS[level];
+    // Normalize level key
+    const levelKey = (level || "a1").toLowerCase();
+
+    const pool = CEFR_CONVERSATION_PROMPTS[levelKey];
     const item = pool[Math.floor(Math.random() * pool.length)];
 
     return {
@@ -5032,15 +5086,17 @@ function generateConversationPrompt(level) {
 
 function renderConversationTab() {
     const container = document.getElementById("conversation-content");
-    const level = appState.currentLevel;
 
-    if (!CEFR_CONVERSATION_PROMPTS[level]) {
+    // Normalize level key
+    const levelKey = (appState.currentLevel || "a1").toLowerCase();
+
+    if (!CEFR_CONVERSATION_PROMPTS[levelKey]) {
         container.innerHTML = "<p>No conversation prompts available for this level.</p>";
         return;
     }
 
-    // Isolate conversation variables cleanly inside state
-    convoState.currentPrompt = generateConversationPrompt(level);
+    // Generate prompt using lowercase key
+    convoState.currentPrompt = generateConversationPrompt(levelKey);
 
     const correctButtons = (convoState.currentPrompt.expected || []).map(exp => {
         const text = extractSpanishText(exp);
@@ -5049,7 +5105,10 @@ function renderConversationTab() {
         };
     });
 
-    const rawDisruptors = typeof getDisruptorResponses === 'function' ? getDisruptorResponses(level) : [];
+    const rawDisruptors = typeof getDisruptorResponses === 'function'
+        ? getDisruptorResponses(levelKey)
+        : [];
+
     const disruptorButtons = (Array.isArray(rawDisruptors) ? rawDisruptors : []).map(exp => {
         const text = extractSpanishText(exp);
         return {
@@ -5062,7 +5121,7 @@ function renderConversationTab() {
 
     container.innerHTML = `
         <div class="glass-panel convo-card">
-            <h2>Conversation — Level ${level}</h2>
+            <h2>Conversation — Level ${levelKey}</h2>
             <p>Respond naturally using Spanish.</p>
 
             <div class="convo-prompt">
@@ -5088,6 +5147,7 @@ function renderConversationTab() {
 
     setupConversationEvents(convoState.currentPrompt);
 }
+
 
 /* ============================================================
    CONVERSATION EVENTS — SAFETY INSULATED GRADING ENGINE (PART 2B - A)
@@ -5157,15 +5217,25 @@ function setupConversationEvents(convo) {
                 learnerEnglishTranslation = globalLookupSpanish(userText);
             }
 
-            // Short-circuit: Force 0% immediately if user picked an active disruptor
-            let isDisruptor = false;
-            if (typeof getDisruptorResponses === 'function') {
-                const disruptors = getDisruptorResponses(appState.currentLevel || "a1");
-                isDisruptor = disruptors.some(d => {
-                    const dText = typeof d === 'object' ? (d.es || d.spanish || "") : String(d);
-                    return dText.toLowerCase().trim() === userText.toLowerCase().trim();
-                });
-            }
+          // Short-circuit: Force 0% immediately if user picked an active disruptor
+let isDisruptor = false;
+
+if (typeof getDisruptorResponses === 'function') {
+
+    // ⭐ FIXED: Normalize level key so "A1" → "a1"
+    const levelKey = (appState.currentLevel || "a1").toLowerCase();
+
+    const disruptors = getDisruptorResponses(levelKey);
+
+    isDisruptor = disruptors.some(d => {
+        const dText = typeof d === 'object'
+            ? (d.es || d.spanish || "")
+            : String(d);
+
+        return dText.toLowerCase().trim() === userText.toLowerCase().trim();
+    });
+}
+
 
             if (isDisruptor) {
                 finalScore = 0;
@@ -5266,33 +5336,36 @@ function setupConversationEvents(convo) {
 
 
 
-/* ============================================================
-   CONVERSATION RUNTIME — STORAGE MANAGEMENT & SCENE RELOADS (PART 2B - B)
-   ============================================================ */
-
 function processConversationRewards(matchStatus, baseXP, baseScore, expectedEs, promptEsRaw) {
-    if (!appState.levelStats[appState.currentLevel]) {
-        appState.levelStats[appState.currentLevel] = { conversationCompleted: 0 };
+
+    // Normalize level key so "A1" → "a1"
+    const levelKey = (appState.currentLevel || "a1").toLowerCase();
+
+    if (!appState.levelStats[levelKey]) {
+        appState.levelStats[levelKey] = { conversationCompleted: 0 };
     }
-    
-    appState.levelStats[appState.currentLevel].conversationCompleted++;
+
+    appState.levelStats[levelKey].conversationCompleted++;
 
     // Process metric awards safely inside application memory blocks
     if (matchStatus === "correct") {
         appState.totalXP = (appState.totalXP || 0) + baseXP;
         appState.globalScore = (appState.globalScore || 0) + baseScore;
         if (typeof checkAndAdvanceStreak === "function") checkAndAdvanceStreak();
+
     } else if (matchStatus === "partial") {
         appState.totalXP = (appState.totalXP || 0) + baseXP;
         appState.globalScore = (appState.globalScore || 0) + baseScore;
+
     } else {
         const promptEsClean = promptEsRaw || "Conversation Prompt";
         const mistakeString = `${promptEsClean} ➔ ${expectedEs}`;
-        
-        // DEDUPLICATION FILTER: Verifies mistake is completely unique before writing to review lists
+
         const cleanMistakeEntry = mistakeString.trim();
-        const alreadyLogged = Array.isArray(window.reviewList) && window.reviewList.some(item => item.trim() === cleanMistakeEntry);
-        
+        const alreadyLogged =
+            Array.isArray(window.reviewList) &&
+            window.reviewList.some(item => item.trim() === cleanMistakeEntry);
+
         if (!alreadyLogged && typeof addIncorrectWord === "function") {
             addIncorrectWord(cleanMistakeEntry);
         }
@@ -5302,7 +5375,6 @@ function processConversationRewards(matchStatus, baseXP, baseScore, expectedEs, 
     if (typeof updateProgressMeters === "function") updateProgressMeters();
     saveState();
 }
-
 function reloadSameConversation(convo) {
     const presetBox = document.querySelector("#conversation-content .preset-box");
     const inputBox = document.querySelector("#conversation-content #convo-input");
@@ -5318,7 +5390,10 @@ function reloadSameConversation(convo) {
         return { html: `<button class="pill preset-response correct" data-response="${text}">${text}</button>` };
     });
 
-    const disruptors = getDisruptorResponses(appState.currentLevel).map(exp => {
+    // Normalize level key so "A1" → "a1"
+    const levelKey = (appState.currentLevel || "a1").toLowerCase();
+
+    const disruptors = getDisruptorResponses(levelKey).map(exp => {
         const text = extractSpanishText(exp);
         return { html: `<button class="pill preset-response disruptor" data-response="${text}">${text}</button>` };
     });
@@ -5337,6 +5412,7 @@ function reloadSameConversation(convo) {
         };
     });
 }
+
 
 // Low-level synthesizer fallback note generation anchor node
 function audioContextPlayback(type) {
@@ -6459,8 +6535,13 @@ function animateNumber(id, target, suffix = "%") {
 }
 
 function updateProgressMeters() {
-    const stats = appState.levelStats[appState.currentLevel];
+
+    // ⭐ FIXED: Normalize level key so "A1" → "a1"
+    const levelKey = (appState.currentLevel || "a1").toLowerCase();
+
+    const stats = appState.levelStats[levelKey];
     if (!stats) return;
+
 
     // Defensive defaults so undefined never becomes NaN
     const streak = typeof stats.streak === "number" ? stats.streak : 0;
