@@ -7693,18 +7693,17 @@ if (lang === "spanish") {
     return;
 }
 
-        /* ============================================================
-           3. UNKNOWN INPUT
-        ============================================================ */
-        resultBox.innerHTML = `
-            <div style="color: #f87171; font-style: italic; font-size: 13px; margin-top: 8px;">
-                Unable to detect language. Please type English or Spanish only.
-            </div>
-        `;
-    });  // CLOSE: addEventListener("input", ...)
+/* ============================================================
+   3. UNKNOWN INPUT
+============================================================ */
+resultBox.innerHTML = `
+    <div style="color: #f87171; font-style: italic; font-size: 13px; margin-top: 8px;">
+        Unable to detect language. Please type English or Spanish only.
+    </div>
+`;
+});  // CLOSES: searchInput.addEventListener("input", ...)
 
-}  // CLOSE: function initDictionarySearch()
-
+}  // CLOSES: function initDictionarySearch()
 /* ============================================================
    GLOBAL FREE PRACTICE SANDBOX (UNSCORED)
    ============================================================ */
