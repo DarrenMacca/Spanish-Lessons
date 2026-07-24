@@ -588,6 +588,16 @@ b2: [
 ]      // ✔ closes B2 array
 };     // ✔ closes CEFR_LEVELS object
 
+/* ============================================================
+   MERGED CEFR WORDS (A1–B2)
+   ============================================================ */
+
+const CEFR_WORDS = {
+    a1: CEFR_LEVELS.a1,
+    a2: CEFR_LEVELS.a2,
+    b1: CEFR_LEVELS.b1,
+    b2: CEFR_LEVELS.b2
+};
 
 /* ============================================================
    LISTEN VOCAB — A1 → B2 (Category → Word List)
