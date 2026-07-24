@@ -62,7 +62,7 @@ let smartMax = 0;
    ============================================================ */
 
 const CEFR_SENTENCES = {
-    A1: [
+    a1: [
         { english: "I would like water, please.", spanish: "me gustaría agua por favor" },
        { english: "I would like beer, please.", spanish: "me gustaría cerveza por favor" },
         { english: "Where is the bathroom?", spanish: "dónde está el baño" },
@@ -105,7 +105,7 @@ const CEFR_SENTENCES = {
         { english: "He likes sports.", spanish: "a él le gustan los deportes" }
     ],
 
-    A2: [
+    a2: [
         { english: "I prefer chicken for dinner.", spanish: "prefiero pollo para la cena" },
         { english: "Can you open the window?", spanish: "puedes abrir la ventana" },
         { english: "We are going to visit my parents.", spanish: "vamos a visitar a mis padres" },
@@ -147,7 +147,7 @@ const CEFR_SENTENCES = {
         { english: "I want to go outside.", spanish: "quiero salir afuera" }
     ],
 
-    B1: [
+    b1: [
         { english: "We need to organize the meeting.", spanish: "necesitamos organizar la reunión" },
         { english: "I want to improve my Spanish.", spanish: "quiero mejorar mi español" },
         { english: "She hopes to find a better job.", spanish: "ella espera encontrar un mejor trabajo" },
@@ -189,7 +189,7 @@ const CEFR_SENTENCES = {
         { english: "I will call you later.", spanish: "te llamaré más tarde" }
     ],
 
-    B2: [
+    b2: [
         { english: "They want to analyze the situation.", spanish: "quieren analizar la situación" },
         { english: "We must consider all possibilities.", spanish: "debemos considerar todas las posibilidades" },
         { english: "He suggested improving the communication process.", spanish: "él sugirió mejorar el proceso de comunicación" },
@@ -237,7 +237,7 @@ const CEFR_SENTENCES = {
    ============================================================ */
 
 const CEFR_LEVELS = {
-A1: [
+a1: [
     // Daily Life
     { spanish: "vivir", english: "to live", category: "Daily Life" },
     { spanish: "trabajar", english: "to work", category: "Daily Life" },
@@ -388,7 +388,7 @@ A1: [
 
 ],
 
-A2: [
+a2: [
     // Daily Life
     { spanish: "desayuno", english: "breakfast", category: "Daily Life" },
     { spanish: "almuerzo", english: "lunch", category: "DailyLife" },
@@ -450,7 +450,7 @@ A2: [
 
 ],
 
-B1: [
+b1: [
     // Daily Life — auxiliary verbs
     { spanish: "he", english: "I have (auxiliary)", category: "Daily Life" },
     { spanish: "has", english: "you have (auxiliary)", category: "Daily Life" },
@@ -511,7 +511,7 @@ B1: [
     { spanish: "años", english: "years", category: "Numbers" }
 ],
 
-B2: [
+b2: [
     // Daily Life — abstract nouns & professional vocabulary
     { spanish: "proceso", english: "process", category: "Daily Life" },
     { spanish: "tarea", english: "task", category: "Daily Life" },
@@ -593,7 +593,7 @@ B2: [
    LISTEN VOCAB — A1 → B2 (Category → Word List)
    ============================================================ */
 const LISTEN_VOCAB = {
-    A1: {
+    a1: {
         "Daily Life": [
             "vivir","trabajar","estudiar","leer","libros","hora",
             "levantarse","música","televisión","limpiar","cocinar",
@@ -657,7 +657,7 @@ const LISTEN_VOCAB = {
 
     },
 
-    A2: {
+    a2: {
         "Daily Life": [
             "desayuno","almuerzo","cena","temprano","tarde","anoche",
             "ahora","minutos","tarea","mensaje","información",
@@ -691,7 +691,7 @@ const LISTEN_VOCAB = {
 
     },
 
-    B1: {
+    b1: {
         "Daily Life": [
             "he","has","ha","hemos","habéis","han",
             "estado","aprendido","trabajando","estudiando",
@@ -719,7 +719,7 @@ const LISTEN_VOCAB = {
         ]
     },
 
-    B2: {
+    b2: {
         "Daily Life": [
             "proceso","tarea","resultados","rendimiento",
             "estrategia","sistema","enfoque","concepto",
@@ -1384,7 +1384,7 @@ autoExpandDictionary();
 /* ============================================================
    MULTI-WORD PHRASES (CEFR-aligned)
    ============================================================ */
-const CEFR_PHRASES_A1 = [
+const CEFR_PHRASES_a1 = [
   { english: "how are you", spanish: "cómo estás", level: "A1" },
   { english: "where do you live", spanish: "dónde vives", level: "A1" },
   { english: "what time is it", spanish: "qué hora es", level: "A1" },
@@ -1437,7 +1437,7 @@ const CEFR_PHRASES_A1 = [
   { english: "good night", spanish: "buenas noches", level: "A1" }
 ];
 
-const CEFR_PHRASES_A2 = [
+const CEFR_PHRASES_a2 = [
   { english: "i would like", spanish: "me gustaría", level: "A2" },
   { english: "i am looking for", spanish: "estoy buscando", level: "A2" },
   { english: "how much does it cost", spanish: "cuánto cuesta", level: "A2" },
@@ -1489,7 +1489,7 @@ const CEFR_PHRASES_A2 = [
   { english: "i will wait for you", spanish: "te esperaré", level: "A2" }
 ];
 
-const CEFR_PHRASES_B1 = [
+const CEFR_PHRASES_b1 = [
   { english: "i think that", spanish: "creo que", level: "B1" },
   { english: "in my opinion", spanish: "en mi opinión", level: "B1" },
   { english: "i believe that", spanish: "yo creo que", level: "B1" },
@@ -1542,7 +1542,7 @@ const CEFR_PHRASES_B1 = [
   { english: "i am doing my best", spanish: "estoy haciendo lo mejor que puedo", level: "B1" }
 ];
 
-const CEFR_PHRASES_B2 = [
+const CEFR_PHRASES_b2 = [
   { english: "as far as i know", spanish: "hasta donde sé", level: "B2" },
   { english: "from my perspective", spanish: "desde mi perspectiva", level: "B2" },
   { english: "it seems to me that", spanish: "me parece que", level: "B2" },
@@ -1838,7 +1838,7 @@ function getCEFRGrammarHint(level, user, correct) {
     /* ============================
        A1 HINTS
        ============================ */
-    if (level === "A1") {
+    if (level === "a1") {
         if (!u.includes("el") && !u.includes("la") && (c.includes("el") || c.includes("la"))) {
             return "A1 hint: Remember to include articles (el/la) before nouns.";
         }
@@ -1851,7 +1851,7 @@ function getCEFRGrammarHint(level, user, correct) {
     /* ============================
        A2 HINTS
        ============================ */
-    if (level === "A2") {
+    if (level === "a2") {
         if (u.includes("lento") && c.includes("a menudo")) {
             return "A2 hint: Use frequency words like “a menudo” instead of speed words like “lento”.";
         }
@@ -1864,7 +1864,7 @@ function getCEFRGrammarHint(level, user, correct) {
     /* ============================
        B1 HINTS
        ============================ */
-    if (level === "B1") {
+    if (level === "b1") {
         if (!u.includes("porque") && c.includes("porque")) {
             return "B1 hint: Use connectors like “porque” to explain reasons.";
         }
@@ -1877,7 +1877,7 @@ function getCEFRGrammarHint(level, user, correct) {
     /* ============================
        B2 HINTS
        ============================ */
-    if (level === "B2") {
+    if (level === "b2") {
         if (!u.includes("aunque") && c.includes("aunque")) {
             return "B2 hint: Use contrast connectors like “aunque” for complex ideas.";
         }
@@ -1910,14 +1910,14 @@ function groupByCategory(words) {
 const STORAGE_KEY = "cefr_trainer_state_v2";
 
 let appState = {
-    currentLevel: "A1",
+    currentLevel: "a1",
     speechRate: 1.0,
     studentName: "",
     badges: [],
     totalXP: 0,
     globalScore: 0,
     levelStats: {
-        A1: { 
+        a1: { 
             listens: 0, 
             flashSeen: 0, 
             quizScore: 0, 
@@ -1928,7 +1928,7 @@ let appState = {
             streak: 0,
             reviewDue: 0
         },
-        A2: { 
+        a2: { 
             listens: 0, 
             flashSeen: 0, 
             quizScore: 0, 
@@ -1939,7 +1939,7 @@ let appState = {
             streak: 0,
             reviewDue: 0
         },
-        B1: { 
+        b1: { 
             listens: 0, 
             flashSeen: 0, 
             quizScore: 0, 
@@ -1950,7 +1950,7 @@ let appState = {
             streak: 0,
             reviewDue: 0
         },
-        B2: { 
+        b2: { 
             listens: 0, 
             flashSeen: 0, 
             quizScore: 0, 
@@ -2149,7 +2149,7 @@ function resetAllProgress() {
     appState.totalXP = 0;
     appState.globalScore = 0;
     appState.badges = [];
-    appState.currentLevel = "A1";
+    appState.currentLevel = "a1";
     appState.lastActiveDate = null; 
 
     // ⭐ FIXED: Clears your live review list array and local tracking storage
@@ -3134,7 +3134,7 @@ const CEFR_SENTENCE_CHOICES = {
        A1 — Beginner
        ============================ */
 
-    A1: [    {
+    a1: [    {
         english: "I’m a bit tired today.",
         correct: { es: "estoy un poco cansado hoy", en: "I’m a bit tired today." },
         options: [
@@ -3503,7 +3503,7 @@ const CEFR_SENTENCE_CHOICES = {
    A2 — Elementary
    ============================ */
 
-A2: [
+a2: [
     {
         english: "We’re planning a trip next week.",
         correct: { es: "estamos planeando un viaje la próxima semana", en: "We’re planning a trip next week." },
@@ -3865,7 +3865,7 @@ A2: [
    B1 — Intermediate
    ============================ */
 
-B1: [
+b1: [
     {
         english: "We need to explain the plan clearly.",
         correct: { es: "necesitamos explicar el plan claramente", en: "We need to explain the plan clearly." },
@@ -4246,7 +4246,7 @@ B1: [
    B2 — Upper Intermediate
    ============================ */
 
-B2: [
+b2: [
     {
         english: "We need to consider all the details before deciding.",
         correct: { es: "necesitamos considerar todos los detalles antes de decidir", en: "We need to consider all the details before deciding." },
@@ -4628,25 +4628,25 @@ function getDisruptorResponses(level) {
     });
 }
 
-const DISRUPTORS_A1 = [
+const DISRUPTORS_a1 = [
     { es: "Bueno, te digo algo.", en: "Well, let me tell you something." },
     { es: "Pues mira.", en: "Well, look." },
     { es: "La verdad es que.", en: "The truth is that..." }
 ];
 
-const DISRUPTORS_A2 = [
+const DISRUPTORS_a2 = [
     { es: "A menudo pienso en esto.", en: "I often think about this." },
     { es: "Antes de responder, te cuento.", en: "Before answering, let me tell you something." },
     { es: "Ya sabes cómo es.", en: "You know how it is." }
 ];
 
-const DISRUPTORS_B1 = [
+const DISRUPTORS_b1 = [
     { es: "Mientras lo pienso, te digo algo.", en: "While I think about it, let me tell you something." },
     { es: "Sin embargo, hay más que decir.", en: "However, there's more to say." },
     { es: "Sobre esto, tengo una opinion.", en: "About this, I have an opinion." }
 ];
 
-const DISRUPTORS_B2 = [
+const DISRUPTORS_b2 = [
     { es: "además", en: "besides" },
     { es: "por lo tanto", en: "therefore" },
     { es: "a pesar de", en: "despite" },
@@ -4655,10 +4655,10 @@ const DISRUPTORS_B2 = [
 ];
 
 const DISRUPTOR_WORDS = {
-    A1: DISRUPTORS_A1,
-    A2: DISRUPTORS_A2,
-    B1: DISRUPTORS_B1,
-    B2: DISRUPTORS_B2
+    A1: DISRUPTORS_a1,
+    A2: DISRUPTORS_a2,
+    B1: DISRUPTORS_b1,
+    B2: DISRUPTORS_b2
 };
 
 /* ============================================================
@@ -4666,10 +4666,10 @@ const DISRUPTOR_WORDS = {
    ============================================================ */
 
 const CEFR_PHRASES = [
-    ...(CEFR_PHRASES_A1 || []),
-    ...(CEFR_PHRASES_A2 || []),
-    ...(CEFR_PHRASES_B1 || []),
-    ...(CEFR_PHRASES_B2 || [])
+    ...(CEFR_PHRASES_a1 || []),
+    ...(CEFR_PHRASES_a2 || []),
+    ...(CEFR_PHRASES_b1 || []),
+    ...(CEFR_PHRASES_b2 || [])
 ];
 
 
@@ -4683,7 +4683,7 @@ function globalLookup(word) {
 
     const w = word.toLowerCase();
     const cw = cleanStringForKeyboard(w);   // normalized input
-    const levelsList = ["A1", "A2", "B1", "B2"];
+    const levelsList = ["a1", "a2", "b1", "b2"];
 
     /* ============================================================
        1. CEFR Vocabulary
@@ -4792,10 +4792,10 @@ function globalLookup(word) {
        8. Conversation Audio Banks
     ============================================================ */
     const convoAudioBanks = [
-        CEFR_CONVERSATION_AUDIO_A1,
-        CEFR_CONVERSATION_AUDIO_A2,
-        CEFR_CONVERSATION_AUDIO_B1,
-        CEFR_CONVERSATION_AUDIO_B2
+        CEFR_CONVERSATION_AUDIO_a1,
+        CEFR_CONVERSATION_AUDIO_a2,
+        CEFR_CONVERSATION_AUDIO_b1,
+        CEFR_CONVERSATION_AUDIO_b2
     ];
 
     for (const bank of convoAudioBanks) {
@@ -4880,18 +4880,18 @@ function globalLookupSpanish(spanishText) {
     const s = cleanStringForKeyboard(spanishText.toLowerCase().trim());
     const banks = [];
 
-    if (CEFR_LEVELS?.A1) banks.push(...CEFR_LEVELS.A1);
-    if (CEFR_LEVELS?.A2) banks.push(...CEFR_LEVELS.A2);
-    if (CEFR_LEVELS?.B1) banks.push(...CEFR_LEVELS.B1);
-    if (CEFR_LEVELS?.B2) banks.push(...CEFR_LEVELS.B2);
+    if (CEFR_LEVELS?.a1) banks.push(...CEFR_LEVELS.a1);
+    if (CEFR_LEVELS?.a2) banks.push(...CEFR_LEVELS.a2);
+    if (CEFR_LEVELS?.B1) banks.push(...CEFR_LEVELS.b1);
+    if (CEFR_LEVELS?.B2) banks.push(...CEFR_LEVELS.b2);
 
     if (Array.isArray(CEFR_PHRASES)) banks.push(...CEFR_PHRASES);
     if (Array.isArray(LISTEN_VOCAB)) banks.push(...LISTEN_VOCAB);
 
-    if (Array.isArray(CEFR_CONVERSATION_AUDIO_A1)) banks.push(...CEFR_CONVERSATION_AUDIO_A1);
-    if (Array.isArray(CEFR_CONVERSATION_AUDIO_A2)) banks.push(...CEFR_CONVERSATION_AUDIO_A2);
-    if (Array.isArray(CEFR_CONVERSATION_AUDIO_B1)) banks.push(...CEFR_CONVERSATION_AUDIO_B1);
-    if (Array.isArray(CEFR_CONVERSATION_AUDIO_B2)) banks.push(...CEFR_CONVERSATION_AUDIO_B2);
+    if (Array.isArray(CEFR_CONVERSATION_AUDIO_a1)) banks.push(...CEFR_CONVERSATION_AUDIO_a1);
+    if (Array.isArray(CEFR_CONVERSATION_AUDIO_a2)) banks.push(...CEFR_CONVERSATION_AUDIO_a2);
+    if (Array.isArray(CEFR_CONVERSATION_AUDIO_b1)) banks.push(...CEFR_CONVERSATION_AUDIO_b1);
+    if (Array.isArray(CEFR_CONVERSATION_AUDIO_b2)) banks.push(...CEFR_CONVERSATION_AUDIO_b2);
 
     Object.values(CEFR_CONVERSATION_PROMPTS || {}).forEach(levelArray => {
         if (!Array.isArray(levelArray)) return;
@@ -4902,7 +4902,7 @@ function globalLookupSpanish(spanishText) {
         });
     });
 
-    const levelsList = ["A1", "A2", "B1", "B2"];
+    const levelsList = ["a1", "a2", "b1", "b2"];
     levelsList.forEach(level => {
         if (typeof getDisruptorResponses === "function") {
             const disruptors = getDisruptorResponses(level);
@@ -5109,7 +5109,7 @@ function setupConversationEvents(convo) {
             // Short-circuit: Force 0% immediately if user picked an active disruptor
             let isDisruptor = false;
             if (typeof getDisruptorResponses === 'function') {
-                const disruptors = getDisruptorResponses(appState.currentLevel || "A1");
+                const disruptors = getDisruptorResponses(appState.currentLevel || "a1");
                 isDisruptor = disruptors.some(d => {
                     const dText = typeof d === 'object' ? (d.es || d.spanish || "") : String(d);
                     return dText.toLowerCase().trim() === userText.toLowerCase().trim();
@@ -5323,7 +5323,7 @@ function audioContextPlayback(type) {
 
 const CEFR_CONVERSATION_PROMPTS = {
 
-    A1: [
+    a1: [
     {
         prompt_es: "¿Qué te gustaría beber?",
         prompt_en: "What would you like to drink?",
@@ -5525,7 +5525,7 @@ const CEFR_CONVERSATION_PROMPTS = {
 ],
 
 
-    A2: [
+    a2: [
     {
         prompt_es: "¿Qué haces normalmente por la mañana?",
         prompt_en: "What do you normally do in the morning?",
@@ -5727,7 +5727,7 @@ const CEFR_CONVERSATION_PROMPTS = {
 ],
 
 
-    B1: [
+    b1: [
     {
         prompt_es: "¿Qué has aprendido recientemente?",
         prompt_en: "What have you learned recently?",
@@ -5920,7 +5920,7 @@ const CEFR_CONVERSATION_PROMPTS = {
 ],
 
 
-   B2: [
+   b2: [
     {
         prompt_es: "¿Qué estrategia usas para aprender mejor?",
         prompt_en: "What strategy do you use to learn better?",
@@ -6114,7 +6114,7 @@ const CEFR_CONVERSATION_PROMPTS = {
 
 };
 
-const CEFR_CONVERSATION_AUDIO_A1 = [
+const CEFR_CONVERSATION_AUDIO_a1 = [
     { es: "qué te gustaría beber", file: "que-te-gustaria-beber.mp3", en: "What would you like to drink?" },
     { es: "cómo estás hoy", file: "como-estas-hoy.mp3", en: "How are you today?" },
     { es: "dónde vives", file: "donde-vives.mp3", en: "Where do you live?" },
@@ -6139,7 +6139,7 @@ const CEFR_CONVERSATION_AUDIO_A1 = [
     { es: "qué haces en casa", file: "que-haces-en-casa.mp3", en: "What do you do at home?" }
 ];
 
-const CEFR_CONVERSATION_AUDIO_A2 = [
+const CEFR_CONVERSATION_AUDIO_a2 = [
     { es: "qué haces normalmente por la mañana", file: "que-haces-normalmente-por-la-manana.mp3", en: "What do you normally do in the morning?" },
     { es: "qué te gustaría probar hoy", file: "que-te-gustaria-probar-hoy.mp3", en: "What would you like to try today?" },
     { es: "a qué hora llegaste anoche", file: "a-que-hora-llegaste-anoche.mp3", en: "What time did you arrive last night?" },
@@ -6164,7 +6164,7 @@ const CEFR_CONVERSATION_AUDIO_A2 = [
     { es: "qué te gustaría visitar este año", file: "que-te-gustaria-visitar-este-ano.mp3", en: "What would you like to visit this year?" }
 ];
 
-const CEFR_CONVERSATION_AUDIO_B1 = [
+const CEFR_CONVERSATION_AUDIO_b1 = [
     { es: "qué has aprendido recientemente", file: "que-has-aprendido-recientemente.mp3", en: "What have you learned recently?" },
     { es: "qué estás estudiando ahora", file: "que-estas-estudiando-ahora.mp3", en: "What are you studying now?" },
     { es: "qué experiencias pasadas recuerdas más", file: "que-experiencias-pasadas-recuerdas-mas.mp3", en: "What past experiences do you remember most?" },
@@ -6188,7 +6188,7 @@ const CEFR_CONVERSATION_AUDIO_B1 = [
     { es: "qué te gustaría seguir revisando", file: "que-te-gustaria-seguir-revisando.mp3", en: "What would you like to keep reviewing?" }
 ];
 
-const CEFR_CONVERSATION_AUDIO_B2 = [
+const CEFR_CONVERSATION_AUDIO_b2 = [
     { es: "qué estrategia usas para aprender mejor", file: "que-estrategia-usas-para-aprender-mejor.mp3", en: "What strategy do you use to learn better?" },
     { es: "cómo evalúas tu rendimiento en el trabajo", file: "como-evaluas-tu-rendimiento-en-el-trabajo.mp3", en: "How do you evaluate your performance at work?" },
     { es: "qué concepto te parece complicado últimamente", file: "que-concepto-te-parece-complicado-ultimamente.mp3", en: "What concept seems complicated to you lately?" },
@@ -6557,17 +6557,17 @@ if (stats.b2.avg >= PASS_THRESHOLD) unlockCertificate("b2");
    ACHIEVEMENT / BADGE SYSTEM
    ============================================================ */
 const ACHIEVEMENTS = [
-    { id: "a1_master", label: "A1 Master", condition: s => s.a1.avg >= PASS_THRESHOLD },
-    { id: "a2_master", label: "A2 Master", condition: s => s.a2.avg >= PASS_THRESHOLD },
-    { id: "b1_master", label: "B1 Master", condition: s => s.b1.avg >= PASS_THRESHOLD },
-    { id: "b2_master", label: "B2 Master", condition: s => s.b2.avg >= PASS_THRESHOLD },
+    { id: "a1_master", label: "a1 Master", condition: s => s.a1.avg >= PASS_THRESHOLD },
+    { id: "a2_master", label: "a2 Master", condition: s => s.a2.avg >= PASS_THRESHOLD },
+    { id: "b1_master", label: "b1 Master", condition: s => s.b1.avg >= PASS_THRESHOLD },
+    { id: "b2_master", label: "b2 Master", condition: s => s.b2.avg >= PASS_THRESHOLD },
 
     {
         id: "full_progress",
         label: "200‑Word Explorer",
         condition: s => {
             const totalAvg = Math.round(
-                (s.A1.avg + s.A2.avg + s.B1.avg + s.B2.avg) / 4
+                (s.a1.avg + s.a2.avg + s.b1.avg + s.b2.avg) / 4
             );
             return totalAvg >= PASS_THRESHOLD;
         }
@@ -6662,10 +6662,8 @@ function loadPDFLibraries(callback) {
     }
 
     const html2canvasScript = document.createElement("script");
-    html2canvasScript.src = "https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js";
-
-    const jsPDFScript = document.createElement("script");
-    jsPDFScript.src = "https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js";
+html2canvasScript.src =2"https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js";
+   jsPDFScript.src =5"https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js";
 
     let loaded = 0;
     function checkLoaded() {
@@ -6771,10 +6769,10 @@ function findAudioForSpanish(spanishText) {
 
     const banks = [];
     // FIXED: Individual existence checks prevent crash loops if specific asset sheets load late
-    if (typeof CEFR_CONVERSATION_AUDIO_A1 !== "undefined" && Array.isArray(CEFR_CONVERSATION_AUDIO_A1)) banks.push(...CEFR_CONVERSATION_AUDIO_A1);
-    if (typeof CEFR_CONVERSATION_AUDIO_A2 !== "undefined" && Array.isArray(CEFR_CONVERSATION_AUDIO_A2)) banks.push(...CEFR_CONVERSATION_AUDIO_A2);
-    if (typeof CEFR_CONVERSATION_AUDIO_B1 !== "undefined" && Array.isArray(CEFR_CONVERSATION_AUDIO_B1)) banks.push(...CEFR_CONVERSATION_AUDIO_B1);
-    if (typeof CEFR_CONVERSATION_AUDIO_B2 !== "undefined" && Array.isArray(CEFR_CONVERSATION_AUDIO_B2)) banks.push(...CEFR_CONVERSATION_AUDIO_B2);
+    if (typeof CEFR_CONVERSATION_AUDIO_a1 !== "undefined" && Array.isArray(CEFR_CONVERSATION_AUDIO_a1)) banks.push(...CEFR_CONVERSATION_AUDIO_a1);
+    if (typeof CEFR_CONVERSATION_AUDIO_a2 !== "undefined" && Array.isArray(CEFR_CONVERSATION_AUDIO_a2)) banks.push(...CEFR_CONVERSATION_AUDIO_a2);
+    if (typeof CEFR_CONVERSATION_AUDIO_b1 !== "undefined" && Array.isArray(CEFR_CONVERSATION_AUDIO_b1)) banks.push(...CEFR_CONVERSATION_AUDIO_b1);
+    if (typeof CEFR_CONVERSATION_AUDIO_b2 !== "undefined" && Array.isArray(CEFR_CONVERSATION_AUDIO_b2)) banks.push(...CEFR_CONVERSATION_AUDIO_b2);
 
     for (const item of banks) {
         if (!item || !item.es || !item.audio) continue;
@@ -6895,9 +6893,9 @@ function normalizeSpanish(str) {
 
 function globalLookup(word) {
     const w = word.toLowerCase();
-    const levelsList = ["A1", "A2", "B1", "B2"];
+    const levelsList = ["a1", "a2", "b1", "b2"];
 
-    // 1. CEFR Vocabulary (A1–B2) — CEFR_LEVELS
+    // 1. CEFR Vocabulary (a1–b2) — CEFR_LEVELS
     for (const level of levelsList) {
         const vocab = CEFR_LEVELS[level];
         if (!vocab) continue;
@@ -6982,10 +6980,10 @@ function globalLookup(word) {
 
     // 8. Conversation Audio — A1–B2
     const convoAudioBanks = [
-        typeof CEFR_CONVERSATION_AUDIO_A1 !== "undefined" ? CEFR_CONVERSATION_AUDIO_A1 : null,
-        typeof CEFR_CONVERSATION_AUDIO_A2 !== "undefined" ? CEFR_CONVERSATION_AUDIO_A2 : null,
-        typeof CEFR_CONVERSATION_AUDIO_B1 !== "undefined" ? CEFR_CONVERSATION_AUDIO_B1 : null,
-        typeof CEFR_CONVERSATION_AUDIO_B2 !== "undefined" ? CEFR_CONVERSATION_AUDIO_B2 : null
+        typeof CEFR_CONVERSATION_AUDIO_a1 !== "undefined" ? CEFR_CONVERSATION_AUDIO_a1 : null,
+        typeof CEFR_CONVERSATION_AUDIO_a2 !== "undefined" ? CEFR_CONVERSATION_AUDIO_a2 : null,
+        typeof CEFR_CONVERSATION_AUDIO_b1 !== "undefined" ? CEFR_CONVERSATION_AUDIO_b1 : null,
+        typeof CEFR_CONVERSATION_AUDIO_b2 !== "undefined" ? CEFR_CONVERSATION_AUDIO_b2 : null
     ];
 
     for (const bank of convoAudioBanks) {
@@ -7163,7 +7161,7 @@ function multiPhraseStitch(query) {
 function globalLookup(word) {
     if (!word) return null;
     const w = word.toLowerCase();
-    const levelsList = ["A1", "A2", "B1", "B2"];
+    const levelsList = ["a1", "a2", "b1", "b2"];
 
     for (const level of levelsList) {
         const vocab = CEFR_LEVELS?.[level];
@@ -7252,10 +7250,10 @@ function globalLookup(word) {
     }
 
     const convoAudioBanks = [
-        CEFR_CONVERSATION_AUDIO_A1,
-        CEFR_CONVERSATION_AUDIO_A2,
-        CEFR_CONVERSATION_AUDIO_B1,
-        CEFR_CONVERSATION_AUDIO_B2
+        CEFR_CONVERSATION_AUDIO_a1,
+        CEFR_CONVERSATION_AUDIO_a2,
+        CEFR_CONVERSATION_AUDIO_b1,
+        CEFR_CONVERSATION_AUDIO_b2
     ];
 
     for (const bank of convoAudioBanks) {
@@ -7286,10 +7284,10 @@ function globalLookupSpanish(spanishText) {
     const banks = [];
 
     // CEFR Vocabulary
-    if (CEFR_LEVELS?.A1) banks.push(...CEFR_LEVELS.A1);
-    if (CEFR_LEVELS?.A2) banks.push(...CEFR_LEVELS.A2);
-    if (CEFR_LEVELS?.B1) banks.push(...CEFR_LEVELS.B1);
-    if (CEFR_LEVELS?.B2) banks.push(...CEFR_LEVELS.B2);
+    if (CEFR_LEVELS?.a1) banks.push(...CEFR_LEVELS.a1);
+    if (CEFR_LEVELS?.a2) banks.push(...CEFR_LEVELS.a2);
+    if (CEFR_LEVELS?.b1) banks.push(...CEFR_LEVELS.b1);
+    if (CEFR_LEVELS?.b2) banks.push(...CEFR_LEVELS.b2);
 
     // CEFR Phrases
     if (Array.isArray(CEFR_PHRASES)) banks.push(...CEFR_PHRASES);
@@ -7298,10 +7296,10 @@ function globalLookupSpanish(spanishText) {
     if (Array.isArray(LISTEN_VOCAB)) banks.push(...LISTEN_VOCAB);
 
     // Conversation Audio Banks
-    if (Array.isArray(CEFR_CONVERSATION_AUDIO_A1)) banks.push(...CEFR_CONVERSATION_AUDIO_A1);
-    if (Array.isArray(CEFR_CONVERSATION_AUDIO_A2)) banks.push(...CEFR_CONVERSATION_AUDIO_A2);
-    if (Array.isArray(CEFR_CONVERSATION_AUDIO_B1)) banks.push(...CEFR_CONVERSATION_AUDIO_B1);
-    if (Array.isArray(CEFR_CONVERSATION_AUDIO_B2)) banks.push(...CEFR_CONVERSATION_AUDIO_B2);
+    if (Array.isArray(CEFR_CONVERSATION_AUDIO_a1)) banks.push(...CEFR_CONVERSATION_AUDIO_a1);
+    if (Array.isArray(CEFR_CONVERSATION_AUDIO_a2)) banks.push(...CEFR_CONVERSATION_AUDIO_a2);
+    if (Array.isArray(CEFR_CONVERSATION_AUDIO_b1)) banks.push(...CEFR_CONVERSATION_AUDIO_b1);
+    if (Array.isArray(CEFR_CONVERSATION_AUDIO_b2)) banks.push(...CEFR_CONVERSATION_AUDIO_b2);
 
     // Conversation Prompts (expected responses)
     Object.values(CEFR_CONVERSATION_PROMPTS || {}).forEach(levelArray => {
@@ -7314,7 +7312,7 @@ function globalLookupSpanish(spanishText) {
     });
 
     // Disruptors
-    const levelsList = ["A1", "A2", "B1", "B2"];
+    const levelsList = ["a1", "a2", "b1", "b2"];
     levelsList.forEach(level => {
         if (typeof getDisruptorResponses === "function") {
             const disruptors = getDisruptorResponses(level);
