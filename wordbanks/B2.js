@@ -2,7 +2,7 @@
 // CEFR B2 WORD BANK (EXPANDED)
 // ===============================
 
-const B2_WORDS = [
+const b2_WORDS = [
     // ADVANCED CONNECTORS (B2)
     { english: "however", spanish: "sin embargo", audio: "sin-embargo.mp3", category: "connector" },
     { english: "on the other hand", spanish: "por otro lado", audio: "otro-lado.mp3", category: "connector" },
