@@ -2552,9 +2552,10 @@ function renderFlashcardsTab() {
     /* ------------------------------------------------------------
        RENDER MERGED CATEGORIES
        ------------------------------------------------------------ */
-    Object.keys(normalized).forEach(cleanKey => {
-        const catDisplay = normalized[cleanKey].display.tolowerCase();
-        const items = normalized[cleanKey].items;
+    Object.keys(normalized).forEach(key => {
+    const cleanKey = key.toLowerCase();
+    const catDisplay = normalized[cleanKey].display.toUpperCase();
+    const items = normalized[cleanKey].items;
 
         html += `
         <div class="glass-panel">
