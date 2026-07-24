@@ -2,7 +2,7 @@
 // CEFR B1 WORD BANK (EXPANDED)
 // ===============================
 
-const B1_WORDS = [
+const b1_WORDS = [
     // CONNECTORS (B1)
     { english: "and", spanish: "y", audio: "y.mp3", category: "connector" },
     { english: "but", spanish: "pero", audio: "pero.mp3", category: "connector" },
