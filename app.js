@@ -2553,7 +2553,7 @@ function renderFlashcardsTab() {
        RENDER MERGED CATEGORIES
        ------------------------------------------------------------ */
     Object.keys(normalized).forEach(cleanKey => {
-        const catDisplay = normalized[cleanKey].display.toUpperCase();
+        const catDisplay = normalized[cleanKey].display.tolowerCase();
         const items = normalized[cleanKey].items;
 
         html += `
