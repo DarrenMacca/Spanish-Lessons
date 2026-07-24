@@ -2577,7 +2577,7 @@ function renderFlashcardsTab() {
        ------------------------------------------------------------ */
     Object.keys(normalized).forEach(key => {
     const cleanKey = key.toLowerCase();
-    const catDisplay = normalized[cleanKey].display.toUpperCase();
+    const catDisplay = normalized[cleanKey].display.toLowerCase();
     const items = normalized[cleanKey].items;
 
         html += `
