@@ -2269,8 +2269,6 @@ function setLevel(level) {
     activateTab(currentTab);
 }
 
-}
-
 /* ============================================================
    TAB SYSTEM — FINAL CLEAN VERSION
    ============================================================ */
