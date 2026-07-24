@@ -7696,8 +7696,6 @@ if (lang === "spanish") {
             </div>
         `;
     });
-}
-
 
 /* ============================================================
    GLOBAL FREE PRACTICE SANDBOX (UNSCORED)
