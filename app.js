@@ -6499,16 +6499,6 @@ function calculateLevelScores() {
 }
 
 
-/* ============================================================
-   CERTIFICATE STATE
-   ============================================================ */
-let certificates = {
-    a1: false,
-    a2: false,
-    b1: false,
-    b2: false,
-    mastery: false
-};
 
 /* ============================================================
    SAVE / LOAD CERTIFICATES
