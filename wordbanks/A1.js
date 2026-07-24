@@ -2,7 +2,7 @@
 // CEFR A1 WORD BANK (EXPANDED)
 // ===============================
 
-const A1_WORDS = [
+const a1_WORDS = [
     // CONNECTORS
     { english: "and", spanish: "y", audio: "y.mp3", category: "connector" },
     { english: "or", spanish: "o", audio: "o.mp3", category: "connector" },
