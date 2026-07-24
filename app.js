@@ -1596,6 +1596,17 @@ const CEFR_PHRASES_b2 = [
 ];
 
 
+/* ============================================================
+   MERGED CEFR PHRASES (A1–B2, lowercase)
+   ============================================================ */
+
+const CEFR_PHRASES = [
+    ...CEFR_PHRASES_a1.map(p => ({ ...p, level: "a1" })),
+    ...CEFR_PHRASES_a2.map(p => ({ ...p, level: "a2" })),
+    ...CEFR_PHRASES_b1.map(p => ({ ...p, level: "b1" })),
+    ...CEFR_PHRASES_b2.map(p => ({ ...p, level: "b2" }))
+];
+
 
 /* ============================================================
    TRANSLATION ENGINE — CEFR Phrases + Word Dictionary
