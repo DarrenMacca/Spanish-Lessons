@@ -1913,9 +1913,6 @@ function getCEFRGrammarHint(level, user, correct) {
     return "";
 }
 
-
-
-
 /* ============================================================
    CEFR TRAINER — CLEAN APP.JS (PART 1)
    ============================================================ */
@@ -2691,9 +2688,6 @@ function renderFlashcardsTab() {
     });
 }
 
-
-
-
 /* ============================================================
    SHARED QUIZ / BUILD / SENTENCE / CONVERSATION STATE
    ============================================================ */
@@ -2914,8 +2908,6 @@ function cleanStringForKeyboard(text) {
         // ⭐ FIXED: Keeps spaces normal so multi-word queries remain split words
         .replace(/\s+/g, " ");
 }
-
-
 
 /* ============================================================
    BUILD TAB — English → Spanish Builder (with disruptors + feedback)
@@ -3232,8 +3224,6 @@ function setupSentenceEvents(q) {
 nextBtn.addEventListener("click", () => {
     renderSentenceTab();
 });
-
-
 
 /* ============================================================
    CEFR SENTENCE CHOICES — FULL PACK (A1 → B2)
@@ -4916,8 +4906,6 @@ function globalLookup(word) {
     return null;
 }
 
-
-
 /* ============================================================
    SMART PHRASE SPLITTING (ENGLISH → SPANISH)
    ============================================================ */
@@ -5333,7 +5321,6 @@ if (typeof getDisruptorResponses === 'function') {
 }
 
 
-
 function processConversationRewards(matchStatus, baseXP, baseScore, expectedEs, promptEsRaw) {
 
     // Normalize level key so "A1" → "a1"
@@ -5443,8 +5430,6 @@ function audioContextPlayback(type) {
         console.warn("WebAudio player stalled:", e);
     }
 }
-
-
 
 const CEFR_CONVERSATION_PROMPTS = {
 
@@ -6462,8 +6447,6 @@ function updateBadges() {
     }).join("");
 }
 
-
-
 /* ============================================================
    STUDENT NAME BOX
    ============================================================ */
@@ -6935,21 +6918,21 @@ function findAudioForSpanish(spanishText) {
     const clean = cleanStringForKeyboard(spanishText.toLowerCase());
 
     const banks = [];
-    // FIXED: Individual existence checks prevent crash loops if specific asset sheets load late
-    if (typeof CEFR_CONVERSATION_AUDIO_a1 !== "undefined" && Array.isArray(CEFR_CONVERSATION_AUDIO_a1)) banks.push(...CEFR_CONVERSATION_AUDIO_a1);
-    if (typeof CEFR_CONVERSATION_AUDIO_a2 !== "undefined" && Array.isArray(CEFR_CONVERSATION_AUDIO_a2)) banks.push(...CEFR_CONVERSATION_AUDIO_a2);
-    if (typeof CEFR_CONVERSATION_AUDIO_b1 !== "undefined" && Array.isArray(CEFR_CONVERSATION_AUDIO_b1)) banks.push(...CEFR_CONVERSATION_AUDIO_b1);
-    if (typeof CEFR_CONVERSATION_AUDIO_b2 !== "undefined" && Array.isArray(CEFR_CONVERSATION_AUDIO_b2)) banks.push(...CEFR_CONVERSATION_AUDIO_b2);
+    if (Array.isArray(CEFR_CONVERSATION_AUDIO_a1)) banks.push(...CEFR_CONVERSATION_AUDIO_a1);
+    if (Array.isArray(CEFR_CONVERSATION_AUDIO_a2)) banks.push(...CEFR_CONVERSATION_AUDIO_a2);
+    if (Array.isArray(CEFR_CONVERSATION_AUDIO_b1)) banks.push(...CEFR_CONVERSATION_AUDIO_b1);
+    if (Array.isArray(CEFR_CONVERSATION_AUDIO_b2)) banks.push(...CEFR_CONVERSATION_AUDIO_b2);
 
     for (const item of banks) {
-        if (!item || !item.es || !item.audio) continue;
+        if (!item || !item.es || !item.file) continue;
 
         if (cleanStringForKeyboard(item.es.toLowerCase()) === clean) {
-            return item.audio;
+            return item.file;
         }
     }
     return null;
 }
+
 
 /* ============================================================
    PURE REVIEW AUDIO PLAYER (NO COMMENTARY, NO TTS)
@@ -7062,7 +7045,7 @@ function globalLookup(word) {
     const w = word.toLowerCase();
     const levelsList = ["a1", "a2", "b1", "b2"];
 
-    // 1. CEFR Vocabulary (a1–b2) — CEFR_LEVELS
+    // 1. CEFR Vocabulary
     for (const level of levelsList) {
         const vocab = CEFR_LEVELS[level];
         if (!vocab) continue;
@@ -7075,7 +7058,7 @@ function globalLookup(word) {
         }
     }
 
-    // 2. CEFR Sentences — CEFR_SENTENCES
+    // 2. CEFR Sentences
     for (const level of levelsList) {
         const bank = CEFR_SENTENCES[level];
         if (!bank) continue;
@@ -7088,7 +7071,7 @@ function globalLookup(word) {
         }
     }
 
-    // 3. CEFR Sentence Choices — CEFR_SENTENCE_CHOICES
+    // 3. CEFR Sentence Choices
     for (const level of levelsList) {
         const bank = CEFR_SENTENCE_CHOICES[level];
         if (!bank) continue;
@@ -7101,8 +7084,8 @@ function globalLookup(word) {
         }
     }
 
-    // 4. CEFR Phrases — CEFR_PHRASES
-    if (typeof CEFR_PHRASES !== "undefined" && Array.isArray(CEFR_PHRASES)) {
+    // 4. CEFR Phrases
+    if (Array.isArray(CEFR_PHRASES)) {
         const phraseMatch = CEFR_PHRASES.find(p =>
             p.english && p.english.toLowerCase() === w
         );
@@ -7111,8 +7094,8 @@ function globalLookup(word) {
         }
     }
 
-    // 5. Listen Vocab — LISTEN_VOCAB
-    if (typeof LISTEN_VOCAB !== "undefined" && Array.isArray(LISTEN_VOCAB)) {
+    // 5. Listen Vocab
+    if (Array.isArray(LISTEN_VOCAB)) {
         const lvMatch = LISTEN_VOCAB.find(item =>
             item.english && item.english.toLowerCase() === w
         );
@@ -7121,48 +7104,51 @@ function globalLookup(word) {
         }
     }
 
-    // 6. Word-by-word dictionary — WORD_DICT
-    if (typeof WORD_DICT !== "undefined" && WORD_DICT[w]) {
+    // 6. Word Dictionary
+    if (WORD_DICT && WORD_DICT[w]) {
         return { spanish: WORD_DICT[w], source: "Word Dictionary", level: "GLOBAL" };
     }
 
-    // 7. Conversation Prompts — CEFR_CONVERSATION_PROMPTS (FIXED LOOKUP LOOP)
-    if (typeof CEFR_CONVERSATION_PROMPTS !== "undefined" && CEFR_CONVERSATION_PROMPTS !== null) {
+    // 7. Conversation Prompts (FIXED)
+    if (CEFR_CONVERSATION_PROMPTS) {
         for (const levelKey of Object.keys(CEFR_CONVERSATION_PROMPTS)) {
             const prompts = CEFR_CONVERSATION_PROMPTS[levelKey];
             if (!Array.isArray(prompts)) continue;
-            
+
             const convoMatch = prompts.find(p =>
-                p.english && p.english.toLowerCase() === w
+                p.prompt_en && p.prompt_en.toLowerCase() === w
             );
+
             if (convoMatch) {
-                return { 
-                    spanish: typeof convoMatch.spanish === 'object' ? extractSpanishText(convoMatch.spanish) : convoMatch.spanish, 
-                    source: "Conversation Prompt", 
-                    level: levelKey 
+                return {
+                    spanish: convoMatch.prompt_es,
+                    source: "Conversation Prompt",
+                    level: levelKey
                 };
             }
         }
     }
 
-    // 8. Conversation Audio — A1–B2
+    // 8. Conversation Audio (FIXED)
     const convoAudioBanks = [
-        typeof CEFR_CONVERSATION_AUDIO_a1 !== "undefined" ? CEFR_CONVERSATION_AUDIO_a1 : null,
-        typeof CEFR_CONVERSATION_AUDIO_a2 !== "undefined" ? CEFR_CONVERSATION_AUDIO_a2 : null,
-        typeof CEFR_CONVERSATION_AUDIO_b1 !== "undefined" ? CEFR_CONVERSATION_AUDIO_b1 : null,
-        typeof CEFR_CONVERSATION_AUDIO_b2 !== "undefined" ? CEFR_CONVERSATION_AUDIO_b2 : null
+        CEFR_CONVERSATION_AUDIO_a1,
+        CEFR_CONVERSATION_AUDIO_a2,
+        CEFR_CONVERSATION_AUDIO_b1,
+        CEFR_CONVERSATION_AUDIO_b2
     ];
 
     for (const bank of convoAudioBanks) {
-        if (!bank || !Array.isArray(bank)) continue;
+        if (!Array.isArray(bank)) continue;
+
         const audioMatch = bank.find(a =>
-            a.english && a.english.toLowerCase() === w
+            a.en && a.en.toLowerCase() === w
         );
+
         if (audioMatch) {
             return {
-                spanish: audioMatch.spanish,
+                spanish: audioMatch.es,
                 source: "Conversation Audio",
-                level: audioMatch.level || "GLOBAL"
+                level: "GLOBAL"
             };
         }
     }
@@ -7327,51 +7313,52 @@ function multiPhraseStitch(query) {
    ============================================================ */
 function globalLookup(word) {
     if (!word) return null;
-    const w = word.toLowerCase();
+    const w = cleanStringForKeyboard(word.toLowerCase());
     const levelsList = ["a1", "a2", "b1", "b2"];
 
+    // 1. CEFR Vocabulary
     for (const level of levelsList) {
         const vocab = CEFR_LEVELS?.[level];
         if (!vocab) continue;
 
         const match = vocab.find(item =>
-            cleanStringForKeyboard(item?.english || "").toLowerCase() === cleanStringForKeyboard(w).toLowerCase()
-
+            cleanStringForKeyboard(item?.english || "").toLowerCase() === w
         );
         if (match) {
             return { spanish: match.spanish, source: "CEFR Vocabulary", level };
         }
     }
 
+    // 2. CEFR Sentences
     for (const level of levelsList) {
         const bank = CEFR_SENTENCES?.[level];
         if (!bank) continue;
 
         const match = bank.find(item =>
-            cleanStringForKeyboard(item?.english || "").toLowerCase() === cleanStringForKeyboard(w).toLowerCase()
-
+            cleanStringForKeyboard(item?.english || "").toLowerCase() === w
         );
         if (match) {
             return { spanish: match.spanish, source: "CEFR Sentences", level };
         }
     }
 
+    // 3. CEFR Sentence Choices
     for (const level of levelsList) {
         const bank = CEFR_SENTENCE_CHOICES?.[level];
         if (!bank) continue;
 
         const match = bank.find(item =>
-            cleanStringForKeyboard(item?.english || "").toLowerCase() === cleanStringForKeyboard(w).toLowerCase()
-
+            cleanStringForKeyboard(item?.english || "").toLowerCase() === w
         );
         if (match) {
             return { spanish: match.correct?.es, source: "Dialogue Choices", level };
         }
     }
 
+    // 4. CEFR Phrases
     if (Array.isArray(CEFR_PHRASES)) {
         const phraseMatch = CEFR_PHRASES.find(p =>
-            p?.english?.toLowerCase() === w
+            cleanStringForKeyboard(p?.english || "").toLowerCase() === w
         );
         if (phraseMatch) {
             return {
@@ -7382,10 +7369,10 @@ function globalLookup(word) {
         }
     }
 
+    // 5. Listen Vocab
     if (Array.isArray(LISTEN_VOCAB)) {
         const lvMatch = LISTEN_VOCAB.find(item =>
-            cleanStringForKeyboard(item?.english || "").toLowerCase() === cleanStringForKeyboard(w).toLowerCase()
-
+            cleanStringForKeyboard(item?.english || "").toLowerCase() === w
         );
         if (lvMatch) {
             return {
@@ -7396,26 +7383,32 @@ function globalLookup(word) {
         }
     }
 
+    // 6. Word Dictionary
     if (WORD_DICT?.[w]) {
         return { spanish: WORD_DICT[w], source: "Word Dictionary", level: "GLOBAL" };
     }
 
+    // 7. Conversation Prompts (FIXED)
     if (CEFR_CONVERSATION_PROMPTS) {
         for (const levelKey of Object.keys(CEFR_CONVERSATION_PROMPTS)) {
             const prompts = CEFR_CONVERSATION_PROMPTS[levelKey];
+            if (!Array.isArray(prompts)) continue;
+
             const convoMatch = prompts.find(p =>
-                p?.english?.toLowerCase() === w
+                cleanStringForKeyboard(p?.prompt_en || "").toLowerCase() === w
             );
+
             if (convoMatch) {
                 return {
-                    spanish: convoMatch.spanish,
+                    spanish: convoMatch.prompt_es,
                     source: "Conversation Prompt",
-                    level: convoMatch.level || levelKey
+                    level: levelKey
                 };
             }
         }
     }
 
+    // 8. Conversation Audio (FIXED)
     const convoAudioBanks = [
         CEFR_CONVERSATION_AUDIO_a1,
         CEFR_CONVERSATION_AUDIO_a2,
@@ -7427,13 +7420,14 @@ function globalLookup(word) {
         if (!Array.isArray(bank)) continue;
 
         const audioMatch = bank.find(a =>
-            a?.english?.toLowerCase() === w
+            cleanStringForKeyboard(a?.en || "").toLowerCase() === w
         );
+
         if (audioMatch) {
             return {
-                spanish: audioMatch.spanish,
+                spanish: audioMatch.es,
                 source: "Conversation Audio",
-                level: audioMatch.level || "GLOBAL"
+                level: "GLOBAL"
             };
         }
     }
@@ -7451,10 +7445,11 @@ function globalLookupSpanish(spanishText) {
     const banks = [];
 
     // CEFR Vocabulary
-    if (CEFR_LEVELS?.a1) banks.push(...CEFR_LEVELS.a1);
-    if (CEFR_LEVELS?.a2) banks.push(...CEFR_LEVELS.a2);
-    if (CEFR_LEVELS?.b1) banks.push(...CEFR_LEVELS.b1);
-    if (CEFR_LEVELS?.b2) banks.push(...CEFR_LEVELS.b2);
+    ["a1", "a2", "b1", "b2"].forEach(level => {
+        if (Array.isArray(CEFR_LEVELS?.[level])) {
+            banks.push(...CEFR_LEVELS[level]);
+        }
+    });
 
     // CEFR Phrases
     if (Array.isArray(CEFR_PHRASES)) banks.push(...CEFR_PHRASES);
@@ -7463,15 +7458,21 @@ function globalLookupSpanish(spanishText) {
     if (Array.isArray(LISTEN_VOCAB)) banks.push(...LISTEN_VOCAB);
 
     // Conversation Audio Banks
-    if (Array.isArray(CEFR_CONVERSATION_AUDIO_a1)) banks.push(...CEFR_CONVERSATION_AUDIO_a1);
-    if (Array.isArray(CEFR_CONVERSATION_AUDIO_a2)) banks.push(...CEFR_CONVERSATION_AUDIO_a2);
-    if (Array.isArray(CEFR_CONVERSATION_AUDIO_b1)) banks.push(...CEFR_CONVERSATION_AUDIO_b1);
-    if (Array.isArray(CEFR_CONVERSATION_AUDIO_b2)) banks.push(...CEFR_CONVERSATION_AUDIO_b2);
+    [CEFR_CONVERSATION_AUDIO_a1,
+     CEFR_CONVERSATION_AUDIO_a2,
+     CEFR_CONVERSATION_AUDIO_b1,
+     CEFR_CONVERSATION_AUDIO_b2].forEach(bank => {
+        if (Array.isArray(bank)) banks.push(...bank);
+    });
 
-    // Conversation Prompts (expected responses)
+    // Conversation Prompts (prompt_es + expected_responses)
     Object.values(CEFR_CONVERSATION_PROMPTS || {}).forEach(levelArray => {
         if (!Array.isArray(levelArray)) return;
+
         levelArray.forEach(prompt => {
+            if (prompt.prompt_es) {
+                banks.push({ es: prompt.prompt_es, en: prompt.prompt_en });
+            }
             if (Array.isArray(prompt.expected_responses)) {
                 banks.push(...prompt.expected_responses);
             }
@@ -7479,8 +7480,7 @@ function globalLookupSpanish(spanishText) {
     });
 
     // Disruptors
-    const levelsList = ["a1", "a2", "b1", "b2"];
-    levelsList.forEach(level => {
+    ["a1", "a2", "b1", "b2"].forEach(level => {
         if (typeof getDisruptorResponses === "function") {
             const disruptors = getDisruptorResponses(level);
             if (Array.isArray(disruptors)) banks.push(...disruptors);
@@ -7492,9 +7492,10 @@ function globalLookupSpanish(spanishText) {
         if (!item) continue;
 
         const spanishString =
-            typeof item === "object"
-                ? item.es || item.spanish
-                : item;
+            item.es ||
+            item.spanish ||
+            item.text ||
+            (typeof item === "string" ? item : null);
 
         if (!spanishString) continue;
 
@@ -7506,7 +7507,6 @@ function globalLookupSpanish(spanishText) {
     return "[Unknown translation]";
 }
 
-
 /* ============================================================
    UNIVERSAL TEXT EXTRACTOR
    ============================================================ */
@@ -7515,15 +7515,22 @@ function extractSpanishText(item) {
     if (typeof item === "string") return item;
 
     if (typeof item === "object") {
+
+        // Direct Spanish fields
+        if (item.prompt_es) return item.prompt_es;
+        if (item.es) return item.es;
+        if (item.spanish) return item.spanish;
+        if (item.text && detectLanguage(item.text) === "spanish") return item.text;
+
+        // Nested Spanish objects
         if (typeof item.es === "object") return extractSpanishText(item.es);
         if (typeof item.spanish === "object") return extractSpanishText(item.spanish);
 
-        if (item.es) return item.es;
-        if (item.spanish) return item.spanish;
-        if (item.text) return item.text;
-
+        // Deep scan — but only return Spanish strings
         for (const value of Object.values(item)) {
-            if (typeof value === "string" && !value.includes("[object")) return value;
+            if (typeof value === "string" && detectLanguage(value) === "spanish") {
+                return value;
+            }
             if (typeof value === "object" && value !== null) {
                 const nested = extractSpanishText(value);
                 if (nested) return nested;
@@ -7531,8 +7538,9 @@ function extractSpanishText(item) {
         }
     }
 
-    return String(item);
+    return "";
 }
+
 
 
 /* ============================================================
@@ -7642,29 +7650,51 @@ if (lang === "english") {
         /* ============================================================
            2. SPANISH → ENGLISH
         ============================================================ */
-        if (lang === "spanish") {
+       if (lang === "spanish") {
 
-            const lowerQuery = cleanStringForKeyboard(query.toLowerCase());
+    const lowerQuery = cleanStringForKeyboard(query.toLowerCase());
 
-            // MULTI‑PHRASE MODE
-            if (lowerQuery.includes(" ")) {
-                const stitched = multiPhraseStitchSpanish(lowerQuery);
+    // MULTI‑PHRASE MODE
+    if (lowerQuery.includes(" ")) {
+        const stitched = multiPhraseStitchSpanish(lowerQuery);
 
-                resultBox.innerHTML = `
-                    <div style="padding: 10px; background: rgba(74, 222, 128, 0.1);
-                                border: 1px solid rgba(74, 222, 128, 0.3);
-                                border-radius: 10px; margin-top: 5px;">
-                        <span style="color: #a5f3fc; font-weight: bold;">English:</span>
-                        <span style="color: #4ade80; font-size: 1.1rem; font-weight: 600;">
-                            ${stitched.english}
-                        </span>
-                        <div style="font-size: 11px; color: rgba(255,255,255,0.4);">
-                            Multi‑phrase mode — matched: ${stitched.matched.join(", ")}
-                        </div>
+        if (stitched) {
+            resultBox.innerHTML = `
+                <div style="padding: 10px; background: rgba(74, 222, 128, 0.1);
+                            border: 1px solid rgba(74, 222, 128, 0.3);
+                            border-radius: 10px; margin-top: 5px;">
+                    <span style="color: #a5f3fc; font-weight: bold;">English:</span>
+                    <span style="color: #4ade80; font-size: 1.1rem; font-weight: 600;">
+                        ${stitched.english}
+                    </span>
+                    <div style="font-size: 11px; color: rgba(255,255,255,0.4);">
+                        Multi‑phrase mode — matched: ${stitched.matched.join(", ")}
                     </div>
-                `;
-                return;
-            }
+                </div>
+            `;
+            return;
+        }
+    }
+
+    // SINGLE WORD MODE
+    const englishResult = globalLookupSpanish(lowerQuery);
+
+    resultBox.innerHTML = `
+        <div style="padding: 10px; background: rgba(74, 222, 128, 0.1);
+                    border: 1px solid rgba(74, 222, 128, 0.3);
+                    border-radius: 10px; margin-top: 5px;">
+            <span style="color: #a5f3fc; font-weight: bold;">English:</span>
+            <span style="color: #4ade80; font-size: 1.1rem; font-weight: 600;">
+                ${englishResult}
+            </span>
+            <div style="font-size: 11px; color: rgba(255,255,255,0.4);">
+                Spanish → English mode
+            </div>
+        </div>
+    `;
+    return;
+}
+
 
             // SINGLE WORD MODE
             const englishResult = globalLookupSpanish(lowerQuery);
@@ -7757,27 +7787,27 @@ function evaluatePracticeAnswer() {
     if (!inputField || !feedbackBox || !currentPracticeWord) return;
 
     const userTyped = inputField.value.trim();
-    
     if (!userTyped) {
         feedbackBox.innerHTML = `<span style="color: #f87171;">Type an answer first!</span>`;
         return;
     }
 
-    // KEYBOARD PROTECTOR: Clean entries using our helper utility
     const cleanUser = cleanStringForKeyboard(userTyped);
-    const cleanCorrect = cleanStringForKeyboard(currentPracticeWord.spanish);
+    const englishFromUser = globalLookupSpanish(cleanUser);
+    const englishCorrect = currentPracticeWord.english;
 
-    if (cleanUser === cleanCorrect) {
+    const isCorrect = englishFromUser === englishCorrect;
+
+    if (isCorrect) {
         const cleanSpeechText = currentPracticeWord.spanish.replace(/'/g, "\\'");
-        
+
         feedbackBox.innerHTML = `
             <div style="color: #4ade80; font-weight: 600; padding: 6px; background: rgba(74,222,128,0.1); border-radius: 8px; display: flex; align-items: center; gap: 6px; flex-wrap: wrap;">
                 <span>Correct! 🎉 (${currentPracticeWord.spanish})</span>
                 <button id="practice-speak-btn" class="pill" style="padding: 2px 8px; font-size: 10px; max-width: 40px; cursor: pointer;">🔊</button>
             </div>
         `;
-        
-        // Inline events are replaced with dedicated listeners to prevent apostrophe injection breakages
+
         const speakBtn = document.getElementById("practice-speak-btn");
         if (speakBtn) {
             speakBtn.onclick = () => {
@@ -7789,17 +7819,15 @@ function evaluatePracticeAnswer() {
                 window.speechSynthesis.speak(utterance);
             };
         }
-        
-        // Auto-vocalize correct matches immediately 
+
         window.speechSynthesis.cancel();
         const utterance = new SpeechSynthesisUtterance(currentPracticeWord.spanish);
         utterance.lang = 'es-ES';
         const speedSlider = document.getElementById('rate');
         if (speedSlider) utterance.rate = parseFloat(speedSlider.value);
         window.speechSynthesis.speak(utterance);
-        
+
     } else {
-        // Revealed answer engine correction block
         feedbackBox.innerHTML = `
             <div style="color: #f87171; font-weight: 500; padding: 6px; background: rgba(248,113,113,0.1); border-radius: 8px;">
                 Not quite! "<strong>${currentPracticeWord.english}</strong>" translates to "<strong>${currentPracticeWord.spanish}</strong>". Try again, or click Skip.
