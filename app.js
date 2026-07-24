@@ -6227,17 +6227,36 @@ const CEFR_CONVERSATION_AUDIO_b2 = [
 
 
 /* ============================================================
-   GRAMMAR TAB
+   GRAMMAR TAB (FIXED LEVEL NORMALIZATION)
    ============================================================ */
 
 function renderGrammarTab() {
     const container = document.getElementById("grammar-content");
-    const words = CEFR_LEVELS[appState.currentLevel];
+    if (!container) return;
+
+    // Normalize level key so "A1" → "a1"
+    const levelKey = (appState.currentLevel || "a1").toLowerCase();
+
+    // Safely pull vocabulary
+    const words = CEFR_LEVELS[levelKey] || [];
+
+    // If no words found, show a friendly message
+    if (!Array.isArray(words) || words.length === 0) {
+        container.innerHTML = `
+            <div class="glass-panel quiz-card">
+                <h2>Grammar — Level ${levelKey}</h2>
+                <p>No grammar items found for this level.</p>
+            </div>
+        `;
+        return;
+    }
+
+    // Group by category
     const grouped = groupByCategory(words);
 
     container.innerHTML = `
         <div class="glass-panel quiz-card">
-            <h2>Grammar — Level ${appState.currentLevel}</h2>
+            <h2>Grammar — Level ${levelKey}</h2>
             <p>Breakdown of word types you're training.</p>
         </div>
 
@@ -6253,6 +6272,7 @@ function renderGrammarTab() {
         </div>
     `;
 }
+
 
 /* ============================================================
    BADGES (UPGRADED VISUAL EDITION)
