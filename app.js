@@ -4669,22 +4669,11 @@ const DISRUPTORS_b2 = [
 ];
 
 const DISRUPTOR_WORDS = {
-    A1: DISRUPTORS_a1,
-    A2: DISRUPTORS_a2,
-    B1: DISRUPTORS_b1,
-    B2: DISRUPTORS_b2
+    a1: DISRUPTORS_a1,
+    a2: DISRUPTORS_a2,
+    b1: DISRUPTORS_b1,
+    b2: DISRUPTORS_b2
 };
-
-/* ============================================================
-   MERGED CEFR PHRASES (A1–B2)
-   ============================================================ */
-
-const CEFR_PHRASES = [
-    ...(CEFR_PHRASES_a1 || []),
-    ...(CEFR_PHRASES_a2 || []),
-    ...(CEFR_PHRASES_b1 || []),
-    ...(CEFR_PHRASES_b2 || [])
-];
 
 
 /* ============================================================
