@@ -7701,9 +7701,12 @@ resultBox.innerHTML = `
         Unable to detect language. Please type English or Spanish only.
     </div>
 `;
-});  // CLOSES: searchInput.addEventListener("input", ...)
+return;   // ← THIS WAS MISSING
+});  // CLOSES event listener
 
-}  // CLOSES: function initDictionarySearch()
+}  // CLOSES initDictionarySearch()
+
+
 /* ============================================================
    GLOBAL FREE PRACTICE SANDBOX (UNSCORED)
    ============================================================ */
