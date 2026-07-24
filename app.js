@@ -2408,44 +2408,51 @@ function renderListenTab() {
         </div>
     `;
 
-    /* ============================================================
-       CATEGORY LIST (already grouped in LISTEN_VOCAB)
-       ============================================================ */
-    Object.keys(levelData).forEach(categoryName => {
-        const words = levelData[categoryName];
+  /* ============================================================
+   CATEGORY LIST (already grouped in LISTEN_VOCAB)
+   ============================================================ */
+Object.keys(levelData).forEach(categoryName => {
+    const words = levelData[categoryName];
 
-       html += `
-<div class="glass-panel">
-    <div class="listen-category-header" data-cat="${categoryName}">
-       <span class="listen-category-title">${categoryName}</span>
-       <span class="listen-arrow">▶</span>
-    </div>
+    html += `
+    <div class="glass-panel">
+        <div class="listen-category-header" data-cat="${categoryName}">
+            <span class="listen-category-title">${categoryName}</span>
+            <span class="listen-arrow">▶</span>
+        </div>
 
+        <div class="listen-category-content" data-cat="${categoryName}">
+            <div class="listen-grid" style="
+                display:grid;
+                grid-template-columns:repeat(auto-fill, minmax(120px, 1fr));
+                gap:6px;
+                margin-top:8px;
+            ">
+                ${words.map(item => {
+                    // item may be a string OR an object
+                    const spanishWord = typeof item === "string" ? item : item.spanish;
 
-            <div class="listen-category-content" data-cat="${categoryName}">
-                <div class="listen-grid" style="
-                    display:grid;
-                    grid-template-columns:repeat(auto-fill, minmax(120px, 1fr));
-                    gap:6px;
-                    margin-top:8px;
-                ">
-                    ${words.map(spanish => {
-                         const entry = CEFR_LEVELS[appState.currentLevel].find(w => w.spanish === spanish);
-                         const english = entry ? entry.english : "";
-                         return `
-                           <button class="pill listen-pill" data-spanish="${spanish}">
-                             <div class="listen-pill-en">${english}</div>
-                             <div class="listen-pill-es">${spanish}</div>
-                           </button>
-                       `;
-                   }).join("")}
+                    // Normalize level key so "A1" → "a1"
+                    const levelKey = (appState.currentLevel || "a1").toLowerCase();
 
-                </div>
+                    // Safely pull vocabulary entry
+                    const entry = CEFR_LEVELS[levelKey].find(w => w.spanish === spanishWord);
+                    const english = entry ? entry.english : "";
+
+                    return `
+                        <button class="pill listen-pill" data-spanish="${spanishWord}">
+                            <div class="listen-pill-en">${english}</div>
+                            <div class="listen-pill-es">${spanishWord}</div>
+                        </button>
+                    `;
+                }).join("")}
             </div>
-        </div>`;
-    });
+        </div>
+    </div>`;
+});
 
-    container.innerHTML = html;
+container.innerHTML = html;
+
 
     /* ============================================================
        CATEGORY COLLAPSE
@@ -2538,12 +2545,30 @@ function playNextListenWord() {
 }
 
 /* ============================================================
-   FLASHCARDS — CATEGORY GROUPED + FLIP + AUDIO (STABLE VERSION)
+   FLASHCARDS — CATEGORY GROUPED + FLIP + AUDIO (FIXED VERSION)
    ============================================================ */
 
 function renderFlashcardsTab() {
     const container = document.getElementById("flash-content");
-    const words = CEFR_LEVELS[appState.currentLevel];
+    if (!container) return;
+
+    // Normalize level key so "A1" → "a1"
+    const levelKey = (appState.currentLevel || "a1").toLowerCase();
+
+    // Safely pull vocabulary
+    const words = CEFR_LEVELS[levelKey] || [];
+
+    // If no words found, show a friendly message
+    if (!Array.isArray(words) || words.length === 0) {
+        container.innerHTML = `
+            <div class="glass-panel">
+                <h2>Flashcards — Level ${levelKey}</h2>
+                <p>No flashcards available for this level.</p>
+            </div>
+        `;
+        return;
+    }
+
     const grouped = groupByCategory(words);
 
     /* ------------------------------------------------------------
@@ -2567,8 +2592,8 @@ function renderFlashcardsTab() {
        ------------------------------------------------------------ */
     let html = `
         <div class="glass-panel">
-            <h2>Flashcards — Level ${appState.currentLevel}</h2>
-            <p>Translate the word then tap the card to flip it over and see if your correct. Spanish side plays audio.</p>
+            <h2>Flashcards — Level ${levelKey}</h2>
+            <p>Translate the word then tap the card to flip it over and see if you're correct. Spanish side plays audio.</p>
         </div>
     `;
 
@@ -2576,9 +2601,9 @@ function renderFlashcardsTab() {
        RENDER MERGED CATEGORIES
        ------------------------------------------------------------ */
     Object.keys(normalized).forEach(key => {
-    const cleanKey = key.toLowerCase();
-    const catDisplay = normalized[cleanKey].display.toLowerCase();
-    const items = normalized[cleanKey].items;
+        const cleanKey = key.toLowerCase();
+        const catDisplay = normalized[cleanKey].display.toUpperCase();
+        const items = normalized[cleanKey].items;
 
         html += `
         <div class="glass-panel">
@@ -2628,7 +2653,7 @@ function renderFlashcardsTab() {
 
             if (flipped) {
                 speakSpanish(spanish);
-                appState.levelStats[appState.currentLevel].flashSeen++;
+                appState.levelStats[levelKey].flashSeen++;
                 saveState();
                 updateBadges();
                 updateProgressMeters();
@@ -2638,6 +2663,7 @@ function renderFlashcardsTab() {
         });
     });
 }
+
 
 
 
@@ -2680,54 +2706,66 @@ function generateQuizOptions(words, correctWord) {
 }
 
 /* ============================================================
-   QUIZ TAB — RENDER + EVENTS
+   QUIZ TAB — RENDER + EVENTS (FIXED VERSION)
    ============================================================ */
 
 function renderQuizTab() {
     const container = document.getElementById("quiz-content");
-    const words = CEFR_LEVELS[appState.currentLevel];
+    if (!container) return;
 
-    if (!words || !words.length) {
-        container.innerHTML = `<div class="glass-panel quiz-card">
-            <p>No words found for level ${appState.currentLevel}.</p>
-        </div>`;
+    // Normalize level key so "A1" → "a1"
+    const levelKey = (appState.currentLevel || "a1").toLowerCase();
+
+    // Safely pull vocabulary
+    const words = CEFR_LEVELS[levelKey] || [];
+
+    if (!Array.isArray(words) || words.length === 0) {
+        container.innerHTML = `
+            <div class="glass-panel quiz-card">
+                <p>No words found for level ${levelKey}.</p>
+            </div>
+        `;
         return;
     }
 
+    // Pick a random word
     quizState.currentWord = words[Math.floor(Math.random() * words.length)];
+
+    // Generate options safely
     quizState.options = generateQuizOptions(words, quizState.currentWord);
     quizState.selected = null;
 
     container.innerHTML = `
-    <div class="glass-panel quiz-card">
-        <h2>Quiz — Level ${appState.currentLevel}</h2>
-        <p>Select the correct Spanish for the English word.</p>
+        <div class="glass-panel quiz-card">
+            <h2>Quiz — Level ${levelKey}</h2>
+            <p>Select the correct Spanish for the English word.</p>
 
-        <div id="qb-meta"><strong>English:</strong> ${quizState.currentWord.english}</div>
+            <div id="qb-meta"><strong>English:</strong> ${quizState.currentWord.english}</div>
 
-        <div id="qb-grid" class="sb-grid">
-            ${quizState.options.map(opt => `
-                <button class="pill" data-spanish="${opt}">${opt}</button>
-            `).join("")}
+            <div id="qb-grid" class="sb-grid">
+                ${quizState.options.map(opt => `
+                    <button class="pill" data-spanish="${opt}">${opt}</button>
+                `).join("")}
+            </div>
+
+            <div id="qb-answer" class="qb-answer"></div>
+
+            <div class="sb-controls quiz-controls-tight">
+                <button id="qb-submit">Check</button>
+                <button id="qb-next">Next</button>
+                <button id="qb-harder" class="${quizState.harderMode ? "active" : ""}">Harder</button>
+            </div>
+
+            <div id="qb-feedback" class="qb-feedback"></div>
         </div>
-
-        <div id="qb-answer" class="qb-answer"></div>
-
-        <div class="sb-controls quiz-controls-tight">
-            <button id="qb-submit">Check</button>
-            <button id="qb-next">Next</button>
-            <button id="qb-harder" class="${quizState.harderMode ? "active" : ""}">Harder</button>
-        </div>
-
-        <div id="qb-feedback" class="qb-feedback"></div>
-    </div>
     `;
 
     setupQuizEvents();
 }
 
+
 /* ============================================================
-   QUIZ EVENTS
+   QUIZ EVENTS (FIXED VERSION)
    ============================================================ */
 
 function setupQuizEvents() {
@@ -2739,6 +2777,9 @@ function setupQuizEvents() {
     const answerBox = document.getElementById("qb-answer");
 
     quizState.selected = null;
+
+    // Normalize level key so "A1" → "a1"
+    const levelKey = (appState.currentLevel || "a1").toLowerCase();
 
     // Pill selection
     grid.querySelectorAll(".pill").forEach(btn => {
@@ -2752,7 +2793,7 @@ function setupQuizEvents() {
 
     // Helper: translate Spanish → English
     function getEnglishForSpanish(spanishWord) {
-        const levelWords = CEFR_LEVELS[appState.currentLevel];
+        const levelWords = CEFR_LEVELS[levelKey] || [];
         const match = levelWords.find(w => w.spanish === spanishWord);
         return match ? match.english : "[no match]";
     }
@@ -2769,35 +2810,32 @@ function setupQuizEvents() {
         const learnerEnglish = getEnglishForSpanish(learnerSpanish);
 
         // Ensure quizScore is not null before incrementing
-        if (appState.levelStats[appState.currentLevel].quizScore === null) {
-            appState.levelStats[appState.currentLevel].quizScore = 0;
+        if (appState.levelStats[levelKey].quizScore === null) {
+            appState.levelStats[levelKey].quizScore = 0;
         }
 
-        // Correct / Incorrect feedback + NEW "You selected:"
-       if (learnerSpanish === correct) {
-    feedback.innerHTML = `
-        <div class="quiz-correct">Correct! 🎉</div>
-        <div class="quiz-selected"><strong>You selected:</strong> ${learnerSpanish} (${learnerEnglish})</div>
-    `;
+        if (learnerSpanish === correct) {
+            feedback.innerHTML = `
+                <div class="quiz-correct">Correct! 🎉</div>
+                <div class="quiz-selected"><strong>You selected:</strong> ${learnerSpanish} (${learnerEnglish})</div>
+            `;
 
-       appState.levelStats[appState.currentLevel].quizScore++;
-      appState.levelStats[appState.currentLevel].quizCompleted++;
+            appState.levelStats[levelKey].quizScore++;
+            appState.levelStats[levelKey].quizCompleted++;
 
-    /* ⭐ CEFR ENGINE SCORING ⭐ */
-      quizCorrect++;
-      quizTotal++;
-      runCEFRScoringEngine();
-      renderCertificates();
-   /* ⭐ END ⭐ */
+            /* ⭐ CEFR ENGINE SCORING ⭐ */
+            quizCorrect++;
+            quizTotal++;
+            runCEFRScoringEngine();
+            renderCertificates();
+            /* ⭐ END ⭐ */
 
+            appState.totalXP = (appState.totalXP || 0) + 10;
+            appState.globalScore = (appState.globalScore || 0) + 5;
 
-    appState.totalXP = (appState.totalXP || 0) + 10; 
-    appState.globalScore = (appState.globalScore || 0) + 5;
-
-    checkAndAdvanceStreak();
-    updateBadges();
-    updateProgressMeters();
-
+            checkAndAdvanceStreak();
+            updateBadges();
+            updateProgressMeters();
 
         } else {
             feedback.innerHTML = `
@@ -2805,7 +2843,6 @@ function setupQuizEvents() {
                 <div class="quiz-selected"><strong>You selected:</strong> ${learnerSpanish} (${learnerEnglish})</div>
             `;
 
-            // INTEGRATION: Formats the phrase "English ➔ Spanish" and adds it to your review tracking list
             const mistakeString = `${quizState.currentWord.english} ➔ ${correct}`;
             addIncorrectWord(mistakeString);
         }
@@ -2828,6 +2865,7 @@ function setupQuizEvents() {
         renderQuizTab();
     });
 }
+
 
 /* ============================================================
    KEYBOARD NORMALIZATION UTILITY (MULTI-WORD VERSION)
