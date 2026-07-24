@@ -7695,26 +7695,6 @@ if (lang === "english") {
     return;
 }
 
-
-            // SINGLE WORD MODE
-            const englishResult = globalLookupSpanish(lowerQuery);
-
-            resultBox.innerHTML = `
-                <div style="padding: 10px; background: rgba(74, 222, 128, 0.1);
-                            border: 1px solid rgba(74, 222, 128, 0.3);
-                            border-radius: 10px; margin-top: 5px;">
-                    <span style="color: #a5f3fc; font-weight: bold;">English:</span>
-                    <span style="color: #4ade80; font-size: 1.1rem; font-weight: 600;">
-                        ${englishResult}
-                    </span>
-                    <div style="font-size: 11px; color: rgba(255,255,255,0.4);">
-                        Spanish → English mode
-                    </div>
-                </div>
-            `;
-            return;
-        }  // CLOSE: if (lang === "spanish")
-
         /* ============================================================
            3. UNKNOWN INPUT
         ============================================================ */
