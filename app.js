@@ -7809,7 +7809,3 @@ function evaluatePracticeAnswer() {
         `;
     }
 }
-
-
-
-
