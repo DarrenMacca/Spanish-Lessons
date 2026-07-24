@@ -6652,36 +6652,7 @@ function renderCertificates() {
     }
 }
 
-/* ============================================================
-   LOAD PDF LIBRARIES (html2canvas + jsPDF)
-   ============================================================ */
-function loadPDFLibraries(callback) {
-    if (window.html2canvas && window.jspdf) {
-        callback();
-        return;
-    }
-
-    const html2canvasScript = document.createElement("script");
-html2canvasScript.src =2"https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js";
-   jsPDFScript.src =5"https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js";
-
-    let loaded = 0;
-    function checkLoaded() {
-        loaded++;
-        if (loaded === 2) callback();
-    }
-
-    html2canvasScript.onload = checkLoaded;
-    jsPDFScript.onload = checkLoaded;
-
-    document.body.appendChild(html2canvasScript);
-    document.body.appendChild(jsPDFScript);
-}
-
-
-/* ============================================================
-   DOWNLOAD CERTIFICATE AS PDF
-   ============================================================ */
+/* ============================================================2   LOAD PDF LIBRARIES (html2canvas + jsPDF)3   ============================================================ */4function loadPDFLibraries(callback) {5    // Libraries already loaded6    if (window.html2canvas && window.jspdf) {7        callback();8        return;9    }10 11    const html2canvasScript = document.createElement("script");12    html2canvasScript.src =13        "https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js";14 15    const jsPDFScript = document.createElement("script");16    jsPDFScript.src =17        "https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js";18 19    let loaded = 0;20 21    function checkLoaded() {22        loaded++;23        if (loaded === 2) {24            callback();25        }26    }27 28    html2canvasScript.onload = checkLoaded;29    jsPDFScript.onload = checkLoaded;30 31    html2canvasScript.onerror = () => {32        console.error("Failed to load html2canvas library.");33    };34 35    jsPDFScript.onerror = () => {36        console.error("Failed to load jsPDF library.");37    };38 39    document.body.appendChild(html2canvasScript);40    document.body.appendChild(jsPDFScript);41}42 43/* ============================================================44   DOWNLOAD CERTIFICATE AS PDF45   ============================================================ */
 function downloadCertificate(certId) {
     const element = document.getElementById(certId);
     if (!element) {
