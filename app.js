@@ -7808,7 +7808,7 @@ function evaluatePracticeAnswer() {
         if (speedSlider) utterance.rate = parseFloat(speedSlider.value);
         window.speechSynthesis.speak(utterance);
 
-   } else {
+  } else {
         feedbackBox.innerHTML = `
             <div style="color: #f87171; font-weight: 500; padding: 6px; background: rgba(248,113,113,0.1); border-radius: 8px;">
                 Not quite! "<strong>${currentPracticeWord.english}</strong>" translates to "<strong>${currentPracticeWord.spanish}</strong>". Try again, or click Skip.
@@ -7816,4 +7816,3 @@ function evaluatePracticeAnswer() {
         `;
     }
 } // Closes evaluatePracticeAnswer()
-} // Closes initDictionarySearch()
