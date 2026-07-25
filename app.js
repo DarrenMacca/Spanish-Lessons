@@ -7578,7 +7578,7 @@ function initDictionarySearch() {
                 </div>
             `;
             return;
-        }   // ← THIS closes the ENGLISH block correctly
+        }   // ← closes ENGLISH block
 
 
         /* ============================================================
@@ -7627,7 +7627,7 @@ function initDictionarySearch() {
                 </div>
             `;
             return;
-        }   // ← THIS closes the SPANISH block correctly
+        }   // ← closes SPANISH block
 
 
         /* ============================================================
