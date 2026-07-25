@@ -7169,7 +7169,7 @@ function multiPhraseStitch(query) {
         .map(w => cleanStringForKeyboard(w));
 
     const results = [];
-    const matches = [];
+    const matched = [];
 
     let i = 0;
 
@@ -7199,7 +7199,7 @@ function multiPhraseStitch(query) {
 
             if (hit) {
                 results.push(hit.spanish);
-                matches.push(subPhrase);
+                matched.push(subPhrase);
                 i = end;
                 found = true;
                 break;
@@ -7219,9 +7219,10 @@ function multiPhraseStitch(query) {
 
     return {
         spanish: results.join(" "),
-        matched: matches
+        matched
     };
 }
+
 
 function multiPhraseStitchSpanish(spanishText) {
     if (!spanishText) return { english: "", matched: [] };
@@ -7250,6 +7251,7 @@ function multiPhraseStitchSpanish(spanishText) {
     };
 }
 
+
 /* ============================================================
    LANGUAGE DETECTOR (Bulletproof)
    ============================================================ */
@@ -7265,48 +7267,6 @@ function detectLanguage(text) {
     return "english";
 }
 
-/* ============================================================
-   MULTI‑PHRASE STITCHING ENGINE
-   ============================================================ */
-function multiPhraseStitch(query) {
-    const words = query.split(/\s+/);
-    const results = [];
-    const matches = [];
-
-    let i = 0;
-
-    while (i < words.length) {
-        let found = false;
-
-        for (let end = words.length; end > i; end--) {
-            const subPhrase = words.slice(i, end).join(" ");
-            const hit = globalLookup(subPhrase);
-
-            if (hit) {
-                results.push(hit.spanish);
-                matches.push(subPhrase);
-                i = end;
-                found = true;
-                break;
-            }
-        }
-
-        if (!found) {
-            const single = globalLookup(words[i]);
-            if (single) {
-                results.push(single.spanish);
-            } else {
-                results.push(`[${words[i]}]`);
-            }
-            i++;
-        }
-    }
-
-    return {
-        spanish: results.join(" "),
-        matches
-    };
-}
 
 /* ============================================================
    GLOBAL ALL-BANKS DICTIONARY & CONVERSATIONAL PHRASE SEARCH
@@ -7582,7 +7542,8 @@ if (lang === "english") {
                     ${stitched.spanish}
                 </span>
                 <div style="font-size: 11px; color: rgba(255,255,255,0.4);">
-                    Multi‑phrase mode — matched: ${stitched.matches.join(", ")}
+                    Multi‑phrase mode — matched: ${stitched.matched.join(", ")
+}
                 </div>
             </div>
         `;
