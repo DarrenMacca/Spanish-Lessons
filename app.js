@@ -7816,5 +7816,3 @@ function evaluatePracticeAnswer() {
         `;
     }
 } // Closes evaluatePracticeAnswer()
-
-});
