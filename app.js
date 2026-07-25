@@ -7816,7 +7816,4 @@ function evaluatePracticeAnswer() {
         `;
     }
 } // Closes evaluatePracticeAnswer()
-
-}); // Closes searchInput.addEventListener("input", ...)
-
 } // Closes initDictionarySearch()
