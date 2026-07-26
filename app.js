@@ -7220,6 +7220,26 @@ const EVERYDAY_PHRASE_TEMPLATES = [
             return { translation: `Quiero comprar ${parsedTarget}`, label: "Spanish", speakText: `Quiero comprar ${parsedTarget}`, source: "Dynamic Purchase Template" };
         }
     },
+       {
+        // Matches: "Can I buy [a beer / shoes / tickets / a book...]"
+        pattern: /^can i buy (.+)$/i,
+        translate: (targetWord) => {
+            const parsedTarget = parseSubPhrase(targetWord);
+            // Swaps the literal "un/una" split directly for smooth native output phrasing
+            let cleanSegment = parsedTarget.replace("to", "un"); 
+            return { translation: `¿Puedo comprar ${cleanSegment}?`, label: "Spanish", speakText: `Puedo comprar ${cleanSegment}`, source: "Dynamic Transaction Template" };
+        }
+    },
+    {
+        // Matches: "Can I order [a coffee / tea / food...]"
+        pattern: /^can i order (.+)$/i,
+        translate: (targetWord) => {
+            const parsedTarget = parseSubPhrase(targetWord);
+            let cleanSegment = parsedTarget.replace("to", "un");
+            return { translation: `¿Puedo pedir ${cleanSegment}?`, label: "Spanish", speakText: `Puedo pedir ${cleanSegment}`, source: "Dynamic Transaction Template" };
+        }
+    },
+
     {
         // Matches: "Where can I find [the bathroom / a hotel...]"
         pattern: /^where can i find (.+)$/i,
