@@ -697,633 +697,332 @@ const LISTEN_VOCAB = {
 /* ============================================================
    WORD-BY-WORD DICTIONARY — CEFR A1 → B2 (Categorized)
    ============================================================ */
+/* ============================================================
+   WORD-BY-WORD DICTIONARY — CEFR A1 → B2 (Categorized Master)
+   ============================================================ */
 
 const WORD_DICT = {
+    /* ============================================================
+       FOUNDATIONAL CONVERSATIONAL ARCHITECTURE (STRUCTURAL TOKENS)
+       ============================================================ */
 
     /* ============================
-       A1 — Connectors
+       Functional Connectors
        ============================ */
-
-
-"y": "and",
-"o": "or",
-"con": "with",
-"sin": "without",
-"más": "more",
-"poco": "little",
-"solo": "only / alone",
-"muy": "very",
-"cerca": "near",
-"para": "for",
-"a": "to",
-"en": "in",
-"por": "for/by",
-"de": "of/from",
-"al": "to the",
-"del": "of the",
-"pero": "but",
-"porque": "because",
-"también": "also",
-"entonces": "then",
-"qué": "what",
-"quién": "who",
-"cuándo": "when",
-"cómo": "how",
-"cuál": "which",
-"dónde": "where",
-"no": "no / not",
-"si": "yes",
-"hay": "there is / there are",
-"otra": "other / another",
-"pesar": "despite",
-"favor": "favor (por favor)",
+    "y": "and",
+    "o": "or",
+    "con": "with",
+    "sin": "without",
+    "más": "more",
+    "poco": "little",
+    "solo": "only / alone",
+    "muy": "very",
+    "cerca": "near",
+    "para": "for",
+    "a": "to",
+    "en": "in / on",
+    "por": "for / by",
+    "de": "of / from",
+    "al": "to the",
+    "del": "of the",
+    "pero": "but",
+    "porque": "because",
+    "también": "also",
+    "entonces": "then",
+    "si": "yes / if",
+    "hay": "there is / there are",
+    "otra": "other / another",
+    "otro": "other / another (masc.)",
+    "otras": "other / another (plural)",
+    "otros": "other / another (masc. plural)",
+    "pesar": "despite",
+    "a pesar de": "despite",
+    "favor": "favor (por favor)",
+    "por favor": "please",
+    "mientras": "while",
+    "sin embargo": "however",
+    "sobre": "about / on top of",
+    "después": "after",
+    "durante": "during",
+    "además": "in addition / furthermore",
+    "por lo tanto": "therefore",
+    "aunque": "although",
+    "incluso": "even",
+    "otra vez": "again",
 
     /* ============================
-       A1 — Numbers
+       Question Roots & Interrogatives
        ============================ */
-
-"uno": "one",
-"dos": "two",
-"diez": "ten",
-"nueve": "nine",
-
-
- /* ============================
-       A1 — Articles
-   ============================ */
-
-"el": "the",
-"la": "the",
-"los": "the",
-"las": "the",
-"un": "a",
-"una": "a",
-
-
-/* ============================
-       A1 — Pronouns
-   ============================ */
-
-"me": "me",
-"te": "you",
-"le": "to him/her",
-"nos": "us",
-"les": "to them",
-"lo": "it (masc.)",
-"la": "it (fem.)",
-"los": "them (masc.)",
-"las": "them (fem.)",
-"que": "that/which",
-"él": "he",
-"mi": "my",
-"mis": "my (plural)",
-"sus": "his/her/their",
-"tú": "you (informal)",
-"yo": "I",
-
-
-/* ============================
-       A1 — Daily Life
-   ============================ */
-
-"vivir": "to live",
-"trabajar": "to work",
-"estudiar": "to study",
-"leer": "to read",
-"libros": "books",
-"hora": "hour",
-"levantarse": "to get up",
-"música": "music",
-"televisión": "television",
-"limpiar": "to clean",
-"cocinar": "to cook",
-"abrir": "to open",
-"terminar": "to finish",
-"escribir": "to write",
-"aprender": "to learn",
-"ir": "to go",
-"hacer": "to do",
-"ver": "to see",
-"escuchar": "to listen",
-"salir": "to go out",
-"descansar": "to rest",
-"caliente": "hot",
-"frío": "cold",
-"feliz": "happy",
-"nuevo": "new",
-"nueva": "new (fem.)",
-"nuevos": "new (plural)",
-"nuevas": "new (fem. plural)",
-"necesito": "I need",
-"necesita": "he/she needs",
-"necesitan": "they need",
-"quiero": "I want",
-"quiere": "he/she wants",
-"queremos": "we want",
-"quieren": "they want",
-"vivo": "I live",
-"trabaja": "he/she works",
-"estoy": "I am",
-"está": "he/she is",
-"están": "they are",
-"somos": "we are",
-"soy": "I am",
-"eres": "you are",
-"son": "they are",
-"tengo": "I have",
-"tiene": "he/she has",
-"estamos": "we are",
-"ayuda": "help",
-"cansado": "tired",
-"alto": "tall",
-"hola": "hello",
-"adiós": "goodbye",
-"gracias": "thank you",
-"siento": "sorry / I feel",
-"estás": "you are",
-"listos": "ready",
-"despierto": "awake",
-"tiempo": "time",
-"problemas": "problems",
-"cambio": "change",
-"es": "is",
-"gusta": "likes",
-"gustan": "they like",
-"gustaría": "would like",
-"aprendiendo": "learning",
-"arreglando": "fixing",
-"bueno": "good",
-"difícil": "difficult",
-"clara": "clear",
-"fácil": "easy",
-"malo": "bad",
-"pequeño": "small",
-"ellos": "they",
-"su": "his / her / their",
-
-
-/* ============================
-       A1 — Family
-   ============================ */
-
-"familia": "family",
-"madre": "mother",
-"padre": "father",
-"hijo": "son",
-"hija": "daughter",
-"amigo": "friend",
-"amiga": "friend (female)",
-"hermana": "sister",
-"hermanos": "brothers",
-"hermanas": "sisters",
-"abuela": "grandmother",
-"hambre": "hunger",
-"tenemos": "we have",
-"tienen": "they have",
-"ellas": "they (fem.)",
-"nosotros": "we",
-"ustedes": "you all",
-
-
-/* ============================
-       A1 — Food
-   ============================ */
-
-"agua": "water",
-"comida": "food",
-"café": "coffee",
-"té": "tea",
-"leche": "milk",
-"pan": "bread",
-"cerveza": "beer",
-"huevo": "egg",
-"fruta": "fruit",
-"filete": "steak",
-"papas fritas": "french fries",
-"manzana": "apple",
-"naranja": "orange",
-"plátano": "banana",
-"pollo": "chicken",
-"pescado": "fish",
-"sopa": "soup",
-"ensalada": "salad",
-"arroz": "rice",
-"frijoles": "beans",
-"queso": "cheese",
-"sal": "salt",
-
-/* ============================
-       A1 — Travel
-   ============================ */
-
-"autobús": "bus",
-"tren": "train",
-"boleto": "ticket",
-"estación": "station",
-"aeropuerto": "airport",
-"casa": "house",
-"escuela": "school",
-"hotel": "hotel",
-"baño": "bathroom",
-"lugar": "place",
-"llega": "arrives",
-"llegamos": "we arrived",
-
-
-/* ============================
-       A1 — Extra from CEFR_SENTENCES
-   ============================ */
-
-"tienda": "store",
-"abre": "opens",
-"pequeña": "small (fem.)",
-"fría": "cold (fem.)",
-"grande": "big",
-"amable": "kind",
-"deliciosa": "delicious (fem.)",
-"limpia": "clean (fem.)",
-"roja": "red (fem.)",
-"retrasado": "delayed",
-"coche": "car",
-"bolsa": "bag",
-"clima": "weather",
-"habitación": "room",
-"médico": "doctor",
-"deportes": "sports",
-"hoy": "today",
-"mesa": "table",
-"libro": "book",
-"bolígrafo": "pen",
-"calle": "street",
-"ciudad": "city",
-"noche": "night",
-"algo": "something",
-"vez": "time / occurrence",
-
-
-
-/* ============================
-       A2 — Daily Life
-   ============================ */
-
-"desayuno": "breakfast",
-"almuerzo": "lunch",
-"cena": "dinner",
-"temprano": "early",
-"tarde": "late",
-"anoche": "last night",
-"ahora": "now",
-"minutos": "minutes",
-"tarea": "homework",
-"mensaje": "message",
-"información": "information",
-"película": "movie",
-"ventana": "window",
-"cocina": "kitchen",
-"zapatos": "shoes",
-"viaje": "trip",
-"probar": "to try",
-"olvidar": "to forget",
-"esperar": "to wait",
-"conducir": "to drive",
-"arreglar": "to fix",
-"irse": "to leave",
-"llegar": "to arrive",
-"llegamos": "we arrived",
-"llegarán": "they will arrive",
-"comeremos": "we will eat",
-"irnos": "to leave",
-"escuchando": "listening",
-"planeando": "planning",
-"cocinando": "cooking",
-"conduciendo": "driving",
-"necesitamos": "we need",
-"necesitan": "they need",
-"compré": "I bought",
-"limpié": "I cleaned",
-"escribí": "I wrote",
-
- 
-/* ============================
-       A2 — Extra from Sentences
-   ============================ */
-
-"mercado": "market",
-"reunión": "meeting",
-"llaves": "keys",
-"teléfono": "phone",
-"afuera": "outside",
-"noche": "night",
-"algo": "something",
-"vez": "time / occurrence",
-"sus": "their",
-"mis": "my (plural)",
-"esta": "this (fem.)",
-"ese": "that",
-"este": "this",
-"próximo": "next",
-"horario": "schedule",
-
-/* ============================
-       A2 — Verbs from Sentences
-   ============================ */
-
-"compró": "bought",
-"comprar": "to buy",
-"visitó": "visited",
-"estudiaré": "I will study",
-"olvidó": "forgot",
-"esperando": "waiting",
-"viendo": "watching",
-"hablando": "talking",
-"desayunando": "eating breakfast",
-"quiere": "he/she wants",
-"quieren": "they want",
-"prefiero": "I prefer",
-"puedes": "you can",
-"vamos": "we go / let's go",
-"planeando": "planning",
-"llamó": "he/she called",
-"trabaja": "he/she works",
-"está": "he/she is",
-"están": "they are",
-"creo": "I believe",
-"debemos": "we must",
-"podemos": "we can",
-"hablamos": "we speak",
-
-
-/* ============================
-       A2 — Connectors
-   ============================ */
-
-"a menudo": "often",
-"antes": "before",
-"ya": "already",
-"todavía": "still",
-"normalmente": "normally",
-"pero": "but",
-"porque": "because",
-"también": "also",
-"entonces": "then",
-"si": "if",
-"argumentó": "argued",
-
-
-/* ============================
-       A2 — Multi-word Phrases
-   ============================ */
-
-"por favor": "please",
-"más tarde": "later",
-"esta noche": "tonight",
-"a las nueve": "at nine",
-"otra vez": "again",
-"en detalle": "in detail",
-
-
-
-/* ============================
-       B1 — Verbs
-   ============================ */
-
-"organizar": "to organize",
-"mejorar": "to improve",
-"espera": "hopes",
-"encontrar": "to find",
-"decidieron": "decided",
-"cancelar": "to cancel",
-"hablar": "to talk",
-"traer": "to bring",
-"llamaré": "I will call",
-"llegue": "I arrive (subj.)",
-"viajar": "to travel",
-"terminar": "to finish",
-"explicó": "explained",
-"resolver": "to solve",
-"pidió": "asked",
-"ayudara": "help (subj.)",
-"planean": "they plan",
-"mudarse": "to move",
-"seguir": "to follow",
-"deberíamos": "we should",
-"continuaremos": "we will continue",
-"conseguir": "to get",
-"ayudaré": "I will help",
-"creo": "I believe",
-"debemos": "we must",
-"podemos": "we can",
-"hablamos": "we speak",
-"parece": "it seems",
-"cree": "he/she believes",
-"esperan": "they wait",
-"discutieron": "they discussed",
-"completó": "completed",
-"fue": "was",
-"era": "was",
-
-
-/* ============================
-       B1 — Nouns
-   ============================ */
-
-"español": "Spanish",
-"trabajo": "job",
-"problema": "problem",
-"documentos": "documents",
-"año": "year",
-"proyecto": "project",
-"situación": "situation",
-"reglas": "rules",
-"informe": "report",
-"metas": "goals",
-"plan": "plan",
-"ropa": "clothes",
-"detalles": "details",
-"problemas": "problems",
-"detalle": "detail",
-"horas": "hours",
-"esfuerzos": "efforts",
-"éxito": "success",
-"noche": "night",
-"vez": "time / occurrence",
-
-
-/* ============================
-       B1 — Adverbs
-   ============================ */
-
-"claramente": "clearly",
-"pronto": "soon",
-"mañana": "tomorrow",
-"ahora": "now",
-"lentamente": "slowly",
-"ayer": "yesterday",
-"rápido": "fast",
-"lento": "slow",
-"siempre": "always",
-"nunca": "never",
-
-
-/* ============================
-       B1 — Determiners
-   ============================ */
-
-"nuestras": "our (fem. plural)",
-"todo": "everything",
-"todas": "all (fem.)",
-"este": "this",
-"ese": "that",
-"esto": "this (neutral)",
-
-
-/* ============================
-       B1 — Extra B1 Words
-   ============================ */
-
-"mejor": "better",
-"excelente": "excellent",
-"importante": "important",
-"diferente": "different",
-"posibles": "possible",
-"nuestros": "our",
-"próximo": "next",
-"horario": "schedule",
-
-
-
-/* ============================
-       B2 — Verbs
-   ============================ */
-
-"analizar": "to analyze",
-"considerar": "to consider",
-"sugirió": "suggested",
-"completar": "to complete",
-"evaluar": "to evaluate",
-"argumentaron": "argued",
-"ampliar": "to expand",
-"continuar": "to continue",
-"terminaron": "they finished",
-"adaptarnos": "to adapt",
-"reducir": "to reduce",
-"insistió": "insisted",
-"lograr": "to achieve",
-"explorar": "to explore",
-"aclarar": "to clarify",
-"fortalecer": "to strengthen",
-"actualizar": "to update",
-"aumentar": "to increase",
-"preparar": "to prepare",
-"expandir": "to expand",
-"coordinar": "to coordinate",
-"optimizar": "to optimize",
-"tendrá": "he/she will have",
-"serán": "they will be",
-"prepararnos": "to prepare ourselves",
-
-
-/* ============================
-       B2 — Nouns
-   ============================ */
-
-"posibilidades": "possibilities",
-"comunicación": "communication",
-"proceso": "process",
-"tarea": "task",
-"riesgos": "risks",
-"problemas": "problems",
-"experiencia": "experience",
-"desafíos": "challenges",
-"concepto": "concept",
-"manera": "way",
-"instrucciones": "instructions",
-"idea": "idea",
-"gastos": "expenses",
-"datos": "data",
-"habilidades": "skills",
-"rendimiento": "performance",
-"tema": "topic",
-"enfoque": "approach",
-"sistema": "system",
-"cambios": "changes",
-"negocio": "business",
-"flujo": "flow",
-"equipo": "team",
-"oportunidades": "opportunities",
-"productividad": "productivity",
-"estrategia": "strategy",
-"esfuerzos": "efforts",
-"horas": "hours",
-"detalle": "detail",
-"mejores": "better / best",
-"posibles": "possible",
-"próximo": "next",
-"horario": "schedule",
-"éxito": "success",
-
-
-/* ============================
-       B2 — Adjectives
-   ============================ */
-
-"difícil": "difficult",
-"realista": "realistic",
-"profesional": "professional",
-"innovadora": "innovative",
-"innecesarios": "unnecessary",
-"posible": "possible",
-"arriesgada": "risky",
-"capaz": "capable",
-"efectivo": "effective",
-"positivo": "positive",
-"complicado": "complicated",
-"importante": "important",
-"diferente": "different",
-"mejor": "better",
-"excelente": "excellent",
-"todas": "all (fem.)",
-"nuestros": "our",
-"positivos": "positive",
-
-
-/* ============================
-       B2 — Adverbs / Connectors
-   ============================ */
-
-"cuidadosamente": "carefully",
-"incluso": "even",
-"otra vez": "again",
-"en detalle": "in detail",
-"lentamente": "slowly",
-"ayer": "yesterday",
-"rápido": "fast",
-"lento": "slow",
-"siempre": "always",
-"nunca": "never",
-"porque": "because",
-"pero": "but",
-"también": "also",
-"entonces": "then"
-}
-
+    "qué": "what",
+    "quién": "who",
+    "cuándo": "when",
+    "cómo": "how",
+    "cuál": "which",
+    "dónde": "where",
+    "por qué": "why",
+
+    /* ============================
+       Grammatical Definite & Indefinite Articles
+       ============================ */
+    "el": "the",
+    "la": "the",
+    "los": "the (plural)",
+    "las": "the (fem. plural)",
+    "un": "a / an",
+    "una": "a / an (fem.)",
+    "unos": "some",
+    "unas": "some (fem.)",
+    /* ============================
+       Pronouns & Object Markers
+       =========================== */
+    "me": "me / myself",
+    "te": "you / yourself",
+    "le": "to him / to her",
+    "nos": "us / ourselves",
+    "les": "to them",
+    "lo": "it / him",
+    "la_pronoun": "it / her",
+    "los_pronoun": "them (masc.)",
+    "las_pronoun": "them (fem.)",
+    "que": "that / which",
+    "él": "he",
+    "ella": "she",
+    "yo": "I",
+    "tú": "you (informal)",
+    "nosotros": "we",
+    "nosotras": "we (fem.)",
+    "ellos": "they",
+    "ellas": "they (fem.)",
+    "ustedes": "you all",
+    "mi": "my",
+    "mis": "my (plural)",
+    "su": "his / her / their / your",
+    "sus": "his / her / their / your (plural)",
+    "tu": "your (possessive)",
+    "tus": "your (possessive plural)",
+    "esto": "this (neutral)",
+    "este": "this (masc.)",
+    "esta": "this (fem.)",
+    "ese": "that (masc.)",
+    "esa": "that (fem.)",
+    "algo": "something",
+    "todo": "everything / all",
+    "todas": "all (fem. plural)",
+    "todos": "all (masc. plural)",
+
+    /* ============================
+       High-Frequency Verb Inflections (A1-B2)
+       ============================ */
+    "es": "is",
+    "soy": "I am",
+    "eres": "you are",
+    "somos": "we are",
+    "son": "they are / you all are",
+    "estoy": "I am (state/location)",
+    "está": "is / you are (formal)",
+    "estás": "you are (informal)",
+    "estamos": "we are (state/location)",
+    "están": "they are / you all are (state/location)",
+    "fue": "was / went (past)",
+    "era": "was (descriptive past)",
+    "quiero": "I want",
+    "quiere": "he / she wants",
+    "queremos": "we want",
+    "quieren": "they want / you all want",
+    "necesito": "I need",
+    "necesita": "he / she needs",
+    "necesitamos": "we need",
+    "necesitan": "they need",
+    "tengo": "I have",
+    "tiene": "he / she has",
+    "tenemos": "we have",
+    "tienen": "they have",
+    "hambre": "hunger (as in 'tengo hambre')",
+    "gusta": "likes / pleasing to",
+    "gustan": "they like / pleasing to (plural)",
+    "gustaría": "would like",
+    "me gustaría": "I would like",
+    "vivo": "I live",
+    "viven": "they live",
+    "trabaja": "he / she works",
+    "trabajando": "working",
+    "estudiando": "studying",
+    "aprendiendo": "learning",
+    "arreglando": "fixing",
+    "leyendo": "reading",
+    "viviendo": "living",
+    "esperando": "waiting",
+    "viendo": "watching / seeing",
+    "hablando": "talking / speaking",
+    "cocinando": "cooking",
+    "conduciendo": "driving",
+    "planeando": "planning",
+    "desayunando": "eating breakfast",
+    "llega": "arrives / he or she arrives",
+    "llegamos": "we arrived",
+    "llegarán": "they will arrive",
+    "llegue": "I arrive / he or she arrives (subjunctive)",
+    "abre": "opens",
+    "sugirió": "suggested",
+    "argumentaron": "argued",
+    "terminaron": "they finished",
+    "insistió": "insisted",
+    "explicó": "explained",
+    "pidió": "asked for / requested",
+    "ayudara": "helped / would help (subjunctive)",
+    "planean": "they plan",
+    "adaptarnos": "to adapt ourselves",
+    "prepararnos": "to prepare ourselves",
+    "tendrá": "he / she will have",
+    "serán": "they will be",
+    "completó": "completed",
+    "visitó": "visited",
+    "olvidó": "forgot",
+    "llamó": "called",
+    "compré": "I bought",
+    "limpié": "I cleaned",
+    "escribí": "I wrote",
+    "estudiaré": "I will study",
+    "ayudaré": "I will help",
+    "continuaremos": "we will continue",
+    "comeremos": "we will eat",
+    "irnos": "to leave / to go away",
+
+    /* ============================
+       Time, Chronology & Adverbs
+       ============================ */
+    "hoy": "today",
+    "mañana": "tomorrow / morning",
+    "ayer": "yesterday",
+    "anoche": "last night",
+    "ahora": "now",
+    "siempre": "always",
+    "nunca": "never",
+    "ya": "already / now",
+    "todavía": "still / yet",
+    "normalmente": "normally",
+    "pronto": "soon",
+    "tarde": "late / afternoon",
+    "temprano": "early",
+    "a menudo": "often",
+    "más tarde": "later",
+    "esta noche": "tonight",
+    "a las nueve": "at nine",
+    "claramente": "clearly",
+    "lentamente": "slowly",
+    /* ============================
+       Gender & Plural Adjective Maps
+       ============================ */
+    "bueno": "good",
+    "buena": "good (fem.)",
+    "buenos": "good (plural)",
+    "buenas": "good (fem. plural)",
+    "malo": "bad",
+    "mala": "bad (fem.)",
+    "malos": "bad (plural)",
+    "malas": "bad (fem. plural)",
+    "nuevo": "new",
+    "nueva": "new (fem.)",
+    "nuevos": "new (plural)",
+    "nuevas": "new (fem. plural)",
+    "pequeño": "small",
+    "pequeña": "small (fem.)",
+    "pequeños": "small (plural)",
+    "pequeña_plural": "small (fem. plural)",
+    "caliente": "hot",
+    "calientes": "hot (plural)",
+    "frío": "cold",
+    "fría": "cold (fem.)",
+    "fríos": "cold (plural)",
+    "frías": "cold (fem. plural)",
+    "feliz": "happy",
+    "felices": "happy (plural)",
+    "difícil": "difficult",
+    "difíciles": "difficult (plural)",
+    "fácil": "easy",
+    "fáciles": "easy (plural)",
+    "clara": "clear / bright (fem.)",
+    "claro": "clear / bright (masc.)",
+    "claros": "clear (plural)",
+    "claras": "clear (fem. plural)",
+    "grande": "big / large",
+    "grandes": "big / large (plural)",
+    "alto": "tall / high",
+    "alta": "tall (fem.)",
+    "altos": "tall (plural)",
+    "altas": "tall (fem. plural)",
+    "deliciosa": "delicious (fem.)",
+    "delicioso": "delicious (masc.)",
+    "amable": "kind / nice",
+    "amables": "kind / nice (plural)",
+    "limpia": "clean (fem.)",
+    "limpio": "clean (masc.)",
+    "roja": "red (fem.)",
+    "rojo": "red (masc.)",
+    "retrasado": "delayed / late",
+    "retrasada": "delayed (fem.)",
+    "realista": "realistic",
+    "realistas": "realistic (plural)",
+    "profesional": "professional",
+    "profesionales": "professional (plural)",
+    "innovadora": "innovative (fem.)",
+    "innovador": "innovative (masc.)",
+    "innecesarios": "unnecessary (plural)",
+    "innecesario": "unnecessary",
+    "arriesgada": "risky (fem.)",
+    "arriesgado": "risky (masc.)",
+    "capaz": "capable",
+    "capaces": "capable (plural)",
+    "efectivo": "effective",
+    "efectiva": "effective (fem.)",
+    "positivo": "positive",
+    "positiva": "positive (fem.)",
+    "positivos": "positive (plural)",
+    "complicado": "complicated",
+    "complicada": "complicated (fem.)",
+    "importante": "important",
+    "importantes": "important (plural)",
+    "diferente": "different",
+    "diferentes": "different (plural)",
+    "mejor": "better",
+    "mejores": "better / best (plural)",
+    "excelente": "excellent",
+    "excelentes": "excellent (plural)",
+    "posible": "possible",
+    "posibles": "possible (plural)",
+    "próximo": "next",
+    "próxima": "next (fem.)",
+
+    /* ============================
+       A2 Intermediate Core Numbers
+       ============================ */
+    "once": "eleven",
+    "doce": "twelve",
+    "trece": "thirteen",
+    "catorce": "fourteen",
+    "quince": "fifteen",
+    "dieisiete": "sixteen",
+    "diecisiete": "seventeen",
+    "dieciocho": "eighteen",
+    "diecinueve": "nineteen",
+    "veinte": "twenty"
+}; // ✔ Safely closes the master WORD_DICT map shell container
 
 /* ============================================================
    AUTO‑EXPAND DICTIONARY FROM CEFR LEVELS
    ============================================================ */
-
 function autoExpandDictionary() {
     const allWords = Object.values(CEFR_LEVELS).flat();
 
     allWords.forEach(item => {
+        if (!item || !item.spanish || !item.english) return;
         const key = item.spanish.toLowerCase().trim();
         const value = item.english.trim();
-        WORD_DICT[key] = value;   // real translation
+        WORD_DICT[key] = value; // Hydrates real vocabulary mappings natively
     });
 }
 
 autoExpandDictionary();
-
   
 /* ============================================================
    MULTI-WORD PHRASES (CEFR-aligned)
