@@ -7501,9 +7501,59 @@ function globalLookup(word) {
     return null;
 }
 
+/* ============================================================
+   DYNAMIC EVERYDAY PHRASE TEMPLATE BLUEPRINTS
+   ============================================================ */
+const EVERYDAY_PHRASE_TEMPLATES = [
+    {
+        // Matches: "I would like to order [food/coffee/beer/steak...]"
+        pattern: /^i would like to order (.+)$/i,
+        translate: (match) => {
+            const item = globalLookup(match[1]);
+            const itemSpan = item ? item.translation : `[${match[1]}]`;
+            return { translation: `Me gustaría pedir ${itemSpan}`, label: "Spanish", speakText: `Me gustaría pedir ${itemSpan}`, source: "Dynamic Order Template" };
+        }
+    },
+    {
+        // Matches: "I want to buy [shoes/books/tickets...]"
+        pattern: /^i want to buy (.+)$/i,
+        translate: (match) => {
+            const item = globalLookup(match[1]);
+            const itemSpan = item ? item.translation : `[${match[1]}]`;
+            return { translation: `Quiero comprar ${itemSpan}`, label: "Spanish", speakText: `Quiero comprar ${itemSpan}`, source: "Dynamic Purchase Template" };
+        }
+    },
+    {
+        // Matches: "Where can I find [the bathroom/a hotel/the train...]"
+        pattern: /^where can i find (.+)$/i,
+        translate: (match) => {
+            const item = globalLookup(match[1]);
+            const itemSpan = item ? item.translation : `[${match[1]}]`;
+            return { translation: `¿Dónde puedo encontrar ${itemSpan}?`, label: "Spanish", speakText: `Dónde puedo encontrar ${itemSpan}`, source: "Dynamic Location Template" };
+        }
+    },
+    {
+        // Matches: "I need to fix [the television/the window/the car...]"
+        pattern: /^i need to fix (.+)$/i,
+        translate: (match) => {
+            const item = globalLookup(match[1]);
+            const itemSpan = item ? item.translation : `[${match[1]}]`;
+            return { translation: `Necesito arreglar ${itemSpan}`, label: "Spanish", speakText: `Necesito arreglar ${itemSpan}`, source: "Dynamic Repair Template" };
+        }
+    },
+    {
+        // Matches: "Do you have [milk/water/cheese/money...]"
+        pattern: /^do you have (.+)$/i,
+        translate: (match) => {
+            const item = globalLookup(match[1]);
+            const itemSpan = item ? item.translation : `[${match[1]}]`;
+            return { translation: `¿Tienes ${itemSpan}?`, label: "Spanish", speakText: `Tienes ${itemSpan}`, source: "Dynamic Inventory Template" }
+        }
+    }
+];
 
 /* ============================================================
-   DICTIONARY SEARCH INITIALIZER SYSTEM (DYNAMIC LABELS)
+   DICTIONARY SEARCH INITIALIZER SYSTEM (PATTERN INTERCEPTOR)
    ============================================================ */
 
 function initDictionarySearch() {
@@ -7512,53 +7562,56 @@ function initDictionarySearch() {
 
     if (!searchInput || !resultBox) return;
 
+    // A. Dynamically Inject a "Clear" visual anchor if it doesn't exist in the DOM
+    let clearBtn = document.getElementById("dict-clear-btn");
+    if (!clearBtn) {
+        clearBtn = document.createElement("button");
+        clearBtn.id = "dict-clear-btn";
+        clearBtn.className = "pill";
+        clearBtn.innerText = "✕ Clear";
+        clearBtn.style.cssText = "padding: 6px 12px; font-size: 11px; margin-left: 8px; cursor: pointer; display: none; background: rgba(248,113,113,0.15); border: 1px solid rgba(248,113,113,0.3); color: #f87171;";
+        searchInput.parentNode.insertBefore(clearBtn, searchInput.nextSibling);
+
+        clearBtn.addEventListener("click", () => {
+            searchInput.value = "";
+            resultBox.innerHTML = "";
+            clearBtn.style.display = "none";
+            searchInput.focus();
+        });
+    }
+
     searchInput.addEventListener("input", () => {
-        // Look up using raw value strings to accommodate character spaces
         const rawValue = searchInput.value;
-        const phraseResult = globalLookup(rawValue);
+        const normalizedQuery = normalizeEnglish(rawValue);
 
         if (!rawValue.trim()) {
             resultBox.innerHTML = "";
+            clearBtn.style.display = "none";
             return;
         }
 
-        // A. Successful Bidirectional Phrase Match View Rendering
-        if (phraseResult) {
-            const cleanSpeechText = phraseResult.speakText.replace(/'/g, "\\'");
-            
-            resultBox.innerHTML = `
-                <div style="padding: 10px; background: rgba(74, 222, 128, 0.1); border: 1px solid rgba(74, 222, 128, 0.3); border-radius: 10px; margin-top: 5px; display: flex; flex-direction: column; gap: 4px;">
-                    <div style="display: flex; align-items: center; gap: 8px; flex-wrap: wrap;">
-                        <span style="color: #a5f3fc; font-weight: bold;">${phraseResult.label}:</span>
-                        <span style="color: #4ade80; font-size: 1.1rem; font-weight: 600; text-shadow: 0 0 6px rgba(74,222,128,0.45);">
-                            ${phraseResult.translation}
-                        </span>
-                        <button id="dict-speak-btn" class="pill" style="padding: 4px 10px; font-size: 11px; max-width: 50px; cursor: pointer;">🔊</button>
-                    </div>
-                    <div style="font-size: 11px; color: rgba(255,255,255,0.4); margin-top: 2px;">
-                        Phrase mode — Found in ${phraseResult.level || "GLOBAL"} (${phraseResult.source})
-                    </div>
-                </div>
-            `;
+        clearBtn.style.display = "inline-block";
 
-            const speakBtn = document.getElementById("dict-speak-btn");
-            if (speakBtn) {
-                speakBtn.onclick = () => {
-                    window.speechSynthesis.cancel();
-                    const utterance = new SpeechSynthesisUtterance(cleanSpeechText);
-                    utterance.lang = 'es-ES';
-                    const speedSlider = document.getElementById('rate');
-                    if (speedSlider) utterance.rate = parseFloat(speedSlider.value);
-                    window.speechSynthesis.speak(utterance);
-                };
+        // B. INTERCEPT: Check Dynamic Everyday Phrase Templates First
+        for (const template of EVERYDAY_PHRASE_TEMPLATES) {
+            const match = normalizedQuery.match(template.pattern);
+            if (match && match[1]) {
+                const targetText = match[1].trim();
+                const dynamicResult = template.translate(targetText);
+                renderPhraseBox(dynamicResult);
+                return;
             }
+        }
+
+        // C. FALLBACK 1: Standard Static Phrase Match
+        const phraseResult = globalLookup(rawValue);
+        if (phraseResult) {
+            renderPhraseBox(phraseResult);
             return;
         }
 
-        // B. Word-by-Word Fallback Layer (Handles Multi-word English inputs if lookup drops)
-        const queryCleanEng = normalizeEnglish(rawValue);
-        const words = queryCleanEng.split(/\s+/).filter(w => w.length > 0);
-
+        // D. FALLBACK 2: Greedy Word-by-Word Split Layer
+        const words = normalizedQuery.split(/\s+/).filter(w => w.length > 0);
         if (words.length > 1) {
             const translatedSegments = [];
             const unknownWords = [];
@@ -7572,7 +7625,7 @@ function initDictionarySearch() {
                     const chunkResult = globalLookup(chunk);
 
                     if (chunkResult) {
-                        translatedSegments.push(chunkResult.translation);
+                        translatedSegments.push(chunkResult.translation || chunkResult.spanish);
                         i += len;
                         matched = true;
                         break;
@@ -7584,7 +7637,7 @@ function initDictionarySearch() {
                     const wordResult = globalLookup(word);
 
                     if (wordResult) {
-                        translatedSegments.push(wordResult.translation);
+                        translatedSegments.push(wordResult.translation || wordResult.spanish);
                     } else {
                         unknownWords.push(word);
                         translatedSegments.push(`[${word}]`);
@@ -7594,45 +7647,59 @@ function initDictionarySearch() {
             }
 
             const spanishSentence = translatedSegments.join(" ");
-            const cleanSpeechText = spanishSentence.replace(/'/g, "\\'");
-
-            resultBox.innerHTML = `
-                <div style="padding: 10px; background: rgba(74, 222, 128, 0.1); border: 1px solid rgba(74, 222, 128, 0.3); border-radius: 10px; margin-top: 5px; display: flex; flex-direction: column; gap: 4px;">
-                    <div style="display: flex; align-items: center; gap: 8px; flex-wrap: wrap;">
-                        <span style="color: #a5f3fc; font-weight: bold;">Spanish:</span>
-                        <span style="color: #4ade80; font-size: 1.1rem; font-weight: 600; text-shadow: 0 0 6px rgba(74,222,128,0.45);">
-                            ${spanishSentence}
-                        </span>
-                        <button id="dict-speak-btn" class="pill" style="padding: 4px 10px; font-size: 11px; max-width: 50px; cursor: pointer;">🔊</button>
-                    </div>
-                    <div style="font-size: 11px; color: rgba(255,255,255,0.4); margin-top: 2px;">
-                        Sentence mode — ${unknownWords.length === 0 ? "all words found" : "missing: " + unknownWords.join(", ")}
-                    </div>
-                </div>
-            `;
-
-            const speakBtn = document.getElementById("dict-speak-btn");
-            if (speakBtn) {
-                speakBtn.onclick = () => {
-                    window.speechSynthesis.cancel();
-                    const speakableString = cleanSpeechText.replace(/[\[\]]/g, "");
-                    const utterance = new SpeechSynthesisUtterance(speakableString);
-                    utterance.lang = 'es-ES';
-                    const speedSlider = document.getElementById('rate');
-                    if (speedSlider) utterance.rate = parseFloat(speedSlider.value);
-                    window.speechSynthesis.speak(utterance);
-                };
-            }
+            renderPhraseBox({
+                translation: spanishSentence,
+                label: "Spanish",
+                speakText: spanishSentence.replace(/[\[\]]/g, ""),
+                source: "Sentence Split Fallback Mode",
+                level: unknownWords.length === 0 ? "ALL FOUND" : "MISSING: " + unknownWords.join(", ")
+            });
             return;
         }
 
         resultBox.innerHTML = `
             <div style="color: #f87171; font-style: italic; font-size: 13px; margin-top: 8px;">
-                Term or phrase not found in bidirectional levels banks.
+                Term or everyday conversational pattern not found in database.
             </div>
         `;
     });
+
+    // Unified sub-function to handle high-utility scannable visual layout renders
+    function renderPhraseBox(res) {
+        const outputText = res.translation || res.spanish;
+        const outputLabel = res.label || "Spanish";
+        const speechTarget = res.speakText || res.spanish;
+        const cleanSpeechText = speechTarget.replace(/'/g, "\\'");
+
+        resultBox.innerHTML = `
+            <div style="padding: 10px; background: rgba(74, 222, 128, 0.1); border: 1px solid rgba(74, 222, 128, 0.3); border-radius: 10px; margin-top: 5px; display: flex; flex-direction: column; gap: 4px;">
+                <div style="display: flex; align-items: center; gap: 8px; flex-wrap: wrap;">
+                    <span style="color: #a5f3fc; font-weight: bold;">${outputLabel}:</span>
+                    <span style="color: #4ade80; font-size: 1.1rem; font-weight: 600; text-shadow: 0 0 6px rgba(74,222,128,0.45);">
+                        ${outputText}
+                    </span>
+                    <button id="dict-speak-btn" class="pill" style="padding: 4px 10px; font-size: 11px; max-width: 50px; cursor: pointer;">🔊</button>
+                </div>
+                <div style="font-size: 11px; color: rgba(255,255,255,0.4); margin-top: 2px;">
+                    Matched via ${res.source} (${res.level || "GLOBAL"})
+                </div>
+            </div>
+        `;
+
+        const speakBtn = document.getElementById("dict-speak-btn");
+        if (speakBtn) {
+            speakBtn.onclick = () => {
+                window.speechSynthesis.cancel();
+                const utterance = new SpeechSynthesisUtterance(cleanSpeechText);
+                utterance.lang = 'es-ES';
+                const speedSlider = document.getElementById('rate');
+                if (speedSlider) utterance.rate = parseFloat(speedSlider.value);
+                window.speechSynthesis.speak(utterance);
+            };
+        }
+    }
 }
+
 
 /* ============================================================
    STARTUP & EVENT INITIALIZATION
