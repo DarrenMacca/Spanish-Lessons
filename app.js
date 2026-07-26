@@ -1,68 +1,9 @@
-/* ============================================================
-   CERTIFICATE STATE
-   ============================================================ */
-let certificates = {
-    a1: false,
-    a2: false,
-    b1: false,
-    b2: false,
-    mastery: false
-};
-
-/* ============================================================
-   UNLOCK CERTIFICATE
-   ============================================================ */
-function unlockCertificate(key) {
-    if (!certificates[key]) {
-        certificates[key] = true;
-        saveCertificates();
-        renderCertificates();
-    }
-}
-
-function runCEFRScoringEngine() {
-    const stats = calculateLevelScores();
-
-    if (stats.a1.avg >= PASS_THRESHOLD) unlockCertificate("a1");
-    if (stats.a2.avg >= PASS_THRESHOLD) unlockCertificate("a2");
-    if (stats.b1.avg >= PASS_THRESHOLD) unlockCertificate("b1");
-    if (stats.b2.avg >= PASS_THRESHOLD) unlockCertificate("b2");
-
-    if (
-        certificates.a1 &&
-        certificates.a2 &&
-        certificates.b1 &&
-        certificates.b2
-    ) {
-        unlockCertificate("mastery");
-    }
-}
-
-/* ============================================================
-   CEFR SCORING VARIABLES (GLOBAL)
-   ============================================================ */
-
-let quizCorrect = 0;
-let quizTotal = 0;
-
-let builderScore = 0;
-let builderMax = 0;
-
-let sentenceScore = 0;
-let sentenceMax = 0;
-
-let conversationScore = 0;
-let conversationMax = 0;
-
-let smartScore = 0;
-let smartMax = 0;
-
-/* ============================================================
+   /* ============================================================
    CEFR SENTENCE BANKS (for Build tab)
    ============================================================ */
 
 const CEFR_SENTENCES = {
-    a1: [
+    A1: [
         { english: "I would like water, please.", spanish: "me gustaría agua por favor" },
        { english: "I would like beer, please.", spanish: "me gustaría cerveza por favor" },
         { english: "Where is the bathroom?", spanish: "dónde está el baño" },
@@ -105,7 +46,7 @@ const CEFR_SENTENCES = {
         { english: "He likes sports.", spanish: "a él le gustan los deportes" }
     ],
 
-    a2: [
+    A2: [
         { english: "I prefer chicken for dinner.", spanish: "prefiero pollo para la cena" },
         { english: "Can you open the window?", spanish: "puedes abrir la ventana" },
         { english: "We are going to visit my parents.", spanish: "vamos a visitar a mis padres" },
@@ -147,7 +88,7 @@ const CEFR_SENTENCES = {
         { english: "I want to go outside.", spanish: "quiero salir afuera" }
     ],
 
-    b1: [
+    B1: [
         { english: "We need to organize the meeting.", spanish: "necesitamos organizar la reunión" },
         { english: "I want to improve my Spanish.", spanish: "quiero mejorar mi español" },
         { english: "She hopes to find a better job.", spanish: "ella espera encontrar un mejor trabajo" },
@@ -189,7 +130,7 @@ const CEFR_SENTENCES = {
         { english: "I will call you later.", spanish: "te llamaré más tarde" }
     ],
 
-    b2: [
+    B2: [
         { english: "They want to analyze the situation.", spanish: "quieren analizar la situación" },
         { english: "We must consider all possibilities.", spanish: "debemos considerar todas las posibilidades" },
         { english: "He suggested improving the communication process.", spanish: "él sugirió mejorar el proceso de comunicación" },
@@ -237,7 +178,7 @@ const CEFR_SENTENCES = {
    ============================================================ */
 
 const CEFR_LEVELS = {
-a1: [
+A1: [
     // Daily Life
     { spanish: "vivir", english: "to live", category: "Daily Life" },
     { spanish: "trabajar", english: "to work", category: "Daily Life" },
@@ -388,7 +329,7 @@ a1: [
 
 ],
 
-a2: [
+A2: [
     // Daily Life
     { spanish: "desayuno", english: "breakfast", category: "Daily Life" },
     { spanish: "almuerzo", english: "lunch", category: "DailyLife" },
@@ -450,7 +391,7 @@ a2: [
 
 ],
 
-b1: [
+B1: [
     // Daily Life — auxiliary verbs
     { spanish: "he", english: "I have (auxiliary)", category: "Daily Life" },
     { spanish: "has", english: "you have (auxiliary)", category: "Daily Life" },
@@ -511,7 +452,7 @@ b1: [
     { spanish: "años", english: "years", category: "Numbers" }
 ],
 
-b2: [
+B2: [
     // Daily Life — abstract nouns & professional vocabulary
     { spanish: "proceso", english: "process", category: "Daily Life" },
     { spanish: "tarea", english: "task", category: "Daily Life" },
@@ -588,22 +529,12 @@ b2: [
 ]      // ✔ closes B2 array
 };     // ✔ closes CEFR_LEVELS object
 
-/* ============================================================
-   MERGED CEFR WORDS (A1–B2)
-   ============================================================ */
-
-const CEFR_WORDS = {
-    a1: CEFR_LEVELS.a1,
-    a2: CEFR_LEVELS.a2,
-    b1: CEFR_LEVELS.b1,
-    b2: CEFR_LEVELS.b2
-};
 
 /* ============================================================
    LISTEN VOCAB — A1 → B2 (Category → Word List)
    ============================================================ */
 const LISTEN_VOCAB = {
-    a1: {
+    A1: {
         "Daily Life": [
             "vivir","trabajar","estudiar","leer","libros","hora",
             "levantarse","música","televisión","limpiar","cocinar",
@@ -667,7 +598,7 @@ const LISTEN_VOCAB = {
 
     },
 
-    a2: {
+    A2: {
         "Daily Life": [
             "desayuno","almuerzo","cena","temprano","tarde","anoche",
             "ahora","minutos","tarea","mensaje","información",
@@ -701,7 +632,7 @@ const LISTEN_VOCAB = {
 
     },
 
-    b1: {
+    B1: {
         "Daily Life": [
             "he","has","ha","hemos","habéis","han",
             "estado","aprendido","trabajando","estudiando",
@@ -729,7 +660,7 @@ const LISTEN_VOCAB = {
         ]
     },
 
-    b2: {
+    B2: {
         "Daily Life": [
             "proceso","tarea","resultados","rendimiento",
             "estrategia","sistema","enfoque","concepto",
@@ -1390,233 +1321,57 @@ function autoExpandDictionary() {
 
 autoExpandDictionary();
 
+  
 /* ============================================================
    MULTI-WORD PHRASES (CEFR-aligned)
    ============================================================ */
-const CEFR_PHRASES_a1 = [
-  { english: "how are you", spanish: "cómo estás", level: "a1" },
-  { english: "where do you live", spanish: "dónde vives", level: "a1" },
-  { english: "what time is it", spanish: "qué hora es", level: "a1" },
-  { english: "you like coffee", spanish: "te gusta el café", level: "a1" },
-  { english: "i like music", spanish: "me gusta la música", level: "a1" },
-  { english: "i live in the city", spanish: "vivo en la ciudad", level: "a1" },
-  { english: "i work in a hotel", spanish: "trabajo en un hotel", level: "a1" },
-  { english: "i want to eat", spanish: "quiero comer", level: "a1" },
-  { english: "i want to drink", spanish: "quiero beber", level: "a1" },
-  { english: "where is the bathroom", spanish: "dónde está el baño", level: "a1" },
-  { english: "she runs fast", spanish: "ella corre rápido", level: "a1" },
-  { english: "she is fast", spanish: "ella es rápida", level: "a1" },
-  { english: "she goes fast", spanish: "ella va rápido", level: "a1" },
-  { english: "i am happy", spanish: "estoy feliz", level: "a1" },
-  { english: "i am sad", spanish: "estoy triste", level: "a1" },
-  { english: "i am cold", spanish: "tengo frío", level: "a1" },
-  { english: "i am hot", spanish: "tengo calor", level: "a1" },
-  { english: "i am hungry", spanish: "tengo hambre", level: "a1" },
-  { english: "i am thirsty", spanish: "tengo sed", level: "a1" },
-  { english: "i am tired", spanish: "estoy cansado", level: "a1" },
-  { english: "i am ready", spanish: "estoy listo", level: "a1" },
-  { english: "i am busy", spanish: "estoy ocupado", level: "a1" },
-  { english: "i am at home", spanish: "estoy en casa", level: "a1" },
-  { english: "i am at work", spanish: "estoy en el trabajo", level: "a1" },
-  { english: "i am at school", spanish: "estoy en la escuela", level: "a1" },
-  { english: "i am in the car", spanish: "estoy en el coche", level: "a1" },
-  { english: "i am in the park", spanish: "estoy en el parque", level: "a1" },
-  { english: "i am in the store", spanish: "estoy en la tienda", level: "a1" },
-  { english: "i need help", spanish: "necesito ayuda", level: "a1" },
-  { english: "i need water", spanish: "necesito agua", level: "a1" },
-  { english: "i need food", spanish: "necesito comida", level: "a1" },
-  { english: "i need sleep", spanish: "necesito dormir", level: "a1" },
-  { english: "i need money", spanish: "necesito dinero", level: "a1" },
-  { english: "i need time", spanish: "necesito tiempo", level: "a1" },
-  { english: "i want water", spanish: "quiero agua", level: "a1" },
-  { english: "i want food", spanish: "quiero comida", level: "a1" },
-  { english: "i want coffee", spanish: "quiero café", level: "a1" },
-  { english: "i want tea", spanish: "quiero té", level: "a1" },
-  { english: "i want to go", spanish: "quiero ir", level: "a1" },
-  { english: "i want to stay", spanish: "quiero quedarme", level: "a1" },
-  { english: "i like this", spanish: "me gusta esto", level: "a1" },
-  { english: "i don't like that", spanish: "no me gusta eso", level: "a1" },
-  { english: "what is your name", spanish: "cómo te llamas", level: "a1" },
-  { english: "my name is john", spanish: "me llamo john", level: "a1" },
-  { english: "i am from australia", spanish: "soy de australia", level: "a1" },
-  { english: "i speak english", spanish: "hablo inglés", level: "a1" },
-  { english: "i speak a little spanish", spanish: "hablo un poco de español", level: "a1" },
-  { english: "see you later", spanish: "hasta luego", level: "a1" },
-  { english: "good morning", spanish: "buenos días", level: "a1" },
-  { english: "good night", spanish: "buenas noches", level: "a1" }
-];
+const CEFR_PHRASES = {
+    // A1
+    "cómo estás": "how are you",
+    "dónde vives": "where do you live",
+    "qué hora es": "what time is it",
+    "te gusta el café": "you like coffee",
+    "me gusta la música": "I like music",
+    "vivo en la ciudad": "I live in the city",
+    "trabajo en un hotel": "I work in a hotel",
+    "quiero comer": "I want to eat",
+    "quiero beber": "I want to drink",
+    "dónde está el baño": "where is the bathroom",
+    "ella corre rápido": "she runs fast",
+    "ella es rápida": "she is fast",
+    "ella va rápido": "she goes fast",
 
+    // A2
+    "qué hiciste ayer": "what did you do yesterday",
+    "fuiste al supermercado": "did you go to the supermarket",
+    "viajas a menudo": "you travel often",
+    "qué compraste": "what did you buy",
+    "qué estás haciendo": "what are you doing",
+    "sueles comer temprano": "you usually eat early",
+    "necesito ayuda": "I need help",
+    "quiero hacer una reserva": "I want to make a reservation",
+    "dónde está la estación": "where is the station",
 
-const CEFR_PHRASES_a2 = [
-  { english: "i would like", spanish: "me gustaría", level: "a2" },
-  { english: "i am looking for", spanish: "estoy buscando", level: "a2" },
-  { english: "how much does it cost", spanish: "cuánto cuesta", level: "a2" },
-  { english: "i am hungry", spanish: "tengo hambre", level: "a2" },
-  { english: "i am thirsty", spanish: "tengo sed", level: "a2" },
-  { english: "i am tired", spanish: "estoy cansado", level: "a2" },
-  { english: "i like this", spanish: "me gusta esto", level: "a2" },
-  { english: "i don't like that", spanish: "no me gusta eso", level: "a2" },
-  { english: "what do you want to do", spanish: "qué quieres hacer", level: "a2" },
-  { english: "i need to go", spanish: "necesito irme", level: "a2" },
-  { english: "i will be back soon", spanish: "volveré pronto", level: "a2" },
-  { english: "can you help me", spanish: "puedes ayudarme", level: "a2" },
-  { english: "i am just looking", spanish: "solo estoy mirando", level: "a2" },
-  { english: "what do you think", spanish: "qué piensas", level: "a2" },
-  { english: "i am not sure", spanish: "no estoy seguro", level: "a2" },
-  { english: "i will call you later", spanish: "te llamaré más tarde", level: "a2" },
-  { english: "i am on my way", spanish: "estoy en camino", level: "a2" },
-  { english: "i am getting ready", spanish: "me estoy preparando", level: "a2" },
-  { english: "i am leaving now", spanish: "me voy ahora", level: "a2" },
-  { english: "i am waiting for you", spanish: "te estoy esperando", level: "a2" },
-  { english: "i am thinking about it", spanish: "lo estoy pensando", level: "a2" },
-  { english: "i am trying", spanish: "estoy intentando", level: "a2" },
-  { english: "i am learning", spanish: "estoy aprendiendo", level: "a2" },
-  { english: "i am practicing", spanish: "estoy practicando", level: "a2" },
-  { english: "i am working", spanish: "estoy trabajando", level: "a2" },
-  { english: "i am studying", spanish: "estoy estudiando", level: "a2" },
-  { english: "i am cooking", spanish: "estoy cocinando", level: "a2" },
-  { english: "i am cleaning", spanish: "estoy limpiando", level: "a2" },
-  { english: "i am shopping", spanish: "estoy comprando", level: "a2" },
-  { english: "i am driving", spanish: "estoy conduciendo", level: "a2" },
-  { english: "i am walking", spanish: "estoy caminando", level: "a2" },
-  { english: "i am listening", spanish: "estoy escuchando", level: "a2" },
-  { english: "i am watching a movie", spanish: "estoy viendo una película", level: "a2" },
-  { english: "i am talking to someone", spanish: "estoy hablando con alguien", level: "a2" },
-  { english: "i am getting dressed", spanish: "me estoy vistiendo", level: "a2" },
-  { english: "i am taking a break", spanish: "estoy tomando un descanso", level: "a2" },
-  { english: "i am going to sleep", spanish: "voy a dormir", level: "a2" },
-  { english: "i am going to eat", spanish: "voy a comer", level: "a2" },
-  { english: "i am going to work", spanish: "voy a trabajar", level: "a2" },
-  { english: "i am going home", spanish: "voy a casa", level: "a2" },
-  { english: "i will do it later", spanish: "lo haré más tarde", level: "a2" },
-  { english: "i will try", spanish: "lo intentaré", level: "a2" },
-  { english: "i will help you", spanish: "te ayudaré", level: "a2" },
-  { english: "i will tell you", spanish: "te diré", level: "a2" },
-  { english: "i will show you", spanish: "te mostraré", level: "a2" },
-  { english: "i will think about it", spanish: "lo pensaré", level: "a2" },
-  { english: "i will let you know", spanish: "te avisaré", level: "a2" },
-  { english: "i will be there soon", spanish: "estaré allí pronto", level: "a2" },
-  { english: "i will wait for you", spanish: "te esperaré", level: "a2" }
-];
+    // B1
+    "he estado aprendiendo español": "I have been learning Spanish",
+    "disfruto viajar": "I enjoy traveling",
+    "quiero mejorar mis habilidades": "I want to improve my skills",
+    "qué piensas de la ciudad": "what do you think of the city",
+    "cómo mantienes una vida saludable": "how do you maintain a healthy life",
+    "qué aprendiste recientemente": "what did you learn recently",
+    "cuáles son tus metas": "what are your goals",
+    "qué experiencias pasadas tienes": "what past experiences do you have",
 
-
-const CEFR_PHRASES_b1 = [
-  { english: "i think that", spanish: "creo que", level: "b1" },
-  { english: "in my opinion", spanish: "en mi opinión", level: "b1" },
-  { english: "i believe that", spanish: "yo creo que", level: "b1" },
-  { english: "it seems that", spanish: "parece que", level: "b1" },
-  { english: "i am interested in", spanish: "estoy interesado en", level: "b1" },
-  { english: "i am worried about", spanish: "estoy preocupado por", level: "b1" },
-  { english: "i am excited about", spanish: "estoy emocionado por", level: "b1" },
-  { english: "i am tired of", spanish: "estoy cansado de", level: "b1" },
-  { english: "i am used to", spanish: "estoy acostumbrado a", level: "b1" },
-  { english: "i am trying to improve", spanish: "estoy tratando de mejorar", level: "b1" },
-  { english: "i agree with you", spanish: "estoy de acuerdo contigo", level: "b1" },
-  { english: "i disagree", spanish: "no estoy de acuerdo", level: "b1" },
-  { english: "i am not sure yet", spanish: "todavía no estoy seguro", level: "b1" },
-  { english: "i will think about it", spanish: "lo pensaré", level: "b1" },
-  { english: "i have a question", spanish: "tengo una pregunta", level: "b1" },
-  { english: "i have no idea", spanish: "no tengo idea", level: "b1" },
-  { english: "i didn't expect that", spanish: "no esperaba eso", level: "b1" },
-  { english: "i didn't mean to", spanish: "no quise", level: "b1" },
-  { english: "i didn't know", spanish: "no sabía", level: "b1" },
-  { english: "i didn't hear you", spanish: "no te escuché", level: "b1" },
-  { english: "i didn't see anything", spanish: "no vi nada", level: "b1" },
-  { english: "i have been there", spanish: "he estado allí", level: "b1" },
-  { english: "i have done that", spanish: "he hecho eso", level: "b1" },
-  { english: "i have tried that", spanish: "he intentado eso", level: "b1" },
-  { english: "i have seen that", spanish: "he visto eso", level: "b1" },
-  { english: "i have heard that", spanish: "he oído eso", level: "b1" },
-  { english: "what happened", spanish: "qué pasó", level: "b1" },
-  { english: "what do you mean", spanish: "qué quieres decir", level: "b1" },
-  { english: "what are you talking about", spanish: "de qué estás hablando", level: "b1" },
-  { english: "what do you think about that", spanish: "qué piensas sobre eso", level: "b1" },
-  { english: "what should i do", spanish: "qué debería hacer", level: "b1" },
-  { english: "what would you do", spanish: "qué harías tú", level: "b1" },
-  { english: "that sounds good", spanish: "suena bien", level: "b1" },
-  { english: "that sounds bad", spanish: "suena mal", level: "b1" },
-  { english: "that makes sense", spanish: "eso tiene sentido", level: "b1" },
-  { english: "that doesn't make sense", spanish: "eso no tiene sentido", level: "b1" },
-  { english: "that is not fair", spanish: "eso no es justo", level: "b1" },
-  { english: "that is not true", spanish: "eso no es verdad", level: "b1" },
-  { english: "that is true", spanish: "eso es verdad", level: "b1" },
-  { english: "i am sure", spanish: "estoy seguro", level: "b1" },
-  { english: "i am not sure", spanish: "no estoy seguro", level: "b1" },
-  { english: "i am confused", spanish: "estoy confundido", level: "b1" },
-  { english: "i am surprised", spanish: "estoy sorprendido", level: "b1" },
-  { english: "i am bored", spanish: "estoy aburrido", level: "b1" },
-  { english: "i am frustrated", spanish: "estoy frustrado", level: "b1" },
-  { english: "i am ready to go", spanish: "estoy listo para irme", level: "b1" },
-  { english: "i am thinking about you", spanish: "estoy pensando en ti", level: "b1" },
-  { english: "i am planning to go", spanish: "estoy planeando ir", level: "b1" },
-  { english: "i am trying to help", spanish: "estoy tratando de ayudar", level: "b1" },
-  { english: "i am doing my best", spanish: "estoy haciendo lo mejor que puedo", level: "b1" }
-];
-
-const CEFR_PHRASES_b2 = [
-  { english: "as far as i know", spanish: "hasta donde sé", level: "b2" },
-  { english: "from my perspective", spanish: "desde mi perspectiva", level: "b2" },
-  { english: "it seems to me that", spanish: "me parece que", level: "b2" },
-  { english: "i am confident that", spanish: "estoy seguro de que", level: "b2" },
-  { english: "i would appreciate it if", spanish: "agradecería si", level: "b2" },
-  { english: "i am considering", spanish: "estoy considerando", level: "b2" },
-  { english: "i didn't realize that", spanish: "no me di cuenta de eso", level: "b2" },
-  { english: "it depends on the situation", spanish: "depende de la situación", level: "b2" },
-  { english: "i am familiar with that", spanish: "estoy familiarizado con eso", level: "b2" },
-  { english: "i am willing to try", spanish: "estoy dispuesto a intentarlo", level: "b2" },
-  { english: "i am not convinced", spanish: "no estoy convencido", level: "b2" },
-  { english: "i completely understand", spanish: "entiendo completamente", level: "b2" },
-  { english: "that makes sense to me", spanish: "eso tiene sentido para mí", level: "b2" },
-  { english: "i will take care of it", spanish: "me encargaré de eso", level: "b2" },
-  { english: "i appreciate your help", spanish: "agradezco tu ayuda", level: "b2" },
-  { english: "i am aware of that", spanish: "soy consciente de eso", level: "b2" },
-  { english: "i am not aware of that", spanish: "no soy consciente de eso", level: "b2" },
-  { english: "i am trying to figure it out", spanish: "estoy tratando de resolverlo", level: "b2" },
-  { english: "i am trying to understand", spanish: "estoy tratando de entender", level: "b2" },
-  { english: "i am trying to explain", spanish: "estoy tratando de explicar", level: "b2" },
-  { english: "i am trying to decide", spanish: "estoy tratando de decidir", level: "b2" },
-  { english: "i am trying to remember", spanish: "estoy tratando de recordar", level: "b2" },
-  { english: "i am trying to focus", spanish: "estoy tratando de concentrarme", level: "b2" },
-  { english: "i am trying to relax", spanish: "estoy tratando de relajarme", level: "b2" },
-  { english: "i am trying to help you", spanish: "estoy tratando de ayudarte", level: "b2" },
-  { english: "i am trying to improve myself", spanish: "estoy tratando de mejorarme", level: "b2" },
-  { english: "i am trying to solve the problem", spanish: "estoy tratando de resolver el problema", level: "b2" },
-  { english: "i am trying to fix it", spanish: "estoy tratando de arreglarlo", level: "b2" },
-  { english: "i am trying to avoid that", spanish: "estoy tratando de evitar eso", level: "b2" },
-  { english: "i am trying to be patient", spanish: "estoy tratando de ser paciente", level: "b2" },
-  { english: "i am trying to be honest", spanish: "estoy tratando de ser honesto", level: "b2" },
-  { english: "i am trying to be careful", spanish: "estoy tratando de tener cuidado", level: "b2" },
-  { english: "i am trying to be respectful", spanish: "estoy tratando de ser respetuoso", level: "b2" },
-  { english: "i am trying to be responsible", spanish: "estoy tratando de ser responsable", level: "b2" },
-  { english: "i am trying to be more organized", spanish: "estoy tratando de ser más organizado", level: "b2" },
-  { english: "i am trying to be more productive", spanish: "estoy tratando de ser más productivo", level: "b2" },
-  { english: "i am trying to be more positive", spanish: "estoy tratando de ser más positivo", level: "b2" },
-  { english: "i am trying to be more patient", spanish: "estoy tratando de ser más paciente", level: "b2" },
-  { english: "i am trying to be more confident", spanish: "estoy tratando de tener más confianza", level: "b2" },
-  { english: "i am trying to be more consistent", spanish: "estoy tratando de ser más constante", level: "b2" },
-  { english: "i am trying to be more flexible", spanish: "estoy tratando de ser más flexible", level: "b2" },
-  { english: "i am trying to be more creative", spanish: "estoy tratando de ser más creativo", level: "b2" },
-  { english: "i am trying to be more patient with myself", spanish: "estoy tratando de ser más paciente conmigo mismo", level: "b2" },
-  { english: "i am trying to be more patient with others", spanish: "estoy tratando de ser más paciente con los demás", level: "b2" },
-  { english: "i am trying to be more understanding", spanish: "estoy tratando de ser más comprensivo", level: "b2" },
-  { english: "i am trying to be more supportive", spanish: "estoy tratando de ser más solidario", level: "b2" },
-  { english: "i am trying to be more helpful", spanish: "estoy tratando de ser más útil", level: "b2" },
-  { english: "i am trying to be more disciplined", spanish: "estoy tratando de ser más disciplinado", level: "b2" },
-  { english: "i am trying to be more patient every day", spanish: "estoy tratando de ser más paciente cada día", level: "b2" }
-];
-
-
-/* ============================================================
-   MERGED CEFR PHRASES (A1–B2, lowercase)
-   ============================================================ */
-
-const CEFR_PHRASES = [
-    ...CEFR_PHRASES_a1.map(p => ({ ...p, level: "a1" })),
-    ...CEFR_PHRASES_a2.map(p => ({ ...p, level: "a2" })),
-    ...CEFR_PHRASES_b1.map(p => ({ ...p, level: "b1" })),
-    ...CEFR_PHRASES_b2.map(p => ({ ...p, level: "b2" }))
-];
-
+    // B2
+    "cómo manejas situaciones estresantes": "how do you handle stressful situations",
+    "cuál es tu opinión sobre la tecnología": "what is your opinion on technology",
+    "cómo ha cambiado tu vida": "how has your life changed",
+    "qué desafíos enfrentas": "what challenges do you face",
+    "qué esperas lograr": "what do you hope to achieve",
+    "qué piensas del futuro": "what do you think about the future",
+    "cómo ves la sociedad actual": "how do you see modern society",
+    "cuál es tu perspectiva": "what is your perspective"
+};
 
 /* ============================================================
    TRANSLATION ENGINE — CEFR Phrases + Word Dictionary
@@ -1861,7 +1616,7 @@ function getCEFRGrammarHint(level, user, correct) {
     /* ============================
        A1 HINTS
        ============================ */
-    if (level === "a1") {
+    if (level === "A1") {
         if (!u.includes("el") && !u.includes("la") && (c.includes("el") || c.includes("la"))) {
             return "A1 hint: Remember to include articles (el/la) before nouns.";
         }
@@ -1874,7 +1629,7 @@ function getCEFRGrammarHint(level, user, correct) {
     /* ============================
        A2 HINTS
        ============================ */
-    if (level === "a2") {
+    if (level === "A2") {
         if (u.includes("lento") && c.includes("a menudo")) {
             return "A2 hint: Use frequency words like “a menudo” instead of speed words like “lento”.";
         }
@@ -1887,7 +1642,7 @@ function getCEFRGrammarHint(level, user, correct) {
     /* ============================
        B1 HINTS
        ============================ */
-    if (level === "b1") {
+    if (level === "B1") {
         if (!u.includes("porque") && c.includes("porque")) {
             return "B1 hint: Use connectors like “porque” to explain reasons.";
         }
@@ -1900,7 +1655,7 @@ function getCEFRGrammarHint(level, user, correct) {
     /* ============================
        B2 HINTS
        ============================ */
-    if (level === "b2") {
+    if (level === "B2") {
         if (!u.includes("aunque") && c.includes("aunque")) {
             return "B2 hint: Use contrast connectors like “aunque” for complex ideas.";
         }
@@ -1912,6 +1667,9 @@ function getCEFRGrammarHint(level, user, correct) {
 
     return "";
 }
+
+
+
 
 /* ============================================================
    CEFR TRAINER — CLEAN APP.JS (PART 1)
@@ -1930,14 +1688,14 @@ function groupByCategory(words) {
 const STORAGE_KEY = "cefr_trainer_state_v2";
 
 let appState = {
-    currentLevel: "a1",
+    currentLevel: "A1",
     speechRate: 1.0,
     studentName: "",
     badges: [],
     totalXP: 0,
     globalScore: 0,
     levelStats: {
-        a1: { 
+        A1: { 
             listens: 0, 
             flashSeen: 0, 
             quizScore: 0, 
@@ -1948,7 +1706,7 @@ let appState = {
             streak: 0,
             reviewDue: 0
         },
-        a2: { 
+        A2: { 
             listens: 0, 
             flashSeen: 0, 
             quizScore: 0, 
@@ -1959,7 +1717,7 @@ let appState = {
             streak: 0,
             reviewDue: 0
         },
-        b1: { 
+        B1: { 
             listens: 0, 
             flashSeen: 0, 
             quizScore: 0, 
@@ -1970,7 +1728,7 @@ let appState = {
             streak: 0,
             reviewDue: 0
         },
-        b2: { 
+        B2: { 
             listens: 0, 
             flashSeen: 0, 
             quizScore: 0, 
@@ -2098,7 +1856,7 @@ function saveState() {
 appState.lastActiveDate = appState.lastActiveDate || null;
 
 /* ============================================================
-   CALENDAR DAY STREAK ENGINE (FIXED VERSION)
+   CALENDAR DAY STREAK ENGINE
    ============================================================ */
 
 // Safely ensure this property exists on your global state when app initializes
@@ -2107,64 +1865,56 @@ if (typeof appState !== "undefined" && !appState.hasOwnProperty("lastActiveDate"
 }
 
 function checkAndAdvanceStreak() {
-    const todayStr = new Date().toLocaleDateString('en-CA'); // YYYY-MM-DD
+    const todayStr = new Date().toLocaleDateString('en-CA'); // Formats cleanly as YYYY-MM-DD
     const lastActive = appState.lastActiveDate;
-
-    // Normalize level key so "A1" → "a1"
-    const levelKey = (appState.currentLevel || "a1").toLowerCase();
-
-    // Ensure streak exists
-    if (typeof appState.levelStats[levelKey].streak !== "number") {
-        appState.levelStats[levelKey].streak = 0;
+    
+    // Fallback: Ensure active level stats object has a numeric streak parameter initialized
+    if (typeof appState.levelStats[appState.currentLevel].streak !== "number") {
+        appState.levelStats[appState.currentLevel].streak = 0;
     }
 
-    // Case 1: First time playing
+    // Case 1: First time playing, or progress was just reset
     if (!lastActive) {
-        appState.levelStats[levelKey].streak = 1;
+        appState.levelStats[appState.currentLevel].streak = 1;
         appState.lastActiveDate = todayStr;
         saveState();
         return;
     }
 
-    // Case 2: Already played today
+    // Case 2: Already played today, do nothing to the count
     if (lastActive === todayStr) {
         return;
     }
 
-    // Calculate day difference
+    // Calculate the difference in calendar days
     const lastDateObj = new Date(lastActive);
     const todayDateObj = new Date(todayStr);
     const timeDiff = todayDateObj.getTime() - lastDateObj.getTime();
     const dayDiff = Math.floor(timeDiff / (1000 * 60 * 60 * 24));
 
     if (dayDiff === 1) {
-        // Played yesterday → increment streak
-        appState.levelStats[levelKey].streak++;
+        // Case 3: Played yesterday! Increment the consecutive day count
+        appState.levelStats[appState.currentLevel].streak++;
     } else if (dayDiff > 1) {
-        // Skipped → reset streak
-        appState.levelStats[levelKey].streak = 1;
+        // Case 4: Skipped a day or more. Reset streak back to 1
+        appState.levelStats[appState.currentLevel].streak = 1;
     }
 
-    // Update last active date
+    // Update the last active date milestone to today
     appState.lastActiveDate = todayStr;
     saveState();
 }
 
-
 /* ============================================================
-   FULL RESET — ALL LEVELS, ALL SCORES, ALL XP (FIXED VERSION)
+   FULL RESET — ALL LEVELS, ALL SCORES, ALL XP
    ============================================================ */
 function resetAllProgress() {
-
-    // Normalize all level keys to lowercase
     Object.keys(appState.levelStats).forEach(level => {
-        const levelKey = level.toLowerCase();
-
-        appState.levelStats[levelKey] = {
+        appState.levelStats[level] = {
             listens: 0,
             flashSeen: 0,
             quizScore: 0,
-            quizCompleted: 0,
+            quizCompleted: 0, // Zeroes completion fields alongside standard rating stats
             buildCompleted: 0,
             sentenceCompleted: 0,
             conversationCompleted: 0,
@@ -2173,35 +1923,30 @@ function resetAllProgress() {
         };
     });
 
-    // Reset global metrics
+    // ⭐ FIXED: Completely zeroes global metrics memory data structures
     appState.totalXP = 0;
     appState.globalScore = 0;
     appState.badges = [];
+    appState.currentLevel = "A1";
+    appState.lastActiveDate = null; 
 
-    // Force current level to lowercase
-    appState.currentLevel = "a1";
-
-    // Reset streak date
-    appState.lastActiveDate = null;
-
-    // Reset review list
+    // ⭐ FIXED: Clears your live review list array and local tracking storage
     reviewList = [];
-    localStorage.removeItem("reviewList");
+    localStorage.removeItem('reviewList');
 
-    // Save changes
+    // Save changes to disk memory
     saveState();
 
-    // Redraw UI
+    // ⭐ FIXED: Instantly redraws the entire interface so everything clicks down to 0% right away
     updateBadges();
     updateProgressMeters();
     renderReviewList();
-
-    // Return user to dashboard
+    
+    // Optional: Take the user back to the clean dashboard overview tab
     activateTab("dashboard");
-
+    
     console.log("🧼 Application data successfully cleared back to baseline!");
 }
-
 
 
 /* ============================================================
@@ -2246,23 +1991,18 @@ function speakQuiz(correctAnswer) {
 
 
 /* ============================================================
-   LEVEL SELECTOR (FIXED VERSION)
+   LEVEL SELECTOR
    ============================================================ */
 function setLevel(level) {
-    // Normalize level key so "A1" → "a1"
-    const levelKey = (level || "a1").toLowerCase();
+    if (!CEFR_LEVELS[level]) return;
 
-    if (!CEFR_LEVELS[levelKey]) return;
-
-    appState.currentLevel = levelKey;
+    appState.currentLevel = level;
     saveState();
 
-    // Update button highlight
     document.querySelectorAll(".level-btn").forEach(btn => {
-        btn.classList.toggle("active", btn.dataset.level.toLowerCase() === levelKey);
+        btn.classList.toggle("active", btn.dataset.level === level);
     });
 
-    // Re-render the currently active tab
     activateTab(currentTab);
 }
 
@@ -2386,7 +2126,7 @@ function initDashboardResetButtons() {
 }
 
 /* ============================================================
-   LISTEN TAB — CATEGORY + AUDIO PLAYER + CLEAN UI (FIXED)
+   LISTEN TAB — CATEGORY + AUDIO PLAYER + CLEAN UI
    ============================================================ */
 
 let listenAutoPlay = {
@@ -2400,15 +2140,12 @@ function renderListenTab() {
     const container = document.getElementById("listen-content");
     if (!container) return;
 
-    // Normalize level key so "A1" → "a1"
-    const levelKey = (appState.currentLevel || "a1").toLowerCase();
-
     // Pull the correct CEFR level vocabulary (already categorized)
-    const levelData = LISTEN_VOCAB[levelKey] || {};
+    const levelData = LISTEN_VOCAB[appState.currentLevel];
 
     let html = `
         <div class="glass-panel quiz-card">
-            <h2>Listen — Level ${levelKey}</h2>
+            <h2>Listen — Level ${appState.currentLevel}</h2>
             <p>Tap a category, then click a word pill to hear it.</p>
 
             <div class="listen-player-controls" style="
@@ -2426,52 +2163,44 @@ function renderListenTab() {
         </div>
     `;
 
+    /* ============================================================
+       CATEGORY LIST (already grouped in LISTEN_VOCAB)
+       ============================================================ */
+    Object.keys(levelData).forEach(categoryName => {
+        const words = levelData[categoryName];
 
-  /* ============================================================
-   CATEGORY LIST (already grouped in LISTEN_VOCAB)
-   ============================================================ */
-Object.keys(levelData).forEach(categoryName => {
-    const words = levelData[categoryName];
+       html += `
+<div class="glass-panel">
+    <div class="listen-category-header" data-cat="${categoryName}">
+       <span class="listen-category-title">${categoryName}</span>
+       <span class="listen-arrow">▶</span>
+    </div>
 
-    html += `
-    <div class="glass-panel">
-        <div class="listen-category-header" data-cat="${categoryName}">
-            <span class="listen-category-title">${categoryName}</span>
-            <span class="listen-arrow">▶</span>
-        </div>
 
-        <div class="listen-category-content" data-cat="${categoryName}">
-            <div class="listen-grid" style="
-                display:grid;
-                grid-template-columns:repeat(auto-fill, minmax(120px, 1fr));
-                gap:6px;
-                margin-top:8px;
-            ">
-                ${words.map(item => {
-                    // item may be a string OR an object
-                    const spanishWord = typeof item === "string" ? item : item.spanish;
+            <div class="listen-category-content" data-cat="${categoryName}">
+                <div class="listen-grid" style="
+                    display:grid;
+                    grid-template-columns:repeat(auto-fill, minmax(120px, 1fr));
+                    gap:6px;
+                    margin-top:8px;
+                ">
+                    ${words.map(spanish => {
+                         const entry = CEFR_LEVELS[appState.currentLevel].find(w => w.spanish === spanish);
+                         const english = entry ? entry.english : "";
+                         return `
+                           <button class="pill listen-pill" data-spanish="${spanish}">
+                             <div class="listen-pill-en">${english}</div>
+                             <div class="listen-pill-es">${spanish}</div>
+                           </button>
+                       `;
+                   }).join("")}
 
-                    // Normalize level key so "A1" → "a1"
-                    const levelKey = (appState.currentLevel || "a1").toLowerCase();
-
-                    // Safely pull vocabulary entry
-                    const entry = CEFR_LEVELS[levelKey].find(w => w.spanish === spanishWord);
-                    const english = entry ? entry.english : "";
-
-                    return `
-                        <button class="pill listen-pill" data-spanish="${spanishWord}">
-                            <div class="listen-pill-en">${english}</div>
-                            <div class="listen-pill-es">${spanishWord}</div>
-                        </button>
-                    `;
-                }).join("")}
+                </div>
             </div>
-        </div>
-    </div>`;
-});
+        </div>`;
+    });
 
-container.innerHTML = html;
-
+    container.innerHTML = html;
 
     /* ============================================================
        CATEGORY COLLAPSE
@@ -2488,23 +2217,18 @@ container.innerHTML = html;
         });
     });
 
-   /* ============================================================
-   SINGLE WORD PLAYBACK (FIXED VERSION)
-   ============================================================ */
-container.querySelectorAll(".pill[data-spanish]").forEach(btn => {
-    btn.addEventListener("click", () => {
-        speakSpanish(btn.dataset.spanish);
-
-        // Normalize level key so "A1" → "a1"
-        const levelKey = (appState.currentLevel || "a1").toLowerCase();
-
-        appState.levelStats[levelKey].listens++;
-        saveState();
-        updateBadges();
-        updateProgressMeters();
+    /* ============================================================
+       SINGLE WORD PLAYBACK
+       ============================================================ */
+    container.querySelectorAll(".pill[data-spanish]").forEach(btn => {
+        btn.addEventListener("click", () => {
+            speakSpanish(btn.dataset.spanish);
+            appState.levelStats[appState.currentLevel].listens++;
+            saveState();
+            updateBadges();
+            updateProgressMeters();
+        });
     });
-});
-
 
     /* ============================================================
        AUTO PLAY — PLAY ALL WORDS
@@ -2569,30 +2293,12 @@ function playNextListenWord() {
 }
 
 /* ============================================================
-   FLASHCARDS — CATEGORY GROUPED + FLIP + AUDIO (FIXED VERSION)
+   FLASHCARDS — CATEGORY GROUPED + FLIP + AUDIO (STABLE VERSION)
    ============================================================ */
 
 function renderFlashcardsTab() {
     const container = document.getElementById("flash-content");
-    if (!container) return;
-
-    // Normalize level key so "A1" → "a1"
-    const levelKey = (appState.currentLevel || "a1").toLowerCase();
-
-    // Safely pull vocabulary
-    const words = CEFR_LEVELS[levelKey] || [];
-
-    // If no words found, show a friendly message
-    if (!Array.isArray(words) || words.length === 0) {
-        container.innerHTML = `
-            <div class="glass-panel">
-                <h2>Flashcards — Level ${levelKey}</h2>
-                <p>No flashcards available for this level.</p>
-            </div>
-        `;
-        return;
-    }
-
+    const words = CEFR_LEVELS[appState.currentLevel];
     const grouped = groupByCategory(words);
 
     /* ------------------------------------------------------------
@@ -2616,16 +2322,15 @@ function renderFlashcardsTab() {
        ------------------------------------------------------------ */
     let html = `
         <div class="glass-panel">
-            <h2>Flashcards — Level ${levelKey}</h2>
-            <p>Translate the word then tap the card to flip it over and see if you're correct. Spanish side plays audio.</p>
+            <h2>Flashcards — Level ${appState.currentLevel}</h2>
+            <p>Translate the word then tap the card to flip it over and see if your correct. Spanish side plays audio.</p>
         </div>
     `;
 
     /* ------------------------------------------------------------
        RENDER MERGED CATEGORIES
        ------------------------------------------------------------ */
-    Object.keys(normalized).forEach(key => {
-        const cleanKey = key.toLowerCase();
+    Object.keys(normalized).forEach(cleanKey => {
         const catDisplay = normalized[cleanKey].display.toUpperCase();
         const items = normalized[cleanKey].items;
 
@@ -2677,7 +2382,7 @@ function renderFlashcardsTab() {
 
             if (flipped) {
                 speakSpanish(spanish);
-                appState.levelStats[levelKey].flashSeen++;
+                appState.levelStats[appState.currentLevel].flashSeen++;
                 saveState();
                 updateBadges();
                 updateProgressMeters();
@@ -2687,6 +2392,8 @@ function renderFlashcardsTab() {
         });
     });
 }
+
+
 
 /* ============================================================
    SHARED QUIZ / BUILD / SENTENCE / CONVERSATION STATE
@@ -2727,66 +2434,54 @@ function generateQuizOptions(words, correctWord) {
 }
 
 /* ============================================================
-   QUIZ TAB — RENDER + EVENTS (FIXED VERSION)
+   QUIZ TAB — RENDER + EVENTS
    ============================================================ */
 
 function renderQuizTab() {
     const container = document.getElementById("quiz-content");
-    if (!container) return;
+    const words = CEFR_LEVELS[appState.currentLevel];
 
-    // Normalize level key so "A1" → "a1"
-    const levelKey = (appState.currentLevel || "a1").toLowerCase();
-
-    // Safely pull vocabulary
-    const words = CEFR_LEVELS[levelKey] || [];
-
-    if (!Array.isArray(words) || words.length === 0) {
-        container.innerHTML = `
-            <div class="glass-panel quiz-card">
-                <p>No words found for level ${levelKey}.</p>
-            </div>
-        `;
+    if (!words || !words.length) {
+        container.innerHTML = `<div class="glass-panel quiz-card">
+            <p>No words found for level ${appState.currentLevel}.</p>
+        </div>`;
         return;
     }
 
-    // Pick a random word
     quizState.currentWord = words[Math.floor(Math.random() * words.length)];
-
-    // Generate options safely
     quizState.options = generateQuizOptions(words, quizState.currentWord);
     quizState.selected = null;
 
     container.innerHTML = `
-        <div class="glass-panel quiz-card">
-            <h2>Quiz — Level ${levelKey}</h2>
-            <p>Select the correct Spanish for the English word.</p>
+    <div class="glass-panel quiz-card">
+        <h2>Quiz — Level ${appState.currentLevel}</h2>
+        <p>Select the correct Spanish for the English word.</p>
 
-            <div id="qb-meta"><strong>English:</strong> ${quizState.currentWord.english}</div>
+        <div id="qb-meta"><strong>English:</strong> ${quizState.currentWord.english}</div>
 
-            <div id="qb-grid" class="sb-grid">
-                ${quizState.options.map(opt => `
-                    <button class="pill" data-spanish="${opt}">${opt}</button>
-                `).join("")}
-            </div>
-
-            <div id="qb-answer" class="qb-answer"></div>
-
-            <div class="sb-controls quiz-controls-tight">
-                <button id="qb-submit">Check</button>
-                <button id="qb-next">Next</button>
-                <button id="qb-harder" class="${quizState.harderMode ? "active" : ""}">Harder</button>
-            </div>
-
-            <div id="qb-feedback" class="qb-feedback"></div>
+        <div id="qb-grid" class="sb-grid">
+            ${quizState.options.map(opt => `
+                <button class="pill" data-spanish="${opt}">${opt}</button>
+            `).join("")}
         </div>
+
+        <div id="qb-answer" class="qb-answer"></div>
+
+        <div class="sb-controls quiz-controls-tight">
+            <button id="qb-submit">Check</button>
+            <button id="qb-next">Next</button>
+            <button id="qb-harder" class="${quizState.harderMode ? "active" : ""}">Harder</button>
+        </div>
+
+        <div id="qb-feedback" class="qb-feedback"></div>
+    </div>
     `;
 
     setupQuizEvents();
 }
 
-
 /* ============================================================
-   QUIZ EVENTS (FIXED VERSION)
+   QUIZ EVENTS
    ============================================================ */
 
 function setupQuizEvents() {
@@ -2798,9 +2493,6 @@ function setupQuizEvents() {
     const answerBox = document.getElementById("qb-answer");
 
     quizState.selected = null;
-
-    // Normalize level key so "A1" → "a1"
-    const levelKey = (appState.currentLevel || "a1").toLowerCase();
 
     // Pill selection
     grid.querySelectorAll(".pill").forEach(btn => {
@@ -2814,7 +2506,7 @@ function setupQuizEvents() {
 
     // Helper: translate Spanish → English
     function getEnglishForSpanish(spanishWord) {
-        const levelWords = CEFR_LEVELS[levelKey] || [];
+        const levelWords = CEFR_LEVELS[appState.currentLevel];
         const match = levelWords.find(w => w.spanish === spanishWord);
         return match ? match.english : "[no match]";
     }
@@ -2831,30 +2523,27 @@ function setupQuizEvents() {
         const learnerEnglish = getEnglishForSpanish(learnerSpanish);
 
         // Ensure quizScore is not null before incrementing
-        if (appState.levelStats[levelKey].quizScore === null) {
-            appState.levelStats[levelKey].quizScore = 0;
+        if (appState.levelStats[appState.currentLevel].quizScore === null) {
+            appState.levelStats[appState.currentLevel].quizScore = 0;
         }
 
+        // Correct / Incorrect feedback + NEW "You selected:"
         if (learnerSpanish === correct) {
             feedback.innerHTML = `
                 <div class="quiz-correct">Correct! 🎉</div>
                 <div class="quiz-selected"><strong>You selected:</strong> ${learnerSpanish} (${learnerEnglish})</div>
             `;
 
-            appState.levelStats[levelKey].quizScore++;
-            appState.levelStats[levelKey].quizCompleted++;
+            appState.levelStats[appState.currentLevel].quizScore++;
+            appState.levelStats[appState.currentLevel].quizCompleted++;
 
-            /* ⭐ CEFR ENGINE SCORING ⭐ */
-            quizCorrect++;
-            quizTotal++;
-            runCEFRScoringEngine();
-            renderCertificates();
-            /* ⭐ END ⭐ */
-
-            appState.totalXP = (appState.totalXP || 0) + 10;
+            // Increments global state stats when answers match perfectly
+            appState.totalXP = (appState.totalXP || 0) + 10; 
             appState.globalScore = (appState.globalScore || 0) + 5;
-
+            
+            // ⭐ UPDATED: Invokes calendar comparison check engine for daily streak increments
             checkAndAdvanceStreak();
+
             updateBadges();
             updateProgressMeters();
 
@@ -2864,6 +2553,7 @@ function setupQuizEvents() {
                 <div class="quiz-selected"><strong>You selected:</strong> ${learnerSpanish} (${learnerEnglish})</div>
             `;
 
+            // INTEGRATION: Formats the phrase "English ➔ Spanish" and adds it to your review tracking list
             const mistakeString = `${quizState.currentWord.english} ➔ ${correct}`;
             addIncorrectWord(mistakeString);
         }
@@ -2887,7 +2577,6 @@ function setupQuizEvents() {
     });
 }
 
-
 /* ============================================================
    KEYBOARD NORMALIZATION UTILITY (MULTI-WORD VERSION)
    ============================================================ */
@@ -2909,29 +2598,15 @@ function cleanStringForKeyboard(text) {
         .replace(/\s+/g, " ");
 }
 
+
+
 /* ============================================================
    BUILD TAB — English → Spanish Builder (with disruptors + feedback)
    ============================================================ */
 function renderBuildTab() {
     const container = document.getElementById("build-content");
-    if (!container) return;
 
-    // Normalize level key so "A1" → "a1"
-    const levelKey = (appState.currentLevel || "a1").toLowerCase();
-
-    // Safely pull sentence pool
-    const pool = CEFR_SENTENCES[levelKey] || [];
-
-    if (!Array.isArray(pool) || pool.length === 0) {
-        container.innerHTML = `
-            <div class="glass-panel build-card">
-                <h2>Build — Level ${levelKey}</h2>
-                <p>No build sentences available for this level.</p>
-            </div>
-        `;
-        return;
-    }
-
+    const pool = CEFR_SENTENCES[appState.currentLevel];
     const sentence = pool[Math.floor(Math.random() * pool.length)];
 
     const english = sentence.english;
@@ -3032,69 +2707,65 @@ function setupBuildEvents(sentence) {
         });
     });
 
-     checkBtn.addEventListener("click", () => {
-    const correct = sentence.spanish.trim();
-    const user = buildState.answer.join(" ").trim();
+       checkBtn.addEventListener("click", () => {
+        const correct = sentence.spanish.trim();
+        const user = buildState.answer.join(" ").trim();
 
-    // Translate learner answer to English
-    const learnerEnglish = translateToEnglish(user);
+        // Translate learner answer to English
+        const learnerEnglish = translateToEnglish(user);
 
-    // Normalize both strings to bypass accent/punctuation keyboard mismatches
-    const cleanCorrect = cleanStringForKeyboard(correct);
-    const cleanUser = cleanStringForKeyboard(user);
+        // ⭐ INTEGRATION: Normalize both strings to bypass accent/punctuation keyboard mismatches
+        const cleanCorrect = cleanStringForKeyboard(correct);
+        const cleanUser = cleanStringForKeyboard(user);
 
-    // ⭐ Normalize level key so "A1" → "a1"
-    const levelKey = (appState.currentLevel || "a1").toLowerCase();
+        // Check against the cleaned, keyboard-forgiving values
+        if (cleanUser === cleanCorrect) {
+            feedback.innerHTML = `
+                <span style="color:#4ade80;font-weight:600;">Correct! 🎉</span><br><br>
+                <strong>Your Translated Response is:</strong><br>${learnerEnglish}
+            `;
+            appState.levelStats[appState.currentLevel].buildCompleted++;
 
-    // Check against the cleaned, keyboard-forgiving values
-    if (cleanUser === cleanCorrect) {
-        feedback.innerHTML = `
-            <span style="color:#4ade80;font-weight:600;">Correct! 🎉</span><br><br>
-            <strong>Your Translated Response is:</strong><br>${learnerEnglish}
-        `;
+            appState.totalXP = (appState.totalXP || 0) + 20; 
+            appState.globalScore = (appState.globalScore || 0) + 15;
 
-        // ⭐ FIXED: update correct lowercase stats object
-        appState.levelStats[levelKey].buildCompleted++;
+            checkAndAdvanceStreak();
 
-        appState.totalXP = (appState.totalXP || 0) + 20; 
-        appState.globalScore = (appState.globalScore || 0) + 15;
+            updateBadges();
+            updateProgressMeters();
+            setTimeout(() => speakQuiz(correct), 50);
+        } else {
+            const correctTokens = correct.split(" ");
+            const userTokens = buildState.answer;
 
-        checkAndAdvanceStreak();
-        updateBadges();
-        updateProgressMeters();
-        setTimeout(() => speakQuiz(correct), 50);
+            let html = `<strong>Correct Answer:</strong><br>${correct}<br><br>`;
+            html += `<strong>Your Answer:</strong><br>${user}<br><br>`;
+            html += `<strong>Your Translated Response is:</strong><br>${learnerEnglish}<br><br>`;
+            html += `<strong>Word-by-word feedback:</strong><br>`;
 
-    } else {
-        const correctTokens = correct.split(" ");
-        const userTokens = buildState.answer;
+            userTokens.forEach((t, i) => {
+                // Fuzzy check each single token for individual word correctness indicators
+                if (cleanStringForKeyboard(correctTokens[i]) === cleanStringForKeyboard(t)) {
+                    html += `<span style="color:#4ade80;">${t} ✔</span> `;
+                } else {
+                    html += `<span style="color:#f87171;">${t} ✖</span> `;
+                }
+            });
 
-        let html = `<strong>Correct Answer:</strong><br>${correct}<br><br>`;
-        html += `<strong>Your Answer:</strong><br>${user}<br><br>`;
-        html += `<strong>Your Translated Response is:</strong><br>${learnerEnglish}<br><br>`;
-        html += `<strong>Word-by-word feedback:</strong><br>`;
+            feedback.innerHTML = html;
+            setTimeout(() => speakQuiz(correct), 50);
 
-        userTokens.forEach((t, i) => {
-            if (cleanStringForKeyboard(correctTokens[i]) === cleanStringForKeyboard(t)) {
-                html += `<span style="color:#4ade80;">${t} ✔</span> `;
-            } else {
-                html += `<span style="color:#f87171;">${t} ✖</span> `;
-            }
-        });
+            const mistakeSentenceString = `${sentence.english} ➔ ${correct}`;
+            addIncorrectWord(mistakeSentenceString);
+        }
 
-        feedback.innerHTML = html;
-        setTimeout(() => speakQuiz(correct), 50);
+        saveState();
+    });
 
-        const mistakeSentenceString = `${sentence.english} ➔ ${correct}`;
-        addIncorrectWord(mistakeSentenceString);
-    }
-
-    saveState();
-});
-
-nextBtn.addEventListener("click", () => {
-    renderBuildTab();
-});
-
+    nextBtn.addEventListener("click", () => {
+        renderBuildTab();
+    });
+}
 
 /* ============================================================
    SENTENCE TAB — CEFR MULTIPLE‑CHOICE (FINAL MASTER VERSION)
@@ -3117,16 +2788,13 @@ function generateSentenceForLevel(level) {
 
 function renderSentenceTab() {
     const container = document.getElementById("sentence-content");
-
-    // Normalize level key so "A1" → "a1"
-    const levelKey = (appState.currentLevel || "a1").toLowerCase();
+    const level = appState.currentLevel;
 
     // SAFETY CHECK — prevents crashes if level has no sentences
-    if (!CEFR_SENTENCE_CHOICES[levelKey]) {
+    if (!CEFR_SENTENCE_CHOICES[level]) {
         container.innerHTML = "<p>No sentences available for this level.</p>";
         return;
     }
-
 
     const q = generateSentenceForLevel(level);
 
@@ -3170,60 +2838,63 @@ function setupSentenceEvents(q) {
         return match ? match.en : "[no match]";
     }
 
-   buttons.forEach(btn => {
-    btn.addEventListener("click", () => {
-        const chosen = btn.dataset.opt;
-        const chosenEnglish = getEnglishForSpanish(chosen);
+    buttons.forEach(btn => {
+        btn.addEventListener("click", () => {
+            const chosen = btn.dataset.opt;
+            const chosenEnglish = getEnglishForSpanish(chosen);
 
-        // Normalize level key so "A1" → "a1"
-        const levelKey = (appState.currentLevel || "a1").toLowerCase();
+            if (chosen === q.correct.es) {
+                feedback.innerHTML = `
+                    <span style="color:#4ade80;font-weight:600;">
+                        Correct! 🎉
+                    </span><br>
+                    <div class="sentence-selected">
+                        <strong>You selected:</strong> ${chosen} (${chosenEnglish})
+                    </div>
+                `;
 
-        if (chosen === q.correct.es) {
-            feedback.innerHTML = `
-                <span style="color:#4ade80;font-weight:600;">
-                    Correct! 🎉
-                </span><br>
-                <div class="sentence-selected">
-                    <strong>You selected:</strong> ${chosen} (${chosenEnglish})
-                </div>
-            `;
+                appState.levelStats[appState.currentLevel].sentenceCompleted++;
 
-            // ⭐ FIXED: update correct lowercase stats object
-            appState.levelStats[levelKey].sentenceCompleted++;
+                // Increments global progress metrics on success
+                appState.totalXP = (appState.totalXP || 0) + 15; 
+                appState.globalScore = (appState.globalScore || 0) + 10;
+                
+                // ⭐ UPDATED: Invokes calendar comparison check engine for daily streak increments
+                checkAndAdvanceStreak();
 
-            appState.totalXP = (appState.totalXP || 0) + 15; 
-            appState.globalScore = (appState.globalScore || 0) + 10;
+                updateBadges();
+                updateProgressMeters();
+                speakQuiz(q.correct.es);
 
-            checkAndAdvanceStreak();
-            updateBadges();
-            updateProgressMeters();
-            speakQuiz(q.correct.es);
+            } else {
+                feedback.innerHTML = `
+                    <span style="color:#f87171;font-weight:600;">
+                        Incorrect.
+                    </span><br>
+                    Correct answer: <strong>${q.correct.es}</strong><br>
+                    <div class="sentence-selected">
+                        <strong>You selected:</strong> ${chosen} (${chosenEnglish})
+                    </div>
+                `;
 
-        } else {
-            feedback.innerHTML = `
-                <span style="color:#f87171;font-weight:600;">
-                    Incorrect.
-                </span><br>
-                Correct answer: <strong>${q.correct.es}</strong><br>
-                <div class="sentence-selected">
-                    <strong>You selected:</strong> ${chosen} (${chosenEnglish})
-                </div>
-            `;
+                // INTEGRATION: Formats sentence mistake path and updates tracking engine
+                const mistakeSentenceString = `${q.english} ➔ ${q.correct.es}`;
+                addIncorrectWord(mistakeSentenceString);
 
-            const mistakeSentenceString = `${q.english} ➔ ${q.correct.es}`;
-            addIncorrectWord(mistakeSentenceString);
+                speakQuiz(q.correct.es);
+            }
 
-            speakQuiz(q.correct.es);
-        }
-
-        buttons.forEach(b => b.disabled = true);
-        saveState();
+            // Disable only answer buttons
+            buttons.forEach(b => b.disabled = true);
+            saveState();
+        });
     });
-});
 
-nextBtn.addEventListener("click", () => {
-    renderSentenceTab();
-});
+    nextBtn.addEventListener("click", () => {
+        renderSentenceTab();
+    });
+}
+
 
 /* ============================================================
    CEFR SENTENCE CHOICES — FULL PACK (A1 → B2)
@@ -3235,7 +2906,7 @@ const CEFR_SENTENCE_CHOICES = {
        A1 — Beginner
        ============================ */
 
-    a1: [    {
+    A1: [    {
         english: "I’m a bit tired today.",
         correct: { es: "estoy un poco cansado hoy", en: "I’m a bit tired today." },
         options: [
@@ -3604,7 +3275,7 @@ const CEFR_SENTENCE_CHOICES = {
    A2 — Elementary
    ============================ */
 
-a2: [
+A2: [
     {
         english: "We’re planning a trip next week.",
         correct: { es: "estamos planeando un viaje la próxima semana", en: "We’re planning a trip next week." },
@@ -3966,7 +3637,7 @@ a2: [
    B1 — Intermediate
    ============================ */
 
-b1: [
+B1: [
     {
         english: "We need to explain the plan clearly.",
         correct: { es: "necesitamos explicar el plan claramente", en: "We need to explain the plan clearly." },
@@ -4347,7 +4018,7 @@ b1: [
    B2 — Upper Intermediate
    ============================ */
 
-b2: [
+B2: [
     {
         english: "We need to consider all the details before deciding.",
         correct: { es: "necesitamos considerar todos los detalles antes de decidir", en: "We need to consider all the details before deciding." },
@@ -4729,25 +4400,25 @@ function getDisruptorResponses(level) {
     });
 }
 
-const DISRUPTORS_a1 = [
+const DISRUPTORS_A1 = [
     { es: "Bueno, te digo algo.", en: "Well, let me tell you something." },
     { es: "Pues mira.", en: "Well, look." },
     { es: "La verdad es que.", en: "The truth is that..." }
 ];
 
-const DISRUPTORS_a2 = [
+const DISRUPTORS_A2 = [
     { es: "A menudo pienso en esto.", en: "I often think about this." },
     { es: "Antes de responder, te cuento.", en: "Before answering, let me tell you something." },
     { es: "Ya sabes cómo es.", en: "You know how it is." }
 ];
 
-const DISRUPTORS_b1 = [
+const DISRUPTORS_B1 = [
     { es: "Mientras lo pienso, te digo algo.", en: "While I think about it, let me tell you something." },
     { es: "Sin embargo, hay más que decir.", en: "However, there's more to say." },
     { es: "Sobre esto, tengo una opinion.", en: "About this, I have an opinion." }
 ];
 
-const DISRUPTORS_b2 = [
+const DISRUPTORS_B2 = [
     { es: "además", en: "besides" },
     { es: "por lo tanto", en: "therefore" },
     { es: "a pesar de", en: "despite" },
@@ -4756,117 +4427,84 @@ const DISRUPTORS_b2 = [
 ];
 
 const DISRUPTOR_WORDS = {
-    a1: DISRUPTORS_a1,
-    a2: DISRUPTORS_a2,
-    b1: DISRUPTORS_b1,
-    b2: DISRUPTORS_b2
+    A1: DISRUPTORS_A1,
+    A2: DISRUPTORS_A2,
+    B1: DISRUPTORS_B1,
+    B2: DISRUPTORS_B2
 };
 
 
 /* ============================================================
    GLOBAL ALL-BANKS DICTIONARY & CONVERSATIONAL PHRASE SEARCH
-   (Patched with cleanStringForKeyboard normalization)
    ============================================================ */
 
 function globalLookup(word) {
-    if (!word) return null;
-
     const w = word.toLowerCase();
-    const cw = cleanStringForKeyboard(w);   // normalized input
-    const levelsList = ["a1", "a2", "b1", "b2"];
+    const levelsList = ["A1", "A2", "B1", "B2"];
 
-    /* ============================================================
-       1. CEFR Vocabulary
-    ============================================================ */
     for (const level of levelsList) {
-        const vocab = CEFR_LEVELS?.[level];
+        const vocab = CEFR_LEVELS[level];
         if (!vocab) continue;
 
         const match = vocab.find(item =>
-            cleanStringForKeyboard(item?.english || "").toLowerCase() === cw
+            item.english && item.english.toLowerCase() === w
         );
         if (match) {
             return { spanish: match.spanish, source: "CEFR Vocabulary", level };
         }
     }
 
-    /* ============================================================
-       2. CEFR Sentences
-    ============================================================ */
     for (const level of levelsList) {
-        const bank = CEFR_SENTENCES?.[level];
+        const bank = CEFR_SENTENCES[level];
         if (!bank) continue;
 
         const match = bank.find(item =>
-            cleanStringForKeyboard(item?.english || "").toLowerCase() === cw
+            item.english && item.english.toLowerCase() === w
         );
         if (match) {
             return { spanish: match.spanish, source: "CEFR Sentences", level };
         }
     }
 
-    /* ============================================================
-       3. CEFR Dialogue Choices
-    ============================================================ */
     for (const level of levelsList) {
-        const bank = CEFR_SENTENCE_CHOICES?.[level];
+        const bank = CEFR_SENTENCE_CHOICES[level];
         if (!bank) continue;
 
         const match = bank.find(item =>
-            cleanStringForKeyboard(item?.english || "").toLowerCase() === cw
+            item.english && item.english.toLowerCase() === w
         );
         if (match) {
-            return { spanish: match.correct?.es, source: "Dialogue Choices", level };
+            return { spanish: match.correct.es, source: "Dialogue Choices", level };
         }
     }
 
-    /* ============================================================
-       4. CEFR Phrases (A1–B2 merged)
-    ============================================================ */
-    if (Array.isArray(CEFR_PHRASES)) {
+    if (typeof CEFR_PHRASES !== "undefined") {
         const phraseMatch = CEFR_PHRASES.find(p =>
-            cleanStringForKeyboard(p?.english || "").toLowerCase() === cw
+            p.english && p.english.toLowerCase() === w
         );
         if (phraseMatch) {
-            return {
-                spanish: phraseMatch.spanish,
-                source: "CEFR Phrases",
-                level: phraseMatch.level || "GLOBAL"
-            };
+            return { spanish: phraseMatch.spanish, source: "CEFR Phrases", level: phraseMatch.level || "GLOBAL" };
         }
     }
 
-    /* ============================================================
-       5. Listening Vocabulary
-    ============================================================ */
-    if (Array.isArray(LISTEN_VOCAB)) {
+    if (typeof LISTEN_VOCAB !== "undefined") {
         const lvMatch = LISTEN_VOCAB.find(item =>
-            cleanStringForKeyboard(item?.english || "").toLowerCase() === cw
+            item.english && item.english.toLowerCase() === w
         );
         if (lvMatch) {
-            return {
-                spanish: lvMatch.spanish,
-                source: "Listen Vocab",
-                level: lvMatch.level || "GLOBAL"
-            };
+            return { spanish: lvMatch.spanish, source: "Listen Vocab", level: lvMatch.level || "GLOBAL" };
         }
     }
 
-    /* ============================================================
-       6. Word Dictionary (custom)
-    ============================================================ */
-    if (WORD_DICT?.[w]) {
+    if (typeof WORD_DICT !== "undefined" && WORD_DICT[w]) {
         return { spanish: WORD_DICT[w], source: "Word Dictionary", level: "GLOBAL" };
     }
 
-    /* ============================================================
-       7. Conversation Prompts
-    ============================================================ */
-    if (CEFR_CONVERSATION_PROMPTS) {
+    if (typeof CEFR_CONVERSATION_PROMPTS !== "undefined") {
         for (const levelKey of Object.keys(CEFR_CONVERSATION_PROMPTS)) {
             const prompts = CEFR_CONVERSATION_PROMPTS[levelKey];
             const convoMatch = prompts.find(p =>
-                cleanStringForKeyboard(p?.english || "").toLowerCase() === cw
+                p.english && p.english.toLowerCase() === w
             );
             if (convoMatch) {
                 return {
@@ -4878,21 +4516,17 @@ function globalLookup(word) {
         }
     }
 
-    /* ============================================================
-       8. Conversation Audio Banks
-    ============================================================ */
     const convoAudioBanks = [
-        CEFR_CONVERSATION_AUDIO_a1,
-        CEFR_CONVERSATION_AUDIO_a2,
-        CEFR_CONVERSATION_AUDIO_b1,
-        CEFR_CONVERSATION_AUDIO_b2
+        CEFR_CONVERSATION_AUDIO_A1,
+        CEFR_CONVERSATION_AUDIO_A2,
+        CEFR_CONVERSATION_AUDIO_B1,
+        CEFR_CONVERSATION_AUDIO_B2
     ];
 
     for (const bank of convoAudioBanks) {
-        if (!Array.isArray(bank)) continue;
-
+        if (!bank) continue;
         const audioMatch = bank.find(a =>
-            cleanStringForKeyboard(a?.english || "").toLowerCase() === cw
+            a.english && a.english.toLowerCase() === w
         );
         if (audioMatch) {
             return {
@@ -4906,147 +4540,88 @@ function globalLookup(word) {
     return null;
 }
 
-/* ============================================================
-   SMART PHRASE SPLITTING (ENGLISH → SPANISH)
-   ============================================================ */
-
-function splitPhraseLookup(query) {
-    if (!query) return null;
-
-    // Normalize input words (remove accents, punctuation, spacing)
-    const rawWords = query.toLowerCase().split(/\s+/);
-    const words = rawWords.map(w => cleanStringForKeyboard(w));
-
-    if (words.length <= 1) return null;
-
-    for (let start = 0; start < words.length; start++) {
-        for (let end = words.length; end > start; end--) {
-
-            const subPhrase = words.slice(start, end).join(" ");
-
-            /* Priority: CEFR_PHRASES first (normalized comparison) */
-            let subResult = null;
-
-            if (Array.isArray(CEFR_PHRASES)) {
-                const phraseHit = CEFR_PHRASES.find(p =>
-                    cleanStringForKeyboard(p?.english || "").toLowerCase() === subPhrase
-                );
-                if (phraseHit) {
-                    subResult = { spanish: phraseHit.spanish };
-                }
-            }
-
-            /* Fallback: globalLookup (already normalized) */
-            if (!subResult) {
-                subResult = globalLookup(subPhrase);
-            }
-
-            if (subResult) {
-                const before = words.slice(0, start).join(" ");
-                const after  = words.slice(end).join(" ");
-
-                return {
-                    spanish: [before, subResult.spanish, after].join(" ").trim(),
-                    matched: subPhrase
-                };
-            }
-        }
-    }
-
-    return null;
-}
-
-
-
-/* ============================================================
-   SPANISH → ENGLISH LOOKUP
-   ============================================================ */
-
 function globalLookupSpanish(spanishText) {
-    if (!spanishText) return "[Unknown translation]";
-
     const s = cleanStringForKeyboard(spanishText.toLowerCase().trim());
     const banks = [];
 
-    if (CEFR_LEVELS?.a1) banks.push(...CEFR_LEVELS.a1);
-    if (CEFR_LEVELS?.a2) banks.push(...CEFR_LEVELS.a2);
-    if (CEFR_LEVELS?.b1) banks.push(...CEFR_LEVELS.b1);
-    if (CEFR_LEVELS?.b2) banks.push(...CEFR_LEVELS.b2);
+    if (CEFR_LEVELS?.A1) banks.push(...CEFR_LEVELS.A1);
+    if (CEFR_LEVELS?.A2) banks.push(...CEFR_LEVELS.A2);
+    if (CEFR_LEVELS?.B1) banks.push(...CEFR_LEVELS.B1);
+    if (CEFR_LEVELS?.B2) banks.push(...CEFR_LEVELS.B2);
 
     if (Array.isArray(CEFR_PHRASES)) banks.push(...CEFR_PHRASES);
     if (Array.isArray(LISTEN_VOCAB)) banks.push(...LISTEN_VOCAB);
 
-    if (Array.isArray(CEFR_CONVERSATION_AUDIO_a1)) banks.push(...CEFR_CONVERSATION_AUDIO_a1);
-    if (Array.isArray(CEFR_CONVERSATION_AUDIO_a2)) banks.push(...CEFR_CONVERSATION_AUDIO_a2);
-    if (Array.isArray(CEFR_CONVERSATION_AUDIO_b1)) banks.push(...CEFR_CONVERSATION_AUDIO_b1);
-    if (Array.isArray(CEFR_CONVERSATION_AUDIO_b2)) banks.push(...CEFR_CONVERSATION_AUDIO_b2);
+    if (Array.isArray(CEFR_CONVERSATION_AUDIO_A1)) banks.push(...CEFR_CONVERSATION_AUDIO_A1);
+    if (Array.isArray(CEFR_CONVERSATION_AUDIO_A2)) banks.push(...CEFR_CONVERSATION_AUDIO_A2);
+    if (Array.isArray(CEFR_CONVERSATION_AUDIO_B1)) banks.push(...CEFR_CONVERSATION_AUDIO_B1);
+    if (Array.isArray(CEFR_CONVERSATION_AUDIO_B2)) banks.push(...CEFR_CONVERSATION_AUDIO_B2);
 
+    // 1. Gather all standard expected responses
     Object.values(CEFR_CONVERSATION_PROMPTS || {}).forEach(levelArray => {
-        if (!Array.isArray(levelArray)) return;
-        levelArray.forEach(prompt => {
-            if (Array.isArray(prompt.expected_responses)) {
-                banks.push(...prompt.expected_responses);
-            }
-        });
+        if (Array.isArray(levelArray)) {
+            levelArray.forEach(prompt => {
+                if (Array.isArray(prompt.expected_responses)) {
+                    banks.push(...prompt.expected_responses);
+                }
+            });
+        }
     });
 
-    const levelsList = ["a1", "a2", "b1", "b2"];
+    // 2. FIXED: Inject disruptor bank entries so incorrect pill selections resolve their English translation values cleanly
+    const levelsList = ["A1", "A2", "B1", "B2"];
     levelsList.forEach(level => {
-        if (typeof getDisruptorResponses === "function") {
-            const disruptors = getDisruptorResponses(level);
-            if (Array.isArray(disruptors)) banks.push(...disruptors);
+        if (typeof getDisruptorResponses === 'function') {
+            const levelDisruptors = getDisruptorResponses(level);
+            if (Array.isArray(levelDisruptors)) {
+                banks.push(...levelDisruptors);
+            }
         }
     });
 
     for (const item of banks) {
         if (!item) continue;
-
-        const spanishString =
-            typeof item === "object"
-                ? item.es || item.spanish
-                : item;
-
+        const spanishString = typeof item === 'object' ? item.es || item.spanish : item;
         if (!spanishString) continue;
 
         if (cleanStringForKeyboard(spanishString.toLowerCase()) === s) {
             return item.en || item.english || "[Unknown translation]";
         }
     }
-
     return "[Unknown translation]";
 }
 
-/* ============================================================
-   UNIVERSAL TEXT EXTRACTOR
-   ============================================================ */
 
+/**
+ * Universal Text Extractor Helper
+ * Safely removes multi-nested tracking array patterns to clear all pill errors.
+ */
 function extractSpanishText(item) {
     if (!item) return "";
-    if (typeof item === "string") return item;
-
-    if (typeof item === "object") {
-        if (typeof item.es === "object") return extractSpanishText(item.es);
-        if (typeof item.spanish === "object") return extractSpanishText(item.spanish);
-
+    if (typeof item === 'string') return item;
+    if (typeof item === 'object') {
+        if (item.es && typeof item.es === 'object') return extractSpanishText(item.es);
+        if (item.spanish && typeof item.spanish === 'object') return extractSpanishText(item.spanish);
+        
         if (item.es) return item.es;
         if (item.spanish) return item.spanish;
         if (item.text) return item.text;
-
-        for (const value of Object.values(item)) {
-            if (typeof value === "string" && !value.includes("[object")) return value;
-            if (typeof value === "object" && value !== null) {
-                const nested = extractSpanishText(value);
-                if (nested) return nested;
+        
+        const properties = Object.values(item);
+        for (const value of properties) {
+            if (typeof value === 'string' && !value.includes('[object')) return value;
+            if (typeof value === 'object' && value !== null) {
+                const nestedString = extractSpanishText(value);
+                if (nestedString) return nestedString;
             }
         }
     }
-
     return String(item);
 }
 
 
 /* ============================================================
-   CONVERSATION TAB — MAIN RENDER PIPELINE (FIXED VERSION)
+   CONVERSATION TAB — MAIN RENDER PIPELINE (PART 2A)
    ============================================================ */
 
 function shuffle(array) {
@@ -5057,10 +4632,7 @@ function shuffle(array) {
 }
 
 function generateConversationPrompt(level) {
-    // Normalize level key
-    const levelKey = (level || "a1").toLowerCase();
-
-    const pool = CEFR_CONVERSATION_PROMPTS[levelKey];
+    const pool = CEFR_CONVERSATION_PROMPTS[level];
     const item = pool[Math.floor(Math.random() * pool.length)];
 
     return {
@@ -5072,17 +4644,15 @@ function generateConversationPrompt(level) {
 
 function renderConversationTab() {
     const container = document.getElementById("conversation-content");
+    const level = appState.currentLevel;
 
-    // Normalize level key
-    const levelKey = (appState.currentLevel || "a1").toLowerCase();
-
-    if (!CEFR_CONVERSATION_PROMPTS[levelKey]) {
+    if (!CEFR_CONVERSATION_PROMPTS[level]) {
         container.innerHTML = "<p>No conversation prompts available for this level.</p>";
         return;
     }
 
-    // Generate prompt using lowercase key
-    convoState.currentPrompt = generateConversationPrompt(levelKey);
+    // Isolate conversation variables cleanly inside state
+    convoState.currentPrompt = generateConversationPrompt(level);
 
     const correctButtons = (convoState.currentPrompt.expected || []).map(exp => {
         const text = extractSpanishText(exp);
@@ -5091,10 +4661,7 @@ function renderConversationTab() {
         };
     });
 
-    const rawDisruptors = typeof getDisruptorResponses === 'function'
-        ? getDisruptorResponses(levelKey)
-        : [];
-
+    const rawDisruptors = typeof getDisruptorResponses === 'function' ? getDisruptorResponses(level) : [];
     const disruptorButtons = (Array.isArray(rawDisruptors) ? rawDisruptors : []).map(exp => {
         const text = extractSpanishText(exp);
         return {
@@ -5107,7 +4674,7 @@ function renderConversationTab() {
 
     container.innerHTML = `
         <div class="glass-panel convo-card">
-            <h2>Conversation — Level ${levelKey}</h2>
+            <h2>Conversation — Level ${level}</h2>
             <p>Respond naturally using Spanish.</p>
 
             <div class="convo-prompt">
@@ -5133,7 +4700,6 @@ function renderConversationTab() {
 
     setupConversationEvents(convoState.currentPrompt);
 }
-
 
 /* ============================================================
    CONVERSATION EVENTS — SAFETY INSULATED GRADING ENGINE (PART 2B - A)
@@ -5203,25 +4769,15 @@ function setupConversationEvents(convo) {
                 learnerEnglishTranslation = globalLookupSpanish(userText);
             }
 
-          // Short-circuit: Force 0% immediately if user picked an active disruptor
-let isDisruptor = false;
-
-if (typeof getDisruptorResponses === 'function') {
-
-    // ⭐ FIXED: Normalize level key so "A1" → "a1"
-    const levelKey = (appState.currentLevel || "a1").toLowerCase();
-
-    const disruptors = getDisruptorResponses(levelKey);
-
-    isDisruptor = disruptors.some(d => {
-        const dText = typeof d === 'object'
-            ? (d.es || d.spanish || "")
-            : String(d);
-
-        return dText.toLowerCase().trim() === userText.toLowerCase().trim();
-    });
-}
-
+            // Short-circuit: Force 0% immediately if user picked an active disruptor
+            let isDisruptor = false;
+            if (typeof getDisruptorResponses === 'function') {
+                const disruptors = getDisruptorResponses(appState.currentLevel || "A1");
+                isDisruptor = disruptors.some(d => {
+                    const dText = typeof d === 'object' ? (d.es || d.spanish || "") : String(d);
+                    return dText.toLowerCase().trim() === userText.toLowerCase().trim();
+                });
+            }
 
             if (isDisruptor) {
                 finalScore = 0;
@@ -5321,36 +4877,34 @@ if (typeof getDisruptorResponses === 'function') {
 }
 
 
+
+/* ============================================================
+   CONVERSATION RUNTIME — STORAGE MANAGEMENT & SCENE RELOADS (PART 2B - B)
+   ============================================================ */
+
 function processConversationRewards(matchStatus, baseXP, baseScore, expectedEs, promptEsRaw) {
-
-    // Normalize level key so "A1" → "a1"
-    const levelKey = (appState.currentLevel || "a1").toLowerCase();
-
-    if (!appState.levelStats[levelKey]) {
-        appState.levelStats[levelKey] = { conversationCompleted: 0 };
+    if (!appState.levelStats[appState.currentLevel]) {
+        appState.levelStats[appState.currentLevel] = { conversationCompleted: 0 };
     }
-
-    appState.levelStats[levelKey].conversationCompleted++;
+    
+    appState.levelStats[appState.currentLevel].conversationCompleted++;
 
     // Process metric awards safely inside application memory blocks
     if (matchStatus === "correct") {
         appState.totalXP = (appState.totalXP || 0) + baseXP;
         appState.globalScore = (appState.globalScore || 0) + baseScore;
         if (typeof checkAndAdvanceStreak === "function") checkAndAdvanceStreak();
-
     } else if (matchStatus === "partial") {
         appState.totalXP = (appState.totalXP || 0) + baseXP;
         appState.globalScore = (appState.globalScore || 0) + baseScore;
-
     } else {
         const promptEsClean = promptEsRaw || "Conversation Prompt";
         const mistakeString = `${promptEsClean} ➔ ${expectedEs}`;
-
+        
+        // DEDUPLICATION FILTER: Verifies mistake is completely unique before writing to review lists
         const cleanMistakeEntry = mistakeString.trim();
-        const alreadyLogged =
-            Array.isArray(window.reviewList) &&
-            window.reviewList.some(item => item.trim() === cleanMistakeEntry);
-
+        const alreadyLogged = Array.isArray(window.reviewList) && window.reviewList.some(item => item.trim() === cleanMistakeEntry);
+        
         if (!alreadyLogged && typeof addIncorrectWord === "function") {
             addIncorrectWord(cleanMistakeEntry);
         }
@@ -5360,6 +4914,7 @@ function processConversationRewards(matchStatus, baseXP, baseScore, expectedEs, 
     if (typeof updateProgressMeters === "function") updateProgressMeters();
     saveState();
 }
+
 function reloadSameConversation(convo) {
     const presetBox = document.querySelector("#conversation-content .preset-box");
     const inputBox = document.querySelector("#conversation-content #convo-input");
@@ -5375,10 +4930,7 @@ function reloadSameConversation(convo) {
         return { html: `<button class="pill preset-response correct" data-response="${text}">${text}</button>` };
     });
 
-    // Normalize level key so "A1" → "a1"
-    const levelKey = (appState.currentLevel || "a1").toLowerCase();
-
-    const disruptors = getDisruptorResponses(levelKey).map(exp => {
+    const disruptors = getDisruptorResponses(appState.currentLevel).map(exp => {
         const text = extractSpanishText(exp);
         return { html: `<button class="pill preset-response disruptor" data-response="${text}">${text}</button>` };
     });
@@ -5397,7 +4949,6 @@ function reloadSameConversation(convo) {
         };
     });
 }
-
 
 // Low-level synthesizer fallback note generation anchor node
 function audioContextPlayback(type) {
@@ -5431,9 +4982,11 @@ function audioContextPlayback(type) {
     }
 }
 
+
+
 const CEFR_CONVERSATION_PROMPTS = {
 
-    a1: [
+    A1: [
     {
         prompt_es: "¿Qué te gustaría beber?",
         prompt_en: "What would you like to drink?",
@@ -5635,7 +5188,7 @@ const CEFR_CONVERSATION_PROMPTS = {
 ],
 
 
-    a2: [
+    A2: [
     {
         prompt_es: "¿Qué haces normalmente por la mañana?",
         prompt_en: "What do you normally do in the morning?",
@@ -5837,7 +5390,7 @@ const CEFR_CONVERSATION_PROMPTS = {
 ],
 
 
-    b1: [
+    B1: [
     {
         prompt_es: "¿Qué has aprendido recientemente?",
         prompt_en: "What have you learned recently?",
@@ -6030,7 +5583,7 @@ const CEFR_CONVERSATION_PROMPTS = {
 ],
 
 
-   b2: [
+   B2: [
     {
         prompt_es: "¿Qué estrategia usas para aprender mejor?",
         prompt_en: "What strategy do you use to learn better?",
@@ -6224,7 +5777,7 @@ const CEFR_CONVERSATION_PROMPTS = {
 
 };
 
-const CEFR_CONVERSATION_AUDIO_a1 = [
+const CEFR_CONVERSATION_AUDIO_A1 = [
     { es: "qué te gustaría beber", file: "que-te-gustaria-beber.mp3", en: "What would you like to drink?" },
     { es: "cómo estás hoy", file: "como-estas-hoy.mp3", en: "How are you today?" },
     { es: "dónde vives", file: "donde-vives.mp3", en: "Where do you live?" },
@@ -6249,7 +5802,7 @@ const CEFR_CONVERSATION_AUDIO_a1 = [
     { es: "qué haces en casa", file: "que-haces-en-casa.mp3", en: "What do you do at home?" }
 ];
 
-const CEFR_CONVERSATION_AUDIO_a2 = [
+const CEFR_CONVERSATION_AUDIO_A2 = [
     { es: "qué haces normalmente por la mañana", file: "que-haces-normalmente-por-la-manana.mp3", en: "What do you normally do in the morning?" },
     { es: "qué te gustaría probar hoy", file: "que-te-gustaria-probar-hoy.mp3", en: "What would you like to try today?" },
     { es: "a qué hora llegaste anoche", file: "a-que-hora-llegaste-anoche.mp3", en: "What time did you arrive last night?" },
@@ -6274,7 +5827,7 @@ const CEFR_CONVERSATION_AUDIO_a2 = [
     { es: "qué te gustaría visitar este año", file: "que-te-gustaria-visitar-este-ano.mp3", en: "What would you like to visit this year?" }
 ];
 
-const CEFR_CONVERSATION_AUDIO_b1 = [
+const CEFR_CONVERSATION_AUDIO_B1 = [
     { es: "qué has aprendido recientemente", file: "que-has-aprendido-recientemente.mp3", en: "What have you learned recently?" },
     { es: "qué estás estudiando ahora", file: "que-estas-estudiando-ahora.mp3", en: "What are you studying now?" },
     { es: "qué experiencias pasadas recuerdas más", file: "que-experiencias-pasadas-recuerdas-mas.mp3", en: "What past experiences do you remember most?" },
@@ -6298,7 +5851,7 @@ const CEFR_CONVERSATION_AUDIO_b1 = [
     { es: "qué te gustaría seguir revisando", file: "que-te-gustaria-seguir-revisando.mp3", en: "What would you like to keep reviewing?" }
 ];
 
-const CEFR_CONVERSATION_AUDIO_b2 = [
+const CEFR_CONVERSATION_AUDIO_B2 = [
     { es: "qué estrategia usas para aprender mejor", file: "que-estrategia-usas-para-aprender-mejor.mp3", en: "What strategy do you use to learn better?" },
     { es: "cómo evalúas tu rendimiento en el trabajo", file: "como-evaluas-tu-rendimiento-en-el-trabajo.mp3", en: "How do you evaluate your performance at work?" },
     { es: "qué concepto te parece complicado últimamente", file: "que-concepto-te-parece-complicado-ultimamente.mp3", en: "What concept seems complicated to you lately?" },
@@ -6324,36 +5877,17 @@ const CEFR_CONVERSATION_AUDIO_b2 = [
 
 
 /* ============================================================
-   GRAMMAR TAB (FIXED LEVEL NORMALIZATION)
+   GRAMMAR TAB
    ============================================================ */
 
 function renderGrammarTab() {
     const container = document.getElementById("grammar-content");
-    if (!container) return;
-
-    // Normalize level key so "A1" → "a1"
-    const levelKey = (appState.currentLevel || "a1").toLowerCase();
-
-    // Safely pull vocabulary
-    const words = CEFR_LEVELS[levelKey] || [];
-
-    // If no words found, show a friendly message
-    if (!Array.isArray(words) || words.length === 0) {
-        container.innerHTML = `
-            <div class="glass-panel quiz-card">
-                <h2>Grammar — Level ${levelKey}</h2>
-                <p>No grammar items found for this level.</p>
-            </div>
-        `;
-        return;
-    }
-
-    // Group by category
+    const words = CEFR_LEVELS[appState.currentLevel];
     const grouped = groupByCategory(words);
 
     container.innerHTML = `
         <div class="glass-panel quiz-card">
-            <h2>Grammar — Level ${levelKey}</h2>
+            <h2>Grammar — Level ${appState.currentLevel}</h2>
             <p>Breakdown of word types you're training.</p>
         </div>
 
@@ -6369,8 +5903,6 @@ function renderGrammarTab() {
         </div>
     `;
 }
-
-
 
 /* ============================================================
    BADGES (UPGRADED VISUAL EDITION)
@@ -6447,6 +5979,8 @@ function updateBadges() {
     }).join("");
 }
 
+
+
 /* ============================================================
    STUDENT NAME BOX
    ============================================================ */
@@ -6516,13 +6050,8 @@ function animateNumber(id, target, suffix = "%") {
 }
 
 function updateProgressMeters() {
-
-    // ⭐ FIXED: Normalize level key so "A1" → "a1"
-    const levelKey = (appState.currentLevel || "a1").toLowerCase();
-
-    const stats = appState.levelStats[levelKey];
+    const stats = appState.levelStats[appState.currentLevel];
     if (!stats) return;
-
 
     // Defensive defaults so undefined never becomes NaN
     const streak = typeof stats.streak === "number" ? stats.streak : 0;
@@ -6586,61 +6115,25 @@ function pulseTile(id) {
     tile.classList.add("pulse");
 }
 
-/* ============================================================
-   CEFR SCORING + CERTIFICATE + ACHIEVEMENT ENGINE (Unified)
-   ============================================================ */
-
-const PASS_THRESHOLD = 1;   // ← 1 for testing, e.g. 90 for production
 
 /* ============================================================
-   SAFE PERCENT (avoids NaN)
+   CERTIFICATE SYSTEM — CEFR LEVEL COMPLETION
    ============================================================ */
-function safePercent(score, max) {
-    if (!max || max === 0) return 0;
-    return Math.round((score / max) * 100);
-}
 
-/* ============================================================
-   CALCULATE LEVEL SCORES
-   ============================================================ */
-function calculateLevelScores() {
-    const stats = {
-        a1: { quiz: 0, builder: 0, sentence: 0, conversation: 0, smart: 0, avg: 0 },
-        a2: { quiz: 0, builder: 0, sentence: 0, conversation: 0, smart: 0, avg: 0 },
-        b1: { quiz: 0, builder: 0, sentence: 0, conversation: 0, smart: 0, avg: 0 },
-        b2: { quiz: 0, builder: 0, sentence: 0, conversation: 0, smart: 0, avg: 0 }
-    };
+// Persistent certificate unlock state
+let certificates = {
+    a1: false,
+    a2: false,
+    b1: false,
+    b2: false
+};
 
-    const level = currentLevel.toLowerCase(); // ⭐ FIXED
-
-    stats[level].quiz = safePercent(quizCorrect, quizTotal);
-    stats[level].builder = safePercent(builderScore, builderMax);
-    stats[level].sentence = safePercent(sentenceScore, sentenceMax);
-    stats[level].conversation = safePercent(conversationScore, conversationMax);
-    stats[level].smart = safePercent(smartScore, smartMax);
-
-    stats[level].avg = Math.round(
-        (
-            stats[level].quiz +
-            stats[level].builder +
-            stats[level].sentence +
-            stats[level].conversation +
-            stats[level].smart
-        ) / 5
-    );
-
-    return stats;
-}
-
-
-
-/* ============================================================
-   SAVE / LOAD CERTIFICATES
-   ============================================================ */
+// Save certificate state
 function saveCertificates() {
     localStorage.setItem("certificates", JSON.stringify(certificates));
 }
 
+// Load certificate state
 function loadCertificates() {
     const saved = localStorage.getItem("certificates");
     if (saved) {
@@ -6654,7 +6147,7 @@ function loadCertificates() {
 loadCertificates();
 
 /* ============================================================
-   UNLOCK CERTIFICATE / ACHIEVEMENT
+   UNLOCK CERTIFICATE WHEN LEVEL COMPLETED
    ============================================================ */
 function unlockCertificate(levelKey) {
     if (!levelKey) return;
@@ -6666,68 +6159,7 @@ function unlockCertificate(levelKey) {
 }
 
 /* ============================================================
-   CERTIFICATE UNLOCK LOGIC
-   ============================================================ */
-function checkLevelCertificates(stats) {
-   if (stats.a1.avg >= PASS_THRESHOLD) unlockCertificate("a1");
-if (stats.a2.avg >= PASS_THRESHOLD) unlockCertificate("a2");
-if (stats.b1.avg >= PASS_THRESHOLD) unlockCertificate("b1");
-if (stats.b2.avg >= PASS_THRESHOLD) unlockCertificate("b2");
-
-
-    // Mastery unlock when all CEFR levels are complete
-    if (
-        certificates.a1 &&
-        certificates.a2 &&
-        certificates.b1 &&
-        certificates.b2
-    ) {
-        certificates.mastery = true;
-        saveCertificates();
-    }
-}
-
-/* ============================================================
-   ACHIEVEMENT / BADGE SYSTEM
-   ============================================================ */
-const ACHIEVEMENTS = [
-    { id: "a1_master", label: "a1 Master", condition: s => s.a1.avg >= PASS_THRESHOLD },
-    { id: "a2_master", label: "a2 Master", condition: s => s.a2.avg >= PASS_THRESHOLD },
-    { id: "b1_master", label: "b1 Master", condition: s => s.b1.avg >= PASS_THRESHOLD },
-    { id: "b2_master", label: "b2 Master", condition: s => s.b2.avg >= PASS_THRESHOLD },
-
-    {
-        id: "full_progress",
-        label: "200‑Word Explorer",
-        condition: s => {
-            const totalAvg = Math.round(
-                (s.a1.avg + s.a2.avg + s.b1.avg + s.b2.avg) / 4
-            );
-            return totalAvg >= PASS_THRESHOLD;
-        }
-    }
-];
-
-function evaluateAchievements(stats) {
-    ACHIEVEMENTS.forEach(a => {
-        if (a.condition(stats)) {
-            unlockCertificate(a.id); // uses same unlock system
-        }
-    });
-}
-
-/* ============================================================
-   MASTER SCORING RUNNER
-   ============================================================ */
-function runCEFRScoringEngine() {
-    const stats = calculateLevelScores();
-    checkLevelCertificates(stats);
-    evaluateAchievements(stats);
-    return stats;
-}
-
-/* ============================================================
-   RENDER CERTIFICATES WITH NAME + DATE (Updated CEFR Edition)
+   RENDER CERTIFICATES WITH NAME + DATE
    ============================================================ */
 function renderCertificates() {
     const container = document.getElementById("certificates-container");
@@ -6735,102 +6167,58 @@ function renderCertificates() {
 
     container.style.display = "block";
 
+    // FIXED: Correctly synchronized state references against studentName instead of missing userName property
     const studentInputField = document.getElementById("student-name");
     const name = appState.studentName || (studentInputField ? studentInputField.value : "") || "Learner";
 
     const today = new Date().toLocaleDateString();
 
     const setCertFields = (prefix, isActive) => {
-        const certEl = document.getElementById(`cert-${prefix}`);
         const nameEl = document.getElementById(`cert-${prefix}-name`);
         const dateEl = document.getElementById(`cert-${prefix}-date`);
-        const sealEl = certEl ? certEl.querySelector(".seal") : null;
-
-        if (certEl) {
-            certEl.style.display = isActive ? "block" : "none";
-        }
-
         if (isActive && nameEl && dateEl) {
             nameEl.innerText = name;
             dateEl.innerText = today;
         }
-
-        if (sealEl) {
-            sealEl.src = "images/seal-gold.png";
-        }
     };
 
-    // Standard CEFR certificates
     setCertFields("a1", certificates.a1);
     setCertFields("a2", certificates.a2);
     setCertFields("b1", certificates.b1);
     setCertFields("b2", certificates.b2);
-
-    // Mastery Diploma
-    const masteryEl = document.getElementById("cert-mastery");
-    const masteryNameEl = document.getElementById("cert-mastery-name");
-    const masteryDateEl = document.getElementById("cert-mastery-date");
-    const masterySealEl = masteryEl ? masteryEl.querySelector(".seal") : null;
-
-    if (masteryEl) {
-        masteryEl.style.display = certificates.mastery ? "block" : "none";
-    }
-
-    if (certificates.mastery && masteryNameEl && masteryDateEl) {
-        masteryNameEl.innerText = name;
-        masteryDateEl.innerText = today;
-    }
-
-    if (masterySealEl) {
-        masterySealEl.src = "images/seal-gold.png";
-    }
 }
 
 /* ============================================================
    LOAD PDF LIBRARIES (html2canvas + jsPDF)
    ============================================================ */
 function loadPDFLibraries(callback) {
-    // Libraries already loaded
     if (window.html2canvas && window.jspdf) {
         callback();
         return;
     }
 
     const html2canvasScript = document.createElement("script");
-    html2canvasScript.src =
-        "https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js";
+    html2canvasScript.src = "https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js";
 
     const jsPDFScript = document.createElement("script");
-    jsPDFScript.src =
-        "https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js";
+    jsPDFScript.src = "https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js";
 
     let loaded = 0;
-
     function checkLoaded() {
         loaded++;
-        if (loaded === 2) {
-            callback();
-        }
+        if (loaded === 2) callback();
     }
 
     html2canvasScript.onload = checkLoaded;
     jsPDFScript.onload = checkLoaded;
 
-    html2canvasScript.onerror = () => {
-        console.error("Failed to load html2canvas library.");
-    };
-
-    jsPDFScript.onerror = () => {
-        console.error("Failed to load jsPDF library.");
-    };
-
     document.body.appendChild(html2canvasScript);
     document.body.appendChild(jsPDFScript);
 }
+
 /* ============================================================
    DOWNLOAD CERTIFICATE AS PDF
    ============================================================ */
-
 function downloadCertificate(certId) {
     const element = document.getElementById(certId);
     if (!element) {
@@ -6841,7 +6229,8 @@ function downloadCertificate(certId) {
     loadPDFLibraries(() => {
         html2canvas(element, { scale: 2 }).then(canvas => {
             const imgData = canvas.toDataURL("image/png");
-
+            
+            // Safe assignment fallbacks to capture CDN instances across browser contexts
             const { jsPDF } = window.jspdf || jspdf;
             const pdf = new jsPDF("p", "mm", "a4");
 
@@ -6857,6 +6246,7 @@ function downloadCertificate(certId) {
         });
     });
 }
+
 
 /* ============================================================
    STARTUP & EVENT INITIALIZATION
@@ -6918,21 +6308,21 @@ function findAudioForSpanish(spanishText) {
     const clean = cleanStringForKeyboard(spanishText.toLowerCase());
 
     const banks = [];
-    if (Array.isArray(CEFR_CONVERSATION_AUDIO_a1)) banks.push(...CEFR_CONVERSATION_AUDIO_a1);
-    if (Array.isArray(CEFR_CONVERSATION_AUDIO_a2)) banks.push(...CEFR_CONVERSATION_AUDIO_a2);
-    if (Array.isArray(CEFR_CONVERSATION_AUDIO_b1)) banks.push(...CEFR_CONVERSATION_AUDIO_b1);
-    if (Array.isArray(CEFR_CONVERSATION_AUDIO_b2)) banks.push(...CEFR_CONVERSATION_AUDIO_b2);
+    // FIXED: Individual existence checks prevent crash loops if specific asset sheets load late
+    if (typeof CEFR_CONVERSATION_AUDIO_A1 !== "undefined" && Array.isArray(CEFR_CONVERSATION_AUDIO_A1)) banks.push(...CEFR_CONVERSATION_AUDIO_A1);
+    if (typeof CEFR_CONVERSATION_AUDIO_A2 !== "undefined" && Array.isArray(CEFR_CONVERSATION_AUDIO_A2)) banks.push(...CEFR_CONVERSATION_AUDIO_A2);
+    if (typeof CEFR_CONVERSATION_AUDIO_B1 !== "undefined" && Array.isArray(CEFR_CONVERSATION_AUDIO_B1)) banks.push(...CEFR_CONVERSATION_AUDIO_B1);
+    if (typeof CEFR_CONVERSATION_AUDIO_B2 !== "undefined" && Array.isArray(CEFR_CONVERSATION_AUDIO_B2)) banks.push(...CEFR_CONVERSATION_AUDIO_B2);
 
     for (const item of banks) {
-        if (!item || !item.es || !item.file) continue;
+        if (!item || !item.es || !item.audio) continue;
 
         if (cleanStringForKeyboard(item.es.toLowerCase()) === clean) {
-            return item.file;
+            return item.audio;
         }
     }
     return null;
 }
-
 
 /* ============================================================
    PURE REVIEW AUDIO PLAYER (NO COMMENTARY, NO TTS)
@@ -7043,9 +6433,9 @@ function normalizeSpanish(str) {
 
 function globalLookup(word) {
     const w = word.toLowerCase();
-    const levelsList = ["a1", "a2", "b1", "b2"];
+    const levelsList = ["A1", "A2", "B1", "B2"];
 
-    // 1. CEFR Vocabulary
+    // 1. CEFR Vocabulary (A1–B2) — CEFR_LEVELS
     for (const level of levelsList) {
         const vocab = CEFR_LEVELS[level];
         if (!vocab) continue;
@@ -7058,7 +6448,7 @@ function globalLookup(word) {
         }
     }
 
-    // 2. CEFR Sentences
+    // 2. CEFR Sentences — CEFR_SENTENCES
     for (const level of levelsList) {
         const bank = CEFR_SENTENCES[level];
         if (!bank) continue;
@@ -7071,7 +6461,7 @@ function globalLookup(word) {
         }
     }
 
-    // 3. CEFR Sentence Choices
+    // 3. CEFR Sentence Choices — CEFR_SENTENCE_CHOICES
     for (const level of levelsList) {
         const bank = CEFR_SENTENCE_CHOICES[level];
         if (!bank) continue;
@@ -7084,8 +6474,8 @@ function globalLookup(word) {
         }
     }
 
-    // 4. CEFR Phrases
-    if (Array.isArray(CEFR_PHRASES)) {
+    // 4. CEFR Phrases — CEFR_PHRASES
+    if (typeof CEFR_PHRASES !== "undefined" && Array.isArray(CEFR_PHRASES)) {
         const phraseMatch = CEFR_PHRASES.find(p =>
             p.english && p.english.toLowerCase() === w
         );
@@ -7094,8 +6484,8 @@ function globalLookup(word) {
         }
     }
 
-    // 5. Listen Vocab
-    if (Array.isArray(LISTEN_VOCAB)) {
+    // 5. Listen Vocab — LISTEN_VOCAB
+    if (typeof LISTEN_VOCAB !== "undefined" && Array.isArray(LISTEN_VOCAB)) {
         const lvMatch = LISTEN_VOCAB.find(item =>
             item.english && item.english.toLowerCase() === w
         );
@@ -7104,51 +6494,48 @@ function globalLookup(word) {
         }
     }
 
-    // 6. Word Dictionary
-    if (WORD_DICT && WORD_DICT[w]) {
+    // 6. Word-by-word dictionary — WORD_DICT
+    if (typeof WORD_DICT !== "undefined" && WORD_DICT[w]) {
         return { spanish: WORD_DICT[w], source: "Word Dictionary", level: "GLOBAL" };
     }
 
-    // 7. Conversation Prompts (FIXED)
-    if (CEFR_CONVERSATION_PROMPTS) {
+    // 7. Conversation Prompts — CEFR_CONVERSATION_PROMPTS (FIXED LOOKUP LOOP)
+    if (typeof CEFR_CONVERSATION_PROMPTS !== "undefined" && CEFR_CONVERSATION_PROMPTS !== null) {
         for (const levelKey of Object.keys(CEFR_CONVERSATION_PROMPTS)) {
             const prompts = CEFR_CONVERSATION_PROMPTS[levelKey];
             if (!Array.isArray(prompts)) continue;
-
+            
             const convoMatch = prompts.find(p =>
-                p.prompt_en && p.prompt_en.toLowerCase() === w
+                p.english && p.english.toLowerCase() === w
             );
-
             if (convoMatch) {
-                return {
-                    spanish: convoMatch.prompt_es,
-                    source: "Conversation Prompt",
-                    level: levelKey
+                return { 
+                    spanish: typeof convoMatch.spanish === 'object' ? extractSpanishText(convoMatch.spanish) : convoMatch.spanish, 
+                    source: "Conversation Prompt", 
+                    level: levelKey 
                 };
             }
         }
     }
 
-    // 8. Conversation Audio (FIXED)
+    // 8. Conversation Audio — A1–B2
     const convoAudioBanks = [
-        CEFR_CONVERSATION_AUDIO_a1,
-        CEFR_CONVERSATION_AUDIO_a2,
-        CEFR_CONVERSATION_AUDIO_b1,
-        CEFR_CONVERSATION_AUDIO_b2
+        typeof CEFR_CONVERSATION_AUDIO_A1 !== "undefined" ? CEFR_CONVERSATION_AUDIO_A1 : null,
+        typeof CEFR_CONVERSATION_AUDIO_A2 !== "undefined" ? CEFR_CONVERSATION_AUDIO_A2 : null,
+        typeof CEFR_CONVERSATION_AUDIO_B1 !== "undefined" ? CEFR_CONVERSATION_AUDIO_B1 : null,
+        typeof CEFR_CONVERSATION_AUDIO_B2 !== "undefined" ? CEFR_CONVERSATION_AUDIO_B2 : null
     ];
 
     for (const bank of convoAudioBanks) {
-        if (!Array.isArray(bank)) continue;
-
+        if (!bank || !Array.isArray(bank)) continue;
         const audioMatch = bank.find(a =>
-            a.en && a.en.toLowerCase() === w
+            a.english && a.english.toLowerCase() === w
         );
-
         if (audioMatch) {
             return {
-                spanish: audioMatch.es,
+                spanish: audioMatch.spanish,
                 source: "Conversation Audio",
-                level: "GLOBAL"
+                level: audioMatch.level || "GLOBAL"
             };
         }
     }
@@ -7157,355 +6544,9 @@ function globalLookup(word) {
 }
 
 /* ============================================================
-   DICTIONARY SEARCH INITIALIZER SYSTEM (BILINGUAL MODE)
+   DICTIONARY SEARCH INITIALIZER SYSTEM
    ============================================================ */
-function multiPhraseStitch(query) {
-    if (!query) return { spanish: "", matched: [] };
 
-    // Normalize English input
-    const words = query
-        .toLowerCase()
-        .split(/\s+/)
-        .map(w => cleanStringForKeyboard(w));
-
-    const results = [];
-    const matched = [];
-
-    let i = 0;
-
-    while (i < words.length) {
-        let found = false;
-
-        // Try longest possible phrase first
-        for (let end = words.length; end > i; end--) {
-            const subPhrase = words.slice(i, end).join(" ");
-
-            // CEFR phrase priority (normalized)
-            let hit = null;
-
-            if (Array.isArray(CEFR_PHRASES)) {
-                const phraseHit = CEFR_PHRASES.find(p =>
-                    cleanStringForKeyboard(p?.english || "").toLowerCase() === subPhrase
-                );
-                if (phraseHit) {
-                    hit = { spanish: phraseHit.spanish };
-                }
-            }
-
-            // Fallback: globalLookup
-            if (!hit) {
-                hit = globalLookup(subPhrase);
-            }
-
-            if (hit) {
-                results.push(hit.spanish);
-                matched.push(subPhrase);
-                i = end;
-                found = true;
-                break;
-            }
-        }
-
-        if (!found) {
-            const single = globalLookup(words[i]);
-            if (single) {
-                results.push(single.spanish);
-            } else {
-                results.push(`[${words[i]}]`);
-            }
-            i++;
-        }
-    }
-
-    return {
-        spanish: results.join(" "),
-        matched
-    };
-}
-
-
-function multiPhraseStitchSpanish(spanishText) {
-    if (!spanishText) return { english: "", matched: [] };
-
-    const words = spanishText
-        .split(/\s+/)
-        .map(w => cleanStringForKeyboard(w.toLowerCase()));
-
-    const matched = [];
-    const englishParts = [];
-
-    for (const w of words) {
-        const english = globalLookupSpanish(w);
-
-        if (english && english !== "[Unknown translation]") {
-            matched.push(w);
-            englishParts.push(english);
-        } else {
-            englishParts.push(`[${w}]`);
-        }
-    }
-
-    return {
-        english: englishParts.join(" "),
-        matched
-    };
-}
-
-
-/* ============================================================
-   LANGUAGE DETECTOR (Bulletproof)
-   ============================================================ */
-function detectLanguage(text) {
-    const t = text.toLowerCase();
-
-    if (/[áéíóúñü]/.test(t)) return "spanish";
-
-    if (/\b(el|la|los|las|un|una|yo|tú|usted|nosotros|vosotros|ellos)\b/.test(t)) {
-        return "spanish";
-    }
-
-    return "english";
-}
-
-
-/* ============================================================
-   GLOBAL ALL-BANKS DICTIONARY & CONVERSATIONAL PHRASE SEARCH
-   ============================================================ */
-function globalLookup(word) {
-    if (!word) return null;
-    const w = cleanStringForKeyboard(word.toLowerCase());
-    const levelsList = ["a1", "a2", "b1", "b2"];
-
-    // 1. CEFR Vocabulary
-    for (const level of levelsList) {
-        const vocab = CEFR_LEVELS?.[level];
-        if (!vocab) continue;
-
-        const match = vocab.find(item =>
-            cleanStringForKeyboard(item?.english || "").toLowerCase() === w
-        );
-        if (match) {
-            return { spanish: match.spanish, source: "CEFR Vocabulary", level };
-        }
-    }
-
-    // 2. CEFR Sentences
-    for (const level of levelsList) {
-        const bank = CEFR_SENTENCES?.[level];
-        if (!bank) continue;
-
-        const match = bank.find(item =>
-            cleanStringForKeyboard(item?.english || "").toLowerCase() === w
-        );
-        if (match) {
-            return { spanish: match.spanish, source: "CEFR Sentences", level };
-        }
-    }
-
-    // 3. CEFR Sentence Choices
-    for (const level of levelsList) {
-        const bank = CEFR_SENTENCE_CHOICES?.[level];
-        if (!bank) continue;
-
-        const match = bank.find(item =>
-            cleanStringForKeyboard(item?.english || "").toLowerCase() === w
-        );
-        if (match) {
-            return { spanish: match.correct?.es, source: "Dialogue Choices", level };
-        }
-    }
-
-    // 4. CEFR Phrases
-    if (Array.isArray(CEFR_PHRASES)) {
-        const phraseMatch = CEFR_PHRASES.find(p =>
-            cleanStringForKeyboard(p?.english || "").toLowerCase() === w
-        );
-        if (phraseMatch) {
-            return {
-                spanish: phraseMatch.spanish,
-                source: "CEFR Phrases",
-                level: phraseMatch.level || "GLOBAL"
-            };
-        }
-    }
-
-    // 5. Listen Vocab
-    if (Array.isArray(LISTEN_VOCAB)) {
-        const lvMatch = LISTEN_VOCAB.find(item =>
-            cleanStringForKeyboard(item?.english || "").toLowerCase() === w
-        );
-        if (lvMatch) {
-            return {
-                spanish: lvMatch.spanish,
-                source: "Listen Vocab",
-                level: lvMatch.level || "GLOBAL"
-            };
-        }
-    }
-
-    // 6. Word Dictionary
-    if (WORD_DICT?.[w]) {
-        return { spanish: WORD_DICT[w], source: "Word Dictionary", level: "GLOBAL" };
-    }
-
-    // 7. Conversation Prompts (FIXED)
-    if (CEFR_CONVERSATION_PROMPTS) {
-        for (const levelKey of Object.keys(CEFR_CONVERSATION_PROMPTS)) {
-            const prompts = CEFR_CONVERSATION_PROMPTS[levelKey];
-            if (!Array.isArray(prompts)) continue;
-
-            const convoMatch = prompts.find(p =>
-                cleanStringForKeyboard(p?.prompt_en || "").toLowerCase() === w
-            );
-
-            if (convoMatch) {
-                return {
-                    spanish: convoMatch.prompt_es,
-                    source: "Conversation Prompt",
-                    level: levelKey
-                };
-            }
-        }
-    }
-
-    // 8. Conversation Audio (FIXED)
-    const convoAudioBanks = [
-        CEFR_CONVERSATION_AUDIO_a1,
-        CEFR_CONVERSATION_AUDIO_a2,
-        CEFR_CONVERSATION_AUDIO_b1,
-        CEFR_CONVERSATION_AUDIO_b2
-    ];
-
-    for (const bank of convoAudioBanks) {
-        if (!Array.isArray(bank)) continue;
-
-        const audioMatch = bank.find(a =>
-            cleanStringForKeyboard(a?.en || "").toLowerCase() === w
-        );
-
-        if (audioMatch) {
-            return {
-                spanish: audioMatch.es,
-                source: "Conversation Audio",
-                level: "GLOBAL"
-            };
-        }
-    }
-
-    return null;
-}
-
-/* ============================================================
-   SPANISH → ENGLISH LOOKUP (ACCENT-SAFE)
-   ============================================================ */
-function globalLookupSpanish(spanishText) {
-    if (!spanishText) return "[Unknown translation]";
-
-    const s = cleanStringForKeyboard(spanishText.toLowerCase().trim());
-    const banks = [];
-
-    // CEFR Vocabulary
-    ["a1", "a2", "b1", "b2"].forEach(level => {
-        if (Array.isArray(CEFR_LEVELS?.[level])) {
-            banks.push(...CEFR_LEVELS[level]);
-        }
-    });
-
-    // CEFR Phrases
-    if (Array.isArray(CEFR_PHRASES)) banks.push(...CEFR_PHRASES);
-
-    // Listening Vocabulary
-    if (Array.isArray(LISTEN_VOCAB)) banks.push(...LISTEN_VOCAB);
-
-    // Conversation Audio Banks
-    [CEFR_CONVERSATION_AUDIO_a1,
-     CEFR_CONVERSATION_AUDIO_a2,
-     CEFR_CONVERSATION_AUDIO_b1,
-     CEFR_CONVERSATION_AUDIO_b2].forEach(bank => {
-        if (Array.isArray(bank)) banks.push(...bank);
-    });
-
-    // Conversation Prompts (prompt_es + expected_responses)
-    Object.values(CEFR_CONVERSATION_PROMPTS || {}).forEach(levelArray => {
-        if (!Array.isArray(levelArray)) return;
-
-        levelArray.forEach(prompt => {
-            if (prompt.prompt_es) {
-                banks.push({ es: prompt.prompt_es, en: prompt.prompt_en });
-            }
-            if (Array.isArray(prompt.expected_responses)) {
-                banks.push(...prompt.expected_responses);
-            }
-        });
-    });
-
-    // Disruptors
-    ["a1", "a2", "b1", "b2"].forEach(level => {
-        if (typeof getDisruptorResponses === "function") {
-            const disruptors = getDisruptorResponses(level);
-            if (Array.isArray(disruptors)) banks.push(...disruptors);
-        }
-    });
-
-    // FINAL MATCHING (accent-safe)
-    for (const item of banks) {
-        if (!item) continue;
-
-        const spanishString =
-            item.es ||
-            item.spanish ||
-            item.text ||
-            (typeof item === "string" ? item : null);
-
-        if (!spanishString) continue;
-
-        if (cleanStringForKeyboard(spanishString.toLowerCase()) === s) {
-            return item.en || item.english || "[Unknown translation]";
-        }
-    }
-
-    return "[Unknown translation]";
-}
-
-/* ============================================================
-   UNIVERSAL TEXT EXTRACTOR
-   ============================================================ */
-function extractSpanishText(item) {
-    if (!item) return "";
-    if (typeof item === "string") return item;
-
-    if (typeof item === "object") {
-
-        // Direct Spanish fields
-        if (item.prompt_es) return item.prompt_es;
-        if (item.es) return item.es;
-        if (item.spanish) return item.spanish;
-        if (item.text && detectLanguage(item.text) === "spanish") return item.text;
-
-        // Nested Spanish objects
-        if (typeof item.es === "object") return extractSpanishText(item.es);
-        if (typeof item.spanish === "object") return extractSpanishText(item.spanish);
-
-        // Deep scan — but only return Spanish strings
-        for (const value of Object.values(item)) {
-            if (typeof value === "string" && detectLanguage(value) === "spanish") {
-                return value;
-            }
-            if (typeof value === "object" && value !== null) {
-                const nested = extractSpanishText(value);
-                if (nested) return nested;
-            }
-        }
-    }
-
-    return "";
-}
-
-
-
-/* ============================================================
-   DICTIONARY SEARCH INITIALIZER SYSTEM (BILINGUAL MODE)
-   ============================================================ */
 function initDictionarySearch() {
     const searchInput = document.getElementById("dict-search-input");
     const resultBox = document.getElementById("dict-search-result");
@@ -7513,49 +6554,68 @@ function initDictionarySearch() {
     if (!searchInput || !resultBox) return;
 
     searchInput.addEventListener("input", () => {
-        const query = searchInput.value.trim();
-        const lowerQuery = query.toLowerCase();
+        const query = searchInput.value.trim().toLowerCase();
 
         if (!query) {
             resultBox.innerHTML = "";
             return;
         }
 
-        const lang = detectLanguage(query);
+        /* ============================================================
+           1. FULL PHRASE LAYER — Scan the entire sentence string first
+        ============================================================ */
+        const phraseResult = globalLookup(query);
+
+        if (phraseResult) {
+            const cleanSpeechText = phraseResult.spanish.replace(/'/g, "\\'");
+            
+            resultBox.innerHTML = `
+                <div style="padding: 10px; background: rgba(74, 222, 128, 0.1);
+                            border: 1px solid rgba(74, 222, 128, 0.3);
+                            border-radius: 10px; margin-top: 5px; display: flex; flex-direction: column; gap: 4px;">
+                    <div style="display: flex; align-items: center; gap: 8px; flex-wrap: wrap;">
+                        <span style="color: #a5f3fc; font-weight: bold;">Spanish:</span>
+                        <span style="color: #4ade80; font-size: 1.1rem; font-weight: 600;
+                                     text-shadow: 0 0 6px rgba(74,222,128,0.45);">
+                            ${phraseResult.spanish}
+                        </span>
+
+                        <button id="dict-speak-btn" class="pill" style="padding: 4px 10px; font-size: 11px; max-width: 50px; cursor: pointer;">🔊</button>
+                    </div>
+
+                    <div style="font-size: 11px; color: rgba(255,255,255,0.4); margin-top: 2px;">
+                        Phrase mode — Found in ${phraseResult.level || "GLOBAL"} (${phraseResult.source})
+                    </div>
+                </div>
+            `;
+
+            const speakBtn = document.getElementById("dict-speak-btn");
+            if (speakBtn) {
+                speakBtn.onclick = () => {
+                    window.speechSynthesis.cancel();
+                    const utterance = new SpeechSynthesisUtterance(cleanSpeechText);
+                    utterance.lang = 'es-ES';
+                    const speedSlider = document.getElementById('rate');
+                    if (speedSlider) utterance.rate = parseFloat(speedSlider.value);
+                    window.speechSynthesis.speak(utterance);
+                };
+            }
+            return;
+        }
 
         /* ============================================================
-           1. ENGLISH → SPANISH
+           2. WORD-BY-WORD FALLBACK — Executes only if full phrase fails
         ============================================================ */
-        if (lang === "english") {
+        const words = query.split(/\s+/).filter(w => w.length > 0);
 
-            // A. MULTI‑PHRASE
-            const stitched = multiPhraseStitch(lowerQuery);
-            if (stitched) {
-                resultBox.innerHTML = `
-                    <div style="padding: 10px; background: rgba(74, 222, 128, 0.1);
-                                border: 1px solid rgba(74, 222, 128, 0.3);
-                                border-radius: 10px; margin-top: 5px;">
-                        <span style="color: #a5f3fc; font-weight: bold;">Spanish:</span>
-                        <span style="color: #4ade80; font-size: 1.1rem; font-weight: 600;">
-                            ${stitched.spanish}
-                        </span>
-                        <div style="font-size: 11px; color: rgba(255,255,255,0.4);">
-                            Multi‑phrase mode — matched: ${stitched.matched.join(", ")}
-                        </div>
-                    </div>
-                `;
-                return;
-            }
-
-            // C. WORD‑BY‑WORD FALLBACK
-            const words = lowerQuery.split(/\s+/);
+        if (words.length > 1) {
             const translatedWords = [];
             const unknownWords = [];
 
             for (const word of words) {
                 const result = globalLookup(word);
                 if (result) {
-                    translatedWords.push(result.spanish);
+                    translatedWords.push(normalizeSpanish(result.spanish));
                 } else {
                     unknownWords.push(word);
                     translatedWords.push(`[${word}]`);
@@ -7569,80 +6629,29 @@ function initDictionarySearch() {
                             border: 1px solid rgba(74, 222, 128, 0.3);
                             border-radius: 10px; margin-top: 5px;">
                     <span style="color: #a5f3fc; font-weight: bold;">Spanish:</span>
-                    <span style="color: #4ade80; font-size: 1.1rem; font-weight: 600;">
+                    <span style="color: #4ade80; font-size: 1.1rem; font-weight: 600;
+                                 text-shadow: 0 0 6px rgba(74,222,128,0.45); margin-right: 8px;">
                         ${spanishSentence}
                     </span>
-                    <div style="font-size: 11px; color: rgba(255,255,255,0.4);">
+
+                    <div style="font-size: 11px; color: rgba(255,255,255,0.4); margin-top: 4px;">
                         Sentence mode — ${unknownWords.length === 0 ? "all words found" : "missing: " + unknownWords.join(", ")}
                     </div>
                 </div>
             `;
             return;
-        }   // ← closes ENGLISH block
+        }
 
-
-        /* ============================================================
-           2. SPANISH → ENGLISH
-        ============================================================ */
-        if (lang === "spanish") {
-
-            const lowerSpanishQuery = cleanStringForKeyboard(lowerQuery);
-
-            // MULTI‑PHRASE MODE
-            if (lowerSpanishQuery.includes(" ")) {
-                const stitched = multiPhraseStitchSpanish(lowerSpanishQuery);
-
-                if (stitched) {
-                    resultBox.innerHTML = `
-                        <div style="padding: 10px; background: rgba(74, 222, 128, 0.1);
-                                    border: 1px solid rgba(74, 222, 128, 0.3);
-                                    border-radius: 10px; margin-top: 5px;">
-                            <span style="color: #a5f3fc; font-weight: bold;">English:</span>
-                            <span style="color: #4ade80; font-size: 1.1rem; font-weight: 600;">
-                                ${stitched.english}
-                            </span>
-                            <div style="font-size: 11px; color: rgba(255,255,255,0.4);">
-                                Multi‑phrase mode — matched: ${stitched.matched.join(", ")}
-                            </div>
-                        </div>
-                    `;
-                    return;
-                }
-            }
-
-            // SINGLE WORD MODE
-            const englishResult = globalLookupSpanish(lowerSpanishQuery);
-
-            resultBox.innerHTML = `
-                <div style="padding: 10px; background: rgba(74, 222, 128, 0.1);
-                            border: 1px solid rgba(74, 222, 128, 0.3);
-                            border-radius: 10px; margin-top: 5px;">
-                    <span style="color: #a5f3fc; font-weight: bold;">English:</span>
-                    <span style="color: #4ade80; font-size: 1.1rem; font-weight: 600;">
-                        ${englishResult}
-                    </span>
-                    <div style="font-size: 11px; color: rgba(255,255,255,0.4);">
-                        Spanish → English mode
-                    </div>
-                </div>
-            `;
-            return;
-        }   // ← closes SPANISH block
-
-
-        /* ============================================================
-           3. UNKNOWN INPUT
-        ============================================================ */
+        // No match found anywhere
         resultBox.innerHTML = `
             <div style="color: #f87171; font-style: italic; font-size: 13px; margin-top: 8px;">
-                Unable to detect language. Please type English or Spanish only.
+                Phrase not found in any level resource banks.
             </div>
         `;
-        return;
+    });
+}
 
-    });  // ← closes event listener
 
-}  // ← closes initDictionarySearch()
 
 /* ============================================================
    GLOBAL FREE PRACTICE SANDBOX (UNSCORED)
@@ -7704,27 +6713,27 @@ function evaluatePracticeAnswer() {
     if (!inputField || !feedbackBox || !currentPracticeWord) return;
 
     const userTyped = inputField.value.trim();
+    
     if (!userTyped) {
         feedbackBox.innerHTML = `<span style="color: #f87171;">Type an answer first!</span>`;
         return;
     }
 
+    // KEYBOARD PROTECTOR: Clean entries using our helper utility
     const cleanUser = cleanStringForKeyboard(userTyped);
-    const englishFromUser = globalLookupSpanish(cleanUser);
-    const englishCorrect = currentPracticeWord.english;
+    const cleanCorrect = cleanStringForKeyboard(currentPracticeWord.spanish);
 
-    const isCorrect = englishFromUser === englishCorrect;
-
-    if (isCorrect) {
+    if (cleanUser === cleanCorrect) {
         const cleanSpeechText = currentPracticeWord.spanish.replace(/'/g, "\\'");
-
+        
         feedbackBox.innerHTML = `
             <div style="color: #4ade80; font-weight: 600; padding: 6px; background: rgba(74,222,128,0.1); border-radius: 8px; display: flex; align-items: center; gap: 6px; flex-wrap: wrap;">
                 <span>Correct! 🎉 (${currentPracticeWord.spanish})</span>
                 <button id="practice-speak-btn" class="pill" style="padding: 2px 8px; font-size: 10px; max-width: 40px; cursor: pointer;">🔊</button>
             </div>
         `;
-
+        
+        // Inline events are replaced with dedicated listeners to prevent apostrophe injection breakages
         const speakBtn = document.getElementById("practice-speak-btn");
         if (speakBtn) {
             speakBtn.onclick = () => {
@@ -7736,19 +6745,21 @@ function evaluatePracticeAnswer() {
                 window.speechSynthesis.speak(utterance);
             };
         }
-
+        
+        // Auto-vocalize correct matches immediately 
         window.speechSynthesis.cancel();
         const utterance = new SpeechSynthesisUtterance(currentPracticeWord.spanish);
         utterance.lang = 'es-ES';
         const speedSlider = document.getElementById('rate');
         if (speedSlider) utterance.rate = parseFloat(speedSlider.value);
         window.speechSynthesis.speak(utterance);
-
-  } else {
+        
+    } else {
+        // Revealed answer engine correction block
         feedbackBox.innerHTML = `
             <div style="color: #f87171; font-weight: 500; padding: 6px; background: rgba(248,113,113,0.1); border-radius: 8px;">
                 Not quite! "<strong>${currentPracticeWord.english}</strong>" translates to "<strong>${currentPracticeWord.spanish}</strong>". Try again, or click Skip.
             </div>
         `;
     }
-} // Closes evaluatePracticeAnswer()
+}
