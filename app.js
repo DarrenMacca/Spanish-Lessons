@@ -6114,13 +6114,17 @@ function pulseTile(id) {
     void tile.offsetWidth; // Forces layout recalculation to re-trigger transition rules safely
     tile.classList.add("pulse");
 }
-
+/**
+ * ==========================================================================
+ * MASTER LESSON PLATFORM & TRANSLATION ENGINE
+ * Core Unified Runtime Application Pipeline Script (Chunk 1 of 3)
+ * ==========================================================================
+ */
 
 /* ============================================================
    CERTIFICATE SYSTEM — CEFR LEVEL COMPLETION
    ============================================================ */
 
-// Persistent certificate unlock state
 let certificates = {
     a1: false,
     a2: false,
@@ -6128,12 +6132,10 @@ let certificates = {
     b2: false
 };
 
-// Save certificate state
 function saveCertificates() {
     localStorage.setItem("certificates", JSON.stringify(certificates));
 }
 
-// Load certificate state
 function loadCertificates() {
     const saved = localStorage.getItem("certificates");
     if (saved) {
@@ -6146,9 +6148,6 @@ function loadCertificates() {
 }
 loadCertificates();
 
-/* ============================================================
-   UNLOCK CERTIFICATE WHEN LEVEL COMPLETED
-   ============================================================ */
 function unlockCertificate(levelKey) {
     if (!levelKey) return;
     const lowerKey = levelKey.toLowerCase();
@@ -6158,18 +6157,14 @@ function unlockCertificate(levelKey) {
     }
 }
 
-/* ============================================================
-   RENDER CERTIFICATES WITH NAME + DATE
-   ============================================================ */
 function renderCertificates() {
     const container = document.getElementById("certificates-container");
     if (!container) return;
 
     container.style.display = "block";
 
-    // FIXED: Correctly synchronized state references against studentName instead of missing userName property
     const studentInputField = document.getElementById("student-name");
-    const name = appState.studentName || (studentInputField ? studentInputField.value : "") || "Learner";
+    const name = (typeof appState !== "undefined" && appState.studentName) || (studentInputField ? studentInputField.value : "") || "Learner";
 
     const today = new Date().toLocaleDateString();
 
@@ -6198,10 +6193,10 @@ function loadPDFLibraries(callback) {
     }
 
     const html2canvasScript = document.createElement("script");
-    html2canvasScript.src = "https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js";
+    html2canvasScript.src = "https://cloudflare.com";
 
     const jsPDFScript = document.createElement("script");
-    jsPDFScript.src = "https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js";
+    jsPDFScript.src = "https://cloudflare.com";
 
     let loaded = 0;
     function checkLoaded() {
@@ -6216,9 +6211,6 @@ function loadPDFLibraries(callback) {
     document.body.appendChild(jsPDFScript);
 }
 
-/* ============================================================
-   DOWNLOAD CERTIFICATE AS PDF
-   ============================================================ */
 function downloadCertificate(certId) {
     const element = document.getElementById(certId);
     if (!element) {
@@ -6230,7 +6222,6 @@ function downloadCertificate(certId) {
         html2canvas(element, { scale: 2 }).then(canvas => {
             const imgData = canvas.toDataURL("image/png");
             
-            // Safe assignment fallbacks to capture CDN instances across browser contexts
             const { jsPDF } = window.jspdf || jspdf;
             const pdf = new jsPDF("p", "mm", "a4");
 
@@ -6247,178 +6238,8 @@ function downloadCertificate(certId) {
     });
 }
 
-
 /* ============================================================
-   STARTUP & EVENT INITIALIZATION
-   ============================================================ */
-document.addEventListener("DOMContentLoaded", () => {
-    // Safely verify state engines read before triggering components
-    if (typeof loadState === "function") loadState();
-
-    if (typeof initTabNavigation === "function") initTabNavigation();     
-    if (typeof activateTab === "function") activateTab("dashboard"); 
-
-    if (typeof initRateControl === "function") initRateControl();       
-    if (typeof initNameBox === "function") initNameBox();           
-    if (typeof initDictionarySearch === "function") initDictionarySearch();  
-    
-    // Spawns the sandbox setup calculations
-    if (typeof initFreePracticeSandbox === "function") initFreePracticeSandbox();  
-
-    const resetBtn = document.getElementById("resetAllLevelsBtn");
-    if (resetBtn) {
-        resetBtn.addEventListener("click", () => {
-            const confirmReset = confirm("Are you completely sure you want to delete everything? This will permanently wipe your scores, XP, streaks, and review list tracking.");
-            if (confirmReset) {
-                if (typeof resetAllProgress === "function") {
-                    resetAllProgress();
-                } else {
-                    localStorage.clear();
-                    location.reload();
-                }
-            }
-        });
-    }
-
-    if (typeof updateBadges === "function") updateBadges();
-    if (typeof updateProgressMeters === "function") updateProgressMeters();
-});
-
-
-
-/* ============================================================
-   MISTAKEN AREAS — REVIEW SYSTEM ENGINE (UPDATED: PURE AUDIO)
-   ============================================================ */
-
-// Initialize the incorrect words list from localStorage, or start empty
-window.reviewList = [];
-try {
-    const savedReview = localStorage.getItem('reviewList');
-    if (savedReview) window.reviewList = JSON.parse(savedReview);
-} catch (e) {
-    console.error("Error reading saved mistake logs:", e);
-    window.reviewList = [];
-}
-
-/* ============================================================
-   FIND AUDIO FOR SPANISH PHRASE (FIXED CRASH PIPELINE)
-   ============================================================ */
-function findAudioForSpanish(spanishText) {
-    if (!spanishText) return null;
-    const clean = cleanStringForKeyboard(spanishText.toLowerCase());
-
-    const banks = [];
-    // FIXED: Individual existence checks prevent crash loops if specific asset sheets load late
-    if (typeof CEFR_CONVERSATION_AUDIO_A1 !== "undefined" && Array.isArray(CEFR_CONVERSATION_AUDIO_A1)) banks.push(...CEFR_CONVERSATION_AUDIO_A1);
-    if (typeof CEFR_CONVERSATION_AUDIO_A2 !== "undefined" && Array.isArray(CEFR_CONVERSATION_AUDIO_A2)) banks.push(...CEFR_CONVERSATION_AUDIO_A2);
-    if (typeof CEFR_CONVERSATION_AUDIO_B1 !== "undefined" && Array.isArray(CEFR_CONVERSATION_AUDIO_B1)) banks.push(...CEFR_CONVERSATION_AUDIO_B1);
-    if (typeof CEFR_CONVERSATION_AUDIO_B2 !== "undefined" && Array.isArray(CEFR_CONVERSATION_AUDIO_B2)) banks.push(...CEFR_CONVERSATION_AUDIO_B2);
-
-    for (const item of banks) {
-        if (!item || !item.es || !item.audio) continue;
-
-        if (cleanStringForKeyboard(item.es.toLowerCase()) === clean) {
-            return item.audio;
-        }
-    }
-    return null;
-}
-
-/* ============================================================
-   PURE REVIEW AUDIO PLAYER (NO COMMENTARY, NO TTS)
-   ============================================================ */
-function playReviewAudio(spanishText) {
-    const audioFile = findAudioForSpanish(spanishText);
-    if (!audioFile) {
-        // Fallback to active browser TTS engine if explicit file is absent
-        if (typeof speakSpanish === "function") speakSpanish(spanishText);
-        return;
-    }
-
-    try {
-        const audio = new Audio(`audio/${audioFile}`);
-        audio.play().catch(e => console.warn("Native file play stalled. Audio folder missing assets.", e));
-    } catch (e) {
-        console.error("Audio engine failed to load instance:", e);
-    }
-}
-
-/* ============================================================
-   ADD WORD TO REVIEW LIST
-   ============================================================ */
-function addIncorrectWord(word) {
-    if (!word) return;
-    if (!window.reviewList.includes(word)) {
-        window.reviewList.push(word);
-        localStorage.setItem('reviewList', JSON.stringify(window.reviewList));
-        renderReviewList();
-        if (typeof updateProgressMeters === "function") updateProgressMeters();
-    }
-}
-
-/* ============================================================
-   REMOVE WORD FROM REVIEW LIST
-   ============================================================ */
-function clearWordFromReview(word) {
-    window.reviewList = window.reviewList.filter(item => item !== word);
-    localStorage.setItem('reviewList', JSON.stringify(window.reviewList));
-    renderReviewList();
-    if (typeof updateProgressMeters === "function") updateProgressMeters();
-}
-
-/* ============================================================
-   RENDER REVIEW LIST UI
-   ============================================================ */
-function renderReviewList() {
-    const listContainer = document.getElementById('review-words-list');
-    if (!listContainer) return;
-    listContainer.innerHTML = '';
-
-    if (window.reviewList.length === 0) {
-        listContainer.innerHTML = '<p class="review-empty-msg">🎉 Great job! No words to review.</p>';
-        return;
-    }
-
-    window.reviewList.forEach(word => {
-        const card = document.createElement('div');
-        card.className = 'review-card';
-        card.style.display = 'flex';
-        card.style.alignItems = 'center';
-        card.style.margin = '10px 0';
-        
-        // Extract Spanish part after "➔" or "→"
-        let spanishText = word;
-        if (word.includes('➔')) {
-            spanishText = word.split('➔')[1].trim();
-        } else if (word.includes('→')) {
-            spanishText = word.split('→')[1].trim();
-        }
-
-        card.innerHTML = `
-            <span class="review-word-text">${word}</span>
-            <div class="review-card-actions" style="display: flex; align-items: center; gap: 12px; margin-left: auto;">
-                <button class="pill review-play-btn" style="min-width: 45px; padding: 10px 14px;">
-                    🔊 Play
-                </button>
-                <button class="pill got-it-btn">Got it!</button>
-            </div>
-        `;
-
-        // Direct binding to safely pass string contents across event cycles
-        card.querySelector('.review-play-btn').addEventListener('click', () => {
-            playReviewAudio(spanishText);
-        });
-
-        card.querySelector('.got-it-btn').addEventListener('click', () => {
-            clearWordFromReview(word);
-        });
-
-        listContainer.appendChild(card);
-    });
-}
-
-/* ============================================================
-   GLOBAL ALL-BANKS DICTIONARY & CONVERSATIONAL PHRASE SEARCH
+   GLOBAL TEXT NORMALIZATION LAYER
    ============================================================ */
 
 function normalizeSpanish(str) {
@@ -6432,10 +6253,6 @@ function normalizeSpanish(str) {
         .toLowerCase();
 }
 
-/**
- * Normalizes English query inputs to remove hyphens, 
- * punctuation distortions, and extra whitespace layers.
- */
 function normalizeEnglish(str) {
     if (!str) return '';
     return str
@@ -6445,83 +6262,88 @@ function normalizeEnglish(str) {
         .trim();
 }
 
+function cleanStringForKeyboard(str) {
+    if (!str) return '';
+    return str.toLowerCase().replace(/[^a-z0-9áéíóúüñ]/g, " ").replace(/\s+/g, " ").trim();
+}
+
+function extractSpanishText(obj) {
+    if (!obj) return "";
+    if (typeof obj === "string") return obj;
+    if (obj.es) return obj.es;
+    if (obj.spanish) return obj.spanish;
+    return Object.values(obj)[0] || "";
+}
+/* ============================================================
+   GLOBAL ALL-BANKS DICTIONARY SEARCH ENGINE
+   ============================================================ */
+
 function globalLookup(word) {
     const w = normalizeEnglish(word);
     if (!w) return null;
 
     const levelsList = ["A1", "A2", "B1", "B2"];
 
-    // 1. CEFR Vocabulary (A1–B2) — CEFR_LEVELS
+    // 1. CEFR Vocabulary (A1–B2)
     for (const level of levelsList) {
+        if (typeof CEFR_LEVELS === "undefined" || !CEFR_LEVELS) continue;
         const vocab = CEFR_LEVELS[level];
         if (!vocab) continue;
 
         const match = vocab.find(item =>
             item.english && normalizeEnglish(item.english) === w
         );
-        if (match) {
-            return { spanish: match.spanish, source: "CEFR Vocabulary", level };
-        }
+        if (match) return { spanish: match.spanish, source: "CEFR Vocabulary", level };
     }
 
-    // 2. CEFR Sentences — CEFR_SENTENCES
+    // 2. CEFR Sentences
     for (const level of levelsList) {
+        if (typeof CEFR_SENTENCES === "undefined" || !CEFR_SENTENCES) continue;
         const bank = CEFR_SENTENCES[level];
         if (!bank) continue;
 
         const match = bank.find(item =>
             item.english && normalizeEnglish(item.english) === w
         );
-        if (match) {
-            return { spanish: match.spanish, source: "CEFR Sentences", level };
-        }
+        if (match) return { spanish: match.spanish, source: "CEFR Sentences", level };
     }
 
-    // 3. CEFR Sentence Choices — CEFR_SENTENCE_CHOICES
+    // 3. CEFR Sentence Choices
     for (const level of levelsList) {
+        if (typeof CEFR_SENTENCE_CHOICES === "undefined" || !CEFR_SENTENCE_CHOICES) continue;
         const bank = CEFR_SENTENCE_CHOICES[level];
         if (!bank) continue;
 
         const match = bank.find(item =>
             item.english && normalizeEnglish(item.english) === w
         );
-        if (match) {
-            return { spanish: match.correct.es, source: "Dialogue Choices", level };
-        }
+        if (match) return { spanish: match.correct.es, source: "Dialogue Choices", level };
     }
 
-    // 4. CEFR Phrases — CEFR_PHRASES
+    // 4. CEFR Phrases
     if (typeof CEFR_PHRASES !== "undefined" && Array.isArray(CEFR_PHRASES)) {
         const phraseMatch = CEFR_PHRASES.find(p =>
             p.english && normalizeEnglish(p.english) === w
         );
-        if (phraseMatch) {
-            return { spanish: phraseMatch.spanish, source: "CEFR Phrases", level: phraseMatch.level || "GLOBAL" };
-        }
+        if (phraseMatch) return { spanish: phraseMatch.spanish, source: "CEFR Phrases", level: phraseMatch.level || "GLOBAL" };
     }
 
-    // 5. Listen Vocab — LISTEN_VOCAB
+    // 5. Listen Vocab
     if (typeof LISTEN_VOCAB !== "undefined" && Array.isArray(LISTEN_VOCAB)) {
         const lvMatch = LISTEN_VOCAB.find(item =>
             item.english && normalizeEnglish(item.english) === w
         );
-        if (lvMatch) {
-            return { spanish: lvMatch.spanish, source: "Listen Vocab", level: lvMatch.level || "GLOBAL" };
-        }
+        if (lvMatch) return { spanish: lvMatch.spanish, source: "Listen Vocab", level: lvMatch.level || "GLOBAL" };
     }
 
-    // 6. Word-by-word dictionary — WORD_DICT
+    // 6. Word-by-word dictionary
     if (typeof WORD_DICT !== "undefined") {
-        if (WORD_DICT[w]) {
-            return { spanish: WORD_DICT[w], source: "Word Dictionary", level: "GLOBAL" };
-        }
+        if (WORD_DICT[w]) return { spanish: WORD_DICT[w], source: "Word Dictionary", level: "GLOBAL" };
         const dynamicWordKey = Object.keys(WORD_DICT).find(k => normalizeEnglish(k) === w);
-        if (dynamicWordKey) {
-            return { spanish: WORD_DICT[dynamicWordKey], source: "Word Dictionary", level: "GLOBAL" };
-        }
+        if (dynamicWordKey) return { spanish: WORD_DICT[dynamicWordKey], source: "Word Dictionary", level: "GLOBAL" };
     }
 
-    // 7. Conversation Prompts — CEFR_CONVERSATION_PROMPTS
+    // 7. Conversation Prompts
     if (typeof CEFR_CONVERSATION_PROMPTS !== "undefined" && CEFR_CONVERSATION_PROMPTS !== null) {
         for (const levelKey of Object.keys(CEFR_CONVERSATION_PROMPTS)) {
             const prompts = CEFR_CONVERSATION_PROMPTS[levelKey];
@@ -6540,13 +6362,12 @@ function globalLookup(word) {
         }
     }
 
-    // 8. Conversation Audio — A1–B2
-    const convoAudioBanks = [
-        typeof CEFR_CONVERSATION_AUDIO_A1 !== "undefined" ? CEFR_CONVERSATION_AUDIO_A1 : null,
-        typeof CEFR_CONVERSATION_AUDIO_A2 !== "undefined" ? CEFR_CONVERSATION_AUDIO_A2 : null,
-        typeof CEFR_CONVERSATION_AUDIO_B1 !== "undefined" ? CEFR_CONVERSATION_AUDIO_B1 : null,
-        typeof CEFR_CONVERSATION_AUDIO_B2 !== "undefined" ? CEFR_CONVERSATION_AUDIO_B2 : null
-    ];
+    // 8. Conversation Audio
+    const convoAudioBanks = [];
+    if (typeof CEFR_CONVERSATION_AUDIO_A1 !== "undefined") convoAudioBanks.push(CEFR_CONVERSATION_AUDIO_A1);
+    if (typeof CEFR_CONVERSATION_AUDIO_A2 !== "undefined") convoAudioBanks.push(CEFR_CONVERSATION_AUDIO_A2);
+    if (typeof CEFR_CONVERSATION_AUDIO_B1 !== "undefined") convoAudioBanks.push(CEFR_CONVERSATION_AUDIO_B1);
+    if (typeof CEFR_CONVERSATION_AUDIO_B2 !== "undefined") convoAudioBanks.push(CEFR_CONVERSATION_AUDIO_B2);
 
     for (const bank of convoAudioBanks) {
         if (!bank || !Array.isArray(bank)) continue;
@@ -6554,11 +6375,7 @@ function globalLookup(word) {
             a.english && normalizeEnglish(a.english) === w
         );
         if (audioMatch) {
-            return {
-                spanish: audioMatch.spanish,
-                source: "Conversation Audio",
-                level: audioMatch.level || "GLOBAL"
-            };
+            return { spanish: audioMatch.spanish, source: "Conversation Audio", level: audioMatch.level || "GLOBAL" };
         }
     }
 
@@ -6582,28 +6399,21 @@ function initDictionarySearch() {
             return;
         }
 
-        /* ============================================================
-           1. FULL PHRASE LAYER — Scan the entire sentence string first
-        ============================================================ */
+        // A. Full Sentence Lookup Target Scan
         const phraseResult = globalLookup(query);
 
         if (phraseResult) {
             const cleanSpeechText = phraseResult.spanish.replace(/'/g, "\\'");
             
             resultBox.innerHTML = `
-                <div style="padding: 10px; background: rgba(74, 222, 128, 0.1);
-                            border: 1px solid rgba(74, 222, 128, 0.3);
-                            border-radius: 10px; margin-top: 5px; display: flex; flex-direction: column; gap: 4px;">
+                <div style="padding: 10px; background: rgba(74, 222, 128, 0.1); border: 1px solid rgba(74, 222, 128, 0.3); border-radius: 10px; margin-top: 5px; display: flex; flex-direction: column; gap: 4px;">
                     <div style="display: flex; align-items: center; gap: 8px; flex-wrap: wrap;">
                         <span style="color: #a5f3fc; font-weight: bold;">Spanish:</span>
-                        <span style="color: #4ade80; font-size: 1.1rem; font-weight: 600;
-                                     text-shadow: 0 0 6px rgba(74,222,128,0.45);">
+                        <span style="color: #4ade80; font-size: 1.1rem; font-weight: 600; text-shadow: 0 0 6px rgba(74,222,128,0.45);">
                             ${phraseResult.spanish}
                         </span>
-
                         <button id="dict-speak-btn" class="pill" style="padding: 4px 10px; font-size: 11px; max-width: 50px; cursor: pointer;">🔊</button>
                     </div>
-
                     <div style="font-size: 11px; color: rgba(255,255,255,0.4); margin-top: 2px;">
                         Phrase mode — Found in ${phraseResult.level || "GLOBAL"} (${phraseResult.source})
                     </div>
@@ -6624,9 +6434,7 @@ function initDictionarySearch() {
             return;
         }
 
-        /* ============================================================
-           2. AUTOMATED SUB-STRING CHUNK LOOKUP & FALLBACK ENGINE
-        ============================================================ */
+        // B. Dynamic Sub-string Greedy Window Framework Split
         const words = query.split(/\s+/).filter(w => w.length > 0);
 
         if (words.length > 1) {
@@ -6634,30 +6442,27 @@ function initDictionarySearch() {
             const unknownWords = [];
             let i = 0;
 
-            // Greedy Sub-String Processing Window Frame Array Loop
             while (i < words.length) {
                 let matched = false;
 
-                // Attempt to look for multi-word blocks first (e.g., 4 words decreasing down to 2)
                 for (let len = Math.min(4, words.length - i); len >= 2; len--) {
                     const chunk = words.slice(i, i + len).join(" ");
                     const chunkResult = globalLookup(chunk);
 
                     if (chunkResult) {
                         translatedSegments.push(chunkResult.spanish);
-                        i += len; // Jump forward past matched multi-word text grouping
+                        i += len;
                         matched = true;
                         break;
                     }
                 }
 
-                // If no sub-string phrase match found, isolate single index element word row
                 if (!matched) {
                     const word = words[i];
                     const wordResult = globalLookup(word);
 
                     if (wordResult) {
-                        translatedSegments.push(wordResult.spanish); // Real accents preserved
+                        translatedSegments.push(wordResult.spanish);
                     } else {
                         unknownWords.push(word);
                         translatedSegments.push(`[${word}]`);
@@ -6670,19 +6475,14 @@ function initDictionarySearch() {
             const cleanSpeechText = spanishSentence.replace(/'/g, "\\'");
 
             resultBox.innerHTML = `
-                <div style="padding: 10px; background: rgba(74, 222, 128, 0.1);
-                            border: 1px solid rgba(74, 222, 128, 0.3);
-                            border-radius: 10px; margin-top: 5px; display: flex; flex-direction: column; gap: 4px;">
+                <div style="padding: 10px; background: rgba(74, 222, 128, 0.1); border: 1px solid rgba(74, 222, 128, 0.3); border-radius: 10px; margin-top: 5px; display: flex; flex-direction: column; gap: 4px;">
                     <div style="display: flex; align-items: center; gap: 8px; flex-wrap: wrap;">
                         <span style="color: #a5f3fc; font-weight: bold;">Spanish:</span>
-                        <span style="color: #4ade80; font-size: 1.1rem; font-weight: 600;
-                                     text-shadow: 0 0 6px rgba(74,222,128,0.45);">
+                        <span style="color: #4ade80; font-size: 1.1rem; font-weight: 600; text-shadow: 0 0 6px rgba(74,222,128,0.45);">
                             ${spanishSentence}
                         </span>
-
                         <button id="dict-speak-btn" class="pill" style="padding: 4px 10px; font-size: 11px; max-width: 50px; cursor: pointer;">🔊</button>
                     </div>
-
                     <div style="font-size: 11px; color: rgba(255,255,255,0.4); margin-top: 2px;">
                         Sentence mode — ${unknownWords.length === 0 ? "all words found" : "missing: " + unknownWords.join(", ")}
                     </div>
@@ -6693,7 +6493,7 @@ function initDictionarySearch() {
             if (speakBtn) {
                 speakBtn.onclick = () => {
                     window.speechSynthesis.cancel();
-                    const speakableString = cleanSpeechText.replace(/[\[\]]/g, ""); // Strip brackets from speaker array output
+                    const speakableString = cleanSpeechText.replace(/[\[\]]/g, "");
                     const utterance = new SpeechSynthesisUtterance(speakableString);
                     utterance.lang = 'es-ES';
                     const speedSlider = document.getElementById('rate');
@@ -6704,7 +6504,6 @@ function initDictionarySearch() {
             return;
         }
 
-        // No match found anywhere
         resultBox.innerHTML = `
             <div style="color: #f87171; font-style: italic; font-size: 13px; margin-top: 8px;">
                 Phrase not found in any level resource banks.
@@ -6712,7 +6511,145 @@ function initDictionarySearch() {
         `;
     });
 }
+/* ============================================================
+   STARTUP & EVENT INITIALIZATION
+   ============================================================ */
+document.addEventListener("DOMContentLoaded", () => {
+    if (typeof loadState === "function") loadState();
+    if (typeof initTabNavigation === "function") initTabNavigation();     
+    if (typeof activateTab === "function") activateTab("dashboard"); 
+    if (typeof initRateControl === "function") initRateControl();       
+    if (typeof initNameBox === "function") initNameBox();           
+    if (typeof initDictionarySearch === "function") initDictionarySearch();  
+    if (typeof initFreePracticeSandbox === "function") initFreePracticeSandbox();  
 
+    const resetBtn = document.getElementById("resetAllLevelsBtn");
+    if (resetBtn) {
+        resetBtn.addEventListener("click", () => {
+            const confirmReset = confirm("Are you completely sure you want to delete everything? This will permanently wipe your scores, XP, streaks, and review list tracking.");
+            if (confirmReset) {
+                if (typeof resetAllProgress === "function") {
+                    resetAllProgress();
+                } else {
+                    localStorage.clear();
+                    location.reload();
+                }
+            }
+        });
+    }
+
+    if (typeof updateBadges === "function") updateBadges();
+    if (typeof updateProgressMeters === "function") updateProgressMeters();
+});
+
+/* ============================================================
+   MISTAKEN AREAS — REVIEW SYSTEM ENGINE
+   ============================================================ */
+
+window.reviewList = [];
+try {
+    const savedReview = localStorage.getItem('reviewList');
+    if (savedReview) window.reviewList = JSON.parse(savedReview);
+} catch (e) {
+    console.error("Error reading saved mistake logs:", e);
+    window.reviewList = [];
+}
+
+function findAudioForSpanish(spanishText) {
+    if (!spanishText) return null;
+    const clean = cleanStringForKeyboard(spanishText.toLowerCase());
+    const banks = [];
+
+    if (typeof CEFR_CONVERSATION_AUDIO_A1 !== "undefined" && Array.isArray(CEFR_CONVERSATION_AUDIO_A1)) banks.push(...CEFR_CONVERSATION_AUDIO_A1);
+    if (typeof CEFR_CONVERSATION_AUDIO_A2 !== "undefined" && Array.isArray(CEFR_CONVERSATION_AUDIO_A2)) banks.push(...CEFR_CONVERSATION_AUDIO_A2);
+    if (typeof CEFR_CONVERSATION_AUDIO_B1 !== "undefined" && Array.isArray(CEFR_CONVERSATION_AUDIO_B1)) banks.push(...CEFR_CONVERSATION_AUDIO_B1);
+    if (typeof CEFR_CONVERSATION_AUDIO_B2 !== "undefined" && Array.isArray(CEFR_CONVERSATION_AUDIO_B2)) banks.push(...CEFR_CONVERSATION_AUDIO_B2);
+
+    for (const item of banks) {
+        if (!item || !item.es || !item.audio) continue;
+        if (cleanStringForKeyboard(item.es.toLowerCase()) === clean) {
+            return item.audio;
+        }
+    }
+    return null;
+}
+
+function playReviewAudio(spanishText) {
+    const audioFile = findAudioForSpanish(spanishText);
+    if (!audioFile) {
+        if (typeof speakSpanish === "function") speakSpanish(spanishText);
+        return;
+    }
+    try {
+        const audio = new Audio(`audio/${audioFile}`);
+        audio.play().catch(e => console.warn("Native file play stalled. Audio folder missing assets.", e));
+    } catch (e) {
+        console.error("Audio engine failed to load instance:", e);
+    }
+}
+
+function addIncorrectWord(word) {
+    if (!word) return;
+    if (!window.reviewList.includes(word)) {
+        window.reviewList.push(word);
+        localStorage.setItem('reviewList', JSON.stringify(window.reviewList));
+        renderReviewList();
+        if (typeof updateProgressMeters === "function") updateProgressMeters();
+    }
+}
+
+function clearWordFromReview(word) {
+    window.reviewList = window.reviewList.filter(item => item !== word);
+    localStorage.setItem('reviewList', JSON.stringify(window.reviewList));
+    renderReviewList();
+    if (typeof updateProgressMeters === "function") updateProgressMeters();
+}
+
+function renderReviewList() {
+    const listContainer = document.getElementById('review-words-list');
+    if (!listContainer) return;
+    listContainer.innerHTML = '';
+
+    if (window.reviewList.length === 0) {
+        listContainer.innerHTML = '<p class="review-empty-msg">🎉 Great job! No words to review.</p>';
+        return;
+    }
+
+    window.reviewList.forEach(word => {
+        const card = document.createElement('div');
+        card.className = 'review-card';
+        card.style.display = 'flex';
+        card.style.alignItems = 'center';
+        card.style.margin = '10px 0';
+        
+        let spanishText = word;
+        if (word.includes('➔')) {
+            const parts = word.split('➔');
+            spanishText = (parts && parts[1]) ? parts[1].trim() : word.trim();
+        } else if (word.includes('→')) {
+            const parts = word.split('→');
+            spanishText = (parts && parts[1]) ? parts[1].trim() : word.trim();
+        }
+
+        card.innerHTML = `
+            <span class="review-word-text">${word}</span>
+            <div class="review-card-actions" style="display: flex; align-items: center; gap: 12px; margin-left: auto;">
+                <button class="pill review-play-btn" style="min-width: 45px; padding: 10px 14px;">🔊 Play</button>
+                <button class="pill got-it-btn">Got it!</button>
+            </div>
+        `;
+
+        card.querySelector('.review-play-btn').addEventListener('click', () => {
+            playReviewAudio(spanishText);
+        });
+
+        card.querySelector('.got-it-btn').addEventListener('click', () => {
+            clearWordFromReview(word);
+        });
+
+        listContainer.appendChild(card);
+    });
+}
 /* ============================================================
    GLOBAL FREE PRACTICE SANDBOX (UNSCORED)
    ============================================================ */
@@ -6725,7 +6662,6 @@ function initFreePracticeSandbox() {
 
     if (!checkBtn || !nextBtn || !inputField) return;
 
-    // Load initial prompt cleanly
     getNewPracticeWord();
 
     checkBtn.addEventListener("click", evaluatePracticeAnswer);
@@ -6751,7 +6687,6 @@ function getNewPracticeWord() {
 
     if (typeof CEFR_LEVELS === "undefined" || CEFR_LEVELS === null) return;
     
-    // Filter down to levels that are explicitly defined and contain valid datasets
     const levels = Object.keys(CEFR_LEVELS).filter(lvl => Array.isArray(CEFR_LEVELS[lvl]) && CEFR_LEVELS[lvl].length > 0);
     if (levels.length === 0) {
         wordPlaceholder.textContent = "Loading vocabulary banks...";
@@ -6762,10 +6697,9 @@ function getNewPracticeWord() {
     const wordPool = CEFR_LEVELS[randomLevel];
     
     currentPracticeWord = wordPool[Math.floor(Math.random() * wordPool.length)];
-
-    // Always display the English translation word as prompt clue question
     wordPlaceholder.textContent = `${currentPracticeWord.english} (${randomLevel})`;
 }
+
 function evaluatePracticeAnswer() {
     const inputField = document.getElementById("practice-user-input");
     const feedbackBox = document.getElementById("practice-feedback");
@@ -6779,7 +6713,6 @@ function evaluatePracticeAnswer() {
         return;
     }
 
-    // KEYBOARD PROTECTOR: Clean entries using our helper utility
     const cleanUser = cleanStringForKeyboard(userTyped);
     const cleanCorrect = cleanStringForKeyboard(currentPracticeWord.spanish);
 
@@ -6793,7 +6726,6 @@ function evaluatePracticeAnswer() {
             </div>
         `;
         
-        // Inline events are replaced with dedicated listeners to prevent apostrophe injection breakages
         const speakBtn = document.getElementById("practice-speak-btn");
         if (speakBtn) {
             speakBtn.onclick = () => {
@@ -6806,7 +6738,6 @@ function evaluatePracticeAnswer() {
             };
         }
         
-        // Auto-vocalize correct matches immediately 
         window.speechSynthesis.cancel();
         const utterance = new SpeechSynthesisUtterance(currentPracticeWord.spanish);
         utterance.lang = 'es-ES';
@@ -6815,7 +6746,6 @@ function evaluatePracticeAnswer() {
         window.speechSynthesis.speak(utterance);
         
     } else {
-        // Revealed answer engine correction block
         feedbackBox.innerHTML = `
             <div style="color: #f87171; font-weight: 500; padding: 6px; background: rgba(248,113,113,0.1); border-radius: 8px;">
                 Not quite! "<strong>${currentPracticeWord.english}</strong>" translates to "<strong>${currentPracticeWord.spanish}</strong>". Try again, or click Skip.
