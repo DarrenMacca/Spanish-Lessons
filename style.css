@@ -1073,45 +1073,71 @@ body {
 
 
 /* ============================================================
-   MOBILE — ≤600px
+   MOBILE — ≤600px (Part 1 Cleaned & Corrected)
    ============================================================ */
 @media (max-width: 600px) {
 
     /* iPhone Safari scroll fix */
-html, body {
-    overflow-x: hidden !important;
-    overflow-y: auto !important;
-    height: auto !important;
-}
+    html, body {
+        overflow-x: hidden !important;
+        overflow-y: auto !important;
+        height: auto !important;
+    }
 
-/* Remove sticky nav on mobile */
-.nav-bar {
-    position: relative !important;
-    top: auto !important;
-    z-index: 10 !important;
-}
+    /* Remove sticky nav on mobile */
+    .nav-bar {
+        position: relative !important;
+        top: auto !important;
+        z-index: 10 !important;
+        max-width: 100% !important;
+        width: 100% !important;
+    }
 
-/* Prevent nav-bar width overflow */
-.nav-bar {
-    max-width: 100% !important;
-    width: 100% !important;
-}
+    /* 📱 RESPONSIVE TOUCH-SCROLL OVERFLOW FIX FOR MOBILE TABS */
+    .level-navigation, 
+    .tab-container,
+    .nav-bar .dashboard-row {
+        display: flex !important;
+        flex-direction: row !important; /* Forces buttons to sit side-by-side */
+        flex-wrap: nowrap !important;   /* Prevents tabs from breaking onto new lines */
+        overflow-x: auto !important;     /* Enables horizontal finger swiping on mobile */
+        overflow-y: hidden !important;   /* Hides accidental vertical jumps */
+        -webkit-overflow-scrolling: touch !important; /* Smooth momentum scrolling on iOS */
+        gap: 8px !important;             /* Spacing between button edges */
+        width: 100% !important;          /* Keeps tabs flush with the edge */
+        padding-bottom: 6px !important;  /* Soft cushion under the buttons */
+        
+        scrollbar-width: none !important; /* Hides default scrollbars on Firefox */
+    }
 
-/* Stack dashboard panels */
-.dashboard-row {
-    flex-direction: column;
-    max-width: 100%;
-    gap: 16px;
-}
+    /* Hide default scrollbars completely across Chrome/Safari/iOS viewports */
+    .level-navigation::-webkit-scrollbar,
+    .tab-container::-webkit-scrollbar {
+        display: none !important;
+    }
 
-   /* FIX — Listen tab must expand fully */
+    /* Protect button text shapes from being compressed inside the scroll track */
+    .tab-btn {
+        padding: 8px 12px !important;
+        font-size: 13px !important;
+        flex-shrink: 0 !important;      /* Stops text from shrinking on narrow screens */
+        white-space: nowrap !important;  /* Guarantees words stay perfectly on a single line */
+    }
+
+    /* Stack dashboard panels */
+    .dashboard-row {
+        flex-direction: column !important;
+        max-width: 100%;
+        gap: 16px;
+    }
+
+    /* FIX — Listen tab must expand fully */
     .listen-category-content {
         max-height: none !important;
     }
 
     /* Prevent dashboard overflow */
-    .dashboard,
-    .dashboard-row {
+    .dashboard {
         max-width: 100% !important;
         width: 100% !important;
         margin-left: 0 !important;
@@ -1155,7 +1181,6 @@ html, body {
    ULTRA‑SMALL PHONES — ≤360px
    ============================================================ */
 @media (max-width: 360px) {
-
     .dashboard-row {
         flex-direction: column;
         gap: 14px;
@@ -1190,23 +1215,23 @@ html, body {
     }
 
     .tab-btn {
-        padding: 8px 12px;
-        font-size: 13px;
+        padding: 8px 12px !important;
+        font-size: 13px !important;
+        flex-shrink: 0 !important;
+        white-space: nowrap !important;
     }
 
-   .glass-panel {
-    margin-left: 0 !important;
-    margin-right: 0 !important;
-    width: 100% !important;
-}
-
+    .glass-panel {
+        margin-left: 0 !important;
+        margin-right: 0 !important;
+        width: 100% !important;
+    }
 }
 
 /* ============================================================
    FOLDABLE PHONES — FOLDED (≤500px)
    ============================================================ */
 @media (max-width: 500px) {
-
     .dashboard-row {
         flex-direction: column;
         gap: 16px;
@@ -1233,15 +1258,24 @@ html, body {
     }
 
     .tab-btn {
-        padding: 10px 14px;
-        font-size: 14px;
+        padding: 10px 14px !important;
+        font-size: 14px !important;
+        flex-shrink: 0 !important;
+        white-space: nowrap !important;
     }
 }
 
 /* ============================================================
-   TABLETS — 600–900px
+   TABLETS — 600–900px (Part 2 Refined)
    ============================================================ */
 @media (min-width: 600px) and (max-width: 900px) {
+    /* Keep horizontal swipe clean if screen gets crowded in tablet portrait mode */
+    .tab-container, .level-navigation {
+        display: flex !important;
+        flex-wrap: nowrap !important;
+        overflow-x: auto !important;
+        -webkit-overflow-scrolling: touch !important;
+    }
 
     .dashboard-row {
         flex-direction: row;
@@ -1268,8 +1302,10 @@ html, body {
     }
 
     .tab-btn {
-        padding: 12px 18px;
-        font-size: 15px;
+        padding: 10px 16px !important; /* Gently fits buttons to prevent cutoffs */
+        font-size: 14px !important;
+        flex-shrink: 0 !important;
+        white-space: nowrap !important;
     }
 }
 
@@ -1277,7 +1313,6 @@ html, body {
    FOLDABLE PHONES — UNFOLDED (700–900px)
    ============================================================ */
 @media (min-width: 700px) and (max-width: 900px) {
-
     .dashboard-row {
         flex-direction: row;
         gap: 24px;
@@ -1303,8 +1338,10 @@ html, body {
     }
 
     .tab-btn {
-        padding: 14px 20px;
-        font-size: 16px;
+        padding: 14px 20px !important;
+        font-size: 16px !important;
+        flex-shrink: 0 !important;
+        white-space: nowrap !important;
     }
 }
 
@@ -1320,7 +1357,6 @@ html, body {
     max-width: 100%;
 }
 
-/* Keeps the text on the left, action items tightly grouped on the right */
 .review-card {
     display: flex;
     justify-content: space-between;
@@ -1328,7 +1364,6 @@ html, body {
     gap: 20px; 
 }
 
-/* Erases old default margins and bullet points from the badge container listing */
 #badge-list {
     padding: 0;
     margin: 12px 0 0 0;
@@ -1336,6 +1371,46 @@ html, body {
     flex-direction: column;
     gap: 10px;
 }
+
+.utility-row {
+    display: flex;
+    justify-content: center;
+    align-items: stretch;
+    gap: 20px;
+    max-width: 700px;
+    margin: 20px auto;
+}
+
+.dictionary-search-box,
+.free-practice-box {
+    flex: 1;
+    min-width: 280px;
+    max-width: 340px;
+    padding: 16px;
+    margin: 0 !important;
+    box-shadow: 0 0 10px rgba(0,255,255,0.05);
+}
+
+.dictionary-search-box .input-field,
+.free-practice-box .input-field {
+    width: 100%;
+    max-width: 100% !important;
+}
+
+@media (max-width: 700px) {
+    .utility-row {
+        flex-direction: column;
+        align-items: center;
+        gap: 16px;
+    }
+    
+    .dictionary-search-box,
+    .free-practice-box {
+        width: 100%;
+        max-width: 350px;
+    }
+}
+
 
 /* ============================================================
    RESPONSIVE UTILITY ROW (SIDE-BY-SIDE ON DESKTOP)
