@@ -5367,8 +5367,7 @@ const CEFR_CONVERSATION_PROMPTS = {
                 { es: "no me gusta este lugar", en: "I don't like this place" },
                 { es: "es un lugar pequeño", en: "It is a small place" }
             ]
-        }
-    ],
+        },
         {
             prompt_es: "¿Quieres un filete con papas fritas?",
             prompt_en: "Do you want a steak with french fries?",
