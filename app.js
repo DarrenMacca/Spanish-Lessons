@@ -579,16 +579,9 @@ const LISTEN_VOCAB = {
             "levantarse","música","televisión","limpiar","cocinar",
             "abrir","terminar","escribir","aprender","ir","hacer",
             "ver","escuchar","salir","descansar","caliente","frío",
-            "feliz","nuevo", "hola",
-    "adiós",
-    "gracias",
-    "siento",
-    "estás",
-    "listos",
-    "despierto",
-    "tiempo",
-    "problemas",
-    "cambio"
+            "feliz","nuevo","hola","adiós","gracias","siento",
+            "estás","listos","despierto","tiempo","problemas","cambio",
+            "buenos días","buenas tardes","buenas noches","bien","señor","señora"
         ],
         "Family": [
             "familia","madre","padre","hijo","hija","amigo","amiga",
@@ -596,9 +589,10 @@ const LISTEN_VOCAB = {
             "tenemos","tienen"
         ],
         "Food & Drink": [
-            "agua","comida","café","té","leche","pan","cerveza","filete","papas fritas",
-            "huevo","fruta","manzana","naranja","plátano","pollo",
-            "pescado","sopa","ensalada","arroz","frijoles","queso","sal"
+            "agua","comida","café","té","leche","filete","papas fritas",
+            "pan","cerveza","huevo","fruta","manzana","naranja",
+            "plátano","pollo","pescado","sopa","ensalada","arroz",
+            "frijoles","queso","sal"
         ],
         "Travel": [
             "autobús","tren","boleto","estación","aeropuerto",
@@ -606,35 +600,21 @@ const LISTEN_VOCAB = {
         ],
         "Connectors": [
             "y","o","con","sin","más","poco","solo","muy",
-            "cerca","para","a","en",  "qué",
-    "quién",
-    "cuándo",
-    "cómo",
-    "cuál",
-    "dónde",
-    "no",
-    "hay",
-    "otra",
-    "pesar",
-    "favor",  "es",
-    "gusta",
-    "gustan",
-    "gustaría",
-    "aprendiendo",
-    "arreglando",  "bueno",
-    "difícil",
-    "clara",
-    "fácil",
-    "malo",
-    "pequeño", "ellos",
-    "su"
+            "cerca","para","a","en","qué","quién","cuándo",
+            "cómo","cuál","dónde","no","si","hay","otra",
+            "pesar","favor","me","mi","un","una","el","la",
+            "ellos","su"
         ],
-        
-       "Numbers": [
-    "uno",   "dos", "tres", "cuatro", "cinco", "seis", "siete", "ocho",
-    "nueve", "diez"
-]
-
+        "Verbs": [
+            "es","gusta","gustan","gustaría","aprendiendo","arreglando",
+            "está","quiero","tengo","necesito"
+        ],
+        "Adjectives": [
+            "bueno","difícil","clara","fácil","malo","pequeño"
+        ],
+        "Numbers": [
+            "uno","dos","tres","cuatro","cinco","seis","siete","ocho","nueve","diez"
+        ]
     },
 
     A2: {
@@ -644,40 +624,24 @@ const LISTEN_VOCAB = {
             "película","ventana","cocina","zapatos","viaje","probar",
             "olvidar","esperar","conducir","arreglar","irse","llegar"
         ],
-        "Family": [
-            "padres","abuela","amiga"
-        ],
-        "Food & Drink": [
-            "desayuno","almuerzo","cena"
-        ],
+        "Family": [],
         "Travel": [
             "avión","visitar","transporte"
         ],
         "Connectors": [
-            "a menudo","antes","ya","todavía","normalmente", "argumentó"
+            "a menudo","antes","ya","todavía","normalmente","porque"
         ],
         "Numbers": [
-    "once",
-    "doce",
-    "trece",
-    "catorce",
-    "quince",
-    "dieciséis",
-    "diecisiete",
-    "dieciocho",
-    "diecinueve",
-    "veinte"
-]
-
+            "once","doce","trece","catorce","quince","dieisiete","diecisiete","dieciocho","diecinueve","veinte"
+        ]
     },
-
     B1: {
         "Daily Life": [
             "he","has","ha","hemos","habéis","han",
             "estado","aprendido","trabajando","estudiando",
             "leyendo","viviendo","diarias",
             "comunicación","conversaciones","mejorar",
-            "habilidades","revisar","continuar","cambiar",
+            "habilidades","revisar","continuar",
             "seguir","preparar","conseguir","entender"
         ],
         "Family": [
@@ -691,7 +655,7 @@ const LISTEN_VOCAB = {
             "mudarse","unirse"
         ],
         "Connectors": [
-            "mientras","sin embargo","sobre","cuando",
+            "mientras","sin embargo","sobre",
             "después","durante"
         ],
         "Numbers": [
@@ -701,7 +665,7 @@ const LISTEN_VOCAB = {
 
     B2: {
         "Daily Life": [
-            "proceso","tarea","resultados","rendimiento",
+            "proceso","resultados","rendimiento",
             "estrategia","sistema","enfoque","concepto",
             "riesgo","posibilidad","situación",
             "optimizar","coordinar","aumentar","actualizar",
@@ -6411,23 +6375,44 @@ function globalLookup(word) {
         }
     }
 
-    // 5. Listen Vocab — LISTEN_VOCAB
-    if (typeof LISTEN_VOCAB !== "undefined" && Array.isArray(LISTEN_VOCAB)) {
-        const lvMatch = LISTEN_VOCAB.find(item =>
-            (item.english && normalizeEnglish(item.english) === queryCleanEng) ||
-            (item.spanish && normalizeSpanish(item.spanish) === queryCleanEsp)
-        );
-        if (lvMatch) {
-            const isSpanishInput = lvMatch.spanish && normalizeSpanish(lvMatch.spanish) === queryCleanEsp;
-            return {
-                translation: isSpanishInput ? lvMatch.english : lvMatch.spanish,
-                label: isSpanishInput ? "English" : "Spanish",
-                speakText: lvMatch.spanish,
-                source: "Listen Vocab",
-                level: lvMatch.level || "GLOBAL"
-            };
+       // 5. Listen Vocab — LISTEN_VOCAB (COMPATIBLE WITH ORIGINAL NESTED STRUCTURE)
+    if (typeof LISTEN_VOCAB !== "undefined" && LISTEN_VOCAB !== null) {
+        const queryCleanEng = normalizeEnglish(word);
+        const queryCleanEsp = normalizeSpanish(word);
+        
+        // Loop through levels (A1, A2, B1, B2)
+        for (const lvlKey of Object.keys(LISTEN_VOCAB)) {
+            const levelData = LISTEN_VOCAB[lvlKey];
+            if (!levelData) continue;
+
+            // Loop through categories (Daily Life, Family, etc.)
+            for (const catKey of Object.keys(levelData)) {
+                const wordArray = levelData[catKey];
+                if (!Array.isArray(wordArray)) continue;
+
+                // Scan for the raw Spanish string matching our cleaned input queries
+                const matchSpan = wordArray.find(spanWord => normalizeSpanish(spanWord) === queryCleanEsp);
+                
+                if (matchSpan) {
+                    // Pull cross-reference from your primary vocabulary block to fetch English definitions safely
+                    const primaryRef = (typeof CEFR_LEVELS !== "undefined" && CEFR_LEVELS[lvlKey]) 
+                        ? CEFR_LEVELS[lvlKey].find(item => normalizeSpanish(item.spanish) === queryCleanEsp)
+                        : null;
+
+                    const englishTranslation = primaryRef ? primaryRef.english : "Vocabulary item";
+                    
+                    return {
+                        translation: englishTranslation,
+                        label: "English",
+                        speakText: matchSpan,
+                        source: `Listen Vocab (${catKey})`,
+                        level: lvlKey
+                    };
+                }
+            }
         }
     }
+
 
     // 6. Word-by-word dictionary — WORD_DICT (KEY-VALUE DIRECTORY)
     if (typeof WORD_DICT !== "undefined") {
