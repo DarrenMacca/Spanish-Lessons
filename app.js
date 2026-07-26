@@ -7502,67 +7502,59 @@ function globalLookup(word) {
 }
 
 /* ============================================================
-   DYNAMIC EVERYDAY PHRASE TEMPLATE BLUEPRINTS
+   DYNAMIC EVERYDAY PHRASE TEMPLATE BLUEPRINTS (REFIRED)
    ============================================================ */
 const EVERYDAY_PHRASE_TEMPLATES = [
     {
         // Matches: "I would like to order [food/coffee/beer/steak...]"
         pattern: /^i would like to order (.+)$/i,
-        translate: (match) => {
-            const item = globalLookup(match[1]);
-            const itemSpan = item ? item.translation : `[${match[1]}]`;
-            return { translation: `Me gustaría pedir ${itemSpan}`, label: "Spanish", speakText: `Me gustaría pedir ${itemSpan}`, source: "Dynamic Order Template" };
+        translate: (targetWord) => {
+            const cleanWord = targetWord.trim();
+            const lookupResult = globalLookup(cleanWord);
+            const spanishWord = lookupResult ? (lookupResult.translation || lookupResult.spanish) : `[${cleanWord}]`;
+            return { translation: `Me gustaría pedir ${spanishWord}`, label: "Spanish", speakText: `Me gustaría pedir ${cleanWord}`, source: "Dynamic Order Template" };
         }
     },
     {
         // Matches: "I want to buy [shoes/books/tickets...]"
         pattern: /^i want to buy (.+)$/i,
-        translate: (match) => {
-            const item = globalLookup(match[1]);
-            const itemSpan = item ? item.translation : `[${match[1]}]`;
-            return { translation: `Quiero comprar ${itemSpan}`, label: "Spanish", speakText: `Quiero comprar ${itemSpan}`, source: "Dynamic Purchase Template" };
+        translate: (targetWord) => {
+            const cleanWord = targetWord.trim();
+            const lookupResult = globalLookup(cleanWord);
+            const spanishWord = lookupResult ? (lookupResult.translation || lookupResult.spanish) : `[${cleanWord}]`;
+            return { translation: `Quiero comprar ${spanishWord}`, label: "Spanish", speakText: `Quiero comprar ${cleanWord}`, source: "Dynamic Purchase Template" };
         }
     },
     {
         // Matches: "Where can I find [the bathroom/a hotel/the train...]"
         pattern: /^where can i find (.+)$/i,
-        translate: (match) => {
-            const item = globalLookup(match[1]);
-            const itemSpan = item ? item.translation : `[${match[1]}]`;
-            return { translation: `¿Dónde puedo encontrar ${itemSpan}?`, label: "Spanish", speakText: `Dónde puedo encontrar ${itemSpan}`, source: "Dynamic Location Template" };
+        translate: (targetWord) => {
+            const cleanWord = targetWord.trim();
+            const lookupResult = globalLookup(cleanWord);
+            const spanishWord = lookupResult ? (lookupResult.translation || lookupResult.spanish) : `[${cleanWord}]`;
+            return { translation: `¿Dónde puedo encontrar ${spanishWord}?`, label: "Spanish", speakText: `Dónde puedo encontrar ${cleanWord}`, source: "Dynamic Location Template" };
         }
     },
     {
-        // Matches: "I need to fix [the television/the window/the car...]"
-        pattern: /^i need to fix (.+)$/i,
-        translate: (match) => {
-            const item = globalLookup(match[1]);
-            const itemSpan = item ? item.translation : `[${match[1]}]`;
-            return { translation: `Necesito arreglar ${itemSpan}`, label: "Spanish", speakText: `Necesito arreglar ${itemSpan}`, source: "Dynamic Repair Template" };
-        }
-    },
-    {
-        // Matches: "Do you have [milk/water/cheese/money...]"
-        pattern: /^do you have (.+)$/i,
-        translate: (match) => {
-            const item = globalLookup(match[1]);
-            const itemSpan = item ? item.translation : `[${match[1]}]`;
-            return { translation: `¿Tienes ${itemSpan}?`, label: "Spanish", speakText: `Tienes ${itemSpan}`, source: "Dynamic Inventory Template" }
+        // Matches: "Is the [hotel/bathroom/station] far"
+        pattern: /^is the (.+) far$/i,
+        translate: (targetWord) => {
+            const cleanWord = targetWord.trim();
+            const lookupResult = globalLookup(cleanWord);
+            const spanishWord = lookupResult ? (lookupResult.translation || lookupResult.spanish) : `[${cleanWord}]`;
+            return { translation: `¿Está lejos el ${spanishWord}?`, label: "Spanish", speakText: `Está lejos el ${cleanWord}`, source: "Dynamic Distance Template" };
         }
     }
 ];
-
 /* ============================================================
    DICTIONARY SEARCH INITIALIZER SYSTEM (PATTERN INTERCEPTOR)
    ============================================================ */
-
 function initDictionarySearch() {
     const searchInput = document.getElementById("dict-search-input");
     const resultBox = document.getElementById("dict-search-result");
 
     if (!searchInput || !resultBox) return;
 
-    // A. Dynamically Inject a "Clear" visual anchor if it doesn't exist in the DOM
     let clearBtn = document.getElementById("dict-clear-btn");
     if (!clearBtn) {
         clearBtn = document.createElement("button");
@@ -7592,18 +7584,17 @@ function initDictionarySearch() {
 
         clearBtn.style.display = "inline-block";
 
-                             // B. INTERCEPT: Check Dynamic Everyday Phrase Templates First
+        // B. INTERCEPT: Safe Array Destructuring Capture Group Reader
         for (const template of EVERYDAY_PHRASE_TEMPLATES) {
             const matchArray = normalizedQuery.match(template.pattern);
             if (matchArray && matchArray.length > 1) {
-                // Destructure the array to safely isolate the captured word string
-                const [fullSentenceText, extractedTargetText] = matchArray;
-                const dynamicResult = template.translate(extractedTargetText.trim());
+                const fullMatchText = matchArray[0];
+                const capturedWordGroup = matchArray[1];
+                const dynamicResult = template.translate(capturedWordGroup);
                 renderPhraseBox(dynamicResult);
                 return;
             }
         }
-
 
         // C. FALLBACK 1: Standard Static Phrase Match
         const phraseResult = globalLookup(rawValue);
@@ -7636,8 +7627,19 @@ function initDictionarySearch() {
 
                 if (!matched) {
                     const word = words[i];
-                    const wordResult = globalLookup(word);
+                    // Manual baseline injection filters for clean literal rendering fallbacks
+                    if (word === "the") {
+                        translatedSegments.push("el/la");
+                        i++;
+                        continue;
+                    }
+                    if (word === "far") {
+                        translatedSegments.push("lejos");
+                        i++;
+                        continue;
+                    }
 
+                    const wordResult = globalLookup(word);
                     if (wordResult) {
                         translatedSegments.push(wordResult.translation || wordResult.spanish);
                     } else {
@@ -7666,7 +7668,6 @@ function initDictionarySearch() {
         `;
     });
 
-    // Unified sub-function to handle high-utility scannable visual layout renders
     function renderPhraseBox(res) {
         const outputText = res.translation || res.spanish;
         const outputLabel = res.label || "Spanish";
@@ -7701,7 +7702,6 @@ function initDictionarySearch() {
         }
     }
 }
-
 
 /* ============================================================
    STARTUP & EVENT INITIALIZATION
