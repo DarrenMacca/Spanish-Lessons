@@ -6275,96 +6275,153 @@ function extractSpanishText(obj) {
     return Object.values(obj)[0] || "";
 }
 /* ============================================================
-   GLOBAL ALL-BANKS DICTIONARY SEARCH ENGINE
+   GLOBAL ALL-BANKS DICTIONARY SEARCH ENGINE (BIDIRECTIONAL)
    ============================================================ */
 
 function globalLookup(word) {
-    const w = normalizeEnglish(word);
-    if (!w) return null;
+    const queryCleanEng = normalizeEnglish(word);
+    const queryCleanEsp = normalizeSpanish(word);
+    if (!queryCleanEng && !queryCleanEsp) return null;
 
     const levelsList = ["A1", "A2", "B1", "B2"];
 
-    // 1. CEFR Vocabulary (A1–B2)
+    // 1. CEFR Vocabulary (A1–B2) — CEFR_LEVELS
     for (const level of levelsList) {
         if (typeof CEFR_LEVELS === "undefined" || !CEFR_LEVELS) continue;
         const vocab = CEFR_LEVELS[level];
         if (!vocab) continue;
 
         const match = vocab.find(item =>
-            item.english && normalizeEnglish(item.english) === w
+            (item.english && normalizeEnglish(item.english) === queryCleanEng) ||
+            (item.spanish && normalizeSpanish(item.spanish) === queryCleanEsp)
         );
-        if (match) return { spanish: match.spanish, source: "CEFR Vocabulary", level };
+        if (match) {
+            const isSpanishInput = item.spanish && normalizeSpanish(item.spanish) === queryCleanEsp;
+            return {
+                translation: isSpanishInput ? item.english : item.spanish,
+                label: isSpanishInput ? "English" : "Spanish",
+                speakText: item.spanish,
+                source: "CEFR Vocabulary",
+                level
+            };
+        }
     }
 
-    // 2. CEFR Sentences
+    // 2. CEFR Sentences — CEFR_SENTENCES
     for (const level of levelsList) {
         if (typeof CEFR_SENTENCES === "undefined" || !CEFR_SENTENCES) continue;
         const bank = CEFR_SENTENCES[level];
         if (!bank) continue;
 
         const match = bank.find(item =>
-            item.english && normalizeEnglish(item.english) === w
+            (item.english && normalizeEnglish(item.english) === queryCleanEng) ||
+            (item.spanish && normalizeSpanish(item.spanish) === queryCleanEsp)
         );
-        if (match) return { spanish: match.spanish, source: "CEFR Sentences", level };
+        if (match) {
+            const isSpanishInput = item.spanish && normalizeSpanish(item.spanish) === queryCleanEsp;
+            return {
+                translation: isSpanishInput ? item.english : item.spanish,
+                label: isSpanishInput ? "English" : "Spanish",
+                speakText: item.spanish,
+                source: "CEFR Sentences",
+                level
+            };
+        }
     }
 
-    // 3. CEFR Sentence Choices
+    // 3. CEFR Sentence Choices — CEFR_SENTENCE_CHOICES
     for (const level of levelsList) {
         if (typeof CEFR_SENTENCE_CHOICES === "undefined" || !CEFR_SENTENCE_CHOICES) continue;
         const bank = CEFR_SENTENCE_CHOICES[level];
         if (!bank) continue;
 
         const match = bank.find(item =>
-            item.english && normalizeEnglish(item.english) === w
+            (item.english && normalizeEnglish(item.english) === queryCleanEng) ||
+            (item.correct && item.correct.es && normalizeSpanish(item.correct.es) === queryCleanEsp)
         );
-        if (match) return { spanish: match.correct.es, source: "Dialogue Choices", level };
+        if (match) {
+            const isSpanishInput = match.correct && match.correct.es && normalizeSpanish(match.correct.es) === queryCleanEsp;
+            return {
+                translation: isSpanishInput ? match.english : match.correct.es,
+                label: isSpanishInput ? "English" : "Spanish",
+                speakText: match.correct.es,
+                source: "Dialogue Choices",
+                level
+            };
+        }
     }
 
-       // 4. CEFR Phrases — CEFR_PHRASES (FIXED FOR OBJECT LOOKUP)
+    // 4. CEFR Phrases — CEFR_PHRASES (OBJECT MODEL)
     if (typeof CEFR_PHRASES !== "undefined" && CEFR_PHRASES !== null && !Array.isArray(CEFR_PHRASES)) {
-        // Scan through all the Spanish keys inside the object
         const matchingKey = Object.keys(CEFR_PHRASES).find(spanishKey => {
             const englishValue = CEFR_PHRASES[spanishKey];
-            return englishValue && normalizeEnglish(englishValue) === w;
+            return (englishValue && normalizeEnglish(englishValue) === queryCleanEng) || 
+                   (normalizeSpanish(spanishKey) === queryCleanEsp);
         });
 
         if (matchingKey) {
+            const englishValue = CEFR_PHRASES[matchingKey];
+            const isSpanishInput = normalizeSpanish(matchingKey) === queryCleanEsp;
             return { 
-                spanish: matchingKey, // The key itself is the Spanish phrase!
+                translation: isSpanishInput ? englishValue : matchingKey, 
+                label: isSpanishInput ? "English" : "Spanish",
+                speakText: matchingKey,
                 source: "CEFR Phrases", 
                 level: "A1" 
             };
         }
     }
 
-
-    // 5. Listen Vocab
+    // 5. Listen Vocab — LISTEN_VOCAB
     if (typeof LISTEN_VOCAB !== "undefined" && Array.isArray(LISTEN_VOCAB)) {
         const lvMatch = LISTEN_VOCAB.find(item =>
-            item.english && normalizeEnglish(item.english) === w
+            (item.english && normalizeEnglish(item.english) === queryCleanEng) ||
+            (item.spanish && normalizeSpanish(item.spanish) === queryCleanEsp)
         );
-        if (lvMatch) return { spanish: lvMatch.spanish, source: "Listen Vocab", level: lvMatch.level || "GLOBAL" };
+        if (lvMatch) {
+            const isSpanishInput = item.spanish && normalizeSpanish(item.spanish) === queryCleanEsp;
+            return {
+                translation: isSpanishInput ? lvMatch.english : lvMatch.spanish,
+                label: isSpanishInput ? "English" : "Spanish",
+                speakText: lvMatch.spanish,
+                source: "Listen Vocab",
+                level: lvMatch.level || "GLOBAL"
+            };
+        }
     }
 
-    // 6. Word-by-word dictionary
+    // 6. Word-by-word dictionary — WORD_DICT (KEY-VALUE DIRECTORY)
     if (typeof WORD_DICT !== "undefined") {
-        if (WORD_DICT[w]) return { spanish: WORD_DICT[w], source: "Word Dictionary", level: "GLOBAL" };
-        const dynamicWordKey = Object.keys(WORD_DICT).find(k => normalizeEnglish(k) === w);
-        if (dynamicWordKey) return { spanish: WORD_DICT[dynamicWordKey], source: "Word Dictionary", level: "GLOBAL" };
+        // A. Check if user typed English key
+        if (WORD_DICT[queryCleanEng]) {
+            return { translation: WORD_DICT[queryCleanEng], label: "Spanish", speakText: WORD_DICT[queryCleanEng], source: "Word Dictionary", level: "GLOBAL" };
+        }
+        // B. Check reverse: if user typed Spanish value
+        const reverseKeyMatch = Object.keys(WORD_DICT).find(k => normalizeSpanish(WORD_DICT[k]) === queryCleanEsp);
+        if (reverseKeyMatch) {
+            return { translation: reverseKeyMatch, label: "English", speakText: WORD_DICT[reverseKeyMatch], source: "Word Dictionary", level: "GLOBAL" };
+        }
     }
 
-    // 7. Conversation Prompts
+    // 7. Conversation Prompts — CEFR_CONVERSATION_PROMPTS
     if (typeof CEFR_CONVERSATION_PROMPTS !== "undefined" && CEFR_CONVERSATION_PROMPTS !== null) {
         for (const levelKey of Object.keys(CEFR_CONVERSATION_PROMPTS)) {
             const prompts = CEFR_CONVERSATION_PROMPTS[levelKey];
             if (!Array.isArray(prompts)) continue;
             
-            const convoMatch = prompts.find(p =>
-                p.english && normalizeEnglish(p.english) === w
-            );
+            const convoMatch = prompts.find(p => {
+                const spanTxt = typeof p.spanish === 'object' ? extractSpanishText(p.spanish) : p.spanish;
+                return (p.english && normalizeEnglish(p.english) === queryCleanEng) ||
+                       (spanTxt && normalizeSpanish(spanTxt) === queryCleanEsp);
+            });
+            
             if (convoMatch) {
+                const targetSpanishText = typeof convoMatch.spanish === 'object' ? extractSpanishText(convoMatch.spanish) : convoMatch.spanish;
+                const isSpanishInput = targetSpanishText && normalizeSpanish(targetSpanishText) === queryCleanEsp;
                 return { 
-                    spanish: typeof convoMatch.spanish === 'object' ? extractSpanishText(convoMatch.spanish) : convoMatch.spanish, 
+                    translation: isSpanishInput ? convoMatch.english : targetSpanishText, 
+                    label: isSpanishInput ? "English" : "Spanish",
+                    speakText: targetSpanishText,
                     source: "Conversation Prompt", 
                     level: levelKey 
                 };
@@ -6372,7 +6429,7 @@ function globalLookup(word) {
         }
     }
 
-    // 8. Conversation Audio
+    // 8. Conversation Audio — A1–B2
     const convoAudioBanks = [];
     if (typeof CEFR_CONVERSATION_AUDIO_A1 !== "undefined") convoAudioBanks.push(CEFR_CONVERSATION_AUDIO_A1);
     if (typeof CEFR_CONVERSATION_AUDIO_A2 !== "undefined") convoAudioBanks.push(CEFR_CONVERSATION_AUDIO_A2);
@@ -6382,17 +6439,26 @@ function globalLookup(word) {
     for (const bank of convoAudioBanks) {
         if (!bank || !Array.isArray(bank)) continue;
         const audioMatch = bank.find(a =>
-            a.english && normalizeEnglish(a.english) === w
+            (a.english && normalizeEnglish(a.english) === queryCleanEng) ||
+            (a.spanish && normalizeSpanish(a.spanish) === queryCleanEsp)
         );
         if (audioMatch) {
-            return { spanish: audioMatch.spanish, source: "Conversation Audio", level: audioMatch.level || "GLOBAL" };
+            const isSpanishInput = audioMatch.spanish && normalizeSpanish(audioMatch.spanish) === queryCleanEsp;
+            return {
+                translation: isSpanishInput ? audioMatch.english : audioMatch.spanish,
+                label: isSpanishInput ? "English" : "Spanish",
+                speakText: audioMatch.spanish,
+                source: "Conversation Audio",
+                level: audioMatch.level || "GLOBAL"
+            };
         }
     }
 
     return null;
 }
+
 /* ============================================================
-   DICTIONARY SEARCH INITIALIZER SYSTEM
+   DICTIONARY SEARCH INITIALIZER SYSTEM (DYNAMIC LABELS)
    ============================================================ */
 
 function initDictionarySearch() {
@@ -6402,25 +6468,25 @@ function initDictionarySearch() {
     if (!searchInput || !resultBox) return;
 
     searchInput.addEventListener("input", () => {
-        const query = normalizeEnglish(searchInput.value);
+        // Look up using raw value strings to accommodate character spaces
+        const rawValue = searchInput.value;
+        const phraseResult = globalLookup(rawValue);
 
-        if (!query) {
+        if (!rawValue.trim()) {
             resultBox.innerHTML = "";
             return;
         }
 
-        // A. Full Sentence Lookup Target Scan
-        const phraseResult = globalLookup(query);
-
+        // A. Successful Bidirectional Phrase Match View Rendering
         if (phraseResult) {
-            const cleanSpeechText = phraseResult.spanish.replace(/'/g, "\\'");
+            const cleanSpeechText = phraseResult.speakText.replace(/'/g, "\\'");
             
             resultBox.innerHTML = `
                 <div style="padding: 10px; background: rgba(74, 222, 128, 0.1); border: 1px solid rgba(74, 222, 128, 0.3); border-radius: 10px; margin-top: 5px; display: flex; flex-direction: column; gap: 4px;">
                     <div style="display: flex; align-items: center; gap: 8px; flex-wrap: wrap;">
-                        <span style="color: #a5f3fc; font-weight: bold;">Spanish:</span>
+                        <span style="color: #a5f3fc; font-weight: bold;">${phraseResult.label}:</span>
                         <span style="color: #4ade80; font-size: 1.1rem; font-weight: 600; text-shadow: 0 0 6px rgba(74,222,128,0.45);">
-                            ${phraseResult.spanish}
+                            ${phraseResult.translation}
                         </span>
                         <button id="dict-speak-btn" class="pill" style="padding: 4px 10px; font-size: 11px; max-width: 50px; cursor: pointer;">🔊</button>
                     </div>
@@ -6444,8 +6510,9 @@ function initDictionarySearch() {
             return;
         }
 
-        // B. Dynamic Sub-string Greedy Window Framework Split
-        const words = query.split(/\s+/).filter(w => w.length > 0);
+        // B. Word-by-Word Fallback Layer (Handles Multi-word English inputs if lookup drops)
+        const queryCleanEng = normalizeEnglish(rawValue);
+        const words = queryCleanEng.split(/\s+/).filter(w => w.length > 0);
 
         if (words.length > 1) {
             const translatedSegments = [];
@@ -6460,7 +6527,7 @@ function initDictionarySearch() {
                     const chunkResult = globalLookup(chunk);
 
                     if (chunkResult) {
-                        translatedSegments.push(chunkResult.spanish);
+                        translatedSegments.push(chunkResult.translation);
                         i += len;
                         matched = true;
                         break;
@@ -6472,7 +6539,7 @@ function initDictionarySearch() {
                     const wordResult = globalLookup(word);
 
                     if (wordResult) {
-                        translatedSegments.push(wordResult.spanish);
+                        translatedSegments.push(wordResult.translation);
                     } else {
                         unknownWords.push(word);
                         translatedSegments.push(`[${word}]`);
@@ -6516,11 +6583,12 @@ function initDictionarySearch() {
 
         resultBox.innerHTML = `
             <div style="color: #f87171; font-style: italic; font-size: 13px; margin-top: 8px;">
-                Phrase not found in any level resource banks.
+                Term or phrase not found in bidirectional levels banks.
             </div>
         `;
     });
 }
+
 /* ============================================================
    STARTUP & EVENT INITIALIZATION
    ============================================================ */
