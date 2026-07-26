@@ -7592,16 +7592,18 @@ function initDictionarySearch() {
 
         clearBtn.style.display = "inline-block";
 
-                      // B. INTERCEPT: Check Dynamic Everyday Phrase Templates First (FIXED STRIP MATCH INDEX)
+                             // B. INTERCEPT: Check Dynamic Everyday Phrase Templates First
         for (const template of EVERYDAY_PHRASE_TEMPLATES) {
-            const match = normalizedQuery.match(template.pattern);
-            if (match && match[1]) { 
-                const targetText = match[1].trim(); 
-                const dynamicResult = template.translate(targetText);
+            const matchArray = normalizedQuery.match(template.pattern);
+            if (matchArray && matchArray.length > 1) {
+                // Destructure the array to safely isolate the captured word string
+                const [fullSentenceText, extractedTargetText] = matchArray;
+                const dynamicResult = template.translate(extractedTargetText.trim());
                 renderPhraseBox(dynamicResult);
                 return;
             }
         }
+
 
         // C. FALLBACK 1: Standard Static Phrase Match
         const phraseResult = globalLookup(rawValue);
