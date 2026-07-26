@@ -2738,7 +2738,7 @@ function setupBuildEvents(sentence) {
             const correctTokens = correct.split(" ");
             const userTokens = buildState.answer;
 
-            let html = `<strong>Correct Answer:</strong><br>${correct}<br><br>`;
+            let html = `<strong>The correct answer is:</strong><br>${correct}<br><br>`;
             html += `<strong>Your Answer:</strong><br>${user}<br><br>`;
             html += `<strong>Your Translated Response is:</strong><br>${learnerEnglish}<br><br>`;
             html += `<strong>Word-by-word feedback:</strong><br>`;
