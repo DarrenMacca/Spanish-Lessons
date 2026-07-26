@@ -7671,20 +7671,34 @@ function getNewPracticeWord() {
     inputField.value = "";
     feedbackBox.innerHTML = "";
 
-    if (typeof CEFR_LEVELS === "undefined" || CEFR_LEVELS === null) return;
+    // 🌟 SMART FALLBACK LOGIC: Auto-detect whichever name your vocabulary variable is using
+    let masterPool = null;
+    if (typeof CEFR_LEVELS !== "undefined" && CEFR_LEVELS !== null) {
+        masterPool = CEFR_LEVELS;
+    } else if (typeof vocabularyData !== "undefined" && vocabularyData !== null) {
+        masterPool = vocabularyData;
+    } else if (typeof dictData !== "undefined" && dictData !== null) {
+        masterPool = dictData;
+    }
+
+    if (!masterPool) {
+        wordPlaceholder.textContent = "Error: Vocabulary database not found.";
+        return;
+    }
     
-    const levels = Object.keys(CEFR_LEVELS).filter(lvl => Array.isArray(CEFR_LEVELS[lvl]) && CEFR_LEVELS[lvl].length > 0);
+    const levels = Object.keys(masterPool).filter(lvl => Array.isArray(masterPool[lvl]) && masterPool[lvl].length > 0);
     if (levels.length === 0) {
-        wordPlaceholder.textContent = "Loading vocabulary banks...";
+        wordPlaceholder.textContent = "Error: Level arrays are empty.";
         return;
     }
     
     const randomLevel = levels[Math.floor(Math.random() * levels.length)];
-    const wordPool = CEFR_LEVELS[randomLevel];
+    const wordPool = masterPool[randomLevel];
     
     currentPracticeWord = wordPool[Math.floor(Math.random() * wordPool.length)];
     wordPlaceholder.textContent = `${currentPracticeWord.english} (${randomLevel})`;
 }
+
 
 function evaluatePracticeAnswer() {
     const inputField = document.getElementById("practice-user-input");
