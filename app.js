@@ -566,7 +566,8 @@ const CEFR_LEVELS = {
         { spanish: "incluso", english: "even", category: "Connectors" },
         { spanish: "otra vez", english: "again", category: "Connectors" },
         { spanish: "cuidadosamente", english: "carefully", category: "Connectors" }
-    ],
+    ]
+};
 
 /* ============================================================
    LISTEN VOCAB — A1 → B2 (Category → Word List)
