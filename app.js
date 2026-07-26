@@ -7868,3 +7868,31 @@ function evaluatePracticeAnswer() {
         `;
     }
 }
+/* ============================================================
+   UNIFIED SECURE LIFECYCLE DEPLOYMENT HOOK
+   ============================================================ */
+document.addEventListener("DOMContentLoaded", () => {
+    // 1. First, make sure the automatic vocabulary hydration expander loop compiles cleanly
+    if (typeof autoExpandDictionary === "function") {
+        console.log("🔄 Step 1: Hydrating Master Vocabulary Matrix...");
+        autoExpandDictionary();
+    }
+
+    // 2. Second, boot up your floating scoring indicators and responsive iPhone lockouts
+    if (typeof renderScoreDashboardUI === "function") {
+        renderScoreDashboardUI();
+    }
+    if (typeof enforceMobileNavigationLocks === "function") {
+        enforceMobileNavigationLocks();
+    }
+
+    // 3. Final Step: Safe delayed timeout execution to force synchronous sandbox database binding
+    setTimeout(() => {
+        console.log("🎯 Step 2: Binding Safe Vocabulary Links to Practice Sandbox...");
+        if (typeof initFreePracticeSandbox === "function") {
+            initFreePracticeSandbox();
+        } else {
+            console.error("❌ Fatal Error: initFreePracticeSandbox initialization function block is missing.");
+        }
+    }, 150); // 150ms delay provides ample breathing track space for long level data arrays to initialize
+});
