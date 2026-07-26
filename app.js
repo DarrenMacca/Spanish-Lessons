@@ -6320,13 +6320,23 @@ function globalLookup(word) {
         if (match) return { spanish: match.correct.es, source: "Dialogue Choices", level };
     }
 
-    // 4. CEFR Phrases
-    if (typeof CEFR_PHRASES !== "undefined" && Array.isArray(CEFR_PHRASES)) {
-        const phraseMatch = CEFR_PHRASES.find(p =>
-            p.english && normalizeEnglish(p.english) === w
-        );
-        if (phraseMatch) return { spanish: phraseMatch.spanish, source: "CEFR Phrases", level: phraseMatch.level || "GLOBAL" };
+       // 4. CEFR Phrases — CEFR_PHRASES (FIXED FOR OBJECT LOOKUP)
+    if (typeof CEFR_PHRASES !== "undefined" && CEFR_PHRASES !== null && !Array.isArray(CEFR_PHRASES)) {
+        // Scan through all the Spanish keys inside the object
+        const matchingKey = Object.keys(CEFR_PHRASES).find(spanishKey => {
+            const englishValue = CEFR_PHRASES[spanishKey];
+            return englishValue && normalizeEnglish(englishValue) === w;
+        });
+
+        if (matchingKey) {
+            return { 
+                spanish: matchingKey, // The key itself is the Spanish phrase!
+                source: "CEFR Phrases", 
+                level: "A1" 
+            };
+        }
     }
+
 
     // 5. Listen Vocab
     if (typeof LISTEN_VOCAB !== "undefined" && Array.isArray(LISTEN_VOCAB)) {
