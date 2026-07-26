@@ -6420,7 +6420,9 @@ function renderReviewList() {
 /* ============================================================
    GLOBAL ALL-BANKS DICTIONARY & CONVERSATIONAL PHRASE SEARCH
    ============================================================ */
+
 function normalizeSpanish(str) {
+    if (!str) return '';
     return str
         .normalize("NFD")
         .replace(/[\u0300-\u036f]/g, "") // remove accents
@@ -6430,9 +6432,23 @@ function normalizeSpanish(str) {
         .toLowerCase();
 }
 
+/**
+ * Normalizes English query inputs to remove hyphens, 
+ * punctuation distortions, and extra whitespace layers.
+ */
+function normalizeEnglish(str) {
+    if (!str) return '';
+    return str
+        .toLowerCase()
+        .replace(/[-_.,?!¡¿]/g, " ")     // convert punctuation to safe gaps
+        .replace(/\s+/g, " ")            // reduce to single spaces
+        .trim();
+}
 
 function globalLookup(word) {
-    const w = word.toLowerCase();
+    const w = normalizeEnglish(word);
+    if (!w) return null;
+
     const levelsList = ["A1", "A2", "B1", "B2"];
 
     // 1. CEFR Vocabulary (A1–B2) — CEFR_LEVELS
@@ -6441,7 +6457,7 @@ function globalLookup(word) {
         if (!vocab) continue;
 
         const match = vocab.find(item =>
-            item.english && item.english.toLowerCase() === w
+            item.english && normalizeEnglish(item.english) === w
         );
         if (match) {
             return { spanish: match.spanish, source: "CEFR Vocabulary", level };
@@ -6454,7 +6470,7 @@ function globalLookup(word) {
         if (!bank) continue;
 
         const match = bank.find(item =>
-            item.english && item.english.toLowerCase() === w
+            item.english && normalizeEnglish(item.english) === w
         );
         if (match) {
             return { spanish: match.spanish, source: "CEFR Sentences", level };
@@ -6467,7 +6483,7 @@ function globalLookup(word) {
         if (!bank) continue;
 
         const match = bank.find(item =>
-            item.english && item.english.toLowerCase() === w
+            item.english && normalizeEnglish(item.english) === w
         );
         if (match) {
             return { spanish: match.correct.es, source: "Dialogue Choices", level };
@@ -6477,7 +6493,7 @@ function globalLookup(word) {
     // 4. CEFR Phrases — CEFR_PHRASES
     if (typeof CEFR_PHRASES !== "undefined" && Array.isArray(CEFR_PHRASES)) {
         const phraseMatch = CEFR_PHRASES.find(p =>
-            p.english && p.english.toLowerCase() === w
+            p.english && normalizeEnglish(p.english) === w
         );
         if (phraseMatch) {
             return { spanish: phraseMatch.spanish, source: "CEFR Phrases", level: phraseMatch.level || "GLOBAL" };
@@ -6487,7 +6503,7 @@ function globalLookup(word) {
     // 5. Listen Vocab — LISTEN_VOCAB
     if (typeof LISTEN_VOCAB !== "undefined" && Array.isArray(LISTEN_VOCAB)) {
         const lvMatch = LISTEN_VOCAB.find(item =>
-            item.english && item.english.toLowerCase() === w
+            item.english && normalizeEnglish(item.english) === w
         );
         if (lvMatch) {
             return { spanish: lvMatch.spanish, source: "Listen Vocab", level: lvMatch.level || "GLOBAL" };
@@ -6495,18 +6511,24 @@ function globalLookup(word) {
     }
 
     // 6. Word-by-word dictionary — WORD_DICT
-    if (typeof WORD_DICT !== "undefined" && WORD_DICT[w]) {
-        return { spanish: WORD_DICT[w], source: "Word Dictionary", level: "GLOBAL" };
+    if (typeof WORD_DICT !== "undefined") {
+        if (WORD_DICT[w]) {
+            return { spanish: WORD_DICT[w], source: "Word Dictionary", level: "GLOBAL" };
+        }
+        const dynamicWordKey = Object.keys(WORD_DICT).find(k => normalizeEnglish(k) === w);
+        if (dynamicWordKey) {
+            return { spanish: WORD_DICT[dynamicWordKey], source: "Word Dictionary", level: "GLOBAL" };
+        }
     }
 
-    // 7. Conversation Prompts — CEFR_CONVERSATION_PROMPTS (FIXED LOOKUP LOOP)
+    // 7. Conversation Prompts — CEFR_CONVERSATION_PROMPTS
     if (typeof CEFR_CONVERSATION_PROMPTS !== "undefined" && CEFR_CONVERSATION_PROMPTS !== null) {
         for (const levelKey of Object.keys(CEFR_CONVERSATION_PROMPTS)) {
             const prompts = CEFR_CONVERSATION_PROMPTS[levelKey];
             if (!Array.isArray(prompts)) continue;
             
             const convoMatch = prompts.find(p =>
-                p.english && p.english.toLowerCase() === w
+                p.english && normalizeEnglish(p.english) === w
             );
             if (convoMatch) {
                 return { 
@@ -6529,7 +6551,7 @@ function globalLookup(word) {
     for (const bank of convoAudioBanks) {
         if (!bank || !Array.isArray(bank)) continue;
         const audioMatch = bank.find(a =>
-            a.english && a.english.toLowerCase() === w
+            a.english && normalizeEnglish(a.english) === w
         );
         if (audioMatch) {
             return {
@@ -6542,7 +6564,6 @@ function globalLookup(word) {
 
     return null;
 }
-
 /* ============================================================
    DICTIONARY SEARCH INITIALIZER SYSTEM
    ============================================================ */
@@ -6554,7 +6575,7 @@ function initDictionarySearch() {
     if (!searchInput || !resultBox) return;
 
     searchInput.addEventListener("input", () => {
-        const query = searchInput.value.trim().toLowerCase();
+        const query = normalizeEnglish(searchInput.value);
 
         if (!query) {
             resultBox.innerHTML = "";
@@ -6604,41 +6625,82 @@ function initDictionarySearch() {
         }
 
         /* ============================================================
-           2. WORD-BY-WORD FALLBACK — Executes only if full phrase fails
+           2. AUTOMATED SUB-STRING CHUNK LOOKUP & FALLBACK ENGINE
         ============================================================ */
         const words = query.split(/\s+/).filter(w => w.length > 0);
 
         if (words.length > 1) {
-            const translatedWords = [];
+            const translatedSegments = [];
             const unknownWords = [];
+            let i = 0;
 
-            for (const word of words) {
-                const result = globalLookup(word);
-                if (result) {
-                    translatedWords.push(normalizeSpanish(result.spanish));
-                } else {
-                    unknownWords.push(word);
-                    translatedWords.push(`[${word}]`);
+            // Greedy Sub-String Processing Window Frame Array Loop
+            while (i < words.length) {
+                let matched = false;
+
+                // Attempt to look for multi-word blocks first (e.g., 4 words decreasing down to 2)
+                for (let len = Math.min(4, words.length - i); len >= 2; len--) {
+                    const chunk = words.slice(i, i + len).join(" ");
+                    const chunkResult = globalLookup(chunk);
+
+                    if (chunkResult) {
+                        translatedSegments.push(chunkResult.spanish);
+                        i += len; // Jump forward past matched multi-word text grouping
+                        matched = true;
+                        break;
+                    }
+                }
+
+                // If no sub-string phrase match found, isolate single index element word row
+                if (!matched) {
+                    const word = words[i];
+                    const wordResult = globalLookup(word);
+
+                    if (wordResult) {
+                        translatedSegments.push(wordResult.spanish); // Real accents preserved
+                    } else {
+                        unknownWords.push(word);
+                        translatedSegments.push(`[${word}]`);
+                    }
+                    i++;
                 }
             }
 
-            const spanishSentence = translatedWords.join(" ");
+            const spanishSentence = translatedSegments.join(" ");
+            const cleanSpeechText = spanishSentence.replace(/'/g, "\\'");
 
             resultBox.innerHTML = `
                 <div style="padding: 10px; background: rgba(74, 222, 128, 0.1);
                             border: 1px solid rgba(74, 222, 128, 0.3);
-                            border-radius: 10px; margin-top: 5px;">
-                    <span style="color: #a5f3fc; font-weight: bold;">Spanish:</span>
-                    <span style="color: #4ade80; font-size: 1.1rem; font-weight: 600;
-                                 text-shadow: 0 0 6px rgba(74,222,128,0.45); margin-right: 8px;">
-                        ${spanishSentence}
-                    </span>
+                            border-radius: 10px; margin-top: 5px; display: flex; flex-direction: column; gap: 4px;">
+                    <div style="display: flex; align-items: center; gap: 8px; flex-wrap: wrap;">
+                        <span style="color: #a5f3fc; font-weight: bold;">Spanish:</span>
+                        <span style="color: #4ade80; font-size: 1.1rem; font-weight: 600;
+                                     text-shadow: 0 0 6px rgba(74,222,128,0.45);">
+                            ${spanishSentence}
+                        </span>
 
-                    <div style="font-size: 11px; color: rgba(255,255,255,0.4); margin-top: 4px;">
+                        <button id="dict-speak-btn" class="pill" style="padding: 4px 10px; font-size: 11px; max-width: 50px; cursor: pointer;">🔊</button>
+                    </div>
+
+                    <div style="font-size: 11px; color: rgba(255,255,255,0.4); margin-top: 2px;">
                         Sentence mode — ${unknownWords.length === 0 ? "all words found" : "missing: " + unknownWords.join(", ")}
                     </div>
                 </div>
             `;
+
+            const speakBtn = document.getElementById("dict-speak-btn");
+            if (speakBtn) {
+                speakBtn.onclick = () => {
+                    window.speechSynthesis.cancel();
+                    const speakableString = cleanSpeechText.replace(/[\[\]]/g, ""); // Strip brackets from speaker array output
+                    const utterance = new SpeechSynthesisUtterance(speakableString);
+                    utterance.lang = 'es-ES';
+                    const speedSlider = document.getElementById('rate');
+                    if (speedSlider) utterance.rate = parseFloat(speedSlider.value);
+                    window.speechSynthesis.speak(utterance);
+                };
+            }
             return;
         }
 
@@ -6650,8 +6712,6 @@ function initDictionarySearch() {
         `;
     });
 }
-
-
 
 /* ============================================================
    GLOBAL FREE PRACTICE SANDBOX (UNSCORED)
