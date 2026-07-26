@@ -7507,7 +7507,7 @@ document.addEventListener("DOMContentLoaded", () => {
     if (typeof initRateControl === "function") initRateControl();       
     if (typeof initNameBox === "function") initNameBox();           
     if (typeof initDictionarySearch === "function") initDictionarySearch();  
-    if (typeof initFreePracticeSandbox === "function") initFreePracticeSandbox();  
+    if (typeof initFreePracticex === "function") initFreePracticex();  
 
     const resetBtn = document.getElementById("resetAllLevelsBtn");
     if (resetBtn) {
@@ -7699,8 +7699,9 @@ function evaluatePracticeAnswer() {
         return;
     }
 
-    const cleanUser = cleanStringForKeyboard(userTyped);
-    const cleanCorrect = cleanStringForKeyboard(currentPracticeWord.spanish);
+    // 🌟 THE CRITICAL HOTFIX: Swap cleanStringForKeyboard for normalizeSpanish
+    const cleanUser = normalizeSpanish(userTyped);
+    const cleanCorrect = normalizeSpanish(currentPracticeWord.spanish);
 
     if (cleanUser === cleanCorrect) {
         const cleanSpeechText = currentPracticeWord.spanish.replace(/'/g, "\\'");
