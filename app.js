@@ -697,14 +697,65 @@ const LISTEN_VOCAB = {
 /* ============================================================
    WORD-BY-WORD DICTIONARY — CEFR A1 → B2 (Categorized)
    ============================================================ */
-/* ============================================================
-   WORD-BY-WORD DICTIONARY — CEFR A1 → B2 (Categorized Master)
-   ============================================================ */
 
 const WORD_DICT = {
     /* ============================================================
        FOUNDATIONAL CONVERSATIONAL ARCHITECTURE (STRUCTURAL TOKENS)
        ============================================================ */
+    /* ============================================================
+       ENGLISH DIRECT ANCHORS & FUNCTIONAL OVERRIDES
+       ============================================================ */
+    "can": "puedo / puedes / puede",
+    "buy": "comprar",
+    "order": "pedir",
+    "the": "el / la / los / las",
+    "a": "un / una",
+    "an": "un / una",
+    "is": "es / está",
+    "are": "son / están",
+    "want": "quiero / quiere / queremos / quieren",
+    "need": "necesito / necesita / necesitamos / necesitan",
+
+    /* ============================================================
+       VERB INFLECTION MATRIX (SUBJECT LOOPS)
+       ============================================================ */
+    "puedo": "I can",
+    "puedes": "you can (informal)",
+    "puede": "he / she / you (formal) can",
+    "podemos": "we can",
+    "pueden": "they / you all can",
+    "quieres": "you want (informal)",
+    "necesitas": "you need (informal)",
+    "tienes": "you have (informal)",
+    "haces": "you do / you make",
+    "compro": "I buy",
+    "compras": "you buy",
+    "pido": "I order / I request",
+    "pides": "you order",
+
+    /* ============================================================
+       ADJECTIVE AGREEMENT AGREEMENTS (GENDER & PLURAL)
+       ============================================================ */
+    "buena": "good (fem.)",
+    "buenos": "good (plural)",
+    "buenas": "good (fem. plural)",
+    "mala": "bad (fem.)",
+    "malos": "bad (plural)",
+    "malas": "bad (fem. plural)",
+    "nueva": "new (fem.)",
+    "nuevos": "new (plural)",
+    "nuevas": "new (fem. plural)",
+    "pequeña": "small (fem.)",
+    "pequeños": "small (plural)",
+    "pequeñas": "small (fem. plural)",
+    "fría": "cold (fem.)",
+    "fríos": "cold (plural)",
+    "frías": "cold (fem. plural)",
+    "grandes": "big / large (plural)",
+    "altos": "tall (plural)",
+    "altas": "tall (fem. plural)",
+    "limpia": "clean (fem.)",
+    "limpios": "clean (plural)",
 
     /* ============================
        Functional Connectors
