@@ -74,7 +74,7 @@ const CEFR_SENTENCES = {
 
         // Household Actions, Cooking, and Spaces
         { english: "The kitchen is clean now.", spanish: "cocina es clara ahora" },
-        { english: "Open the kitchen window, please.", spanish: "abrir ventana cocina favor" },
+        { english: "Open the kitchen window, please.", spanish: "abrir ventana cocina por favor" },
         { english: "I want to try a new breakfast today.", spanish: "quiero probar un nuevo desayuno hoy" },
         { english: "I want to fix the window now.", spanish: "quiero arreglar ventana ahora" },
         { english: "He is fixing the television in the house.", spanish: "el arreglando televisión en casa" },
@@ -87,7 +87,7 @@ const CEFR_SENTENCES = {
         // Messages, Information & Communication Loops
         { english: "I want to read the message now.", spanish: "quiero leer mensaje ahora" },
         { english: "She wants to write a message.", spanish: "ella escribir un mensaje" },
-        { english: "He wants more information, please.", spanish: "el más información favor" },
+        { english: "He wants more information, please.", spanish: "el más información por favor" },
         { english: "Don't forget the message.", spanish: "no olvidar mensaje" },
 
         // Travel Logistics, Apparel, & Social Scenarios
@@ -104,10 +104,10 @@ const CEFR_SENTENCES = {
         { english: "I have eleven new books.", spanish: "tengo once nuevos libros" },
         { english: "There are twelve buses in the station.", spanish: "hay doce autobuses en estación" },
         { english: "Thirteen minutes to finish.", spanish: "trece minutos para terminar" },
-        { english: "Fourteen fish and rice, please.", spanish: "catorce pescado y arroz favor" },
+        { english: "Fourteen fish and rice, please.", spanish: "catorce pescado y arroz por favor" },
         { english: "We have fifteen eggs for breakfast.", spanish: "tenemos quince huevos para desayuno" },
         { english: "She has sixteen apples.", spanish: "ella tiene dieciséis manzanas" },
-        { english: "Seventeen train tickets, please.", spanish: "diecisiete boletos tren favor" },
+        { english: "Seventeen train tickets, please.", spanish: "diecisiete boletos tren por favor" },
         { english: "Eighteen beers for the house.", spanish: "dieciocho cervezas para casa" },
         { english: "Nineteen people study here.", spanish: "diecinueve estudiar" },
         { english: "Twenty minutes to rest.", spanish: "veinte minutos para descansar" }
@@ -341,7 +341,7 @@ const CEFR_LEVELS = {
         { spanish: "hay", english: "there is / there are", category: "Connectors" },
         { spanish: "otra", english: "other / another", category: "Connectors" },
         { spanish: "pesar", english: "despite", category: "Connectors" },
-        { spanish: "favor (por favor)", english: "please", category: "Connectors" },
+        { spanish: "por favor", english: "please", category: "Connectors" },
         { spanish: "me", english: "myself / to me", category: "Connectors" },
         { spanish: "mi", english: "my", category: "Connectors" },
         { spanish: "un", english: "a / an (masculine)", category: "Connectors" },
@@ -602,7 +602,7 @@ const LISTEN_VOCAB = {
             "y","o","con","sin","más","poco","solo","muy",
             "cerca","para","a","en","qué","quién","cuándo",
             "cómo","cuál","dónde","no","si","hay","otra",
-            "pesar","favor","me","mi","un","una","el","la",
+            "pesar","por favor","me","mi","un","una","el","la",
             "ellos","su"
         ],
         "Verbs": [
@@ -788,7 +788,7 @@ const WORD_DICT = {
     "otros": "other / another (masc. plural)",
     "pesar": "despite",
     "a pesar de": "despite",
-    "favor": "favor (por favor)",
+    "favor": "favor",
     "por favor": "please",
     "mientras": "while",
     "sin embargo": "however",
