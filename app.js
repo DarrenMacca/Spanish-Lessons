@@ -7592,16 +7592,17 @@ function initDictionarySearch() {
 
         clearBtn.style.display = "inline-block";
 
-        // B. INTERCEPT: Check Dynamic Everyday Phrase Templates First
+               // B. INTERCEPT: Check Dynamic Everyday Phrase Templates First (FIXED ARRAY INDEX INDEX)
         for (const template of EVERYDAY_PHRASE_TEMPLATES) {
             const match = normalizedQuery.match(template.pattern);
-            if (match && match[1]) {
-                const targetText = match[1].trim();
+            if (match && match[1]) { // Verify the capture group index array exists
+                const targetText = match[1].trim(); // Pull index 1 to grab the actual word string!
                 const dynamicResult = template.translate(targetText);
                 renderPhraseBox(dynamicResult);
                 return;
             }
         }
+
 
         // C. FALLBACK 1: Standard Static Phrase Match
         const phraseResult = globalLookup(rawValue);
