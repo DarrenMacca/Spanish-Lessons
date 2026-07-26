@@ -341,7 +341,7 @@ const CEFR_LEVELS = {
         { spanish: "hay", english: "there is / there are", category: "Connectors" },
         { spanish: "otra", english: "other / another", category: "Connectors" },
         { spanish: "pesar", english: "despite", category: "Connectors" },
-        { spanish: "favor", english: "favor (por favor)", category: "Connectors" },
+        { spanish: "favor (por favor)", english: "please", category: "Connectors" },
         { spanish: "me", english: "myself / to me", category: "Connectors" },
         { spanish: "mi", english: "my", category: "Connectors" },
         { spanish: "un", english: "a / an (masculine)", category: "Connectors" },
@@ -377,7 +377,7 @@ const CEFR_LEVELS = {
         { spanish: "cinco", english: "five", category: "Numbers" },
         { spanish: "seis", english: "six", category: "Numbers" },
         { spanish: "siete", english: "seven", category: "Numbers" },
-        { spanish: "ocho", english: "ocho", category: "Numbers" },
+        { spanish: "ocho", english: "eight", category: "Numbers" },
         { spanish: "nueve", english: "nine", category: "Numbers" },
         { spanish: "diez", english: "ten", category: "Numbers" }
     ],
