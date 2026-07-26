@@ -7201,53 +7201,77 @@ function globalLookup(word) {
 }
 
 /* ============================================================
-   DYNAMIC EVERYDAY PHRASE TEMPLATE BLUEPRINTS (REFIRED)
+   DYNAMIC EVERYDAY PHRASE TEMPLATE BLUEPRINTS (SUB-PARSER)
    ============================================================ */
 const EVERYDAY_PHRASE_TEMPLATES = [
     {
-        // Matches: "I would like to order [food/coffee/beer/steak...]"
+        // Matches: "I would like to order [a steak / the coffee / beer...]"
         pattern: /^i would like to order (.+)$/i,
         translate: (targetWord) => {
-            const cleanWord = targetWord.trim();
-            const lookupResult = globalLookup(cleanWord);
-            const spanishWord = lookupResult ? (lookupResult.translation || lookupResult.spanish) : `[${cleanWord}]`;
-            return { translation: `Me gustaría pedir ${spanishWord}`, label: "Spanish", speakText: `Me gustaría pedir ${cleanWord}`, source: "Dynamic Order Template" };
+            const parsedTarget = parseSubPhrase(targetWord);
+            return { translation: `Me gustaría pedir ${parsedTarget}`, label: "Spanish", speakText: `Me gustaría pedir ${parsedTarget}`, source: "Dynamic Order Template" };
         }
     },
     {
-        // Matches: "I want to buy [shoes/books/tickets...]"
+        // Matches: "I want to buy [new shoes / a ticket...]"
         pattern: /^i want to buy (.+)$/i,
         translate: (targetWord) => {
-            const cleanWord = targetWord.trim();
-            const lookupResult = globalLookup(cleanWord);
-            const spanishWord = lookupResult ? (lookupResult.translation || lookupResult.spanish) : `[${cleanWord}]`;
-            return { translation: `Quiero comprar ${spanishWord}`, label: "Spanish", speakText: `Quiero comprar ${cleanWord}`, source: "Dynamic Purchase Template" };
+            const parsedTarget = parseSubPhrase(targetWord);
+            return { translation: `Quiero comprar ${parsedTarget}`, label: "Spanish", speakText: `Quiero comprar ${parsedTarget}`, source: "Dynamic Purchase Template" };
         }
     },
     {
-        // Matches: "Where can I find [the bathroom/a hotel/the train...]"
+        // Matches: "Where can I find [the bathroom / a hotel...]"
         pattern: /^where can i find (.+)$/i,
         translate: (targetWord) => {
-            const cleanWord = targetWord.trim();
-            const lookupResult = globalLookup(cleanWord);
-            const spanishWord = lookupResult ? (lookupResult.translation || lookupResult.spanish) : `[${cleanWord}]`;
-            return { translation: `¿Dónde puedo encontrar ${spanishWord}?`, label: "Spanish", speakText: `Dónde puedo encontrar ${cleanWord}`, source: "Dynamic Location Template" };
+            const parsedTarget = parseSubPhrase(targetWord);
+            return { translation: `¿Dónde puedo encontrar ${parsedTarget}?`, label: "Spanish", speakText: `Dónde puedo encontrar ${parsedTarget}`, source: "Dynamic Location Template" };
         }
     },
     {
-        // Matches: "Is the [hotel/bathroom/station] far"
+        // Matches: "Is the [hotel / station] far"
         pattern: /^is the (.+) far$/i,
         translate: (targetWord) => {
-            const cleanWord = targetWord.trim();
-            const lookupResult = globalLookup(cleanWord);
-            const spanishWord = lookupResult ? (lookupResult.translation || lookupResult.spanish) : `[${cleanWord}]`;
-            return { translation: `¿Está lejos el ${spanishWord}?`, label: "Spanish", speakText: `Está lejos el ${cleanWord}`, source: "Dynamic Distance Template" };
+            const parsedTarget = parseSubPhrase(targetWord);
+            return { translation: `¿Está lejos el ${parsedTarget}?`, label: "Spanish", speakText: `Está lejos el ${parsedTarget}`, source: "Dynamic Distance Template" };
         }
     }
 ];
+
+/**
+ * Helper Sub-Parser Function: Breaks down compound template inputs (e.g. "a steak")
+ * and cross-references them word-by-word against your massive single word dictionary map.
+ */
+function parseSubPhrase(phraseText) {
+    if (!phraseText) return "";
+    const cleanText = phraseText.trim().toLowerCase();
+    const bits = cleanText.split(/\s+/).filter(b => b.length > 0);
+    const translatedBits = [];
+
+    bits.forEach(bit => {
+        // Try looking up the word inside your global dictionaries first
+        const look = globalLookup(bit);
+        if (look) {
+            // If the dictionary returns a complex multi-translation mapping string like "el/la" or "un/una",
+            // we safely pick the first option as a default baseline for conversational simplicity.
+            const cleanTrans = (look.translation || look.spanish).split('/');
+            translatedBits.push(cleanTrans[0].trim());
+        } else if (typeof WORD_DICT !== "undefined" && WORD_DICT[bit]) {
+            const dictTrans = WORD_DICT[bit].split('/');
+            translatedBits.push(dictTrans[0].trim());
+        } else {
+            // Keep unknown components safe inside standard error brackets
+            translatedBits.push(`[${bit}]`);
+        }
+    });
+
+    return translatedBits.join(" ");
+}
+
 /* ============================================================
    DICTIONARY SEARCH INITIALIZER SYSTEM (PATTERN INTERCEPTOR)
    ============================================================ */
+
 function initDictionarySearch() {
     const searchInput = document.getElementById("dict-search-input");
     const resultBox = document.getElementById("dict-search-result");
