@@ -6296,11 +6296,11 @@ function globalLookup(word) {
             (item.spanish && normalizeSpanish(item.spanish) === queryCleanEsp)
         );
         if (match) {
-            const isSpanishInput = item.spanish && normalizeSpanish(item.spanish) === queryCleanEsp;
+            const isSpanishInput = match.spanish && normalizeSpanish(match.spanish) === queryCleanEsp;
             return {
-                translation: isSpanishInput ? item.english : item.spanish,
+                translation: isSpanishInput ? match.english : match.spanish,
                 label: isSpanishInput ? "English" : "Spanish",
-                speakText: item.spanish,
+                speakText: match.spanish,
                 source: "CEFR Vocabulary",
                 level
             };
@@ -6318,11 +6318,11 @@ function globalLookup(word) {
             (item.spanish && normalizeSpanish(item.spanish) === queryCleanEsp)
         );
         if (match) {
-            const isSpanishInput = item.spanish && normalizeSpanish(item.spanish) === queryCleanEsp;
+            const isSpanishInput = match.spanish && normalizeSpanish(match.spanish) === queryCleanEsp;
             return {
-                translation: isSpanishInput ? item.english : item.spanish,
+                translation: isSpanishInput ? match.english : match.spanish,
                 label: isSpanishInput ? "English" : "Spanish",
-                speakText: item.spanish,
+                speakText: match.spanish,
                 source: "CEFR Sentences",
                 level
             };
@@ -6379,7 +6379,7 @@ function globalLookup(word) {
             (item.spanish && normalizeSpanish(item.spanish) === queryCleanEsp)
         );
         if (lvMatch) {
-            const isSpanishInput = item.spanish && normalizeSpanish(item.spanish) === queryCleanEsp;
+            const isSpanishInput = lvMatch.spanish && normalizeSpanish(lvMatch.spanish) === queryCleanEsp;
             return {
                 translation: isSpanishInput ? lvMatch.english : lvMatch.spanish,
                 label: isSpanishInput ? "English" : "Spanish",
@@ -6392,11 +6392,9 @@ function globalLookup(word) {
 
     // 6. Word-by-word dictionary — WORD_DICT (KEY-VALUE DIRECTORY)
     if (typeof WORD_DICT !== "undefined") {
-        // A. Check if user typed English key
         if (WORD_DICT[queryCleanEng]) {
             return { translation: WORD_DICT[queryCleanEng], label: "Spanish", speakText: WORD_DICT[queryCleanEng], source: "Word Dictionary", level: "GLOBAL" };
         }
-        // B. Check reverse: if user typed Spanish value
         const reverseKeyMatch = Object.keys(WORD_DICT).find(k => normalizeSpanish(WORD_DICT[k]) === queryCleanEsp);
         if (reverseKeyMatch) {
             return { translation: reverseKeyMatch, label: "English", speakText: WORD_DICT[reverseKeyMatch], source: "Word Dictionary", level: "GLOBAL" };
@@ -6456,6 +6454,7 @@ function globalLookup(word) {
 
     return null;
 }
+
 
 /* ============================================================
    DICTIONARY SEARCH INITIALIZER SYSTEM (DYNAMIC LABELS)
