@@ -1,4 +1,120 @@
-   /* ============================================================
+/* ============================================================
+   CEFR PERCENTAGE PROGRESSION ENGINE (85% PASSING CRITERIA)
+   ============================================================ */
+
+// 1. Initial State Profile Trackers (Saves completed item fingerprints to prevent scoring duplicates)
+let cefrUserProgressMatrix = {
+    currentScore: parseInt(localStorage.getItem("cefr_user_score")) || 0,
+    correctStreak: parseInt(localStorage.getItem("cefr_user_streak")) || 0,
+    
+    // Arrays holding the unique IDs of questions answered correctly
+    masteredItems: JSON.parse(localStorage.getItem("cefr_mastered_fingerprints")) || {
+        A1: [],
+        A2: [],
+        B1: [],
+        B2: []
+    }
+};
+
+// 🎯 TARGET CRITERIA: A level requires an 85% completion rate to unlock the next block
+const PASSING_PERCENTAGE_CRITERIA = 85;
+
+/**
+ * Dynamic Percentage Calculator: Computes active completion rates per milestone bracket
+ */
+function calculateLevelPercentage(levelKey) {
+    // 🔍 Under the hood, this counts total items available inside your main data structures
+    let totalAvailableQueries = 0;
+    
+    if (typeof CEFR_LEVELS !== "undefined" && CEFR_LEVELS[levelKey]) {
+        totalAvailableQueries += CEFR_LEVELS[levelKey].length; // Vocabulary-backed items
+    }
+    if (typeof CEFR_SENTENCES !== "undefined" && CEFR_SENTENCES[levelKey]) {
+        totalAvailableQueries += CEFR_SENTENCES[levelKey].length; // Context items
+    }
+    if (typeof CEFR_CONVERSATION_PROMPTS !== "undefined" && CEFR_CONVERSATION_PROMPTS[levelKey]) {
+        totalAvailableQueries += CEFR_CONVERSATION_PROMPTS[levelKey].length; // Dialogues
+    }
+
+    // Baseline fallback protection against zero-division loops
+    if (totalAvailableQueries === 0) return 100;
+
+    const correctUniqueCount = cefrUserProgressMatrix.masteredItems[levelKey].length;
+    const currentPercent = Math.min(100, Math.round((correctUniqueCount / totalAvailableQueries) * 100));
+    
+    return currentPercent;
+}
+
+/**
+ * Gatekeeper Engine Check: Determines if a level tier is legally open for the user
+ */
+function isLevelUnlocked(levelKey) {
+    if (levelKey === "A1") return true; // A1 is wide open by default
+    if (levelKey === "A2") return calculateLevelPercentage("A1") >= PASSING_PERCENTAGE_CRITERIA;
+    if (levelKey === "B1") return isLevelUnlocked("A2") && calculateLevelPercentage("A2") >= PASSING_PERCENTAGE_CRITERIA;
+    if (levelKey === "B2") return isLevelUnlocked("B1") && calculateLevelPercentage("B1") >= PASSING_PERCENTAGE_CRITERIA;
+    return true;
+}
+
+/**
+ * Activity Evaluator: Logs successful module tasks and awards cosmetic score increments
+ */
+function registerSuccessfulModuleTask(levelKey, itemId, sourceModule) {
+    // 🛡️ SECURITY FILTER: Restrict scoring strictly to authorized activity tabs
+    const approvedTabs = ["Quiz", "Build", "Sentence", "Conversation"];
+    if (!approvedTabs.includes(sourceModule)) return;
+
+    // Create a unique compound tracking fingerprint identifier
+    const itemFingerprint = `${sourceModule}_${itemId}`;
+
+    // If they haven't answered this specific question correctly before, save it!
+    if (!cefrUserProgressMatrix.masteredItems[levelKey].includes(itemFingerprint)) {
+        cefrUserProgressMatrix.masteredItems[levelKey].push(itemFingerprint);
+        cefrUserProgressMatrix.currentScore += 10; // Award cosmetic score points
+        cefrUserProgressMatrix.correctStreak += 1;
+        
+        // Save changes permanently to device memory profiles
+        localStorage.setItem("cefr_user_score", cefrUserProgressMatrix.currentScore);
+        localStorage.setItem("cefr_user_streak", cefrUserProgressMatrix.correctStreak);
+        localStorage.setItem("cefr_mastered_fingerprints", JSON.stringify(cefrUserProgressMatrix.masteredItems));
+        
+        // Live UI rendering checks for milestones
+        evaluateMilestoneThresholds(levelKey);
+    } else {
+        cefrUserProgressMatrix.correctStreak += 1;
+        localStorage.setItem("cefr_user_streak", cefrUserProgressMatrix.correctStreak);
+    }
+
+    renderScoreDashboardUI();
+}
+
+/**
+ * Milestone Review Tracker: Monitors percentages and pops up promotion modals
+ */
+function evaluateMilestoneThresholds(currentLevel) {
+    const currentPercent = calculateLevelPercentage(currentLevel);
+    console.log(`📊 Progress Matrix: Level ${currentLevel} is currently at ${currentPercent}% completion.`);
+
+    // Check if the current level just satisfied the 85% requirement to reveal the next gate
+    if (currentPercent >= PASSING_PERCENTAGE_CRITERIA) {
+        let nextLvlMap = { "A1": "A2", "A2": "B1", "B1": "B2" };
+        let nextLevelName = nextLvlMap[currentLevel];
+        
+        if (nextLevelName) {
+            // Check if we already popped this level up during this lifecycle
+            const alreadyNotified = localStorage.getItem(`notified_pass_${currentLevel}`) === "true";
+            if (!alreadyNotified) {
+                localStorage.setItem(`notified_pass_${currentLevel}`, "true");
+                triggerLevelPassModal(currentLevel, nextLevelName);
+            }
+        }
+    }
+
+    enforceMobileNavigationLocks();
+}
+
+
+/* ============================================================
    CEFR SENTENCE BANKS (for Build tab)
    ============================================================ */
 
@@ -1740,8 +1856,6 @@ function speakQuiz(correctAnswer) {
     const message = `La respuesta correcta es: ${correctAnswer}`;
     speak(message); // Sabina voice
 }
-
-
 
 /* ============================================================
    LEVEL SELECTOR
