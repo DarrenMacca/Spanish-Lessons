@@ -764,8 +764,7 @@ window.MINING_REFERENCES = {
         { spanish: "contrapique", english: "winze", category: "Underground Mining" }
     ]
 };
-};
-};
+
 
 /* ============================================================
    LISTEN VOCAB — A1 → B2 (Category → Word List)
