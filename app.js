@@ -6880,17 +6880,20 @@ function renderGrammarTab() {
    ============================================================ */
 function renderMiningReferencesTab() {
   const tabContainer = document.getElementById("mining-content");
-  if (!tabContainer) return;
+  if (!tabContainer) {
+    console.error("ERROR: #mining-content element not found in DOM!");
+    return;
+  }
 
   const miningData = typeof MINING_REFERENCES !== 'undefined' ? MINING_REFERENCES : null;
   if (!miningData) {
+    console.error("ERROR: MINING_REFERENCES is not defined!");
     tabContainer.innerHTML = `<div class="mining-references-container"><h2>Mining References / Referencias Mineras</h2><p>No mining data found.</p></div>`;
     return;
   }
   
   let htmlContent = `<div class="mining-references-container"><h2>Mining References / Referencias Mineras</h2>`;
 
-  // Loop through the entries of MINING_REFERENCES directly ("Open Cut Mining", "Underground Mining")
   for (const [categoryName, termsArray] of Object.entries(miningData)) {
     if (!termsArray || termsArray.length === 0) continue;
 
@@ -6918,14 +6921,14 @@ function renderMiningReferencesTab() {
   tabContainer.innerHTML = htmlContent;
 }
 
-// Call the function on DOM load AND ensure it hooks into your navigation tab switcher
+// Global hook into your main application tab-switcher logic
 document.addEventListener("DOMContentLoaded", () => {
   renderMiningReferencesTab();
 
-  // Automatically hook into tab buttons to render when the mining tab is clicked
   document.querySelectorAll('.tab-btn').forEach(btn => {
-    btn.addEventListener('click', () => {
-      if (btn.getAttribute('data-tab') === 'mining') {
+    btn.addEventListener('click', (e) => {
+      const targetTab = btn.getAttribute('data-tab') || btn.dataset.tab;
+      if (targetTab === 'mining') {
         renderMiningReferencesTab();
       }
     });
