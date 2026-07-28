@@ -6882,7 +6882,7 @@ function renderGrammarTab() {
 }
 
 /* ============================================================
-   MINING REFERENCES TAB (FULL LISTEN STYLE + MASTER CONTROLS)
+   MINING REFERENCES TAB (FIXED AUDIO INTEGRATION)
    ============================================================ */
 function renderMiningReferencesTab() {
   const tabContainer = document.getElementById("mining-content");
@@ -6921,7 +6921,7 @@ function renderMiningReferencesTab() {
   });
   htmlContent += `</div>`;
 
-  // 2. Master Audio Control Bar (Play All, Pause, Resume, Stop) matching Listen Tab
+  // 2. Master Audio Control Bar
   htmlContent += `
     <div class="master-audio-controls" style="display: flex; gap: 10px; margin-bottom: 25px; align-items: center; flex-wrap: wrap; background: rgba(255,255,255,0.03); padding: 12px 18px; border-radius: 12px; border: 1px solid rgba(255,255,255,0.1);">
       <button onclick="playAllMiningAudio()" style="background: #10b981; color: white; border: none; padding: 8px 16px; border-radius: 8px; cursor: pointer; font-weight: 600; display: flex; align-items: center; gap: 6px;">
@@ -6939,7 +6939,7 @@ function renderMiningReferencesTab() {
     </div>
   `;
 
-  // 3. Term Pills Grid Container
+  // 3. Term Pills Grid Container (using speakSpanish)
   htmlContent += `<div class="mining-cards-grid" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 15px;">`;
   
   const currentTerms = miningData[window.currentMiningCategory] || [];
@@ -6952,7 +6952,7 @@ function renderMiningReferencesTab() {
           <div class="term-es" style="font-weight: 700; font-size: 1.05rem; color: #ffffff; margin-bottom: 3px;">${item.spanish}</div>
           <div class="term-en" style="font-size: 0.9rem; color: #94a3b8;">${item.english}</div>
         </div>
-        <button class="audio-btn" onclick="playAudio('${safeEs}')" title="Listen" style="background: rgba(59, 130, 246, 0.2); border: 1px solid rgba(59, 130, 246, 0.4); color: #60a5fa; width: 38px; height: 38px; border-radius: 50%; display: flex; align-items: center; justify-content: center; cursor: pointer; transition: background 0.2s;">
+        <button class="audio-btn" onclick="speakSpanish('${safeEs}')" title="Listen" style="background: rgba(59, 130, 246, 0.2); border: 1px solid rgba(59, 130, 246, 0.4); color: #60a5fa; width: 38px; height: 38px; border-radius: 50%; display: flex; align-items: center; justify-content: center; cursor: pointer; transition: background 0.2s;">
           🔊
         </button>
       </div>
@@ -6969,7 +6969,7 @@ window.switchMiningCategory = function(categoryName) {
   renderMiningReferencesTab();
 };
 
-// Sequential / Master Audio Engine Helpers for Mining Tab
+// Sequential Audio Engine Hooks (using speakSpanish)
 let miningAudioQueueIndex = 0;
 let isMiningAudioPlaying = false;
 
@@ -6994,12 +6994,8 @@ function playNextInMiningQueue() {
   const item = miningData[miningAudioQueueIndex];
   miningAudioQueueIndex++;
 
-  // Utilizes your global speech function if available, or falls back to standard SpeechSynthesis
-  if (typeof playAudio === 'function') {
-    playAudio(item.spanish);
-  }
+  speakSpanish(item.spanish);
 
-  // Estimate delay per word item before triggering the next one sequentially
   setTimeout(() => {
     if (isMiningAudioPlaying) {
       playNextInMiningQueue();
@@ -7026,6 +7022,7 @@ window.stopMiningAudio = function() {
     window.speechSynthesis.cancel();
   }
 };
+
 /* ============================================================
    BADGES (UPGRADED VISUAL EDITION)
    ============================================================ */
