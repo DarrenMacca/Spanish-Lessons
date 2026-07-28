@@ -6882,7 +6882,7 @@ function renderGrammarTab() {
 }
 
 /* ============================================================
-   MINING REFERENCES TAB (LISTEN STYLE WITH AUDIO & PILLS)
+   MINING REFERENCES TAB (FULL LISTEN STYLE + MASTER CONTROLS)
    ============================================================ */
 function renderMiningReferencesTab() {
   const tabContainer = document.getElementById("mining-content");
@@ -6894,41 +6894,56 @@ function renderMiningReferencesTab() {
     return;
   }
 
-  // Get categories ("Open Cut Mining", "Underground Mining")
   const categories = Object.keys(miningData);
   
-  // Track active category state locally for this view (defaults to the first category)
   if (!window.currentMiningCategory) {
     window.currentMiningCategory = categories[0];
   }
 
   let htmlContent = `
     <div class="mining-references-container">
-      <div class="tab-header-section">
+      <div class="tab-header-section" style="margin-bottom: 20px;">
         <h2>Mining Terminology / Terminología Minera</h2>
-        <p class="section-subtitle">Explore key mining concepts with audio pronunciation.</p>
+        <p class="section-subtitle" style="color: #94a3b8;">Explore key mining concepts with individual or sequential audio playback.</p>
       </div>
   `;
 
-  // 1. Render Category Filter Buttons (matching your Listen tab selector style)
+  // 1. Category Filter Buttons
   htmlContent += `<div class="category-selector-container" style="display: flex; gap: 10px; margin-bottom: 20px; flex-wrap: wrap;">`;
   categories.forEach(cat => {
     const isActive = cat === window.currentMiningCategory ? 'active' : '';
     htmlContent += `
-      <button class="category-btn ${isActive}" data-category="${cat}" onclick="switchMiningCategory('${cat}')" 
-        style="padding: 10px 18px; border-radius: 10px; border: 1px solid rgba(255,255,255,0.2); background: ${isActive ? 'var(--accent-color, #3b82f6)' : 'rgba(255,255,255,0.05)'}; color: white; cursor: pointer; font-weight: 600; transition: all 0.2s;">
+      <button class="category-btn ${isActive}" onclick="switchMiningCategory('${cat}')" 
+        style="padding: 10px 18px; border-radius: 10px; border: 1px solid rgba(255,255,255,0.2); background: ${isActive === 'active' ? 'var(--accent-color, #3b82f6)' : 'rgba(255,255,255,0.05)'}; color: white; cursor: pointer; font-weight: 600; transition: all 0.2s;">
         ${cat}
       </button>
     `;
   });
   htmlContent += `</div>`;
 
-  // 2. Render Term Pills Container for the Active Category
+  // 2. Master Audio Control Bar (Play All, Pause, Resume, Stop) matching Listen Tab
+  htmlContent += `
+    <div class="master-audio-controls" style="display: flex; gap: 10px; margin-bottom: 25px; align-items: center; flex-wrap: wrap; background: rgba(255,255,255,0.03); padding: 12px 18px; border-radius: 12px; border: 1px solid rgba(255,255,255,0.1);">
+      <button onclick="playAllMiningAudio()" style="background: #10b981; color: white; border: none; padding: 8px 16px; border-radius: 8px; cursor: pointer; font-weight: 600; display: flex; align-items: center; gap: 6px;">
+        ▶ Play All
+      </button>
+      <button onclick="pauseMiningAudio()" style="background: #f59e0b; color: white; border: none; padding: 8px 16px; border-radius: 8px; cursor: pointer; font-weight: 600;">
+        ⏸ Pause
+      </button>
+      <button onclick="resumeMiningAudio()" style="background: #3b82f6; color: white; border: none; padding: 8px 16px; border-radius: 8px; cursor: pointer; font-weight: 600;">
+        ▶ Resume
+      </button>
+      <button onclick="stopMiningAudio()" style="background: #ef4444; color: white; border: none; padding: 8px 16px; border-radius: 8px; cursor: pointer; font-weight: 600;">
+        ⏹ Stop
+      </button>
+    </div>
+  `;
+
+  // 3. Term Pills Grid Container
   htmlContent += `<div class="mining-cards-grid" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 15px;">`;
   
   const currentTerms = miningData[window.currentMiningCategory] || [];
-  currentTerms.forEach((item, index) => {
-    // Escape single quotes for safety in onclick string arguments
+  currentTerms.forEach((item) => {
     const safeEs = item.spanish.replace(/'/g, "\\'");
     
     htmlContent += `
@@ -6948,10 +6963,68 @@ function renderMiningReferencesTab() {
   tabContainer.innerHTML = htmlContent;
 }
 
-// Helper function to switch categories dynamically when clicked
+// Category Switcher Helper
 window.switchMiningCategory = function(categoryName) {
   window.currentMiningCategory = categoryName;
   renderMiningReferencesTab();
+};
+
+// Sequential / Master Audio Engine Helpers for Mining Tab
+let miningAudioQueueIndex = 0;
+let isMiningAudioPlaying = false;
+
+window.playAllMiningAudio = function() {
+  const miningData = MINING_REFERENCES[window.currentMiningCategory];
+  if (!miningData || miningData.length === 0) return;
+
+  miningAudioQueueIndex = 0;
+  isMiningAudioPlaying = true;
+  playNextInMiningQueue();
+};
+
+function playNextInMiningQueue() {
+  if (!isMiningAudioPlaying) return;
+  const miningData = MINING_REFERENCES[window.currentMiningCategory];
+  
+  if (!miningData || miningAudioQueueIndex >= miningData.length) {
+    isMiningAudioPlaying = false;
+    return;
+  }
+
+  const item = miningData[miningAudioQueueIndex];
+  miningAudioQueueIndex++;
+
+  // Utilizes your global speech function if available, or falls back to standard SpeechSynthesis
+  if (typeof playAudio === 'function') {
+    playAudio(item.spanish);
+  }
+
+  // Estimate delay per word item before triggering the next one sequentially
+  setTimeout(() => {
+    if (isMiningAudioPlaying) {
+      playNextInMiningQueue();
+    }
+  }, 2200);
+}
+
+window.pauseMiningAudio = function() {
+  isMiningAudioPlaying = false;
+  if ('speechSynthesis' in window) {
+    window.speechSynthesis.pause();
+  }
+};
+
+window.resumeMiningAudio = function() {
+  if ('speechSynthesis' in window) {
+    window.speechSynthesis.resume();
+  }
+};
+
+window.stopMiningAudio = function() {
+  isMiningAudioPlaying = false;
+  if ('speechSynthesis' in window) {
+    window.speechSynthesis.cancel();
+  }
 };
 /* ============================================================
    BADGES (UPGRADED VISUAL EDITION)
