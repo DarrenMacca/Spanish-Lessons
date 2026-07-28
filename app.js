@@ -688,7 +688,7 @@ const CEFR_LEVELS = {
    MINING REFERENCES — Open Cut & Underground Vocabulary (Spanish → English)
    ============================================================ */
 
-const MINING_REFERENCES = {
+window.MINING_REFERENCES = {
     "Open Cut Mining": [
         { spanish: "rampa de acceso", english: "access ramp", category: "Open Cut Mining" },
         { spanish: "ángulo de reposo", english: "angle of repose", category: "Open Cut Mining" },
@@ -763,6 +763,7 @@ const MINING_REFERENCES = {
         { spanish: "nivel de socavación", english: "undercut level", category: "Underground Mining" },
         { spanish: "contrapique", english: "winze", category: "Underground Mining" }
     ]
+};
 };
 };
 
