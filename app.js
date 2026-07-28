@@ -683,7 +683,7 @@ const CEFR_LEVELS = {
         { spanish: "otra vez", english: "again", category: "Connectors" },
         { spanish: "cuidadosamente", english: "carefully", category: "Connectors" }
     ],
-
+};
    /* ============================================================
    MINING REFERENCES — Open Cut & Underground Vocabulary (Spanish → English)
    ============================================================ */
