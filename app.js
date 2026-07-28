@@ -6876,17 +6876,27 @@ function renderGrammarTab() {
 }
 
 /* ============================================================
-   MINING TAB
+   MINING REFERENCES TAB
    ============================================================ */
 function renderMiningReferencesTab() {
   const tabContainer = document.getElementById("mining-references-tab");
   if (!tabContainer) return;
 
+  // Pulling directly from the new categories embedded inside CEFR_LEVELS.A1
+  const words = CEFR_LEVELS[appState ? appState.currentLevel : "A1"] || CEFR_LEVELS.A1;
+  
+  // Filter only the mining categories
+  const miningCategories = ["Open Cut Mining", "Underground Mining"];
+  
   let htmlContent = `<div class="mining-references-container"><h2>Mining References / Referencias Mineras</h2>`;
 
-  // Loop through each category key (e.g., "Open Cut Mining", "Underground Mining")
-  for (const [categoryName, termsArray] of Object.entries(window.MINING_REFERENCES)) {
-    // Generate a clean CSS ID from the category name
+  miningCategories.forEach(categoryName => {
+    // Filter words matching this specific mining category
+    const termsArray = words.filter(item => item.category === categoryName);
+    
+    // Skip rendering if no terms exist for this category
+    if (termsArray.length === 0) return;
+
     const categoryId = categoryName.toLowerCase().replace(/\s+/g, '-');
     
     htmlContent += `
@@ -6895,7 +6905,6 @@ function renderMiningReferencesTab() {
         <ul class="term-list">
     `;
 
-    // Loop through each term object inside the category array
     termsArray.forEach(item => {
       htmlContent += `
         <li class="term-item">
@@ -6906,13 +6915,13 @@ function renderMiningReferencesTab() {
     });
 
     htmlContent += `</ul></div>`;
-  }
+  });
 
   htmlContent += `</div>`;
   tabContainer.innerHTML = htmlContent;
 }
 
-// Call the function when your page loads or when the tab is clicked
+// Call the function when your page loads or hook it to your tab click listener
 document.addEventListener("DOMContentLoaded", () => {
   renderMiningReferencesTab();
 });
