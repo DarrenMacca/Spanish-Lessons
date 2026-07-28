@@ -6879,7 +6879,7 @@ function renderGrammarTab() {
    MINING REFERENCES TAB
    ============================================================ */
 function renderMiningReferencesTab() {
-  const tabContainer = document.getElementById("mining");
+  const tabContainer = document.getElementById("mining-content");
   if (!tabContainer) return;
 
   const miningData = typeof MINING_REFERENCES !== 'undefined' ? MINING_REFERENCES : null;
@@ -6887,12 +6887,10 @@ function renderMiningReferencesTab() {
     tabContainer.innerHTML = `<div class="mining-references-container"><h2>Mining References / Referencias Mineras</h2><p>No mining data found.</p></div>`;
     return;
   }
-  // ... rest of your code
-}
   
   let htmlContent = `<div class="mining-references-container"><h2>Mining References / Referencias Mineras</h2>`;
 
-  // Loop through the entries of window.MINING_REFERENCES directly ("Open Cut Mining", "Underground Mining")
+  // Loop through the entries of MINING_REFERENCES directly ("Open Cut Mining", "Underground Mining")
   for (const [categoryName, termsArray] of Object.entries(miningData)) {
     if (!termsArray || termsArray.length === 0) continue;
 
