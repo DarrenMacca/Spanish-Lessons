@@ -7513,26 +7513,19 @@ function globalLookup(word) {
         }
     }
 
-       // 5. Listen Vocab — LISTEN_VOCAB (COMPATIBLE WITH ORIGINAL NESTED STRUCTURE)
+    // 5. Listen Vocab — LISTEN_VOCAB (COMPATIBLE WITH ORIGINAL NESTED STRUCTURE)
     if (typeof LISTEN_VOCAB !== "undefined" && LISTEN_VOCAB !== null) {
-        const queryCleanEng = normalizeEnglish(word);
-        const queryCleanEsp = normalizeSpanish(word);
-        
-        // Loop through levels (A1, A2, B1, B2)
         for (const lvlKey of Object.keys(LISTEN_VOCAB)) {
             const levelData = LISTEN_VOCAB[lvlKey];
             if (!levelData) continue;
 
-            // Loop through categories (Daily Life, Family, etc.)
             for (const catKey of Object.keys(levelData)) {
                 const wordArray = levelData[catKey];
                 if (!Array.isArray(wordArray)) continue;
 
-                // Scan for the raw Spanish string matching our cleaned input queries
                 const matchSpan = wordArray.find(spanWord => normalizeSpanish(spanWord) === queryCleanEsp);
                 
                 if (matchSpan) {
-                    // Pull cross-reference from your primary vocabulary block to fetch English definitions safely
                     const primaryRef = (typeof CEFR_LEVELS !== "undefined" && CEFR_LEVELS[lvlKey]) 
                         ? CEFR_LEVELS[lvlKey].find(item => normalizeSpanish(item.spanish) === queryCleanEsp)
                         : null;
@@ -7551,7 +7544,6 @@ function globalLookup(word) {
         }
     }
 
-
     // 6. Word-by-word dictionary — WORD_DICT (KEY-VALUE DIRECTORY)
     if (typeof WORD_DICT !== "undefined") {
         if (WORD_DICT[queryCleanEng]) {
@@ -7560,6 +7552,30 @@ function globalLookup(word) {
         const reverseKeyMatch = Object.keys(WORD_DICT).find(k => normalizeSpanish(WORD_DICT[k]) === queryCleanEsp);
         if (reverseKeyMatch) {
             return { translation: reverseKeyMatch, label: "English", speakText: WORD_DICT[reverseKeyMatch], source: "Word Dictionary", level: "GLOBAL" };
+        }
+    }
+
+    // ⭐ 6.5 MINING TERMINOLOGY SEARCH SUPPORT
+    if (typeof MINING_REFERENCES !== "undefined" && MINING_REFERENCES !== null) {
+        for (const categoryKey of Object.keys(MINING_REFERENCES)) {
+            const miningCategory = MINING_REFERENCES[categoryKey];
+            if (!Array.isArray(miningCategory)) continue;
+
+            const match = miningCategory.find(item =>
+                (item.english && normalizeEnglish(item.english) === queryCleanEng) ||
+                (item.spanish && normalizeSpanish(item.spanish) === queryCleanEsp)
+            );
+
+            if (match) {
+                const isSpanishInput = match.spanish && normalizeSpanish(match.spanish) === queryCleanEsp;
+                return {
+                    translation: isSpanishInput ? match.english : match.spanish,
+                    label: isSpanishInput ? "English" : "Spanish",
+                    speakText: match.spanish,
+                    source: `Mining Terminology (${categoryKey})`,
+                    level: "GLOBAL"
+                };
+            }
         }
     }
 
