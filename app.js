@@ -1968,6 +1968,7 @@ const TABS = [
     "sentence",
     "conversation",
     "grammar",
+    "mining",
     "review" // ⭐ ADDED: Tells the routing loop your review panel exists
 ];
 
