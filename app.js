@@ -116,7 +116,7 @@ function evaluateMilestoneThresholds(currentLevel) {
    MINING REFERENCES — Open Cut & Underground Vocabulary (Spanish → English)
    ============================================================ */
 
-window.MINING_REFERENCES = {
+const MINING_REFERENCES = {
     "Open Cut Mining": [
         { spanish: "rampa de acceso", english: "access ramp", category: "Open Cut Mining" },
         { spanish: "ángulo de reposo", english: "angle of repose", category: "Open Cut Mining" },
@@ -6882,12 +6882,13 @@ function renderMiningReferencesTab() {
   const tabContainer = document.getElementById("mining");
   if (!tabContainer) return;
 
-  // Pulling directly from the dedicated global window.MINING_REFERENCES object
-  const miningData = window.MINING_REFERENCES;
+  const miningData = typeof MINING_REFERENCES !== 'undefined' ? MINING_REFERENCES : null;
   if (!miningData) {
     tabContainer.innerHTML = `<div class="mining-references-container"><h2>Mining References / Referencias Mineras</h2><p>No mining data found.</p></div>`;
     return;
   }
+  // ... rest of your code
+}
   
   let htmlContent = `<div class="mining-references-container"><h2>Mining References / Referencias Mineras</h2>`;
 
