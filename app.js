@@ -2025,6 +2025,11 @@ function activateTab(tabName) {
             renderGrammarTab();
             break;
 
+         // ⭐ INTEGRATION: Populates mining references whenever this tab is opened
+        case "mining":
+            renderMiningReferencesTab();
+            break;
+          
         // ⭐ INTEGRATION: Populates your mistake cards list whenever this tab is opened
         case "review":
             renderReviewList();
