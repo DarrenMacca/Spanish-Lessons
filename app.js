@@ -6882,20 +6882,18 @@ function renderMiningReferencesTab() {
   const tabContainer = document.getElementById("mining-references-tab");
   if (!tabContainer) return;
 
-  // Pulling directly from the new categories embedded inside CEFR_LEVELS.A1
-  const words = CEFR_LEVELS[appState ? appState.currentLevel : "A1"] || CEFR_LEVELS.A1;
-  
-  // Filter only the mining categories
-  const miningCategories = ["Open Cut Mining", "Underground Mining"];
+  // Pulling directly from the dedicated global window.MINING_REFERENCES object
+  const miningData = window.MINING_REFERENCES;
+  if (!miningData) {
+    tabContainer.innerHTML = `<div class="mining-references-container"><h2>Mining References / Referencias Mineras</h2><p>No mining data found.</p></div>`;
+    return;
+  }
   
   let htmlContent = `<div class="mining-references-container"><h2>Mining References / Referencias Mineras</h2>`;
 
-  miningCategories.forEach(categoryName => {
-    // Filter words matching this specific mining category
-    const termsArray = words.filter(item => item.category === categoryName);
-    
-    // Skip rendering if no terms exist for this category
-    if (termsArray.length === 0) return;
+  // Loop through the entries of window.MINING_REFERENCES directly ("Open Cut Mining", "Underground Mining")
+  for (const [categoryName, termsArray] of Object.entries(miningData)) {
+    if (!termsArray || termsArray.length === 0) continue;
 
     const categoryId = categoryName.toLowerCase().replace(/\s+/g, '-');
     
@@ -6915,7 +6913,7 @@ function renderMiningReferencesTab() {
     });
 
     htmlContent += `</ul></div>`;
-  });
+  }
 
   htmlContent += `</div>`;
   tabContainer.innerHTML = htmlContent;
