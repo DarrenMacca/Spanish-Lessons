@@ -6882,65 +6882,77 @@ function renderGrammarTab() {
 }
 
 /* ============================================================
-   MINING REFERENCES TAB
+   MINING REFERENCES TAB (LISTEN STYLE WITH AUDIO & PILLS)
    ============================================================ */
 function renderMiningReferencesTab() {
   const tabContainer = document.getElementById("mining-content");
-  if (!tabContainer) {
-    console.error("ERROR: #mining-content element not found in DOM!");
-    return;
-  }
+  if (!tabContainer) return;
 
   const miningData = typeof MINING_REFERENCES !== 'undefined' ? MINING_REFERENCES : null;
   if (!miningData) {
-    console.error("ERROR: MINING_REFERENCES is not defined!");
-    tabContainer.innerHTML = `<div class="mining-references-container"><h2>Mining References / Referencias Mineras</h2><p>No mining data found.</p></div>`;
+    tabContainer.innerHTML = `<div class="mining-references-container"><h2>Mining Terminology</h2><p>No mining data found.</p></div>`;
     return;
   }
+
+  // Get categories ("Open Cut Mining", "Underground Mining")
+  const categories = Object.keys(miningData);
   
-  let htmlContent = `<div class="mining-references-container"><h2>Mining References / Referencias Mineras</h2>`;
-
-  for (const [categoryName, termsArray] of Object.entries(miningData)) {
-    if (!termsArray || termsArray.length === 0) continue;
-
-    const categoryId = categoryName.toLowerCase().replace(/\s+/g, '-');
-    
-    htmlContent += `
-      <div class="category-section" id="${categoryId}">
-        <h3>${categoryName}</h3>
-        <ul class="term-list">
-    `;
-
-    termsArray.forEach(item => {
-      htmlContent += `
-        <li class="term-item">
-          <span class="term-es"><strong>${item.spanish}</strong></span> — 
-          <span class="term-en">${item.english}</span>
-        </li>
-      `;
-    });
-
-    htmlContent += `</ul></div>`;
+  // Track active category state locally for this view (defaults to the first category)
+  if (!window.currentMiningCategory) {
+    window.currentMiningCategory = categories[0];
   }
 
+  let htmlContent = `
+    <div class="mining-references-container">
+      <div class="tab-header-section">
+        <h2>Mining Terminology / Terminología Minera</h2>
+        <p class="section-subtitle">Explore key mining concepts with audio pronunciation.</p>
+      </div>
+  `;
+
+  // 1. Render Category Filter Buttons (matching your Listen tab selector style)
+  htmlContent += `<div class="category-selector-container" style="display: flex; gap: 10px; margin-bottom: 20px; flex-wrap: wrap;">`;
+  categories.forEach(cat => {
+    const isActive = cat === window.currentMiningCategory ? 'active' : '';
+    htmlContent += `
+      <button class="category-btn ${isActive}" data-category="${cat}" onclick="switchMiningCategory('${cat}')" 
+        style="padding: 10px 18px; border-radius: 10px; border: 1px solid rgba(255,255,255,0.2); background: ${isActive ? 'var(--accent-color, #3b82f6)' : 'rgba(255,255,255,0.05)'}; color: white; cursor: pointer; font-weight: 600; transition: all 0.2s;">
+        ${cat}
+      </button>
+    `;
+  });
   htmlContent += `</div>`;
+
+  // 2. Render Term Pills Container for the Active Category
+  htmlContent += `<div class="mining-cards-grid" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 15px;">`;
+  
+  const currentTerms = miningData[window.currentMiningCategory] || [];
+  currentTerms.forEach((item, index) => {
+    // Escape single quotes for safety in onclick string arguments
+    const safeEs = item.spanish.replace(/'/g, "\\'");
+    
+    htmlContent += `
+      <div class="word-pill" style="background: rgba(255, 255, 255, 0.07); border: 1px solid rgba(255, 255, 255, 0.12); padding: 14px 18px; border-radius: 12px; display: flex; align-items: center; justify-content: space-between; box-shadow: 0 4px 6px rgba(0,0,0,0.1);">
+        <div class="pill-text-content">
+          <div class="term-es" style="font-weight: 700; font-size: 1.05rem; color: #ffffff; margin-bottom: 3px;">${item.spanish}</div>
+          <div class="term-en" style="font-size: 0.9rem; color: #94a3b8;">${item.english}</div>
+        </div>
+        <button class="audio-btn" onclick="playAudio('${safeEs}')" title="Listen" style="background: rgba(59, 130, 246, 0.2); border: 1px solid rgba(59, 130, 246, 0.4); color: #60a5fa; width: 38px; height: 38px; border-radius: 50%; display: flex; align-items: center; justify-content: center; cursor: pointer; transition: background 0.2s;">
+          🔊
+        </button>
+      </div>
+    `;
+  });
+
+  htmlContent += `</div></div>`;
   tabContainer.innerHTML = htmlContent;
 }
 
-// Global hook into your main application tab-switcher logic
-document.addEventListener("DOMContentLoaded", () => {
+// Helper function to switch categories dynamically when clicked
+window.switchMiningCategory = function(categoryName) {
+  window.currentMiningCategory = categoryName;
   renderMiningReferencesTab();
-
-  document.querySelectorAll('.tab-btn').forEach(btn => {
-    btn.addEventListener('click', (e) => {
-      const targetTab = btn.getAttribute('data-tab') || btn.dataset.tab;
-      if (targetTab === 'mining') {
-        renderMiningReferencesTab();
-      }
-    });
-  });
-});
-
+};
 /* ============================================================
    BADGES (UPGRADED VISUAL EDITION)
    ============================================================ */
