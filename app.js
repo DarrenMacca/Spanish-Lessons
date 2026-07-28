@@ -6879,8 +6879,7 @@ function renderGrammarTab() {
    MINING REFERENCES TAB
    ============================================================ */
 function renderMiningReferencesTab() {
-  const tabContainer = document.getElementById("mining-references-tab");
-  if (!tabContainer) return;
+const tabContainer = document.getElementById("mining");  if (!tabContainer) return;
 
   // Pulling directly from the dedicated global window.MINING_REFERENCES object
   const miningData = window.MINING_REFERENCES;
