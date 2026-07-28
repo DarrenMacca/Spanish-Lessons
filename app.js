@@ -6969,15 +6969,20 @@ window.switchMiningCategory = function(categoryName) {
   renderMiningReferencesTab();
 };
 
-// Sequential Audio Engine Hooks (using speakSpanish)
+// Sequential Audio Engine State & Controls
 let miningAudioQueueIndex = 0;
 let isMiningAudioPlaying = false;
+let miningQueueTimeout = null;
 
 window.playAllMiningAudio = function() {
   const miningData = MINING_REFERENCES[window.currentMiningCategory];
   if (!miningData || miningData.length === 0) return;
 
-  miningAudioQueueIndex = 0;
+  // Reset or start from current index
+  if (miningAudioQueueIndex >= miningData.length) {
+    miningAudioQueueIndex = 0;
+  }
+  
   isMiningAudioPlaying = true;
   playNextInMiningQueue();
 };
@@ -6988,6 +6993,7 @@ function playNextInMiningQueue() {
   
   if (!miningData || miningAudioQueueIndex >= miningData.length) {
     isMiningAudioPlaying = false;
+    miningAudioQueueIndex = 0;
     return;
   }
 
@@ -6996,7 +7002,7 @@ function playNextInMiningQueue() {
 
   speakSpanish(item.spanish);
 
-  setTimeout(() => {
+  miningQueueTimeout = setTimeout(() => {
     if (isMiningAudioPlaying) {
       playNextInMiningQueue();
     }
@@ -7005,19 +7011,35 @@ function playNextInMiningQueue() {
 
 window.pauseMiningAudio = function() {
   isMiningAudioPlaying = false;
+  if (miningQueueTimeout) {
+    clearTimeout(miningQueueTimeout);
+  }
   if ('speechSynthesis' in window) {
-    window.speechSynthesis.pause();
+    window.speechSynthesis.cancel(); // Cleans up current voice output safely
   }
 };
 
 window.resumeMiningAudio = function() {
-  if ('speechSynthesis' in window) {
-    window.speechSynthesis.resume();
+  if (isMiningAudioPlaying) return; // Already playing
+  
+  const miningData = MINING_REFERENCES[window.currentMiningCategory];
+  if (!miningData || miningData.length === 0) return;
+
+  // If we were partway through, step back one index so it plays the paused word immediately
+  if (miningAudioQueueIndex > 0) {
+    miningAudioQueueIndex = Math.max(0, miningAudioQueueIndex - 1);
   }
+
+  isMiningAudioPlaying = true;
+  playNextInMiningQueue();
 };
 
 window.stopMiningAudio = function() {
   isMiningAudioPlaying = false;
+  miningAudioQueueIndex = 0;
+  if (miningQueueTimeout) {
+    clearTimeout(miningQueueTimeout);
+  }
   if ('speechSynthesis' in window) {
     window.speechSynthesis.cancel();
   }
