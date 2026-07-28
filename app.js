@@ -6874,7 +6874,9 @@ function renderGrammarTab() {
     `;
 }
 
-// Function to render the Mining References tab on your website
+/* ============================================================
+   MINING TAB
+   ============================================================ */
 function renderMiningReferencesTab() {
   const tabContainer = document.getElementById("mining-references-tab");
   if (!tabContainer) return;
