@@ -6919,9 +6919,18 @@ function renderMiningReferencesTab() {
   tabContainer.innerHTML = htmlContent;
 }
 
-// Call the function when your page loads or hook it to your tab click listener
+// Call the function on DOM load AND ensure it hooks into your navigation tab switcher
 document.addEventListener("DOMContentLoaded", () => {
   renderMiningReferencesTab();
+
+  // Automatically hook into tab buttons to render when the mining tab is clicked
+  document.querySelectorAll('.tab-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      if (btn.getAttribute('data-tab') === 'mining') {
+        renderMiningReferencesTab();
+      }
+    });
+  });
 });
 
 /* ============================================================
