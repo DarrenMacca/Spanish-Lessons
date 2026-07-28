@@ -6875,6 +6875,46 @@ function renderGrammarTab() {
     `;
 }
 
+// Function to render the Mining References tab on your website
+function renderMiningReferencesTab() {
+  const tabContainer = document.getElementById("mining-references-tab");
+  if (!tabContainer) return;
+
+  let htmlContent = `<div class="mining-references-container"><h2>Mining References / Referencias Mineras</h2>`;
+
+  // Loop through each category key (e.g., "Open Cut Mining", "Underground Mining")
+  for (const [categoryName, termsArray] of Object.entries(window.MINING_REFERENCES)) {
+    // Generate a clean CSS ID from the category name
+    const categoryId = categoryName.toLowerCase().replace(/\s+/g, '-');
+    
+    htmlContent += `
+      <div class="category-section" id="${categoryId}">
+        <h3>${categoryName}</h3>
+        <ul class="term-list">
+    `;
+
+    // Loop through each term object inside the category array
+    termsArray.forEach(item => {
+      htmlContent += `
+        <li class="term-item">
+          <span class="term-es"><strong>${item.spanish}</strong></span> — 
+          <span class="term-en">${item.english}</span>
+        </li>
+      `;
+    });
+
+    htmlContent += `</ul></div>`;
+  }
+
+  htmlContent += `</div>`;
+  tabContainer.innerHTML = htmlContent;
+}
+
+// Call the function when your page loads or when the tab is clicked
+document.addEventListener("DOMContentLoaded", () => {
+  renderMiningReferencesTab();
+});
+
 /* ============================================================
    BADGES (UPGRADED VISUAL EDITION)
    ============================================================ */
