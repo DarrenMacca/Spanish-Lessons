@@ -587,31 +587,20 @@ body {
 .progress-tile:hover .gradient-b2 { box-shadow: 0 0 14px rgba(239,68,68,0.9); }
 
 /* ------------------------------------------------------------
-   TAB BAR
+   TAB BAR (Default Desktop View — Centered & Clean)
 ------------------------------------------------------------ */
 .nav-bar {
     position: sticky;
     top: 0;
     z-index: 999;
     display: flex;
-    justify-content: flex-start; /* FIX: Allows scrolling to start cleanly from the left edge on mobile */
-    align-items: center;
+    justify-content: center;
     gap: 10px;
     max-width: 900px;
-    width: 100%;
     margin: 0 auto;
-    padding: 12px 16px;
+    padding: 12px 0;
     background: rgba(15, 23, 42, 0.6);
     backdrop-filter: blur(12px);
-    overflow-x: auto; /* FIX: Enables side-to-side touch swiping */
-    -webkit-overflow-scrolling: touch;
-    box-sizing: border-box;
-    scrollbar-width: none; /* Hides scrollbar on Firefox */
-}
-
-/* Hides scrollbar on Chrome, Safari, Edge */
-.nav-bar::-webkit-scrollbar {
-    display: none;
 }
 
 .tab-btn {
@@ -623,8 +612,6 @@ body {
     border: 1px solid rgba(148, 163, 184, 0.5);
     font-size: 14px;
     transition: background 0.25s ease;
-    flex-shrink: 0;         /* FIX: Stops buttons from being squished or compressed */
-    white-space: nowrap;    /* FIX: Keeps tab text neatly on a single line */
 }
 
 .tab-btn.active {
@@ -658,6 +645,29 @@ body {
 
 .hidden {
     display: none;
+}
+
+/* ------------------------------------------------------------
+   MOBILE ONLY OVERRIDE (≤600px) — Enables Swiping Without Hitting Desktop
+------------------------------------------------------------ */
+@media (max-width: 600px) {
+    .nav-bar {
+        justify-content: flex-start !important;
+        overflow-x: auto !important;
+        -webkit-overflow-scrolling: touch !important;
+        width: 100% !important;
+        padding: 12px 16px !important;
+        scrollbar-width: none !important;
+    }
+
+    .nav-bar::-webkit-scrollbar {
+        display: none !important;
+    }
+
+    .tab-btn {
+        flex-shrink: 0 !important;
+        white-space: nowrap !important;
+    }
 }
 /* ------------------------------------------------------------
    EXTENSION — Active Tab Neon Edge
